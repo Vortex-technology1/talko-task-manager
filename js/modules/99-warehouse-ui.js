@@ -90,10 +90,10 @@
   function _renderHeader() {
     const alertsCount = window.whAlertsCount ? window.whAlertsCount() : 0;
     const tabs = [
-      { id: 'dashboard',  icon: 'layout-dashboard', label: 'Дашборд' },
-      { id: 'catalog',    icon: 'package',           label: 'Каталог' },
+      { id: 'dashboard',  icon: 'layout-dashboard', label: window.t('whDashboard') },
+      { id: 'catalog',    icon: 'package',           label: window.t('whCatalog') },
       { id: 'operations', icon: 'arrow-left-right',  label: window.t('operationsWord') },
-      { id: 'suppliers',  icon: 'truck',             label: 'Постачальники' },
+      { id: 'suppliers',  icon: 'truck',             label: window.t('whSuppliers') },
       { id: 'locations',  icon: 'map-pin',           label: window.t('locationsWord') },
     ];
     return `
@@ -185,7 +185,7 @@
       { icon: 'package',        label: window.t('whItemsCount'), value: items.length,      color: '#6366f1', click: "window._whSetView('catalog')" },
       { icon: 'layers',         label: window.t('whUnitsInStock'),  value: fmt(totalUnits),   color: '#3b82f6', click: '' },
       { icon: 'dollar-sign',    label: window.t('whStockValue'),    value: fmtMoney(totalVal),color: '#22c55e', click: '' },
-      { icon: 'alert-triangle', label: 'Потреб. замовлення', value: alertsList.length, color: alertsList.length > 0 ? '#ef4444' : '#9ca3af', click: '' },
+      { icon: 'alert-triangle', label: window.t('whNeedOrder'), value: alertsList.length, color: alertsList.length > 0 ? '#ef4444' : '#9ca3af', click: '' },
     ];
 
     return `
@@ -209,16 +209,16 @@
         <!-- Швидкі дії -->
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
           <button onclick="window._whSetView('catalog',()=>window.whOpenItemForm())" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#ede9fe;color:#7c3aed;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
-            <i data-lucide="plus-circle" style="width:14px;height:14px;"></i> Новий товар
+            <i data-lucide="plus-circle" style="width:14px;height:14px;"></i> ${window.t('whAddItem')}
           </button>
           <button onclick="window._whSetView('operations',()=>window.whOpenOpForm('IN'))" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#dcfce7;color:#166534;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
-            <i data-lucide="arrow-down-circle" style="width:14px;height:14px;"></i> Прийняти товар
+            <i data-lucide="arrow-down-circle" style="width:14px;height:14px;"></i> ${window.t('whOpIn')}
           </button>
           <button onclick="window._whSetView('operations',()=>window.whOpenOpForm('OUT'))" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#fee2e2;color:#991b1b;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
-            <i data-lucide="arrow-up-circle" style="width:14px;height:14px;"></i> Видати товар
+            <i data-lucide="arrow-up-circle" style="width:14px;height:14px;"></i> ${window.t('whOpOut')}
           </button>
           <button onclick="window._whSetView('operations',()=>window.whOpenOpForm('WRITE_OFF'))" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#fef3c7;color:#92400e;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
-            <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Списати
+            <i data-lucide="trash-2" style="width:14px;height:14px;"></i> ${window.t('whOpWriteOff')}
           </button>
         </div>
 
@@ -229,7 +229,7 @@
             <div style="font-size:0.88rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;justify-content:space-between;">
               <span style="display:flex;align-items:center;gap:0.4rem;">
                 <i data-lucide="alert-triangle" style="width:15px;height:15px;color:#ef4444;"></i>
-                Потребують замовлення
+                ${window.t('whNeedOrder')}
               </span>
               ${alertsList.length > 0 ? `<span style="font-size:0.75rem;color:#ef4444;font-weight:700;">${alertsList.length}</span>` : ''}
             </div>
@@ -254,7 +254,7 @@
           <div style="background:white;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
             <div style="font-size:0.88rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.4rem;">
               <i data-lucide="trending-up" style="width:15px;height:15px;color:#6b7280;"></i>
-              Топ-5 по вартості
+              ${window.t('whTop5Value')}
             </div>
             ${top5.length === 0
               ? `<p style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:0.75rem;">${window.t('noDataWord')}</p>`
@@ -282,9 +282,9 @@
           <div style="font-size:0.88rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;justify-content:space-between;">
             <span style="display:flex;align-items:center;gap:0.4rem;">
               <i data-lucide="clock" style="width:15px;height:15px;color:#6b7280;"></i>
-              Останні операції
+              ${window.t('whLastOps')}
             </span>
-            <button onclick="window._whSetView('operations')" style="font-size:0.75rem;color:#6366f1;background:none;border:none;cursor:pointer;padding:0;">Всі →</button>
+            <button onclick="window._whSetView('operations')" style="font-size:0.75rem;color:#6366f1;background:none;border:none;cursor:pointer;padding:0;">${window.t('whAllOps')}</button>
           </div>
           ${ops.length === 0
             ? `<p style="color:#9ca3af;font-size:0.85rem;text-align:center;padding:1rem;">${window.t('noOpsYet2')}</p>`
@@ -354,7 +354,7 @@
           <div style="background:white;border-radius:12px;padding:3rem;text-align:center;">
             <i data-lucide="package" style="width:40px;height:40px;color:#d1d5db;margin-bottom:0.75rem;"></i>
             ${items.length === 0 ? `
-              <p style="color:#9ca3af;margin:0 0 0.75rem;">Каталог порожній.</p>
+              <p style="color:#9ca3af;margin:0 0 0.75rem;">${window.t('whNoItems')}</p>
               <button onclick="window.whOpenItemForm()" style="padding:0.45rem 1rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">
                 + Додати перший товар
               </button>
@@ -392,13 +392,13 @@
                       ${item.costPrice ? `<div style="font-size:0.75rem;color:#6b7280;">${fmtMoney(item.costPrice)}/од</div>` : ''}
                     </div>
                     <div style="display:flex;gap:0.3rem;">
-                      <button onclick="event.stopPropagation();window.whOpenOpForm('IN','${item.id}')" title="Прийняти" style="padding:5px;border:none;background:#dcfce7;border-radius:6px;cursor:pointer;">
+                      <button onclick="event.stopPropagation();window.whOpenOpForm('IN','${item.id}')" title="${window.t('whOpIn')}" style="padding:5px;border:none;background:#dcfce7;border-radius:6px;cursor:pointer;">
                         <i data-lucide="arrow-down-circle" style="width:14px;height:14px;color:#16a34a;display:block;"></i>
                       </button>
-                      <button onclick="event.stopPropagation();window.whOpenOpForm('OUT','${item.id}')" title="Видати" style="padding:5px;border:none;background:#fee2e2;border-radius:6px;cursor:pointer;">
+                      <button onclick="event.stopPropagation();window.whOpenOpForm('OUT','${item.id}')" title="${window.t('whOpOut')}" style="padding:5px;border:none;background:#fee2e2;border-radius:6px;cursor:pointer;">
                         <i data-lucide="arrow-up-circle" style="width:14px;height:14px;color:#dc2626;display:block;"></i>
                       </button>
-                      <button onclick="event.stopPropagation();window.whOpenItemForm('${item.id}')" title="Редагувати" style="padding:5px;border:none;background:#f3f4f6;border-radius:6px;cursor:pointer;">
+                      <button onclick="event.stopPropagation();window.whOpenItemForm('${item.id}')" title="${window.t('whEditBtn')}" style="padding:5px;border:none;background:#f3f4f6;border-radius:6px;cursor:pointer;">
                         <i data-lucide="pencil" style="width:14px;height:14px;color:#6b7280;display:block;"></i>
                       </button>
                     </div>
@@ -501,7 +501,7 @@
 
         <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
           ${filtered.length === 0 ? `
-            <p style="text-align:center;padding:2rem;color:#9ca3af;">Операцій немає</p>
+            <p style="text-align:center;padding:2rem;color:#9ca3af;">${window.t('whNoOps2')}</p>
           ` : filtered.map(op => {
             const tc = typeColor[op.type] || typeColor.ADJUST;
             return `
@@ -543,7 +543,7 @@
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
         ${suppliers.length === 0 ? `
           <div style="background:white;border-radius:12px;padding:3rem;text-align:center;">
-            <p style="color:#9ca3af;">Постачальників немає. Додайте першого.</p>
+            <p style="color:#9ca3af;">${window.t('whNoSuppliers')}</p>
           </div>
         ` : `
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0.75rem;">
@@ -618,7 +618,7 @@
 
     _showModal(`
       <div style="padding:1.25rem;">
-        <h3 style="margin:0 0 1rem;font-size:1rem;">${itemId ? 'Редагувати товар' : 'Новий товар'}</h3>
+        <h3 style="margin:0 0 1rem;font-size:1rem;">${itemId ? window.t('whEditItem') : window.t('whNewItem')}</h3>
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
@@ -813,7 +813,7 @@
     const s = supplierId ? (window.whGetSuppliers().find(x => x.id === supplierId) || {}) : {};
     _showModal(`
       <div style="padding:1.25rem;">
-        <h3 style="margin:0 0 1rem;font-size:1rem;">${supplierId ? 'Редагувати постачальника' : 'Новий постачальник'}</h3>
+        <h3 style="margin:0 0 1rem;font-size:1rem;">${supplierId ? window.t('whEditSupplier') : window.t('whNewSupplier')}</h3>
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Назва *</label>
@@ -865,7 +865,7 @@
     try {
       await window.whSaveSupplier({ deleted: true }, id);
       window._whCloseModal();
-      if (window.showToast) showToast('Постачальника видалено', 'info');
+      if (window.showToast) showToast(window.t('whSupplierDeleted'), 'info');
     } catch (e) {
       if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
@@ -960,7 +960,7 @@
       const ref = (window.companyRef ? window.companyRef() : window.db.collection('companies').doc(window.currentCompanyId))
         .collection('warehouse_locations').doc(id);
       await ref.update({ deleted: true, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-      if (window.showToast) showToast('Локацію видалено', 'info');
+      if (window.showToast) showToast(window.t('whLocationDeleted'), 'info');
     } catch (e) {
       if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
@@ -986,7 +986,7 @@
             </div>
           </div>
           <button onclick="window.whOpenItemForm('${itemId}');window._whCloseModal()" style="padding:4px 8px;background:#f3f4f6;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;color:#6b7280;white-space:nowrap;">
-            ✏️ Редагувати
+            ✏️ ${window.t('whEditBtn')}
           </button>
         </div>
 
@@ -1013,7 +1013,7 @@
             <div style="font-weight:600;">${item.costPrice ? fmtMoney(item.costPrice) + ' / ' + (item.unit||'шт') : '—'}</div>
           </div>
           <div style="background:#f9fafb;border-radius:8px;padding:0.6rem;">
-            <div style="color:#6b7280;margin-bottom:2px;">Вартість запасу</div>
+            <div style="color:#6b7280;margin-bottom:2px;">${window.t('whStockValueLabel')}</div>
             <div style="font-weight:600;">${item.costPrice ? fmtMoney(s.qty * item.costPrice) : '—'}</div>
           </div>
           ${item.minStock ? `
@@ -1029,7 +1029,7 @@
         </div>
 
         <!-- Останні операції -->
-        <div style="font-size:0.82rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">Останні операції</div>
+        <div style="font-size:0.82rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">${window.t('whLastOps')}</div>
         ${ops.length === 0
           ? `<p style="color:#9ca3af;font-size:0.8rem;text-align:center;padding:0.5rem;">${window.t('noOps2')}</p>`
           : `<div style="max-height:180px;overflow-y:auto;">
@@ -1052,9 +1052,9 @@
 
         <!-- Кнопки операцій -->
         <div style="display:flex;gap:0.4rem;margin-top:1rem;flex-wrap:wrap;">
-          <button onclick="window._whCloseModal();setTimeout(()=>window.whOpenOpForm('IN','${itemId}'),50)" style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">↓ Прийняти</button>
-          <button onclick="window._whCloseModal();setTimeout(()=>window.whOpenOpForm('OUT','${itemId}'),50)" style="flex:1;padding:0.45rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">↑ Видати</button>
-          <button onclick="window._whCloseModal();setTimeout(()=>window.whOpenOpForm('WRITE_OFF','${itemId}'),50)" style="flex:1;padding:0.45rem;background:#f59e0b;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">✕ Списати</button>
+          <button onclick="window._whCloseModal();setTimeout(()=>window.whOpenOpForm('IN','${itemId}'),50)" style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">${window.t('whOpIn')}</button>
+          <button onclick="window._whCloseModal();setTimeout(()=>window.whOpenOpForm('OUT','${itemId}'),50)" style="flex:1;padding:0.45rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">${window.t('whOpOut')}</button>
+          <button onclick="window._whCloseModal();setTimeout(()=>window.whOpenOpForm('WRITE_OFF','${itemId}'),50)" style="flex:1;padding:0.45rem;background:#f59e0b;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">${window.t('whOpWriteOff')}</button>
           <button onclick="window._whCloseModal()" style="padding:0.45rem 0.75rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">Закрити</button>
         </div>
       </div>
