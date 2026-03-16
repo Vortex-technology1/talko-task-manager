@@ -376,7 +376,7 @@
               const level = window.whStockLevel(item.id);
               const totalVal2 = s.qty * (item.costPrice || 0);
               return `
-                <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:0.75rem 1rem;border-bottom:1px solid #f9fafb;gap:0.5rem;font-size:0.85rem;">
+                <div onclick="window._whShowItemDetail('${item.id}')" style="display:flex;align-items:flex-start;justify-content:space-between;padding:0.75rem 1rem;border-bottom:1px solid #f9fafb;gap:0.5rem;font-size:0.85rem;cursor:pointer;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background=''"  >
                   <div style="flex:1;min-width:0;">
                     <div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</div>
                     <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:2px;">
@@ -951,6 +951,114 @@
   // ── Публічний рендер alerts (для 99-warehouse-alerts.js) ─
   window._whRenderAlerts = function () {
     if (_currentView === 'dashboard') _render();
+  };
+
+  // ── Delete location ──────────────────────────────────────
+  window._whDeleteLocation = async function (id) {
+    if (!confirm('Видалити локацію?')) return;
+    try {
+      const ref = (window.companyRef ? window.companyRef() : window.db.collection('companies').doc(window.currentCompanyId))
+        .collection('warehouse_locations').doc(id);
+      await ref.update({ deleted: true, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      if (window.showToast) showToast('Локацію видалено', 'info');
+    } catch (e) {
+      if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
+  };
+
+  // ── Деталі товару ────────────────────────────────────────
+  window._whShowItemDetail = function (itemId) {
+    const item = window.whGetItems().find(i => i.id === itemId);
+    if (!item) return;
+    const s    = window.whGetStock(itemId);
+    const level = window.whStockLevel(itemId);
+    const ops  = (window.whGetOperations() || []).filter(o => o.itemId === itemId).slice(0, 10);
+    const sup  = item.supplierId ? window.whGetSuppliers().find(x => x.id === item.supplierId) : null;
+
+    _showModal(`
+      <div style="padding:1.25rem;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;gap:0.5rem;">
+          <div>
+            <h3 style="margin:0 0 0.25rem;font-size:1.05rem;">${item.name}</h3>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+              ${item.sku ? `<span style="font-size:0.72rem;color:#9ca3af;background:#f3f4f6;padding:1px 7px;border-radius:4px;">${item.sku}</span>` : ''}
+              ${item.category ? `<span style="font-size:0.72rem;color:#6b7280;background:#f3f4f6;padding:1px 7px;border-radius:4px;">${item.category}</span>` : ''}
+            </div>
+          </div>
+          <button onclick="window.whOpenItemForm('${itemId}');window._whCloseModal()" style="padding:4px 8px;background:#f3f4f6;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;color:#6b7280;white-space:nowrap;">
+            ✏️ Редагувати
+          </button>
+        </div>
+
+        <!-- Залишки -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1rem;">
+          <div style="background:${s.qty===0?'#fef2f2':s.qty<=s.minStock?'#fffbeb':'#f0fdf4'};border-radius:8px;padding:0.6rem;text-align:center;">
+            <div style="font-size:1.3rem;font-weight:700;color:${levelColor(level)};">${s.qty}</div>
+            <div style="font-size:0.72rem;color:#6b7280;">залишок</div>
+          </div>
+          <div style="background:#f9fafb;border-radius:8px;padding:0.6rem;text-align:center;">
+            <div style="font-size:1.3rem;font-weight:700;color:#f59e0b;">${s.reserved}</div>
+            <div style="font-size:0.72rem;color:#6b7280;">резерв</div>
+          </div>
+          <div style="background:#f9fafb;border-radius:8px;padding:0.6rem;text-align:center;">
+            <div style="font-size:1.3rem;font-weight:700;color:#6366f1;">${s.available}</div>
+            <div style="font-size:0.72rem;color:#6b7280;">доступно</div>
+          </div>
+        </div>
+
+        <!-- Фінанси -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;font-size:0.82rem;">
+          <div style="background:#f9fafb;border-radius:8px;padding:0.6rem;">
+            <div style="color:#6b7280;margin-bottom:2px;">Собівартість</div>
+            <div style="font-weight:600;">${item.costPrice ? fmtMoney(item.costPrice) + ' / ' + (item.unit||'шт') : '—'}</div>
+          </div>
+          <div style="background:#f9fafb;border-radius:8px;padding:0.6rem;">
+            <div style="color:#6b7280;margin-bottom:2px;">Вартість запасу</div>
+            <div style="font-weight:600;">${item.costPrice ? fmtMoney(s.qty * item.costPrice) : '—'}</div>
+          </div>
+          ${item.minStock ? `
+          <div style="background:#f9fafb;border-radius:8px;padding:0.6rem;">
+            <div style="color:#6b7280;margin-bottom:2px;">Мін. залишок</div>
+            <div style="font-weight:600;">${item.minStock} ${item.unit||'шт'}</div>
+          </div>` : ''}
+          ${sup ? `
+          <div style="background:#ede9fe;border-radius:8px;padding:0.6rem;">
+            <div style="color:#7c3aed;margin-bottom:2px;">Постачальник</div>
+            <div style="font-weight:600;color:#5b21b6;">${sup.name}</div>
+          </div>` : ''}
+        </div>
+
+        <!-- Останні операції -->
+        <div style="font-size:0.82rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">Останні операції</div>
+        ${ops.length === 0
+          ? `<p style="color:#9ca3af;font-size:0.8rem;text-align:center;padding:0.5rem;">Немає операцій</p>`
+          : `<div style="max-height:180px;overflow-y:auto;">
+              ${ops.map(op => `
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid #f3f4f6;font-size:0.8rem;">
+                  <div style="display:flex;align-items:center;gap:0.4rem;">
+                    <span style="padding:1px 6px;border-radius:4px;font-size:0.68rem;font-weight:700;
+                      background:${op.type==='IN'?'#dcfce7':op.type==='OUT'?'#fee2e2':'#fef3c7'};
+                      color:${op.type==='IN'?'#166534':op.type==='OUT'?'#991b1b':'#92400e'};">
+                      ${op.type==='IN'?'IN':'OUT'}
+                    </span>
+                    <span>${op.type==='IN'?'+':'−'}${op.qty} ${item.unit||'шт'}</span>
+                    ${op.note ? `<span style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;">${op.note}</span>` : ''}
+                  </div>
+                  <span style="color:#9ca3af;">${fmtDate(op.createdAt)}</span>
+                </div>
+              `).join('')}
+            </div>`
+        }
+
+        <!-- Кнопки операцій -->
+        <div style="display:flex;gap:0.4rem;margin-top:1rem;flex-wrap:wrap;">
+          <button onclick="window._whCloseModal();window.whOpenOpForm('IN','${itemId}')" style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">↓ Прийняти</button>
+          <button onclick="window._whCloseModal();window.whOpenOpForm('OUT','${itemId}')" style="flex:1;padding:0.45rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">↑ Видати</button>
+          <button onclick="window._whCloseModal();window.whOpenOpForm('WRITE_OFF','${itemId}')" style="flex:1;padding:0.45rem;background:#f59e0b;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">✕ Списати</button>
+          <button onclick="window._whCloseModal()" style="padding:0.45rem 0.75rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">Закрити</button>
+        </div>
+      </div>
+    `);
   };
 
   // ── Показати nav кнопку ──────────────────────────────────

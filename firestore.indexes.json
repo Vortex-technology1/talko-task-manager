@@ -857,6 +857,44 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "warehouse_operations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "warehouse_items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "deleted",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "warehouse_stock",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "itemId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "qty",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []
