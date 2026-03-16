@@ -144,11 +144,11 @@ function _renderARModal() {
         <!-- Фільтри -->
         <div style="padding:0.75rem 1.25rem;background:#f8fafc;border-bottom:1px solid #e8eaed;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
             <select id="arFilterUser" onchange="applyARFilters()" style="padding:0.3rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.78rem;background:white;min-width:140px;">
-                <option value="">Всі співробітники</option>
+                <option value="">${window.t('allEmployees')}</option>
                 ${usersOpts}
             </select>
             <select id="arFilterCat" onchange="applyARFilters()" style="padding:0.3rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.78rem;background:white;">
-                <option value="">Всі категорії</option>
+                <option value="">${window.t('allCategories')}</option>
                 <option value="task">Задачі</option>
                 <option value="crm">CRM</option>
                 <option value="system">Система</option>
@@ -278,12 +278,12 @@ function renderAREntries(entries, content) {
                             </span>
                         </th>
                         <th style="text-align:center;padding:0.25rem 0.5rem;font-weight:600;">
-                            <span style="display:inline-flex;align-items:center;gap:2px;" title=window.t('toReview')>
+                            <span style="display:inline-flex;align-items:center;gap:2px;" title=${window.t('toReview')}>
                                 <span style="width:12px;height:12px;color:#7c3aed;">${AR_ICONS.task_to_review}</span>
                             </span>
                         </th>
                         <th style="text-align:center;padding:0.25rem 0.5rem;font-weight:600;">
-                            <span style="display:inline-flex;align-items:center;gap:2px;" title=window.t('callsConnected')>
+                            <span style="display:inline-flex;align-items:center;gap:2px;" title=${window.t('callsConnected')}>
                                 <span style="width:12px;height:12px;color:#ea580c;">${AR_ICONS.crm_call}</span>
                             </span>
                         </th>

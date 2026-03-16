@@ -219,7 +219,7 @@ function mountCanvas() {
                         max-width:200px;min-width:80px;width:auto;
                         outline:none;cursor:text;transition:border-color 0.15s, background 0.15s;
                         white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
-                    title=window.t('clickToRename')
+                    title=${window.t('clickToRename')}
                     onmouseenter="this.style.borderColor='#334155'"
                     onmouseleave="if(document.activeElement!==this)this.style.borderColor='transparent'"
                     onfocus="this.style.borderColor='#22c55e';this.style.background='#1e293b';this.select()"
@@ -654,7 +654,7 @@ function buildNodeEl(node) {
             border:2.5px solid #9ca3af;cursor:crosshair;z-index:3;transition:border-color 0.15s;"
             onmouseenter="this.style.borderColor='${cfg.color}'"
             onmouseleave="this.style.borderColor='#9ca3af'"
-            title=window.t('flowEntryLabel')></div>`;
+            title=${window.t('flowEntryLabel')}></div>`;
 
     // ── OUT ports ──────────────────────────────────────────
     const totalPorts = outputs.length;
@@ -716,7 +716,7 @@ function buildNodeEl(node) {
                 <div style="font-size:12px;color:white;font-weight:600;margin-top:1px;
                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${nodeName || cfg.label}</div>
             </div>
-            <div data-del="${node.id}" title=window.t('flowDelete')
+            <div data-del="${node.id}" title=${window.t('flowDelete')}
                 style="width:22px;height:22px;border-radius:6px;background:rgba(0,0,0,0.15);
                 display:flex;align-items:center;justify-content:center;cursor:pointer;
                 flex-shrink:0;transition:background 0.15s;"

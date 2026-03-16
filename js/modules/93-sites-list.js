@@ -148,7 +148,7 @@ function _siteCard(site) {
                         ${site.customDomain ? site.customDomain : (site.publicUrl||'').replace(/^https:\/\/[^/]+/,'').slice(0,40)+'...'}
                     </span>
                     <button onclick="navigator.clipboard?.writeText('${site.customDomain ? 'https://'+_esc(site.customDomain) : _esc(site.publicUrl||'')}');event.stopPropagation();if(typeof showToast==='function')showToast('URL скопійовано','success');"
-                        style="background:none;border:none;cursor:pointer;color:#0ea5e9;padding:1px;flex-shrink:0;" title=window.t('copyURL')>
+                        style="background:none;border:none;cursor:pointer;color:#0ea5e9;padding:1px;flex-shrink:0;" title=${window.t('copyURL')}>
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                     </button>
                 </div>` : ''}
@@ -184,7 +184,7 @@ function _siteCard(site) {
                     ${isPublished && site.publicUrl ? `
                     <button onclick="sitesTrackVisit('${site.id}');window.open('${_esc(site.publicUrl)}','_blank')"
                         style="flex:1;padding:0.35rem;background:#f0fdf4;color:#16a34a;border:none;
-                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title=window.t('openSite')><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span></button>` : ''}
+                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title=${window.t('openSite')}><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span></button>` : ''}
                     <button onclick="sitesTogglePublish('${site.id}','${site.status}')"
                         style="flex:1;padding:0.35rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;
                         border-radius:7px;cursor:pointer;font-size:0.72rem;" title="${isPublished ? window.t('botsRemove') : window.t('sitesPublish')}">
@@ -192,7 +192,7 @@ function _siteCard(site) {
                     </button>
                     <button onclick="sitesDelete('${site.id}','${_esc(site.name || '')}')"
                         style="flex:1;padding:0.35rem;background:#fff5f5;color:#ef4444;border:none;
-                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title=window.t('crmDelete')><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span></button>
+                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title=${window.t('crmDelete')}><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span></button>
                 </div>
             </div>
         </div>
@@ -541,7 +541,7 @@ function _showPublicUrlModal(url, siteId) {
                 style="flex:1;padding:0.6rem 0.75rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.8rem;font-family:monospace;background:#f9fafb;">
             <button onclick="navigator.clipboard?.writeText('${url}');this.textContent='✓';setTimeout(()=>this.textContent=window.t('copyWord'),1500);"
                 style="padding:0.6rem 1rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;white-space:nowrap;">
-                Копіювати
+                ${window.t('copyWord')}
             </button>
         </div>
         <div style="display:flex;gap:0.5rem;">

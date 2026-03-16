@@ -82,7 +82,7 @@ function _renderAll() {
                     placeholder="sk-ant-api03-..." style="${inp}flex:1;">
                 <button onclick="intgToggleVisibility('intg_anthropic')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;"
-                    title=window.t('intgToggleVisibility')>${I.eye}</button>
+                    title=${window.t('intgToggleVisibility')}>${I.eye}</button>
             </div>
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
                 Для AI аналізу угод у CRM. Отримати: <a href="https://console.anthropic.com" target="_blank" style="color:#22c55e;">console.anthropic.com</a>

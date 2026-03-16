@@ -274,20 +274,20 @@ function renderBotsTab() {
                     <!-- Кнопки дій -->
                     <div style="display:flex;gap:0.25rem;flex-shrink:0;" onclick="event.stopPropagation()">
                         <button onclick="openBot('${bot.id}')"
-                            title=window.t('openWord')
+                            title=${window.t('openWord')}
                             style="padding:0.35rem 0.65rem;background:#22c55e;color:white;
                             border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;
                             display:flex;align-items:center;gap:3px;">
                             Відкрити
                         </button>
                         <button onclick="openBotSettings('${bot.id}')"
-                            title=window.t('flowSettings')
+                            title=${window.t('flowSettings')}
                             style="width:30px;height:30px;background:#f9fafb;border:1px solid #e5e7eb;
                             border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
                             <i data-lucide="settings" style="width:13px;height:13px;"></i>
                         </button>
                         <button onclick="confirmDeleteBot('${bot.id}')"
-                            title=window.t('flowDelete')
+                            title=${window.t('flowDelete')}
                             style="width:30px;height:30px;background:#fff0f0;border:1px solid #fecaca;
                             border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
                             <i data-lucide="trash-2" style="width:12px;height:12px;color:#ef4444;"></i>
@@ -460,7 +460,7 @@ function renderFlowsTab() {
                                             : '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5,3 19,12 5,21"/></svg>'}
                                     </button>
                                     <button onclick="deleteFlow('${flow.id}')"
-                                        title=window.t('crmDelete')
+                                        title=${window.t('crmDelete')}
                                         style="flex:1;padding:0.4rem 0;background:#fff5f5;color:#ef4444;
                                         border:1px solid #fecaca;border-radius:7px;cursor:pointer;
                                         display:flex;align-items:center;justify-content:center;
@@ -812,13 +812,13 @@ async function renderContactsTab() {
                     <select id="ctsFilterBot" onchange="ctsOnFilterBot(this.value)"
                         style="flex:1;min-width:100px;padding:0.38rem 0.5rem;border:1.5px solid #e5e7eb;
                         border-radius:8px;font-size:0.76rem;background:white;cursor:pointer;">
-                        <option value="">Всі боти</option>
+                        <option value="">${window.t('allBots')}</option>
                         ${bp.bots.map(b=>`<option value="${b.id}" ${cts.botId===b.id?'selected':''}>${escH(b.name)}</option>`).join('')}
                     </select>
                     <select id="ctsFilterFlow" onchange="ctsOnFilterFlow(this.value)"
                         style="flex:1;min-width:100px;padding:0.38rem 0.5rem;border:1.5px solid #e5e7eb;
                         border-radius:8px;font-size:0.76rem;background:white;cursor:pointer;">
-                        <option value="">Всі воронки</option>
+                        <option value="">${window.t('allFunnels')}</option>
                         ${bp.flows.map(f=>`<option value="${f.id}" ${cts.flowId===f.id?'selected':''}>${escH(f.name)}</option>`).join('')}
                     </select>
                     <input type="date" id="ctsDateFrom" value="${cts.dateFrom}"
@@ -1023,13 +1023,13 @@ function _ctsCardHTML(ct) {
                 <span style="font-size:0.68rem;color:#9ca3af;">${date}</span>
                 <div style="display:flex;gap:3px;margin-top:2px;">
                     <button onclick="event.stopPropagation();bpOpenChat('${ct.id}')"
-                        title=window.t('botsWrite')
+                        title=${window.t('botsWrite')}
                         style="padding:0.3rem 0.45rem;background:#eff6ff;color:#3b82f6;border:none;
                         border-radius:7px;cursor:pointer;font-size:0.7rem;">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     </button>
                     <button onclick="event.stopPropagation();ctsOpenCard('${ct.id}')"
-                        title=window.t('crmCard')
+                        title=${window.t('crmCard')}
                         style="padding:0.3rem 0.45rem;background:#f9fafb;color:#6b7280;border:1px solid #e5e7eb;
                         border-radius:7px;cursor:pointer;font-size:0.7rem;">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -1787,7 +1787,7 @@ function _chatRenderHeader(ct, containerId = 'chatMsgHeader') {
             <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></span> Заблокував
         </span>` : ''}
         <button onclick="ctsOpenCard('${ct.id}')"
-            title=window.t('botsContactCard')
+            title=${window.t('botsContactCard')}
             style="padding:0.35rem 0.5rem;background:#f9fafb;border:1px solid #e5e7eb;
             border-radius:8px;cursor:pointer;flex-shrink:0;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2055,7 +2055,7 @@ async function renderBroadcastTab() {
                         <div>
                             <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Канал</div>
                             <select id="bcastChannel" onchange="bcastPreview()" style="${selectStyle}">
-                                <option value="">Всі канали</option>
+                                <option value="">${window.t('allChannels')}</option>
                                 <option value="telegram">Telegram</option>
                                 <option value="instagram">Instagram</option>
                             </select>
@@ -2063,21 +2063,21 @@ async function renderBroadcastTab() {
                         <div>
                             <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Воронка</div>
                             <select id="bcastFlow" onchange="bcastPreview()" style="${selectStyle}">
-                                <option value="">Всі воронки</option>
+                                <option value="">${window.t('allFunnels')}</option>
                                 ${bp.flows.map(f => `<option value="${f.id}">${escH(f.name)}</option>`).join('')}
                             </select>
                         </div>
                         <div>
                             <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Ніша</div>
                             <select id="bcastNiche" onchange="bcastPreview()" style="${selectStyle}">
-                                <option value="">Всі ніші</option>
+                                <option value="">${window.t('allNiches')}</option>
                                 ${allNiches.map(n => `<option value="${escH(n)}">${escH(n)}</option>`).join('')}
                             </select>
                         </div>
                         <div>
                             <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Тег</div>
                             <select id="bcastTag" onchange="bcastPreview()" style="${selectStyle}">
-                                <option value="">Всі теги</option>
+                                <option value="">${window.t('allTags')}</option>
                                 ${allTags.map(t => `<option value="${escH(t)}">${escH(t)}</option>`).join('')}
                             </select>
                         </div>

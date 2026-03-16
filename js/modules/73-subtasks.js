@@ -285,7 +285,7 @@
     // ---- ВІДОБРАЖЕННЯ в списку завдань — іконка якщо є підзавдання ----
     window.getSubtasksBadgeHTML = function(task) {
         if (!task.parentId) return '';
-        return `<span title=window.t('subtaskWord') style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 5px;border:1px solid #bbf7d0;">↳ підзавдання</span>`;
+        return `<span title=${window.t('subtaskWord')} style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 5px;border:1px solid #bbf7d0;">↳ підзавдання</span>`;
     };
 
 })();

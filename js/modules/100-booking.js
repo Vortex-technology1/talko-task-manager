@@ -137,11 +137,11 @@ function renderCalendarList() {
             data-action="appointments" data-cal-id="${cal.id}" data-cal-name="${window.htmlEsc ? window.htmlEsc(cal.name||'') : (cal.name||'')}">
       ${I.list} Записи
     </button>
-    <button class="bk-btn-sm" title=window.t('copyLink')
+    <button class="bk-btn-sm" title=${window.t('copyLink')}
             data-action="copy-link" data-url="${window.htmlEsc ? window.htmlEsc(bookUrl) : bookUrl}">
       ${I.copy} Посилання
     </button>
-    <button class="bk-btn-sm" title=window.t('openWord')
+    <button class="bk-btn-sm" title=${window.t('openWord')}
             data-action="open-link" data-url="${window.htmlEsc ? window.htmlEsc(bookUrl) : bookUrl}">
       ${I.link}
     </button>
@@ -384,7 +384,7 @@ async function renderAppointments(calendarId, calendarName) {
   </div>
   <div style="display:flex;gap:.5rem">
     <select class="bk-select-sm" id="bk-appt-status-filter" onchange="window._bkLoadAppointments('${calendarId}')">
-      <option value="">Всі статуси</option>
+      <option value="">${window.t('allStatuses')}</option>
       <option value="pending">Очікує</option>
       <option value="confirmed">Підтверджено</option>
       <option value="cancelled">Скасовано</option>

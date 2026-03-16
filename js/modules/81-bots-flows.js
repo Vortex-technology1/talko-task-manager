@@ -144,11 +144,11 @@
                                         style="padding:0.45rem 0.75rem;background:${flow.status==='active'?'#fee2e2':'#f0fdf4'};color:${flow.status==='active'?'#ef4444':'#16a34a'};border:1.5px solid ${flow.status==='active'?'#fca5a5':'#86efac'};border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
                                         ${flow.status === 'active' ? window.t('botsPauseLabel') : window.t('botsActivateLabel')}
                                     </button>
-                                    <button onclick="openFlowEditor('${flow.id}')" title=window.t('flowEdt2')
+                                    <button onclick="openFlowEditor('${flow.id}')" title=${window.t('flowEdt2')}
                                         style="padding:0.45rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">
                                         Редагувати
                                     </button>
-                                    <button onclick="confirmDeleteFlow('${flow.id}')" title=window.t('flowDel2')
+                                    <button onclick="confirmDeleteFlow('${flow.id}')" title=${window.t('flowDel2')}
                                         style="padding:0.45rem 0.6rem;background:#fee2e2;color:#ef4444;border:1px solid #fca5a5;border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;letter-spacing:0.05em;">
                                         DEL
                                     </button>

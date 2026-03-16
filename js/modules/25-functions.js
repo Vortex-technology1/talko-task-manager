@@ -328,7 +328,7 @@
                             ${weeklyHours > 0 ? `<span style="font-size:0.82rem;color:#0284c7;font-weight:600;"><i data-lucide="clock" class="icon icon-sm"></i> ${weeklyHours} ${window.t('hoursPerWeek')}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.3rem;" onclick="event.stopPropagation();">
-                            <button class="btn btn-small" onclick="toggleFuncFinance('${escId(f.id)}')" title=window.t('financeWord2') style="color:#22c55e;border-color:#d1fae5;">
+                            <button class="btn btn-small" onclick="toggleFuncFinance('${escId(f.id)}')" title=${window.t('financeWord2')} style="color:#22c55e;border-color:#d1fae5;">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                             </button>
                             <button class="btn btn-small" onclick="openFunctionModal('${escId(f.id)}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>

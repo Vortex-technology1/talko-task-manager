@@ -344,7 +344,7 @@
           </div>
           <select onchange="window._whFilterCategory(this.value)"
             style="padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
-            <option value="">Всі категорії</option>
+            <option value="">${window.t('allCategories')}</option>
             ${categories.map(c => `<option value="${c}" ${_categoryFilter === c ? 'selected' : ''}>${c}</option>`).join('')}
           </select>
         </div>
@@ -477,7 +477,7 @@
           </div>
           <select onchange="window._whOpFilter(this.value)"
             style="padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
-            <option value="">Всі типи</option>
+            <option value="">${window.t('allTypes')}</option>
             <option value="IN" ${_opTypeFilter==='IN'?'selected':''}>Прихід</option>
             <option value="OUT" ${_opTypeFilter==='OUT'?'selected':''}>Видача</option>
             <option value="WRITE_OFF" ${_opTypeFilter==='WRITE_OFF'?'selected':''}>Списання</option>

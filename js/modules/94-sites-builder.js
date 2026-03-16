@@ -82,7 +82,7 @@ function _renderBuilderShell() {
                     <button onclick="sbOpenPublicUrl()"
                         style="display:flex;align-items:center;padding:0.25rem 0.4rem;background:#7c3aed;
                         color:white;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;"
-                        title=window.t('openSite')>
+                        title=${window.t('openSite')}>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                     </button>
                 </div>
@@ -251,13 +251,13 @@ function _renderBlockList() {
             <div style="display:flex;gap:0.2rem;">
                 ${i > 0 ? `<button onclick="event.stopPropagation();sbMoveBlock(${i},-1)"
                     style="padding:1px 4px;background:none;border:none;cursor:pointer;font-size:0.7rem;color:#9ca3af;"
-                    title=window.t('sitesUp')>↑</button>` : ''}
+                    title=${window.t('sitesUp')}>↑</button>` : ''}
                 ${i < sb.blocks.length-1 ? `<button onclick="event.stopPropagation();sbMoveBlock(${i},1)"
                     style="padding:1px 4px;background:none;border:none;cursor:pointer;font-size:0.7rem;color:#9ca3af;"
-                    title=window.t('sitesDown')>↓</button>` : ''}
+                    title=${window.t('sitesDown')}>↓</button>` : ''}
                 <button onclick="event.stopPropagation();sbRemoveBlock(${i})"
                     style="padding:1px 4px;background:none;border:none;cursor:pointer;font-size:0.7rem;color:#ef4444;"
-                    title=window.t('crmDelete')>✕</button>
+                    title=${window.t('crmDelete')}>✕</button>
             </div>
         </div>`;
     }).join('');

@@ -549,15 +549,15 @@ function _kanbanFilterBar() {
     return `
     <div id="crmKanbanFilters" style="background:white;border-bottom:1px solid #e8eaed;padding:0.4rem 0.75rem;display:flex;flex-wrap:wrap;gap:0.35rem;align-items:center;flex-shrink:0;">
         <select id="crmKanbanFilterAssignee" onchange="crmApplyFilters(true)" style="${sel}">
-            <option value="">Всі відповідальні</option>
+            <option value="">${window.t('allAssignees')}</option>
             ${assigneeOpts}
         </select>
         <select id="crmKanbanFilterSource" onchange="crmApplyFilters(true)" style="${sel}">
-            <option value="">Всі джерела</option>
+            <option value="">${window.t('allSources')}</option>
             ${sourceOpts}
         </select>
         <select id="crmKanbanFilterTag" onchange="crmApplyFilters(true)" style="${sel}">
-            <option value="">Всі теги</option>
+            <option value="">${window.t('allTags')}</option>
             ${tagOpts}
         </select>
         <div style="display:flex;align-items:center;gap:0.25rem;">
@@ -912,12 +912,12 @@ function _renderListView() {
         <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;align-items:center;">
             <select onchange="crm.filters.assignee=this.value;crmSetViewMode('list')"
                 style="padding:0.35rem 0.5rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;background:white;cursor:pointer;">
-                <option value="">Всі відповідальні</option>
+                <option value="">${window.t('allAssignees')}</option>
                 ${(typeof users!=='undefined'?users:[]).map(u=>`<option value="${u.id}" ${crm.filters.assignee===u.id?'selected':''}>${_esc(u.name||u.email)}</option>`).join('')}
             </select>
             <select onchange="crm.filters.stage=this.value;crmSetViewMode('list')"
                 style="padding:0.35rem 0.5rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;background:white;cursor:pointer;">
-                <option value="">Всі стадії</option>
+                <option value="">${window.t('allStages')}</option>
                 ${stages.map(s=>`<option value="${s.id}" ${crm.filters.stage===s.id?'selected':''}>${_esc(s.label)}</option>`).join('')}
             </select>
             ${crm.filters.assignee || crm.filters.stage || crm.filters.search ? `
@@ -999,7 +999,7 @@ function _renderListView() {
                             </td>
                             <td style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;" onclick="event.stopPropagation()">
                                 <div style="display:flex;gap:4px;">
-                                    <button onclick="crmOpenDeal('${d.id}')" title=window.t('openWord')
+                                    <button onclick="crmOpenDeal('${d.id}')" title=${window.t('openWord')}
                                         style="padding:3px 6px;border:1px solid #e8eaed;border-radius:5px;background:white;cursor:pointer;
                                         font-size:0.68rem;color:#6b7280;display:flex;align-items:center;">${I.edit}</button>
                                     <button onclick="crmDuplicateDeal('${d.id}')" title="Дублювати"
@@ -1377,7 +1377,7 @@ function _dealCard(deal) {
             <span style="font-size:0.78rem;font-weight:700;color:${deal.amount ? '#16a34a' : '#d1d5db'};">
                 ${deal.amount ? _fmt(deal.amount) : '—'}
             </span>
-            <span style="font-size:0.62rem;color:${stageTimeColor};font-weight:${daysInStage>=7?'600':'400'};" title=window.t('timeInStage')>${isActive ? '⏱ '+stageTimeLabel : date}</span>
+            <span style="font-size:0.62rem;color:${stageTimeColor};font-weight:${daysInStage>=7?'600':'400'};" title=${window.t('timeInStage')}>${isActive ? '⏱ '+stageTimeLabel : date}</span>
         </div>
         ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#3b82f6'};"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${deal.nextContactDate}</div>` : ''}
         ${(deal.tags||[]).length ? `<div style="margin-top:0.3rem;display:flex;flex-wrap:wrap;gap:2px;">${(deal.tags||[]).map(tag=>`<span style="font-size:0.6rem;padding:1px 5px;background:#f3f4f6;color:#6b7280;border-radius:3px;">${_esc(tag)}</span>`).join('')}</div>` : ''}
@@ -1387,7 +1387,7 @@ function _dealCard(deal) {
         <!-- Quick stage bar -->
         <div style="margin-top:0.4rem;display:flex;gap:2px;align-items:center;" onclick="event.stopPropagation()">
             <button onclick="crmQuickStage(event,'${deal.id}')"
-                title=window.t('changeStage')
+                title=${window.t('changeStage')}
                 style="flex:1;padding:2px 0;background:#f4f5f7;border:1px solid #e8eaed;border-radius:4px;
                 cursor:pointer;font-size:0.65rem;color:#6b7280;display:flex;align-items:center;justify-content:center;gap:3px;">
                 ${I.arrow} <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:90px;">${_stageLabel(deal.stage)}</span>
@@ -1395,7 +1395,7 @@ function _dealCard(deal) {
             ${crm.pipelines && crm.pipelines.length > 1 ? `
             <div style="position:relative;" onclick="event.stopPropagation()">
                 <button onclick="crmTogglePipelineMenu(event,'${deal.id}')"
-                    title=window.t('moveToPipeline')
+                    title=${window.t('moveToPipeline')}
                     style="padding:2px 5px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:4px;
                     cursor:pointer;font-size:0.65rem;color:#7c3aed;display:flex;align-items:center;gap:2px;">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
@@ -1805,7 +1805,7 @@ window.crmOpenDeal = function(dealId) {
                 <div style="display:flex;gap:0.4rem;align-items:center;">
                     <!-- Кнопка чату -->
                     <button id="crmDealChatBtn" onclick="crmToggleDealChat('${deal.id}')"
-                        title=window.t('chatWithClient')
+                        title=${window.t('chatWithClient')}
                         style="padding:0.35rem 0.55rem;background:none;border:1px solid #e8eaed;border-radius:6px;
                         cursor:pointer;color:#9ca3af;display:flex;align-items:center;gap:3px;font-size:0.72rem;font-weight:600;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -2042,7 +2042,7 @@ function _renderDealDetails(deal) {
                     <input id="dd_ttn" value="${_esc(deal.ttn||'')}" placeholder="59000000000000"
                         style="${inp}flex:1;font-family:monospace;font-size:0.78rem;">
                     ${deal.ttn ? `<button onclick="crmTrackNP('${_esc(deal.ttn)}')"
-                        title=window.t('trackWord')
+                        title=${window.t('trackWord')}
                         style="padding:0.3rem 0.5rem;background:#e30613;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.7rem;font-weight:600;white-space:nowrap;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Статус
                     </button>` : ''}

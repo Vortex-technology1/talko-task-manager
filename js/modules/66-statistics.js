@@ -1084,8 +1084,8 @@
                     </div>
                 </div>
                 <div class="th-actions" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);display:flex;gap:1px;opacity:0;transition:opacity 0.1s;">
-                    ${canEdit ? `<button class="stats-comment-btn" onclick="openMetricModal('${m.id}')" title=window.t('flowEdit') style="width:18px;height:18px;padding:1px;">${SVG.settings}</button>` : ''}
-                    ${canEdit ? `<button class="stats-comment-btn" onclick="deleteMetric('${m.id}')" title=window.t('flowDelete') style="color:#e03e3e;width:18px;height:18px;padding:1px;">${SVG.trash}</button>` : ''}
+                    ${canEdit ? `<button class="stats-comment-btn" onclick="openMetricModal('${m.id}')" title=${window.t('flowEdit')} style="width:18px;height:18px;padding:1px;">${SVG.settings}</button>` : ''}
+                    ${canEdit ? `<button class="stats-comment-btn" onclick="deleteMetric('${m.id}')" title=${window.t('flowDelete')} style="color:#e03e3e;width:18px;height:18px;padding:1px;">${SVG.trash}</button>` : ''}
                     <button class="stats-comment-btn" onclick="openTrendsChart('${m.id}')" title="Графік" style="width:18px;height:18px;padding:1px;">${SVG.barChart}</button>
                 </div>
             </th>`;
@@ -1133,7 +1133,7 @@
                             <div class="stats-cell-row">
                                 <span class="stats-cell-val">${formatted}</span>
                                 <span class="stats-cell-pct ${pctCls}">${pct}%</span>
-                                ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title=window.t('flowDelete')>${SVG.trash}</button>` : ''}
+                                ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title=${window.t('flowDelete')}>${SVG.trash}</button>` : ''}
                             </div>
                             <div class="stats-mini-bar">
                                 <div class="stats-mini-bar-fill ${barCls}" style="width:${Math.min(pct,100)}%;"></div>
@@ -1142,7 +1142,7 @@
                     } else {
                         cellHtml = `<div class="stats-cell-row" onclick="openMetricDetail('${m.id}','${pk}')">
                             <span class="stats-cell-val">${formatted}</span>
-                            ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title=window.t('flowDelete')>${SVG.trash}</button>` : ''}
+                            ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title=${window.t('flowDelete')}>${SVG.trash}</button>` : ''}
                         </div>`;
                     }
                 } else {
