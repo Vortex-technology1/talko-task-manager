@@ -918,34 +918,74 @@
       "collectionGroup": "booking_appointments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "calendarId", "order": "ASCENDING" },
-        { "fieldPath": "date", "order": "ASCENDING" },
-        { "fieldPath": "status", "order": "ASCENDING" }
+        {
+          "fieldPath": "calendarId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "booking_appointments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "calendarId", "order": "ASCENDING" },
-        { "fieldPath": "startTime", "order": "DESCENDING" }
+        {
+          "fieldPath": "calendarId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "startTime",
+          "order": "DESCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "booking_appointments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "ownerId", "order": "ASCENDING" },
-        { "fieldPath": "status", "order": "ASCENDING" },
-        { "fieldPath": "startTime", "order": "ASCENDING" }
+        {
+          "fieldPath": "ownerId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "startTime",
+          "order": "ASCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "booking_appointments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "crmClientId", "order": "ASCENDING" },
-        { "fieldPath": "startTime", "order": "DESCENDING" }
+        {
+          "fieldPath": "crmClientId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "startTime",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "metrics",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
       ]
     }
   ],

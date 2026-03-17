@@ -296,7 +296,16 @@
             const s = await metricsRef().orderBy('createdAt', 'desc').get();
             statsMetrics = s.docs.map(d => ({ id: d.id, ...d.data() }));
             window._metrics = statsMetrics; // global for search
-        } catch (e) { console.error('[STATS] loadMetrics:', e); }
+        } catch (e) {
+            // Fallback: index not ready yet — load without ordering
+            console.warn('[STATS] loadMetrics orderBy failed, using fallback:', e.code || e.message);
+            try {
+                const s = await metricsRef().get();
+                statsMetrics = s.docs.map(d => ({ id: d.id, ...d.data() }))
+                    .sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
+                window._metrics = statsMetrics;
+            } catch(e2) { console.error('[STATS] loadMetrics fallback failed:', e2); }
+        }
     }
 
     // P2-1 + P1-2: Scoped loadEntries — minimize data pulled per role/scope

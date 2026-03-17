@@ -331,9 +331,19 @@ async function _enrichWithAI(signals, ctx) {
     try {
         const prompt = _buildAIPrompt(signals, ctx);
 
+        // Отримуємо Firebase ID token для авторизації
+        let _idToken = '';
+        try {
+            const _user = firebase.auth().currentUser;
+            if (_user) _idToken = await _user.getIdToken();
+        } catch(e) { console.warn('[ai-diagnostic] getIdToken:', e.message); }
+
         const response = await fetch('/api/ai-proxy', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                ...(_idToken ? { 'Authorization': 'Bearer ' + _idToken } : {}),
+            },
             body: JSON.stringify({
                 companyId:    window.currentCompanyId,
                 module:       'diagnostic_agent',

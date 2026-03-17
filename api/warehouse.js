@@ -14,14 +14,33 @@ const db = admin.firestore();
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  // ── Auth: Firebase ID token обов'язковий ────────────────
+  const authHeader = req.headers.authorization || '';
+  if (!authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: missing Bearer token' });
+  }
+  let uid;
+  try {
+    const decoded = await admin.auth().verifyIdToken(authHeader.slice(7));
+    uid = decoded.uid;
+  } catch(e) {
+    return res.status(401).json({ error: 'Unauthorized: invalid token' });
+  }
 
   const { companyId, action } = req.query;
   if (!companyId) return res.status(400).json({ error: 'Missing companyId' });
   // Базова валідація — тільки alphanumeric + дефіс (Firestore doc ID формат)
   if (!/^[a-zA-Z0-9_-]{3,64}$/.test(companyId)) {
     return res.status(400).json({ error: 'Invalid companyId' });
+  }
+
+  // ── Verify: user belongs to this company ──────────────────
+  const memberSnap = await db.doc(`companies/${companyId}/users/${uid}`).get().catch(() => null);
+  if (!memberSnap || !memberSnap.exists) {
+    return res.status(403).json({ error: 'Forbidden: not a company member' });
   }
 
   const comp = db.collection('companies').doc(companyId);
