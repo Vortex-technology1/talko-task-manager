@@ -5,6 +5,11 @@
 (function() {
     'use strict';
 
+    // HTML escape helper — захист від XSS в innerHTML шаблонах
+    function esc(s) {
+        return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
     // Дедуплікація cost_overrun — один запис в Firestore на проєкт на день
     const _costOverrunEmitted = new Set();
 
@@ -131,7 +136,7 @@
                     return `<div style="display:flex;align-items:center;gap:0.5rem;padding:4px 0;font-size:0.78rem;">
                         <span>${icon}</span>
                         <span style="font-weight:600;color:#6b7280;">${esc(a.project.name)}</span>
-                        <span style="flex:1;">${a.message}</span>
+                        <span style="flex:1;">${esc(a.message)}</span>
                     </div>`;
                 }).join('')}
                 ${alerts.length > 6 ? `<div style="font-size:0.72rem;color:#9ca3af;text-align:center;margin-top:4px;">...і ще ${alerts.length - 6} повідомлень</div>` : ''}

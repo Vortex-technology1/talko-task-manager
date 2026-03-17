@@ -440,13 +440,18 @@
     };
     // ---- End Search History ----
 
+    // Debounce timer for globalSearch — prevents re-render on every keypress
+    let _gsDebounceTimer = null;
+
     window.globalSearch = function(query, mode) {
+        clearTimeout(_gsDebounceTimer);
         const q = (query||'').trim().toLowerCase();
         activeIndex = -1;
 
         const desktopR = document.getElementById('globalSearchResults');
         const mobileR  = document.getElementById('mobileSearchResults');
 
+        // Clear immediately on empty
         if (q.length < 1) {
             if (desktopR) desktopR.style.display = 'none';
             if (mobileR)  mobileR.style.display  = 'none';
@@ -454,16 +459,19 @@
             return;
         }
 
-        currentResults = buildResults(q);
+        // Debounce: wait 120ms after last keypress before searching
+        _gsDebounceTimer = setTimeout(function() {
+            currentResults = buildResults(q);
 
-        if (mode === 'mobile') {
-            if (desktopR) desktopR.style.display = 'none';
-            renderResults(currentResults, q, 'mobileSearchResults');
-        } else {
-            if (mobileR) mobileR.style.display = 'none';
-            saveToSearchHistory(q);
-            renderResults(currentResults, q, 'globalSearchResults');
-        }
+            if (mode === 'mobile') {
+                if (desktopR) desktopR.style.display = 'none';
+                renderResults(currentResults, q, 'mobileSearchResults');
+            } else {
+                if (mobileR) mobileR.style.display = 'none';
+                saveToSearchHistory(q);
+                renderResults(currentResults, q, 'globalSearchResults');
+            }
+        }, 120);
     };
 
     function selectResult(idx, isMobile) {
