@@ -6,6 +6,11 @@
 
 (function () {
 
+  // HTML escape helper — захист від XSS в innerHTML шаблонах
+  function _whEscHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
   let _currentView = 'dashboard';
   let _searchQuery = '';
   let _searchTimer = null;
@@ -239,7 +244,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;font-size:0.82rem;">
                   <div style="display:flex;align-items:center;gap:0.4rem;min-width:0;">
                     <span style="width:7px;height:7px;border-radius:50%;background:${levelColor(a.level)};flex-shrink:0;"></span>
-                    <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${a.item.name}</span>
+                    <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_whEscHtml(a.item.name)}</span>
                   </div>
                   <div style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0;">
                     <span style="color:${levelColor(a.level)};font-weight:600;">${a.stock.qty}/${a.item.minStock}</span>
@@ -263,7 +268,7 @@
                   return `
                     <div style="margin-bottom:0.5rem;">
                       <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:2px;">
-                        <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;">${x.item.name}</span>
+                        <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;">${_whEscHtml(x.item.name)}</span>
                         <span style="color:#6b7280;flex-shrink:0;">${fmtMoney(x.val)}</span>
                       </div>
                       <div style="height:4px;background:#f3f4f6;border-radius:2px;">
@@ -298,7 +303,7 @@
                         ${op.type==='IN'?'IN':op.type==='OUT'?'OUT':'OFF'}
                       </span>
                       <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${op.itemName}</span>
-                      ${op.note ? `<span style="color:#9ca3af;font-size:0.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${op.note}</span>` : ''}
+                      ${op.note ? `<span style="color:#9ca3af;font-size:0.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_whEscHtml(op.note)}</span>` : ''}
                     </div>
                     <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
                       <span style="font-weight:600;color:${op.type==='IN'?'#22c55e':'#ef4444'};">${op.type==='IN'?'+':'−'}${op.qty}</span>
@@ -378,10 +383,10 @@
               return `
                 <div onclick="window._whShowItemDetail('${item.id}')" style="display:flex;align-items:flex-start;justify-content:space-between;padding:0.75rem 1rem;border-bottom:1px solid #f9fafb;gap:0.5rem;font-size:0.85rem;cursor:pointer;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background=''"  >
                   <div style="flex:1;min-width:0;">
-                    <div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</div>
+                    <div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${_whEscHtml(item.name)}</div>
                     <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:2px;">
-                      ${item.sku ? `<span style="font-size:0.72rem;color:#9ca3af;">${item.sku}</span>` : ''}
-                      ${item.category ? `<span style="font-size:0.72rem;color:#6b7280;background:#f3f4f6;padding:1px 6px;border-radius:4px;">${item.category}</span>` : ''}
+                      ${item.sku ? `<span style="font-size:0.72rem;color:#9ca3af;">${_whEscHtml(item.sku)}</span>` : ''}
+                      ${item.category ? `<span style="font-size:0.72rem;color:#6b7280;background:#f3f4f6;padding:1px 6px;border-radius:4px;">${_whEscHtml(item.category)}</span>` : ''}
                       ${item.supplierId ? window._whSupBadge(item.supplierId) : ''}
                     </div>
                   </div>
@@ -421,7 +426,7 @@
   window._whSupBadge = function (supplierId) {
     try {
       const sup = window.whGetSuppliers().find(s => s.id === supplierId);
-      return sup ? `<span style="font-size:0.72rem;color:#6366f1;background:#ede9fe;padding:1px 6px;border-radius:4px;">${sup.name}</span>` : '';
+      return sup ? `<span style="font-size:0.72rem;color:#6366f1;background:#ede9fe;padding:1px 6px;border-radius:4px;">${_whEscHtml(sup.name)}</span>` : '';
     } catch (e) { return ''; }
   };
 
@@ -510,7 +515,7 @@
                   <span style="padding:2px 8px;border-radius:5px;font-size:0.72rem;font-weight:600;background:${tc.bg};color:${tc.color};white-space:nowrap;">${typeLabel[op.type] || op.type}</span>
                   <div style="min-width:0;">
                     <div style="font-weight:500;font-size:0.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${op.itemName}</div>
-                    ${op.note ? `<div style="font-size:0.75rem;color:#9ca3af;">${op.note}</div>` : ''}
+                    ${op.note ? `<div style="font-size:0.75rem;color:#9ca3af;">${_whEscHtml(op.note)}</div>` : ''}
                   </div>
                 </div>
                 <div style="display:flex;align-items:center;gap:1rem;flex-shrink:0;font-size:0.83rem;">
@@ -550,14 +555,14 @@
             ${suppliers.map(s => `
               <div style="background:white;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-                  <div style="font-weight:600;font-size:0.9rem;">${s.name}</div>
+                  <div style="font-weight:600;font-size:0.9rem;">${_whEscHtml(s.name)}</div>
                   <button onclick="window.whOpenSupplierForm('${s.id}')" style="padding:4px;border:none;background:#f3f4f6;border-radius:6px;cursor:pointer;">
                     <i data-lucide="pencil" style="width:13px;height:13px;color:#6b7280;"></i>
                   </button>
                 </div>
                 ${s.phone ? `<div style="font-size:0.82rem;color:#6b7280;margin-top:0.3rem;"><i data-lucide="phone" style="width:12px;height:12px;display:inline;"></i> ${s.phone}</div>` : ''}
                 ${s.email ? `<div style="font-size:0.82rem;color:#6b7280;"><i data-lucide="mail" style="width:12px;height:12px;display:inline;"></i> ${s.email}</div>` : ''}
-                ${s.note ? `<div style="font-size:0.78rem;color:#9ca3af;margin-top:0.4rem;">${s.note}</div>` : ''}
+                ${s.note ? `<div style="font-size:0.78rem;color:#9ca3af;margin-top:0.4rem;">${_whEscHtml(s.note)}</div>` : ''}
               </div>
             `).join('')}
           </div>
@@ -585,7 +590,7 @@
             <div style="background:white;border-radius:12px;padding:0.85rem 1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);display:flex;align-items:center;gap:0.75rem;">
               <i data-lucide="${typeIcons[l.type] || 'map-pin'}" style="width:20px;height:20px;color:#6366f1;flex-shrink:0;"></i>
               <div style="flex:1;min-width:0;">
-                <div style="font-weight:500;font-size:0.88rem;">${l.name}</div>
+                <div style="font-weight:500;font-size:0.88rem;">${_whEscHtml(l.name)}</div>
                 <div style="font-size:0.75rem;color:#9ca3af;">${typeLabels[l.type] || l.type}</div>
               </div>
               ${l.isDefault ? `<span style="font-size:0.7rem;background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;">за замовч.</span>` : ''}
@@ -671,7 +676,7 @@
           </div>
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Опис</label>
-            <textarea id="wh_desc" style="${_inp()}height:56px;resize:none;" placeholder="Додатковий опис...">${item.description || ''}</textarea>
+            <textarea id="wh_desc" style="${_inp()}height:56px;resize:none;" placeholder="Додатковий опис...">${_whEscHtml(item.description || '')}</textarea>
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
@@ -736,7 +741,7 @@
               <option value="">— Оберіть товар —</option>
               ${items.map(i => {
                 const s = window.whGetStock(i.id);
-                return `<option value="${i.id}" ${preItemId === i.id ? 'selected' : ''}>${i.name} (${s.qty} ${i.unit || 'шт'})</option>`;
+                return `<option value="${i.id}" ${preItemId === i.id ? 'selected' : ''}>${_whEscHtml(i.name)} (${s.qty} ${_whEscHtml(i.unit || 'шт')})</option>`;
               }).join('')}
             </select>
           </div>
@@ -753,7 +758,7 @@
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Локація</label>
             <select id="wh_op_loc" style="${_inp()}">
-              ${locs.length > 0 ? locs.map(l => `<option value="${l.id}">${l.name}</option>`).join('') : '<option value="main">Головний склад</option>'}
+              ${locs.length > 0 ? locs.map(l => `<option value="${l.id}">${_whEscHtml(l.name)}</option>`).join('') : '<option value="main">Головний склад</option>'}
             </select>
           </div>
           <div>
@@ -831,7 +836,7 @@
           </div>
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Примітка</label>
-            <textarea id="wh_sup_note" style="${_inp()}height:56px;resize:none;">${s.note || ''}</textarea>
+            <textarea id="wh_sup_note" style="${_inp()}height:56px;resize:none;">${_whEscHtml(s.note || '')}</textarea>
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;flex-wrap:wrap;">
@@ -979,10 +984,10 @@
       <div style="padding:1.25rem;">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;gap:0.5rem;">
           <div>
-            <h3 style="margin:0 0 0.25rem;font-size:1.05rem;">${item.name}</h3>
+            <h3 style="margin:0 0 0.25rem;font-size:1.05rem;">${_whEscHtml(item.name)}</h3>
             <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-              ${item.sku ? `<span style="font-size:0.72rem;color:#9ca3af;background:#f3f4f6;padding:1px 7px;border-radius:4px;">${item.sku}</span>` : ''}
-              ${item.category ? `<span style="font-size:0.72rem;color:#6b7280;background:#f3f4f6;padding:1px 7px;border-radius:4px;">${item.category}</span>` : ''}
+              ${item.sku ? `<span style="font-size:0.72rem;color:#9ca3af;background:#f3f4f6;padding:1px 7px;border-radius:4px;">${_whEscHtml(item.sku)}</span>` : ''}
+              ${item.category ? `<span style="font-size:0.72rem;color:#6b7280;background:#f3f4f6;padding:1px 7px;border-radius:4px;">${_whEscHtml(item.category)}</span>` : ''}
             </div>
           </div>
           <button onclick="window.whOpenItemForm('${itemId}');window._whCloseModal()" style="padding:4px 8px;background:#f3f4f6;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;color:#6b7280;white-space:nowrap;">
@@ -1024,7 +1029,7 @@
           ${sup ? `
           <div style="background:#ede9fe;border-radius:8px;padding:0.6rem;">
             <div style="color:#7c3aed;margin-bottom:2px;">Постачальник</div>
-            <div style="font-weight:600;color:#5b21b6;">${sup.name}</div>
+            <div style="font-weight:600;color:#5b21b6;">${_whEscHtml(sup.name)}</div>
           </div>` : ''}
         </div>
 
@@ -1042,7 +1047,7 @@
                       ${op.type==='IN'?'IN':'OUT'}
                     </span>
                     <span>${op.type==='IN'?'+':'−'}${op.qty} ${item.unit||'шт'}</span>
-                    ${op.note ? `<span style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;">${op.note}</span>` : ''}
+                    ${op.note ? `<span style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;">${_whEscHtml(op.note)}</span>` : ''}
                   </div>
                   <span style="color:#9ca3af;">${fmtDate(op.createdAt)}</span>
                 </div>

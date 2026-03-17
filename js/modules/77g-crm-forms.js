@@ -153,7 +153,7 @@ window.crmCreateForm = function () {
         <label style="display:block;margin-bottom:0.65rem;">
             <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Стадія для нових лідів</div>
             <select id="crmFormStage" style="${selStyle}">
-                ${stages.map(s => `<option value="${s.id}">${s.label}</option>`).join('')}
+                ${stages.map(s => `<option value="${s.id}">${_fEsc(s.label)}</option>`).join('')}
             </select>
         </label>
 
@@ -161,7 +161,7 @@ window.crmCreateForm = function () {
             <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Відповідальний менеджер</div>
             <select id="crmFormAssignee" style="${selStyle}">
                 <option value="">— Автоматично —</option>
-                ${users.map(u => `<option value="${u.id}">${u.name||u.email}</option>`).join('')}
+                ${users.map(u => `<option value="${u.id}">${_fEsc(u.name||u.email)}</option>`).join('')}
             </select>
         </label>
 

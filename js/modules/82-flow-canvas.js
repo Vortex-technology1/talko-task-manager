@@ -714,7 +714,7 @@ function buildNodeEl(node) {
             <div style="flex:1;min-width:0;">
                 <div style="font-weight:700;font-size:11px;color:rgba(255,255,255,0.75);letter-spacing:0.06em;text-transform:uppercase;">${cfg.label}</div>
                 <div style="font-size:12px;color:white;font-weight:600;margin-top:1px;
-                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${nodeName || cfg.label}</div>
+                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(nodeName) || cfg.label}</div>
             </div>
             <div data-del="${node.id}" title=${window.t('flowDelete')}
                 style="width:22px;height:22px;border-radius:6px;background:rgba(0,0,0,0.15);
