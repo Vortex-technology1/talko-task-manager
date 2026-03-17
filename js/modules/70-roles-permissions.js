@@ -260,13 +260,13 @@ window.renderRolesTab = async function() {
     const c = document.getElementById('rolesPermissionsContainer');
     if (!c) return;
 
-    c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;">Завантаження...</div>';
+    c.innerHTML = `<div style="text-align:center;padding:2rem;color:#9ca3af;">${window.t('loading') || 'Loading...'}</div>`;
 
     if (!permissionsLoaded) await loadRolePermissions();
 
     const canEdit = hasPermission('editRoles');
     const roles = ['admin', 'manager', 'employee'];
-    const roleLabels = { admin: window.t('adminWord'), manager: 'Менеджер', employee: window.t('employeeWord') };
+    const roleLabels = { admin: window.t('adminWord'), manager: window.t('roleManager'), employee: window.t('employeeWord') };
     const roleColors = { admin: '#ef4444', manager: '#f97316', employee: '#6b7280' };
 
     let html = `
@@ -274,7 +274,7 @@ window.renderRolesTab = async function() {
     <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
         <thead>
             <tr style="background:#f9fafb;">
-                <th style="padding:0.75rem 1rem;text-align:left;border-bottom:2px solid #e5e7eb;min-width:220px;">Дозвіл</th>
+                <th style="padding:0.75rem 1rem;text-align:left;border-bottom:2px solid #e5e7eb;min-width:220px;">${window.t('permissionLabel') || window.t('permSystem') || 'Permission'}</th>
                 <th style="padding:0.75rem;text-align:center;border-bottom:2px solid #e5e7eb;width:80px;">
                     <span style="background:#22c55e;color:white;padding:2px 8px;border-radius:6px;font-size:0.75rem;">Owner</span>
                 </th>`;
