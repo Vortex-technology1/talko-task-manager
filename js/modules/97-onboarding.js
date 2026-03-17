@@ -572,6 +572,19 @@ const OB_STEPS = [
     action: { label:'Відкрити процеси', tab:'processes' },
     tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 1 налаштований процес = сотні годин зекономлених за рік.'
 },
+{
+    id: 'project_estimate_link', block: 'projects', color: '#3b82f6',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>',
+    title: 'Матеріали і кошторис в проекті', subtitle: 'Блок 4 · Проєкти і процеси', est: '8 хв',
+    description: '<b>Біль без цього:</b> проект є, задачі є, а де матеріали? Скільки вже витрачено? Що ще потрібно купити? — власник не знає.<br><br><b>Відкрив проект → вкладка «Кошторис»</b> → бачиш потребу, залишки, дефіцит, бюджет. Списав матеріали — одразу відображається у фінансах.<br><br>Проект + Кошторис + Склад = повний контроль об\'єкту в одному місці.<br><br>' + '<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента</a>',
+    tasks: [
+        { id:'pel1', text:'Відкрити проект і перейти у вкладку «Кошторис»', detail:'Проекти → відкрити проект → кнопка «Кошторис» у view switcher.' },
+        { id:'pel2', text:'Створити або прив\'язати кошторис до проекту', detail:'«Створити кошторис» → або в Бізнес → Кошторис обрати проект у списку.' },
+        { id:'pel3', text:'Переглянути дефіцит матеріалів і бюджет', detail:'У вкладці Кошторис проекту видно загальний бюджет і сума докупівлі.' },
+    ],
+    action: { label:'Відкрити проекти', tab:'projects' },
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Проект + Кошторис + Склад = повний контроль об\'єкту в одному місці.',
+},
 
 // ══ БЛОК 5 — КООРДИНАЦІЇ ═════════════════════════════════════
 {
@@ -718,6 +731,33 @@ const OB_STEPS = [
     ],
     action: { label:'Відкрити склад', tab:'warehouse' },
     tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Встановіть мінімальний запас для критичних матеріалів — система буде попереджати автоматично.',
+},
+{
+    id: 'estimate_norms', block: 'business', color: '#f97316',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 8.7 8.7 21.3c-1 1-2.5 1-3.4 0l-2.6-2.6c-1-1-1-2.5 0-3.4L15.3 2.7c1-1 2.5-1 3.4 0l2.6 2.6c1 1 1 2.5 0 3.4Z"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m13.5 4.5 2 2"/><path d="m4.5 13.5 2 2"/></svg>',
+    title: 'Довідник норм матеріалів', subtitle: 'Блок 8 · Бізнес', est: '10 хв',
+    description: '<b>Біль без цього:</b> скільки матеріалів потрібно на проект? Власник рахує вручну або на пальцях — помиляється, переплачує або матеріалів не вистачає на об\'єкті.<br><br><b>Довідник норм</b> — один раз налаштував норми витрат → система сама рахує по будь-якому проекту. Вибрав тип роботи, ввів площу — отримав специфікацію.<br><br><b>Де знайти:</b> Бізнес → Кошторис → Довідник норм.<br><br>' + '<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента</a>',
+    tasks: [
+        { id:'en1', text:'Відкрити Довідник норм', detail:'Бізнес → Кошторис → вкладка «Довідник норм».' },
+        { id:'en2', text:'Завантажити стандартні норми для вашої ніші', detail:'«Завантажити стандартні» → оберіть нішу (Будівництво / Ремонт / Металоконструкції) → підтвердити.' },
+        { id:'en3', text:'Відредагувати або додати свою норму', detail:'«Редагувати» → змінити нормативи під реалії вашого бізнесу, або «+ Додати норму» для власного типу робіт.' },
+    ],
+    action: { label:'Відкрити Довідник норм', tab:'estimate' },
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Без довідника норм система не може рахувати матеріали автоматично. Це фундамент модуля кошторису.',
+},
+{
+    id: 'estimate_project', block: 'business', color: '#f97316',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>',
+    title: 'Кошторис проекту', subtitle: 'Блок 8 · Бізнес', est: '15 хв',
+    description: '<b>Біль без цього:</b> матеріали замовили — не те або не стільки. Проект стоїть. Гроші витрачено, а об\'єкт не здали в термін.<br><br><b>Кошторис</b> = специфікація + склад + фінанси в одному екрані. Бачиш одразу: є матеріал, дефіцит, скільки докупити і за скільки.<br><br><b>Прив\'язаний до проекту</b> — кошторис видно у вкладці «Кошторис» всередині проекту.<br><br>При затвердженні → автоматична транзакція у фінансах. При дефіциті → автоматична задача «Закупити матеріали».<br><br>' + '<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента</a>',
+    tasks: [
+        { id:'ep1', text:'Створити перший кошторис', detail:'Бізнес → Кошторис → «+ Новий кошторис» → введіть назву і прив\'яжіть до проекту.' },
+        { id:'ep2', text:'Додати тип роботи та ввести об\'єми', detail:'«+ Додати тип роботи» → оберіть норму → введіть площу або об\'єм. Система розрахує матеріали.' },
+        { id:'ep3', text:'Перевірити дефіцит матеріалів по складу', detail:'У таблиці матеріалів помаранчевим відображається дефіцит — скільки треба докупити.' },
+        { id:'ep4', text:'Затвердити кошторис', detail:'«Затвердити кошторис» → створюється планова транзакція у фінансах.' },
+    ],
+    action: { label:'Відкрити Кошториси', tab:'estimate' },
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Кошторис прив\'язаний до проекту, угоди в CRM і складу одночасно. Дефіцит матеріалів → автоматична задача на закупівлю.',
 },
 {
     id: 'booking', block: 'business', color: '#0ea5e9',

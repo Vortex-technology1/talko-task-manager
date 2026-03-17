@@ -139,10 +139,9 @@ window.renderEstimateListView = function() {
             const deficit= e.totals?.totalDeficitCost || 0;
             const project= (window.projects||[]).find(p=>p.id===e.projectId);
             return `
-            <div onclick="openEstimateModal('${esc(e.id)}')"
-              style="background:white;border:1px solid #e5e7eb;border-radius:12px;padding:1rem 1.25rem;cursor:pointer;transition:box-shadow .15s;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;"
+            <div style="background:white;border:1px solid #e5e7eb;border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;"
               onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
-              <div style="flex:1;min-width:180px;">
+              <div onclick="openEstimateModal('${esc(e.id)}')" style="flex:1;min-width:180px;cursor:pointer;">
                 <div style="font-weight:600;font-size:0.95rem;color:#111827;">${esc(e.title||'Без назви')}</div>
                 ${project?`<div style="font-size:0.78rem;color:#6b7280;margin-top:0.15rem;display:flex;align-items:center;gap:0.3rem;">${_estIco.folder} ${esc(project.title||project.name||'')}</div>`:''}
               </div>
@@ -156,7 +155,13 @@ window.renderEstimateListView = function() {
                     ? `<div style="font-size:0.75rem;color:#ef4444;font-weight:600;display:flex;align-items:center;gap:0.2rem;justify-content:flex-end;">${_estIco.warning} докупити: ${formatMoney(deficit)}</div>`
                     : `<div style="font-size:0.75rem;color:#10b981;display:flex;align-items:center;gap:0.2rem;justify-content:flex-end;">${_estIco.ok} матеріалів достатньо</div>`}
               </div>
-              <div style="font-size:0.75rem;color:#9ca3af;">${e.createdAt?.toDate?(new Date(e.createdAt.toDate())).toLocaleDateString('uk-UA'):''}</div>
+              <div style="display:flex;gap:0.4rem;align-items:center;">
+                <button onclick="exportEstimatePDF('${esc(e.id)}')" title="Експорт PDF"
+                    style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.65rem;border:1px solid #e5e7eb;border-radius:6px;background:white;font-size:0.78rem;cursor:pointer;">
+                    ${_estIco.pdf||'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'} PDF
+                </button>
+                <div style="font-size:0.75rem;color:#9ca3af;">${e.createdAt?.toDate?(new Date(e.createdAt.toDate())).toLocaleDateString('uk-UA'):''}</div>
+              </div>
             </div>`;
         }).join('');
 
@@ -612,6 +617,8 @@ window.openEstimateModal = function(estimateId) {
 
           <div style="display:flex;justify-content:flex-end;gap:0.6rem;flex-wrap:wrap;">
             <button onclick="closeEstimateModal()" style="padding:0.55rem 1.1rem;border:1.5px solid #e5e7eb;background:white;border-radius:8px;font-size:0.88rem;cursor:pointer;">Скасувати</button>
+            ${estimateId ? `<button onclick="exportEstimatePDF('${estimateId}')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.1rem;border:1.5px solid #e5e7eb;background:white;border-radius:8px;font-size:0.88rem;cursor:pointer;">${_estIco.save} PDF</button>` : ''}
+            ${estimateId && existing?.status === 'approved' ? `<button onclick="writeOffEstimateMaterials('${estimateId}')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.1rem;background:#ef4444;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">${_estIco.package} Списати матеріали</button>` : ''}
             <button onclick="saveEstimate('draft')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.25rem;background:#f59e0b;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">${_estIco.save} Зберегти як чернетку</button>
             <button onclick="saveEstimate('approved')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.25rem;background:#10b981;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">${_estIco.check} Затвердити</button>
           </div>
@@ -987,4 +994,109 @@ window.writeOffEstimateMaterials = async function(estimateId, sectionId) {
 
     if (typeof window.showToast === 'function') window.showToast(`Списано ${writtenOff} позицій зі складу`);
     await syncEstimateWithWarehouse(estimateId);
+};
+
+// ══════════════════════════════════════════════════════════════
+// ФАЗА 3 — EXPORT PDF
+// ══════════════════════════════════════════════════════════════
+window.exportEstimatePDF = function(estimateId) {
+    const estimate = estimateId
+        ? (window._projectEstimates||[]).find(e=>e.id===estimateId)
+        : null;
+
+    if (!estimate) { alert('Кошторис не знайдено'); return; }
+
+    const fmt = n => new Intl.NumberFormat('uk-UA', {style:'currency',currency:'UAH',maximumFractionDigits:0}).format(n||0);
+    const fmtNum = n => { const num = parseFloat(n||0); return isNaN(num)?'0':(num%1===0?num.toString():num.toFixed(2)); };
+    const statusLabel = { draft:'Чернетка', approved:'Затверджено', in_progress:'В роботі', done:'Виконано' };
+    const project = (window.projects||[]).find(p=>p.id===estimate.projectId);
+
+    const sectionsHtml = (estimate.sections||[]).map(sec => `
+        <div style="margin-bottom:18px;page-break-inside:avoid;">
+            <div style="background:#f3f4f6;padding:8px 12px;border-radius:6px;font-weight:700;font-size:13px;margin-bottom:6px;">
+                ${sec.normName||'Секція'}
+                <span style="font-weight:400;color:#6b7280;margin-left:8px;">${sec.inputValue||0} ${sec.inputUnit||''} ${sec.extraParam?'× '+sec.extraParam+' '+( sec.extraParamLabel||''):''}</span>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                <thead>
+                    <tr style="background:#e5e7eb;">
+                        <th style="text-align:left;padding:5px 8px;border:1px solid #d1d5db;">Матеріал</th>
+                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">Потрібно</th>
+                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">На складі</th>
+                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">Дефіцит</th>
+                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">Ціна/од</th>
+                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">Сума</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${(sec.calculatedMaterials||[]).map(m=>`
+                    <tr>
+                        <td style="padding:5px 8px;border:1px solid #e5e7eb;">${m.name||''}</td>
+                        <td style="padding:5px 8px;border:1px solid #e5e7eb;text-align:right;">${fmtNum(m.required)} ${m.unit||''}</td>
+                        <td style="padding:5px 8px;border:1px solid #e5e7eb;text-align:right;color:#10b981;">${fmtNum(m.inStock)} ${m.unit||''}</td>
+                        <td style="padding:5px 8px;border:1px solid #e5e7eb;text-align:right;${m.deficit>0?'color:#ef4444;font-weight:600;':''}">
+                            ${m.deficit>0?'⚠ '+fmtNum(m.deficit)+' '+(m.unit||''):'—'}
+                        </td>
+                        <td style="padding:5px 8px;border:1px solid #e5e7eb;text-align:right;">${m.pricePerUnit||0}</td>
+                        <td style="padding:5px 8px;border:1px solid #e5e7eb;text-align:right;font-weight:600;">${fmt((m.required||0)*(m.pricePerUnit||0))}</td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>
+        </div>`).join('');
+
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Кошторис: ${estimate.title||'Без назви'}</title>
+<style>
+  body { font-family: Arial, sans-serif; color: #111; margin: 0; padding: 20px; }
+  @media print { body { padding: 0; } }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .meta { font-size: 12px; color: #6b7280; margin-bottom: 20px; }
+  .totals { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+  .total-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 16px; min-width: 140px; }
+  .total-label { font-size: 11px; color: #6b7280; }
+  .total-val { font-size: 16px; font-weight: 700; margin-top: 2px; }
+  .footer { margin-top: 24px; font-size: 11px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px; }
+</style>
+</head>
+<body>
+<h1>Кошторис: ${estimate.title||'Без назви'}</h1>
+<div class="meta">
+    Статус: <b>${statusLabel[estimate.status]||estimate.status||'—'}</b>
+    ${project?` &nbsp;|&nbsp; Проект: <b>${project.title||project.name||''}</b>`:''}
+    &nbsp;|&nbsp; Дата: <b>${new Date().toLocaleDateString('uk-UA')}</b>
+</div>
+
+<div class="totals">
+    <div class="total-card">
+        <div class="total-label">Бюджет матеріалів</div>
+        <div class="total-val" style="color:#10b981;">${fmt(estimate.totals?.totalMaterialsCost)}</div>
+    </div>
+    <div class="total-card">
+        <div class="total-label">Потрібно докупити</div>
+        <div class="total-val" style="color:${(estimate.totals?.totalDeficitCost||0)>0?'#ef4444':'#10b981'};">${fmt(estimate.totals?.totalDeficitCost)}</div>
+    </div>
+    <div class="total-card">
+        <div class="total-label">Типів робіт</div>
+        <div class="total-val" style="color:#3b82f6;">${(estimate.sections||[]).length}</div>
+    </div>
+</div>
+
+${sectionsHtml}
+
+<div class="footer">
+    Сформовано: ${new Date().toLocaleString('uk-UA')} &nbsp;|&nbsp; TALKO System
+</div>
+</body>
+</html>`;
+
+    // Відкриваємо у новому вікні і запускаємо друк
+    const win = window.open('', '_blank');
+    if (!win) { alert('Дозвольте pop-ups для цього сайту'); return; }
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    setTimeout(() => win.print(), 500);
 };

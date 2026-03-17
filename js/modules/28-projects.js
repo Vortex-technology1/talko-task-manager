@@ -1466,6 +1466,7 @@ function _renderProjectEstimateTab(projectId) {
     const icoWarning  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m10.29 3.86-8.47 14.67A2 2 0 0 0 3.54 21h16.92a2 2 0 0 0 1.72-3l-8.47-14.67a2 2 0 0 0-3.42-.47Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
     const icoCheck    = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>`;
     const icoPlus     = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+    const icoPDF      = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
 
     if (estimates.length === 0) {
         container.innerHTML = `
@@ -1517,7 +1518,25 @@ function _renderProjectEstimateTab(projectId) {
                 ${icoPlus} Новий кошторис
             </button>
         </div>
-        ${cards}
+        ${cards.replace(/onclick="openEstimateModal/g, `onclick="event.stopPropagation();return false;" data-eid="`).replace(/'\)"\s+style=/g, `'" style=`)}
+        ${estimates.map(e=>`
+        <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;">
+            <button onclick="openEstimateModal('${e.id}')" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;border:1px solid #e5e7eb;border-radius:7px;background:white;font-size:0.8rem;cursor:pointer;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                ${e.title||'Кошторис'}
+            </button>
+            <button onclick="exportEstimatePDF('${e.id}')" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;border:1px solid #e5e7eb;border-radius:7px;background:white;font-size:0.8rem;cursor:pointer;">
+                ${icoPDF} PDF
+            </button>
+            <button onclick="syncEstimateWithWarehouse('${e.id}')" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;border:1px solid #e5e7eb;border-radius:7px;background:white;font-size:0.8rem;cursor:pointer;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Оновити склад
+            </button>
+            ${e.status === 'approved' ? `<button onclick="writeOffEstimateMaterials('${e.id}')" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;border:1px solid #fecaca;border-radius:7px;background:#fef2f2;color:#dc2626;font-size:0.8rem;cursor:pointer;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 8.5V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.5"/><path d="M22 8.5H2"/><path d="M10 12h4"/><rect x="2" y="2" width="20" height="6.5" rx="1"/></svg>
+                Списати матеріали
+            </button>` : ''}
+        </div>`).join('')}
     </div>`;
 }
 
