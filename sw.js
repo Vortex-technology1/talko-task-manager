@@ -1,11 +1,10 @@
-const CACHE_VERSION = '2026-03-15-v9.0';
+const CACHE_VERSION = '2026-03-17-v10.0';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
-// Static assets to precache
+// Static assets to precache — core shell only (JS modules via network-first)
 const PRECACHE_URLS = [
   'index.html',
   'manifest.json',
-  'js/vendor/lucide-loader.js',
   'icons/icon-192x192.png',
   'icons/icon-512x512.png',
   'css/animations-misc.css',
@@ -14,14 +13,17 @@ const PRECACHE_URLS = [
   'css/filters-structure.css',
   'css/focus-mode.css',
   'css/kanban-calendar.css',
+  'css/learning.css',
   'css/mobile.css',
   'css/modals-auth.css',
   'css/myday.css',
   'css/projects.css',
+  'css/statistics.css',
   'css/tables-forms.css',
   'css/undo-toast.css',
   'css/variables.css',
-  'js/modules/01-translations.js',
+  // Core modules (завантажуються при старті — варто кешувати)
+  'js/modules/01-translations-v2.js',
   'js/modules/02-firebase-config.js',
   'js/modules/03-app-state.js',
   'js/modules/04-google-calendar-config.js',
@@ -30,12 +32,6 @@ const PRECACHE_URLS = [
   'js/modules/07-data-loading.js',
   'js/modules/08-notifications-sound-badge-title.js',
   'js/modules/09-auto-generate-regular-tasks.js',
-    'js/modules/70-roles-permissions.js',
-    'js/modules/71-owner-dashboard.js',
-    'js/modules/72-global-search.js',
-    'js/modules/73-subtasks.js',
-    'js/modules/74-bulk-duplicate.js',
-  'js/modules/75-superadmin-panel.js',
   'js/modules/10-auto-archive-done-tasks-30-days.js',
   'js/modules/11-archive-ui.js',
   'js/modules/12-my-day-popup.js',
@@ -67,12 +63,12 @@ const PRECACHE_URLS = [
   'js/modules/38-google-calendar-integration.js',
   'js/modules/39-telegram-integration.js',
   'js/modules/40-calendar-quick-actions.js',
-  'js/modules/41-demo-data.js',
-  'js/modules/42-swipe-between-tabs.js',
+  'js/modules/43b-swipe-between-tabs.js',
   'js/modules/43-pull-to-refresh-mobile.js',
   'js/modules/44-offline-support.js',
   'js/modules/45-comments-system.js',
   'js/modules/46-audit-log.js',
+  'js/modules/47b-activity-registry.js',
   'js/modules/47-cascading-escalation.js',
   'js/modules/48-kanban-board-status-deadlines.js',
   'js/modules/49-file-attachments.js',
@@ -91,7 +87,23 @@ const PRECACHE_URLS = [
   'js/modules/62-completion-report.js',
   'js/modules/63-notification-center.js',
   'js/modules/64-focus-mode.js',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+  'js/modules/65-business-structure.js',
+  'js/modules/67-project-stages.js',
+  'js/modules/68-project-templates-qc.js',
+  'js/modules/69-ai-bottleneck-dashboard.js',
+  'js/modules/70-roles-permissions.js',
+  'js/modules/71-owner-dashboard.js',
+  'js/modules/72-global-search.js',
+  'js/modules/73-subtasks.js',
+  'js/modules/74-bulk-duplicate.js',
+  'js/modules/75-superadmin-panel.js',
+  'js/modules/78-landing-pages.js',
+  'js/modules/84-event-bus.js',
+  'js/modules/84b-event-tracking.js',
+  'js/modules/85-ai-proxy-helper.js',
+  'js/modules/86-ai-chat-modal.js',
+  'js/modules/87-ai-diagnostic-agent.js',
+  'js/modules/93-sites-list.js',
 ];
 
 // Install — precache static assets
