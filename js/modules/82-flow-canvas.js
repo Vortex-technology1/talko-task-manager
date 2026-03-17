@@ -2546,6 +2546,12 @@ async function saveFlow() {
         if (typeof showToast === 'function') showToast('Помилка: ID флоу або компанії відсутній', 'error');
         return;
     }
+    // CRITICAL FIX: застосовуємо дані з відкритої панелі перед збереженням
+    // Без цього: юзер вставив ключ → натиснув Зберегти → fc.nodes містить старий ключ
+    // бо fcApplyNodeData не викликався (onblur не спрацював)
+    if (fc.selected) {
+        try { window.fcApplyNodeData(fc.selected); } catch(e) { console.warn('[saveFlow] pre-save apply:', e.message); }
+    }
     console.log('[saveFlow] START flowId:', fc.flowId, 'botId:', fc.botId, 'nodes:', fc.nodes.length);
     window._fcSaving = true;
     const btn = document.getElementById('fcBtnSave');
