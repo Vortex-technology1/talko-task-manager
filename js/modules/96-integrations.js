@@ -333,7 +333,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
 
         <!-- LiqPay -->
         <div style="margin-bottom:0.75rem;padding-top:0.75rem;border-top:1px solid #f1f5f9;">
-            <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:0.35rem;">💳 LiqPay</div>
+            <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:0.35rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> LiqPay</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.35rem;">
                 <div>
                     <label style="${lbl}">Public Key</label>

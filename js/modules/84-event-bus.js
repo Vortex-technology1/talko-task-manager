@@ -230,7 +230,7 @@ const _defaultAutomationRules = [
         condition: null,
         action: _actionCreateTask,
         actionParams: (e) => ({
-            title: `⚠️ Перевищення бюджету: ${e.payload.taskTitle}`,
+            title: `[!] Перевищення бюджету: ${e.payload.taskTitle}`,
             deadlineOffset: '+0d',
             dealId: e.payload.dealId,
             assigneeId: e.payload.managerId,
@@ -250,7 +250,7 @@ const _defaultAutomationRules = [
         condition: (e) => ['approved', 'Погоджено', 'won'].includes(e.payload.toStage),
         action: _actionCreateTask,
         actionParams: (e) => ({
-            title: `🧵 ТЗ на пошив: ${e.payload.clientName || e.payload.dealTitle || ''}`,
+            title: `[ТЗ] Пошив: ${e.payload.clientName || e.payload.dealTitle || ''}`,
             description: `Замовлення підтверджено. Деталізація по кімнатах і вікнах — у вкладці КП картки угоди CRM.\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+3d',
             dealId: e.payload.dealId,
@@ -268,7 +268,7 @@ const _defaultAutomationRules = [
         condition: (e) => ['approved', 'Погоджено', 'won'].includes(e.payload.toStage),
         action: _actionCreateTask,
         actionParams: (e) => ({
-            title: `📦 Закупівля матеріалів: ${e.payload.clientName || e.payload.dealTitle || ''}`,
+            title: `[Закупка]: ${e.payload.clientName || e.payload.dealTitle || ''}`,
             description: `Перевір позиції КП у картці угоди CRM і сформуй список матеріалів для закупівлі.\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+2d',
             dealId: e.payload.dealId,
@@ -286,7 +286,7 @@ const _defaultAutomationRules = [
         condition: (e) => ['approved', 'Погоджено', 'won'].includes(e.payload.toStage),
         action: _actionCreateTask,
         actionParams: (e) => ({
-            title: `🗺 Планування монтажу: ${e.payload.clientName || e.payload.dealTitle || ''}`,
+            title: `[Монтаж]: ${e.payload.clientName || e.payload.dealTitle || ''}`,
             description: `Запланувати виїзд монтажників.\nАдреса: ${e.payload.objectAddress || 'уточни в CRM'}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+5d',
             dealId: e.payload.dealId,
@@ -304,7 +304,7 @@ const _defaultAutomationRules = [
         condition: null,
         action: _actionCreateTask,
         actionParams: (e) => ({
-            title: `✅ Старт виробництва: ${e.payload.clientName || ''}`,
+            title: `[Старт] Виробництво: ${e.payload.clientName || ''}`,
             description: `Передоплата ${e.payload.prepayment || ''}€ отримана. Починаємо пошив.\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+0d',
             dealId: e.payload.dealId,

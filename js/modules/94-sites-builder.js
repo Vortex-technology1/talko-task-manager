@@ -24,7 +24,7 @@ const BLOCK_TYPES = [
     { type:'team',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>', label:window.t('sitesBlockTeam') },
     { type:'prices',    icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>', label:window.t('sitesBlockPrices') },
     { type:'gallery',   icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>', label:'Галерея' },
-    { type:'about',     icon:'ℹ️',  label:window.t('sitesBlockAbout') },
+    { type:'about',     icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>',  label:window.t('sitesBlockAbout') },
     { type:'html',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>', label:'HTML блок' },
 ];
 
@@ -694,7 +694,7 @@ window.sbTogglePublish = async function() {
         if (pub && _pubUrl) {
             try { navigator.clipboard?.writeText(_pubUrl); } catch(e) {}
             if (typeof showToast === 'function')
-                showToast('🚀 Сайт опубліковано! URL скопійовано', 'success');
+                showToast('Сайт опубліковано! URL скопійовано', 'success');
             // Показуємо посилання в badge
             const badge = document.getElementById('sbStatusBadge');
             if (badge) badge.title = _pubUrl;
@@ -1066,7 +1066,7 @@ function _renderCodePanel() {
 
     <!-- Підказки -->
     <div style="margin-bottom:1rem;padding:0.6rem;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
-        <div style="font-size:0.72rem;font-weight:700;color:#475569;margin-bottom:0.4rem;">💡 Код у &lt;head&gt;/&lt;body&gt; — для:</div>
+        <div style="font-size:0.72rem;font-weight:700;color:#475569;margin-bottom:0.4rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="12" y1="22" x2="12" y2="18"/><path d="M12 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg> Код у &lt;head&gt;/&lt;body&gt; — для:</div>
         <div style="font-size:0.7rem;color:#64748b;display:flex;flex-direction:column;gap:3px;">
             <span>• Google Analytics / GA4 (gtag.js)</span>
             <span>• Meta Pixel / TikTok Pixel</span>

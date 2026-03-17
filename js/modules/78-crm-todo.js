@@ -305,7 +305,7 @@ window.crmTodoOpenCard = async function(dealId) {
                 <select id="crmTodoStageSelect" onchange="_crmTodoValidate()"
                   style="font-size:0.72rem;font-weight:600;border:1.5px solid ${stageClr}55;border-radius:6px;padding:2px 6px;background:${stageClr}11;color:${stageClr};cursor:pointer;outline:none;">
                   ${stages.filter(s=>s.id!=='lost').map(s=>`<option value="${s.id}"${s.id===deal.stage?' selected':''}>${_esc(s.label)}</option>`).join('')}
-                  ${stages.find(s=>s.id==='lost')?`<option value="lost"${deal.stage==='lost'?' selected':''}>🔴 ${_esc(stages.find(s=>s.id==='lost').label)}</option>`:''}
+                  ${stages.find(s=>s.id==='lost')?`<option value="lost"${deal.stage==='lost'?' selected':''}>${_esc(stages.find(s=>s.id==='lost').label)}</option>`:''}
                 </select>
               </div>
             </div>

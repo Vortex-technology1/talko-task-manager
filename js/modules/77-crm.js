@@ -890,7 +890,7 @@ function _renderListView() {
                 <div style="flex:1;min-width:0;">
                     <div style="font-size:.82rem;font-weight:700;color:#111827;
                         overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                        ${d.isHot?'🔥 ':''}${_esc(d.title||d.clientName||window.t('crmDeal'))}
+                        ${d.isHot?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg> ':''}${_esc(d.title||d.clientName||window.t('crmDeal'))}
                     </div>
                     <div style="font-size:.7rem;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                         ${_esc(d.clientName||'')}
@@ -2096,8 +2096,8 @@ function _renderDealDetails(deal) {
                 <label style="${lbl}">Філіал</label>
                 <select id="dd_branch" style="${inp}background:white;cursor:pointer;">
                     <option value="" ${!deal.branch?'selected':''}>— не вказано —</option>
-                    <option value="prague"    ${deal.branch==='prague'    ?'selected':''}>🏙 Прага</option>
-                    <option value="brno"      ${deal.branch==='brno'      ?'selected':''}>🏘 Брно</option>
+                    <option value="prague"    ${deal.branch==='prague'    ?'selected':''}> Прага</option>
+                    <option value="brno"      ${deal.branch==='brno'      ?'selected':''}> Брно</option>
                     <option value="bratislava"${deal.branch==='bratislava'?'selected':''}>🌆 Братислава</option>
                 </select>
             </div>
@@ -2197,7 +2197,7 @@ function _renderDealDetails(deal) {
     <!-- Товари зі складу -->
     ${typeof window.whGetItems === 'function' && window.whGetItems().length > 0 ? `
     <div style="margin-bottom:0.9rem;">
-        <label style="${lbl}">📦 Товари зі складу</label>
+        <label style="${lbl}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> Товари зі складу</label>
         <div id="dealWhItems" style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.4rem;">
             ${(deal.warehouseItems||[]).map((wi,idx) => {
                 const it = window.whGetItems().find(i=>i.id===wi.itemId);
@@ -5021,7 +5021,7 @@ window.crmShowImportPreview = function(rows) {
     const info = document.getElementById('crmImportPreviewInfo');
     const table = document.getElementById('crmImportPreviewTable');
 
-    info.innerHTML = `✅ Знайдено <b>${rows.length}</b> записів. Перегляд перших 5:`;
+    info.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Знайдено <b>${rows.length}</b> записів. Перегляд перших 5:`;
 
     const cols = ['name','phone','email','source','amount','stage'];
     const shown = rows.slice(0, 5);
@@ -5134,7 +5134,7 @@ window.crmDoImport = async function() {
 
     const msg = errors > 0
         ? `${window.t('imported')} ${done} ${window.t('finTransferMin2')||'з'} ${rows.length}. ${window.t('error')||'Помилок'}: ${errors}.`
-        : `✅ Успішно імпортовано ${done} записів!`;
+        : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Успішно імпортовано ${done} записів!`;
     if (window.showToast) showToast(msg, errors > 0 ? 'warning' : 'success');
 };
 

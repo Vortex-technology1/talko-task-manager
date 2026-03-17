@@ -506,7 +506,7 @@
                 const autoSignals = [];
                 allVisible.filter(tk => tk.deadlineDate && tk.deadlineDate < todayStr && tk.status !== 'done' && tk.status !== 'review').forEach(tk => {
                     const d = Math.floor((new Date() - new Date(tk.deadlineDate)) / 86400000);
-                    if (d >= 3) autoSignals.push({ icon: '🔴', text: `Прострочено ${d}д: ${tk.title}`, person: tk.assigneeName || '', taskId: tk.id });
+                    if (d >= 3) autoSignals.push({ icon: '<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg>', text: `Прострочено ${d}д: ${tk.title}`, person: tk.assigneeName || '', taskId: tk.id });
                 });
                 allVisible.filter(tk => tk.reviewRejectedAt).forEach(tk => {
                     autoSignals.push({ icon: '↩', text: `Повернуто: ${tk.title}`, person: tk.assigneeName || '', taskId: tk.id });
@@ -561,7 +561,7 @@
                                         </div>
                                         <div style="font-weight:700;font-size:0.88rem;color:#111827;">${esc(mi.title)}</div>
                                         ${mi.description ? `<div style="font-size:0.78rem;color:#374151;margin-top:0.25rem;">${esc(mi.description)}</div>` : ''}
-                                        ${mi.responsible ? `<div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;">👤 ${esc(mi.responsible)}</div>` : ''}
+                                        ${mi.responsible ? `<div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${esc(mi.responsible)}</div>` : ''}
                                     </div>
                                     <button onclick="resolveIncident('${escId(mi.id)}')"
                                         style="background:#16a34a;color:white;border:none;border-radius:6px;padding:0.3rem 0.6rem;cursor:pointer;font-size:0.72rem;font-weight:600;white-space:nowrap;flex-shrink:0;">

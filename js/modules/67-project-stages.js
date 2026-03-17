@@ -475,6 +475,9 @@
     };
 
     window.saveStageFromModal = async function(projectId, stageId) {
+        if (window._saveStageLock) return;
+        window._saveStageLock = true;
+        try {
         const name = document.getElementById('stageName')?.value?.trim();
         if (!name) { showToast(window.t('enterNm2'), 'error'); return; }
 
@@ -499,6 +502,12 @@
             (window.renderProjectDetail || renderProjectDetail)(projectId);
         }
         showToast(window.t('savedOk2'), 'success');
+        } catch(e) {
+            console.error('[stages] saveStageFromModal:', e);
+            showToast(window.t('errPrefix') + e.message, 'error');
+        } finally {
+            window._saveStageLock = false;
+        }
     };
 
     // ========================
