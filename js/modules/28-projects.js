@@ -583,6 +583,10 @@
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                         Фінанси
                     </button>
+                    <button class="calendar-view-btn" onclick="switchProjectView('estimate', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                        Кошторис
+                    </button>
                 </div>
                 
                 <div id="projectBoardView" class="project-board-columns">${boardHTML}</div>
@@ -590,6 +594,7 @@
                 <div id="projectGanttView" style="display:none;">${renderProjectGantt(s.tasks, project)}</div>
                 <div id="projectStandardsView" style="display:none;"><div id="standardsListContainer"></div></div>
                 <div id="projectFinanceView" style="display:none;"><div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження фінансів...</div></div>
+                <div id="projectEstimateView" style="display:none;"><div id="projectEstimateContent"></div></div>
             `;
             
             refreshIcons();
@@ -617,6 +622,14 @@
                     if (pid && typeof window._renderProjectFinance === 'function') {
                         window._renderProjectFinance(pid, finView);
                     }
+                }
+            }
+            const estView = document.getElementById('projectEstimateView');
+            if (estView) {
+                estView.style.display = view === 'estimate' ? '' : 'none';
+                if (view === 'estimate') {
+                    const pid = document.getElementById('projectDetailContent')?.dataset?.projectId;
+                    if (pid) _renderProjectEstimateTab(pid);
                 }
             }
             btn.parentElement.querySelectorAll('.calendar-view-btn').forEach(b => b.classList.remove('active'));
@@ -1426,3 +1439,102 @@
                 showAlertModal(window.t('error') + ': ' + error.message);
             }
         }
+
+// ── Кошторис всередині проекту ────────────────────────────────
+function _renderProjectEstimateTab(projectId) {
+    const container = document.getElementById('projectEstimateContent');
+    if (!container) return;
+
+    // Перевіряємо чи ініціалізований модуль кошторису
+    if (typeof window.initEstimateModule === 'undefined') {
+        container.innerHTML = `<div style="text-align:center;padding:2rem;color:#9ca3af;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin-bottom:0.75rem;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+            <div>Завантаження модуля кошторису...</div>
+        </div>`;
+        lazyLoad('estimate', function() {
+            window.initEstimateModule?.();
+            setTimeout(() => _renderProjectEstimateTab(projectId), 500);
+        });
+        return;
+    }
+
+    const estimates = (window._projectEstimates || []).filter(e => e.projectId === projectId);
+    const statusLabel = { draft:'Чернетка', approved:'Затверджено', in_progress:'В роботі', done:'Виконано' };
+    const statusColor = { draft:'#f59e0b', approved:'#3b82f6', in_progress:'#8b5cf6', done:'#10b981' };
+
+    const icoClipboard = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>`;
+    const icoWarning  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m10.29 3.86-8.47 14.67A2 2 0 0 0 3.54 21h16.92a2 2 0 0 0 1.72-3l-8.47-14.67a2 2 0 0 0-3.42-.47Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+    const icoCheck    = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>`;
+    const icoPlus     = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+
+    if (estimates.length === 0) {
+        container.innerHTML = `
+        <div style="padding:1.5rem;">
+            <div style="text-align:center;padding:2.5rem 1rem;border:2px dashed #e5e7eb;border-radius:12px;">
+                <div style="display:flex;justify-content:center;margin-bottom:0.75rem;opacity:0.3;">${icoClipboard.replace('16','40')}</div>
+                <div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Кошторис не прив'язаний</div>
+                <div style="font-size:0.83rem;color:#9ca3af;margin-bottom:1.25rem;">Створіть кошторис і прив'яжіть до цього проекту</div>
+                <button onclick="window._openEstimateForProject('${projectId}')"
+                    style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.25rem;background:#3b82f6;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">
+                    ${icoPlus} Створити кошторис
+                </button>
+            </div>
+        </div>`;
+        return;
+    }
+
+    const cards = estimates.map(e => {
+        const status = statusLabel[e.status] || e.status;
+        const color  = statusColor[e.status] || '#6b7280';
+        const budget = e.totals?.totalMaterialsCost || 0;
+        const deficit= e.totals?.totalDeficitCost || 0;
+        const fmt = n => new Intl.NumberFormat('uk-UA', {style:'currency',currency:'UAH',maximumFractionDigits:0}).format(n||0);
+        return `
+        <div onclick="openEstimateModal('${e.id}')"
+            style="background:white;border:1px solid #e5e7eb;border-radius:10px;padding:1rem 1.25rem;cursor:pointer;margin-bottom:0.6rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;"
+            onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
+            <div style="flex:1;min-width:160px;">
+                <div style="font-weight:600;font-size:0.92rem;color:#111827;">${e.title||'Без назви'}</div>
+                <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.15rem;">${e.sections?.length||0} типів робіт</div>
+            </div>
+            <span style="padding:0.2rem 0.6rem;border-radius:20px;font-size:0.73rem;font-weight:600;background:${color}18;color:${color};">${status}</span>
+            <div style="text-align:right;">
+                <div style="font-size:0.75rem;color:#6b7280;">Бюджет матеріалів</div>
+                <div style="font-weight:700;color:#111827;font-size:0.95rem;">${fmt(budget)}</div>
+                ${deficit>0
+                    ? `<div style="font-size:0.73rem;color:#ef4444;display:flex;align-items:center;gap:0.2rem;justify-content:flex-end;">${icoWarning} докупити: ${fmt(deficit)}</div>`
+                    : `<div style="font-size:0.73rem;color:#10b981;display:flex;align-items:center;gap:0.2rem;justify-content:flex-end;">${icoCheck} матеріалів достатньо</div>`}
+            </div>
+        </div>`;
+    }).join('');
+
+    container.innerHTML = `
+    <div style="padding:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <div style="font-weight:600;font-size:0.95rem;color:#374151;display:flex;align-items:center;gap:0.4rem;">${icoClipboard} Кошториси проекту (${estimates.length})</div>
+            <button onclick="window._openEstimateForProject('${projectId}')"
+                style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;background:#3b82f6;color:white;border:none;border-radius:7px;font-size:0.82rem;font-weight:600;cursor:pointer;">
+                ${icoPlus} Новий кошторис
+            </button>
+        </div>
+        ${cards}
+    </div>`;
+}
+
+// Відкрити модалку нового кошторису з прив'язкою до проекту
+window._openEstimateForProject = function(projectId) {
+    // Переконуємось що estimate модуль завантажений
+    if (typeof window.openEstimateModal !== 'function') {
+        lazyLoad('estimate', function() {
+            window.initEstimateModule?.();
+            setTimeout(() => window._openEstimateForProject(projectId), 300);
+        });
+        return;
+    }
+    // Відкриваємо модалку і після рендеру встановлюємо projectId
+    window.openEstimateModal(null);
+    setTimeout(() => {
+        const sel = document.getElementById('estProjectId');
+        if (sel) sel.value = projectId;
+    }, 100);
+};

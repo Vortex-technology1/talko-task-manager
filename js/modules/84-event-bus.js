@@ -72,6 +72,11 @@ const TALKO_EVENTS = {
     MEASUREMENT_ASSIGNED:    'deal.measurement_assigned',   // замірник + дата призначені
     INSTALLATION_ASSIGNED:   'deal.installation_assigned',  // монтажник + дата призначені
     PREPAYMENT_RECEIVED:     'deal.prepayment_received',    // передоплата зафіксована
+
+    // ESTIMATE / КОШТОРИС
+    ESTIMATE_APPROVED:       'estimate.approved',           // кошторис затверджено
+    ESTIMATE_DEFICIT:        'estimate.deficit_detected',   // виявлено дефіцит матеріалів
+    MATERIALS_WRITTEN_OFF:   'estimate.materials_written_off', // матеріали списані зі складу
 };
 
 // ─────────────────────────────────────────

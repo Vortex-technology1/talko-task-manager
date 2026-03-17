@@ -810,8 +810,45 @@ window.saveEstimate = async function(status) {
             window.showToast(status === 'approved' ? 'Кошторис затверджено' : 'Кошторис збережено');
         }
 
-        if (totalDeficitCost > 0 && typeof fireEventBus === 'function') {
-            fireEventBus('estimate_deficit_detected', { title, totalDeficitCost, sections });
+        // Event Bus: затвердження
+        if (status === 'approved' && typeof window.fireEventBus === 'function') {
+            window.fireEventBus('estimate.approved', {
+                estimateId: window._estEditId || 'new',
+                title,
+                projectId: payload.projectId,
+                totalMaterialsCost,
+            });
+        }
+
+        // Event Bus: дефіцит матеріалів
+        if (totalDeficitCost > 0 && typeof window.fireEventBus === 'function') {
+            window.fireEventBus('estimate.deficit_detected', {
+                title,
+                totalDeficitCost,
+                sections: sections.map(s => ({
+                    normName: s.normName,
+                    deficitItems: (s.calculatedMaterials||[]).filter(m=>m.deficit>0).map(m=>({
+                        name: m.name, deficit: m.deficit, unit: m.unit
+                    }))
+                }))
+            });
+        }
+
+        // Finance: планова транзакція при затвердженні
+        if (status === 'approved' && totalMaterialsCost > 0 && typeof db !== 'undefined') {
+            const estId = window._estEditId || 'pending';
+            db.collection('companies').doc(currentCompany)
+                .collection('finance_transactions').add({
+                    type: 'planned_expense',
+                    category: 'materials',
+                    amount: totalMaterialsCost,
+                    description: `Матеріали: ${title}`,
+                    estimateId: estId,
+                    projectId: payload.projectId || '',
+                    date: new Date().toISOString().split('T')[0],
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: currentUser?.uid || '',
+                }).catch(e => console.warn('[estimate finance]', e));
         }
     } catch(e) {
         console.error('[saveEstimate]', e);
@@ -837,3 +874,117 @@ function esc(str) {
 }
 
 window.showEstimateTab = window.renderEstimateTab;
+
+// ══════════════════════════════════════════════════════════════
+// ФАЗА 3 — SYNC З СКЛАДОМ + СПИСАННЯ
+// ══════════════════════════════════════════════════════════════
+
+// Оновити inStock з warehouse_items для всіх матеріалів кошторису
+window.syncEstimateWithWarehouse = async function(estimateId) {
+    const estimate = (window._projectEstimates||[]).find(e=>e.id===estimateId);
+    if (!estimate) return;
+
+    const updatedSections = (estimate.sections||[]).map(sec => {
+        const updatedMats = (sec.calculatedMaterials||[]).map(m => {
+            const stockData = m.warehouseItemId ? (window._wh?.stock?.[m.warehouseItemId] || {qty:0}) : {qty:0};
+            const inStock = stockData.qty || 0;
+            const deficit = Math.max(0, m.required - inStock);
+            return { ...m, inStock, deficit };
+        });
+        return { ...sec, calculatedMaterials: updatedMats };
+    });
+
+    // Перераховуємо totals
+    let totalMaterialsCost = 0, totalDeficitCost = 0;
+    updatedSections.forEach(sec => {
+        (sec.calculatedMaterials||[]).forEach(m => {
+            totalMaterialsCost += (m.required||0) * (m.pricePerUnit||0);
+            if (m.deficit > 0) totalDeficitCost += m.deficit * (m.pricePerUnit||0);
+        });
+    });
+
+    try {
+        await db.collection('companies').doc(currentCompany)
+            .collection('project_estimates').doc(estimateId)
+            .update({
+                sections: updatedSections,
+                totals: { totalMaterialsCost, totalDeficitCost, currency: 'UAH' },
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+        if (typeof window.showToast === 'function') window.showToast('Залишки оновлено зі складу');
+    } catch(e) {
+        console.error('[syncEstimate]', e);
+        alert('Помилка синхронізації: ' + e.message);
+    }
+};
+
+// Списати матеріали зі складу по кошторису (викликає whDoOperation для кожного матеріалу)
+window.writeOffEstimateMaterials = async function(estimateId, sectionId) {
+    const estimate = (window._projectEstimates||[]).find(e=>e.id===estimateId);
+    if (!estimate) return;
+    if (!confirm('Списати матеріали зі складу по кошторису? Дія незворотна.')) return;
+
+    const sections = sectionId
+        ? (estimate.sections||[]).filter(s=>s.sectionId===sectionId)
+        : (estimate.sections||[]);
+
+    if (!sections.length) { alert('Немає секцій для списання'); return; }
+
+    let writtenOff = 0;
+    for (const sec of sections) {
+        for (const m of (sec.calculatedMaterials||[])) {
+            if (!m.warehouseItemId || m.required <= 0) continue;
+            try {
+                if (typeof window.whDoOperation === 'function') {
+                    await window.whDoOperation({
+                        type: 'OUT',
+                        itemId: m.warehouseItemId,
+                        qty: m.required,
+                        note: `Кошторис: ${estimate.title} / ${sec.normName}`,
+                        estimateId,
+                        sectionId: sec.sectionId,
+                        projectId: estimate.projectId || '',
+                    });
+                    writtenOff++;
+                }
+            } catch(e) {
+                console.warn('[writeOff]', m.name, e.message);
+            }
+        }
+    }
+
+    // Event Bus
+    if (typeof window.fireEventBus === 'function') {
+        window.fireEventBus('estimate.materials_written_off', {
+            estimateId,
+            estimateTitle: estimate.title,
+            projectId: estimate.projectId,
+            sectionsCount: sections.length,
+        });
+    }
+
+    // Finance: фактична транзакція
+    let totalActual = 0;
+    sections.forEach(sec => {
+        (sec.calculatedMaterials||[]).forEach(m => {
+            totalActual += (m.required||0) * (m.pricePerUnit||0);
+        });
+    });
+    if (totalActual > 0 && typeof db !== 'undefined') {
+        db.collection('companies').doc(currentCompany)
+            .collection('finance_transactions').add({
+                type: 'actual_expense',
+                category: 'materials',
+                amount: totalActual,
+                description: `Списання матеріалів: ${estimate.title}`,
+                estimateId,
+                projectId: estimate.projectId || '',
+                date: new Date().toISOString().split('T')[0],
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                createdBy: currentUser?.uid || '',
+            }).catch(e => console.warn('[writeOff finance]', e));
+    }
+
+    if (typeof window.showToast === 'function') window.showToast(`Списано ${writtenOff} позицій зі складу`);
+    await syncEstimateWithWarehouse(estimateId);
+};
