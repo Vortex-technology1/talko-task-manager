@@ -987,12 +987,11 @@
         c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;"><div class="spinner" style="margin:0 auto;"></div></div>';
 
         try {
-            // Збираємо всі periodKeys що будуть відображатись (daily=14, weekly=12, monthly=8)
+            // Збираємо periodKeys тільки для ПОТОЧНОГО типу частоти
+            // Уникаємо cross-type запитів: daily(14)+weekly(12)+monthly(8) = 35 ключів > 30 Firestore 'in' ліміт → 400
             const allPeriodKeys = new Set([pk]);
-            ['daily','weekly','monthly'].forEach(freq => {
-                const count = freq === 'daily' ? 14 : freq === 'weekly' ? 12 : 8;
-                for (let i = 0; i < count; i++) allPeriodKeys.add(getStatsPeriodKey(-i, freq));
-            });
+            const _pkCount = statsPeriodType === 'daily' ? 14 : statsPeriodType === 'monthly' ? 8 : 12;
+            for (let i = 1; i < _pkCount; i++) allPeriodKeys.add(getStatsPeriodKey(-i));
             await Promise.all([
                 loadMetrics(),
                 loadEntriesMulti([...allPeriodKeys]),
