@@ -2470,7 +2470,8 @@ window.fcApplyNodeData = function(nodeId) {
     renderAll();
     renderPropPanel();
     // Автозберігаємо в Firestore після Застосувати
-    saveFlow();
+    // GUARD: не викликаємо saveFlow якщо він вже нас викликав (запобігання рекурсії)
+    if (!window._fcApplyingBeforeSave) saveFlow();
 };
 
 // ── Дублювання вузла ───────────────────────────────────────
@@ -2552,8 +2553,11 @@ async function saveFlow() {
     // CRITICAL FIX: застосовуємо дані з відкритої панелі перед збереженням
     // Без цього: юзер вставив ключ → натиснув Зберегти → fc.nodes містить старий ключ
     // бо fcApplyNodeData не викликався (onblur не спрацював)
-    if (fc.selected) {
+    // GUARD: запобігаємо рекурсії saveFlow → fcApplyNodeData → saveFlow
+    if (fc.selected && !window._fcApplyingBeforeSave) {
+        window._fcApplyingBeforeSave = true;
         try { window.fcApplyNodeData(fc.selected); } catch(e) { console.warn('[saveFlow] pre-save apply:', e.message); }
+        window._fcApplyingBeforeSave = false;
     }
     console.log('[saveFlow] START flowId:', fc.flowId, 'botId:', fc.botId, 'nodes:', fc.nodes.length);
     window._fcSaving = true;
