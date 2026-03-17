@@ -549,7 +549,7 @@
                         ${active.sort((a,b) => (b.severity||1)-(a.severity||1)).map(mi => {
                             const cat = catConfig[mi.category] || catConfig.other;
                             const sev = mi.severity || 1;
-                            const sevLabel = sev === 3 ? '🔴 Критично' : sev === 2 ? '🟡 Важливо' : '🟢 Норма';
+                            const sevLabel = sev === 3 ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Критично' : sev === 2 ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span> Важливо' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Норма';
                             return `
                             <div style="background:${cat.bg};border-radius:10px;border-left:4px solid ${cat.color};padding:0.75rem;margin-bottom:0.4rem;">
                                 <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;">

@@ -125,7 +125,7 @@ function renderCalendarList() {
 
     const calCards = bk.calendars.length === 0
         ? `<div class="bk-empty">
-            <div style="font-size:2rem;margin-bottom:.5rem">📅</div>
+            <div style="margin-bottom:0.5rem;color:#9ca3af;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
             <div style="font-weight:600;margin-bottom:.2rem">${t('noCalendarsYet')||'Немає жодного календаря'}</div>
             <div style="color:#94a3b8;font-size:.85rem">${t('createFirstCal')||'Натисніть «+ Новий календар»'}</div>
            </div>`

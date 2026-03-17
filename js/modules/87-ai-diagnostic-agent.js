@@ -466,7 +466,7 @@ function _renderSignals(container, signals, ctx) {
     if (signals.length === 0) {
         container.innerHTML = `
         <div style="background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);border-radius:12px;padding:1rem 1.25rem;border:1px solid #bbf7d0;display:flex;align-items:center;gap:0.75rem;">
-            <div style="font-size:1.4rem;">✅</div>
+            <div style="font-size:1.4rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>
             <div>
                 <div style="font-weight:600;font-size:0.9rem;color:#15803d;">Операційних збоїв не виявлено</div>
                 <div style="font-size:0.78rem;color:#16a34a;margin-top:0.1rem;">Бізнес працює в нормальному режимі. Наступна перевірка автоматично.</div>
@@ -483,7 +483,7 @@ function _renderSignals(container, signals, ctx) {
         ? 'linear-gradient(135deg,#fff1f2 0%,#fecdd3 100%)'
         : 'linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%)';
     const headerBorder = criticals.length > 0 ? '#fecaca' : '#fde68a';
-    const headerIcon   = criticals.length > 0 ? '🔴' : '🟡';
+    const headerIcon   = criticals.length > 0 ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span>';
     const headerTitle  = criticals.length > 0
         ? `${criticals.length} критичних збоїв виявлено`
         : `${warnings.length} попереджень`;
@@ -492,8 +492,8 @@ function _renderSignals(container, signals, ctx) {
         const isCritical = sig.severity === 'critical';
         const rowBg      = isCritical ? '#fff5f5' : '#fffbf0';
         const iconEl     = isCritical
-            ? '<span style="font-size:1rem;flex-shrink:0;">🔴</span>'
-            : '<span style="font-size:1rem;flex-shrink:0;">🟡</span>';
+            ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="#ef4444"/></svg></span>'
+            : '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="#f59e0b"/></svg></span>';
         const labelColor = isCritical ? '#dc2626' : '#d97706';
         const labelText  = isCritical ? 'КРИТИЧНО' : 'ПОПЕРЕДЖЕННЯ';
 

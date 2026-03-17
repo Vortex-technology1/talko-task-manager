@@ -532,7 +532,7 @@ function _showPublicUrlModal(url, siteId) {
     m.innerHTML = `
     <div style="background:white;border-radius:14px;padding:1.75rem;max-width:500px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
         <div style="text-align:center;margin-bottom:1.25rem;">
-            <div style="font-size:2.5rem;margin-bottom:0.5rem;">🚀</div>
+            <div style="margin-bottom:0.5rem;color:#22c55e;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></div>
             <div style="font-weight:800;font-size:1.1rem;">Сайт опубліковано!</div>
             <div style="color:#6b7280;font-size:0.85rem;margin-top:4px;">Ваш сайт доступний за посиланням:</div>
         </div>

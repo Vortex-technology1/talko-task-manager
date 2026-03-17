@@ -1461,7 +1461,7 @@ function renderInvoices(el) {
       <div style="background:#fff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;">
         ${invoices.length === 0 ? `
           <div style="text-align:center;padding:40px;color:#9ca3af;">
-            <div style="font-size:2rem;margin-bottom:8px;">📄</div>
+            <div style="margin-bottom:8px;color:#9ca3af;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
             <div style="font-weight:600;margin-bottom:4px;">${window.t('finNoAccountsYet')}</div>
             <div style="font-size:0.85rem;">${window.t('finNoAccountsHint')}</div>
           </div>` :
@@ -2876,7 +2876,7 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
       ${alerts.map(a => `
         <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;
           background:${a.level==='red'?'#fef2f2':'#fffbeb'};border:1px solid ${a.level==='red'?'#fecaca':'#fde68a'};">
-          <span style="font-size:1rem;">${a.level==='red'?'🔴':'🟡'}</span>
+          <span style="font-size:1rem;">${a.level==='red'?'<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span>':'<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span>'}</span>
           <span style="font-size:0.82rem;font-weight:600;color:${a.level==='red'?'#dc2626':'#d97706'};">
             ${escHtml(a.label)}: перевищення бюджету на +${a.pct}%
           </span>

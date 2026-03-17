@@ -373,7 +373,7 @@
                         <!-- Node editor -->
                         <div style="flex:1;overflow-y:auto;padding:1rem;" id="botsNodeEditor">
                             <div style="text-align:center;padding:3rem 1rem;color:#9ca3af;">
-                                <div style="font-size:2rem;margin-bottom:0.5rem;">👈</div>
+                                <div style="margin-bottom:0.5rem;color:#9ca3af;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
                                 <div>Виберіть вузол або додайте новий</div>
                             </div>
                         </div>
