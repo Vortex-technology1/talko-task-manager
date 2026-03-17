@@ -425,6 +425,30 @@ function getLang(docData) {
     return TG_LANG[lang] ? lang : 'ua';
 }
 
+/**
+ * Отримує мову з Firestore для конкретного юзера.
+ * Спочатку дивиться users/{uid}.language, потім companies/{id}.language.
+ */
+async function getUserLang(companyId, userId) {
+    try {
+        const uDoc = await db.collection('companies').doc(companyId)
+            .collection('users').doc(userId).get();
+        if (uDoc.exists && uDoc.data().language) {
+            const lang = uDoc.data().language;
+            return TG_LANG[lang] ? lang : 'ua';
+        }
+        // Fallback: мова на рівні компанії
+        const cDoc = await db.collection('companies').doc(companyId).get();
+        if (cDoc.exists && cDoc.data().language) {
+            const lang = cDoc.data().language;
+            return TG_LANG[lang] ? lang : 'ua';
+        }
+    } catch(e) {
+        console.warn('[getLang] Failed:', e.message);
+    }
+    return 'ua';
+}
+
 // ===========================
 // TELEGRAM HELPERS
 // ===========================
@@ -563,7 +587,7 @@ exports.onNewTask = functions
         if (!userDoc.exists || !userDoc.data().telegramChatId) return null;
 
         const chatId = userDoc.data().telegramChatId;
-        const userLang = getLang(userDoc.data());
+        const userLang = await getUserLang(companyId, task.assigneeId);
         const taskType = task.processId ? tg(userLang, 'taskType_process') : (task.regularTaskId ? tg(userLang, 'taskType_regular') : tg(userLang, 'taskType_task'));
 
         const message = `
@@ -603,7 +627,7 @@ exports.onTaskCompleted = functions
             if (!userDoc.exists || !userDoc.data().telegramChatId) continue;
 
             const chatId = userDoc.data().telegramChatId;
-            const userLang = getLang(userDoc.data());
+            const userLang = await getUserLang(companyId, userId);
             const message = `
 ${tg(userLang, 'taskDone')}
 
@@ -709,9 +733,7 @@ exports.telegramWebhook = functions
             let cbLang = 'ua';
             if (userId) {
                 try {
-                    const cbUserDoc = await db.collection('companies').doc(companyId)
-                        .collection('users').doc(userId).get();
-                    if (cbUserDoc.exists) cbLang = getLang(cbUserDoc.data());
+                    cbLang = await getUserLang(companyId, userId);
                 } catch(e) { /* fallback to ua */ }
             }
 
@@ -859,7 +881,7 @@ exports.telegramWebhook = functions
                             updatedAt: admin.firestore.FieldValue.serverTimestamp()
                         });
 
-                        const connectedUserLang = getLang(userDoc.data());
+                        const connectedUserLang = await getUserLang(cIdForIdx, uIdForIdx);
                         await sendTelegramMessage(chatId, tg(connectedUserLang, 'connectedSuccess'));
                         return res.status(200).send('OK');
                     }
@@ -899,9 +921,7 @@ exports.telegramWebhook = functions
                     // Визначаємо мову юзера для /today /overdue відповідей
                     let cmdLang = 'ua';
                     try {
-                        const cmdUserDoc = await db.collection('companies').doc(companyId)
-                            .collection('users').doc(uid).get();
-                        if (cmdUserDoc.exists) cmdLang = getLang(cmdUserDoc.data());
+                        cmdLang = await getUserLang(companyId, uid);
                     } catch(e) { /* fallback ua */ }
                     if (true) { // scope wrapper
                     const todayStr = new Date().toISOString().split('T')[0];
@@ -1018,7 +1038,7 @@ exports.telegramWebhook = functions
                         if (t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done') overdue++;
                     });
                     const wUserDoc = await db.collection('companies').doc(wCompanyId).collection('users').doc(wUid).get();
-                    const wLang = wUserDoc.exists ? getLang(wUserDoc.data()) : 'ua';
+                    const wLang = await getUserLang(wCompanyId, wUid);
                     await sendTelegramMessage(chatId,
                         `${tg(wLang, 'weeklyReport')}: ${done}\n${tg(wLang, 'weeklyInProgress')}: ${inProgress}\n${tg(wLang, 'weeklyOverdue')}: ${overdue}`);
                 } else {

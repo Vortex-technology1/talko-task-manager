@@ -19391,6 +19391,16 @@
             window.currentLang = lang; // keep alias in sync
             localStorage.setItem('talko_language', lang);
 
+            // Зберігаємо мову в Firestore — щоб Telegram сповіщення теж перекладались
+            try {
+                if (window.currentUser && window.currentCompany && typeof db !== 'undefined') {
+                    db.collection('companies').doc(window.currentCompany)
+                        .collection('users').doc(window.currentUser.uid)
+                        .update({ language: lang })
+                        .catch(function(e) { console.warn('[i18n] Failed to save language to Firestore:', e.message); });
+                }
+            } catch(e) { /* silent */ }
+
             // Оновлюємо весь UI без reload
             if (typeof updatePageTranslations === 'function') {
                 updatePageTranslations();

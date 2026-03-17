@@ -112,60 +112,63 @@ const DEFAULT_ROLE_PERMISSIONS = {
 };
 
 // ---- PERMISSION LABELS (для UI) ----
-const PERMISSION_GROUPS = [
-    {
-        group: window.t('permStats'),
-        items: [
-            { key: 'viewStats',         label: window.t('permViewStats') },
-            { key: 'viewAllMetrics',    label: window.t('permViewAllMetrics') },
-            { key: 'viewOwnerMetrics',  label: window.t('permViewFinMetrics') },
-            { key: 'editMetrics',       label: window.t('permEditMetrics') },
-            { key: 'deleteMetricRows',  label: window.t('permDeleteMetricRows') },
-        ]
-    },
-    {
-        group: window.t('actTask'),
-        items: [
-            { key: 'viewAllTasks',  label: window.t('permViewAllTasks') },
-            { key: 'assignTasks',   label: window.t('permAssignTasks') },
-            { key: 'editAnyTask',   label: window.t('permEditAnyTask') },
-            { key: 'deleteAnyTask', label: window.t('permDeleteAnyTask') },
-        ]
-    },
-    {
-        group: window.t('permControlAnalytics'),
-        items: [
-            { key: 'viewControl',    label: window.t('permControlPanel') },
-            { key: 'viewAiAnalysis', label: window.t('aiAnalysis2') },
-            { key: 'viewFinance',    label: window.t('finIndicators') },
-        ]
-    },
-    {
-        group: window.t('permProjectsProcesses'),
-        items: [
-            { key: 'viewAllProjects', label: window.t('permViewAllProjects') },
-            { key: 'manageProjects',  label: window.t('permManageProjects') },
-        ]
-    },
-    {
-        group: window.t('teamWord'),
-        items: [
-            { key: 'viewTeamList',         label: window.t('permViewTeamList') },
-            { key: 'viewColleagueEmails',  label: window.t('permViewColleagueEmails') },
-            { key: 'editUserCards',        label: window.t('permEditStaff') },
-            { key: 'inviteUsers',          label: window.t('permInviteStaff') },
-            { key: 'changeRoles',          label: window.t('permChangeRoles') },
-            { key: 'removeUsers',          label: window.t('permDeleteStaff') },
-        ]
-    },
-    {
-        group: window.t('permSystem'),
-        items: [
-            { key: 'viewAdminPanel', label: window.t('permAdminPanel') },
-            { key: 'editRoles',      label: window.t('permEditRoles') },
-        ]
-    }
-];
+// Функція замість const — щоб window.t() викликався при рендері (з поточною мовою)
+function getPermissionGroups() {
+    return [
+        {
+            group: window.t('permStats'),
+            items: [
+                { key: 'viewStats',         label: window.t('permViewStats') },
+                { key: 'viewAllMetrics',    label: window.t('permViewAllMetrics') },
+                { key: 'viewOwnerMetrics',  label: window.t('permViewFinMetrics') },
+                { key: 'editMetrics',       label: window.t('permEditMetrics') },
+                { key: 'deleteMetricRows',  label: window.t('permDeleteMetricRows') },
+            ]
+        },
+        {
+            group: window.t('actTask'),
+            items: [
+                { key: 'viewAllTasks',  label: window.t('permViewAllTasks') },
+                { key: 'assignTasks',   label: window.t('permAssignTasks') },
+                { key: 'editAnyTask',   label: window.t('permEditAnyTask') },
+                { key: 'deleteAnyTask', label: window.t('permDeleteAnyTask') },
+            ]
+        },
+        {
+            group: window.t('permControlAnalytics'),
+            items: [
+                { key: 'viewControl',    label: window.t('permControlPanel') },
+                { key: 'viewAiAnalysis', label: window.t('aiAnalysis2') },
+                { key: 'viewFinance',    label: window.t('finIndicators') },
+            ]
+        },
+        {
+            group: window.t('permProjectsProcesses'),
+            items: [
+                { key: 'viewAllProjects', label: window.t('permViewAllProjects') },
+                { key: 'manageProjects',  label: window.t('permManageProjects') },
+            ]
+        },
+        {
+            group: window.t('teamWord'),
+            items: [
+                { key: 'viewTeamList',         label: window.t('permViewTeamList') },
+                { key: 'viewColleagueEmails',  label: window.t('permViewColleagueEmails') },
+                { key: 'editUserCards',        label: window.t('permEditStaff') },
+                { key: 'inviteUsers',          label: window.t('permInviteStaff') },
+                { key: 'changeRoles',          label: window.t('permChangeRoles') },
+                { key: 'removeUsers',          label: window.t('permDeleteStaff') },
+            ]
+        },
+        {
+            group: window.t('permSystem'),
+            items: [
+                { key: 'viewAdminPanel', label: window.t('permAdminPanel') },
+                { key: 'editRoles',      label: window.t('permEditRoles') },
+            ]
+        }
+    ];
+}
 
 // ---- STATE ----
 let rolePermissions = {}; // завантажені з Firestore або дефолтні
@@ -283,7 +286,7 @@ window.renderRolesTab = async function() {
     });
     html += `</tr></thead><tbody>`;
 
-    PERMISSION_GROUPS.forEach((group, gi) => {
+    getPermissionGroups().forEach((group, gi) => {
         html += `<tr>
             <td colspan="${2 + roles.length}" style="padding:0.6rem 1rem;background:#f0fdf4;font-weight:600;font-size:0.78rem;color:#16a34a;border-top:${gi > 0 ? '2px solid #e5e7eb' : 'none'};">
                 ${group.group}

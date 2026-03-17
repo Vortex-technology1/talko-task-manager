@@ -228,6 +228,31 @@
             // Re-apply translations AFTER interface is shown (nav spans now visible)
             // FIX: застосовуємо переклади без reload — setLanguage(lang, false)
             const _authLang = window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
+            // Синхронізуємо мову з Firestore (для Telegram сповіщень)
+            // Якщо в Firestore є мова — беремо її; якщо ні — записуємо поточну
+            try {
+                if (window.currentUser && window.currentCompany && typeof db !== 'undefined') {
+                    const _uRef = db.collection('companies').doc(window.currentCompany)
+                        .collection('users').doc(window.currentUser.uid);
+                    _uRef.get().then(function(_ud) {
+                        if (_ud.exists) {
+                            const _firestoreLang = _ud.data().language;
+                            if (_firestoreLang && _firestoreLang !== _authLang) {
+                                // Firestore має іншу мову — застосовуємо її
+                                localStorage.setItem('talko_language', _firestoreLang);
+                                window.currentLanguage = _firestoreLang;
+                                window.currentLang = _firestoreLang;
+                                if (typeof window.setLanguage === 'function') {
+                                    setTimeout(function() { window.setLanguage(_firestoreLang, false); }, 150);
+                                }
+                            } else if (!_firestoreLang) {
+                                // Немає мови в Firestore — записуємо поточну
+                                _uRef.update({ language: _authLang }).catch(function() {});
+                            }
+                        }
+                    }).catch(function() {});
+                }
+            } catch(e) { /* silent */ }
             if (typeof window.setLanguage === 'function') {
                 setTimeout(function() { window.setLanguage(_authLang, false); }, 100);
             }
