@@ -116,11 +116,11 @@ const PERMISSION_GROUPS = [
     {
         group: window.t('permStats'),
         items: [
-            { key: 'viewStats',         label: 'Переглядати статистику' },
+            { key: 'viewStats',         label: window.t('permViewStats') },
             { key: 'viewAllMetrics',    label: window.t('permViewAllMetrics') },
             { key: 'viewOwnerMetrics',  label: window.t('permViewFinMetrics') },
-            { key: 'editMetrics',       label: 'Додавати / редагувати метрики' },
-            { key: 'deleteMetricRows',  label: 'Видаляти рядки статистики' },
+            { key: 'editMetrics',       label: window.t('permEditMetrics') },
+            { key: 'deleteMetricRows',  label: window.t('permDeleteMetricRows') },
         ]
     },
     {
@@ -128,30 +128,30 @@ const PERMISSION_GROUPS = [
         items: [
             { key: 'viewAllTasks',  label: window.t('permViewAllTasks') },
             { key: 'assignTasks',   label: window.t('permAssignTasks') },
-            { key: 'editAnyTask',   label: 'Редагувати будь-яке завдання' },
-            { key: 'deleteAnyTask', label: 'Видаляти будь-яке завдання' },
+            { key: 'editAnyTask',   label: window.t('permEditAnyTask') },
+            { key: 'deleteAnyTask', label: window.t('permDeleteAnyTask') },
         ]
     },
     {
         group: window.t('permControlAnalytics'),
         items: [
-            { key: 'viewControl',    label: 'Панель контролю' },
+            { key: 'viewControl',    label: window.t('permControlPanel') },
             { key: 'viewAiAnalysis', label: window.t('aiAnalysis2') },
             { key: 'viewFinance',    label: window.t('finIndicators') },
         ]
     },
     {
-        group: 'Проекти та процеси',
+        group: window.t('permProjectsProcesses'),
         items: [
             { key: 'viewAllProjects', label: window.t('permViewAllProjects') },
-            { key: 'manageProjects',  label: 'Керувати проектами' },
+            { key: 'manageProjects',  label: window.t('permManageProjects') },
         ]
     },
     {
         group: window.t('teamWord'),
         items: [
-            { key: 'viewTeamList',         label: 'Бачити список команди' },
-            { key: 'viewColleagueEmails',  label: 'Бачити email колег' },
+            { key: 'viewTeamList',         label: window.t('permViewTeamList') },
+            { key: 'viewColleagueEmails',  label: window.t('permViewColleagueEmails') },
             { key: 'editUserCards',        label: window.t('permEditStaff') },
             { key: 'inviteUsers',          label: window.t('permInviteStaff') },
             { key: 'changeRoles',          label: window.t('permChangeRoles') },
@@ -323,7 +323,7 @@ window.renderRolesTab = async function() {
     if (canEdit) {
         html += `<div style="padding:1rem;background:#f0fdf4;border-radius:0 0 12px 12px;border-top:1px solid #bbf7d0;">
             <p style="font-size:0.8rem;color:#16a34a;margin:0;">
-                ✓ Зміни зберігаються автоматично. Owner завжди має всі права.
+                ✓ ${window.t('permAutoSave')}
             </p>
         </div>`;
     }
