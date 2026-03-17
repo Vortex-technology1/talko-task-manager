@@ -6908,6 +6908,220 @@ Bist du dabei?</div>
 <div class="l12-divider"></div>
 
 <div class="l12-section">
+    <div class="l12-section-label">Як бізнес росте</div>
+    <div class="l12-section-title">Коли бізнес зростає — функції діляться на підрозділи</div>
+    <div class="l12-card">
+        <p>На старті одна людина може закривати кілька функцій одночасно. Це нормально. Але коли бізнес росте — всередині кожної функції з'являються окремі зони відповідальності.</p>
+        <p>Наприклад: в <strong>Адмініструванні</strong> виділяється окремий <strong>Директор</strong> (стратегія, партнерства) і <strong>Операційний керівник</strong> (регламенти, контроль команди). У <strong>Виробництві</strong> — чотири окремих підрозділи: Планування, Забезпечення, Виробництво і Логістика.</p>
+        <p>Структура не змінюється — вона деталізується.</p>
+    </div>
+    <div style="overflow-x:auto;margin-top:1rem;">
+    <div style="display:flex;gap:6px;min-width:780px;">
+        <div style="display:flex;flex-direction:column;gap:0;flex:2;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Адміністрування</div>
+            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ДИРЕКТОР</div>
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Стратегія</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Ключові рішення</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Зовн. партнерства</div>
+                </div>
+                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ОПЕРАЦІЙНИЙ</div>
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Регламенти</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Наради і звіти</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Контроль команди</div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Найм та управління</div>
+            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Пошук і відбір</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Навчання</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Мотивація і KPI</div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Маркетинг</div>
+            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Розробка офера</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Воронка</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Реклама</div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Продажі</div>
+            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Обробка звернень</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Продажі</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">CRM</div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Фінанси</div>
+            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Доходи</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Витрати</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Облік</div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0;flex:4;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Виробництво / надання послуги</div>
+            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ПЛАНУВАННЯ</div>
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Графік робіт</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Розподіл ресурсів</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Пріоритети</div>
+                </div>
+                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ЗАБЕЗПЕЧЕННЯ</div>
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Закупівля</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Склад</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Постачальники</div>
+                </div>
+                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ВИРОБНИЦТВО</div>
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Надання послуги</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Стандарти</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Виконавці</div>
+                </div>
+                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ЛОГІСТИКА</div>
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Доставка</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Передача клієнту</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Документи</div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Контроль якості</div>
+            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Показники</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Перевірки</div>
+                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Відгуки</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Проблема = відсутня функція</div>
+    <div class="l12-section-title">Будь-яка проблема в бізнесі — це відсутня або зламана функція</div>
+    <div class="l12-card">
+        <p>Власники шукають причину проблем у людях: «поганий менеджер», «ліниві працівники», «не той клієнт». Насправді причина майже завжди одна — у бізнесі є функція, яку <strong>ніхто не виконує</strong>.</p>
+        <p>Знайди відсутню функцію — знайдеш причину. Виправ функцію — вирішиш проблему.</p>
+    </div>
+    <div style="margin-top:0.75rem;">
+        <div style="display:flex;gap:0;margin-bottom:8px;padding:0 4px;">
+            <div style="flex:1.2;font-size:9px;font-weight:700;color:#A32D2D;text-transform:uppercase;letter-spacing:0.06em;">Симптом (що болить)</div>
+            <div style="width:32px;flex-shrink:0;"></div>
+            <div style="flex:1;font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.06em;">Відсутня функція</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
+                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Немає клієнтів або їх дуже мало</span></div>
+                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Маркетинг</div></div></div>
+            </div>
+            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
+                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Клієнти купують раз і не повертаються</span></div>
+                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Повторні продажі / утримання</div></div></div>
+            </div>
+            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
+                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Постійно не вистачає матеріалів або товару</span></div>
+                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Забезпечення виробництва</div></div></div>
+            </div>
+            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
+                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Власник не може піти у відпустку — все зупиняється</span></div>
+                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Операційне управління</div></div></div>
+            </div>
+            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
+                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Нові люди місяцями не виходять на результат</span></div>
+                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Адаптація та навчання персоналу</div></div></div>
+            </div>
+            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
+                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Гроші є, але їх постійно не вистачає</span></div>
+                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Фінансове планування</div></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Що робити</div>
+    <div class="l12-section-title">Знайшов проблему — додай функцію в структуру</div>
+    <div class="l12-card">
+        <p>Коли ви знаходите проблему — не шукайте винного. Запитайте себе: <strong>яка функція у нас відсутня або не виконується?</strong></p>
+        <p>Відповідь на це питання — і є рішення. Не штраф, не звільнення, не нова CRM. А конкретна функція, яку потрібно додати в структуру і призначити відповідального.</p>
+    </div>
+    <div class="l12-steps" style="margin-top:0.75rem;">
+        <div class="l12-step">
+            <div class="l12-step-num" style="background:#ef4444;">1</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Знайди симптом</div>
+                <div class="l12-step-text">Що конкретно не працює? Опиши це як факт, без емоцій: «клієнти не повертаються», «матеріалів постійно не вистачає», «нові люди довго не виходять на результат».</div>
+            </div>
+        </div>
+        <div class="l12-step">
+            <div class="l12-step-num" style="background:#f59e0b;">2</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Визнач відсутню функцію</div>
+                <div class="l12-step-text">Запитай: яка робота мала б виконуватись щоб цієї проблеми не існувало? Це і є відсутня функція. Назви її конкретно.</div>
+            </div>
+        </div>
+        <div class="l12-step">
+            <div class="l12-step-num" style="background:#22c55e;">3</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Додай у структуру і признач відповідального</div>
+                <div class="l12-step-text">Внеси функцію в карту бізнесу. Призначте людину, яка буде за неї відповідати. Тепер ця «діра» закрита — і проблема вирішена системно, а не вручну.</div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:1rem;padding:0.85rem 1rem;background:#EEEDFE;border:1px solid #7F77DD;border-radius:12px;">
+        <div style="font-size:0.82rem;color:#26215C;line-height:1.6;"><strong>Запам'ятайте:</strong> структура — це не папір на стіні. Це живий документ, який оновлюється кожного разу, коли ви знаходите нову «діру» в бізнесі.</div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
     <div class="l12-section-label">Розділ 3</div>
     <div class="l12-section-title">Чотири причини, чому треба ділити роботу на функції</div>
     <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">«Навіщо все це ускладнювати? Просто найму людей і скажу: робіть що треба». Це найпоширеніша думка власника, який застряг. «Роби що треба» — це найдорожча команда, яку ви можете дати.</p>
