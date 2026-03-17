@@ -175,6 +175,22 @@ service cloud.firestore {
         allow update: if isManagerOrOwner(companyId);
         allow delete: if isManagerOrOwner(companyId);
       }
+
+      // ESTIMATE NORMS (Довідник норм витрат матеріалів)
+      match /estimate_norms/{normId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isManagerOrOwner(companyId);
+        allow update: if isManagerOrOwner(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // PROJECT ESTIMATES (Кошториси проектів)
+      match /project_estimates/{estimateId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isManagerOrOwner(companyId);
+        allow update: if isManagerOrOwner(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
       
       // COMPLETED TASKS
       match /completedTasks/{taskId} {

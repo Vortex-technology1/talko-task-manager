@@ -807,6 +807,10 @@ document.addEventListener('mousedown', function(e) {
                             <span id="warehouseNavBadge" style="display:none;position:absolute;top:4px;right:8px;background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;font-size:0.65rem;font-weight:700;align-items:center;justify-content:center;"></span>
                         </button>
                         <div style="height:1px;background:#f1f5f9;margin:0.2rem 0;"></div>
+                        <button class="tab-btn _ntab" id="estimateNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('estimate',function(){switchTab('estimate');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="clipboard-list" class="icon icon-sm"></i><span id="navSpanEstimate">Кошторис</span>
+                        </button>
+                        <div style="height:1px;background:#f1f5f9;margin:0.2rem 0;"></div>
                         <button class="tab-btn _ntab" id="integrationsNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';switchTab('integrations');" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="plug" class="icon icon-sm"></i><span data-i18n="tabIntegrations" id="navSpanIntegrations">Інтеграції</span>
                         </button>
@@ -1137,6 +1141,11 @@ document.addEventListener('mousedown', function(e) {
             <!-- Warehouse Tab -->
             <div id="warehouseTab" class="tab-content">
                 <div id="warehouseContainer"></div>
+            </div>
+
+            <!-- Estimate Tab -->
+            <div id="estimateTab" class="tab-content">
+                <div id="estimateContainer"></div>
             </div>
 
             <!-- Marketing Tab -->
@@ -4261,6 +4270,7 @@ document.addEventListener('mousedown', function(e) {
         funnels:      ["js/modules/79-funnels.js?v=20260317v1"],
         integrations: ["js/modules/96-integrations.js?v=20260317v1"],
         booking:      ["js/modules/100-booking.js?v=20260317v1"],
+        estimate:     ["js/modules/85-estimate.js?v=20260317v1"],
     };
 
     function lazyLoad(group, cb) {

@@ -182,7 +182,7 @@
             var tasksTabs    = ['tasks','regular'];
             var analyticsTabs = ['statistics','analytics','ownerDashboard'];
             var sysTabs      = ['functions','bizstructure','users','admin','onboarding'];
-            var bizTabs      = ['crm','finance','warehouse','marketing','bots','sites','integrations','booking'];
+            var bizTabs      = ['crm','finance','warehouse','marketing','bots','sites','integrations','booking','estimate'];
 
             var tasksBtn     = document.getElementById('tasksTabBtn');
             var analyticsBtn = document.getElementById('analyticsTabBtn');
@@ -284,6 +284,12 @@
                 case 'warehouse':
                     lazyLoad('warehouse', function() {
                         if (typeof window.initWarehouseUI === 'function') window.initWarehouseUI();
+                    });
+                    break;
+                case 'estimate':
+                    lazyLoad('estimate', function() {
+                        if (typeof window.initEstimateModule === 'function') window.initEstimateModule();
+                        else if (typeof window.renderEstimateTab === 'function') window.renderEstimateTab();
                     });
                     break;
             }
