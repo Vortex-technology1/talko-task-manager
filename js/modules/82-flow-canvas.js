@@ -1581,12 +1581,15 @@ window.fcTestAiNode = async function(nodeId) {
 };
 
 window.fcSetAiProvider = function(provider) {
-    if (!fc.selectedNode) return;
+    // FIX: fc.selectedNode не існує — використовуємо fc.selected
+    const node = fc.selected ? fc.nodes.find(n => n.id === fc.selected) : null;
+    if (!node) return;
     // Зберігаємо поточний ключ перед перемалюванням
     const currentKey = document.getElementById('fcp_aiApiKey')?.value || '';
-    fc.selectedNode.config.aiProvider = provider;
-    fc.selectedNode.config.aiApiKey = currentKey;
-    renderPropPanel(); // FIX: correct function name
+    node.config.aiProvider = provider;
+    // Зберігаємо ключ тільки якщо він не маска і не порожній
+    if (currentKey && !currentKey.includes('•')) node.config.aiApiKey = currentKey;
+    renderPropPanel();
 };
 
 // ── Property Panel ─────────────────────────────────────────
@@ -2405,7 +2408,7 @@ window.fcApplyNodeData = function(nodeId) {
                 }
                 node.config.aiApiKey = (_rawKey && !_isInvalid) ? _rawKey : null;
             })();
-            node.config.aiProvider = get('aiProvider') || fc.selectedNode?.config?.aiProvider || 'openai';
+            node.config.aiProvider = get('aiProvider') || node.config?.aiProvider || 'openai';
             node.config.saveAs = get('saveAs') || null;
             node.config.fallback = get('fallback');
             const _rawT = parseFloat(document.getElementById('fcp_temperature')?.value);
