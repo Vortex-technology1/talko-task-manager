@@ -19,6 +19,7 @@ if (!admin.apps.length) {
     } catch(e) { initError = e.message; }
 }
 const db = initError ? null : admin.firestore();
+if (initError) console.error('[webhook] FIREBASE INIT ERROR:', initError);
 
 // ── Auth helper ─────────────────────────────────────────
 async function _verifyAuth(req) {
@@ -52,6 +53,8 @@ module.exports = async (req, res) => {
     }
 
     if (req.method !== 'POST') return res.status(405).end();
+    // TEMP DEBUG: показуємо initError
+    if (initError) return res.status(200).json({ ok: false, initError: initError });
 
     // ── POST /api/webhook?action=send-message ────────────────
     // Відправка повідомлення від менеджера через бота
