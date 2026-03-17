@@ -1309,6 +1309,12 @@ module.exports = async function handler(req, res) {
     }
 
     if (req.query?.action === 'notify') {
+        // Internal server-to-server action — requires CRON_SECRET to prevent abuse
+        const notifySecret = process.env.CRON_SECRET;
+        const providedSecret = (req.headers['authorization'] || '').replace('Bearer ', '').trim();
+        if (notifySecret && providedSecret !== notifySecret) {
+            return res.status(403).json({ ok: false, error: 'Forbidden' });
+        }
         try {
             const { type, userId, userIds, companyId, ...data } = req.body;
             if (userIds) await notifyUsers(companyId, userIds, type, data);
