@@ -1489,20 +1489,20 @@ document.addEventListener('mousedown', function(e) {
                     <div style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;flex-wrap:wrap;">
                         <button id="usersSubTab-list" onclick="switchUsersSubTab('list')" 
                             style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:600;background:none;border:none;border-bottom:2px solid #22c55e;color:#16a34a;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
-                            <i data-lucide="users" class="icon icon-sm"></i> Список
+                            <i data-lucide="users" class="icon icon-sm"></i> <span data-i18n="subTabList">Список</span>
                         </button>
                         <button id="usersSubTab-invite" onclick="switchUsersSubTab('invite')"
                             style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
-                            <i data-lucide="user-plus" class="icon icon-sm"></i> Запросити
+                            <i data-lucide="user-plus" class="icon icon-sm"></i> <span data-i18n="subTabInvite">Запросити</span>
                         </button>
                         <button id="usersSubTab-roles" onclick="switchUsersSubTab('roles')"
                             style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
-                            <i data-lucide="key" class="icon icon-sm"></i> Ролі та дозволи
+                            <i data-lucide="key" class="icon icon-sm"></i> <span data-i18n="subTabRoles">Ролі та дозволи</span>
                         </button>
                         <button id="usersSubTab-company" onclick="switchUsersSubTab('company')"
                             style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:none;align-items:center;gap:0.35rem;"
                             class="owner-only-el">
-                            <i data-lucide="settings" class="icon icon-sm"></i> Компанія
+                            <i data-lucide="settings" class="icon icon-sm"></i> <span data-i18n="subTabCompany">Компанія</span>
                         </button>
                     </div>
                 </div>
@@ -1517,7 +1517,7 @@ document.addEventListener('mousedown', function(e) {
                 <!-- Запросити -->
                 <div id="usersSubContent-invite" style="display:none;">
                     <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-top:1rem;max-width:480px;">
-                        <h3 style="margin:0 0 1rem;font-size:1rem;"><i data-lucide="user-plus" class="icon" style="color:#22c55e;"></i> Запросити співробітника</h3>
+                        <h3 style="margin:0 0 1rem;font-size:1rem;"><i data-lucide="user-plus" class="icon" style="color:#22c55e;"></i> <span data-i18n="inviteEmployeeTitle">Запросити співробітника</span></h3>
                         <form onsubmit="sendInvite(event)">
                             <div class="form-group" style="margin-bottom:1rem;">
                                 <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Email</label>
@@ -1525,19 +1525,19 @@ document.addEventListener('mousedown', function(e) {
                                     style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
                             </div>
                             <div class="form-group" style="margin-bottom:1rem;">
-                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Роль</label>
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;" data-i18n="roleLabel">Роль</label>
                                 <select id="inviteRoleDesktop" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
-                                    <option value="employee">Співробітник</option>
-                                    <option value="manager">Менеджер</option>
+                                    <option value="employee" data-i18n="optionEmployee">Співробітник</option>
+                                    <option value="manager" data-i18n="optionManager">Менеджер</option>
                                     <option value="admin" data-i18n="adminRole">Адміністратор</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-success" style="width:100%;padding:0.7rem;">
-                                <i data-lucide="send" class="icon"></i> Надіслати запрошення
+                                <i data-lucide="send" class="icon"></i> <span data-i18n="sendInvitation">Надіслати запрошення</span>
                             </button>
                         </form>
                         <div id="inviteLink" style="display:none;margin-top:1rem;padding:0.75rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;">
-                            <p style="font-size:0.8rem;color:#16a34a;margin:0 0 0.5rem;font-weight:600;">✓ Запрошення створено. Скопіюйте посилання:</p>
+                            <p style="font-size:0.8rem;color:#16a34a;margin:0 0 0.5rem;font-weight:600;" data-i18n="inviteCreatedCopy">✓ Запрошення створено. Скопіюйте посилання:</p>
                             <div style="display:flex;gap:0.5rem;">
                                 <input id="inviteLinkText" readonly style="flex:1;padding:0.5rem;border:1px solid #bbf7d0;border-radius:6px;font-size:0.78rem;background:white;">
                                 <button onclick="copyInviteLink()" class="btn btn-success" style="padding:0.5rem 0.75rem;white-space:nowrap;"><span data-i18n="copy">Копіювати</span></button>
@@ -1551,11 +1551,11 @@ document.addEventListener('mousedown', function(e) {
                     <div style="background:white;border-radius:12px;box-shadow:var(--shadow);margin-top:1rem;overflow:hidden;">
                         <div style="padding:1rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;">
                             <div>
-                                <h3 style="margin:0;font-size:1rem;"><i data-lucide="key" class="icon" style="color:#f97316;"></i> Ролі та дозволи</h3>
-                                <p style="margin:0.25rem 0 0;font-size:0.8rem;color:#9ca3af;">Налаштуйте що може робити кожна роль</p>
+                                <h3 style="margin:0;font-size:1rem;"><i data-lucide="key" class="icon" style="color:#f97316;"></i> <span data-i18n="rolesPermissionsTitle">Ролі та дозволи</span></h3>
+                                <p style="margin:0.25rem 0 0;font-size:0.8rem;color:#9ca3af;" data-i18n="rolesPermissionsHint">Налаштуйте що може робити кожна роль</p>
                             </div>
                             <button onclick="renderRolesTab()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
-                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Завантажити
+                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> <span data-i18n="loadBtn">Завантажити</span>
                             </button>
                         </div>
                         <div id="rolesPermissionsContainerUsers" style="padding:0;"></div>
@@ -1570,21 +1570,21 @@ document.addEventListener('mousedown', function(e) {
                         <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
                             <div style="padding:1rem 1.25rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:0.5rem;">
                                 <i data-lucide="building-2" class="icon" style="color:#22c55e;"></i>
-                                <h3 style="margin:0;font-size:1rem;font-weight:600;">Налаштування компанії</h3>
+                                <h3 style="margin:0;font-size:1rem;font-weight:600;" data-i18n="companySettingsTitle">Налаштування компанії</h3>
                             </div>
                             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
                                 <div>
-                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Назва компанії</label>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;" data-i18n="companyNameSetting">Назва компанії</label>
                                     <div style="display:flex;gap:0.5rem;">
                                         <input id="settingCompanyName" type="text" placeholder="Назва компанії"
                                             style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
                                         <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">
-                                            <i data-lucide="save" class="icon icon-sm"></i> Зберегти
+                                            <i data-lucide="save" class="icon icon-sm"></i> <span data-i18n="saveBtn">Зберегти</span>
                                         </button>
                                     </div>
                                 </div>
                                 <div>
-                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Часовий пояс</label>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;" data-i18n="timezoneSetting">Часовий пояс</label>
                                     <select id="settingTimezone" onchange="saveCompanySetting('timezone')"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
                                         <option value="Europe/Kyiv">Київ (UTC+2/+3)</option>
@@ -1599,7 +1599,7 @@ document.addEventListener('mousedown', function(e) {
                                     <input type="checkbox" id="settingWeeklyReport" onchange="saveCompanySetting('weeklyReport')"
                                         style="width:16px;height:16px;accent-color:#22c55e;">
                                     <label for="settingWeeklyReport" style="font-size:0.9rem;color:#374151;cursor:pointer;">
-                                        Щотижневий звіт власнику
+                                        <span data-i18n="weeklyReportLabel">Щотижневий звіт власнику</span>
                                     </label>
                                 </div>
                             </div>
@@ -1609,9 +1609,9 @@ document.addEventListener('mousedown', function(e) {
                         <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
                             <div style="padding:1rem 1.25rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:0.5rem;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                                <h3 style="margin:0;font-size:1rem;font-weight:600;">Профіль компанії</h3>
+                                <h3 style="margin:0;font-size:1rem;font-weight:600;" data-i18n="companyProfileTitle">Профіль компанії</h3>
                                 <span style="margin-left:auto;font-size:0.72rem;background:#f0fdf4;color:#16a34a;padding:0.2rem 0.5rem;border-radius:20px;border:1px solid #bbf7d0;">
-                                    Використовується AI-аналітиком
+                                    <span data-i18n="usedByAI">Використовується AI-аналітиком</span>
                                 </span>
                             </div>
                             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1.25rem;">
@@ -1619,28 +1619,28 @@ document.addEventListener('mousedown', function(e) {
                                 <!-- Ніша -->
                                 <div>
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.4rem;">
-                                        Ніша / Галузь бізнесу
+                                        <span data-i18n="companyNicheLabel">Ніша / Галузь бізнесу</span>
                                         <span title="AI порівнює вашу маржу з бенчмарками ніші"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                                     </label>
                                     <div style="display:flex;gap:0.5rem;">
                                         <select id="settingNiche"
                                             style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;background:#fff;">
-                                            <option value="">Оберіть нішу...</option>
-                                            <option value="construction">Будівництво / Підряд</option>
-                                            <option value="medical">Медичний бізнес</option>
-                                            <option value="dental">Стоматологія</option>
-                                            <option value="beauty">Бьюті бізнес (салон, косметологія)</option>
-                                            <option value="furniture">Меблевий бізнес</option>
-                                            <option value="retail">Роздрібна торгівля</option>
-                                            <option value="it">IT / Діджитал послуги</option>
-                                            <option value="manufacturing">Виробництво</option>
-                                            <option value="consulting">Консалтинг / Навчання</option>
-                                            <option value="logistics">Логістика / Транспорт</option>
-                                            <option value="food">Ресторан / Кафе / Їжа</option>
-                                            <option value="other">Інше</option>
+                                            <option value="" data-i18n="nicheSelect">Оберіть нішу...</option>
+                                            <option value="construction" data-i18n="nicheConstruction">Будівництво / Підряд</option>
+                                            <option value="medical" data-i18n="nicheMedical">Медичний бізнес</option>
+                                            <option value="dental" data-i18n="nicheDental">Стоматологія</option>
+                                            <option value="beauty" data-i18n="nicheBeauty">Бьюті бізнес (салон, косметологія)</option>
+                                            <option value="furniture" data-i18n="nicheFurniture">Меблевий бізнес</option>
+                                            <option value="retail" data-i18n="nicheRetail">Роздрібна торгівля</option>
+                                            <option value="it" data-i18n="nicheIT">IT / Діджитал послуги</option>
+                                            <option value="manufacturing" data-i18n="nicheManufacturing">Виробництво</option>
+                                            <option value="consulting" data-i18n="nicheConsulting">Консалтинг / Навчання</option>
+                                            <option value="logistics" data-i18n="nicheLogistics">Логістика / Транспорт</option>
+                                            <option value="food" data-i18n="nicheFood">Ресторан / Кафе / Їжа</option>
+                                            <option value="other" data-i18n="nicheOther">Інше</option>
                                         </select>
                                         <button onclick="saveCompanyProfile()" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти все
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> <span data-i18n="saveAll">Зберегти все</span>
                                         </button>
                                     </div>
                                 </div>
@@ -1648,7 +1648,7 @@ document.addEventListener('mousedown', function(e) {
                                 <!-- Мета -->
                                 <div>
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
-                                        Мета компанії
+                                        <span data-i18n="companyGoalLabel">Мета компанії</span>
                                         <span title="Відповідає на питання 'що зробити для клієнта'. Результат, а не процес. 1-2 речення"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                                         <span onclick="window.loadLearningModules(function(){switchTab('learning');setTimeout(function(){window._openLearningModule&&window._openLearningModule(10)},400);})"
                                             style="margin-left:auto;font-size:0.68rem;color:#16a34a;cursor:pointer;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1px 7px;">
@@ -1658,27 +1658,27 @@ document.addEventListener('mousedown', function(e) {
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
                                         Приклад: «Допомагати власникам бізнесу вибудовувати систему управління, яка працює без їхньої постійної участі»
                                     </div>
-                                    <textarea id="settingGoal" rows="2" placeholder="Мета вашої компанії..."
+                                    <textarea id="settingGoal" rows="2" placeholder="Мета вашої компанії..." data-i18n-placeholder="companyGoalPh"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
                                 </div>
 
                                 <!-- Задум -->
                                 <div>
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
-                                        Задум (чим займається, відмінність від конкурентів)
+                                        <span data-i18n="companyConceptLabel">Задум (чим займається, відмінність від конкурентів)</span>
                                         <span title="Що продаєте, як виробляєте, чому клієнт обирає саме вас. 1-4 речення"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                                     </label>
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
                                         Приклад: «Будівельна компанія, що спеціалізується на зведенні житлових будинків "під ключ". Власна бригада без субпідряду, гарантія 5 років»
                                     </div>
-                                    <textarea id="settingConcept" rows="3" placeholder="Задум вашої компанії..."
+                                    <textarea id="settingConcept" rows="3" placeholder="Задум вашої компанії..." data-i18n-placeholder="companyConceptPh"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
                                 </div>
 
                                 <!-- ЦКП -->
                                 <div>
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
-                                        Цінний Кінцевий Продукт (ЦКП)
+                                        <span data-i18n="companyVVPLabel">Цінний Кінцевий Продукт (ЦКП)</span>
                                         <span title="Що отримує клієнт як завершений результат. Не процес, а результат"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                                         <span onclick="window.loadLearningModules(function(){switchTab('learning');setTimeout(function(){window._openLearningModule&&window._openLearningModule(11)},400);})"
                                             style="margin-left:auto;font-size:0.68rem;color:#0369a1;cursor:pointer;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:1px 7px;">
@@ -1688,20 +1688,20 @@ document.addEventListener('mousedown', function(e) {
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
                                         Приклад: «Готовий об'єкт у встановлені терміни, з гарантією якості, без додаткових витрат понад кошторис»
                                     </div>
-                                    <textarea id="settingCKP" rows="2" placeholder="ЦКП вашої компанії..."
+                                    <textarea id="settingCKP" rows="2" placeholder="ЦКП вашої компанії..." data-i18n-placeholder="companyVVPPh"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
                                 </div>
 
                                 <!-- Ідеальна картина -->
                                 <div>
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
-                                        Ідеальна картина (цілі на 1-3 роки в цифрах)
+                                        <span data-i18n="companyIdealLabel">Ідеальна картина (цілі на 1-3 роки в цифрах)</span>
                                         <span title="Конкретні KPI: виручка, кількість клієнтів, маржа, команда. Реалістично на 1-3 роки"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                                     </label>
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
                                         Приклад: «До кінця 2026: виручка 500к EUR/міс, 3 об'єкти паралельно, команда 25 осіб, маржа 20%+»
                                     </div>
-                                    <textarea id="settingIdealPicture" rows="3" placeholder="Ідеальна картина вашого бізнесу..."
+                                    <textarea id="settingIdealPicture" rows="3" placeholder="Ідеальна картина вашого бізнесу..." data-i18n-placeholder="companyIdealPh"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
                                 </div>
 
@@ -1712,18 +1712,18 @@ document.addEventListener('mousedown', function(e) {
                         <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;border:1px solid #fecaca;">
                             <div style="padding:1rem 1.25rem;border-bottom:1px solid #fecaca;display:flex;align-items:center;gap:0.5rem;">
                                 <i data-lucide="alert-triangle" class="icon" style="color:#ef4444;"></i>
-                                <h3 style="margin:0;font-size:1rem;font-weight:600;color:#ef4444;">Небезпечна зона</h3>
+                                <h3 style="margin:0;font-size:1rem;font-weight:600;color:#ef4444;" data-i18n="dangerZoneTitle">Небезпечна зона</h3>
                             </div>
                             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
-                                <p style="margin:0;font-size:0.85rem;color:#6b7280;">Ці дії незворотні. Будьте обережні.</p>
+                                <p style="margin:0;font-size:0.85rem;color:#6b7280;" data-i18n="dangerZoneHint">Ці дії незворотні. Будьте обережні.</p>
                                 <button onclick="exportCompanyData()" class="btn" style="width:fit-content;padding:0.6rem 1rem;font-size:0.85rem;border:1px solid #d1d5db;">
-                                    <i data-lucide="download" class="icon icon-sm"></i> Експорт даних компанії
+                                    <i data-lucide="download" class="icon icon-sm"></i> <span data-i18n="exportCompanyData">Експорт даних компанії</span>
                                 </button>
                             </div>
                         </div>
 
                         <div style="padding:0.75rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;font-size:0.8rem;color:#16a34a;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Незабаром: логотип компанії, теми оформлення, Telegram інтеграція
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg><span data-i18n="comingSoonMsg"> Незабаром: логотип компанії, теми оформлення, Telegram інтеграція</span>
                         </div>
                     </div>
                 </div>

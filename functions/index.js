@@ -22,6 +22,410 @@ function getTelegramApi() {
 }
 
 // ===========================
+// i18n FOR TELEGRAM MESSAGES
+// ===========================
+const TG_LANG = {
+    ua: {
+        taskDone: '✅ <b>Завдання виконано!</b>',
+        taskSentForReview: '🔍 <b>Відправлено на перевірку!</b>',
+        taskInProgress: '🚀 <b>В роботі</b>',
+        taskPostponed: '🔄 <b>Перенесено</b>',
+        newDeadline: '📅 Новий дедлайн',
+        deadline: '📅 Дедлайн',
+        executor: '👤 Виконавець',
+        unknown: 'Невідомо',
+        taskType_process: '🟣 Процес',
+        taskType_regular: '🟠 Регулярне',
+        taskType_task: '🟢 Завдання',
+        expectedResult: '📋 Очікуваний результат',
+        description: '📝 Опис',
+        status: '📊 Статус',
+        priority: '🔖 Пріоритет',
+        function: '⚙️ Функція',
+        object: '🏷 Об\'єкт',
+        taskNotFound: '❌ Задачу не знайдено',
+        noPermission: '❌ Немає прав на цю задачу',
+        unknownAction: '❌ Невідома дія',
+        invalidParams: '❌ Невірні параметри',
+        errorPrefix: '❌ Помилка: ',
+        cbTaskDone: '✅ Задачу завершено!',
+        cbInProgress: '🚀 Взято в роботу',
+        cbPostponed: '📅 Перенесено на',
+        cbSentForReview: '🔍 Відправлено на перевірку',
+        connectedSuccess: '✅ <b>Успішно підключено!</b>\n\nТепер ви отримуватимете сповіщення про нові завдання.\n\nКнопки під кожним завданням:\n✅ Готово — завершити\n🔄 +1 день — перенести\n🚀 В роботу — взяти\n📎 Деталі — побачити опис',
+        codeNotFound: '❌ Код не знайдено або застарів.\n\nСпробуйте отримати новий код в TALKO System.',
+        welcome: '👋 <b>Вітаю в TALKO Tasks!</b>\n\nЩоб підключити сповіщення, натисніть кнопку "Підключити Telegram" в налаштуваннях TALKO System.\n\nДоступні команди:\n/today — задачі на сьогодні\n/overdue — прострочені',
+        noTasksToday: '✅ Задач на сьогодні немає',
+        noOverdue: '✅ Прострочених немає!',
+        noTasksAndDeals: '✅ На сьогодні завдань і угод немає!',
+        tasksToday: '📋 Задачі на сьогодні',
+        tasksOverdue: '📋 Прострочені',
+        moreItems: '... ще',
+        crmContactToday: '📞 <b>Потрібен контакт сьогодні',
+        crmDeals: 'угод</b>',
+        crmStage: '📊 Стадія',
+        crmContact: '📅 Контакт',
+        crmMoreDeals: 'угод',
+        crmOverdue: '⚠️ Прострочено (мав бути',
+        helpMenu: '📖 <b>TALKO Tasks — команди:</b>\n\n/today — завдання на сьогодні\n/overdue — прострочені завдання\n/weekly — звіт за тиждень\n/team — статус команди\n/connect — підключити email\n/help — ця довідка',
+        weeklyReport: '📊 <b>Тижневий звіт</b>\n\n✅ Виконано',
+        weeklyInProgress: '🔄 В роботі',
+        weeklyOverdue: '⚠️ Прострочено',
+        notConnected: '❌ Не підключено. Натисніть "Підключити Telegram" в TALKO System.',
+        teamOnlyForManagers: 'ℹ️ Команда /team доступна тільки для керівників в TALKO System.',
+        connectHint: 'ℹ️ Для підключення email зайдіть в TALKO System → Профіль → Підключити Telegram.',
+        btnDone: '✅ Готово',
+        btnPostpone: '🔄 +1 день',
+        btnDetails: '📎 Деталі',
+        btnInProgress: '🚀 В роботу',
+        overdueAlert: '⚠️ Прострочено',
+        reminderPrefix: '⏰ Нагадування',
+        escalationPrefix: '🚨 Ескалація',
+        reviewRequired: '🔍 Потребує перевірки',
+        teamReport: '👥 <b>Статус команди</b>',
+        active: 'активних',
+        overdueTasks: 'прострочених',
+        doneTasks: 'виконано сьогодні',
+        noTeamData: 'Немає даних про команду',
+    },
+    ru: {
+        taskDone: '✅ <b>Задача выполнена!</b>',
+        taskSentForReview: '🔍 <b>Отправлено на проверку!</b>',
+        taskInProgress: '🚀 <b>В работе</b>',
+        taskPostponed: '🔄 <b>Перенесено</b>',
+        newDeadline: '📅 Новый дедлайн',
+        deadline: '📅 Дедлайн',
+        executor: '👤 Исполнитель',
+        unknown: 'Неизвестно',
+        taskType_process: '🟣 Процесс',
+        taskType_regular: '🟠 Регулярная',
+        taskType_task: '🟢 Задача',
+        expectedResult: '📋 Ожидаемый результат',
+        description: '📝 Описание',
+        status: '📊 Статус',
+        priority: '🔖 Приоритет',
+        function: '⚙️ Функция',
+        object: '🏷 Объект',
+        taskNotFound: '❌ Задача не найдена',
+        noPermission: '❌ Нет прав на эту задачу',
+        unknownAction: '❌ Неизвестное действие',
+        invalidParams: '❌ Неверные параметры',
+        errorPrefix: '❌ Ошибка: ',
+        cbTaskDone: '✅ Задача завершена!',
+        cbInProgress: '🚀 Взято в работу',
+        cbPostponed: '📅 Перенесено на',
+        cbSentForReview: '🔍 Отправлено на проверку',
+        connectedSuccess: '✅ <b>Успешно подключено!</b>\n\nТеперь вы будете получать уведомления о новых задачах.\n\nКнопки под каждой задачей:\n✅ Готово — завершить\n🔄 +1 день — перенести\n🚀 В работу — взять\n📎 Детали — посмотреть описание',
+        codeNotFound: '❌ Код не найден или устарел.\n\nПопробуйте получить новый код в TALKO System.',
+        welcome: '👋 <b>Добро пожаловать в TALKO Tasks!</b>\n\nЧтобы подключить уведомления, нажмите кнопку "Подключить Telegram" в настройках TALKO System.\n\nДоступные команды:\n/today — задачи на сегодня\n/overdue — просроченные',
+        noTasksToday: '✅ Задач на сегодня нет',
+        noOverdue: '✅ Просроченных нет!',
+        noTasksAndDeals: '✅ На сегодня задач и сделок нет!',
+        tasksToday: '📋 Задачи на сегодня',
+        tasksOverdue: '📋 Просроченные',
+        moreItems: '... ещё',
+        crmContactToday: '📞 <b>Нужен контакт сегодня',
+        crmDeals: 'сделок</b>',
+        crmStage: '📊 Стадия',
+        crmContact: '📅 Контакт',
+        crmMoreDeals: 'сделок',
+        crmOverdue: '⚠️ Просрочено (должен был быть',
+        helpMenu: '📖 <b>TALKO Tasks — команды:</b>\n\n/today — задачи на сегодня\n/overdue — просроченные задачи\n/weekly — отчёт за неделю\n/team — статус команды\n/connect — подключить email\n/help — эта справка',
+        weeklyReport: '📊 <b>Недельный отчёт</b>\n\n✅ Выполнено',
+        weeklyInProgress: '🔄 В работе',
+        weeklyOverdue: '⚠️ Просрочено',
+        notConnected: '❌ Не подключено. Нажмите "Подключить Telegram" в TALKO System.',
+        teamOnlyForManagers: 'ℹ️ Команда /team доступна только для руководителей в TALKO System.',
+        connectHint: 'ℹ️ Для подключения email зайдите в TALKO System → Профиль → Подключить Telegram.',
+        btnDone: '✅ Готово',
+        btnPostpone: '🔄 +1 день',
+        btnDetails: '📎 Детали',
+        btnInProgress: '🚀 В работу',
+        overdueAlert: '⚠️ Просрочено',
+        reminderPrefix: '⏰ Напоминание',
+        escalationPrefix: '🚨 Эскалация',
+        reviewRequired: '🔍 Требует проверки',
+        teamReport: '👥 <b>Статус команды</b>',
+        active: 'активных',
+        overdueTasks: 'просроченных',
+        doneTasks: 'выполнено сегодня',
+        noTeamData: 'Нет данных о команде',
+    },
+    en: {
+        taskDone: '✅ <b>Task completed!</b>',
+        taskSentForReview: '🔍 <b>Sent for review!</b>',
+        taskInProgress: '🚀 <b>In progress</b>',
+        taskPostponed: '🔄 <b>Postponed</b>',
+        newDeadline: '📅 New deadline',
+        deadline: '📅 Deadline',
+        executor: '👤 Assignee',
+        unknown: 'Unknown',
+        taskType_process: '🟣 Process',
+        taskType_regular: '🟠 Regular',
+        taskType_task: '🟢 Task',
+        expectedResult: '📋 Expected result',
+        description: '📝 Description',
+        status: '📊 Status',
+        priority: '🔖 Priority',
+        function: '⚙️ Function',
+        object: '🏷 Object',
+        taskNotFound: '❌ Task not found',
+        noPermission: '❌ No permission for this task',
+        unknownAction: '❌ Unknown action',
+        invalidParams: '❌ Invalid parameters',
+        errorPrefix: '❌ Error: ',
+        cbTaskDone: '✅ Task completed!',
+        cbInProgress: '🚀 Taken in progress',
+        cbPostponed: '📅 Postponed to',
+        cbSentForReview: '🔍 Sent for review',
+        connectedSuccess: '✅ <b>Successfully connected!</b>\n\nYou will now receive notifications about new tasks.\n\nButtons under each task:\n✅ Done — complete\n🔄 +1 day — postpone\n🚀 In progress — take\n📎 Details — view description',
+        codeNotFound: '❌ Code not found or expired.\n\nTry getting a new code in TALKO System.',
+        welcome: '👋 <b>Welcome to TALKO Tasks!</b>\n\nTo connect notifications, click "Connect Telegram" in TALKO System settings.\n\nAvailable commands:\n/today — tasks for today\n/overdue — overdue tasks',
+        noTasksToday: '✅ No tasks for today',
+        noOverdue: '✅ No overdue tasks!',
+        noTasksAndDeals: '✅ No tasks or deals for today!',
+        tasksToday: '📋 Tasks for today',
+        tasksOverdue: '📋 Overdue',
+        moreItems: '... more',
+        crmContactToday: '📞 <b>Contact needed today',
+        crmDeals: 'deals</b>',
+        crmStage: '📊 Stage',
+        crmContact: '📅 Contact',
+        crmMoreDeals: 'deals',
+        crmOverdue: '⚠️ Overdue (was due',
+        helpMenu: '📖 <b>TALKO Tasks — commands:</b>\n\n/today — tasks for today\n/overdue — overdue tasks\n/weekly — weekly report\n/team — team status\n/connect — connect email\n/help — this help',
+        weeklyReport: '📊 <b>Weekly report</b>\n\n✅ Completed',
+        weeklyInProgress: '🔄 In progress',
+        weeklyOverdue: '⚠️ Overdue',
+        notConnected: '❌ Not connected. Click "Connect Telegram" in TALKO System.',
+        teamOnlyForManagers: 'ℹ️ The /team command is available to managers only in TALKO System.',
+        connectHint: 'ℹ️ To connect your email, go to TALKO System → Profile → Connect Telegram.',
+        btnDone: '✅ Done',
+        btnPostpone: '🔄 +1 day',
+        btnDetails: '📎 Details',
+        btnInProgress: '🚀 In progress',
+        overdueAlert: '⚠️ Overdue',
+        reminderPrefix: '⏰ Reminder',
+        escalationPrefix: '🚨 Escalation',
+        reviewRequired: '🔍 Needs review',
+        teamReport: '👥 <b>Team status</b>',
+        active: 'active',
+        overdueTasks: 'overdue',
+        doneTasks: 'done today',
+        noTeamData: 'No team data available',
+    },
+    pl: {
+        taskDone: '✅ <b>Zadanie wykonane!</b>',
+        taskSentForReview: '🔍 <b>Wysłano do sprawdzenia!</b>',
+        taskInProgress: '🚀 <b>W trakcie</b>',
+        taskPostponed: '🔄 <b>Przesunięto</b>',
+        newDeadline: '📅 Nowy termin',
+        deadline: '📅 Termin',
+        executor: '👤 Wykonawca',
+        unknown: 'Nieznany',
+        taskType_process: '🟣 Proces',
+        taskType_regular: '🟠 Regularne',
+        taskType_task: '🟢 Zadanie',
+        expectedResult: '📋 Oczekiwany wynik',
+        description: '📝 Opis',
+        status: '📊 Status',
+        priority: '🔖 Priorytet',
+        function: '⚙️ Funkcja',
+        object: '🏷 Obiekt',
+        taskNotFound: '❌ Zadanie nie znalezione',
+        noPermission: '❌ Brak uprawnień do tego zadania',
+        unknownAction: '❌ Nieznana akcja',
+        invalidParams: '❌ Nieprawidłowe parametry',
+        errorPrefix: '❌ Błąd: ',
+        cbTaskDone: '✅ Zadanie ukończone!',
+        cbInProgress: '🚀 Wzięto do pracy',
+        cbPostponed: '📅 Przesunięto na',
+        cbSentForReview: '🔍 Wysłano do sprawdzenia',
+        connectedSuccess: '✅ <b>Pomyślnie połączono!</b>\n\nBędziesz teraz otrzymywać powiadomienia o nowych zadaniach.\n\nPrzyciski pod każdym zadaniem:\n✅ Gotowe — zakończ\n🔄 +1 dzień — przesuń\n🚀 Do pracy — weź\n📎 Szczegóły — zobacz opis',
+        codeNotFound: '❌ Kod nie znaleziony lub wygasł.\n\nSpróbuj uzyskać nowy kod w TALKO System.',
+        welcome: '👋 <b>Witamy w TALKO Tasks!</b>\n\nAby połączyć powiadomienia, kliknij "Połącz Telegram" w ustawieniach TALKO System.\n\nDostępne polecenia:\n/today — zadania na dziś\n/overdue — zaległe',
+        noTasksToday: '✅ Brak zadań na dziś',
+        noOverdue: '✅ Brak zaległości!',
+        noTasksAndDeals: '✅ Brak zadań i transakcji na dziś!',
+        tasksToday: '📋 Zadania na dziś',
+        tasksOverdue: '📋 Zaległe',
+        moreItems: '... jeszcze',
+        crmContactToday: '📞 <b>Kontakt potrzebny dziś',
+        crmDeals: 'transakcji</b>',
+        crmStage: '📊 Etap',
+        crmContact: '📅 Kontakt',
+        crmMoreDeals: 'transakcji',
+        crmOverdue: '⚠️ Zaległe (miał być',
+        helpMenu: '📖 <b>TALKO Tasks — polecenia:</b>\n\n/today — zadania na dziś\n/overdue — zaległe zadania\n/weekly — raport tygodniowy\n/team — status zespołu\n/connect — połącz email\n/help — ta pomoc',
+        weeklyReport: '📊 <b>Raport tygodniowy</b>\n\n✅ Wykonano',
+        weeklyInProgress: '🔄 W trakcie',
+        weeklyOverdue: '⚠️ Zaległe',
+        notConnected: '❌ Nie połączono. Kliknij "Połącz Telegram" w TALKO System.',
+        teamOnlyForManagers: 'ℹ️ Polecenie /team dostępne tylko dla kierowników w TALKO System.',
+        connectHint: 'ℹ️ Aby połączyć email, przejdź do TALKO System → Profil → Połącz Telegram.',
+        btnDone: '✅ Gotowe',
+        btnPostpone: '🔄 +1 dzień',
+        btnDetails: '📎 Szczegóły',
+        btnInProgress: '🚀 Do pracy',
+        overdueAlert: '⚠️ Zaległe',
+        reminderPrefix: '⏰ Przypomnienie',
+        escalationPrefix: '🚨 Eskalacja',
+        reviewRequired: '🔍 Wymaga sprawdzenia',
+        teamReport: '👥 <b>Status zespołu</b>',
+        active: 'aktywnych',
+        overdueTasks: 'zaległych',
+        doneTasks: 'wykonano dziś',
+        noTeamData: 'Brak danych o zespole',
+    },
+    de: {
+        taskDone: '✅ <b>Aufgabe erledigt!</b>',
+        taskSentForReview: '🔍 <b>Zur Prüfung gesendet!</b>',
+        taskInProgress: '🚀 <b>In Bearbeitung</b>',
+        taskPostponed: '🔄 <b>Verschoben</b>',
+        newDeadline: '📅 Neuer Termin',
+        deadline: '📅 Termin',
+        executor: '👤 Bearbeiter',
+        unknown: 'Unbekannt',
+        taskType_process: '🟣 Prozess',
+        taskType_regular: '🟠 Regelmäßig',
+        taskType_task: '🟢 Aufgabe',
+        expectedResult: '📋 Erwartetes Ergebnis',
+        description: '📝 Beschreibung',
+        status: '📊 Status',
+        priority: '🔖 Priorität',
+        function: '⚙️ Funktion',
+        object: '🏷 Objekt',
+        taskNotFound: '❌ Aufgabe nicht gefunden',
+        noPermission: '❌ Keine Berechtigung für diese Aufgabe',
+        unknownAction: '❌ Unbekannte Aktion',
+        invalidParams: '❌ Ungültige Parameter',
+        errorPrefix: '❌ Fehler: ',
+        cbTaskDone: '✅ Aufgabe abgeschlossen!',
+        cbInProgress: '🚀 In Bearbeitung genommen',
+        cbPostponed: '📅 Verschoben auf',
+        cbSentForReview: '🔍 Zur Prüfung gesendet',
+        connectedSuccess: '✅ <b>Erfolgreich verbunden!</b>\n\nSie erhalten jetzt Benachrichtigungen über neue Aufgaben.\n\nSchaltflächen unter jeder Aufgabe:\n✅ Fertig — abschließen\n🔄 +1 Tag — verschieben\n🚀 In Arbeit — nehmen\n📎 Details — Beschreibung ansehen',
+        codeNotFound: '❌ Code nicht gefunden oder abgelaufen.\n\nVersuchen Sie, einen neuen Code in TALKO System zu erhalten.',
+        welcome: '👋 <b>Willkommen bei TALKO Tasks!</b>\n\nUm Benachrichtigungen zu verbinden, klicken Sie auf "Telegram verbinden" in den TALKO System-Einstellungen.\n\nVerfügbare Befehle:\n/today — Aufgaben für heute\n/overdue — überfällige',
+        noTasksToday: '✅ Keine Aufgaben für heute',
+        noOverdue: '✅ Keine überfälligen Aufgaben!',
+        noTasksAndDeals: '✅ Keine Aufgaben oder Deals für heute!',
+        tasksToday: '📋 Aufgaben für heute',
+        tasksOverdue: '📋 Überfällig',
+        moreItems: '... weitere',
+        crmContactToday: '📞 <b>Kontakt heute erforderlich',
+        crmDeals: 'Deals</b>',
+        crmStage: '📊 Stufe',
+        crmContact: '📅 Kontakt',
+        crmMoreDeals: 'Deals',
+        crmOverdue: '⚠️ Überfällig (war fällig am',
+        helpMenu: '📖 <b>TALKO Tasks — Befehle:</b>\n\n/today — Aufgaben für heute\n/overdue — überfällige Aufgaben\n/weekly — Wochenbericht\n/team — Teamstatus\n/connect — Email verbinden\n/help — diese Hilfe',
+        weeklyReport: '📊 <b>Wochenbericht</b>\n\n✅ Erledigt',
+        weeklyInProgress: '🔄 In Bearbeitung',
+        weeklyOverdue: '⚠️ Überfällig',
+        notConnected: '❌ Nicht verbunden. Klicken Sie auf "Telegram verbinden" in TALKO System.',
+        teamOnlyForManagers: 'ℹ️ Der Befehl /team ist nur für Manager in TALKO System verfügbar.',
+        connectHint: 'ℹ️ Um Ihre E-Mail zu verbinden, gehen Sie zu TALKO System → Profil → Telegram verbinden.',
+        btnDone: '✅ Fertig',
+        btnPostpone: '🔄 +1 Tag',
+        btnDetails: '📎 Details',
+        btnInProgress: '🚀 In Arbeit',
+        overdueAlert: '⚠️ Überfällig',
+        reminderPrefix: '⏰ Erinnerung',
+        escalationPrefix: '🚨 Eskalation',
+        reviewRequired: '🔍 Prüfung erforderlich',
+        teamReport: '👥 <b>Teamstatus</b>',
+        active: 'aktiv',
+        overdueTasks: 'überfällig',
+        doneTasks: 'heute erledigt',
+        noTeamData: 'Keine Teamdaten verfügbar',
+    },
+    cs: {
+        taskDone: '✅ <b>Úkol dokončen!</b>',
+        taskSentForReview: '🔍 <b>Odesláno ke kontrole!</b>',
+        taskInProgress: '🚀 <b>V průběhu</b>',
+        taskPostponed: '🔄 <b>Přesunuto</b>',
+        newDeadline: '📅 Nový termín',
+        deadline: '📅 Termín',
+        executor: '👤 Řešitel',
+        unknown: 'Neznámý',
+        taskType_process: '🟣 Proces',
+        taskType_regular: '🟠 Pravidelný',
+        taskType_task: '🟢 Úkol',
+        expectedResult: '📋 Očekávaný výsledek',
+        description: '📝 Popis',
+        status: '📊 Status',
+        priority: '🔖 Priorita',
+        function: '⚙️ Funkce',
+        object: '🏷 Objekt',
+        taskNotFound: '❌ Úkol nenalezen',
+        noPermission: '❌ Žádná oprávnění pro tento úkol',
+        unknownAction: '❌ Neznámá akce',
+        invalidParams: '❌ Neplatné parametry',
+        errorPrefix: '❌ Chyba: ',
+        cbTaskDone: '✅ Úkol dokončen!',
+        cbInProgress: '🚀 Vzato do práce',
+        cbPostponed: '📅 Přesunuto na',
+        cbSentForReview: '🔍 Odesláno ke kontrole',
+        connectedSuccess: '✅ <b>Úspěšně připojeno!</b>\n\nNyní budete dostávat oznámení o nových úkolech.\n\nTlačítka pod každým úkolem:\n✅ Hotovo — dokončit\n🔄 +1 den — přesunout\n🚀 Do práce — vzít\n📎 Detaily — zobrazit popis',
+        codeNotFound: '❌ Kód nenalezen nebo vypršel.\n\nZkuste získat nový kód v TALKO System.',
+        welcome: '👋 <b>Vítejte v TALKO Tasks!</b>\n\nPro připojení oznámení klikněte na "Připojit Telegram" v nastavení TALKO System.\n\nDostupné příkazy:\n/today — úkoly na dnes\n/overdue — zpožděné',
+        noTasksToday: '✅ Žádné úkoly na dnes',
+        noOverdue: '✅ Žádné zpožděné úkoly!',
+        noTasksAndDeals: '✅ Žádné úkoly ani obchody na dnes!',
+        tasksToday: '📋 Úkoly na dnes',
+        tasksOverdue: '📋 Zpožděné',
+        moreItems: '... dalších',
+        crmContactToday: '📞 <b>Kontakt potřebný dnes',
+        crmDeals: 'obchodů</b>',
+        crmStage: '📊 Fáze',
+        crmContact: '📅 Kontakt',
+        crmMoreDeals: 'obchodů',
+        crmOverdue: '⚠️ Zpožděno (mělo být',
+        helpMenu: '📖 <b>TALKO Tasks — příkazy:</b>\n\n/today — úkoly na dnes\n/overdue — zpožděné úkoly\n/weekly — týdenní zpráva\n/team — stav týmu\n/connect — připojit email\n/help — tato nápověda',
+        weeklyReport: '📊 <b>Týdenní zpráva</b>\n\n✅ Dokončeno',
+        weeklyInProgress: '🔄 V průběhu',
+        weeklyOverdue: '⚠️ Zpožděno',
+        notConnected: '❌ Nepřipojeno. Klikněte na "Připojit Telegram" v TALKO System.',
+        teamOnlyForManagers: 'ℹ️ Příkaz /team je dostupný pouze pro manažery v TALKO System.',
+        connectHint: 'ℹ️ Pro připojení emailu přejděte do TALKO System → Profil → Připojit Telegram.',
+        btnDone: '✅ Hotovo',
+        btnPostpone: '🔄 +1 den',
+        btnDetails: '📎 Detaily',
+        btnInProgress: '🚀 Do práce',
+        overdueAlert: '⚠️ Zpožděno',
+        reminderPrefix: '⏰ Připomínka',
+        escalationPrefix: '🚨 Eskalace',
+        reviewRequired: '🔍 Vyžaduje kontrolu',
+        teamReport: '👥 <b>Stav týmu</b>',
+        active: 'aktivních',
+        overdueTasks: 'zpožděných',
+        doneTasks: 'hotovo dnes',
+        noTeamData: 'Žádná data o týmu',
+    },
+};
+
+/**
+ * Повертає переклад для Telegram повідомлень.
+ * @param {string} lang  — мова ('ua','ru','en','pl','de','cs')
+ * @param {string} key   — ключ з TG_LANG
+ * @returns {string}
+ */
+function tg(lang, key) {
+    const l = TG_LANG[lang] || TG_LANG['ua'];
+    return l[key] !== undefined ? l[key] : (TG_LANG['ua'][key] || key);
+}
+
+/**
+ * Визначає мову користувача/компанії з даних Firestore.
+ * Повертає код мови або 'ua' за замовчуванням.
+ */
+function getLang(docData) {
+    const lang = (docData && (docData.language || docData.lang)) || 'ua';
+    return TG_LANG[lang] ? lang : 'ua';
+}
+
+// ===========================
 // TELEGRAM HELPERS
 // ===========================
 async function sendTelegramMessage(chatId, text, opts = {}) {
@@ -87,15 +491,16 @@ async function editMessageText(chatId, messageId, text, opts = {}) {
     }
 }
 
-function taskButtons(taskId, companyId) {
+function taskButtons(taskId, companyId, lang) {
+    const l = lang || 'ua';
     return [
         [
-            { text: '✅ Готово', callback_data: `done:${companyId}:${taskId}` },
-            { text: '🔄 +1 день', callback_data: `postpone:${companyId}:${taskId}` },
+            { text: tg(l, 'btnDone'), callback_data: `done:${companyId}:${taskId}` },
+            { text: tg(l, 'btnPostpone'), callback_data: `postpone:${companyId}:${taskId}` },
         ],
         [
-            { text: '📎 Деталі', callback_data: `details:${companyId}:${taskId}` },
-            { text: '🚀 В роботу', callback_data: `progress:${companyId}:${taskId}` },
+            { text: tg(l, 'btnDetails'), callback_data: `details:${companyId}:${taskId}` },
+            { text: tg(l, 'btnInProgress'), callback_data: `progress:${companyId}:${taskId}` },
         ],
     ];
 }
@@ -158,17 +563,18 @@ exports.onNewTask = functions
         if (!userDoc.exists || !userDoc.data().telegramChatId) return null;
 
         const chatId = userDoc.data().telegramChatId;
-        const taskType = task.processId ? '🟣 Процес' : (task.regularTaskId ? '🟠 Регулярне' : '🟢 Завдання');
+        const userLang = getLang(userDoc.data());
+        const taskType = task.processId ? tg(userLang, 'taskType_process') : (task.regularTaskId ? tg(userLang, 'taskType_regular') : tg(userLang, 'taskType_task'));
 
         const message = `
 ${taskType}: <b>${task.title}</b>
 
-📅 Дедлайн: ${task.deadlineDate || '-'} ${task.deadlineTime || ''}
-${task.expectedResult ? `\n📋 Очікуваний результат:\n${task.expectedResult}` : ''}
-${task.description ? `\n📝 Опис:\n${task.description.substring(0, 500)}` : ''}
+${tg(userLang, 'deadline')}: ${task.deadlineDate || '-'} ${task.deadlineTime || ''}
+${task.expectedResult ? `\n${tg(userLang, 'expectedResult')}:\n${task.expectedResult}` : ''}
+${task.description ? `\n${tg(userLang, 'description')}:\n${task.description.substring(0, 500)}` : ''}
         `.trim();
 
-        return sendWithButtons(chatId, message, taskButtons(taskId, companyId));
+        return sendWithButtons(chatId, message, taskButtons(taskId, companyId, userLang));
     });
 
 // ===========================
@@ -197,12 +603,13 @@ exports.onTaskCompleted = functions
             if (!userDoc.exists || !userDoc.data().telegramChatId) continue;
 
             const chatId = userDoc.data().telegramChatId;
+            const userLang = getLang(userDoc.data());
             const message = `
-✅ <b>Завдання виконано!</b>
+${tg(userLang, 'taskDone')}
 
 📌 ${after.title}
-👤 Виконавець: ${after.assigneeName || 'Невідомо'}
-📅 ${after.deadlineDate || ''}
+${tg(userLang, 'executor')}: ${after.assigneeName || tg(userLang, 'unknown')}
+${tg(userLang, 'deadline')}: ${after.deadlineDate || ''}
             `.trim();
 
             await sendTelegramMessage(chatId, message);
@@ -235,13 +642,13 @@ exports.telegramWebhook = functions
 
             // Валідація callback_data — захист від injection/malformed input
             if (!data || typeof data !== 'string' || data.length > 200) {
-                await answerCallbackQuery(cb.id, '❌ Невідомна дія');
+                await answerCallbackQuery(cb.id, tg('ua', 'unknownAction'));
                 return res.status(200).send('OK');
             }
             const ALLOWED_ACTIONS = ['done', 'postpone', 'progress', 'details'];
             const parts = data.split(':');
             if (parts.length < 3) {
-                await answerCallbackQuery(cb.id, '❌ Невідомна дія');
+                await answerCallbackQuery(cb.id, tg('ua', 'unknownAction'));
                 return res.status(200).send('OK');
             }
 
@@ -249,12 +656,12 @@ exports.telegramWebhook = functions
 
             // Перевіряємо action в whitelist
             if (!ALLOWED_ACTIONS.includes(action)) {
-                await answerCallbackQuery(cb.id, '❌ Невідомна дія');
+                await answerCallbackQuery(cb.id, tg('ua', 'unknownAction'));
                 return res.status(200).send('OK');
             }
             // Перевіряємо companyId і taskId — тільки alphanumeric
             if (!/^[a-zA-Z0-9_-]{1,128}$/.test(companyId) || !/^[a-zA-Z0-9_-]{1,128}$/.test(taskId)) {
-                await answerCallbackQuery(cb.id, '❌ Невірні параметри');
+                await answerCallbackQuery(cb.id, tg('ua', 'invalidParams'));
                 return res.status(200).send('OK');
             }
 
@@ -274,7 +681,7 @@ exports.telegramWebhook = functions
             const taskDoc = await taskRef.get();
 
             if (!taskDoc.exists) {
-                await answerCallbackQuery(cb.id, '❌ Задачу не знайдено');
+                await answerCallbackQuery(cb.id, tg('ua', 'taskNotFound'));
                 return res.status(200).send('OK');
             }
 
@@ -293,9 +700,19 @@ exports.telegramWebhook = functions
 
                 if (!isAssignee && !isCreator && !isCoExecutor && !isManager) {
                     console.warn('[Webhook] Unauthorized task action:', userId, '->', taskId);
-                    await answerCallbackQuery(cb.id, '❌ Немає прав на цю задачу');
+                    await answerCallbackQuery(cb.id, tg('ua', 'noPermission'));
                     return res.status(200).send('OK');
                 }
+            }
+
+            // Визначаємо мову користувача для callback відповідей
+            let cbLang = 'ua';
+            if (userId) {
+                try {
+                    const cbUserDoc = await db.collection('companies').doc(companyId)
+                        .collection('users').doc(userId).get();
+                    if (cbUserDoc.exists) cbLang = getLang(cbUserDoc.data());
+                } catch(e) { /* fallback to ua */ }
             }
 
             try {
@@ -309,9 +726,9 @@ exports.telegramWebhook = functions
                             completionSource: 'telegram'
                         });
                         await editMessageText(chatId, messageId,
-                            `🔍 <b>Відправлено на перевірку!</b>\n\n📌 ${task.title}`
+                            `${tg(cbLang, 'taskSentForReview')}\n\n📌 ${task.title}`
                         );
-                        await answerCallbackQuery(cb.id, '🔍 Відправлено на перевірку');
+                        await answerCallbackQuery(cb.id, tg(cbLang, 'cbSentForReview'));
                     } else {
                     await taskRef.update({
                         status: 'done',
@@ -321,9 +738,9 @@ exports.telegramWebhook = functions
                     });
 
                     await editMessageText(chatId, messageId,
-                        `✅ <b>Виконано!</b>\n\n📌 ${task.title}\n⏰ ${new Date().toLocaleString('uk-UA')}`
+                        `${tg(cbLang, 'taskDone')}\n\n📌 ${task.title}\n⏰ ${new Date().toLocaleString('uk-UA')}`
                     );
-                    await answerCallbackQuery(cb.id, '✅ Задачу завершено!');
+                    await answerCallbackQuery(cb.id, tg(cbLang, 'cbTaskDone'));
                     } // end else (no requireReview)
 
                 } else if (action === 'postpone') {
@@ -363,10 +780,10 @@ exports.telegramWebhook = functions
                     }
 
                     await editMessageText(chatId, messageId,
-                        `🔄 <b>Перенесено</b>\n\n📌 ${task.title}\n📅 Новий дедлайн: ${newDate}`,
-                        { reply_markup: { inline_keyboard: taskButtons(taskId, companyId) } }
+                        `${tg(cbLang, 'taskPostponed')}\n\n📌 ${task.title}\n${tg(cbLang, 'newDeadline')}: ${newDate}`,
+                        { reply_markup: { inline_keyboard: taskButtons(taskId, companyId, cbLang) } }
                     );
-                    await answerCallbackQuery(cb.id, `📅 Перенесено на ${newDate}`);
+                    await answerCallbackQuery(cb.id, `${tg(cbLang, 'cbPostponed')} ${newDate}`);
 
                 } else if (action === 'progress') {
                     // 🚀 В роботу
@@ -375,28 +792,28 @@ exports.telegramWebhook = functions
                     }
 
                     await editMessageText(chatId, messageId,
-                        `🚀 <b>В роботі</b>\n\n📌 ${task.title}\n📅 Дедлайн: ${task.deadlineDate || '-'} ${task.deadlineTime || ''}`,
-                        { reply_markup: { inline_keyboard: taskButtons(taskId, companyId) } }
+                        `${tg(cbLang, 'taskInProgress')}\n\n📌 ${task.title}\n${tg(cbLang, 'deadline')}: ${task.deadlineDate || '-'} ${task.deadlineTime || ''}`,
+                        { reply_markup: { inline_keyboard: taskButtons(taskId, companyId, cbLang) } }
                     );
-                    await answerCallbackQuery(cb.id, '🚀 Взято в роботу');
+                    await answerCallbackQuery(cb.id, tg(cbLang, 'cbInProgress'));
 
                 } else if (action === 'details') {
                     // 📎 Показати деталі
                     let details = `📎 <b>${task.title}</b>\n\n`;
-                    details += `📅 Дедлайн: ${task.deadlineDate || '-'} ${task.deadlineTime || ''}\n`;
-                    details += `📊 Статус: ${task.status}\n`;
-                    details += `🔖 Пріоритет: ${task.priority || 'medium'}\n`;
-                    if (task.function) details += `⚙️ Функція: ${task.function}\n`;
-                    if (task.expectedResult) details += `\n📋 Очікуваний результат:\n${task.expectedResult}\n`;
-                    if (task.description) details += `\n📝 Опис:\n${task.description.substring(0, 800)}\n`;
-                    if (task.processObject) details += `\n🏷 Об'єкт: ${task.processObject}\n`;
+                    details += `${tg(cbLang, 'deadline')}: ${task.deadlineDate || '-'} ${task.deadlineTime || ''}\n`;
+                    details += `${tg(cbLang, 'status')}: ${task.status}\n`;
+                    details += `${tg(cbLang, 'priority')}: ${task.priority || 'medium'}\n`;
+                    if (task.function) details += `${tg(cbLang, 'function')}: ${task.function}\n`;
+                    if (task.expectedResult) details += `\n${tg(cbLang, 'expectedResult')}:\n${task.expectedResult}\n`;
+                    if (task.description) details += `\n${tg(cbLang, 'description')}:\n${task.description.substring(0, 800)}\n`;
+                    if (task.processObject) details += `\n${tg(cbLang, 'object')}: ${task.processObject}\n`;
 
                     await sendTelegramMessage(chatId, details);
                     await answerCallbackQuery(cb.id);
                 }
             } catch (err) {
                 console.error('Callback error:', err);
-                await answerCallbackQuery(cb.id, '❌ Помилка: ' + err.message);
+                await answerCallbackQuery(cb.id, tg('ua', 'errorPrefix') + err.message);
             }
 
             return res.status(200).send('OK');
@@ -442,21 +859,14 @@ exports.telegramWebhook = functions
                             updatedAt: admin.firestore.FieldValue.serverTimestamp()
                         });
 
-                        await sendTelegramMessage(chatId,
-                            '✅ <b>Успішно підключено!</b>\n\nТепер ви отримуватимете сповіщення про нові завдання.\n\nКнопки під кожним завданням:\n✅ Готово — завершити\n🔄 +1 день — перенести\n🚀 В роботу — взяти\n📎 Деталі — побачити опис'
-                        );
+                        const connectedUserLang = getLang(userDoc.data());
+                        await sendTelegramMessage(chatId, tg(connectedUserLang, 'connectedSuccess'));
                         return res.status(200).send('OK');
                     }
 
-                    await sendTelegramMessage(chatId,
-                        '❌ Код не знайдено або застарів.\n\nСпробуйте отримати новий код в TALKO System.'
-                    );
+                    await sendTelegramMessage(chatId, tg('ua', 'codeNotFound'));
                 } else {
-                    await sendTelegramMessage(chatId,
-                        '👋 <b>Вітаю в TALKO Tasks!</b>\n\n' +
-                        'Щоб підключити сповіщення, натисніть кнопку "Підключити Telegram" в налаштуваннях TALKO System.\n\n' +
-                        'Доступні команди:\n/today — задачі на сьогодні\n/overdue — прострочені'
-                    );
+                    await sendTelegramMessage(chatId, tg('ua', 'welcome'));
                 }
             } else if (text === '/today' || text === '/overdue') {
                 // Lookup user by telegramChatId
@@ -486,6 +896,13 @@ exports.telegramWebhook = functions
                 if (userCompanyId && userUid) {
                     const companyId = userCompanyId;
                     const uid = userUid;
+                    // Визначаємо мову юзера для /today /overdue відповідей
+                    let cmdLang = 'ua';
+                    try {
+                        const cmdUserDoc = await db.collection('companies').doc(companyId)
+                            .collection('users').doc(uid).get();
+                        if (cmdUserDoc.exists) cmdLang = getLang(cmdUserDoc.data());
+                    } catch(e) { /* fallback ua */ }
                     if (true) { // scope wrapper
                     const todayStr = new Date().toISOString().split('T')[0];
 
@@ -532,60 +949,52 @@ exports.telegramWebhook = functions
 
                     if (filtered.length === 0 && crmDealsToday.length === 0) {
                         await sendTelegramMessage(chatId, text === '/today'
-                            ? '✅ На сьогодні завдань і угод немає!'
-                            : '✅ Прострочених немає!');
+                            ? tg(cmdLang, 'noTasksAndDeals')
+                            : tg(cmdLang, 'noOverdue'));
                     } else {
                         // Задачі
                         if (filtered.length > 0) {
                             await sendTelegramMessage(chatId,
-                                `📋 ${text === '/today' ? 'Задачі на сьогодні' : 'Прострочені'}: <b>${filtered.length}</b>`);
+                                `${text === '/today' ? tg(cmdLang, 'tasksToday') : tg(cmdLang, 'tasksOverdue')}: <b>${filtered.length}</b>`);
                             for (const t of filtered.slice(0, 10)) {
                                 const pr = t.priority === 'high' ? '🔴' : t.priority === 'low' ? '🟢' : '🟡';
                                 await sendWithButtons(chatId,
                                     `${pr} <b>${t.title}</b>\n📅 ${t.deadlineDate} ${t.deadlineTime || ''}`,
-                                    taskButtons(t.id, companyId)
+                                    taskButtons(t.id, companyId, cmdLang)
                                 );
                             }
                             if (filtered.length > 10) {
-                                await sendTelegramMessage(chatId, `... ще ${filtered.length - 10}`);
+                                await sendTelegramMessage(chatId, `${tg(cmdLang, 'moreItems')} ${filtered.length - 10}`);
                             }
                         } else if (text === '/today') {
-                            await sendTelegramMessage(chatId, '✅ Задач на сьогодні немає');
+                            await sendTelegramMessage(chatId, tg(cmdLang, 'noTasksToday'));
                         }
 
                         // CRM угоди
                         if (crmDealsToday.length > 0) {
                             await sendTelegramMessage(chatId,
-                                `📞 <b>Потрібен контакт сьогодні: ${crmDealsToday.length} угод</b>`);
+                                `${tg(cmdLang, 'crmContactToday')}: ${crmDealsToday.length} ${tg(cmdLang, 'crmDeals')}`);
                             for (const deal of crmDealsToday.slice(0, 8)) {
                                 const isOverdue = deal.nextContactDate < todayStr;
                                 const amountStr = deal.amount ? ` · ${Number(deal.amount).toLocaleString()} €` : '';
-                                const overdueStr = isOverdue ? `\n⚠️ Прострочено (мав бути ${deal.nextContactDate})` : '';
+                                const overdueStr = isOverdue ? `\n${tg(cmdLang, 'crmOverdue')} ${deal.nextContactDate})` : '';
                                 await sendTelegramMessage(chatId,
                                     `${isOverdue ? '🔴' : '🟡'} <b>${deal.clientName || deal.title || 'Угода'}</b>${amountStr}` +
-                                    `\n📊 Стадія: ${deal.stage}` +
-                                    `\n📅 Контакт: ${deal.nextContactDate}` +
+                                    `\n${tg(cmdLang, 'crmStage')}: ${deal.stage}` +
+                                    `\n${tg(cmdLang, 'crmContact')}: ${deal.nextContactDate}` +
                                     `${deal.note ? '\n📝 ' + deal.note.slice(0, 80) : ''}` +
                                     overdueStr
                                 );
                             }
                             if (crmDealsToday.length > 8) {
-                                await sendTelegramMessage(chatId, `... ще ${crmDealsToday.length - 8} угод`);
+                                await sendTelegramMessage(chatId, `${tg(cmdLang, 'moreItems')} ${crmDealsToday.length - 8} ${tg(cmdLang, 'crmMoreDeals')}`);
                             }
                         }
                     }
                     } // end scope wrapper
                 } // end if cgUserSnap
             } else if (text === '/help') {
-                await sendTelegramMessage(chatId,
-                    '📖 <b>TALKO Tasks — команди:</b>\n\n' +
-                    '/today — завдання на сьогодні\n' +
-                    '/overdue — прострочені завдання\n' +
-                    '/weekly — звіт за тиждень\n' +
-                    '/team — статус команди\n' +
-                    '/connect — підключити email\n' +
-                    '/help — ця довідка'
-                );
+                await sendTelegramMessage(chatId, tg('ua', 'helpMenu'));
             } else if (text === '/weekly') {
                 // Тижневий звіт для поточного користувача
                 let wCompanyId = null, wUid = null;
@@ -608,15 +1017,17 @@ exports.telegramWebhook = functions
                         else if (t.status === 'progress') inProgress++;
                         if (t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done') overdue++;
                     });
+                    const wUserDoc = await db.collection('companies').doc(wCompanyId).collection('users').doc(wUid).get();
+                    const wLang = wUserDoc.exists ? getLang(wUserDoc.data()) : 'ua';
                     await sendTelegramMessage(chatId,
-                        `📊 <b>Тижневий звіт</b>\n\n✅ Виконано: ${done}\n🔄 В роботі: ${inProgress}\n⚠️ Прострочено: ${overdue}`);
+                        `${tg(wLang, 'weeklyReport')}: ${done}\n${tg(wLang, 'weeklyInProgress')}: ${inProgress}\n${tg(wLang, 'weeklyOverdue')}: ${overdue}`);
                 } else {
-                    await sendTelegramMessage(chatId, '❌ Не підключено. Натисніть "Підключити Telegram" в TALKO System.');
+                    await sendTelegramMessage(chatId, tg('ua', 'notConnected'));
                 }
             } else if (text === '/team') {
-                await sendTelegramMessage(chatId, 'ℹ️ Команда /team доступна тільки для керівників в TALKO System.');
+                await sendTelegramMessage(chatId, tg('ua', 'teamOnlyForManagers'));
             } else if (text === '/connect') {
-                await sendTelegramMessage(chatId, 'ℹ️ Для підключення email зайдіть в TALKO System → Профіль → Підключити Telegram.');
+                await sendTelegramMessage(chatId, tg('ua', 'connectHint'));
             }
         }
 
