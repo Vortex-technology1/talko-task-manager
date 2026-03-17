@@ -47,6 +47,19 @@ function esc(s) {
     return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// Validate origin against allowlist before using in Stripe redirect URLs
+const BOOKING_ALLOWED_ORIGINS = [
+    'https://taskmanagerai-vert.vercel.app',
+    'https://test-talko-task.vercel.app',
+    'http://localhost:5500',
+    'http://localhost:3000',
+    'http://127.0.0.1:5500',
+];
+function _safeOrigin(origin) {
+    if (origin && BOOKING_ALLOWED_ORIGINS.includes(origin)) return origin;
+    return 'https://taskmanagerai-vert.vercel.app';
+}
+
 const crypto = require('crypto');
 // Telegram HTML escape — для parse_mode:'HTML'
 function tgEsc(s) {
@@ -1573,8 +1586,8 @@ module.exports = async (req, res) => {
                             clientName: safeClientName,
                         },
                         customer_email: safeClientEmail,
-                        success_url: `${req.headers.origin || 'https://taskmanagerai-vert.vercel.app'}/?stripe=success&bookingId=${appointmentRef.id}`,
-                        cancel_url:  `${req.headers.origin || 'https://taskmanagerai-vert.vercel.app'}/book/${companyId}/${cal.slug || calendarId}`,
+                        success_url: `${_safeOrigin(req.headers.origin)}/?stripe=success&bookingId=${appointmentRef.id}`,
+                        cancel_url:  `${_safeOrigin(req.headers.origin)}/book/${companyId}/${cal.slug || calendarId}`,
                     });
                     stripeUrl = session.url;
                     // Зберігаємо session ID в appointment

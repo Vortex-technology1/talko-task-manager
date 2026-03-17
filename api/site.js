@@ -147,9 +147,12 @@ module.exports = async (req, res) => {
 
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.setHeader('Cache-Control', 'public, max-age=60');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 
-        // rawHtml режим
+        // rawHtml режим — довіряємо власнику сайту, але захищаємо від clickjacking
         if (site.mode === 'html' && site.rawHtml) {
+            res.setHeader('X-Frame-Options', 'SAMEORIGIN');
             return res.status(200).send(site.rawHtml);
         }
 

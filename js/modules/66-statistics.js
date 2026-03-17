@@ -920,7 +920,7 @@
             const fs = typeof functions !== 'undefined' ? functions : [];
             if (fs.length > 0) {
                 funcSel = `<select class="stats-func-select" onchange="onStatsFunctionChange(this.value)">
-                    ${fs.map(f => `<option value="${f.id}" ${f.id === statsSelectedFunctionId ? 'selected' : ''}>${f.name}</option>`).join('')}
+                    ${fs.map(f => `<option value="${f.id}" ${f.id === statsSelectedFunctionId ? 'selected' : ''}>${esc(f.name)}</option>`).join('')}
                 </select>`;
             }
         }
