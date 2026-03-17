@@ -716,6 +716,14 @@ function buildNodeEl(node) {
                 <div style="font-size:12px;color:white;font-weight:600;margin-top:1px;
                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(nodeName) || cfg.label}</div>
             </div>
+            <div data-dup="${node.id}" title="Копіювати вузол (Ctrl+D)"
+                style="width:22px;height:22px;border-radius:6px;background:rgba(0,0,0,0.15);
+                display:flex;align-items:center;justify-content:center;cursor:pointer;
+                flex-shrink:0;transition:background 0.15s;margin-right:3px;"
+                onmouseenter="this.style.background='rgba(34,197,94,0.8)'"
+                onmouseleave="this.style.background='rgba(0,0,0,0.15)'">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </div>
             <div data-del="${node.id}" title=${window.t('flowDelete')}
                 style="width:22px;height:22px;border-radius:6px;background:rgba(0,0,0,0.15);
                 display:flex;align-items:center;justify-content:center;cursor:pointer;
@@ -746,6 +754,14 @@ function buildNodeEl(node) {
         portEl.addEventListener('mousedown', e => {
             e.stopPropagation();
             onPortMouseDown(e, node.id, portEl.dataset.portId);
+        });
+    });
+
+    el.querySelectorAll('[data-dup]').forEach(dupEl => {
+        dupEl.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            fcDuplicateNode(node.id);
         });
     });
 
@@ -2423,6 +2439,25 @@ window.fcApplyNodeData = function(nodeId) {
     saveFlow();
 };
 
+// ── Дублювання вузла ───────────────────────────────────────
+window.fcDuplicateNode = function(nodeId) {
+    const orig = fc.nodes.find(n => n.id === nodeId);
+    if (!orig || orig.type === 'start') return;
+    pushHistory();
+    const newId = 'node_' + Date.now();
+    const copy = JSON.parse(JSON.stringify(orig));
+    copy.id = newId;
+    copy.x = orig.x + 240;
+    copy.y = orig.y + 40;
+    // Скидаємо виходи — нова копія без з'єднань
+    fc.nodes.push(copy);
+    fc.selected = newId;
+    renderAll();
+    renderPropPanel();
+    saveFlow();
+    if (window.showToast) showToast('✅ Вузол скопійовано', 'success');
+};
+
 window.fcDeleteNode = async function(nodeId) {
     if (!(await (window.showConfirmModal ? showConfirmModal('Видалити вузол?',{danger:true}) : Promise.resolve(confirm('Видалити вузол?'))))) return;
     pushHistory();
@@ -2712,6 +2747,10 @@ function onKeyDown(e) {
     if ((e.ctrlKey||e.metaKey) && e.key==='z') { e.preventDefault(); undo(); }
     if ((e.ctrlKey||e.metaKey) && e.key==='y') { e.preventDefault(); redo(); }
     if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveFlow(); }
+    if ((e.ctrlKey||e.metaKey) && e.key==='d') {
+        e.preventDefault();
+        if (fc.selected) fcDuplicateNode(fc.selected);
+    }
     if (e.key==='Escape') { fc.selected=null; renderAll(); renderPropPanel(); }
     if ((e.key==='Delete'||e.key==='Backspace') && fc.selected) {
         const node = fc.nodes.find(n=>n.id===fc.selected);
