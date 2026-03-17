@@ -67,7 +67,8 @@ const TG_LANG = {
         crmContact: '📅 Контакт',
         crmMoreDeals: 'угод',
         crmOverdue: '⚠️ Прострочено (мав бути',
-        helpMenu: '📖 <b>TALKO Tasks — команди:</b>\n\n/today — завдання на сьогодні\n/overdue — прострочені завдання\n/weekly — звіт за тиждень\n/team — статус команди\n/connect — підключити email\n/help — ця довідка',
+        helpMenu: '📖 <b>TALKO Tasks — команди:</b>\n\n/today — завдання на сьогодні\n/overdue — прострочені завдання\n/weekly — звіт за тиждень\n/team — статус команди\n/lang — мова сповіщень\n/connect — підключити email\n/help — ця довідка',
+        langChanged: '✅ 🇺🇦 Українська — мову встановлено!\n\nВсі наступні сповіщення будуть українською.',
         weeklyReport: '📊 <b>Тижневий звіт</b>\n\n✅ Виконано',
         weeklyInProgress: '🔄 В роботі',
         weeklyOverdue: '⚠️ Прострочено',
@@ -130,7 +131,8 @@ const TG_LANG = {
         crmContact: '📅 Контакт',
         crmMoreDeals: 'сделок',
         crmOverdue: '⚠️ Просрочено (должен был быть',
-        helpMenu: '📖 <b>TALKO Tasks — команды:</b>\n\n/today — задачи на сегодня\n/overdue — просроченные задачи\n/weekly — отчёт за неделю\n/team — статус команды\n/connect — подключить email\n/help — эта справка',
+        helpMenu: '📖 <b>TALKO Tasks — команды:</b>\n\n/today — задачи на сегодня\n/overdue — просроченные задачи\n/weekly — отчёт за неделю\n/team — статус команды\n/lang — язык уведомлений\n/connect — подключить email\n/help — эта справка',
+        langChanged: '✅ 🇷🇺 Русский — язык установлен!\n\nВсе следующие уведомления будут на русском.',
         weeklyReport: '📊 <b>Недельный отчёт</b>\n\n✅ Выполнено',
         weeklyInProgress: '🔄 В работе',
         weeklyOverdue: '⚠️ Просрочено',
@@ -193,7 +195,8 @@ const TG_LANG = {
         crmContact: '📅 Contact',
         crmMoreDeals: 'deals',
         crmOverdue: '⚠️ Overdue (was due',
-        helpMenu: '📖 <b>TALKO Tasks — commands:</b>\n\n/today — tasks for today\n/overdue — overdue tasks\n/weekly — weekly report\n/team — team status\n/connect — connect email\n/help — this help',
+        helpMenu: '📖 <b>TALKO Tasks — commands:</b>\n\n/today — tasks for today\n/overdue — overdue tasks\n/weekly — weekly report\n/team — team status\n/lang — notification language\n/connect — connect email\n/help — this help',
+        langChanged: '✅ 🇬🇧 English — language set!\n\nAll future notifications will be in English.',
         weeklyReport: '📊 <b>Weekly report</b>\n\n✅ Completed',
         weeklyInProgress: '🔄 In progress',
         weeklyOverdue: '⚠️ Overdue',
@@ -256,7 +259,8 @@ const TG_LANG = {
         crmContact: '📅 Kontakt',
         crmMoreDeals: 'transakcji',
         crmOverdue: '⚠️ Zaległe (miał być',
-        helpMenu: '📖 <b>TALKO Tasks — polecenia:</b>\n\n/today — zadania na dziś\n/overdue — zaległe zadania\n/weekly — raport tygodniowy\n/team — status zespołu\n/connect — połącz email\n/help — ta pomoc',
+        helpMenu: '📖 <b>TALKO Tasks — polecenia:</b>\n\n/today — zadania na dziś\n/overdue — zaległe zadania\n/weekly — raport tygodniowy\n/team — status zespołu\n/lang — język powiadomień\n/connect — połącz email\n/help — ta pomoc',
+        langChanged: '✅ 🇵🇱 Polski — język ustawiony!\n\nWszystkie przyszłe powiadomienia będą po polsku.',
         weeklyReport: '📊 <b>Raport tygodniowy</b>\n\n✅ Wykonano',
         weeklyInProgress: '🔄 W trakcie',
         weeklyOverdue: '⚠️ Zaległe',
@@ -319,7 +323,8 @@ const TG_LANG = {
         crmContact: '📅 Kontakt',
         crmMoreDeals: 'Deals',
         crmOverdue: '⚠️ Überfällig (war fällig am',
-        helpMenu: '📖 <b>TALKO Tasks — Befehle:</b>\n\n/today — Aufgaben für heute\n/overdue — überfällige Aufgaben\n/weekly — Wochenbericht\n/team — Teamstatus\n/connect — Email verbinden\n/help — diese Hilfe',
+        helpMenu: '📖 <b>TALKO Tasks — Befehle:</b>\n\n/today — Aufgaben für heute\n/overdue — überfällige Aufgaben\n/weekly — Wochenbericht\n/team — Teamstatus\n/lang — Benachrichtigungssprache\n/connect — Email verbinden\n/help — diese Hilfe',
+        langChanged: '✅ 🇩🇪 Deutsch — Sprache gesetzt!\n\nAlle zukünftigen Benachrichtigungen werden auf Deutsch sein.',
         weeklyReport: '📊 <b>Wochenbericht</b>\n\n✅ Erledigt',
         weeklyInProgress: '🔄 In Bearbeitung',
         weeklyOverdue: '⚠️ Überfällig',
@@ -382,7 +387,8 @@ const TG_LANG = {
         crmContact: '📅 Kontakt',
         crmMoreDeals: 'obchodů',
         crmOverdue: '⚠️ Zpožděno (mělo být',
-        helpMenu: '📖 <b>TALKO Tasks — příkazy:</b>\n\n/today — úkoly na dnes\n/overdue — zpožděné úkoly\n/weekly — týdenní zpráva\n/team — stav týmu\n/connect — připojit email\n/help — tato nápověda',
+        helpMenu: '📖 <b>TALKO Tasks — příkazy:</b>\n\n/today — úkoly na dnes\n/overdue — zpožděné úkoly\n/weekly — týdenní zpráva\n/team — stav týmu\n/lang — jazyk oznámení\n/connect — připojit email\n/help — tato nápověda',
+        langChanged: '✅ 🇨🇿 Čeština — jazyk nastaven!\n\nVšechna budoucí oznámení budou v češtině.',
         weeklyReport: '📊 <b>Týdenní zpráva</b>\n\n✅ Dokončeno',
         weeklyInProgress: '🔄 V průběhu',
         weeklyOverdue: '⚠️ Zpožděno',
@@ -1014,7 +1020,53 @@ exports.telegramWebhook = functions
                     } // end scope wrapper
                 } // end if cgUserSnap
             } else if (text === '/help') {
-                await sendTelegramMessage(chatId, tg('ua', 'helpMenu'));
+                // /help — показуємо меню мовою юзера
+                let helpLang = 'ua';
+                try {
+                    const hlIdxDoc = await db.collection('telegramIndex').doc('chat_' + chatId.toString()).get();
+                    if (hlIdxDoc.exists) {
+                        helpLang = await getUserLang(hlIdxDoc.data().companyId, hlIdxDoc.data().userId);
+                    }
+                } catch(e) {}
+                await sendTelegramMessage(chatId, tg(helpLang, 'helpMenu'));
+            } else if (text.startsWith('/lang')) {
+                // /lang — встановити мову сповіщень прямо з Telegram
+                // Використання: /lang de  або  /lang ua  або  /lang en
+                const parts = text.trim().split(/\s+/);
+                const requestedLang = parts[1] ? parts[1].toLowerCase() : null;
+                const LANG_NAMES = { ua: '🇺🇦 Українська', ru: '🇷🇺 Русский', en: '🇬🇧 English', de: '🇩🇪 Deutsch', cs: '🇨🇿 Čeština', pl: '🇵🇱 Polski' };
+
+                // Знаходимо юзера
+                let langCompanyId = null, langUid = null;
+                const langIdxDoc = await db.collection('telegramIndex').doc('chat_' + chatId.toString()).get();
+                if (langIdxDoc.exists) {
+                    langCompanyId = langIdxDoc.data().companyId;
+                    langUid = langIdxDoc.data().userId;
+                }
+                if (!langCompanyId) {
+                    const ls = await db.collectionGroup('users').where('telegramChatId', '==', chatId.toString()).limit(1).get();
+                    if (!ls.empty) { langUid = ls.docs[0].id; langCompanyId = ls.docs[0].ref.parent.parent.id; }
+                }
+
+                if (!langCompanyId) {
+                    await sendTelegramMessage(chatId, tg('ua', 'notConnected'));
+                } else if (!requestedLang || !TG_LANG[requestedLang]) {
+                    // Показуємо поточну мову і доступні варіанти
+                    const curLang = await getUserLang(langCompanyId, langUid);
+                    const langList = Object.entries(LANG_NAMES).map(([k, v]) => `  /lang ${k} — ${v}`).join('\n');
+                    await sendTelegramMessage(chatId,
+                        `🌐 <b>Мова сповіщень</b>\n\nПоточна: ${LANG_NAMES[curLang] || curLang}\n\n<b>Змінити:</b>\n${langList}`
+                    );
+                } else {
+                    // Зберігаємо нову мову в Firestore
+                    await db.collection('companies').doc(langCompanyId)
+                        .collection('users').doc(langUid)
+                        .update({ language: requestedLang });
+                    await sendTelegramMessage(chatId,
+                        tg(requestedLang, 'langChanged') ||
+                        `✅ ${LANG_NAMES[requestedLang]} — мову встановлено!\n\nВсі наступні сповіщення будуть цією мовою.`
+                    );
+                }
             } else if (text === '/weekly') {
                 // Тижневий звіт для поточного користувача
                 let wCompanyId = null, wUid = null;
