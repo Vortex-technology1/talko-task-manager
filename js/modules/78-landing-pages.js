@@ -87,6 +87,10 @@
                 .onSnapshot(snap => {
                     _funnels = snap.docs.map(d=>({id:d.id,...d.data()}));
                     _renderHub();
+                }, err => {
+                    console.error('[landing-pages] funnels onSnapshot error:', err.message);
+                    // Fallback: render without real-time updates
+                    _renderHub();
                 })
         );
     }

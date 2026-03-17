@@ -443,7 +443,7 @@ function renderDashboard(el) {
           <div id="dashAccounts">
           ${_state.accounts.map(acc => `
             <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
-              <div style="font-size:0.8rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${acc.name}</div>
+              <div style="font-size:0.8rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${escHtml(acc.name)}</div>
               <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
             </div>
           `).join('')}
@@ -557,7 +557,7 @@ async function loadDashboardData(monthVal) {
     }
     _state.accounts.forEach(acc => {
       if ((acc.balance || 0) < 0) {
-        alerts.push({ type: 'error', text: `${window.t('finNegBalance')} ${acc.name} (${fmt(acc.balance, acc.currency)})` });
+        alerts.push({ type: 'error', text: `${window.t('finNegBalance')} ${escHtml(acc.name)} (${fmt(acc.balance, acc.currency)})` });
       }
     });
     if (expense > income && income > 0) {
@@ -603,7 +603,7 @@ async function loadDashboardData(monthVal) {
     if (accEl) {
       accEl.innerHTML = _state.accounts.map(acc => `
         <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
-          <div style="font-size:0.8rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${acc.name}</div>
+          <div style="font-size:0.8rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${escHtml(acc.name)}</div>
           <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
         </div>
       `).join('');
@@ -623,7 +623,7 @@ async function loadDashboardData(monthVal) {
         topEl.innerHTML = sorted.map(item => `
           <div style="margin-bottom:0.6rem;">
             <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;">
-              <div style="font-size:0.78rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${item.name}</div>
+              <div style="font-size:0.78rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${escHtml(item.name)}</div>
               <div style="font-size:0.78rem;font-weight:600;color:#ef4444;">${fmt(item.amt)}</div>
             </div>
             <div style="height:4px;background:#f3f4f6;border-radius:2px;">
@@ -660,7 +660,7 @@ async function loadDashboardData(monthVal) {
           const large = angle > 180 ? 1 : 0;
           cumAngle += angle;
           return `<path d="M${CX},${CY} L${x1.toFixed(1)},${y1.toFixed(1)} A${R},${R} 0 ${large},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z"
-            fill="${COLORS[i]}" opacity="0.85"><title>${item.name}: ${fmt(item.amt)}</title></path>`;
+            fill="${COLORS[i]}" opacity="0.85"><title>${escHtml(item.name)}: ${fmt(item.amt)}</title></path>`;
         }).join('');
         // Hole
         const hole = `<circle cx="${CX}" cy="${CY}" r="28" fill="white"/>
@@ -1414,7 +1414,7 @@ window._doTransfer = async function() {
     const accEl = document.getElementById('dashAccounts');
     if (accEl) accEl.innerHTML = _state.accounts.map(acc => `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
-        <div style="font-size:0.8rem;color:#374151;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${acc.name}</div>
+        <div style="font-size:0.8rem;color:#374151;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${escHtml(acc.name)}</div>
         <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
       </div>`).join('');
 
@@ -2496,7 +2496,7 @@ async function loadFunctionsData(monthVal) {
       return `
         <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
           padding:0.65rem 1rem;background:${bg};border-bottom:1px solid #f3f4f6;align-items:center;">
-          <div style="font-size:0.85rem;font-weight:500;color:#1a1a1a;">${r.name}</div>
+          <div style="font-size:0.85rem;font-weight:500;color:#1a1a1a;">${escHtml(r.name)}</div>
           <div style="text-align:right;font-size:0.85rem;color:#22c55e;font-weight:600;">${fmt(r.income)}</div>
           <div style="text-align:right;font-size:0.85rem;color:#ef4444;font-weight:600;">${fmt(r.expense)}</div>
           <div style="text-align:right;font-size:0.85rem;font-weight:700;color:${mColor};">${margin}%</div>
@@ -2532,7 +2532,7 @@ async function loadFunctionsData(monthVal) {
         return `
           <div style="margin-bottom:0.65rem;">
             <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;">
-              <div style="font-size:0.78rem;color:#374151;font-weight:500;">${r.name}</div>
+              <div style="font-size:0.78rem;color:#374151;font-weight:500;">${escHtml(r.name)}</div>
               <div style="font-size:0.78rem;font-weight:600;color:#ef4444;">${fmt(r.expense)}</div>
             </div>
             <div style="height:8px;background:#f3f4f6;border-radius:4px;">
@@ -2769,7 +2769,7 @@ async function loadPlanningData(monthVal) {
         return `
           <div style="display:grid;grid-template-columns:1fr 110px 110px 90px;
             padding:0.55rem 1rem;background:${bg};border-bottom:1px solid #f3f4f6;align-items:center;">
-            <div style="font-size:0.82rem;color:#374151;">${cat.name}</div>
+            <div style="font-size:0.82rem;color:#374151;">${escHtml(cat.name)}</div>
             <div style="text-align:right;">
               <input data-plan-cat="${cat.id}" type="number" min="0" value="${budgetVal||''}"
                 placeholder="0"
@@ -3402,7 +3402,7 @@ function _renderTrends(el, txs, currency, from, to, period) {
                 ${catTotals.map(({cat}, i) => {
                   const val = byCatBucket[cat.id]?.[b.key] || 0;
                   const pct = maxVal > 0 ? (val / maxVal * 100) : 0;
-                  return pct > 0 ? `<div style="height:100%;width:${pct}%;background:${COLORS[i]};opacity:0.85;" title="${cat.name}: ${fmt(val, currency)}"></div>` : '';
+                  return pct > 0 ? `<div style="height:100%;width:${pct}%;background:${COLORS[i]};opacity:0.85;" title="${escHtml(cat.name)}: ${fmt(val, currency)}"></div>` : '';
                 }).join('')}
               </div>
             </div>`;
@@ -3462,7 +3462,7 @@ function renderSettings(el) {
             : cats.map((cat, i) => `
               <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
                 background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
-                <div style="flex:1;font-size:0.85rem;color:#1a1a1a;">${cat.name}</div>
+                <div style="flex:1;font-size:0.85rem;color:#1a1a1a;">${escHtml(cat.name)}</div>
                 ${!cat.system ? `
                   <button onclick="window._financeDeleteCategory('${cat.id}','${type}')"
                     style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.2rem;">
@@ -3495,7 +3495,7 @@ function renderSettings(el) {
               <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
                 background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
                 <div style="flex:1;">
-                  <div style="font-size:0.85rem;color:#1a1a1a;">${acc.name}</div>
+                  <div style="font-size:0.85rem;color:#1a1a1a;">${escHtml(acc.name)}</div>
                   <div style="font-size:0.72rem;color:#9ca3af;">${acc.type} · ${acc.currency}</div>
                 </div>
                 <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>

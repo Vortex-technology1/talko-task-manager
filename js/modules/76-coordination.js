@@ -262,6 +262,8 @@
             .onSnapshot(snap => {
                 coordTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 if (activeSession) renderSessionTasks(activeSession.coord);
+            }, err => {
+                console.error('[Coordination] tasks snapshot error:', err.code, err.message);
             });
         coordUnsubscribes.push(taskUnsub);
 

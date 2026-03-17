@@ -77,6 +77,8 @@
                     .onSnapshot(snap => {
                         botsFlows = snap.docs.map(d => ({ id: d.id, botId: botsCurrentBotId, ...d.data() }));
                         if (botsSubTab === 'list') renderBotsListView();
+                    }, err => {
+                        console.error('[Bots] flows onSnapshot error:', err.code, err.message);
                     });
             } else {
                 // Fallback: старий плоский шлях

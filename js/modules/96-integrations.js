@@ -775,6 +775,10 @@ window.intgGenerateApiKey = async function() {
 window.intgSave = async function(field, inputId, isSecret = true) {
     const val = document.getElementById(inputId)?.value.trim();
     if (!val) { if (typeof showToast === 'function') showToast(window.t('botsEnterValue'), 'error'); return; }
+    // Guard against concurrent saves (double-click)
+    const lockKey = '_saving_' + field;
+    if (window[lockKey]) return;
+    window[lockKey] = true;
     try {
         // FIX: Додано await для гарантії завершення update перед оновленням локального стану
         await window.companyRef()
@@ -787,6 +791,8 @@ window.intgSave = async function(field, inputId, isSecret = true) {
     } catch(e) {
         // При помилці локальний стан не змінюється
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    } finally {
+        window[lockKey] = false;
     }
 };
 
