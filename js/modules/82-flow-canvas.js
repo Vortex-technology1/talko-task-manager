@@ -1945,11 +1945,28 @@ function renderPropPanel() {
                     <input id="fcp_aiApiKey" type="password" value="${savedKey}"
                         placeholder="${aiProvider==='openai'?'sk-...':aiProvider==='anthropic'?'sk-ant-...':'AIza...'}"
                         style="width:100%;padding:7px 30px 7px 8px;background:#1e293b;border:1px solid #334155;
-                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;">
+                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;"
+                        oninput="(function(v){
+                            const h=document.getElementById('fcp_keyHint');
+                            if(!h)return;
+                            if(!v){h.textContent='';return;}
+                            if(v.includes('•')){h.style.color='#f59e0b';h.textContent='⚠️ Маска — введіть ключ заново';}
+                            else if(v.includes('@')||v.startsWith('http')){h.style.color='#ef4444';h.textContent='❌ Це не API ключ';}
+                            else if(/^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(v)){h.style.color='#ef4444';h.textContent='❌ Це домен, не ключ';}
+                            else if(v.length<20){h.style.color='#f59e0b';h.textContent='⚠️ Занадто короткий';}
+                            else if(v.startsWith('sk-')||v.startsWith('AIza')||v.startsWith('sk-ant')){h.style.color='#22c55e';h.textContent='✅ Ключ виглядає вірно';}
+                            else{h.style.color='#94a3b8';h.textContent='ℹ️ Формат не розпізнано — перевірте';}
+                        })(this.value)">
                     <span onclick="const i=document.getElementById('fcp_aiApiKey');i.type=i.type==='password'?'text':'password';"
                         style="position:absolute;right:7px;top:50%;transform:translateY(-50%);
                         cursor:pointer;font-size:12px;opacity:0.5;user-select:none;" title="Показати/приховати">👁</span>
                 </div>
+                <div id="fcp_keyHint" style="font-size:9px;margin-top:2px;margin-bottom:2px;">${
+                    savedKey && savedKey.includes('•') ? '<span style="color:#f59e0b;">⚠️ Маска — введіть ключ заново</span>' :
+                    savedKey && (savedKey.includes('@') || /^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(savedKey)) ? '<span style="color:#ef4444;">❌ Збережено невалідне значення — очистіть і введіть sk-...</span>' :
+                    savedKey && savedKey.length >= 20 && (savedKey.startsWith('sk-') || savedKey.startsWith('AIza') || savedKey.startsWith('sk-ant')) ? '<span style="color:#22c55e;">✅ Ключ збережено</span>' :
+                    ''
+                }</div>
                 <div style="font-size:9px;color:#475569;">
                     Ключ для цього ланцюга.
                     <span style="color:#22c55e;cursor:pointer;text-decoration:underline;"
@@ -2373,7 +2390,21 @@ window.fcApplyNodeData = function(nodeId) {
         case 'ai':
             node.config.aiSystem = get('aiSystem');
             node.config.aiModel = get('aiModel');
-            node.config.aiApiKey = get('aiApiKey') || null;
+            // VALIDATE: не зберігаємо маску, email, URL або занадто короткий рядок
+            (function() {
+                const _rawKey = get('aiApiKey');
+                const _isMasked = _rawKey.includes('•');
+                const _isEmail  = _rawKey.includes('@');
+                const _isUrl    = _rawKey.startsWith('http');
+                const _isDomain = /^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(_rawKey);
+                const _tooShort = _rawKey.length > 0 && _rawKey.length < 20;
+                const _isInvalid = _isMasked || _isEmail || _isUrl || _isDomain || _tooShort;
+                if (_isInvalid && _rawKey) {
+                    console.warn('[canvas] aiApiKey invalid — not saved to node:', _rawKey.slice(0,15));
+                    if (window.showToast) showToast('⚠️ API ключ не збережено у вузлі — невалідний формат. Збережіть ключ для всієї компанії.', 'warning');
+                }
+                node.config.aiApiKey = (_rawKey && !_isInvalid) ? _rawKey : null;
+            })();
             node.config.aiProvider = get('aiProvider') || fc.selectedNode?.config?.aiProvider || 'openai';
             node.config.saveAs = get('saveAs') || null;
             node.config.fallback = get('fallback');

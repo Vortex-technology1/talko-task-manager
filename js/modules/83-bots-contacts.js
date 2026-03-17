@@ -2878,6 +2878,17 @@ window.settingsSaveApiKey = window.saveBotApiKey = async function(type) {
     const key = keyEl?.value.trim();
     if (!key || key.includes('•')) { if(window.showToast)showToast(window.t('botsNewKey'),'warning'); else alert(window.t('botsNewKey')); return; }
 
+    // VALIDATE: перевіряємо формат перед збереженням
+    const _isEmail  = key.includes('@');
+    const _isUrl    = key.startsWith('http');
+    const _isDomain = /^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(key);
+    const _tooShort = key.length < 20;
+    if (_isEmail || _isUrl || _isDomain || _tooShort) {
+        const _hint = _isEmail ? 'Це email, не API ключ' : _isUrl ? 'Це URL, не API ключ' : _isDomain ? 'Це домен, не API ключ' : 'Занадто короткий ключ';
+        if(window.showToast)showToast('❌ Невалідний API ключ: ' + _hint + '. Очікується sk-...', 'error');
+        return;
+    }
+
     const result = document.getElementById('apiKeyResult');
     try {
         const field = type === 'openai' ? 'openaiApiKey' : 'anthropicApiKey';

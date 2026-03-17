@@ -1257,7 +1257,7 @@ module.exports = async (req, res) => {
                         typingTimeoutId = null;
                     }
                 }
-                if (!rawReply) rawReply = n.config?.fallback || n.fallback || '';
+                if (!rawReply) rawReply = n.config?.fallback || n.fallback || 'Вибачте, виникла помилка. Спробуйте ще раз.';
 
                 // Парсимо спеціальні теги з відповіді AI:
                 // [BTN:текст] — динамічна кнопка
@@ -1322,7 +1322,7 @@ module.exports = async (req, res) => {
                 }
 
                 // Якщо cleanReply порожній (тільки [DONE]/[BTN]/[SAVE]) — беремо fallback
-                const _replyText = cleanReply || (isDone ? '' : (n.config?.fallback || n.fallback || ''));
+                const _replyText = cleanReply || (isDone ? '' : (n.config?.fallback || n.fallback || 'Вибачте, виникла помилка. Спробуйте ще раз.'));
                 if (_replyText || thinkingMsgId) {
                     // БАГ 8: використовуємо HTML-конвертовану версію для Telegram
                     const _sendText = (channel === 'telegram' ? _sendCleanReply : cleanReply) || _replyText || '...';
@@ -2120,21 +2120,43 @@ async function callAI(node, userText, session, compRef, compData) {
         const _rawTemp = node.config?.temperature ?? node.temperature ?? 0.7;
         const _safeTemp = (typeof _rawTemp === 'number' && !isNaN(_rawTemp)) ? Math.min(Math.max(_rawTemp, 0), 2) : 0.7;
         const model = node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini';
-        const apiKey = node.config?.aiApiKey || node.aiApiKey
+
+        // VALIDATE KEY: перевіряємо формат перед використанням
+        // Захист від: маски '••••', email, URL, порожнього рядка, занадто короткого
+        const _isValidApiKey = (k) => {
+            if (!k || typeof k !== 'string') return false;
+            const trimmed = k.trim();
+            if (trimmed.length < 20) return false;           // занадто короткий
+            if (trimmed.includes('•')) return false;          // маска з UI
+            if (trimmed.includes('@')) return false;          // email
+            if (trimmed.startsWith('http')) return false;     // URL
+            if (/^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(trimmed)) return false; // домен
+            return true;
+        };
+
+        // Беремо ключ вузла тільки якщо він валідний — інакше fallback на ключ компанії
+        const _rawNodeKey = node.config?.aiApiKey || node.aiApiKey;
+        const _validNodeKey = _isValidApiKey(_rawNodeKey) ? _rawNodeKey : null;
+        if (_rawNodeKey && !_validNodeKey) {
+            console.warn('[callAI] Node apiKey invalid/masked, falling back to company key.',
+                'key_preview:', String(_rawNodeKey).slice(0, 15), 'provider:', provider);
+        }
+
+        const apiKey = _validNodeKey
             // Company-level BYOK keys (різні варіанти назв)
-            || compData[provider + 'ApiKey']
-            || compData[provider + '_api_key']
-            || compData.integrations?.[provider]?.apiKey
-            || compData.integrations?.[provider]?.key
+            || (_isValidApiKey(compData[provider + 'ApiKey']) ? compData[provider + 'ApiKey'] : null)
+            || (_isValidApiKey(compData[provider + '_api_key']) ? compData[provider + '_api_key'] : null)
+            || (_isValidApiKey(compData.integrations?.[provider]?.apiKey) ? compData.integrations?.[provider]?.apiKey : null)
+            || (_isValidApiKey(compData.integrations?.[provider]?.key) ? compData.integrations?.[provider]?.key : null)
             // OpenAI specific fallbacks
-            || (provider === 'openai' || provider === 'deepseek' ? compData.openaiApiKey : null)
-            || (provider === 'openai' || provider === 'deepseek' ? compData.openAiApiKey : null)
+            || (provider === 'openai' || provider === 'deepseek' ? (_isValidApiKey(compData.openaiApiKey) ? compData.openaiApiKey : null) : null)
+            || (provider === 'openai' || provider === 'deepseek' ? (_isValidApiKey(compData.openAiApiKey) ? compData.openAiApiKey : null) : null)
             // Anthropic specific
-            || (provider === 'anthropic' ? compData.anthropicApiKey : null)
-            || (provider === 'anthropic' ? compData.anthropic_api_key : null)
+            || (provider === 'anthropic' ? (_isValidApiKey(compData.anthropicApiKey) ? compData.anthropicApiKey : null) : null)
+            || (provider === 'anthropic' ? (_isValidApiKey(compData.anthropic_api_key) ? compData.anthropic_api_key : null) : null)
             // Google specific
-            || (provider === 'google' ? compData.googleApiKey : null)
-            || (provider === 'google' ? compData.geminiApiKey : null)
+            || (provider === 'google' ? (_isValidApiKey(compData.googleApiKey) ? compData.googleApiKey : null) : null)
+            || (provider === 'google' ? (_isValidApiKey(compData.geminiApiKey) ? compData.geminiApiKey : null) : null)
             // Env fallbacks
             || (provider === 'openai' || provider === 'deepseek' ? process.env.OPENAI_API_KEY : null)
             || (provider === 'anthropic' ? process.env.ANTHROPIC_API_KEY : null)
@@ -2142,13 +2164,19 @@ async function callAI(node, userText, session, compRef, compData) {
 
         // Завжди логуємо якщо ключа немає — щоб діагностувати проблему
         if (!apiKey) {
-            console.error('[callAI] NO API KEY for provider:', provider, 'model:', model,
-                'node.config?.aiApiKey:', !!node.config?.aiApiKey,
-                'compData.openaiApiKey:', !!compData?.openaiApiKey,
-                'env.OPENAI_API_KEY:', !!process.env.OPENAI_API_KEY);
-            return node.config?.fallback || node.fallback || 'Вибачте, AI недоступний. Перевірте API ключ.';
+            console.error('[callAI] NO VALID API KEY.',
+                'provider:', provider, 'model:', model,
+                'node_key_raw:', _rawNodeKey ? String(_rawNodeKey).slice(0, 15) + '...' : 'null',
+                'node_key_valid:', !!_validNodeKey,
+                'company_openaiApiKey:', !!compData?.openaiApiKey,
+                'company_key_valid:', _isValidApiKey(compData?.openaiApiKey),
+                'env_key:', !!process.env.OPENAI_API_KEY
+            );
+            return node.config?.fallback || node.fallback || 'Вибачте, AI недоступний. Перевірте API ключ у налаштуваннях.';
         }
-        process.env.WEBHOOK_DEBUG && console.debug('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
+        process.env.WEBHOOK_DEBUG && console.debug('[callAI] provider:', provider, 'model:', model,
+            'key_source:', _validNodeKey ? 'node' : 'company/env',
+            'key_prefix:', apiKey.slice(0, 10));
 
         const _rawSys = (node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.').slice(0, 6000);
         // FIX 3: НЕ примушуємо українську — мова визначається системним промптом

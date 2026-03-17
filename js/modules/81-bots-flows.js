@@ -959,6 +959,18 @@
         const inputId = inputMap[provider] || 'botsOpenAIKey';
         const key = document.getElementById(inputId)?.value.trim();
         if (!key || key.includes('•')) return;
+
+        // VALIDATE: перевіряємо формат перед збереженням
+        const _isEmail  = key.includes('@');
+        const _isUrl    = key.startsWith('http');
+        const _isDomain = /^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(key);
+        const _tooShort = key.length < 20;
+        if (_isEmail || _isUrl || _isDomain || _tooShort) {
+            const _hint = _isEmail ? 'Це email' : _isUrl ? 'Це URL' : _isDomain ? 'Це домен' : 'Занадто короткий';
+            if (typeof showToast === 'function') showToast('❌ Невалідний API ключ: ' + _hint + '. Очікується sk-...', 'error');
+            return;
+        }
+
         const fieldMap = { openai: 'openaiApiKey', anthropic: 'anthropicApiKey', google: 'googleApiKey' };
         const field = fieldMap[provider] || 'openaiApiKey';
         try {
