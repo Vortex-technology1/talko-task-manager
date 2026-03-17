@@ -87,10 +87,23 @@ module.exports = async function handler(req, res) {
     // CORS для внутрішніх Vercel функцій
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+    // ── Auth: Firebase ID token обов'язковий ─────────────────
+    const authHeader = req.headers.authorization || '';
+    if (!authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized: missing Bearer token' });
+    }
+    let uid;
+    try {
+        const decoded = await admin.auth().verifyIdToken(authHeader.slice(7));
+        uid = decoded.uid;
+    } catch(e) {
+        return res.status(401).json({ error: 'Unauthorized: invalid token' });
+    }
 
     const { phone, message, companyId, dealId } = req.body || {};
 
@@ -99,6 +112,12 @@ module.exports = async function handler(req, res) {
     }
 
     try {
+        // ── Verify: user belongs to this company ──────────────
+        const memberSnap = await db.doc(`companies/${companyId}/users/${uid}`).get();
+        if (!memberSnap.exists) {
+            return res.status(403).json({ error: 'Forbidden: not a company member' });
+        }
+
         // Читаємо API ключ компанії з Firestore
         const settingsDoc = await db.collection('companies').doc(companyId)
             .collection('settings').doc('integrations').get();
@@ -108,7 +127,7 @@ module.exports = async function handler(req, res) {
         }
 
         const apiKey = settingsDoc.data()?.whatsappApiKey;
-        // Дозволяємо override через заголовок X-WA-KEY (тільки для тест-кнопки в UI)
+        // X-WA-KEY override тільки для тест-кнопки — auth вже перевірена вище
         const apiKeyToUse = req.headers['x-wa-key'] || apiKey;
         if (!apiKeyToUse) {
             return res.status(400).json({ ok: false, error: 'WhatsApp API Key відсутній. Налаштуйте в Integrations.' });

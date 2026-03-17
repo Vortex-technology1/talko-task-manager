@@ -859,8 +859,18 @@ window.waSend = async function(phone, message, apiKeyOverride) {
     if (!phone || !message) return { ok: false, error: 'phone or message missing' };
     if (!window.currentCompanyId) return { ok: false, error: 'no companyId' };
 
-    // Якщо передали apiKey напряму (тест) — передаємо його через X-WA-KEY
+    // Отримуємо Firebase ID token для авторизації
+    let idToken = '';
+    try {
+        const user = firebase.auth().currentUser;
+        if (user) idToken = await user.getIdToken();
+    } catch(e) {
+        console.warn('[waSend] getIdToken failed:', e.message);
+    }
+
     const headers = { 'Content-Type': 'application/json' };
+    if (idToken) headers['Authorization'] = 'Bearer ' + idToken;
+    // Якщо передали apiKey напряму (тест) — передаємо його через X-WA-KEY
     if (apiKeyOverride) headers['X-WA-KEY'] = apiKeyOverride;
 
     try {
