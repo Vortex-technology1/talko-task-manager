@@ -1908,7 +1908,19 @@ module.exports = async (req, res) => {
         const { _botToken, _cachedFlow: _cf, ...sessionToSave } = session;
         // Повертаємо _cachedFlow тільки якщо він невеликий (< 20 нод)
         if (_cf && _cf.nodes?.length <= 20) sessionToSave._cachedFlow = _cf;
-        sessionRef.set(sessionToSave, { merge: true }).catch(e => console.error('[webhook] final session.set:', e.message));
+        // FIX: Firestore не приймає undefined — замінюємо на null рекурсивно
+        const _sanitizeForFirestore = (obj) => {
+            if (obj === undefined) return null;
+            if (obj === null || typeof obj !== 'object') return obj;
+            if (Array.isArray(obj)) return obj.map(_sanitizeForFirestore);
+            const result = {};
+            for (const [k, v] of Object.entries(obj)) {
+                result[k] = _sanitizeForFirestore(v);
+            }
+            return result;
+        };
+        const _safeSession = _sanitizeForFirestore(sessionToSave);
+        sessionRef.set(_safeSession, { merge: true }).catch(e => console.error('[webhook] final session.set:', e.message));
 
         // FIX 2b: після AI — перевіряємо pending messages (черга)
         // Підхоплюємо і відправляємо typing для кожного
