@@ -5098,6 +5098,89 @@
 <div class="l12-divider"></div>
 
 <div class="l12-section">
+    <div class="l12-section-label">Візуалізація</div>
+    <div class="l12-section-title">Ось як це виглядає на практиці</div>
+    <div class="l12-card" style="margin-bottom:1rem;">
+        <p>Нижче — приклад того, як виглядає функціональна структура реального бізнесу. Кожна колонка — це окрема функція. Під кожною функцією — підфункції: конкретні роботи, які виконуються всередині цієї зони відповідальності.</p>
+        <p>Поки що просто подивіться і зрозумійте логіку. Свою структуру ви будуватимете пізніше — у розділі <strong>«Система: Структура»</strong>.</p>
+    </div>
+    <div style="overflow-x:auto;">
+    <div style="display:flex;gap:8px;min-width:700px;">
+
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Адміністру-вання</div>
+            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Стратегічне планування</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Регламенти та технології</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Наради та контроль</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Найм та управління персоналом</div>
+            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Пошук і відбір</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Введення в посаду</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Навчання</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Мотивація і KPI</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Розвиток команди</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Маркетинг</div>
+            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Розробка офера</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Розробка продукту</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Воронка залучення</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Сайт і посадкові</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Запуск реклами</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Продажі</div>
+            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Обробка звернень</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Продажі</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Повторні продажі</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">CRM</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Фінанси</div>
+            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Доходи</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Витрати</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Облік</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Виробництво / надання послуги</div>
+            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Планування</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Забезпечення</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Виробництво</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Логістика</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Контроль якості</div>
+            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Показники якості</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Перевірки</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Відгуки клієнтів</div>
+            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Виправлення помилок</div>
+        </div>
+
+    </div>
+    </div>
+    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;display:flex;align-items:center;gap:0.75rem;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div style="font-size:0.82rem;color:#166534;line-height:1.5;">Свою структуру ви побудуєте у розділі <strong>«Система: Структура»</strong> — там є покроковий AI-інструмент, який допоможе визначити функції саме вашого бізнесу та знайти «діри».</div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
     <div class="l12-section-label">Розділ 3</div>
     <div class="l12-section-title">Чотири причини, чому треба ділити роботу на функції</div>
     <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">«Навіщо все це ускладнювати? Просто найму людей і скажу: робіть що треба». Це найпоширеніша думка власника, який застряг. «Роби що треба» — це найдорожча команда, яку ви можете дати.</p>
