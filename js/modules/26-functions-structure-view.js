@@ -418,3 +418,199 @@
                 refreshIcons();
             }
         }
+
+        // =====================
+        // CANVAS VIEW (гібридний канвас по ТЗ пріоритет 4)
+        // =====================
+        let _canvasMode = 'full';
+
+        // Override setFunctionsView to support canvas tab
+        const _origSetFunctionsView = typeof setFunctionsView === 'function' ? setFunctionsView : null;
+        function setFunctionsView(view) {
+            currentFunctionsView = view;
+            document.querySelectorAll('[data-fview]').forEach(b => {
+                b.style.background = b.dataset.fview === view ? 'white' : 'transparent';
+                b.style.fontWeight = b.dataset.fview === view ? '600' : '400';
+            });
+            document.getElementById('functionsContainer').style.display = view === 'cards' ? '' : 'none';
+            document.getElementById('functionsStructureContainer').style.display = view === 'structure' ? '' : 'none';
+            const cv = document.getElementById('functionsCanvasContainer');
+            if (cv) cv.style.display = view === 'canvas' ? '' : 'none';
+            if (view === 'structure') renderFunctionsStructure();
+            if (view === 'canvas') renderFunctionsCanvas();
+            refreshIcons();
+        }
+
+        window.setCanvasMode = function(mode) {
+            _canvasMode = mode;
+            document.querySelectorAll('.canvas-mode-btn').forEach(b => {
+                const active = b.dataset.cmode === mode;
+                b.style.background = active ? '#1e40af' : 'white';
+                b.style.color = active ? 'white' : '#374151';
+                b.style.borderColor = active ? '#1e40af' : '#d1d5db';
+                b.style.fontWeight = active ? '600' : '400';
+            });
+            renderFunctionsCanvas();
+        };
+
+        function _getLoadColor(f, todayStr) {
+            if (!f.headId && !f.headName) return { border: '#ef4444', bg: '#fef2f2' };
+            const fTasks = tasks.filter(t => t.function === f.name && t.status !== 'done');
+            if (fTasks.length === 0) return { border: '#d1d5db', bg: '#f9fafb' };
+            const overdue = fTasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr).length;
+            const ratio = overdue / fTasks.length;
+            if (ratio > 0.3) return { border: '#ef4444', bg: '#fff7f7' };
+            if (ratio > 0.1) return { border: '#f59e0b', bg: '#fffbeb' };
+            return { border: '#22c55e', bg: '#f0fdf4' };
+        }
+
+        window.renderFunctionsCanvas = function() {
+            const area = document.getElementById('functionsCanvasArea');
+            if (!area) return;
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
+            if (activeFunctions.length === 0) {
+                area.innerHTML = '<div style="text-align:center;padding:3rem;color:#9ca3af;">Немає активних функцій.</div>';
+                return;
+            }
+            const CARD_W = 200, CARD_H = 115, GAP_X = 60, GAP_Y = 50;
+            const todayStr = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
+
+            const positioned = activeFunctions.map((f, i) => ({
+                ...f,
+                x: (typeof f.positionX === 'number') ? f.positionX : 30 + (i % 4) * (CARD_W + GAP_X),
+                y: (typeof f.positionY === 'number') ? f.positionY : 30 + Math.floor(i / 4) * (CARD_H + GAP_Y)
+            }));
+
+            const maxX = Math.max(...positioned.map(f => f.x + CARD_W)) + 60;
+            const maxY = Math.max(...positioned.map(f => f.y + CARD_H)) + 80;
+
+            let svgLines = '';
+            positioned.forEach(f => {
+                if ((_canvasMode === 'hierarchy' || _canvasMode === 'full') && f.reportsTo) {
+                    const t = positioned.find(p => p.id === f.reportsTo);
+                    if (t) {
+                        svgLines += `<line x1="${f.x+CARD_W/2}" y1="${f.y}" x2="${t.x+CARD_W/2}" y2="${t.y+CARD_H}" stroke="#374151" stroke-width="2" marker-end="url(#arrow-solid)"/>`;
+                    }
+                }
+                if ((_canvasMode === 'communications' || _canvasMode === 'full') && f.communicatesWith && f.communicatesWith.length) {
+                    f.communicatesWith.forEach(function(cw) {
+                        if (cw.direction !== 'incoming' && f.id < cw.functionId) {
+                            const t = positioned.find(p => p.id === cw.functionId);
+                            if (t) {
+                                const x1=f.x+CARD_W, y1=f.y+CARD_H/2, x2=t.x, y2=t.y+CARD_H/2, mx=(x1+x2)/2;
+                                svgLines += `<path d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-comm)"/>`;
+                                if (cw.topics && cw.topics.length) {
+                                    const label = cw.topics.slice(0,2).join(', ').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                                    svgLines += `<text x="${mx}" y="${(y1+y2)/2-5}" text-anchor="middle" font-size="10" fill="#8b5cf6" opacity="0.85">${label}</text>`;
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
+            const svg = `<svg style="position:absolute;top:0;left:0;pointer-events:none;" width="${maxX}" height="${maxY}" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow-solid" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#374151"/></marker><marker id="arrow-comm" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#8b5cf6"/></marker></defs>${svgLines}</svg>`;
+
+            const cards = positioned.map(function(f) {
+                const load = _getLoadColor(f, todayStr);
+                const fTasks = tasks.filter(t => t.function === f.name && t.status !== 'done').length;
+                const overdue = tasks.filter(t => t.function === f.name && t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done').length;
+                const topBar = (f.primaryColor && f.primaryColor !== '#ffffff') ? `border-top:3px solid ${f.primaryColor};` : '';
+                const resultSnip = f.result ? (f.result.length > 48 ? f.result.slice(0,48)+'...' : f.result) : '';
+                const noOwner = !f.headId && !f.headName;
+                const safeId = f.id.replace(/[^a-zA-Z0-9_-]/g,'');
+                const safeName = (f.name||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                const safeOwner = (f.headName||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                const safeResult = resultSnip.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                return `<div class="func-canvas-card" data-func-id="${safeId}" style="position:absolute;left:${f.x}px;top:${f.y}px;width:${CARD_W}px;background:${load.bg};border:2px solid ${load.border};border-radius:10px;padding:0.55rem 0.65rem;cursor:grab;user-select:none;box-shadow:0 2px 6px rgba(0,0,0,0.07);${topBar}" onmousedown="startCanvasDrag(event,'${safeId}')" ondblclick="openFunctionModal('${safeId}')"><div style="font-weight:700;font-size:0.8rem;color:#111827;line-height:1.3;margin-bottom:2px;">${safeName}</div>${noOwner ? `<div style="font-size:0.7rem;color:#ef4444;margin-bottom:3px;">No owner</div>` : `<div style="font-size:0.7rem;color:#6b7280;margin-bottom:3px;">👤 ${safeOwner}</div>`}${safeResult ? `<div style="font-size:0.68rem;color:#374151;font-style:italic;line-height:1.3;margin-bottom:4px;">${safeResult}</div>` : ''}<div style="display:flex;gap:8px;font-size:0.68rem;color:#6b7280;"><span>📋 ${fTasks}</span>${overdue > 0 ? `<span style="color:#ef4444;font-weight:600;">⚠ ${overdue}</span>` : ''}</div></div>`;
+            }).join('');
+
+            area.style.width = maxX + 'px';
+            area.style.height = maxY + 'px';
+            area.innerHTML = svg + cards;
+            setCanvasMode(_canvasMode);
+        };
+
+        let _cdDragging = null, _cdOffX = 0, _cdOffY = 0;
+
+        window.startCanvasDrag = function(e, funcId) {
+            if (e.button !== 0) return;
+            const card = e.currentTarget;
+            const area = document.getElementById('functionsCanvasArea');
+            _cdDragging = { funcId, card };
+            const r = area.getBoundingClientRect();
+            _cdOffX = e.clientX - r.left - parseInt(card.style.left);
+            _cdOffY = e.clientY - r.top - parseInt(card.style.top);
+            card.style.cursor = 'grabbing';
+            card.style.zIndex = 100;
+            e.preventDefault();
+            function onMove(ev) {
+                if (!_cdDragging) return;
+                const r2 = area.getBoundingClientRect();
+                const nx = Math.max(0, ev.clientX - r2.left - _cdOffX);
+                const ny = Math.max(0, ev.clientY - r2.top - _cdOffY);
+                _cdDragging.card.style.left = nx + 'px';
+                _cdDragging.card.style.top = ny + 'px';
+                _redrawCanvasArrows(area);
+            }
+            function onUp(ev) {
+                if (!_cdDragging) return;
+                const r2 = area.getBoundingClientRect();
+                const nx = Math.max(0, ev.clientX - r2.left - _cdOffX);
+                const ny = Math.max(0, ev.clientY - r2.top - _cdOffY);
+                card.style.cursor = 'grab';
+                card.style.zIndex = '';
+                const func = functions.find(f => f.id === _cdDragging.funcId);
+                if (func) { func.positionX = nx; func.positionY = ny; }
+                db.collection('companies').doc(currentCompany).collection('functions').doc(_cdDragging.funcId)
+                    .update({ positionX: nx, positionY: ny }).catch(function(er) { console.error(er); });
+                _cdDragging = null;
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            }
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        };
+
+        function _redrawCanvasArrows(area) {
+            const svg = area.querySelector('svg');
+            if (!svg) return;
+            const defs = svg.querySelector('defs');
+            const posMap = {};
+            area.querySelectorAll('.func-canvas-card').forEach(function(c) {
+                posMap[c.dataset.funcId] = { x: parseInt(c.style.left), y: parseInt(c.style.top) };
+            });
+            const CARD_W = 200, CARD_H = 115;
+            let lines = '';
+            functions.filter(f => f.status !== 'archived').forEach(function(f) {
+                const fp = posMap[f.id];
+                if (!fp) return;
+                if ((_canvasMode === 'hierarchy' || _canvasMode === 'full') && f.reportsTo) {
+                    const tp = posMap[f.reportsTo];
+                    if (tp) lines += `<line x1="${fp.x+CARD_W/2}" y1="${fp.y}" x2="${tp.x+CARD_W/2}" y2="${tp.y+CARD_H}" stroke="#374151" stroke-width="2" marker-end="url(#arrow-solid)"/>`;
+                }
+                if ((_canvasMode === 'communications' || _canvasMode === 'full') && f.communicatesWith && f.communicatesWith.length) {
+                    f.communicatesWith.forEach(function(cw) {
+                        if (cw.direction !== 'incoming' && f.id < cw.functionId) {
+                            const tp = posMap[cw.functionId];
+                            if (tp) {
+                                const x1=fp.x+CARD_W, y1=fp.y+CARD_H/2, x2=tp.x, y2=tp.y+CARD_H/2, mx=(x1+x2)/2;
+                                lines += `<path d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-comm)"/>`;
+                            }
+                        }
+                    });
+                }
+            });
+            svg.innerHTML = (defs ? defs.outerHTML : '') + lines;
+        }
+
+        window.autoLayoutCanvas = function() {
+            const CARD_W = 200, GAP_X = 60, GAP_Y = 50, CARD_H = 115;
+            functions.filter(f => f.status !== 'archived').forEach(function(f, i) {
+                f.positionX = 30 + (i % 4) * (CARD_W + GAP_X);
+                f.positionY = 30 + Math.floor(i / 4) * (CARD_H + GAP_Y);
+                db.collection('companies').doc(currentCompany).collection('functions').doc(f.id)
+                    .update({ positionX: f.positionX, positionY: f.positionY }).catch(function(e) { console.error(e); });
+            });
+            renderFunctionsCanvas();
+        };
