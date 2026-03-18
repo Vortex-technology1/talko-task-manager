@@ -1337,10 +1337,17 @@ document.addEventListener('mousedown', function(e) {
                     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
                         <button class="btn btn-success" onclick="openStartProcessModal()"><i data-lucide="play" class="icon"></i> <span data-i18n="startProcess">Запустити</span></button>
                         <button class="btn" onclick="openProcessTemplatesModal()"><i data-lucide="file-cog" class="icon"></i> <span class="hide-mobile" data-i18n="templates">Шаблони</span></button>
+                        <button class="btn hide-mobile" onclick="toggleProcessHowto()" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;">
+                            <i data-lucide="info" class="icon"></i> Як це працює
+                        </button>
                         <a href="https://chatgpt.com/g/g-693ec18df2c0819194f1c3de7404d6fe-talko-ai-business-process" target="_blank" class="btn hide-mobile" title="AI Асистент бізнес-процесів" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);color:white;border:none;">
                             <i data-lucide="sparkles" class="icon"></i> <span data-i18n="aiAssistant">AI</span>
                         </a>
                     </div>
+                </div>
+
+                <!-- How it works panel -->
+                <div id="processHowtoPanel" style="display:none;margin-bottom:1rem;"></div>
                 </div>
                 
                 <!-- Process Board (Kanban style) -->

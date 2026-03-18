@@ -1557,3 +1557,367 @@ window._openEstimateForProject = function(projectId) {
         if (sel) sel.value = projectId;
     }, 100);
 };
+
+// ══════════════════════════════════════════════════════════════
+// ПРОЦЕСИ — ЯК ЦЕ ПРАЦЮЄ
+// ══════════════════════════════════════════════════════════════
+window.toggleProcessHowto = function() {
+    const panel = document.getElementById('processHowtoPanel');
+    if (!panel) return;
+    if (panel.style.display !== 'none') {
+        panel.style.display = 'none';
+        return;
+    }
+    panel.style.display = 'block';
+    panel.innerHTML = _buildProcessHowto();
+    if (typeof refreshIcons === 'function') refreshIcons();
+};
+
+function _buildProcessHowto() {
+    const path = t => `<span style="background:#f0f9ff;border:1px solid #bae6fd;padding:2px 8px;border-radius:4px;font-size:0.78rem;color:#0369a1;font-weight:600;">${t}</span>`;
+    const mono = t => `<span style="background:#f1f5f9;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:0.78rem;color:#374151;">${t}</span>`;
+    const badge = (c,t) => `<span style="background:${c}18;color:${c};padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;">${t}</span>`;
+
+    return `<div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+      <!-- ЗАКРИТИ -->
+      <div style="display:flex;justify-content:flex-end;">
+        <button onclick="toggleProcessHowto()"
+          style="padding:0.35rem 0.85rem;border:1px solid #e5e7eb;border-radius:7px;background:white;font-size:0.82rem;cursor:pointer;color:#6b7280;">
+          ✕ Закрити
+        </button>
+      </div>
+
+      <!-- ЗАГОЛОВОК -->
+      <div style="background:linear-gradient(135deg,#1a1f3c,#4f46e5);border-radius:14px;padding:1.5rem;color:white;">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">Модуль Процеси — що це і навіщо</div>
+        <div style="font-size:0.85rem;line-height:1.7;opacity:0.92;">
+          Процеси вирішують одну головну проблему: <b>власник пояснює одне і те ж "з нуля" кожного разу.</b>
+          Новий клієнт — знову пояснюєш кожному хто що робить. Новий співробітник — знову показуєш кожен крок.
+          Регулярна задача — знову хтось щось забуває. Процеси — це шаблони послідовності дій.
+          Одного разу налаштував → запускаєш кліком → всі задачі створюються автоматично з виконавцями і дедлайнами.
+        </div>
+      </div>
+
+      <!-- ПРОБЛЕМИ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Які проблеми вирішує</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          ${[
+            ['Кожного разу пояснюєш "з нуля"', 'Час власника витрачається на пояснення замість розвитку', 'Шаблон процесу описує кожен крок один раз — далі система сама розподіляє задачі'],
+            ['Менеджер щось забув або переплутав порядок', 'Клієнт отримав неповну послугу, помилка в процесі', 'Система не дає перейти на наступний крок поки попередній не виконано'],
+            ['Не знають хто зараз що робить по кожному клієнту', 'Власник питає всіх по черзі — втрачає час', 'Dashboard процесів — бачиш статус кожного клієнта в одному екрані'],
+            ['Регулярні процеси виконуються по-різному різними людьми', 'Якість непередбачувана, клієнт отримує різний сервіс', 'Один шаблон для всіх — однаковий результат незалежно від виконавця'],
+            ['Не знають скільки часу займає кожен крок', 'Не можна планувати завантаження команди', 'SLA на кожен крок — система рахує дедлайни автоматично'],
+            ['При звільненні співробітника процеси "зникають"', 'Новий не знає як правильно — починаємо з нуля', 'Шаблон залишається в системі — новий бере і виконує за інструкцією'],
+          ].map(([pain, impact, fix]) => `
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid #f3f4f6;border-radius:10px;overflow:hidden;font-size:0.8rem;">
+            <div style="padding:0.65rem 0.85rem;background:#fef2f2;border-right:1px solid #f3f4f6;">
+              <div style="font-size:0.68rem;font-weight:700;color:#dc2626;margin-bottom:2px;">ПРОБЛЕМА</div>
+              <div style="color:#7f1d1d;line-height:1.5;">${pain}</div>
+            </div>
+            <div style="padding:0.65rem 0.85rem;background:#fff7ed;border-right:1px solid #f3f4f6;">
+              <div style="font-size:0.68rem;font-weight:700;color:#ea580c;margin-bottom:2px;">НАСЛІДОК</div>
+              <div style="color:#7c2d12;line-height:1.5;">${impact}</div>
+            </div>
+            <div style="padding:0.65rem 0.85rem;background:#f0fdf4;">
+              <div style="font-size:0.68rem;font-weight:700;color:#16a34a;margin-bottom:2px;">РІШЕННЯ</div>
+              <div style="color:#14532d;line-height:1.5;">${fix}</div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- ОСНОВНА ЛОГІКА -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Основна логіка — як це працює</div>
+        <div style="background:#f8fafc;border-radius:10px;padding:1rem;margin-bottom:1rem;font-family:monospace;font-size:0.8rem;line-height:2;color:#1e293b;">
+          ШАБЛОН (один раз) → ЗАПУСК (кожен клієнт) → АВТОМАТИЧНЕ ВИКОНАННЯ<br>
+          ─────────────────────────────────────────────────────────────<br>
+          Шаблон: Прийом нового клієнта<br>
+          Крок 1: Менеджер → Первинний дзвінок (SLA: 2 год)<br>
+          Крок 2: Юрист → Підписання договору (SLA: 1 день)<br>
+          Крок 3: Бухгалтер → Виставлення рахунку (SLA: 4 год)<br>
+          Крок 4: Технічний відділ → Налаштування доступу (SLA: 8 год)<br>
+          ─────────────────────────────────────────────────────────────<br>
+          Натиснув "Запустити" → Крок 1 → задача Менеджеру автоматично<br>
+          Менеджер позначив "Виконано" → Крок 2 → задача Юристу автоматично<br>
+          Юрист виконав → Крок 3 → задача Бухгалтеру автоматично<br>
+          і так далі...
+        </div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;">
+          <b>Ключова ідея:</b> ти не створюєш задачі вручну. Ти один раз описуєш послідовність — і система сама розподіляє роботу по потрібних людях у потрібний час.
+        </div>
+      </div>
+
+      <!-- ШАБЛОН ДЕТАЛЬНО -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Шаблон процесу — що можна налаштувати</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
+          ${path('Процеси → Шаблони → Новий шаблон')}
+        </div>
+        <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Кожен крок шаблону містить:</div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;">
+          ${[
+            ['Функція','Хто виконує цей крок — вибираєш з функціональної структури компанії (Менеджер, Юрист, Бухгалтер тощо). Система сама знає хто закріплений за цією функцією'],
+            ['Назва кроку','Що конкретно треба зробити: "Підписати договір", "Виставити рахунок", "Налаштувати доступ"'],
+            ['SLA (час на виконання)','30 хв / 1 год / 2 год / 4 год / 8 год / 1 день / 2 дні / 3 дні. Система автоматично рахує дедлайн кожного кроку'],
+            ['Очікуваний результат','Що має бути зроблено по факту: "Договір підписаний і відсканований", "Рахунок виставлений в 1С". Виконавець бачить це в задачі'],
+            ['Контрольне питання','Питання для самоперевірки виконавця перед закриттям кроку: "Чи підтвердив клієнт отримання?"'],
+            ['Інструкція','Детальний опис як виконати крок. Нова людина може виконати без додаткових пояснень'],
+            ['Checkpoint (перевірочний пункт)','Якщо увімкнено — задача спочатку іде на перевірку керівнику і тільки після його підтвердження переходить далі'],
+            ['Smart Assign','Якщо в функції кілька виконавців — система автоматично вибирає найменш завантаженого. Рахує активні задачі + прострочені × 2'],
+          ].map(([field, desc]) => `
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:0.5rem 0.75rem;background:#f9fafb;border-radius:7px;font-size:0.8rem;">
+            <div style="font-weight:700;color:#111827;min-width:180px;flex-shrink:0;">${field}</div>
+            <div style="color:#6b7280;line-height:1.5;">${desc}</div>
+          </div>`).join('')}
+        </div>
+
+        <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Приклади шаблонів:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          ${[
+            ['Прийом нового клієнта','Дзвінок → Договір → Рахунок → Доступ → Вітання'],
+            ['Обробка замовлення','Прийом → Підтвердження → Виробництво → Контроль → Доставка'],
+            ['Onboarding співробітника','Документи → Обладнання → Доступи → Навчання → Перший тиждень'],
+            ['Закриття місяця','Звіт продажів → Звіт витрат → Звірка → Нарахування → Виплата'],
+            ['Рекламна кампанія','Бриф → Дизайн → Погодження → Запуск → Звіт'],
+            ['Претензія клієнта','Реєстрація → Розслідування → Рішення → Відповідь клієнту → Закриття'],
+          ].map(([name, steps]) => `
+          <div style="padding:0.6rem 0.85rem;background:#f0f4ff;border-radius:8px;font-size:0.8rem;">
+            <div style="font-weight:700;color:#3730a3;margin-bottom:0.2rem;">${name}</div>
+            <div style="color:#6b7280;font-size:0.75rem;">${steps}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- ЗАПУСК ПРОЦЕСУ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Запуск процесу — що відбувається</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
+          ${path('Процеси → Запустити')} → вибираєш шаблон → вводиш назву (наприклад "Клієнт Іваненко") → об'єкт (адреса, артикул тощо) → дедлайн процесу.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          ${[
+            ['Автоматично створюється задача для першого кроку','Виконавець першого кроку отримує задачу в Моєму Дні і сповіщення в Telegram'],
+            ['Smart Deadline','Якщо вказав кінцевий дедлайн — система рахує дедлайн кожного кроку від кінця: кінець − SLA останнього − SLA передостаннього − ... Кожен отримує реалістичний дедлайн'],
+            ['Контекст об\'єкту','Якщо вказав "об\'єкт" (наприклад "Кв. Шевченка 15, кв 24") — він буде відображатись в кожній задачі і в dashboard процесів'],
+            ['Виконавець обирається автоматично','Smart Assign вибирає найменш завантаженого з функції. Ніхто не перевантажений'],
+            ['Процес з\'являється в Dashboard','Горизонтальна шкала прогресу — видно на якому кроці кожен процес прямо зараз'],
+          ].map(([title, desc]) => `
+          <div style="border-left:3px solid #4f46e5;padding:0.6rem 0.85rem;background:#f9fafb;border-radius:0 8px 8px 0;font-size:0.82rem;">
+            <div style="font-weight:700;color:#111827;margin-bottom:0.2rem;">${title}</div>
+            <div style="color:#6b7280;line-height:1.55;">${desc}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- АВТОМАТИЧНЕ ВИКОНАННЯ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Автоматичне просування — що відбувається коли крок виконано</div>
+        <div style="background:#f8fafc;border-radius:10px;padding:1rem;margin-bottom:0.75rem;font-size:0.82rem;line-height:1.8;color:#1e293b;">
+          <b>Виконавець позначає задачу "Виконано" → Google Cloud Functions (сервер) автоматично:</b><br><br>
+          1. Фіксує результат кроку (хто виконав, коли, скільки хвилин зайняло, коментар)<br>
+          2. Оновлює прогрес процесу (+1 крок)<br>
+          3. Визначає виконавця наступного кроку (Smart Assign)<br>
+          4. Рахує дедлайн наступного кроку (SLA або від загального дедлайну)<br>
+          5. Створює задачу наступного кроку з повним контекстом попередніх результатів<br>
+          6. Надсилає виконавцю наступного кроку сповіщення в Telegram<br>
+          7. Надсилає власнику / менеджеру сповіщення про прогрес процесу<br><br>
+          <b>Якщо це був останній крок:</b><br>
+          → Процес отримує статус "Завершено"<br>
+          → Всі власники і менеджери отримують Telegram сповіщення "✅ Процес завершено!"<br>
+          → Процес іде в архів (видно при фільтрі "Архів")
+        </div>
+        <div style="padding:0.65rem 0.9rem;background:#fef3c7;border-radius:8px;font-size:0.82rem;color:#92400e;">
+          <b>Важливо:</b> весь ланцюжок запускається на сервері (Google Cloud Functions) — не в браузері. Навіть якщо всі вийшли з системи — процес продовжує працювати.
+        </div>
+      </div>
+
+      <!-- CHECKPOINT -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Checkpoint — крок на перевірку керівника</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
+          Якщо для кроку увімкнено <b>Checkpoint</b> — виконавець не може просто закрити задачу. Задача спочатку іде на статус "На перевірці" і тільки після того як керівник підтверджує — процес іде далі.
+        </div>
+        <div style="background:#f8fafc;border-radius:10px;padding:1rem;font-family:monospace;font-size:0.79rem;line-height:2;color:#1e293b;">
+          Без Checkpoint: Виконавець → "Виконано" → Наступний крок<br>
+          З Checkpoint: &nbsp;Виконавець → "Виконано" → "На перевірці" → Керівник підтверджує → Наступний крок
+        </div>
+        <div style="margin-top:0.75rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+          <b>Коли використовувати:</b> для критичних кроків де помилка дорого коштує — підписання договору, відправка клієнту, фінансові операції, юридичні документи.
+        </div>
+      </div>
+
+      <!-- SMART ASSIGN -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Smart Assign — автоматичний вибір виконавця</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
+          Якщо в функції кілька виконавців (наприклад 3 менеджери) — система не завжди призначає першого по списку. Вона вибирає <b>найменш завантаженого</b>.
+        </div>
+        <div style="background:#f8fafc;border-radius:10px;padding:1rem;font-family:monospace;font-size:0.79rem;line-height:2;color:#1e293b;">
+          Менеджер А: 5 активних задач + 1 прострочена → навантаження = 5 + 1×2 = 7<br>
+          Менеджер Б: 3 активних задачі + 0 прострочених → навантаження = 3<br>
+          Менеджер В: 4 активних задачі + 2 прострочених → навантаження = 4 + 2×2 = 8<br>
+          ──────────────────────────────────────────────────────────<br>
+          Smart Assign вибере: Менеджер Б (навантаження 3 — найменше)
+        </div>
+        <div style="margin-top:0.75rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+          Прострочені задачі рахуються з коефіцієнтом ×2 — вони важливіші. Це забезпечує рівномірне завантаження команди без ручного розподілу.
+        </div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Dashboard процесів — що бачить власник</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
+          Кожен запущений процес відображається рядком з горизонтальною шкалою прогресу:
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem;">
+          ${[
+            ['Назва процесу','Наприклад "[Кошторис Іваненко] Прийом клієнта"'],
+            ['Назва шаблону','Який шаблон використовується'],
+            ['Об\'єкт процесу','Якщо вказано при запуску — "Кв. Шевченка 15", "Замовлення №123"'],
+            ['Поточний виконавець','Хто зараз виконує активний крок'],
+            ['Дедлайн','Дата завершення. Червоний = прострочений'],
+            ['Прогрес %','Скільки кроків виконано з загальної кількості'],
+            ['Горизонтальна шкала кроків','Кожен крок: сірий = очікує, синій = активний, зелений = виконано'],
+          ].map(([field, desc]) => `
+          <div style="display:flex;gap:0.75rem;padding:0.45rem 0.75rem;background:#f9fafb;border-radius:7px;font-size:0.8rem;">
+            <div style="font-weight:600;color:#111827;min-width:180px;flex-shrink:0;">${field}</div>
+            <div style="color:#6b7280;">${desc}</div>
+          </div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          ${[
+            ['Сортування','Прострочені → Активні (менший % вгорі) → Завершені. Найгостріші проблеми завжди вгорі'],
+            ['Фільтр по шаблону','Показати тільки процеси одного типу: наприклад всі "Прийоми клієнтів"'],
+            ['Фільтр по виконавцю','Показати тільки процеси де активний крок призначений на конкретну людину'],
+            ['Архів','Кнопка "Архів" показує завершені процеси — повна історія'],
+          ].map(([title, desc]) => `
+          <div style="padding:0.55rem 0.75rem;background:#f0f4ff;border-radius:8px;font-size:0.79rem;">
+            <div style="font-weight:700;color:#3730a3;margin-bottom:0.2rem;">${title}</div>
+            <div style="color:#6b7280;line-height:1.45;">${desc}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- ЗВ'ЯЗКИ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Зв'язки з іншими модулями</div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+          <div style="border:1px solid #bfdbfe;border-radius:10px;overflow:hidden;">
+            <div style="background:#eff6ff;padding:0.6rem 1rem;"><span style="font-weight:700;font-size:0.88rem;color:#1d4ed8;">Завдання ${path('Мій день / Всі завдання')}</span></div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              Кожен крок процесу — це звичайна задача в системі завдань. Виконавець бачить її в "Моєму Дні", в загальному списку завдань.
+              Задача має назву у форматі <b>[Назва процесу] Крок</b> — одразу зрозуміло до якого процесу належить.
+              В задачі є весь контекст: інструкція, очікуваний результат, контрольне питання, результати попередніх кроків.
+              Виконавець не бачить "зробити щось" — він бачить конкретний крок з повним контекстом.
+            </div>
+          </div>
+
+          <div style="border:1px solid #bbf7d0;border-radius:10px;overflow:hidden;">
+            <div style="background:#f0fdf4;padding:0.6rem 1rem;"><span style="font-weight:700;font-size:0.88rem;color:#065f46;">Функціональна структура ${path('Система → Функції')}</span></div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              Кожен крок прив'язується до <b>функції</b> (ролі в компанії), а не до конкретної людини.
+              Функція "Менеджер" → всі хто є менеджерами. Функція "Юрист" → всі юристи.
+              Якщо менеджер звільнився → призначаєш нову людину на функцію → всі процеси автоматично йдуть до неї.
+              Не треба переробляти жоден шаблон.
+            </div>
+          </div>
+
+          <div style="border:1px solid #fde68a;border-radius:10px;overflow:hidden;">
+            <div style="background:#fffbeb;padding:0.6rem 1rem;"><span style="font-weight:700;font-size:0.88rem;color:#b45309;">Telegram сповіщення</span></div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              <b>Виконавець наступного кроку</b> отримує Telegram сповіщення: назва процесу, номер кроку, що треба зробити, дедлайн, очікуваний результат.<br>
+              <b>Власник і менеджери</b> отримують сповіщення про прогрес: "Крок 2 завершено → Крок 3: Юрист Іваненко".<br>
+              <b>При завершенні всього процесу</b>: "✅ Процес завершено! Всі 5 кроків виконано!"<br>
+              Сповіщення надсилаються сервером — навіть якщо всі вийшли з системи.
+            </div>
+          </div>
+
+          <div style="border:1px solid #e9d5ff;border-radius:10px;overflow:hidden;">
+            <div style="background:#faf5ff;padding:0.6rem 1rem;"><span style="font-weight:700;font-size:0.88rem;color:#7e22ce;">CRM ${path('Бізнес → CRM')}</span></div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              Процес можна запустити автоматично через Event Bus коли угода переходить в певну стадію CRM.
+              Наприклад: угода → "Виграно" → автоматично запускається процес "Onboarding клієнта".
+              Ім'я клієнта передається як "об'єкт процесу" — видно в кожному кроці.
+            </div>
+          </div>
+
+          <div style="border:1px solid #fed7aa;border-radius:10px;overflow:hidden;">
+            <div style="background:#fff7ed;padding:0.6rem 1rem;"><span style="font-weight:700;font-size:0.88rem;color:#c2410c;">Аналітика ${path('Аналітика → Процеси')}</span></div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              Кожен крок зберігає: хто виконав, коли, скільки хвилин зайняло, результат.
+              Ці дані дозволяють аналізувати де процес "гальмує", хто виконує швидше, де постійно перевищується SLA.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ПОКРОКОВО -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Покрокове налаштування з нуля</div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+          ${[
+            ['1','#4f46e5','Перевір функціональну структуру',`${path('Система → Функції')}`,
+              'Переконайся що всі функції компанії налаштовані і до кожної прив\'язані виконавці. Саме з функцій беруться виконавці кроків. Якщо функції не налаштовані — процес не запуститься.',
+              'Функція = роль в компанії: Менеджер, Юрист, Бухгалтер, Технічний відділ тощо. Не посада — роль.'],
+            ['2','#3b82f6','Визнач процес для автоматизації','',
+              'Обери один повторюваний процес який виконується найчастіше або де найбільше помилок. Наприклад: "Обробка замовлення" або "Прийом нового клієнта". Починай з одного — не намагайся автоматизувати все одразу.',
+              'Критерії вибору: виконується мінімум 2-3 рази на тиждень, має чіткі кроки, страждає від помилок або забування.'],
+            ['3','#8b5cf6','Створи шаблон',`${path('Процеси → Шаблони → Новий шаблон')}`,
+              'Назви шаблон. Додай мінімум 2 кроки (система вимагає від 2). Для кожного кроку: вибери функцію, напиши назву кроку, встанови SLA, додай інструкцію і очікуваний результат. Для критичних кроків увімкни Checkpoint.',
+              'Починай просто — 3-5 кроків. Потім розширюй. Краще запустити простий шаблон сьогодні ніж ідеальний через місяць.'],
+            ['4','#10b981','Запусти перший процес',`${path('Процеси → Запустити')}`,
+              'Вибери шаблон → введи назву (ім\'я клієнта або номер замовлення) → вкажи об\'єкт якщо є → встанови дедлайн → підтвердж. Система автоматично створить задачу першого кроку.',
+              ''],
+            ['5','#f59e0b','Спостерігай і коригуй','',
+              'Відкривай Dashboard процесів щодня. Де прострочено? Де затримка? Де постійно один і той же крок "застрягає"? Це сигнали для покращення шаблону — або SLA занадто короткий, або інструкція незрозуміла, або виконавець перевантажений.',
+              ''],
+          ].map(([num, color, title, pathHtml, desc, tip]) => `
+          <div style="border:1px solid #f3f4f6;border-radius:10px;overflow:hidden;">
+            <div style="background:#f9fafb;padding:0.65rem 1rem;display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid #f3f4f6;">
+              <div style="width:26px;height:26px;background:${color};color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.82rem;flex-shrink:0;">${num}</div>
+              <div>
+                <div style="font-weight:700;font-size:0.88rem;color:#111827;">${title}</div>
+                ${pathHtml ? `<div style="margin-top:2px;">${pathHtml}</div>` : ''}
+              </div>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">${desc}</div>
+            ${tip ? `<div style="padding:0.5rem 1rem;background:#fffbeb;border-top:1px solid #fde68a;font-size:0.78rem;color:#92400e;">💡 ${tip}</div>` : ''}
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- РЕЗУЛЬТАТ -->
+      <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#065f46;margin-bottom:0.75rem;">Що отримуєш через місяць роботи з процесами</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          ${[
+            'Власник не пояснює одне і те ж постійно — шаблон робить це замість нього',
+            'Кожен крок виконується в правильному порядку — помилки зникають',
+            'Новий співробітник може виконати процес з першого дня без додаткового навчання',
+            'Власник бачить стан кожного клієнта в реальному часі без нарад',
+            'Прострочені процеси одразу видно — можна реагувати до того як стане проблемою',
+            'Команда рівномірно завантажена — Smart Assign розподіляє без перевантаження',
+            'При звільненні співробітника — змінюєш виконавця функції і все продовжує працювати',
+            '1 налаштований процес = сотні годин зекономлених за рік',
+          ].map(r => `
+          <div style="display:flex;align-items:flex-start;gap:0.4rem;padding:0.5rem 0.75rem;background:white;border-radius:8px;font-size:0.8rem;color:#166534;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>${r}</span>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:1rem;text-align:center;">
+          <button onclick="openProcessTemplatesModal();toggleProcessHowto();"
+            style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.65rem 1.5rem;background:#4f46e5;color:white;border:none;border-radius:9px;font-size:0.9rem;font-weight:700;cursor:pointer;">
+            Створити перший шаблон →
+          </button>
+        </div>
+      </div>
+
+    </div>`;
+}
