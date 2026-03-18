@@ -937,17 +937,19 @@
         function renderTemplateStepEditor(step, index) {
             const activeFunctions = functions.filter(f => f.status !== 'archived');
             const funcOptions = activeFunctions.map(f => 
-                `<option value="${esc(f.name)}" ${f.name === step.function ? 'selected' : ''}>${esc(f.name)}</option>`
+                `<option value="${esc(f.name)}" data-fid="${esc(f.id)}" ${f.name === step.function ? 'selected' : ''}>${esc(f.name)}</option>`
             ).join('');
+            // Resolve existing functionId from step (may be stored or derived from name)
+            const resolvedFuncId = step.functionId || activeFunctions.find(f => f.name === step.function)?.id || '';
             
             const expanded = step.expectedResult || step.controlQuestion || step.instruction || step.slaMinutes;
             
             return `
-                <div class="process-template-step" data-index="${index}">
+                <div class="process-template-step" data-index="${index}" data-function-id="${esc(resolvedFuncId)}">
                     <span class="step-number">${index + 1}</span>
                     <div style="flex:1;">
                         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.3rem;">
-                            <select class="form-select step-function" style="flex:1;min-width:120px;" onchange="updateStepFunction(${index}, this.value)">
+                            <select class="form-select step-function" style="flex:1;min-width:120px;" onchange="updateStepFunction(${index}, this.value, this.options[this.selectedIndex].dataset.fid)">
                                 <option value="">${window.t('stepFunction')}</option>
                                 ${funcOptions}
                             </select>
@@ -1019,8 +1021,13 @@
             }
         }
         
-        function updateStepFunction(index, value) {
-            // Зберігаємо в data атрибут
+        function updateStepFunction(index, value, funcId) {
+            // Зберігаємо functionId в data-атрибут батьківського елементу
+            const container = document.getElementById('templateStepsContainer');
+            const steps = Array.from(container.querySelectorAll('.process-template-step'));
+            if (steps[index]) {
+                steps[index].dataset.functionId = funcId || '';
+            }
         }
         
         function updateStepTitle(index, value) {
@@ -1043,6 +1050,7 @@
                 if (funcSelect?.value) {
                     steps.push({
                         function: funcSelect.value,
+                        functionId: stepEl.dataset.functionId || functions.find(f => f.name === funcSelect.value)?.id || '',
                         title: titleInput?.value || '',
                         expectedResult: stepEl.querySelector('.step-expectedResult')?.value || '',
                         controlQuestion: stepEl.querySelector('.step-controlQuestion')?.value || '',

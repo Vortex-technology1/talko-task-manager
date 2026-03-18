@@ -134,10 +134,11 @@
                 if (activeTask && activeTask.assigneeName) {
                     currentAssignee = activeTask.assigneeName;
                 } else {
-                    const stepFunc = template.steps[currentStep].function;
-                    const func = functions.find(f => f.name === stepFunc);
-                    if (func?.assigneeIds?.length) {
-                        const assignee = users.find(u => func.assigneeIds.includes(u.id));
+                    const stepFunc = template.steps[currentStep].functionId
+                        ? functions.find(f => f.id === template.steps[currentStep].functionId)
+                        : functions.find(f => f.name === template.steps[currentStep].function);
+                    if (stepFunc?.assigneeIds?.length) {
+                        const assignee = users.find(u => stepFunc.assigneeIds.includes(u.id));
                         currentAssignee = assignee?.name || '';
                     }
                 }
@@ -150,9 +151,14 @@
                 else if (i === currentStep) cls = 'active';
                 
                 const label = step.function || `Крок ${i + 1}`;
+                // Resolve function by id or name for display
+                const stepFunc = step.functionId
+                    ? functions.find(f => f.id === step.functionId)
+                    : functions.find(f => f.name === step.function && f.status !== 'archived');
+                const stepFuncLabel = stepFunc ? stepFunc.name : label;
                 
-                return `<div class="pipeline-step ${cls}" title="${esc(step.name || label)}">
-                    <span class="pipeline-step-label">${esc(label)}</span>
+                return `<div class="pipeline-step ${cls}" title="${esc(step.name || stepFuncLabel)}">
+                    <span class="pipeline-step-label">${esc(stepFuncLabel)}</span>
                 </div>`;
             }).join('<div class="pipeline-arrow">›</div>');
             
