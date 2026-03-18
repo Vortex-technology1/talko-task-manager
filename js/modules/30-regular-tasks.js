@@ -205,8 +205,12 @@
                 if (prefillFunction) {
                     setTimeout(() => {
                         const funcSelect = document.getElementById('regularTaskFunction');
-                        if (funcSelect) funcSelect.value = prefillFunction;
-                    }, 50);
+                        if (funcSelect) {
+                            // Шукаємо option по value (враховуємо esc encoding)
+                            const opt = Array.from(funcSelect.options).find(o => o.value === prefillFunction);
+                            if (opt) funcSelect.value = prefillFunction;
+                        }
+                    }, 60);
                 }
             }
         }

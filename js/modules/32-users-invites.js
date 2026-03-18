@@ -84,13 +84,13 @@
                 <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
                     <thead>
                         <tr style="background:#f9fafb;border-bottom:1px solid #e5e7eb;">
-                            <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;color:#374151;">Співробітник</th>
-                            <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;color:#374151;">Функції</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;color:#374151;">${window.t('employee') || 'Співробітник'}</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;color:#374151;">${window.t('tabFunctions') || 'Функції'}</th>
                             <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('regularHoursWeek')}</th>
                             <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('activeTasksCount')}</th>
                             <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('overdueStatus')}</th>
                             <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('autonomyIndex')}</th>
-                            <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">Статус</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('statusLabel') || 'Статус'}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,7 +176,7 @@
                     return `<div style="padding:0.5rem 0;border-bottom:1px solid #f3f4f6;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
                         <div style="flex:1;min-width:120px;">
                             <span style="font-weight:600;font-size:0.85rem;">${esc(f.name)}</span>
-                            <span style="font-size:0.72rem;color:#6b7280;margin-left:0.5rem;">${assigneesCount} викон.</span>
+                            <span style="font-size:0.72rem;color:#6b7280;margin-left:0.5rem;">${assigneesCount} ${window.t('people') || 'викон.'}</span>
                         </div>
                         <div style="font-size:0.78rem;color:#6b7280;">${fActive.length} активних · ${fHrs} год/тижд</div>
                         <div style="display:flex;gap:2px;min-width:120px;">
@@ -190,6 +190,7 @@
             </div>`;
 
             container.innerHTML = `<div style="padding-top:1rem;">${summaryHTML}${tableHTML}${top5HTML}${funcStatsHTML}</div>`;
+            if (typeof refreshIcons === 'function') refreshIcons();
         };
 
         // ---- USERS HOWTO ----

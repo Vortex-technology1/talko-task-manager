@@ -506,8 +506,8 @@
                     <div><div style="font-weight:500;font-size:0.82rem;">${title}</div><div style="font-size:0.78rem;color:#6b7280;">${desc}</div></div>
                 </div>`).join('')}
                 <div style="margin-top:1rem;">
-                    <button class="btn btn-success" onclick="openFunctionModal(); toggleFunctionsHowto();">
-                        <i data-lucide="plus" class="icon icon-sm"></i> Додати функцію
+                    <button class="btn btn-success" onclick="const p=document.getElementById('functionsHowtoPanel');if(p)p.style.display='none';openFunctionModal();">
+                        <i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addFunction') || 'Додати функцію'}
                     </button>
                 </div>
             </div>

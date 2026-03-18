@@ -275,6 +275,9 @@
                         sel.value = currentUser?.uid || '';
                     }
                 }
+                // БАГ FIX: скидаємо Smart Assign hint при відкритті нової задачі
+                const _saHint = document.getElementById('smartAssignHint');
+                if (_saHint) _saHint.style.display = 'none';
             }
         }
         
@@ -388,7 +391,7 @@
             result.innerHTML = `
               <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.5rem 0.75rem;font-size:0.8rem;">
                 <div style="font-weight:600;color:#16a34a;margin-bottom:0.3rem;">
-                  💡 ${window.t ? window.t('smartAssignRecommend') : 'Рекомендований виконавець'}:
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>${window.t ? window.t('smartAssignRecommend') : 'Рекомендований виконавець'}:
                 </div>
                 <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
                   <strong>${esc ? esc(best.name) : best.name}</strong>
