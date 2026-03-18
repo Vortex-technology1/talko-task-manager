@@ -20,7 +20,7 @@
                 const autonomy = done.length > 0 ? Math.round(doneNoReturn / done.length * 100) : 0;
 
                 const userRegular = regularTasks.filter(rt => {
-                    const func = functions.find(f => f.name === rt.function);
+                    const func = functions.find(f => f.name === rt.function && f.status !== 'archived');
                     return func?.assigneeIds?.includes(u.id);
                 });
                 let weeklyMin = 0;
@@ -44,7 +44,7 @@
                 const overloadFlag = weeklyHrs > 45 || overdue.length >= 3;
                 const attentionFlag = !overloadFlag && (weeklyHrs > 35 || overdue.length >= 1);
 
-                const userFuncs = functions.filter(f => f.assigneeIds?.includes(u.id));
+                const userFuncs = functions.filter(f => f.assigneeIds?.includes(u.id) && f.status !== 'archived');
                 return { u, active, overdue, autonomy, weeklyHrs, overloadFlag, attentionFlag, userFuncs, returned };
             });
 
@@ -125,14 +125,14 @@
             const maxHrs = top5.length > 0 ? Math.max(...top5.map(r => r.weeklyHrs), 1) : 1;
             const top5HTML = `
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;margin-bottom:1.25rem;">
-                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Топ-5 найбільш завантажених</div>
+                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>${window.t('top5Loaded') || 'Топ-5 найбільш завантажених'}</div>
                 ${top5.map(r => {
                     const pct = Math.round(r.weeklyHrs / maxHrs * 100);
                     const barColor = r.overloadFlag ? '#ef4444' : r.attentionFlag ? '#f59e0b' : '#22c55e';
                     return `<div style="margin-bottom:0.6rem;">
                         <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.2rem;">
                             <span style="font-weight:500;">${esc(r.u.name || r.u.email)}</span>
-                            <span style="color:#6b7280;">${r.weeklyHrs} год/тижд + ${r.active.length} задач ${r.overloadFlag ? '⚠️' : ''}</span>
+                            <span style="color:#6b7280;">${r.weeklyHrs} ${window.t('hoursPerWeek') || 'год/тижд'} · ${r.active.length} ${window.t('activeTasksCount') || 'активних задач'}${r.overloadFlag ? ' <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" style="vertical-align:-1px;"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>' : ''}</span>
                         </div>
                         <div style="background:#f3f4f6;border-radius:4px;height:8px;">
                             <div style="background:${barColor};width:${pct}%;height:8px;border-radius:4px;transition:width 0.3s;"></div>
@@ -144,7 +144,7 @@
             // --- Навантаження по функціях ---
             const funcStatsHTML = `
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>Навантаження по функціях</div>
+                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>${window.t('funcLoadTitle') || 'Навантаження по функціях'}</div>
                 ${functions.filter(f => f.status !== 'archived').map(f => {
                     const fTasks = tasks.filter(tk => tk.function === f.name);
                     const fActive = fTasks.filter(tk => tk.status !== 'done');
@@ -178,12 +178,12 @@
                             <span style="font-weight:600;font-size:0.85rem;">${esc(f.name)}</span>
                             <span style="font-size:0.72rem;color:#6b7280;margin-left:0.5rem;">${assigneesCount} ${window.t('people') || 'викон.'}</span>
                         </div>
-                        <div style="font-size:0.78rem;color:#6b7280;">${fActive.length} активних · ${fHrs} год/тижд</div>
+                        <div style="font-size:0.78rem;color:#6b7280;">${fActive.length} ${window.t('activeTasksCount') || 'активних'} · ${fHrs} ${window.t('hoursPerWeek') || 'год/тижд'}</div>
                         <div style="display:flex;gap:2px;min-width:120px;">
-                            <div style="flex:${fNew};background:#eff6ff;border-radius:3px 0 0 3px;height:12px;" title="Нових: ${fNew}"></div>
-                            <div style="flex:${fProgress};background:#fefce8;height:12px;" title="В роботі: ${fProgress}"></div>
-                            <div style="flex:${fReview};background:#f3e8ff;height:12px;" title="На перевірці: ${fReview}"></div>
-                            <div style="flex:${fDone};background:#dcfce7;border-radius:0 3px 3px 0;height:12px;" title="Виконано: ${fDone}"></div>
+                            <div style="flex:${Math.max(fNew,0.5)};background:#eff6ff;border-radius:3px 0 0 3px;height:12px;" title="${window.t('statusNew')||'Нових'}: ${fNew}"></div>
+                            <div style="flex:${Math.max(fProgress,0.5)};background:#fefce8;height:12px;" title="${window.t('inProgressStatus')||'В роботі'}: ${fProgress}"></div>
+                            <div style="flex:${Math.max(fReview,0.5)};background:#f3e8ff;height:12px;" title="${window.t('statusOnReview')||'На перевірці'}: ${fReview}"></div>
+                            <div style="flex:${Math.max(fDone,0.5)};background:#dcfce7;border-radius:0 3px 3px 0;height:12px;" title="${window.t('statusDone')||'Виконано'}: ${fDone}"></div>
                         </div>
                     </div>`;
                 }).join('')}
@@ -484,7 +484,7 @@
                 
                 // Regular tasks & weekly hours
                 const userRegular = regularTasks.filter(rt => {
-                    const func = functions.find(f => f.name === rt.function);
+                    const func = functions.find(f => f.name === rt.function && f.status !== 'archived');
                     return func?.assigneeIds?.includes(u.id);
                 });
                 let weeklyMin = 0;

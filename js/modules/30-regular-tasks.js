@@ -108,7 +108,7 @@
             });
         });
         
-        function openRegularTaskModal(id = null, prefillFunction = null) {
+        function openRegularTaskModal(id = null, prefillFunction = null, prefillFunctionId = null) {
             document.getElementById('regularTaskModal').style.display = 'block';
             updateRegularTaskFunctions();
             updatePeriodOptions();
@@ -202,13 +202,17 @@
                 setRegularNotifyUsersCheckboxes([currentUser?.uid]);
                 
                 // Якщо передана функція — прив'язуємо
-                if (prefillFunction) {
+                // prefillFunctionId — надійно (передається f.id, name шукається тут без escaping проблем)
+                // prefillFunction — fallback для зворотної сумісності
+                const _prefillName = prefillFunctionId
+                    ? ((typeof functions !== 'undefined' ? functions : []).find(f => f.id === prefillFunctionId)?.name || null)
+                    : prefillFunction;
+                if (_prefillName) {
                     setTimeout(() => {
                         const funcSelect = document.getElementById('regularTaskFunction');
                         if (funcSelect) {
-                            // Шукаємо option по value (враховуємо esc encoding)
-                            const opt = Array.from(funcSelect.options).find(o => o.value === prefillFunction);
-                            if (opt) funcSelect.value = prefillFunction;
+                            const opt = Array.from(funcSelect.options).find(o => o.value === _prefillName);
+                            if (opt) funcSelect.value = _prefillName;
                         }
                     }, 60);
                 }

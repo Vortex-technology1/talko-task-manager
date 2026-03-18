@@ -42,6 +42,10 @@
                     }
                     document.getElementById('taskTitle').value = task.title || '';
                     document.getElementById('taskFunction').value = task.function || '';
+                    // Smart Assign: показуємо підказку для існуючої функції
+                    if (task.function && typeof triggerSmartAssign === 'function') {
+                        setTimeout(triggerSmartAssign, 80);
+                    }
                     updateProjectSelects(task.projectId);
                     document.getElementById('taskProject').value = task.projectId || '';
                     // Load stages for this project

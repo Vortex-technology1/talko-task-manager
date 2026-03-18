@@ -331,7 +331,7 @@
                             <button class="btn btn-small" onclick="toggleFuncFinance('${escId(f.id)}')" title=${window.t('financeWord2')} style="color:#22c55e;border-color:#d1fae5;">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                             </button>
-                            <button class="btn btn-small" onclick="openRegularTaskModal(null, '${escId(f.name)}')" title="${window.t('addRegularToFunction') || 'Додати регулярне завдання'}" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;">
+                            <button class="btn btn-small" onclick="openRegularTaskModal(null, null, '${escId(f.id)}')" title="${window.t('addRegularToFunction') || 'Додати регулярне завдання'}" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;">
                                 <i data-lucide="repeat" class="icon icon-sm"></i>+
                             </button>
                             <button class="btn btn-small" onclick="openFunctionModal('${escId(f.id)}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>
