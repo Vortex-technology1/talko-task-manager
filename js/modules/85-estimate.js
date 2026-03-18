@@ -176,41 +176,108 @@ window.renderEstimateListView = function() {
     <!-- Пояснення як це працює -->
     <div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1px solid #bae6fd;border-radius:14px;padding:1.25rem;margin-bottom:1.25rem;">
       <div style="font-weight:700;font-size:0.95rem;color:#0369a1;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;">
-        ${_estIco.info} Як це працює — за 3 кроки
+        ${_estIco.info} Як це працює — детальна логіка
       </div>
-      <div style="display:grid;gap:0.6rem;">
-        <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.75rem 1rem;">
-          <div style="width:28px;height:28px;background:#3b82f6;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">1</div>
-          <div>
-            <div style="font-weight:600;font-size:0.88rem;color:#111827;">Бізнес → Кошторис → <span style="color:#3b82f6;">Довідник норм</span></div>
-            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Один раз вкажи норми витрат матеріалів. Наприклад: <b>фундамент 1 м²</b> = 0.3 м³ бетону + 120 кг арматури. Або натисни <b>«Завантажити стандартні»</b> і вибери свою нішу — норми заповняться автоматично.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.75rem 1rem;">
-          <div style="width:28px;height:28px;background:#f59e0b;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">2</div>
-          <div>
-            <div style="font-weight:600;font-size:0.88rem;color:#111827;">Бізнес → Кошторис → <span style="color:#f59e0b;">Кошториси</span> → «+ Новий кошторис»</div>
-            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Вибираєш тип роботи з Довідника → вводиш площу або об'єм (наприклад 150 м²) → система <b>сама рахує</b> скільки матеріалів потрібно і порівнює з залишками на складі.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.75rem 1rem;">
-          <div style="width:28px;height:28px;background:#10b981;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">3</div>
-          <div>
-            <div style="font-weight:600;font-size:0.88rem;color:#111827;">Проекти → відкрий проект → вкладка <span style="color:#10b981;">«Кошторис»</span></div>
-            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Кошторис прив'язується до проекту. Бачиш: що є на складі, чого не вистачає і скільки треба докупити в гривнях. Після затвердження — автоматична транзакція у Фінансах.</div>
+
+      <!-- Крок 1 -->
+      <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+        <div style="width:28px;height:28px;background:#3b82f6;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">1</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.4rem;">Довідник норм — фундамент всього</div>
+          <div style="font-size:0.8rem;color:#374151;line-height:1.6;">
+            Спочатку ти описуєш <b>скільки матеріалів витрачається на одиницю роботи</b>.<br>
+            Приклад: <span style="background:#f0f9ff;padding:1px 6px;border-radius:4px;font-family:monospace;">Фундаментна плита 1 м²</span> = 0.3 м³ бетону + 120 кг арматури + 2.5 м² опалубки.<br><br>
+            Це робиш <b>один раз</b> для свого бізнесу. Або натискаєш «Завантажити стандартні» і вибираєш нішу — система сама заповнить типові норми для будівництва, ремонту чи металоконструкцій.<br><br>
+            Кожна норма має: назву типу роботи, вхідну одиницю (м², м³, т, шт), список матеріалів з нормативами, і опціональний додатковий параметр (наприклад товщина).
           </div>
         </div>
       </div>
-      <div style="margin-top:0.75rem;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
-        <div style="padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:8px;font-size:0.78rem;color:#166534;">
-          <b>Норми</b> — один раз на весь бізнес<br>в Довіднику норм
-        </div>
-        <div style="padding:0.6rem 0.9rem;background:#fef3c7;border-radius:8px;font-size:0.78rem;color:#92400e;">
-          <b>Кошторис</b> — окремо на кожен об'єкт<br>прив'язаний до проекту
+
+      <!-- Крок 2 -->
+      <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+        <div style="width:28px;height:28px;background:#f59e0b;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">2</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.4rem;">Кошторис — розрахунок під конкретний об'єкт</div>
+          <div style="font-size:0.8rem;color:#374151;line-height:1.6;">
+            Для кожного нового об'єкта або проекту створюєш окремий кошторис.<br><br>
+            <b>Що вводиш:</b> вибираєш тип роботи з Довідника → вводиш об'єм (наприклад 150 м² фундаменту, товщина 0.4 м).<br><br>
+            <b>Що система рахує автоматично:</b><br>
+            <span style="display:block;background:#f9fafb;border-radius:6px;padding:6px 10px;margin:4px 0;font-family:monospace;font-size:0.75rem;">150 м² × 0.4 м (товщина) × 0.3 м³/м² = 18 м³ бетону</span>
+            <span style="display:block;background:#f9fafb;border-radius:6px;padding:6px 10px;margin:4px 0;font-family:monospace;font-size:0.75rem;">150 м² × 0.4 м × 120 кг/м² = 7 200 кг арматури</span>
+            Потім система <b>дивиться в Склад</b> і показує скільки вже є і скільки не вистачає.
+          </div>
         </div>
       </div>
-      <div style="margin-top:0.6rem;padding:0.6rem 0.9rem;background:#fef2f2;border-radius:8px;font-size:0.78rem;color:#991b1b;display:flex;align-items:flex-start;gap:0.4rem;">
-        ${_estIco.warning} <span><b>Спочатку:</b> заповни Довідник норм (вкладка поруч). Без норм кошторис не може нічого порахувати.</span>
+
+      <!-- Крок 3 — Склад -->
+      <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+        <div style="width:28px;height:28px;background:#6366f1;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">3</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.4rem;">Зв'язок зі Складом — живі залишки</div>
+          <div style="font-size:0.8rem;color:#374151;line-height:1.6;">
+            Кожен матеріал у нормі можна прив'язати до позиції на <b>Складі</b> (Бізнес → Склад).<br><br>
+            Після цього кошторис показує три колонки:<br>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin:6px 0;">
+              <div style="background:#f0f9ff;border-radius:6px;padding:5px 8px;text-align:center;font-size:0.75rem;"><b>Потрібно</b><br><span style="color:#3b82f6;">18 м³</span></div>
+              <div style="background:#f0fdf4;border-radius:6px;padding:5px 8px;text-align:center;font-size:0.75rem;"><b>На складі</b><br><span style="color:#10b981;">10 м³</span></div>
+              <div style="background:#fef2f2;border-radius:6px;padding:5px 8px;text-align:center;font-size:0.75rem;"><b>Дефіцит</b><br><span style="color:#ef4444;">8 м³</span></div>
+            </div>
+            Вводиш ціну за одиницю → система рахує скільки коштує докупити.<br>
+            Натискаєш <b>«Оновити залишки»</b> — кошторис підтягує актуальні дані зі складу в реальному часі.
+          </div>
+        </div>
+      </div>
+
+      <!-- Крок 4 — Проект -->
+      <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+        <div style="width:28px;height:28px;background:#10b981;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">4</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.4rem;">Зв'язок з Проектом — контроль на об'єкті</div>
+          <div style="font-size:0.8rem;color:#374151;line-height:1.6;">
+            При створенні кошторису вибираєш до якого <b>Проекту</b> він належить.<br><br>
+            Після цього в Проектах (вкладка «Кошторис» всередині проекту) видно:<br>
+            — загальний бюджет матеріалів по об'єкту<br>
+            — дефіцит і суму докупівлі<br>
+            — статус кошторису (Чернетка / Затверджено / В роботі)<br><br>
+            Можна прив'язати і до <b>угоди в CRM</b> — тоді кошторис видно і в картці клієнта.
+          </div>
+        </div>
+      </div>
+
+      <!-- Крок 5 — Фінанси -->
+      <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+        <div style="width:28px;height:28px;background:#f97316;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">5</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.4rem;">Зв'язок з Фінансами — автоматичні транзакції</div>
+          <div style="font-size:0.8rem;color:#374151;line-height:1.6;">
+            <b>Затвердив кошторис</b> → автоматично створюється <span style="background:#fef3c7;padding:1px 6px;border-radius:4px;font-size:0.75rem;">планова витрата</span> у Фінансах на суму всіх матеріалів.<br><br>
+            <b>Списав матеріали зі складу</b> (кнопка «Списати матеріали») → автоматично:<br>
+            — зменшуються залишки на Складі<br>
+            — створюється <span style="background:#fef2f2;padding:1px 6px;border-radius:4px;font-size:0.75rem;">фактична витрата</span> у Фінансах<br>
+            — з'являється рух у журналі складу з прив'язкою до кошторису
+          </div>
+        </div>
+      </div>
+
+      <!-- Схема зв'язків -->
+      <div style="background:white;border-radius:10px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+        <div style="font-weight:700;font-size:0.82rem;color:#374151;margin-bottom:0.6rem;">Схема зв'язків:</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:0.3rem;flex-wrap:wrap;font-size:0.75rem;text-align:center;">
+          <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:5px 10px;"><b>Довідник норм</b><br><span style="color:#6b7280;">один раз</span></div>
+          <div style="color:#9ca3af;font-size:1rem;">→</div>
+          <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:5px 10px;"><b>Кошторис</b><br><span style="color:#6b7280;">на кожен об'єкт</span></div>
+          <div style="color:#9ca3af;font-size:1rem;">→</div>
+          <div style="display:grid;gap:3px;">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:3px 8px;font-size:0.72rem;"><b>Проект</b></div>
+            <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:6px;padding:3px 8px;font-size:0.72rem;"><b>Склад</b></div>
+            <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:3px 8px;font-size:0.72rem;"><b>Фінанси</b></div>
+            <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:3px 8px;font-size:0.72rem;"><b>CRM угода</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:0.65rem 0.9rem;background:#fef2f2;border-radius:8px;font-size:0.78rem;color:#991b1b;display:flex;align-items:flex-start;gap:0.4rem;">
+        ${_estIco.warning} <span><b>З чого почати:</b> спочатку заповни <b>Довідник норм</b> (вкладка поруч) — завантаж стандартні або додай свої. Потім повертайся сюди і створюй кошторис.</span>
       </div>
     </div>
 
