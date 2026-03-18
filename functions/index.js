@@ -117,6 +117,9 @@ const TG_LANG = {
         minutesShort: 'хв',
         processCompleted: '✅ <b>Процес завершено!</b>',
         processSteps: 'етапів виконано',
+        langMenuTitle: '🌐 <b>Мова сповіщень</b>',
+        langCurrent: 'Поточна',
+        langChange: '<b>Змінити:</b>',
     },
     ru: {
         taskDone: '✅ <b>Задача выполнена!</b>',
@@ -210,6 +213,9 @@ const TG_LANG = {
         minutesShort: 'мин',
         processCompleted: '✅ <b>Процесс завершён!</b>',
         processSteps: 'этапов выполнено',
+        langMenuTitle: '🌐 <b>Язык уведомлений</b>',
+        langCurrent: 'Текущий',
+        langChange: '<b>Изменить:</b>',
     },
     en: {
         taskDone: '✅ <b>Task completed!</b>',
@@ -303,6 +309,9 @@ const TG_LANG = {
         minutesShort: 'min',
         processCompleted: '✅ <b>Process completed!</b>',
         processSteps: 'steps completed',
+        langMenuTitle: '🌐 <b>Notification language</b>',
+        langCurrent: 'Current',
+        langChange: '<b>Change:</b>',
     },
     pl: {
         taskDone: '✅ <b>Zadanie wykonane!</b>',
@@ -396,6 +405,9 @@ const TG_LANG = {
         minutesShort: 'min',
         processCompleted: '✅ <b>Proces zakończony!</b>',
         processSteps: 'etapów wykonanych',
+        langMenuTitle: '🌐 <b>Język powiadomień</b>',
+        langCurrent: 'Aktualny',
+        langChange: '<b>Zmień:</b>',
     },
     de: {
         taskDone: '✅ <b>Aufgabe erledigt!</b>',
@@ -489,6 +501,9 @@ const TG_LANG = {
         minutesShort: 'Min',
         processCompleted: '✅ <b>Prozess abgeschlossen!</b>',
         processSteps: 'Schritte abgeschlossen',
+        langMenuTitle: '🌐 <b>Benachrichtigungssprache</b>',
+        langCurrent: 'Aktuell',
+        langChange: '<b>Ändern:</b>',
     },
     cs: {
         taskDone: '✅ <b>Úkol dokončen!</b>',
@@ -582,6 +597,9 @@ const TG_LANG = {
         minutesShort: 'min',
         processCompleted: '✅ <b>Proces dokončen!</b>',
         processSteps: 'kroků dokončeno',
+        langMenuTitle: '🌐 <b>Jazyk oznámení</b>',
+        langCurrent: 'Aktuální',
+        langChange: '<b>Změnit:</b>',
     },
 };
 
@@ -1229,7 +1247,7 @@ exports.telegramWebhook = functions
                     const curLang = await getUserLang(langCompanyId, langUid);
                     const langList = Object.entries(LANG_NAMES).map(([k, v]) => `  /lang ${k} — ${v}`).join('\n');
                     await sendTelegramMessage(chatId,
-                        `🌐 <b>Мова сповіщень</b>\n\nПоточна: ${LANG_NAMES[curLang] || curLang}\n\n<b>Змінити:</b>\n${langList}`
+                        `${tg(curLang, 'langMenuTitle')}\n\n${tg(curLang, 'langCurrent')}: ${LANG_NAMES[curLang] || curLang}\n\n${tg(curLang, 'langChange')}\n${langList}`
                     );
                 } else {
                     // Зберігаємо нову мову в Firestore
