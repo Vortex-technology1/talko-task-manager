@@ -948,6 +948,11 @@
             status:document.getElementById('coordStatus').value,
             chairmanId:document.getElementById('coordChairman').value||null,
             participantIds,
+            // functionIds: унікальні функції задіяних учасників (ТЗ пріоритет 17)
+            functionIds: [...new Set(participantIds.flatMap(pid => {
+                const u = (typeof users !== 'undefined' ? users : []).find(u => u.id === pid);
+                return u?.functionIds || (u?.primaryFunctionId ? [u.primaryFunctionId] : []);
+            }))],
             schedule:{ day:document.getElementById('coordDay').value, time:document.getElementById('coordTime').value },
             taskFilters:filters,
             telegramChatId:document.getElementById('coordTelegramChat').value.trim()||null,

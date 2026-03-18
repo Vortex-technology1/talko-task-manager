@@ -989,6 +989,13 @@ window.openEstimateModal = function(estimateId) {
                   ${deals.slice(0,50).map(d=>`<option value="${d.id}" ${existing?.dealId===d.id?'selected':''}>${esc(d.title||d.name||d.id)}</option>`).join('')}
                 </select>
               </div>
+              <div>
+                <label style="font-size:0.78rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.25rem;">⚙️ Функція (ТЗ: кошторис прив'язаний до функції)</label>
+                <select id="estFunctionId" style="width:100%;padding:0.5rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                  <option value="">— без функції —</option>
+                  ${(typeof functions !== 'undefined' ? functions : []).filter(f=>f.status!=='archived').map(f=>`<option value="${esc(f.id)}" ${existing?.functionId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}
+                </select>
+              </div>
             </div>
           </div>
 
@@ -1176,6 +1183,7 @@ window.saveEstimate = async function(status) {
         title,
         projectId:  document.getElementById('estProjectId')?.value || '',
         dealId:     document.getElementById('estDealId')?.value || '',
+        functionId: document.getElementById('estFunctionId')?.value || '',
         status,
         sections,
         totals: { totalMaterialsCost, totalDeficitCost, currency: 'UAH' },
