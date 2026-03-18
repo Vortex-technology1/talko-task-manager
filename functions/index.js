@@ -3029,18 +3029,20 @@ exports.checkOwnerTempExpiry = functions
                 const func = funcDoc.data();
                 if (!func.ownerTempId || !func.ownerTempUntil) continue;
 
+                // Нормалізуємо дату (може бути рядок або Timestamp)
+                const untilStr = func.ownerTempUntil?.toDate
+                    ? func.ownerTempUntil.toDate().toISOString().split('T')[0]
+                    : String(func.ownerTempUntil).slice(0, 10);
+
                 // Термін закінчився — скидаємо тимчасового власника
-                if (func.ownerTempUntil < today) {
-                    await funcDoc.ref.update({
-                        ownerTempId: '',
-                        ownerTempUntil: ''
-                    });
+                if (untilStr < today) {
+                    await funcDoc.ref.update({ ownerTempId: '', ownerTempUntil: '' });
                     console.log(`[OwnerTempExpiry] Cleared temp owner for ${func.name} in ${companyDoc.id}`);
                     continue;
                 }
 
                 // Нагадування за день до закінчення
-                if (func.ownerTempUntil === tomorrow && func.headId) {
+                if (untilStr === tomorrow && func.headId) {
                     const ownerDoc = await companyDoc.ref.collection('users').doc(func.headId).get();
                     const owner = ownerDoc.data();
                     if (owner?.telegramChatId) {

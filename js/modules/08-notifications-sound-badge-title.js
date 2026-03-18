@@ -427,12 +427,16 @@
         window.initFunctionOwnerNotifications = function() {
             if (!currentCompany || !currentUser) return;
             const role = currentUserData?.role;
-            // Тільки для owner/manager/admin які є власниками функцій
             if (!['owner', 'manager', 'admin'].includes(role)) return;
 
-            // Знаходимо функції де поточний юзер є власником
-            const myFunctions = (typeof functions !== 'undefined' ? functions : [])
-                .filter(f => f.status !== 'archived' && f.headId === currentUser.uid);
+            // Race condition fix: якщо functions[] ще не завантажено — retry через 2с
+            const allFuncs = typeof functions !== 'undefined' ? functions : [];
+            if (!allFuncs.length) {
+                setTimeout(window.initFunctionOwnerNotifications, 2000);
+                return;
+            }
+
+            const myFunctions = allFuncs.filter(f => f.status !== 'archived' && f.headId === currentUser.uid);
             if (!myFunctions.length) return;
 
             const myFuncNames = myFunctions.map(f => f.name);

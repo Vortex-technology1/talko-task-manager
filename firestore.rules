@@ -70,7 +70,10 @@ service cloud.firestore {
           // Юзер може зберегти свою мову інтерфейсу та Telegram мову
           (isAuthenticated() && memberId == userId() &&
            request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['language', 'interfaceLang', 'telegramLanguage', 'updatedAt', 'telegramChatId', 'telegramUserId', 'telegramCode']));
+             .hasOnly(['language', 'interfaceLang', 'telegramLanguage', 'updatedAt', 
+                       'telegramChatId', 'telegramUserId', 'telegramCode',
+                       'functionIds', 'primaryFunctionId', 'functionRoles',
+                       'weeklyFunctionReportEnabled', 'lang']));
         allow delete: if isManagerOrOwner(companyId) && 
           resource.data.role != 'owner';
       }
@@ -656,6 +659,26 @@ service cloud.firestore {
       match /warehouse_locations/{locationId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // Постачальники складу
+      match /warehouse_suppliers/{supplierId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // Ескалації (пишуться клієнтом, обробляються Cloud Functions)
+      match /escalations/{escId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow create: if isCompanyMember(companyId);
+        allow update: if false; // тільки Admin SDK (processEscalations CF)
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // Заплановані задачі (Cloud Functions scheduled tasks)
+      match /scheduledTasks/{taskId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if isManagerOrOwner(companyId);
       }
 
       // =====================

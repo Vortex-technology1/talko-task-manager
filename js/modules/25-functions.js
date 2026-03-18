@@ -8,6 +8,9 @@
                 return;
             }
 
+            // Встановлюємо editingId ДО updateFunctionAssignees — щоб reportsTo виключав поточну функцію
+            editingId = id || null;
+
             document.getElementById('functionModal').style.display = 'block';
             updateFunctionAssignees();
             
