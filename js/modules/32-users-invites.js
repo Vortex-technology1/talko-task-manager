@@ -78,7 +78,7 @@
             const tableHTML = `
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:1.25rem;">
                 <div style="padding:0.75rem 1rem;border-bottom:1px solid #f3f4f6;font-weight:600;font-size:0.95rem;">
-                    📊 ${window.t('workloadTitle')}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>${window.t('workloadTitle')}
                 </div>
                 <div style="overflow-x:auto;">
                 <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
@@ -95,7 +95,7 @@
                     </thead>
                     <tbody>
                         ${rows.map(r => {
-                            const statusText = r.overloadFlag ? `🔴 ${window.t('workloadOverloaded')}` : r.attentionFlag ? `🟡 ${window.t('workloadAttention')}` : `🟢 ${window.t('workloadNorm')}`;
+                            const statusText = r.overloadFlag ? `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;vertical-align:-1px;margin-right:3px;"></span>${window.t('workloadOverloaded')}` : r.attentionFlag ? `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f59e0b;vertical-align:-1px;margin-right:3px;"></span>${window.t('workloadAttention')}` : `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#16a34a;vertical-align:-1px;margin-right:3px;"></span>${window.t('workloadNorm')}`;
                             const hrsColor = r.weeklyHrs > 35 ? '#ef4444' : '#0284c7';
                             const autoColor = r.autonomy >= 80 ? '#16a34a' : r.autonomy >= 50 ? '#f59e0b' : '#ef4444';
                             return `<tr style="border-bottom:1px solid #f3f4f6;${r.overloadFlag ? 'background:#fff5f5;' : ''}">
@@ -125,7 +125,7 @@
             const maxHrs = top5.length > 0 ? Math.max(...top5.map(r => r.weeklyHrs), 1) : 1;
             const top5HTML = `
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;margin-bottom:1.25rem;">
-                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;">🏋️ Топ-5 найбільш завантажених</div>
+                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Топ-5 найбільш завантажених</div>
                 ${top5.map(r => {
                     const pct = Math.round(r.weeklyHrs / maxHrs * 100);
                     const barColor = r.overloadFlag ? '#ef4444' : r.attentionFlag ? '#f59e0b' : '#22c55e';
@@ -144,7 +144,7 @@
             // --- Навантаження по функціях ---
             const funcStatsHTML = `
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;">⚙️ Навантаження по функціях</div>
+                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>Навантаження по функціях</div>
                 ${functions.filter(f => f.status !== 'archived').map(f => {
                     const fTasks = tasks.filter(tk => tk.function === f.name);
                     const fActive = fTasks.filter(tk => tk.status !== 'done');
@@ -204,12 +204,12 @@
             return `<div style="padding-top:1rem;display:flex;flex-direction:column;gap:1rem;">
 
             <div style="background:linear-gradient(135deg,#1e3a5f,#0f2040);border-radius:14px;padding:1.25rem 1.5rem;color:white;">
-                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;">👤 Картка співробітника</div>
+                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Картка співробітника</div>
                 <div style="color:#93c5fd;font-size:0.88rem;line-height:1.5;">Це не просто контакт. Це повний зріз: що людина робить, як завантажена і наскільки самостійна.</div>
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">❓ Яку проблему вирішує</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Яку проблему вирішує</div>
                 <div style="overflow-x:auto;">
                 <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
                     <thead><tr style="background:#f9fafb;">
@@ -235,14 +235,14 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">📋 Що показує картка</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Що показує картка</div>
                 ${[
-                    ['🟢 Функції', 'Ролі в компанії де людина є виконавцем. Звідси приходять регулярні завдання і кроки процесів.'],
-                    ['📊 Pipeline', 'Нових / В роботі / На перевірці / Виконано — стан задач прямо зараз.'],
-                    ['🎯 Індекс автономності', '% задач виконаних без повернення керівником. 80%+ = можна делегувати складне. <50% = більше контролю.'],
-                    ['🕐 Годин/тиждень', 'Скільки годин займають регулярні завдання. >35 = перевантажений, не давати нового.'],
-                    ['🔴 Прострочені', 'Задачі де минув дедлайн. Сигнал: або завдань забагато, або людина не справляється.'],
-                    ['🟡 Повернені', 'Скільки задач повернули на доопрацювання. Багато — проблема з якістю або розумінням завдань.'],
+                    ['<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#16a34a;vertical-align:-1px;margin-right:4px;"></span>Функції', 'Ролі в компанії де людина є виконавцем. Звідси приходять регулярні завдання і кроки процесів.'],
+                    ['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Pipeline', 'Нових / В роботі / На перевірці / Виконано — стан задач прямо зараз.'],
+                    ['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Індекс автономності', '% задач виконаних без повернення керівником. 80%+ = можна делегувати складне. <50% = більше контролю.'],
+                    ['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Годин/тиждень', 'Скільки годин займають регулярні завдання. >35 = перевантажений, не давати нового.'],
+                    ['<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;vertical-align:-1px;margin-right:4px;"></span>Прострочені', 'Задачі де минув дедлайн. Сигнал: або завдань забагато, або людина не справляється.'],
+                    ['<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f59e0b;vertical-align:-1px;margin-right:4px;"></span>Повернені', 'Скільки задач повернули на доопрацювання. Багато — проблема з якістю або розумінням завдань.'],
                 ].map(([k,v]) => `<div style="display:flex;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
                     <div style="min-width:160px;font-weight:500;font-size:0.82rem;">${k}</div>
                     <div style="font-size:0.82rem;color:#6b7280;">${v}</div>
@@ -250,32 +250,32 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🎯 Індекс автономності — як читати</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Індекс автономності — як читати</div>
                 <div style="display:flex;flex-direction:column;gap:0.5rem;">
                     <div style="background:#f0fdf4;border-radius:8px;padding:0.75rem;border-left:4px solid #16a34a;">
-                        <div style="font-weight:600;color:#16a34a;">🟢 ≥ 80% — Норма</div>
+                        <div style="font-weight:600;color:#16a34a;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#16a34a;vertical-align:-1px;margin-right:4px;"></span>≥ 80% — Норма</div>
                         <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Людина працює самостійно. Можна делегувати складні завдання без детального контролю.</div>
                     </div>
                     <div style="background:#fffbeb;border-radius:8px;padding:0.75rem;border-left:4px solid #f59e0b;">
-                        <div style="font-weight:600;color:#b45309;">🟡 50–79% — Увага</div>
+                        <div style="font-weight:600;color:#b45309;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f59e0b;vertical-align:-1px;margin-right:4px;"></span>50–79% — Увага</div>
                         <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Перевіряй виконання, уточнюй очікуваний результат. Є зони покращення.</div>
                     </div>
                     <div style="background:#fef2f2;border-radius:8px;padding:0.75rem;border-left:4px solid #ef4444;">
-                        <div style="font-weight:600;color:#dc2626;">🔴 &lt; 50% — Системні проблеми</div>
+                        <div style="font-weight:600;color:#dc2626;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;vertical-align:-1px;margin-right:4px;"></span>&lt; 50% — Системні проблеми</div>
                         <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Або завдання ставляться нечітко, або людина не розуміє стандарт якості, або потрібне навчання.</div>
                     </div>
                 </div>
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">📊 Дашборд навантаження</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Дашборд навантаження</div>
                 <div style="background:#f0f9ff;border-radius:8px;padding:0.75rem;font-size:0.82rem;color:#374151;line-height:1.5;">
                     Вкладка <strong>"Навантаження"</strong> — загальна картина команди. Таблиця де видно кожну людину: скільки годин регулярної роботи, скільки активних задач, індекс автономності, статус (Норма / Увага / Перевантажений). Відразу видно де проблема — без нарад і дзвінків.
                 </div>
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🔗 Взаємозв'язки</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Взаємозв'язки</div>
                 <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">СПІВРОБІТНИК
 │
 ├──→ ФУНКЦІЇ — ролі в компанії, звідси регулярні завдання і кроки процесів
@@ -288,12 +288,12 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🚀 Як правильно налаштувати команду</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Як правильно налаштувати команду</div>
                 ${[
                     ['1','Система → Функції','Створи всі ролі компанії ПЕРЕД додаванням людей'],
                     ['2','Система → Співробітники → Запросити','Відправ запрошення на email'],
                     ['3','Після прийняття → картка людини','Відкрий → редагуй → вибери функції'],
-                    ['4','Система → Функції','Для кожної функції додай регулярні завдання (кнопка 🔁 на картці)'],
+                    ['4','Система → Функції','Для кожної функції додай регулярні завдання (кнопка repeat+ на картці)'],
                     ['5','Вкладка "Навантаження"','У всіх має бути статус "Норма"'],
                     ['6','Система → Інтеграції → Telegram','Скопіюй код → відправ боту /connect КОД'],
                 ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">

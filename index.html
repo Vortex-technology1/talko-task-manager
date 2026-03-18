@@ -1472,7 +1472,7 @@ document.addEventListener('mousedown', function(e) {
                     <button class="btn btn-success" onclick="openFunctionModal()" data-i18n="addFunction">+ Функція</button>
                     <button class="btn" onclick="openMergeFunctionsModal()" id="mergeFunctionsBtn" style="display:none;"><i data-lucide="git-merge" class="icon"></i> <span data-i18n="mergeFunctions">Об'єднати</span></button>
                     <button class="btn" onclick="openAiGeneratorModal()" id="aiStructureBtnDesktop" style="display:none;background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:white;"><i data-lucide="sparkles" class="icon"></i> AI Структура</button>
-                    <button class="btn hide-mobile" onclick="toggleFunctionsHowto()" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;">ℹ️ <span data-i18n="howItWorksBtn">Як це працює</span></button>
+                    <button class="btn hide-mobile" onclick="toggleFunctionsHowto()" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-i18n="howItWorksBtn">Як це працює</span></button>
                     <div style="margin-left:auto;display:flex;gap:2px;background:#f3f4f6;border-radius:8px;padding:2px;">
                         <button class="calendar-view-btn active" onclick="setFunctionsView('cards')" data-fview="cards" style="padding:0.35rem 0.7rem;font-size:0.8rem;border:none;border-radius:6px;cursor:pointer;background:white;font-weight:500;"><i data-lucide="layout-grid" class="icon icon-sm"></i> <span data-i18n="cardsView">Картки</span></button>
                         <button class="calendar-view-btn" onclick="setFunctionsView('structure')" data-fview="structure" style="padding:0.35rem 0.7rem;font-size:0.8rem;border:none;border-radius:6px;cursor:pointer;background:transparent;font-weight:500;"><i data-lucide="columns" class="icon icon-sm"></i> <span data-i18n="structureView">Структура</span></button>
@@ -1480,7 +1480,7 @@ document.addEventListener('mousedown', function(e) {
                 </div>
                 <div id="functionsHowtoPanel" style="display:none;margin-bottom:1rem;"></div>
                 <div id="functionsContainer" class="cards-grid">
-                    <div class="loading"><div class="spinner"></div>
+                    <div class="loading"><div class="spinner"></div></div>
                 </div>
                 <div id="functionsStructureContainer" style="display:none;"></div>
             </div>
@@ -1515,11 +1515,13 @@ document.addEventListener('mousedown', function(e) {
                         </button>
                         <button id="usersSubTab-workload" onclick="switchUsersSubTab('workload')"
                             style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
-                            📊 <span data-i18n="workloadTab">Навантаження</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            <span data-i18n="workloadTab">Навантаження</span>
                         </button>
                         <button id="usersSubTab-howto" onclick="switchUsersSubTab('howto')"
                             style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
-                            ℹ️ <span data-i18n="howItWorksBtn">Як це працює</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span data-i18n="howItWorksBtn">Як це працює</span>
                         </button>
                     </div>
                 </div>

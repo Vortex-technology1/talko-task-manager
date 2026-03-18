@@ -398,12 +398,12 @@
 
             <div style="background:linear-gradient(135deg,#1e3a5f,#0f2040);border-radius:14px;padding:1.25rem 1.5rem;color:white;position:relative;">
                 <button onclick="toggleFunctionsHowto()" style="position:absolute;top:0.75rem;right:0.75rem;background:rgba(255,255,255,0.15);border:none;color:white;border-radius:6px;padding:0.2rem 0.5rem;cursor:pointer;font-size:0.8rem;">✕</button>
-                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;">⚙️ Функції — це ролі, а не люди</div>
+                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Функції — це ролі, а не люди</div>
                 <div style="color:#93c5fd;font-size:0.88rem;line-height:1.5;">Завдання ставляться функції — система сама знає хто її виконує. Змінилась людина — задачі й процеси продовжують працювати.</div>
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">❓ Яку проблему вирішує</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Яку проблему вирішує</div>
                 <div style="overflow-x:auto;">
                 <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
                     <thead><tr style="background:#f9fafb;">
@@ -443,7 +443,7 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">📦 Що таке функція (приклад)</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Що таке функція (приклад)</div>
                 <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">Функція "Менеджер з продажів"
 ├── Керівник: Марія Коваль (приймає рішення по функції)
 ├── Виконавці: Марія, Іван, Олег (3 людини)
@@ -455,7 +455,7 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🔄 Що відбувається при заміні виконавця</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Що відбувається при заміні виконавця</div>
                 ${[
                     ['1','Іванов звільняється','Відкриваєш функцію → прибираєш Іванова, додаєш Сидорова'],
                     ['2','Регулярні завдання','Всі регулярні завдання функції тепер виконує Сидоров автоматично'],
@@ -468,7 +468,7 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🔗 Взаємозв'язки</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Взаємозв'язки</div>
                 <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">ФУНКЦІЯ
 │
 ├──→ РЕГУЛЯРНІ ЗАВДАННЯ — щодня/щотижня задача до виконавця автоматично
@@ -480,7 +480,7 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">💡 Smart Assign — формула</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Smart Assign — формула</div>
                 <div style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.8rem;line-height:1.8;">
                     <div style="margin-bottom:0.5rem;">При постановці задачі — система рахує навантаження кожного виконавця функції:</div>
                     <div style="font-family:monospace;background:#1e293b;color:#86efac;padding:0.5rem 0.75rem;border-radius:6px;font-size:0.75rem;">
@@ -494,11 +494,11 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🚀 Покрокове налаштування</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Покрокове налаштування</div>
                 ${[
                     ['1','+ Функція','Назва ролі в компанії (не посада — роль: "Менеджер продажів", а не "Іванов Іван")'],
                     ['2','Вибери керівника і виконавців','1 або більше людей з команди'],
-                    ['3','🔁+ на картці функції','Додай регулярну роботу з розкладом і часом виконання'],
+                    ['3','Кнопка repeat+ на картці функції','Додай регулярну роботу з розкладом і часом виконання'],
                     ['4','Система → Процеси','В кроках шаблонів вибери функції (не людей)'],
                     ['5','При постановці задачі','Вибери функцію → Smart Assign автоматично підбере виконавця'],
                 ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
