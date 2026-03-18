@@ -417,7 +417,154 @@
             if (window.completedTasksUnsubscribe) { window.completedTasksUnsubscribe(); window.completedTasksUnsubscribe = null; }
         };
         
-        // Multi-tab sync: reload data when tab becomes visible after being hidden
+        // =====================
+        // FUNCTION OWNER NOTIFICATIONS (ТЗ пріоритет 12)
+        // Сповіщення власнику функції + ескалація по reportsTo
+        // =====================
+
+        window._funcOwnerNotifUnsub = null;
+
+        window.initFunctionOwnerNotifications = function() {
+            if (!currentCompany || !currentUser) return;
+            const role = currentUserData?.role;
+            // Тільки для owner/manager/admin які є власниками функцій
+            if (!['owner', 'manager', 'admin'].includes(role)) return;
+
+            // Знаходимо функції де поточний юзер є власником
+            const myFunctions = (typeof functions !== 'undefined' ? functions : [])
+                .filter(f => f.status !== 'archived' && f.headId === currentUser.uid);
+            if (!myFunctions.length) return;
+
+            const myFuncNames = myFunctions.map(f => f.name);
+
+            if (window._funcOwnerNotifUnsub) {
+                window._funcOwnerNotifUnsub();
+                window._funcOwnerNotifUnsub = null;
+            }
+
+            let isFirstLoad = true;
+            const knownIds = new Set();
+
+            // Слухаємо нові задачі в функціях де юзер є власником
+            window._funcOwnerNotifUnsub = db.collection('companies').doc(currentCompany)
+                .collection('tasks')
+                .where('status', '==', 'new')
+                .orderBy('createdAt', 'desc')
+                .limit(50)
+                .onSnapshot(snap => {
+                    if (isFirstLoad) {
+                        snap.docs.forEach(d => knownIds.add(d.id));
+                        isFirstLoad = false;
+                        return;
+                    }
+                    snap.docs.forEach(d => {
+                        if (knownIds.has(d.id)) return;
+                        knownIds.add(d.id);
+                        const task = d.data();
+                        // Тільки задачі функцій де я власник, і не я сам поставив
+                        if (task.creatorId === currentUser.uid) return;
+                        if (!myFuncNames.includes(task.function)) return;
+                        // Показуємо toast власнику функції
+                        _showFuncOwnerToast(
+                            `📋 Нова задача у вашій функції «${task.function}»`,
+                            task.title || '(без назви)',
+                            '#8b5cf6'
+                        );
+                        playNotificationSound();
+                    });
+                }, err => console.warn('[FuncOwnerNotif]', err.message));
+        };
+
+        // Перевірка прострочених задач функції + ескалація
+        window.checkFunctionTasksOverdue = function() {
+            if (!currentUser || typeof functions === 'undefined' || typeof tasks === 'undefined') return;
+
+            const today = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
+            const myFunctions = functions.filter(f => f.status !== 'archived' && f.headId === currentUser.uid);
+
+            myFunctions.forEach(f => {
+                const overdue = tasks.filter(t =>
+                    t.function === f.name &&
+                    t.status !== 'done' &&
+                    t.deadlineDate && t.deadlineDate < today
+                );
+                if (!overdue.length) return;
+
+                // Toast власнику функції якщо є прострочені
+                _showFuncOwnerToast(
+                    `⚠️ Прострочені задачі у функції «${f.name}»`,
+                    `${overdue.length} задач ${overdue.length > 1 ? 'прострочено' : 'прострочена'}`,
+                    '#ef4444'
+                );
+
+                // Ескалація — якщо функція підпорядковується іншій, повідомляємо її власника
+                _escalateFunctionOverdue(f, overdue.length);
+            });
+        };
+
+        function _escalateFunctionOverdue(func, overdueCount) {
+            if (!func.reportsTo) return;
+            const parentFunc = (typeof functions !== 'undefined') ? functions.find(f => f.id === func.reportsTo) : null;
+            if (!parentFunc || !parentFunc.headId) return;
+            if (parentFunc.headId === currentUser.uid) return; // не ескалюємо самому собі
+
+            // Зберігаємо ескалацію в Firestore для відправки через Cloud Function
+            // (або показуємо власнику компанії якщо він поточний юзер)
+            const isOwner = currentUserData?.role === 'owner';
+            if (isOwner) {
+                _showFuncOwnerToast(
+                    `🔺 Ескалація: «${func.name}» → ${overdueCount} прострочених`,
+                    `Власник: ${users.find(u => u.id === func.headId)?.name || '—'}`,
+                    '#f97316'
+                );
+            }
+
+            // Записуємо ескалацію в Firestore щоб Cloud Function міг відправити Telegram
+            db.collection('companies').doc(currentCompany)
+                .collection('escalations').add({
+                    functionId: func.id,
+                    functionName: func.name,
+                    parentFunctionId: parentFunc.id,
+                    parentOwnerId: parentFunc.headId,
+                    overdueCount,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    handled: false
+                }).catch(e => console.warn('[Escalation] write failed:', e));
+        }
+
+        function _showFuncOwnerToast(title, subtitle, color) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `position:fixed;bottom:80px;right:16px;z-index:9999;
+                background:white;border-left:4px solid ${color};border-radius:8px;
+                padding:0.65rem 1rem;box-shadow:0 4px 16px rgba(0,0,0,0.15);
+                max-width:320px;animation:slideInRight 0.3s ease;`;
+            toast.innerHTML = `<div style="font-weight:600;font-size:0.85rem;color:#111;">${title}</div>
+                <div style="font-size:0.78rem;color:#6b7280;margin-top:2px;">${subtitle}</div>`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideInRight 0.3s reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 6000);
+        }
+
+        // Запускаємо перевірку прострочених раз на 5 хвилин
+        let _funcOverdueInterval = null;
+        window._startFunctionOverdueCheck = function() {
+            if (_funcOverdueInterval) clearInterval(_funcOverdueInterval);
+            // Перша перевірка через 30 сек після завантаження
+            setTimeout(() => {
+                window.checkFunctionTasksOverdue();
+                _funcOverdueInterval = setInterval(window.checkFunctionTasksOverdue, 5 * 60 * 1000);
+            }, 30000);
+        };
+
+        // Cleanup
+        const _origCleanup = window._cleanupNotifications;
+        window._cleanupNotifications = function() {
+            if (_origCleanup) _origCleanup();
+            if (_funcOverdueInterval) { clearInterval(_funcOverdueInterval); _funcOverdueInterval = null; }
+            if (window._funcOwnerNotifUnsub) { window._funcOwnerNotifUnsub(); window._funcOwnerNotifUnsub = null; }
+        };
         let _lastVisibleTime = Date.now();
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) return;

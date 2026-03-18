@@ -182,6 +182,13 @@
                     if (typeof window.initManagerTasksListener === 'function') {
                         window.initManagerTasksListener();
                     }
+                    // Function owner notifications (ТЗ пріоритет 12)
+                    if (typeof window.initFunctionOwnerNotifications === 'function') {
+                        window.initFunctionOwnerNotifications();
+                    }
+                    if (typeof window._startFunctionOverdueCheck === 'function') {
+                        window._startFunctionOverdueCheck();
+                    }
                 }, { once: true });
             } else {
                 window.currentUser = null;    // cleanup аліасів
