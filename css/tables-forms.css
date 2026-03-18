@@ -273,6 +273,10 @@
         .status-progress { background: #fff3e0; color: #f57c00; }
         .status-review { background: #fce4ec; color: #c2185b; }
         .status-done { background: #e8f5e8; color: #388e3c; }
+        /* Fallback: якщо статус невідомий або відсутній — нейтральний стиль */
+        .status-badge:not(.status-new):not(.status-progress):not(.status-review):not(.status-done) {
+            background: #f3f4f6; color: #6b7280;
+        }
         
         .myday-item.review { background: #faf5ff; border-left: 3px solid #8b5cf6; }
         .myday-item.review .myday-item-title { color: #6b21a8; }

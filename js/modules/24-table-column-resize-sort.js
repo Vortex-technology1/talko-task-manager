@@ -425,3 +425,153 @@
                 return `${day} ${monthShort[month]}`;
             } catch(e) { return dateStr; }
         }
+
+        // =====================
+        // MOBILE FILTERS (moved from 41-demo-data.js — must load before HTML renders)
+        // =====================
+        let mobileFilters = {
+            type: '',
+            date: '',
+            status: [],
+            function: '',
+            assignee: ''
+        };
+        
+        function openFilterModal() {
+            const modal = document.getElementById('filterModal');
+            modal.style.display = 'flex';
+            
+            // Sync desktop status multi-select to mobile
+            mobileFilters.status = getSelectedStatuses();
+            
+            // Populate function chips
+            const funcContainer = document.getElementById('filterFunctionChips');
+            const activeFuncs = functions.filter(f => f.status !== 'archived');
+            funcContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'function\')">' + window.t('all') + '</div>';
+            activeFuncs.forEach(f => {
+                const selected = mobileFilters.function === f.name ? 'selected' : '';
+                funcContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${esc(f.name)}" onclick="selectFilterChip(this, 'function')">${esc(f.name)}</div>`;
+            });
+            
+            // Populate assignee chips
+            const assigneeContainer = document.getElementById('filterAssigneeChips');
+            assigneeContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'assignee\')">' + window.t('all') + '</div>';
+            users.forEach(u => {
+                const name = u.name || u.email.split('@')[0];
+                const selected = mobileFilters.assignee === u.id ? 'selected' : '';
+                assigneeContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${esc(u.id)}" onclick="selectFilterChip(this, 'assignee')">${esc(name)}</div>`;
+            });
+            
+            // Sync current filters
+            syncFilterChips();
+            refreshIcons();
+        }
+        
+        function closeFilterModal() {
+            closeModal('filterModal');
+        }
+        
+        function selectFilterChip(chip, category) {
+            if (category === 'status') {
+                const val = chip.dataset.value;
+                if (val === '') {
+                    mobileFilters.status = [];
+                    chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('selected'));
+                    chip.classList.add('selected');
+                } else {
+                    const allChip = chip.parentElement.querySelector('.filter-chip[data-value=""]');
+                    if (chip.classList.contains('selected')) {
+                        chip.classList.remove('selected');
+                        mobileFilters.status = mobileFilters.status.filter(s => s !== val);
+                    } else {
+                        chip.classList.add('selected');
+                        mobileFilters.status.push(val);
+                    }
+                    if (mobileFilters.status.length > 0) allChip?.classList.remove('selected');
+                    if (mobileFilters.status.length === 0) allChip?.classList.add('selected');
+                    if (mobileFilters.status.length === 4) {
+                        mobileFilters.status = [];
+                        chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('selected'));
+                        allChip?.classList.add('selected');
+                    }
+                }
+            } else {
+                chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('selected'));
+                chip.classList.add('selected');
+                mobileFilters[category] = chip.dataset.value;
+            }
+        }
+        
+        function syncFilterChips() {
+            document.querySelectorAll('#filterTypeChips .filter-chip').forEach(c => {
+                c.classList.toggle('selected', c.dataset.value === mobileFilters.type);
+            });
+            document.querySelectorAll('#filterDateChips .filter-chip').forEach(c => {
+                c.classList.toggle('selected', c.dataset.value === mobileFilters.date);
+            });
+            document.querySelectorAll('#filterStatusChips .filter-chip').forEach(c => {
+                const val = c.dataset.value;
+                if (val === '') {
+                    c.classList.toggle('selected', mobileFilters.status.length === 0);
+                } else {
+                    c.classList.toggle('selected', mobileFilters.status.includes(val));
+                }
+            });
+        }
+        
+        function applyFiltersAndClose() {
+            document.getElementById('taskTypeFilter').value = mobileFilters.type;
+            syncTaskTypeTabs();
+            document.getElementById('dateFilter').value = mobileFilters.date;
+            setStatusFilterFromArray(mobileFilters.status);
+            document.getElementById('functionFilter').value = mobileFilters.function;
+            document.getElementById('assigneeFilter').value = mobileFilters.assignee;
+            updateFilterCount();
+            updateQuickFilterButtons();
+            renderTasks();
+            closeFilterModal();
+        }
+        
+        function clearAllFilters() {
+            mobileFilters = { type: '', date: '', status: [], function: '', assignee: '' };
+            document.querySelectorAll('.filter-chip').forEach(c => {
+                c.classList.toggle('selected', c.dataset.value === '');
+            });
+            applyFiltersAndClose();
+        }
+        
+        function updateFilterCount() {
+            let count = 0;
+            Object.entries(mobileFilters).forEach(([key, v]) => {
+                if (key === 'status') { if (Array.isArray(v) && v.length > 0) count++; }
+                else { if (v !== '') count++; }
+            });
+            const badge = document.getElementById('activeFilterCount');
+            if (count > 0) { badge.textContent = count; badge.style.display = 'inline'; }
+            else { badge.style.display = 'none'; }
+        }
+        
+        function setMobileQuickFilter(filter) {
+            if (filter === 'my') {
+                mobileFilters.type = mobileFilters.type === 'my' ? '' : 'my';
+                mobileFilters.date = '';
+            } else if (filter === 'today') {
+                mobileFilters.date = mobileFilters.date === 'today' ? '' : 'today';
+                mobileFilters.type = '';
+            }
+            document.getElementById('taskTypeFilter').value = mobileFilters.type;
+            document.getElementById('dateFilter').value = mobileFilters.date;
+            updateQuickFilterButtons();
+            updateFilterCount();
+            renderTasks();
+        }
+        
+        function updateQuickFilterButtons() {
+            document.querySelectorAll('.mobile-filter-btn').forEach(btn => btn.classList.remove('active'));
+            if (mobileFilters.type === 'my') {
+                document.querySelector('.mobile-filter-btn[onclick*="my"]')?.classList.add('active');
+            }
+            if (mobileFilters.date === 'today') {
+                document.querySelector('.mobile-filter-btn[onclick*="today"]')?.classList.add('active');
+            }
+        }

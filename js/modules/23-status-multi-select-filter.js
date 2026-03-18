@@ -231,6 +231,9 @@
             }
             
             const st = { new: window.t('statusNew'), progress: window.t('statusProgress'), review: window.t('statusReview'), done: window.t('statusDone') };
+            const VALID_STATUSES = ['new', 'progress', 'review', 'done'];
+            // Нормалізуємо статуси задач перед рендером — захист від undefined/null/'' з Firestore
+            f.forEach(task => { if (!VALID_STATUSES.includes(task.status)) task.status = 'new'; });
             
             // Desktop table
             const sortIcon = (field) => {
@@ -282,7 +285,7 @@
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td class="col-hide-md">${esc(task.creatorName) || '-'}</td>
                         <td class="deadline-text ${deadlineClass}" onclick="inlineEditDeadline(event, '${escId(task.id)}', '${task.deadlineDate || ''}')" style="cursor:pointer;" title="${window.t('clickToChangeDate')}">${taskDeadline ? formatDateShort(taskDeadline) : '-'}${task.timeEnd ? ' ' + task.timeEnd : ''}</td>
-                        <td><span class="status-badge status-${task.status}" style="cursor:pointer;" onclick="cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status}</span></td>
+                        <td><span class="status-badge status-${task.status}" style="cursor:pointer;" onclick="cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status || '—'}</span></td>
                         <td class="col-hide-sm">${esc(task.function) || '-'}</td>
                         <td>
                             <div class="action-btns">
@@ -409,7 +412,7 @@
                                 <span>${esc(task.assigneeName || '')}</span>
                                 ${task.status !== 'done' ? `
                                     <span class="mobile-task-meta-sep">•</span>
-                                    <span class="status-badge status-${task.status}" style="font-size:0.7rem;padding:0.1rem 0.4rem;cursor:pointer;" onclick="event.stopPropagation();cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status}</span>
+                                    <span class="status-badge status-${task.status}" style="font-size:0.7rem;padding:0.1rem 0.4rem;cursor:pointer;" onclick="event.stopPropagation();cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status || '—'}</span>
                                 ` : ''}
                                 ${task.function ? `<span class="mobile-task-meta-sep">•</span><span>${esc(task.function)}</span>` : ''}
                             </div>
