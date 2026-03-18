@@ -25,7 +25,11 @@
             // Фільтруємо архівовані функції
             const activeFunctions = functions.filter(f => f.status !== 'archived');
             
+            // Зберігаємо поточні значення перед перебудовою — щоб не скидати при Firestore оновленнях
+            const _tfVal = tf?.value || '';
+            const _taVal = ta?.value || '';
             if (tf) tf.innerHTML = `<option value="">${window.t('noFunction')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (tf && _tfVal) tf.value = _tfVal; // відновлюємо якщо option ще є
             if (ta) {
                 let usersList = users.length > 0 ? users : [];
                 // Employee always sees self in assignee list
@@ -41,6 +45,7 @@
                 } else {
                     ta.innerHTML = `<option value="">${window.t('select')}</option>` + usersList.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
                 }
+                if (_taVal) ta.value = _taVal; // відновлюємо значення після перебудови
             }
             if (ff) ff.innerHTML = `<option value="">${window.t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
             if (af) af.innerHTML = `<option value="">${window.t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
@@ -228,7 +233,7 @@
                 case 'projects': renderProjects(); break;
                 case 'regular': if (currentRegularView === 'list') renderRegularTasks(); else renderRegularWeekView(); break;
                 case 'functions': renderFunctions(); if (currentFunctionsView === 'structure') renderFunctionsStructure(); break;
-                case 'users': renderUsers(); break;
+                case 'users': renderUsers(); var _wl=document.getElementById('usersSubContent-workload'); if(_wl && _wl.style.display!=='none' && typeof renderWorkloadDashboard==='function') renderWorkloadDashboard(); break;
                 case 'analytics': renderAnalytics(); break;
                 case 'statistics':
                     lazyLoad('statistics', function() { if (typeof renderStatistics === 'function') renderStatistics(); });

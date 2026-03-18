@@ -102,6 +102,7 @@
                             <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('regularHoursWeek')}</th>
                             <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('activeTasksCount')}</th>
                             <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('overdueStatus')}</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('returnedFromReview') || 'Повернені'}</th>
                             <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('autonomyIndex')}</th>
                             <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('statusLabel') || 'Статус'}</th>
                         </tr>
@@ -124,6 +125,7 @@
                                 <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${hrsColor};">${r.weeklyHrs}</td>
                                 <td style="padding:0.5rem 0.75rem;text-align:center;">${r.active.length}</td>
                                 <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${r.overdue.length > 0 ? '#ef4444' : '#6b7280'};">${r.overdue.length}</td>
+                                <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${r.returned.length > 0 ? '#f59e0b' : '#6b7280'};">${r.returned.length || '—'}</td>
                                 <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${autoColor};">${r.autonomy === null ? '—' : r.autonomy + '%'}</td>
                                 <td style="padding:0.5rem 0.75rem;text-align:center;font-size:0.8rem;">${statusText}</td>
                             </tr>`;
@@ -134,7 +136,7 @@
             </div>`;
 
             // --- Top-5 progress bars ---
-            const top5 = [...rows].sort((a,b) => b.weeklyHrs - a.weeklyHrs).slice(0,5);
+            const top5 = [...rows].sort((a,b) => (b.weeklyHrs - a.weeklyHrs) || (b.active.length - a.active.length)).slice(0,5);
             const maxHrs = top5.length > 0 ? Math.max(...top5.map(r => r.weeklyHrs), 1) : 1;
             const top5HTML = `
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;margin-bottom:1.25rem;">
@@ -145,7 +147,7 @@
                     return `<div style="margin-bottom:0.6rem;">
                         <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.2rem;">
                             <span style="font-weight:500;">${esc(r.u.name || r.u.email)}</span>
-                            <span style="color:#6b7280;">${r.weeklyHrs} ${window.t('hoursPerWeek') || 'год/тижд'} · ${r.active.length} ${window.t('activeTasksCount') || 'активних задач'}${r.overloadFlag ? ' <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" style="vertical-align:-1px;"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>' : ''}</span>
+                            <span style="color:#6b7280;">${r.weeklyHrs > 0 ? r.weeklyHrs + ' ' + (window.t('hoursPerWeek') || 'год/тижд') + ' · ' : ''}${r.active.length} ${window.t('activeTasksCount') || 'активних'}${r.overloadFlag ? ' <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" style="vertical-align:-1px;"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>' : ''}</span>
                         </div>
                         <div style="background:#f3f4f6;border-radius:4px;height:8px;">
                             <div style="background:${barColor};width:${pct}%;height:8px;border-radius:4px;transition:width 0.3s;"></div>
@@ -179,7 +181,7 @@
                             if (dur<=0) dur=60;
                         }
                         let dpw = 1;
-                        if (rt.period==='daily') dpw=5;
+                        if (rt.period==='daily') dpw=rt.skipWeekends===false ? 7 : 5;
                         else if (rt.period==='weekly' && rt.daysOfWeek) dpw=rt.daysOfWeek.length;
                         else if (rt.period==='monthly') dpw=0.25;
                         fMin += dur*dpw;
