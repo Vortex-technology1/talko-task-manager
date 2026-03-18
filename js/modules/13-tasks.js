@@ -421,3 +421,73 @@
             const sel = document.getElementById('taskAssignee');
             if (sel) { sel.value = userId; }
         };
+
+        // ТЗ пріоритет 6: фільтрація виконавців по вибраній функції
+        window.filterTaskAssigneesByFunction = function() {
+            const funcSel = document.getElementById('taskFunction');
+            const assigneeSel = document.getElementById('taskAssignee');
+            if (!funcSel || !assigneeSel) return;
+
+            const funcName = funcSel.value;
+            const currentAssignee = assigneeSel.value;
+            const allUsers = (typeof users !== 'undefined') ? users : [];
+
+            if (!funcName) {
+                // Немає функції — показуємо всіх
+                assigneeSel.innerHTML = `<option value="">${window.t ? window.t('select') : 'Оберіть'}</option>` +
+                    allUsers.map(u => `<option value="${esc(u.id)}" ${u.id === currentAssignee ? 'selected' : ''}>${esc(u.name || u.email)}</option>`).join('');
+                return;
+            }
+
+            const func = (typeof functions !== 'undefined' ? functions : []).find(f => f.name === funcName && f.status !== 'archived');
+            if (!func?.assigneeIds?.length) return; // функція без виконавців — не чіпаємо список
+
+            const funcUserIds = func.assigneeIds;
+            const funcUsers = allUsers.filter(u => funcUserIds.includes(u.id));
+            const otherUsers = allUsers.filter(u => !funcUserIds.includes(u.id));
+
+            // Функція є — фільтруємо: спершу виконавці функції, потім інші (сірим)
+            let opts = `<option value="">${window.t ? window.t('select') : 'Оберіть'}</option>`;
+            if (funcUsers.length) {
+                opts += `<optgroup label="👥 Виконавці функції">` +
+                    funcUsers.map(u => `<option value="${esc(u.id)}" ${u.id === currentAssignee ? 'selected' : ''}>${esc(u.name || u.email)}</option>`).join('') +
+                    `</optgroup>`;
+            }
+            if (otherUsers.length) {
+                opts += `<optgroup label="— Інші співробітники">` +
+                    otherUsers.map(u => `<option value="${esc(u.id)}" ${u.id === currentAssignee ? 'selected' : ''}>${esc(u.name || u.email)}</option>`).join('') +
+                    `</optgroup>`;
+            }
+            assigneeSel.innerHTML = opts;
+
+            // Якщо поточний виконавець не у функції — не скидаємо (залишаємо вибір)
+            triggerSmartAssign();
+        };
+
+        // ТЗ пріоритет 6: автопідстановка функції при виборі виконавця
+        window.autoFillFunctionFromAssignee = function() {
+            const assigneeSel = document.getElementById('taskAssignee');
+            const funcSel = document.getElementById('taskFunction');
+            if (!assigneeSel || !funcSel) return;
+
+            const userId = assigneeSel.value;
+            if (!userId) return;
+
+            // Якщо функція вже вибрана — не перезаписуємо
+            if (funcSel.value) return;
+
+            const user = (typeof users !== 'undefined') ? users.find(u => u.id === userId) : null;
+            if (!user) return;
+
+            // Беремо primaryFunctionId з user-документу
+            const primaryFuncId = user.primaryFunctionId;
+            if (!primaryFuncId) return;
+
+            const primaryFunc = (typeof functions !== 'undefined') ? functions.find(f => f.id === primaryFuncId && f.status !== 'archived') : null;
+            if (!primaryFunc) return;
+
+            // Встановлюємо функцію і запускаємо Smart Assign відображення
+            funcSel.value = primaryFunc.name;
+            triggerSmartAssign();
+            filterTaskAssigneesByFunction();
+        };
