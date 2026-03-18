@@ -1938,7 +1938,11 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                     </div>
                     <div class="form-group"><label class="form-label" data-i18n="description">Опис</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту" data-i18n-placeholder="projectDescPh"></textarea></div>
-                    <!-- Budget -->
+                    <!-- Функції проекту -->
+                    <div class="form-group">
+                        <label class="form-label"><i data-lucide="settings" class="icon icon-sm"></i> Функції задіяні в проекті</label>
+                        <div id="projectFunctionIds" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.6rem;background:#f8f9fa;border-radius:8px;max-height:140px;overflow-y:auto;"></div>
+                    </div>
                     <div style="border-top:1px solid #e5e7eb;margin-top:0.75rem;padding-top:0.75rem;">
                         <label class="form-label" style="font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;">Бюджет (план)</label>
                         <div class="form-grid">

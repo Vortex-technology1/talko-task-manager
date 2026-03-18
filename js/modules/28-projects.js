@@ -16,13 +16,22 @@
             document.getElementById('projectPlannedMaterialCost').value = project?.plannedMaterialCost || '';
             document.getElementById('projectPlannedLaborCost').value = project?.plannedLaborCost || '';
             document.getElementById('projectClientName').value = project?.clientName || '';
+
+            // Populate functionIds checkboxes
+            const funcContainer = document.getElementById('projectFunctionIds');
+            if (funcContainer) {
+                const activeFuncs = (typeof functions !== 'undefined' ? functions : []).filter(f => f.status !== 'archived');
+                const selectedIds = project?.functionIds || [];
+                funcContainer.innerHTML = activeFuncs.length
+                    ? activeFuncs.map(f => `<label class="assignee-checkbox"><input type="checkbox" value="${esc(f.id)}" ${selectedIds.includes(f.id) ? 'checked' : ''}> ${esc(f.name)}</label>`).join('')
+                    : `<span style="color:#9ca3af;font-size:0.82rem;">Немає функцій — спочатку створіть функції</span>`;
+            }
             
             const color = project?.color || '#22c55e';
-            // Reset all, then set matching
             document.querySelectorAll('input[name="projectColor"]').forEach(r => r.checked = false);
             const colorInput = document.querySelector(`input[name="projectColor"][value="${color}"]`);
             if (colorInput) colorInput.checked = true;
-            else document.querySelector('input[name="projectColor"]').checked = true; // fallback to first
+            else document.querySelector('input[name="projectColor"]').checked = true;
             
             document.getElementById('projectModalTitle').textContent = project ? window.t('editProject') : window.t('newProject');
             document.getElementById('projectModal').style.display = 'block';
@@ -47,6 +56,7 @@
                 plannedMaterialCost: parseFloat(document.getElementById('projectPlannedMaterialCost')?.value) || 0,
                 plannedLaborCost: parseFloat(document.getElementById('projectPlannedLaborCost')?.value) || 0,
                 clientName: document.getElementById('projectClientName')?.value?.trim() || '',
+                functionIds: Array.from(document.querySelectorAll('#projectFunctionIds input:checked')).map(cb => cb.value),
             };
             if (!data.name) { isSavingProject = false; if (submitBtn) submitBtn.disabled = false; return; }
             
@@ -294,6 +304,10 @@
                         <span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? window.t('projectActive') : p.status === 'completed' ? window.t('projectCompleted') : window.t('projectPaused')}</span>
                     </div>
                     ${p.description ? `<div class="project-card-desc">${esc(p.description)}</div>` : ''}
+                    ${p.functionIds?.length ? `<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.4rem;">${p.functionIds.slice(0,3).map(fId => {
+                        const f = (typeof functions !== 'undefined') ? functions.find(fn => fn.id === fId) : null;
+                        return f ? `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 6px;border-radius:4px;">⚙ ${esc(f.name)}</span>` : '';
+                    }).filter(Boolean).join('')}${p.functionIds.length > 3 ? `<span style="font-size:0.65rem;color:#9ca3af;">+${p.functionIds.length - 3}</span>` : ''}</div>` : ''}
                     <div class="project-card-stats">
                         <span><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total} ${window.t('tasksWord')}</span>
                         <span><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done} ${window.t('doneWord')}</span>
