@@ -421,7 +421,7 @@
 
     // ── Load data ───────────────────────────────────────────
     async function loadCoordData() {
-        dbg('[Coord] loadCoordData start, companyId:', window.currentCompanyId);
+        window.dbg && dbg('[Coord] loadCoordData start, companyId:', window.currentCompanyId);
         if (!window.currentCompanyId) { console.warn('[Coord] no companyId'); return; }
         coordUnsubscribes.forEach(u => u());
         coordUnsubscribes = [];
@@ -440,7 +440,8 @@
         coordProcessTemplates  = ptSnap.docs.map(d => ({ id:d.id, ...d.data() }));
 
         try {
-            const pipSnap = await col('pipelines').where('isDefault','==',true).limit(1).get();
+            const crmPipelineCol = window.DB_COLS?.CRM_PIPELINE || 'crm_pipeline';
+            const pipSnap = await col(crmPipelineCol).where('isDefault','==',true).limit(1).get();
             if (!pipSnap.empty) coordCrmPipeline = { id:pipSnap.docs[0].id, ...pipSnap.docs[0].data() };
         } catch(e) { console.warn('[Coord] crm pipeline:', e); }
 
@@ -1161,12 +1162,20 @@
         form.scrollIntoView({behavior:'smooth',block:'nearest'});
         setTimeout(()=>{ if(window.lucide) lucide.createIcons(); },50);
     };
-    window.cancelCoordTaskForm = () => { const f=document.getElementById('coordCreateTaskForm'); if(f) f.style.display='none'; };
+    window.cancelCoordTaskForm = () => {
+        const f=document.getElementById('coordCreateTaskForm'); if(f) f.style.display='none';
+        _submitTaskLock=false;
+    };
 
+    let _submitTaskLock = false;
     window.submitCoordTask = async function() {
+        if (_submitTaskLock) return;
+        _submitTaskLock = true;
+        const btn = document.querySelector('#coordCreateTaskForm button.btn-success');
+        if (btn) { btn.disabled = true; btn.textContent = '...'; }
         const idx=parseInt(document.getElementById('coordTaskDecisionIdx').value,10);
         const title=document.getElementById('coordTaskTitle').value.trim();
-        if(!title){ toast('Введіть заголовок задачі','error'); return; }
+        if(!title){ toast('Введіть заголовок задачі','error'); _submitTaskLock=false; if(btn){btn.disabled=false;btn.innerHTML=`<i data-lucide="check" style="width:12px;height:12px;margin-right:3px;"></i>${ct('taskCreateBtn')}`;} return; }
         const assigneeId=document.getElementById('coordTaskAssignee').value||null;
         const deadline=document.getElementById('coordTaskDeadline').value||null;
         const projectId=document.getElementById('coordTaskProject')?.value||null;
@@ -1182,7 +1191,10 @@
             const ref=await col('tasks').add(taskData);
             if(!isNaN(idx)&&sessionDecisions[idx]){ sessionDecisions[idx].taskId=ref.id; sessionDecisions[idx].taskTitle=title; }
             window.cancelCoordTaskForm(); renderDecisions(); toast('✅ Задачу створено');
-        } catch(e) { toast('Помилка: '+e.message,'error'); }
+        } catch(e) {
+            toast('Помилка: '+e.message,'error');
+            if(btn){ btn.disabled=false; btn.innerHTML=`<i data-lucide="check" style="width:12px;height:12px;margin-right:3px;"></i>${ct('taskCreateBtn')}`; }
+        } finally { _submitTaskLock=false; }
     };
 
     window.addUnresolved = function() {
@@ -1346,7 +1358,7 @@
 
     // ── Tab integration ─────────────────────────────────────
     function initCoordTab() {
-        dbg('[Coord] initCoordTab, companyId:', window.currentCompanyId);
+        window.dbg && dbg('[Coord] initCoordTab, companyId:', window.currentCompanyId);
         renderCoordination(); loadCoordData();
     }
     window._initCoordTab = initCoordTab;
