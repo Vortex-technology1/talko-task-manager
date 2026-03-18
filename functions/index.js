@@ -1690,7 +1690,7 @@ exports.checkOverdueTasks = functions
                         const mgrLang = await getUserLang(companyId, managerData.id);
                         await sendWithButtons(d.telegramChatId,
                             `${tg(mgrLang, 'overdueTaskAlert')}\n\n${taskType}\n📌 ${task.title}\n👤 ${task.assigneeName || '-'}\n⏰ +${overdueMinutes} ${tg(mgrLang, 'minutesShort')}`,
-                            taskButtons(taskDoc.id, companyId)
+                            taskButtons(taskDoc.id, companyId, mgrLang)
                         );
                     }
                 }
@@ -2246,7 +2246,7 @@ exports.personalDailyTasks = functions
                     const pr = t.priority === 'high' ? '🔴' : t.priority === 'low' ? '🟢' : '🟡';
                     await sendWithButtons(chatId,
                         `⚠️ ${pr} <b>${t.title}</b>\n📅 ${t.deadlineDate}`,
-                        taskButtons(t.id, companyId));
+                        taskButtons(t.id, companyId, pLang));
                 }
                 if (overdueTasks.length > 5) await sendTelegramMessage(chatId, `${tg(pLang, 'moreItems')} ${overdueTasks.length - 5}. /overdue`);
 
@@ -2255,7 +2255,7 @@ exports.personalDailyTasks = functions
                     const pr = t.priority === 'high' ? '🔴' : t.priority === 'low' ? '🟢' : '🟡';
                     await sendWithButtons(chatId,
                         `${pr} <b>${t.title}</b>${tm}`,
-                        taskButtons(t.id, companyId));
+                        taskButtons(t.id, companyId, pLang));
                 }
                 if (todayTasks.length > 10) await sendTelegramMessage(chatId, `${tg(pLang, 'moreItems')} ${todayTasks.length - 10}. /today`);
             }
@@ -2533,8 +2533,12 @@ exports.eveningDigest = functions
 
                 const tasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-                // Completed today
-                const doneToday = tasks.filter(t => t.status === 'done' && t.completedDate === todayStr);
+                // Completed today — completedAt (Timestamp), конвертуємо в Kyiv date
+                const doneToday = tasks.filter(t => {
+                    if (t.status !== 'done' || !t.completedAt) return false;
+                    const cd = t.completedAt.toDate ? t.completedAt.toDate() : new Date(t.completedAt);
+                    return cd.toLocaleDateString('sv-SE', { timeZone: 'Europe/Kyiv' }) === todayStr;
+                });
 
                 // Due today but not done
                 const missedToday = tasks.filter(t =>
@@ -2583,18 +2587,18 @@ exports.eveningDigest = functions
                     overdue.slice(0, 3).forEach(t => {
                         msg += `  • ${t.title} (📅 ${t.deadlineDate})\n`;
                     });
-                    if (overdue.length > 3) msg += `  ... ще ${overdue.length - 3}\n`;
+                    if (overdue.length > 3) msg += `  ... ${tg(evLang, 'moreItems') || 'ще'} ${overdue.length - 3}\n`;
                     msg += `\n`;
                 }
 
                 if (tomorrow.length > 0) {
-                    msg += `📅 Завтра (${tomorrow.length}):\n`;
+                    msg += `📅 ${tg(evLang, 'eveningTomorrow') || 'Завтра'} (${tomorrow.length}):\n`;
                     tomorrow.slice(0, 5).forEach(t => {
                         const tm = t.deadlineTime ? ` ⏰ ${t.deadlineTime}` : '';
                         const pr = t.priority === 'high' ? '🔴' : t.priority === 'low' ? '🟢' : '🟡';
                         msg += `  ${pr} ${t.title}${tm}\n`;
                     });
-                    if (tomorrow.length > 5) msg += `  ... ще ${tomorrow.length - 5}\n`;
+                    if (tomorrow.length > 5) msg += `  ... ${tg(evLang, 'moreItems') || 'ще'} ${tomorrow.length - 5}\n`;
                 }
 
                 await sendTelegramMessage(chatId, msg);
