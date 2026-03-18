@@ -182,27 +182,35 @@ window.renderEstimateListView = function() {
         <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.75rem 1rem;">
           <div style="width:28px;height:28px;background:#3b82f6;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">1</div>
           <div>
-            <div style="font-weight:600;font-size:0.88rem;color:#111827;">Налаштуй Довідник норм</div>
-            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Один раз вкажи скільки матеріалів потрібно на 1 м² або 1 м³ роботи. Наприклад: на 1 м² фундаменту → 0.3 м³ бетону + 120 кг арматури. Або завантаж стандартні норми кнопкою вище.</div>
+            <div style="font-weight:600;font-size:0.88rem;color:#111827;">Бізнес → Кошторис → <span style="color:#3b82f6;">Довідник норм</span></div>
+            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Один раз вкажи норми витрат матеріалів. Наприклад: <b>фундамент 1 м²</b> = 0.3 м³ бетону + 120 кг арматури. Або натисни <b>«Завантажити стандартні»</b> і вибери свою нішу — норми заповняться автоматично.</div>
           </div>
         </div>
         <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.75rem 1rem;">
           <div style="width:28px;height:28px;background:#f59e0b;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">2</div>
           <div>
-            <div style="font-weight:600;font-size:0.88rem;color:#111827;">Створи кошторис для проекту</div>
-            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Натисни «+ Новий кошторис» → вибери тип роботи → введи площу або об'єм. Система <b>автоматично</b> розрахує скільки матеріалів потрібно і порівняє з тим що є на складі.</div>
+            <div style="font-weight:600;font-size:0.88rem;color:#111827;">Бізнес → Кошторис → <span style="color:#f59e0b;">Кошториси</span> → «+ Новий кошторис»</div>
+            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Вибираєш тип роботи з Довідника → вводиш площу або об'єм (наприклад 150 м²) → система <b>сама рахує</b> скільки матеріалів потрібно і порівнює з залишками на складі.</div>
           </div>
         </div>
         <div style="display:flex;gap:0.75rem;align-items:flex-start;background:white;border-radius:10px;padding:0.75rem 1rem;">
           <div style="width:28px;height:28px;background:#10b981;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">3</div>
           <div>
-            <div style="font-weight:600;font-size:0.88rem;color:#111827;">Бачиш дефіцит → дій</div>
-            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Система покаже що є на складі, чого не вистачає і скільки потрібно докупити в гривнях. Затверди кошторис → він прив'язується до проекту і фінансів автоматично.</div>
+            <div style="font-weight:600;font-size:0.88rem;color:#111827;">Проекти → відкрий проект → вкладка <span style="color:#10b981;">«Кошторис»</span></div>
+            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Кошторис прив'язується до проекту. Бачиш: що є на складі, чого не вистачає і скільки треба докупити в гривнях. Після затвердження — автоматична транзакція у Фінансах.</div>
           </div>
         </div>
       </div>
-      <div style="margin-top:0.75rem;padding:0.6rem 0.9rem;background:#fef3c7;border-radius:8px;font-size:0.78rem;color:#92400e;display:flex;align-items:flex-start;gap:0.4rem;">
-        ${_estIco.warning} <span><b>Перед першим кошторисом:</b> перейди на вкладку «Довідник норм» і завантаж стандартні норми для своєї ніші або додай власні.</span>
+      <div style="margin-top:0.75rem;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+        <div style="padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:8px;font-size:0.78rem;color:#166534;">
+          <b>Норми</b> — один раз на весь бізнес<br>в Довіднику норм
+        </div>
+        <div style="padding:0.6rem 0.9rem;background:#fef3c7;border-radius:8px;font-size:0.78rem;color:#92400e;">
+          <b>Кошторис</b> — окремо на кожен об'єкт<br>прив'язаний до проекту
+        </div>
+      </div>
+      <div style="margin-top:0.6rem;padding:0.6rem 0.9rem;background:#fef2f2;border-radius:8px;font-size:0.78rem;color:#991b1b;display:flex;align-items:flex-start;gap:0.4rem;">
+        ${_estIco.warning} <span><b>Спочатку:</b> заповни Довідник норм (вкладка поруч). Без норм кошторис не може нічого порахувати.</span>
       </div>
     </div>
 
