@@ -88,6 +88,35 @@ const TG_LANG = {
         overdueTasks: 'прострочених',
         doneTasks: 'виконано сьогодні',
         noTeamData: 'Немає даних про команду',
+        morningReport: '📊 <b>Ранковий звіт</b>',
+        morningDate: 'виконано вчора',
+        morningToday: '📋 На сьогодні',
+        morningTasks: 'задач',
+        morningCompleted: '✅ Виконано вчора',
+        morningOverdue: '⚠️ Прострочено',
+        morningProcesses: '🔄 Активних процесів',
+        morningTeam: '👥 <b>Команда:</b>',
+        morningDone: 'виконано',
+        morningOverdueShort: 'прострочено',
+        goodMorning: '☀️ Доброго ранку',
+        noTasksToday2: '✅ На сьогодні завдань немає.',
+        todayTasksCount: '📋 На сьогодні',
+        overdueCount: '⚠️ Прострочено',
+        weeklyTitle: '📈 <b>Тижневий звіт</b>',
+        weeklyCreated: '📝 Створено',
+        weeklyDone: '✅ Виконано',
+        weeklyOverdueShort: '⚠️ Прострочено',
+        weeklyProcesses: '🔄 Процесів завершено',
+        weeklyAvgTime: '⏱ Сер. час',
+        weeklyHours: 'год',
+        weeklyEfficiency: '📊 Ефективність',
+        weeklyBest: '🏆 <b>Найкращі:</b>',
+        weeklyAttention: '⚠️ <b>Потребують уваги:</b>',
+        weeklyOverdueOf: 'прострочень',
+        overdueTaskAlert: '⚠️ <b>Задача прострочена!</b>',
+        minutesShort: 'хв',
+        processCompleted: '✅ <b>Процес завершено!</b>',
+        processSteps: 'етапів виконано',
     },
     ru: {
         taskDone: '✅ <b>Задача выполнена!</b>',
@@ -152,6 +181,35 @@ const TG_LANG = {
         overdueTasks: 'просроченных',
         doneTasks: 'выполнено сегодня',
         noTeamData: 'Нет данных о команде',
+        morningReport: '📊 <b>Утренний отчёт</b>',
+        morningDate: 'выполнено вчера',
+        morningToday: '📋 На сегодня',
+        morningTasks: 'задач',
+        morningCompleted: '✅ Выполнено вчера',
+        morningOverdue: '⚠️ Просрочено',
+        morningProcesses: '🔄 Активных процессов',
+        morningTeam: '👥 <b>Команда:</b>',
+        morningDone: 'выполнено',
+        morningOverdueShort: 'просрочено',
+        goodMorning: '☀️ Доброе утро',
+        noTasksToday2: '✅ На сегодня задач нет.',
+        todayTasksCount: '📋 На сегодня',
+        overdueCount: '⚠️ Просрочено',
+        weeklyTitle: '📈 <b>Недельный отчёт</b>',
+        weeklyCreated: '📝 Создано',
+        weeklyDone: '✅ Выполнено',
+        weeklyOverdueShort: '⚠️ Просрочено',
+        weeklyProcesses: '🔄 Процессов завершено',
+        weeklyAvgTime: '⏱ Ср. время',
+        weeklyHours: 'ч',
+        weeklyEfficiency: '📊 Эффективность',
+        weeklyBest: '🏆 <b>Лучшие:</b>',
+        weeklyAttention: '⚠️ <b>Требуют внимания:</b>',
+        weeklyOverdueOf: 'просрочений',
+        overdueTaskAlert: '⚠️ <b>Задача просрочена!</b>',
+        minutesShort: 'мин',
+        processCompleted: '✅ <b>Процесс завершён!</b>',
+        processSteps: 'этапов выполнено',
     },
     en: {
         taskDone: '✅ <b>Task completed!</b>',
@@ -216,6 +274,35 @@ const TG_LANG = {
         overdueTasks: 'overdue',
         doneTasks: 'done today',
         noTeamData: 'No team data available',
+        morningReport: '📊 <b>Morning report</b>',
+        morningDate: 'completed yesterday',
+        morningToday: '📋 Today',
+        morningTasks: 'tasks',
+        morningCompleted: '✅ Completed yesterday',
+        morningOverdue: '⚠️ Overdue',
+        morningProcesses: '🔄 Active processes',
+        morningTeam: '👥 <b>Team:</b>',
+        morningDone: 'done',
+        morningOverdueShort: 'overdue',
+        goodMorning: '☀️ Good morning',
+        noTasksToday2: '✅ No tasks for today.',
+        todayTasksCount: '📋 Today',
+        overdueCount: '⚠️ Overdue',
+        weeklyTitle: '📈 <b>Weekly report</b>',
+        weeklyCreated: '📝 Created',
+        weeklyDone: '✅ Completed',
+        weeklyOverdueShort: '⚠️ Overdue',
+        weeklyProcesses: '🔄 Processes completed',
+        weeklyAvgTime: '⏱ Avg time',
+        weeklyHours: 'h',
+        weeklyEfficiency: '📊 Efficiency',
+        weeklyBest: '🏆 <b>Top performers:</b>',
+        weeklyAttention: '⚠️ <b>Need attention:</b>',
+        weeklyOverdueOf: 'overdue',
+        overdueTaskAlert: '⚠️ <b>Task overdue!</b>',
+        minutesShort: 'min',
+        processCompleted: '✅ <b>Process completed!</b>',
+        processSteps: 'steps completed',
     },
     pl: {
         taskDone: '✅ <b>Zadanie wykonane!</b>',
@@ -280,6 +367,35 @@ const TG_LANG = {
         overdueTasks: 'zaległych',
         doneTasks: 'wykonano dziś',
         noTeamData: 'Brak danych o zespole',
+        morningReport: '📊 <b>Poranny raport</b>',
+        morningDate: 'ukończono wczoraj',
+        morningToday: '📋 Na dziś',
+        morningTasks: 'zadań',
+        morningCompleted: '✅ Ukończono wczoraj',
+        morningOverdue: '⚠️ Zaległe',
+        morningProcesses: '🔄 Aktywnych procesów',
+        morningTeam: '👥 <b>Zespół:</b>',
+        morningDone: 'wykonano',
+        morningOverdueShort: 'zaległe',
+        goodMorning: '☀️ Dzień dobry',
+        noTasksToday2: '✅ Brak zadań na dziś.',
+        todayTasksCount: '📋 Na dziś',
+        overdueCount: '⚠️ Zaległe',
+        weeklyTitle: '📈 <b>Raport tygodniowy</b>',
+        weeklyCreated: '📝 Utworzono',
+        weeklyDone: '✅ Wykonano',
+        weeklyOverdueShort: '⚠️ Zaległe',
+        weeklyProcesses: '🔄 Ukończonych procesów',
+        weeklyAvgTime: '⏱ Śr. czas',
+        weeklyHours: 'h',
+        weeklyEfficiency: '📊 Wydajność',
+        weeklyBest: '🏆 <b>Najlepsi:</b>',
+        weeklyAttention: '⚠️ <b>Wymagają uwagi:</b>',
+        weeklyOverdueOf: 'zaległych',
+        overdueTaskAlert: '⚠️ <b>Zadanie zaległe!</b>',
+        minutesShort: 'min',
+        processCompleted: '✅ <b>Proces zakończony!</b>',
+        processSteps: 'etapów wykonanych',
     },
     de: {
         taskDone: '✅ <b>Aufgabe erledigt!</b>',
@@ -344,6 +460,35 @@ const TG_LANG = {
         overdueTasks: 'überfällig',
         doneTasks: 'heute erledigt',
         noTeamData: 'Keine Teamdaten verfügbar',
+        morningReport: '📊 <b>Morgenbericht</b>',
+        morningDate: 'gestern erledigt',
+        morningToday: '📋 Heute',
+        morningTasks: 'Aufgaben',
+        morningCompleted: '✅ Gestern erledigt',
+        morningOverdue: '⚠️ Überfällig',
+        morningProcesses: '🔄 Aktive Prozesse',
+        morningTeam: '👥 <b>Team:</b>',
+        morningDone: 'erledigt',
+        morningOverdueShort: 'überfällig',
+        goodMorning: '☀️ Guten Morgen',
+        noTasksToday2: '✅ Keine Aufgaben für heute.',
+        todayTasksCount: '📋 Heute',
+        overdueCount: '⚠️ Überfällig',
+        weeklyTitle: '📈 <b>Wochenbericht</b>',
+        weeklyCreated: '📝 Erstellt',
+        weeklyDone: '✅ Erledigt',
+        weeklyOverdueShort: '⚠️ Überfällig',
+        weeklyProcesses: '🔄 Abgeschlossene Prozesse',
+        weeklyAvgTime: '⏱ Ø Zeit',
+        weeklyHours: 'Std',
+        weeklyEfficiency: '📊 Effizienz',
+        weeklyBest: '🏆 <b>Beste:</b>',
+        weeklyAttention: '⚠️ <b>Benötigen Aufmerksamkeit:</b>',
+        weeklyOverdueOf: 'überfällig',
+        overdueTaskAlert: '⚠️ <b>Aufgabe überfällig!</b>',
+        minutesShort: 'Min',
+        processCompleted: '✅ <b>Prozess abgeschlossen!</b>',
+        processSteps: 'Schritte abgeschlossen',
     },
     cs: {
         taskDone: '✅ <b>Úkol dokončen!</b>',
@@ -408,6 +553,35 @@ const TG_LANG = {
         overdueTasks: 'zpožděných',
         doneTasks: 'hotovo dnes',
         noTeamData: 'Žádná data o týmu',
+        morningReport: '📊 <b>Ranní zpráva</b>',
+        morningDate: 'dokončeno včera',
+        morningToday: '📋 Dnes',
+        morningTasks: 'úkolů',
+        morningCompleted: '✅ Dokončeno včera',
+        morningOverdue: '⚠️ Zpožděno',
+        morningProcesses: '🔄 Aktivních procesů',
+        morningTeam: '👥 <b>Tým:</b>',
+        morningDone: 'hotovo',
+        morningOverdueShort: 'zpožděno',
+        goodMorning: '☀️ Dobré ráno',
+        noTasksToday2: '✅ Žádné úkoly na dnes.',
+        todayTasksCount: '📋 Dnes',
+        overdueCount: '⚠️ Zpožděno',
+        weeklyTitle: '📈 <b>Týdenní zpráva</b>',
+        weeklyCreated: '📝 Vytvořeno',
+        weeklyDone: '✅ Dokončeno',
+        weeklyOverdueShort: '⚠️ Zpožděno',
+        weeklyProcesses: '🔄 Dokončených procesů',
+        weeklyAvgTime: '⏱ Prům. čas',
+        weeklyHours: 'h',
+        weeklyEfficiency: '📊 Efektivita',
+        weeklyBest: '🏆 <b>Nejlepší:</b>',
+        weeklyAttention: '⚠️ <b>Vyžadují pozornost:</b>',
+        weeklyOverdueOf: 'zpožděných',
+        overdueTaskAlert: '⚠️ <b>Úkol zpožděn!</b>',
+        minutesShort: 'min',
+        processCompleted: '✅ <b>Proces dokončen!</b>',
+        processSteps: 'kroků dokončeno',
     },
 };
 
@@ -1432,8 +1606,9 @@ exports.checkOverdueTasks = functions
                     if (managerData.id === task.assigneeId) continue;
                     const d = managerData;
                     if (d.telegramChatId) {
+                        const mgrLang = await getUserLang(companyId, managerData.id);
                         await sendWithButtons(d.telegramChatId,
-                            `⚠️ <b>Задача прострочена!</b>\n\n${taskType}\n📌 ${task.title}\n👤 ${task.assigneeName || '-'}\n⏰ +${overdueMinutes} хв`,
+                            `${tg(mgrLang, 'overdueTaskAlert')}\n\n${taskType}\n📌 ${task.title}\n👤 ${task.assigneeName || '-'}\n⏰ +${overdueMinutes} ${tg(mgrLang, 'minutesShort')}`,
                             taskButtons(taskDoc.id, companyId)
                         );
                     }
@@ -1671,8 +1846,9 @@ exports.onProcessTaskCompleted = functions
             for (const uDoc of usersSnap.docs) {
                 const d = uDoc.data();
                 if (d.telegramChatId) {
+                    const uLangProc = await getUserLang(companyId, uDoc.id);
                     await sendTelegramMessage(d.telegramChatId,
-                        `✅ <b>Процес завершено!</b>\n\n📋 ${process.name}${process.objectName ? ` [${process.objectName}]` : ''}\n🎉 Всі ${template.steps.length} етапів виконано!`
+                        `${tg(uLangProc, 'processCompleted')}\n\n📋 ${process.name}${process.objectName ? ` [${process.objectName}]` : ''}\n🎉 ${template.steps.length} ${tg(uLangProc, 'processSteps')}!`
                     );
                 }
             }
@@ -1895,28 +2071,35 @@ exports.dailyReport = functions
             const procSnap = await companyDoc.ref.collection('processes')
                 .where('status', '==', 'active').get();
 
-            let report = `📊 <b>Ранковий звіт</b>\n`;
-            report += `📅 ${now.toLocaleDateString('uk-UA', { weekday: 'long', day: 'numeric', month: 'long' })}\n\n`;
-            report += `📋 На сьогодні: <b>${todayTasks}</b> задач\n`;
-            report += `✅ Виконано вчора: <b>${completedYesterday}</b>\n`;
-            if (overdueTasks > 0) report += `⚠️ <b>Прострочено: ${overdueTasks}</b>\n`;
-            if (procSnap.size > 0) report += `🔄 Активних процесів: <b>${procSnap.size}</b>\n`;
-
-            const sorted = Object.entries(userStats).sort((a, b) => b[1].completed - a[1].completed).slice(0, 5);
-            if (sorted.length > 0) {
-                report += `\n👥 <b>Команда:</b>\n`;
-                for (const [, s] of sorted) {
-                    const emoji = s.overdue > 0 ? '⚠️' : '✅';
-                    report += `${emoji} ${s.name}: ${s.completed} виконано${s.overdue > 0 ? `, ${s.overdue} прострочено` : ''}\n`;
-                }
-            }
-
             const managersSnap = await companyDoc.ref.collection('users')
                 .where('role', 'in', ['owner', 'manager']).get();
             for (const mDoc of managersSnap.docs) {
                 const d = mDoc.data();
                 if (d.dailyReportEnabled === false) continue;
-                if (d.telegramChatId) await sendTelegramMessage(d.telegramChatId, report);
+                if (!d.telegramChatId) continue;
+
+                // Мова per-manager
+                const mLang = await getUserLang(companyId, mDoc.id);
+                const mLocale = mLang === 'de' ? 'de-DE' : mLang === 'ru' ? 'ru-RU' : mLang === 'en' ? 'en-US' : mLang === 'pl' ? 'pl-PL' : mLang === 'cs' ? 'cs-CZ' : 'uk-UA';
+                const mDateStr = now.toLocaleDateString(mLocale, { weekday: 'long', day: 'numeric', month: 'long' });
+
+                let report = `${tg(mLang, 'morningReport')}\n`;
+                report += `📅 ${mDateStr}\n\n`;
+                report += `${tg(mLang, 'morningToday')}: <b>${todayTasks}</b> ${tg(mLang, 'morningTasks')}\n`;
+                report += `${tg(mLang, 'morningCompleted')}: <b>${completedYesterday}</b>\n`;
+                if (overdueTasks > 0) report += `${tg(mLang, 'morningOverdue')}: <b>${overdueTasks}</b>\n`;
+                if (procSnap.size > 0) report += `${tg(mLang, 'morningProcesses')}: <b>${procSnap.size}</b>\n`;
+
+                const sorted = Object.entries(userStats).sort((a, b) => b[1].completed - a[1].completed).slice(0, 5);
+                if (sorted.length > 0) {
+                    report += `\n${tg(mLang, 'morningTeam')}\n`;
+                    for (const [, s] of sorted) {
+                        const emoji = s.overdue > 0 ? '⚠️' : '✅';
+                        report += `${emoji} ${s.name}: ${s.completed} ${tg(mLang, 'morningDone')}${s.overdue > 0 ? `, ${s.overdue} ${tg(mLang, 'morningOverdueShort')}` : ''}\n`;
+                    }
+                }
+
+                await sendTelegramMessage(d.telegramChatId, report);
             }
         }
         return null;
@@ -1962,15 +2145,18 @@ exports.personalDailyTasks = functions
                 });
                 todayTasks.sort((a, b) => (a.deadlineTime || '').localeCompare(b.deadlineTime || ''));
 
+                // Мова per-user
+                const pLang = await getUserLang(companyId, uid);
+
                 if (todayTasks.length === 0 && overdueTasks.length === 0) {
                     await sendTelegramMessage(chatId,
-                        `☀️ Доброго ранку, <b>${userName}</b>!\n\n✅ На сьогодні завдань немає.`);
+                        `${tg(pLang, 'goodMorning')}, <b>${userName}</b>!\n\n${tg(pLang, 'noTasksToday2')}`);
                     continue;
                 }
 
                 await sendTelegramMessage(chatId,
-                    `☀️ Доброго ранку, <b>${userName}</b>!\n\n📋 На сьогодні: <b>${todayTasks.length}</b>` +
-                    (overdueTasks.length > 0 ? `\n⚠️ Прострочено: <b>${overdueTasks.length}</b>` : ''));
+                    `${tg(pLang, 'goodMorning')}, <b>${userName}</b>!\n\n${tg(pLang, 'todayTasksCount')}: <b>${todayTasks.length}</b>` +
+                    (overdueTasks.length > 0 ? `\n${tg(pLang, 'overdueCount')}: <b>${overdueTasks.length}</b>` : ''));
 
                 for (const t of overdueTasks.slice(0, 5)) {
                     const pr = t.priority === 'high' ? '🔴' : t.priority === 'low' ? '🟢' : '🟡';
@@ -1978,7 +2164,7 @@ exports.personalDailyTasks = functions
                         `⚠️ ${pr} <b>${t.title}</b>\n📅 ${t.deadlineDate}`,
                         taskButtons(t.id, companyId));
                 }
-                if (overdueTasks.length > 5) await sendTelegramMessage(chatId, `... ще ${overdueTasks.length - 5}. /overdue`);
+                if (overdueTasks.length > 5) await sendTelegramMessage(chatId, `${tg(pLang, 'moreItems')} ${overdueTasks.length - 5}. /overdue`);
 
                 for (const t of todayTasks.slice(0, 10)) {
                     const tm = t.deadlineTime ? ` ⏰ ${t.deadlineTime}` : '';
@@ -1987,7 +2173,7 @@ exports.personalDailyTasks = functions
                         `${pr} <b>${t.title}</b>${tm}`,
                         taskButtons(t.id, companyId));
                 }
-                if (todayTasks.length > 10) await sendTelegramMessage(chatId, `... ще ${todayTasks.length - 10}. /today`);
+                if (todayTasks.length > 10) await sendTelegramMessage(chatId, `${tg(pLang, 'moreItems')} ${todayTasks.length - 10}. /today`);
             }
         }
         return null;
@@ -2060,31 +2246,37 @@ exports.weeklyReport = functions
                 return dt >= weekAgo;
             }).length;
 
-            let report = `📈 <b>Тижневий звіт</b>\n`;
-            report += `📅 ${weekAgo.toLocaleDateString('uk-UA')} - ${now.toLocaleDateString('uk-UA')}\n\n`;
-            report += `📝 Створено: ${totalCreated}\n✅ Виконано: ${totalCompleted}\n⚠️ Прострочено: ${totalOverdue}\n`;
-            if (procCompleted > 0) report += `🔄 Процесів завершено: ${procCompleted}\n`;
-            if (avgTime > 0) report += `⏱ Сер. час: ${Math.round(avgTime)} год\n`;
-            if (totalCreated > 0) report += `\n📊 Ефективність: <b>${Math.round((totalCompleted / totalCreated) * 100)}%</b>\n`;
-
             const byCompleted = Object.entries(userStats).sort((a, b) => b[1].completed - a[1].completed);
             const byOverdue = Object.entries(userStats).filter(([, s]) => s.overdue > 0).sort((a, b) => b[1].overdue - a[1].overdue);
 
-            if (byCompleted.length > 0) {
-                report += `\n🏆 <b>Найкращі:</b>\n`;
-                for (const [, s] of byCompleted.slice(0, 3)) report += `✅ ${s.name}: ${s.completed}\n`;
-            }
-            if (byOverdue.length > 0) {
-                report += `\n⚠️ <b>Потребують уваги:</b>\n`;
-                for (const [, s] of byOverdue.slice(0, 3)) report += `❌ ${s.name}: ${s.overdue} прострочень\n`;
-            }
-
-            const managersSnap = await companyDoc.ref.collection('users')
+            const wManagersSnap = await companyDoc.ref.collection('users')
                 .where('role', 'in', ['owner', 'manager']).get();
-            for (const mDoc of managersSnap.docs) {
+            for (const mDoc of wManagersSnap.docs) {
                 const d = mDoc.data();
                 if (d.weeklyReportEnabled === false) continue;
-                if (d.telegramChatId) await sendTelegramMessage(d.telegramChatId, report);
+                if (!d.telegramChatId) continue;
+
+                // Мова per-manager
+                const wLang = await getUserLang(companyId, mDoc.id);
+                const wLocale = wLang === 'de' ? 'de-DE' : wLang === 'ru' ? 'ru-RU' : wLang === 'en' ? 'en-US' : wLang === 'pl' ? 'pl-PL' : wLang === 'cs' ? 'cs-CZ' : 'uk-UA';
+
+                let report = `${tg(wLang, 'weeklyTitle')}\n`;
+                report += `📅 ${weekAgo.toLocaleDateString(wLocale)} - ${now.toLocaleDateString(wLocale)}\n\n`;
+                report += `${tg(wLang, 'weeklyCreated')}: ${totalCreated}\n${tg(wLang, 'weeklyDone')}: ${totalCompleted}\n${tg(wLang, 'weeklyOverdueShort')}: ${totalOverdue}\n`;
+                if (procCompleted > 0) report += `${tg(wLang, 'weeklyProcesses')}: ${procCompleted}\n`;
+                if (avgTime > 0) report += `${tg(wLang, 'weeklyAvgTime')}: ${Math.round(avgTime)} ${tg(wLang, 'weeklyHours')}\n`;
+                if (totalCreated > 0) report += `\n${tg(wLang, 'weeklyEfficiency')}: <b>${Math.round((totalCompleted / totalCreated) * 100)}%</b>\n`;
+
+                if (byCompleted.length > 0) {
+                    report += `\n${tg(wLang, 'weeklyBest')}\n`;
+                    for (const [, s] of byCompleted.slice(0, 3)) report += `✅ ${s.name}: ${s.completed}\n`;
+                }
+                if (byOverdue.length > 0) {
+                    report += `\n${tg(wLang, 'weeklyAttention')}\n`;
+                    for (const [, s] of byOverdue.slice(0, 3)) report += `❌ ${s.name}: ${s.overdue} ${tg(wLang, 'weeklyOverdueOf')}\n`;
+                }
+
+                await sendTelegramMessage(d.telegramChatId, report);
             }
         }
         return null;
