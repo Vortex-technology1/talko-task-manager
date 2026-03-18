@@ -86,7 +86,7 @@ window.renderEstimateTab = function() {
     if (!container) return;
 
     container.innerHTML = `
-    <div style="max-width:1200px;margin:0 auto;padding:1rem;">
+    <div style="padding:1rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:1.25rem;">
         <div>
           <h2 style="margin:0;font-size:1.3rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:0.5rem;">${_estIco.clipboard} Кошторис матеріалів</h2>
@@ -132,7 +132,7 @@ window.renderEstimateHowtoView = function() {
     const path = (text) => `<span style="background:#f0f9ff;border:1px solid #bae6fd;padding:2px 8px;border-radius:4px;font-size:0.78rem;color:#0369a1;font-weight:600;">${text}</span>`;
 
     sub.innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:1.25rem;max-width:860px;">
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
 
       <!-- ЗАГОЛОВОК -->
       <div style="background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-radius:14px;padding:1.5rem;color:white;">
