@@ -2608,7 +2608,11 @@ exports.eveningDigest = functions
             const allTasksSnap = await companyDoc.ref.collection('tasks').get();
             const allTasks = allTasksSnap.docs.map(d => d.data());
             
-            const totalDoneToday = allTasks.filter(t => t.status === 'done' && t.completedDate === todayStr).length;
+            const totalDoneToday = allTasks.filter(t => {
+                if (t.status !== 'done' || !t.completedAt) return false;
+                const cd = t.completedAt.toDate ? t.completedAt.toDate() : new Date(t.completedAt);
+                return cd.toLocaleDateString('sv-SE', { timeZone: 'Europe/Kyiv' }) === todayStr;
+            }).length;
             const totalMissed = allTasks.filter(t => t.deadlineDate === todayStr && t.status !== 'done').length;
             const totalOverdue = allTasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done').length;
             const totalTomorrow = allTasks.filter(t => t.deadlineDate === tmrwStr && t.status !== 'done').length;
@@ -2622,37 +2626,41 @@ exports.eveningDigest = functions
             allTasks.forEach(t => {
                 const n = t.assigneeName || '—';
                 if (!byPerson[n]) byPerson[n] = { done: 0, missed: 0, overdue: 0 };
-                if (t.status === 'done' && t.completedDate === todayStr) byPerson[n].done++;
+                if (t.status === 'done' && t.completedAt) {
+                    const cd2 = t.completedAt.toDate ? t.completedAt.toDate() : new Date(t.completedAt);
+                    if (cd2.toLocaleDateString('sv-SE', { timeZone: 'Europe/Kyiv' }) === todayStr) byPerson[n].done++;
+                }
                 if (t.deadlineDate === todayStr && t.status !== 'done') byPerson[n].missed++;
                 if (t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done') byPerson[n].overdue++;
             });
 
-            let mgrMsg = `🌆 <b>Вечірній звіт (компанія)</b>\n\n`;
-            mgrMsg += `${emoji} <b>План vs Факт: ${totalDoneToday}/${planned} (${score}%)</b>\n`;
-            mgrMsg += `⚠️ Прострочено загалом: ${totalOverdue}\n`;
-            mgrMsg += `📅 Завтра задач: ${totalTomorrow}\n\n`;
-
-            const sorted = Object.entries(byPerson)
+            const sortedByPerson = Object.entries(byPerson)
                 .filter(([, s]) => s.done > 0 || s.missed > 0 || s.overdue > 0)
                 .sort((a, b) => (b[1].missed + b[1].overdue) - (a[1].missed + a[1].overdue));
-            
-            if (sorted.length > 0) {
-                mgrMsg += `👥 <b>По людях:</b>\n`;
-                sorted.forEach(([n, s]) => {
-                    const e = (s.missed + s.overdue) > 0 ? '⚠️' : '✅';
-                    mgrMsg += `${e} ${n}: ✅${s.done}`;
-                    if (s.missed > 0) mgrMsg += ` ❌${s.missed}`;
-                    if (s.overdue > 0) mgrMsg += ` ⏰${s.overdue}`;
-                    mgrMsg += `\n`;
-                });
-            }
 
-            const managersSnap = await companyDoc.ref.collection('users')
+            // Per-manager language
+            const mgrSnap = await companyDoc.ref.collection('users')
                 .where('role', 'in', ['owner', 'manager']).get();
-            for (const mDoc of managersSnap.docs) {
+            for (const mDoc of mgrSnap.docs) {
                 const d = mDoc.data();
                 if (d.eveningDigestEnabled === false) continue;
-                if (d.telegramChatId) await sendTelegramMessage(d.telegramChatId, mgrMsg);
+                if (!d.telegramChatId) continue;
+                const mgrEvLang = await getUserLang(companyId, mDoc.id);
+                let mgrMsg = `🌆 <b>${tg(mgrEvLang, 'eveningReport') || 'Вечірній звіт'} (${tg(mgrEvLang, 'teamReport') || 'Команда'})</b>\n\n`;
+                mgrMsg += `${emoji} <b>${tg(mgrEvLang, 'planVsFact') || 'План vs Факт'}: ${totalDoneToday}/${planned} (${score}%)</b>\n`;
+                mgrMsg += `⚠️ ${tg(mgrEvLang, 'morningOverdue') || 'Прострочено'}: ${totalOverdue}\n`;
+                mgrMsg += `📅 ${tg(mgrEvLang, 'eveningTomorrow') || 'Завтра'}: ${totalTomorrow}\n\n`;
+                if (sortedByPerson.length > 0) {
+                    mgrMsg += `👥 <b>${tg(mgrEvLang, 'teamReport') || 'Команда'}:</b>\n`;
+                    sortedByPerson.forEach(([n, s]) => {
+                        const e = (s.missed + s.overdue) > 0 ? '⚠️' : '✅';
+                        mgrMsg += `${e} ${n}: ✅${s.done}`;
+                        if (s.missed > 0) mgrMsg += ` ❌${s.missed}`;
+                        if (s.overdue > 0) mgrMsg += ` ⏰${s.overdue}`;
+                        mgrMsg += `\n`;
+                    });
+                }
+                await sendTelegramMessage(d.telegramChatId, mgrMsg);
             }
         }
         return null;
