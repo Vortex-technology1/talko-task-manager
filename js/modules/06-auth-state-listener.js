@@ -7,6 +7,7 @@
             if (user) {
                 currentUser = user;
                 window.currentUser = user; // аліас для IIFE модулів
+                window._wasLoggedIn = true; // Позначаємо що була активна сесія
                 
                 // Очищаємо попередні listeners перед ініціалізацією нової сесії
                 cleanupAllListeners();
@@ -192,16 +193,20 @@
                     if (typeof isLoading !== 'undefined') isLoading = false;
                     if (typeof loadingVersion !== 'undefined') loadingVersion = 0;
                 } catch(e) {}
-                // Очищаємо дані щоб не показувати чужі дані при re-login
-                try {
-                    if (typeof tasks !== 'undefined') tasks = [];
-                    if (typeof users !== 'undefined') users = [];
-                    if (typeof functions !== 'undefined') functions = [];
-                    if (typeof processes !== 'undefined') processes = [];
-                    if (typeof projects !== 'undefined') projects = [];
-                    if (typeof regularTasks !== 'undefined') regularTasks = [];
-                    if (typeof processTemplates !== 'undefined') processTemplates = [];
-                } catch(e) {}
+                // Очищаємо дані — тільки якщо була активна сесія
+                // (захист: onAuthStateChanged(null) спрацьовує і при першому завантаженні
+                //  поки Firebase відновлює сесію — не очищаємо якщо ще не логінились)
+                if (window._wasLoggedIn) {
+                    try {
+                        if (typeof tasks !== 'undefined') tasks = [];
+                        if (typeof users !== 'undefined') users = [];
+                        if (typeof functions !== 'undefined') functions = [];
+                        if (typeof processes !== 'undefined') processes = [];
+                        if (typeof projects !== 'undefined') projects = [];
+                        if (typeof regularTasks !== 'undefined') regularTasks = [];
+                        if (typeof processTemplates !== 'undefined') processTemplates = [];
+                    } catch(e) {}
+                }
 
                 // Закриваємо всі Firestore listeners
                 try {
