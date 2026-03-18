@@ -167,21 +167,35 @@
         // ФУНКЦІЇ
         if (typeof functions !== 'undefined') {
             functions.filter(f => f.status!=='archived' && (
-                (f.name||'').toLowerCase().includes(q) || (f.description||'').toLowerCase().includes(q)
-            )).slice(0, 3).forEach(f => {
-                const ids = f.assigneeIds||(f.assigneeId?[f.assigneeId]:[]);
-                const names = (typeof users!=='undefined')
-                    ? ids.map(id=>{const u=users.find(u=>u.id===id);return u?(u.name||u.email).split(' ')[0]:null;}).filter(Boolean).join(', ')
-                    : '';
+                (f.name||'').toLowerCase().includes(q) ||
+                (f.description||'').toLowerCase().includes(q) ||
+                (f.result||'').toLowerCase().includes(q) ||
+                (f.contacts||'').toLowerCase().includes(q) ||
+                (f.keywords||[]).some(k => (k||'').toLowerCase().includes(q)) ||
+                (f.headName||'').toLowerCase().includes(q) ||
+                (f.communicatesWith||[]).some(c =>
+                    (c.topics||[]).some(t => (t||'').toLowerCase().includes(q))
+                )
+            )).slice(0, 4).forEach(f => {
+                const ownerUser = (typeof users!=='undefined') ? users.find(u=>u.id===f.headId) : null;
+                const ownerName = ownerUser ? (ownerUser.name||ownerUser.email) : (f.headName||'');
+                // Build rich subtitle: owner + ЦКП (truncated)
+                const resultSnippet = f.result ? (f.result.length > 55 ? f.result.substring(0,55)+'…' : f.result) : '';
+                const subtitleParts = [
+                    ownerName ? '👤 ' + ownerName : '',
+                    resultSnippet ? '🎯 ' + resultSnippet : ''
+                ].filter(Boolean);
+                // Keywords hint if matched via keyword
+                const matchedKeyword = (f.keywords||[]).find(k => (k||'').toLowerCase().includes(q));
+                const keywordHint = matchedKeyword ? ' · 🔑 ' + matchedKeyword : '';
                 results.push({
                     category: gs_t('gsSearchFunctions','Функції'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>️',
-                    title: f.name, subtitle: names||gs_t('gsNoAssignee','Без відповідального'),
+                    title: f.name,
+                    subtitle: subtitleParts.join(' · ') + keywordHint,
                     badge: gs_t('gsSearchFunctionBadge','Функція'), badgeColor:'#8b5cf6',
-                    // FIX БАГ E: scroll до функції після switchTab
                     action: () => {
                         if (typeof switchTab==='function') switchTab('functions');
                         setTimeout(() => {
-                            // Реальний клас: .function-card, onclick містить id функції
                             const cards = document.querySelectorAll('.function-card');
                             let found = false;
                             cards.forEach(card => {
