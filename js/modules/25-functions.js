@@ -462,6 +462,7 @@
                                 <i data-lucide="repeat" class="icon icon-sm"></i>+
                             </button>
                             <button class="btn btn-small" onclick="openFunctionModal('${escId(f.id)}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                            <button class="btn btn-small" onclick="openEmployeeOnboarding('${escId(f.id)}')" title="Онбординг нового співробітника" style="background:#fdf4ff;color:#7c3aed;border-color:#e9d5ff;"><i data-lucide="user-check" class="icon icon-sm"></i></button>
                             <button class="btn btn-small btn-danger" onclick="deleteFunction('${escId(f.id)}')"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                         </div>
                     </div>
@@ -648,3 +649,137 @@
 
             </div>`;
         }
+
+        // =====================
+        // EMPLOYEE ONBOARDING (ТЗ пріоритет 10)
+        // 9 автоматичних кроків онбордингу з даних функції
+        // =====================
+        window.openEmployeeOnboarding = function(funcId) {
+            const f = functions.find(fn => fn.id === funcId);
+            if (!f) return;
+
+            const modal = document.getElementById('employeeOnboardingModal');
+            const body = document.getElementById('employeeOnboardingBody');
+            if (!modal || !body) return;
+
+            const ownerUser = users.find(u => u.id === f.headId);
+            const funcUsers = users.filter(u => f.assigneeIds?.includes(u.id));
+            const funcRegularTasks = (typeof regularTasks !== 'undefined') ? regularTasks.filter(rt => rt.function === f.name) : [];
+            const funcTasks = (typeof tasks !== 'undefined') ? tasks.filter(t => t.function === f.name && t.status !== 'done').slice(0, 5) : [];
+            const funcLessons = (typeof window._learningLessons !== 'undefined') ? window._learningLessons.filter(l => f.lessonIds?.includes(l.id)) : [];
+
+            // Resolve reportsTo function
+            const reportsToFunc = f.reportsTo ? functions.find(fn => fn.id === f.reportsTo) : null;
+
+            // Build 9 steps
+            const steps = [
+                {
+                    num: 1, icon: '👋', title: 'Ласкаво просимо',
+                    content: `<p style="font-size:0.9rem;margin:0 0 0.5rem;">Твоя функція: <strong>${esc(f.name)}</strong></p>
+                    <div style="background:#f0fdf4;border-left:3px solid #22c55e;padding:0.5rem 0.75rem;border-radius:0 8px 8px 0;font-size:0.85rem;font-style:italic;">${esc(f.result || 'ЦКП не заповнений — попроси керівника функції оновити.')}</div>`
+                },
+                {
+                    num: 2, icon: '👤', title: 'Твій керівник',
+                    content: ownerUser
+                        ? `<div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:#f8fafc;border-radius:8px;">
+                            <div style="width:40px;height:40px;background:#e0e7ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">👤</div>
+                            <div><div style="font-weight:700;">${esc(ownerUser.name || ownerUser.email)}</div>
+                            <div style="font-size:0.8rem;color:#6b7280;">${esc(f.contacts || ownerUser.email || '')}</div></div></div>`
+                        : `<p style="color:#ef4444;">⚠️ Власник функції не призначений. Зверніться до адміністратора.</p>`
+                },
+                {
+                    num: 3, icon: '📋', title: 'Твоя функція',
+                    content: `<p style="font-size:0.85rem;color:#374151;margin:0 0 0.5rem;">${esc(f.description || 'Опис функції не заповнений.')}</p>
+                    ${f.keywords?.length ? `<div style="display:flex;flex-wrap:wrap;gap:4px;">${f.keywords.map(k => `<span style="background:#eff6ff;color:#1d4ed8;border-radius:4px;padding:2px 8px;font-size:0.75rem;">${esc(k)}</span>`).join('')}</div>` : ''}`
+                },
+                {
+                    num: 4, icon: '🏢', title: 'Місце в компанії',
+                    content: reportsToFunc
+                        ? `<p style="font-size:0.85rem;">Функція <strong>${esc(f.name)}</strong> підпорядковується: <strong>${esc(reportsToFunc.name)}</strong></p>
+                           <p style="font-size:0.82rem;color:#6b7280;">Власник вищої функції: ${esc(users.find(u=>u.id===reportsToFunc.headId)?.name || '—')}</p>`
+                        : `<p style="font-size:0.85rem;color:#6b7280;">Функція не має явного підпорядкування. Перегляньте схему в розділі <strong>Система → Структура → Канвас</strong>.</p>`
+                },
+                {
+                    num: 5, icon: '🔗', title: 'З ким взаємодієш',
+                    content: f.communicatesWith?.length
+                        ? `<div style="display:flex;flex-direction:column;gap:0.4rem;">${f.communicatesWith.map(cw => {
+                            const cf = functions.find(fn => fn.id === cw.functionId);
+                            if (!cf) return '';
+                            const cfOwner = users.find(u => u.id === cf.headId);
+                            const arrow = cw.direction === 'outgoing' ? '→' : cw.direction === 'incoming' ? '←' : '↔';
+                            return `<div style="padding:0.5rem 0.75rem;background:#f3f0ff;border-radius:8px;font-size:0.82rem;">
+                                <strong>${arrow} ${esc(cf.name)}</strong>${cfOwner ? ` (${esc(cfOwner.name || cfOwner.email)})` : ''}
+                                ${cw.topics?.length ? `<span style="color:#7c3aed;"> — ${esc(cw.topics.join(', '))}</span>` : ''}
+                            </div>`;
+                        }).filter(Boolean).join('')}</div>`
+                        : `<p style="font-size:0.85rem;color:#6b7280;">Комунікаційні лінії не налаштовані. Перегляньте схему в Структурі.</p>`
+                },
+                {
+                    num: 6, icon: '🔄', title: 'Регулярні задачі',
+                    content: funcRegularTasks.length
+                        ? `<div style="display:flex;flex-direction:column;gap:0.3rem;">${funcRegularTasks.slice(0,5).map(rt => {
+                            const time = (rt.timeStart || rt.time || '') + (rt.timeEnd ? '–'+rt.timeEnd : '');
+                            const period = rt.period === 'daily' ? 'щодня' : rt.period === 'weekly' ? 'щотижня' : 'щомісяця';
+                            return `<div style="padding:0.4rem 0.6rem;background:#f0f9ff;border-radius:6px;font-size:0.82rem;">
+                                <strong>${esc(rt.title)}</strong> <span style="color:#6b7280;">${period}${time ? ' · '+time : ''}</span></div>`;
+                        }).join('')}${funcRegularTasks.length > 5 ? `<p style="font-size:0.75rem;color:#9ca3af;">+${funcRegularTasks.length-5} більше...</p>` : ''}</div>`
+                        : `<p style="font-size:0.85rem;color:#6b7280;">Регулярних задач поки немає.</p>`
+                },
+                {
+                    num: 7, icon: '✅', title: 'Перші задачі',
+                    content: funcTasks.length
+                        ? `<div style="display:flex;flex-direction:column;gap:0.3rem;">${funcTasks.map(t => `<div style="padding:0.4rem 0.6rem;background:#f9fafb;border-radius:6px;font-size:0.82rem;display:flex;justify-content:space-between;">
+                            <span>${esc(t.title)}</span>
+                            <span style="color:#6b7280;font-size:0.75rem;">${t.deadlineDate || ''}</span></div>`).join('')}</div>`
+                        : `<p style="font-size:0.85rem;color:#6b7280;">Активних задач в цій функції немає.</p>`
+                },
+                {
+                    num: 8, icon: '🎓', title: 'Навчання',
+                    content: funcLessons.length
+                        ? `<p style="font-size:0.85rem;margin:0 0 0.5rem;">Уроки для твоєї функції (${funcLessons.length}):</p>
+                           <div style="display:flex;flex-direction:column;gap:0.3rem;">${funcLessons.slice(0,4).map(l => `<div style="padding:0.4rem 0.6rem;background:#fdf4ff;border-radius:6px;font-size:0.82rem;">🎓 ${esc(l.title || l.name || '')}</div>`).join('')}</div>`
+                        : `<p style="font-size:0.85rem;color:#6b7280;">Перейди до розділу <strong>Навчання</strong> і пройди уроки, що стосуються твоєї ролі.</p>`
+                },
+                {
+                    num: 9, icon: '👥', title: 'Команда функції',
+                    content: funcUsers.length
+                        ? `<div style="display:flex;flex-wrap:wrap;gap:0.5rem;">${funcUsers.map(u => `<div style="padding:0.4rem 0.75rem;background:#f0fdf4;border-radius:8px;font-size:0.82rem;display:flex;align-items:center;gap:0.4rem;">
+                            <span>👤</span><span>${esc(u.name || u.email)}</span></div>`).join('')}</div>`
+                        : `<p style="font-size:0.85rem;color:#6b7280;">Учасників функції не знайдено.</p>`
+                }
+            ];
+
+            // Render checklist
+            body.innerHTML = `
+                <div style="margin-bottom:1rem;padding:0.75rem;background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:10px;color:white;">
+                    <div style="font-size:0.75rem;opacity:0.8;margin-bottom:2px;">Функція</div>
+                    <div style="font-weight:700;font-size:1rem;">${esc(f.name)}</div>
+                    ${f.result ? `<div style="font-size:0.78rem;opacity:0.85;margin-top:4px;font-style:italic;">${esc(f.result)}</div>` : ''}
+                </div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                ${steps.map(s => `
+                    <details style="background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+                        <summary style="display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.9rem;cursor:pointer;font-weight:600;font-size:0.88rem;list-style:none;user-select:none;">
+                            <span style="min-width:24px;height:24px;background:#e0e7ff;color:#4338ca;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0;">${s.num}</span>
+                            <span style="font-size:1rem;flex-shrink:0;">${s.icon}</span>
+                            <span style="flex:1;">${s.title}</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" style="flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div style="padding:0.6rem 0.9rem 0.75rem;border-top:1px solid #e5e7eb;">
+                            ${s.content}
+                        </div>
+                    </details>
+                `).join('')}
+                </div>
+                ${f.onboardingChecklist?.length ? `
+                <div style="margin-top:1rem;padding:0.75rem;background:#fffbeb;border-radius:10px;border:1px solid #fde68a;">
+                    <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">📝 Специфічний чекліст функції</div>
+                    ${f.onboardingChecklist.map(item => `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;font-size:0.82rem;">
+                        <input type="checkbox" style="accent-color:#f59e0b;"> <span>${esc(item)}</span>
+                    </div>`).join('')}
+                </div>` : ''}
+            `;
+
+            modal.style.display = 'block';
+            if (typeof refreshIcons === 'function') refreshIcons();
+        };

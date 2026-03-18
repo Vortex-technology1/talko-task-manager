@@ -2301,6 +2301,19 @@ document.addEventListener('mousedown', function(e) {
         </div>
     </div>
 
+    <!-- EMPLOYEE ONBOARDING MODAL (ТЗ пріоритет 10) -->
+    <div id="employeeOnboardingModal" class="modal" role="dialog" aria-modal="true">
+        <div class="modal-content" style="max-width:600px;">
+            <div class="modal-header">
+                <button class="close" onclick="closeModal('employeeOnboardingModal')" aria-label="Закрити">&times;</button>
+                <h2><i data-lucide="user-check" class="icon"></i> Онбординг співробітника</h2>
+            </div>
+            <div class="modal-body">
+                <div id="employeeOnboardingBody" style="max-height:70vh;overflow-y:auto;"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- PROCESS TEMPLATES MODAL -->
     <div id="processTemplatesModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="processTemplatesModalTitle">
         <div class="modal-content" style="max-width:700px;">
