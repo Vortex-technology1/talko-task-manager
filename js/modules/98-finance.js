@@ -4313,18 +4313,20 @@ window._financeDeleteTx = async function(txId, type) {
     if (!snap.exists) return;
     const tx = snap.data();
 
-    await colRef('finance_transactions').doc(txId).delete();
-
-    // Відкатуємо баланс — використовуємо amountBase (базова валюта) як і при збереженні
-    // FIX BP: tx.amount — оригінальна валюта; баланс рахунку в базовій → потрібно txAmt
+    // Атомарно: видаляємо транзакцію + відкатуємо баланс через batch
     if (tx.accountId && tx.amount) {
-      const baseAmt = txAmt(tx); // враховує amountBase або конвертує через курс
+      const baseAmt = txAmt(tx);
       const delta = tx.type === 'income' ? -baseAmt : baseAmt;
-      await colRef('finance_accounts').doc(tx.accountId).update({
+      const delBatch = getDb().batch();
+      delBatch.delete(colRef('finance_transactions').doc(txId));
+      delBatch.update(colRef('finance_accounts').doc(tx.accountId), {
         balance: firebase.firestore.FieldValue.increment(delta)
       });
+      await delBatch.commit();
       const acc = _state.accounts.find(a => a.id === tx.accountId);
       if (acc) acc.balance = (acc.balance || 0) + delta;
+    } else {
+      await colRef('finance_transactions').doc(txId).delete();
     }
 
     // Оновлюємо список

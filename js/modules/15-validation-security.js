@@ -5,8 +5,20 @@
         // Санітизація HTML для захисту від XSS
 'use strict';
         function deepCloneTask(task) {
-            try { return structuredClone(task); } 
-            catch(e) { return JSON.parse(JSON.stringify(task)); }
+            // structuredClone не підтримує Firestore Timestamp — клонуємо вручну
+            try {
+                const clone = { ...task };
+                // Зберігаємо Timestamp об'єкти як є (by reference — для rollback OK)
+                // Масиви клонуємо щоб уникнути мутацій
+                for (const key of Object.keys(clone)) {
+                    if (Array.isArray(clone[key])) {
+                        clone[key] = [...clone[key]];
+                    }
+                }
+                return clone;
+            } catch(e) {
+                return { ...task };
+            }
         }
         
         function sanitizeHTML(str) {

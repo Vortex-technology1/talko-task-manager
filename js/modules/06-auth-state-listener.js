@@ -185,6 +185,37 @@
             } else {
                 window.currentUser = null;    // cleanup аліасів
                 window.currentCompany = null;
+
+                // ── LOGOUT CLEANUP ─────────────────────────────
+                // Скидаємо стан завантаження щоб re-login міг запустити loadAllData
+                try {
+                    if (typeof isLoading !== 'undefined') isLoading = false;
+                    if (typeof loadingVersion !== 'undefined') loadingVersion = 0;
+                } catch(e) {}
+                // Очищаємо дані щоб не показувати чужі дані при re-login
+                try {
+                    if (typeof tasks !== 'undefined') tasks = [];
+                    if (typeof users !== 'undefined') users = [];
+                    if (typeof functions !== 'undefined') functions = [];
+                    if (typeof processes !== 'undefined') processes = [];
+                    if (typeof projects !== 'undefined') projects = [];
+                    if (typeof regularTasks !== 'undefined') regularTasks = [];
+                    if (typeof processTemplates !== 'undefined') processTemplates = [];
+                } catch(e) {}
+
+                // Закриваємо всі Firestore listeners
+                try {
+                    if (typeof window.tasksUnsubscribe === 'function') { window.tasksUnsubscribe(); window.tasksUnsubscribe = null; }
+                    if (typeof window.completedTasksUnsubscribe === 'function') { window.completedTasksUnsubscribe(); window.completedTasksUnsubscribe = null; }
+                    if (typeof window._managerTasksUnsub === 'function') { window._managerTasksUnsub(); window._managerTasksUnsub = null; }
+                    if (typeof reviewTasksUnsubscribe === 'function') { reviewTasksUnsubscribe(); reviewTasksUnsubscribe = null; }
+                    if (typeof rejectedTasksUnsubscribe === 'function') { rejectedTasksUnsubscribe(); rejectedTasksUnsubscribe = null; }
+                    // CRM, warehouse, bots, booking мають власний cleanup при закритті своїх модулів
+                    if (window.crm?.dealUnsub) { window.crm.dealUnsub(); window.crm.dealUnsub = null; }
+                    if (window._wh?.listeners?.length) { window._wh.listeners.forEach(u => u && u()); window._wh.listeners = []; }
+                } catch(e) { console.warn('[Logout] cleanup error:', e.message); }
+                // ── END LOGOUT CLEANUP ──────────────────────────
+
                 document.getElementById('loadingPage').style.display = 'none';
                 document.getElementById('authPage').style.display = 'flex'; document.getElementById('mainHeader') && (document.getElementById('mainHeader').style.display = 'none');
                 document.getElementById('mainInterface').style.display = 'none';
