@@ -101,18 +101,298 @@ window.renderEstimateTab = function() {
             style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:${window._estimateActiveTab==='norms'?'#3b82f6':'white'};color:${window._estimateActiveTab==='norms'?'white':'#374151'};">
             ${_estIco.ruler} Довідник норм
           </button>
+          <button onclick="estimateSwitchSubTab('howto')" id="estTabHowto"
+            style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:${window._estimateActiveTab==='howto'?'#3b82f6':'white'};color:${window._estimateActiveTab==='howto'?'white':'#374151'};">
+            ${_estIco.info} Як це працює
+          </button>
         </div>
       </div>
       <div id="estimateSubContent"></div>
     </div>`;
 
     if (window._estimateActiveTab === 'list') renderEstimateListView();
-    else renderEstimateNormsView();
+    else if (window._estimateActiveTab === 'norms') renderEstimateNormsView();
+    else if (window._estimateActiveTab === 'howto') renderEstimateHowtoView();
 };
 
 window.estimateSwitchSubTab = function(tab) {
     window._estimateActiveTab = tab;
     renderEstimateTab();
+};
+
+// ══════════════════════════════════════════════════════════════
+// РОЗДІЛ 0 — ЯК ЦЕ ПРАЦЮЄ
+// ══════════════════════════════════════════════════════════════
+window.renderEstimateHowtoView = function() {
+    const sub = document.getElementById('estimateSubContent');
+    if (!sub) return;
+
+    const s = (color, text) => `<span style="background:${color}18;color:${color};padding:1px 7px;border-radius:4px;font-size:0.78rem;font-weight:600;">${text}</span>`;
+    const code = (text) => `<span style="background:#f1f5f9;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:0.78rem;color:#374151;">${text}</span>`;
+    const path = (text) => `<span style="background:#f0f9ff;border:1px solid #bae6fd;padding:2px 8px;border-radius:4px;font-size:0.78rem;color:#0369a1;font-weight:600;">${text}</span>`;
+
+    sub.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:1.25rem;max-width:860px;">
+
+      <!-- ЗАГОЛОВОК -->
+      <div style="background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-radius:14px;padding:1.5rem;color:white;">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">Модуль Кошторис — що це і навіщо</div>
+        <div style="font-size:0.85rem;line-height:1.7;opacity:0.92;">
+          Кошторис вирішує одну головну проблему: <b>власник не знає заздалегідь скільки матеріалів потрібно і скільки вони коштують.</b>
+          Замовили не те або не стільки — об'єкт стоїть, клієнт злий, термінова доплата.
+          Цей модуль дозволяє за 5 хвилин отримати точну специфікацію матеріалів для будь-якого об'єкту,
+          побачити що є на складі, чого не вистачає і скільки треба докупити в гривнях.
+        </div>
+      </div>
+
+      <!-- ПРОБЛЕМИ ЯКІ ВИРІШУЄ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+          ${_estIco.warning} Які проблеми вирішує
+        </div>
+        <div style="display:grid;gap:0.5rem;">
+          ${[
+            ['Купили не те або не стільки', 'Об\'єкт стоїть, термінова доплата за матеріали', 'Розрахунок до старту робіт — точна специфікація по кожному типу роботи'],
+            ['Склад є але ніхто не знає що там', 'Купили матеріал який вже є на складі — гроші заморожені', 'Кошторис показує залишки зі складу і дефіцит в реальному часі'],
+            ['Рахують у голові або в Excel', 'Версії розходяться, файл у одного чоловіка, він у відпустці', 'Одна система для всіх, оновлюється автоматично'],
+            ['Не знають скільки коштують матеріали по об\'єкту', 'Не можуть порівняти план і факт, не видно де перевитрата', 'Кожен кошторис — це окремий фінансовий запис у системі'],
+          ].map(([pain, impact, fix]) => `
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;border:1px solid #f3f4f6;border-radius:10px;overflow:hidden;">
+            <div style="padding:0.65rem 0.85rem;background:#fef2f2;">
+              <div style="font-size:0.7rem;font-weight:700;color:#dc2626;margin-bottom:0.25rem;">ПРОБЛЕМА</div>
+              <div style="font-size:0.8rem;color:#7f1d1d;">${pain}</div>
+            </div>
+            <div style="padding:0.65rem 0.85rem;background:#fff7ed;">
+              <div style="font-size:0.7rem;font-weight:700;color:#ea580c;margin-bottom:0.25rem;">НАСЛІДОК</div>
+              <div style="font-size:0.8rem;color:#7c2d12;">${impact}</div>
+            </div>
+            <div style="padding:0.65rem 0.85rem;background:#f0fdf4;">
+              <div style="font-size:0.7rem;font-weight:700;color:#16a34a;margin-bottom:0.25rem;">РІШЕННЯ</div>
+              <div style="font-size:0.8rem;color:#14532d;">${fix}</div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- ОСНОВНА ЛОГІКА -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+          ${_estIco.gear} Основна логіка — як система рахує
+        </div>
+        <div style="font-size:0.85rem;color:#374151;line-height:1.7;margin-bottom:1rem;">
+          Система побудована на <b>нормах витрат</b> — скільки матеріалу потрібно на одиницю роботи.
+          Ти один раз вказуєш норму, а далі просто вводиш об'єм — система рахує все сама.
+        </div>
+        <div style="background:#f8fafc;border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid #e2e8f0;">
+          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;margin-bottom:0.6rem;">ПРИКЛАД НОРМИ:</div>
+          <div style="font-family:monospace;font-size:0.8rem;line-height:1.9;color:#1e293b;">
+            Тип роботи: <b>Фундаментна плита</b><br>
+            Вхідна одиниця: <b>м²</b> (площа фундаменту)<br>
+            Доп. параметр: <b>товщина (м)</b><br>
+            ──────────────────────────────<br>
+            Бетон B25 &nbsp;&nbsp;&nbsp;&nbsp; → <b>0.30 м³</b> на 1 м² при товщині 1 м<br>
+            Арматура А500 → <b>120 кг</b> &nbsp;на 1 м² при товщині 1 м<br>
+            Опалубка &nbsp;&nbsp;&nbsp;&nbsp; → <b>2.50 м²</b> на 1 м²
+          </div>
+        </div>
+        <div style="background:#f8fafc;border-radius:10px;padding:1rem;border:1px solid #e2e8f0;">
+          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;margin-bottom:0.6rem;">ФОРМУЛА РОЗРАХУНКУ:</div>
+          <div style="font-family:monospace;font-size:0.8rem;line-height:2;color:#1e293b;">
+            Потрібно = Площа × Товщина × Норма<br>
+            ──────────────────────────────────────────────<br>
+            Об'єкт: <b>200 м²</b>, товщина <b>0.35 м</b><br>
+            ──────────────────────────────────────────────<br>
+            Бетон: &nbsp;&nbsp; 200 × 0.35 × 0.30 = <b style="color:#2563eb;">21.0 м³</b><br>
+            Арматура: 200 × 0.35 × 120 &nbsp;= <b style="color:#2563eb;">8 400 кг</b><br>
+            Опалубка: 200 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; × 2.50 &nbsp;= <b style="color:#2563eb;">500 м²</b>
+          </div>
+        </div>
+      </div>
+
+      <!-- ЗВ'ЯЗКИ З ІНШИМИ МОДУЛЯМИ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+          ${_estIco.folder} Зв'язки з іншими модулями
+        </div>
+        <div style="display:grid;gap:0.75rem;">
+
+          <div style="border:1px solid #bae6fd;border-radius:10px;overflow:hidden;">
+            <div style="background:#f0f9ff;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#0369a1;">Склад ${path('Бізнес → Склад')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              <b>Що відбувається:</b> кожен матеріал у нормі прив'язується до позиції на складі.
+              При відкритті кошторису система автоматично дивиться актуальні залишки і показує дефіцит.<br>
+              <b>Кнопка "Оновити залишки"</b> — якщо завезли матеріал поки кошторис відкритий, оновлює дані.<br>
+              <b>Кнопка "Списати матеріали"</b> — після завершення робіт залишки на складі зменшуються автоматично,
+              у журналі складу з'являється запис: звідки списано, який кошторис, який проект.
+            </div>
+          </div>
+
+          <div style="border:1px solid #bbf7d0;border-radius:10px;overflow:hidden;">
+            <div style="background:#f0fdf4;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#10b981;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#065f46;">Проекти ${path('Проекти → проект → вкладка Кошторис')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              При створенні кошторису вибираєш до якого проекту він належить.
+              Після цього у вкладці "Кошторис" всередині проекту видно: бюджет матеріалів, дефіцит, статус кошторису.
+              Власник бачить стан матеріалів по об'єкту не виходячи з картки проекту.
+              При затвердженні — поле "Бюджет матеріалів" в проекті оновлюється автоматично.
+            </div>
+          </div>
+
+          <div style="border:1px solid #fed7aa;border-radius:10px;overflow:hidden;">
+            <div style="background:#fff7ed;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#f97316;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#c2410c;">Фінанси ${path('Бізнес → Фінанси → Транзакції')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              <b>Затвердив кошторис</b> → автоматично створюється <b>планова витрата</b> на суму всіх матеріалів.
+              Ти ще нічого не купив — але вже бачиш заплановані витрати у фінансовому звіті. Можна планувати грошовий потік.<br><br>
+              <b>Списав матеріали зі складу</b> → автоматично створюється <b>фактична витрата</b>.
+              У звіті видно план vs факт — де перевитрата і чому.
+            </div>
+          </div>
+
+          <div style="border:1px solid #ddd6fe;border-radius:10px;overflow:hidden;">
+            <div style="background:#f5f3ff;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#8b5cf6;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#5b21b6;">CRM ${path('Бізнес → CRM → картка клієнта')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              При створенні кошторису є поле "Угода CRM" — прив'язуєш до клієнта.
+              Менеджер з продажу відкриває картку клієнта і бачить кошторис — може коректно озвучити вартість матеріалів.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- СХЕМА ЗВ'ЯЗКІВ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Схема — як все пов'язано</div>
+        <div style="background:#f8fafc;border-radius:10px;padding:1.25rem;font-family:monospace;font-size:0.78rem;line-height:2;color:#1e293b;">
+          ${path('Довідник норм')} &nbsp;← один раз для всього бізнесу<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+          ${path('Кошторис')} &nbsp;← окремо на кожен об'єкт<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+          ${path('Проект')} &nbsp;${path('Склад')} &nbsp;${path('Фінанси')} &nbsp;${path('CRM')}<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;залишки &nbsp;&nbsp;план/факт<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;дефіцит &nbsp;&nbsp;транзакції
+        </div>
+      </div>
+
+      <!-- ПОКРОКОВЕ НАЛАШТУВАННЯ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+          ${_estIco.check} Покрокове налаштування з нуля
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+          ${[
+            ['1','#3b82f6','Заповни склад (якщо ще не зроблено)',
+              `${path('Бізнес → Склад → + Додати товар')}`,
+              'Додай всі матеріали які використовуєш: бетон, арматура, цегла, цемент тощо. Для кожного вкажи: назву, одиницю виміру (м³, кг, шт), поточний залишок і мінімальний запас (система попередить коли менше).',
+              'Без позицій на складі система не зможе показати дефіцит — буде рахувати ніби нічого немає.'],
+            ['2','#8b5cf6','Заповни Довідник норм — один раз для всього бізнесу',
+              `${path('Бізнес → Кошторис → Довідник норм')}`,
+              '<b>Швидкий старт:</b> натисни "Завантажити стандартні" → вибери нішу (Будівництво / Ремонт / Металоконструкції) → норми заповняться автоматично.<br><br><b>Власні норми:</b> "+ Додати норму" → вкажи назву, вхідну одиницю, список матеріалів з нормативами.<br><br><b>ОБОВ\'ЯЗКОВО</b> для кожного матеріалу в нормі вибери "Позиція складу" — прив\'яжи до реальної позиції зі складу. Саме звідси береться інформація про залишки.',
+              'Після завантаження стандартних норм — відредагуй нормативи під реальні цифри свого бізнесу. У кожного підрядника свої витрати.'],
+            ['3','#f59e0b','Створи проект для об\'єкту',
+              `${path('Проекти → + Новий проект')}`,
+              'Вкажи назву об\'єкту (наприклад адресу або ім\'я клієнта). Проект потрібен щоб прив\'язати кошторис і бачити стан матеріалів прямо в картці об\'єкту.',
+              'Якщо проект вже є — цей крок пропускаєш.'],
+            ['4','#10b981','Створи кошторис для об\'єкту',
+              `${path('Бізнес → Кошторис → Кошториси → + Новий кошторис')}`,
+              '1. Введи назву кошторису (адреса або назва об\'єкту)<br>2. Вибери проект зі списку<br>3. Опціонально: вибери угоду CRM (клієнта)<br>4. Натисни "+ Додати тип роботи"<br>5. Вибери норму з довідника<br>6. Введи об\'єм (наприклад 150 м²)<br>7. Якщо є товщина — введи<br>8. Система автоматично рахує таблицю матеріалів<br>9. Введи ціни в колонку "Ціна/од"<br>10. Повтори кроки 4-9 для кожного типу роботи',
+              'Можна додати скільки завгодно типів робіт в один кошторис. Підсумок по бюджету рахується по всіх секціях разом.'],
+            ['5','#ef4444','Затверди кошторис',
+              '',
+              'Натисни "Затвердити кошторис".<br>Що відбувається автоматично:<br>• Статус змінюється на "Затверджено"<br>• У Фінансах з\'являється планова витрата на суму матеріалів<br>• У проекті оновлюється поле "Бюджет матеріалів"',
+              'До затвердження кошторис — чернетка. Можна редагувати скільки завгодно. Після затвердження — фіксується у фінансах.'],
+            ['6','#6b7280','В процесі роботи: оновлюй залишки',
+              `${path('Кошторис → Оновити залишки')}`,
+              'Якщо завезли матеріали на склад поки об\'єкт в роботі — натисни "Оновити залишки". Дефіцит перерахується з урахуванням нового надходження.',
+              ''],
+            ['7','#1d4ed8','Після завершення: спиши матеріали',
+              `${path('Проекти → проект → Кошторис → Списати матеріали')}`,
+              'Натисни "Списати матеріали".<br>Що відбувається автоматично:<br>• Залишки на складі зменшуються<br>• У журналі складу — запис з прив\'язкою до кошторису і проекту<br>• У Фінансах — фактична витрата<br>• Кошторис переходить у статус "Виконано"',
+              ''],
+          ].map(([num, color, title, pathHtml, desc, tip]) => `
+          <div style="border:1px solid #f3f4f6;border-radius:10px;overflow:hidden;">
+            <div style="background:#f9fafb;padding:0.65rem 1rem;display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid #f3f4f6;">
+              <div style="width:26px;height:26px;background:${color};color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.82rem;flex-shrink:0;">${num}</div>
+              <div>
+                <div style="font-weight:700;font-size:0.88rem;color:#111827;">${title}</div>
+                ${pathHtml ? `<div style="margin-top:2px;">${pathHtml}</div>` : ''}
+              </div>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">${desc}</div>
+            ${tip ? `<div style="padding:0.5rem 1rem;background:#fffbeb;border-top:1px solid #fde68a;font-size:0.78rem;color:#92400e;display:flex;gap:0.4rem;align-items:flex-start;">${_estIco.warning} <span>${tip}</span></div>` : ''}
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- ТИПОВІ ПОМИЛКИ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+          ${_estIco.info} Типові помилки і як уникнути
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          ${[
+            ['Матеріал є на складі але дефіцит все одно показує', 'Матеріал не прив\'язаний до позиції складу в нормі', 'Довідник норм → відкрий норму → для кожного матеріалу вибери "Позиція складу"'],
+            ['Кошторис не видно у вкладці Кошторис в проекті', 'При створенні кошторису не вибрали проект', 'Відкрий кошторис → редагуй → вибери проект → збережи'],
+            ['Фінанси не оновились після затвердження', 'Натиснули "Зберегти" замість "Затвердити"', 'Відкрий кошторис → натисни "Затвердити кошторис" (зелена кнопка)'],
+            ['Норми не відповідають реальним витратам', 'Стандартні норми — усереднені, у кожного бізнесу свої цифри', 'Після першого об\'єкту порівняй план і факт, відредагуй нормативи під свої реальні дані'],
+            ['Списали матеріали але склад не змінився', 'Матеріал не прив\'язаний до складу або залишок був 0', 'Перевір прив\'язку в Довіднику норм і фактичний залишок на складі'],
+          ].map(([problem, cause, fix]) => `
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid #f3f4f6;border-radius:8px;overflow:hidden;font-size:0.79rem;">
+            <div style="padding:0.6rem 0.8rem;background:#fef2f2;border-right:1px solid #f3f4f6;">
+              <div style="font-size:0.68rem;font-weight:700;color:#dc2626;margin-bottom:2px;">СИМПТОМ</div>
+              <div style="color:#7f1d1d;">${problem}</div>
+            </div>
+            <div style="padding:0.6rem 0.8rem;background:#fff7ed;border-right:1px solid #f3f4f6;">
+              <div style="font-size:0.68rem;font-weight:700;color:#ea580c;margin-bottom:2px;">ПРИЧИНА</div>
+              <div style="color:#7c2d12;">${cause}</div>
+            </div>
+            <div style="padding:0.6rem 0.8rem;background:#f0fdf4;">
+              <div style="font-size:0.68rem;font-weight:700;color:#16a34a;margin-bottom:2px;">ДІЯ</div>
+              <div style="color:#14532d;">${fix}</div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- РЕЗУЛЬТАТ -->
+      <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#065f46;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+          ${_estIco.check} Що отримуєш через місяць роботи
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          ${[
+            'Знаєш точну собівартість матеріалів по кожному об\'єкту',
+            'Бачиш план vs факт — де перевитрата і чому',
+            'Склад не пустіє несподівано — дефіцит видно заздалегідь',
+            'Менеджери бачать кошторис в CRM — правильно озвучують вартість клієнту',
+            'Фінансовий звіт формується автоматично без ручного введення',
+            'Прораб не тримає все в голові — норми і розрахунки в системі',
+          ].map(r => `
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;padding:0.5rem 0.75rem;background:white;border-radius:8px;font-size:0.82rem;color:#166534;">
+            ${_estIco.ok} <span>${r}</span>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:1rem;text-align:center;">
+          <button onclick="estimateSwitchSubTab('norms')"
+            style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.65rem 1.5rem;background:#10b981;color:white;border:none;border-radius:9px;font-size:0.9rem;font-weight:700;cursor:pointer;">
+            ${_estIco.ruler} Почати — заповнити Довідник норм
+          </button>
+        </div>
+      </div>
+
+    </div>`; // end sub.innerHTML
 };
 
 // ══════════════════════════════════════════════════════════════
