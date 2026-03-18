@@ -120,6 +120,16 @@ const TG_LANG = {
         langMenuTitle: '🌐 <b>Мова сповіщень</b>',
         langCurrent: 'Поточна',
         langChange: '<b>Змінити:</b>',
+        hoursShort: 'год',
+        newProcessStep: 'Новий етап процесу!',
+        stepLabel: 'Етап',
+        processProgress: '📊 Прогрес процесу',
+        completed: 'завершено',
+        eveningReport: 'Вечірній звіт',
+        planVsFact: 'План vs Факт',
+        eveningDone: 'Виконано',
+        eveningMissed: 'Не виконано',
+        eveningTomorrow: 'На завтра',
     },
     ru: {
         taskDone: '✅ <b>Задача выполнена!</b>',
@@ -216,6 +226,16 @@ const TG_LANG = {
         langMenuTitle: '🌐 <b>Язык уведомлений</b>',
         langCurrent: 'Текущий',
         langChange: '<b>Изменить:</b>',
+        hoursShort: 'ч',
+        newProcessStep: 'Новый этап процесса!',
+        stepLabel: 'Этап',
+        processProgress: '📊 Прогресс процесса',
+        completed: 'завершён',
+        eveningReport: 'Вечерний отчёт',
+        planVsFact: 'План vs Факт',
+        eveningDone: 'Выполнено',
+        eveningMissed: 'Не выполнено',
+        eveningTomorrow: 'На завтра',
     },
     en: {
         taskDone: '✅ <b>Task completed!</b>',
@@ -312,6 +332,16 @@ const TG_LANG = {
         langMenuTitle: '🌐 <b>Notification language</b>',
         langCurrent: 'Current',
         langChange: '<b>Change:</b>',
+        hoursShort: 'h',
+        newProcessStep: 'New process step!',
+        stepLabel: 'Step',
+        processProgress: '📊 Process progress',
+        completed: 'completed',
+        eveningReport: 'Evening report',
+        planVsFact: 'Plan vs Fact',
+        eveningDone: 'Completed',
+        eveningMissed: 'Missed',
+        eveningTomorrow: 'Tomorrow',
     },
     pl: {
         taskDone: '✅ <b>Zadanie wykonane!</b>',
@@ -408,6 +438,16 @@ const TG_LANG = {
         langMenuTitle: '🌐 <b>Język powiadomień</b>',
         langCurrent: 'Aktualny',
         langChange: '<b>Zmień:</b>',
+        hoursShort: 'h',
+        newProcessStep: 'Nowy etap procesu!',
+        stepLabel: 'Etap',
+        processProgress: '📊 Postęp procesu',
+        completed: 'ukończono',
+        eveningReport: 'Raport wieczorny',
+        planVsFact: 'Plan vs Fakt',
+        eveningDone: 'Wykonano',
+        eveningMissed: 'Niewykonane',
+        eveningTomorrow: 'Na jutro',
     },
     de: {
         taskDone: '✅ <b>Aufgabe erledigt!</b>',
@@ -504,6 +544,16 @@ const TG_LANG = {
         langMenuTitle: '🌐 <b>Benachrichtigungssprache</b>',
         langCurrent: 'Aktuell',
         langChange: '<b>Ändern:</b>',
+        hoursShort: 'Std',
+        newProcessStep: 'Neuer Prozessschritt!',
+        stepLabel: 'Schritt',
+        processProgress: '📊 Prozessfortschritt',
+        completed: 'abgeschlossen',
+        eveningReport: 'Abendbericht',
+        planVsFact: 'Plan vs Ist',
+        eveningDone: 'Erledigt',
+        eveningMissed: 'Nicht erledigt',
+        eveningTomorrow: 'Morgen',
     },
     cs: {
         taskDone: '✅ <b>Úkol dokončen!</b>',
@@ -600,6 +650,16 @@ const TG_LANG = {
         langMenuTitle: '🌐 <b>Jazyk oznámení</b>',
         langCurrent: 'Aktuální',
         langChange: '<b>Změnit:</b>',
+        hoursShort: 'h',
+        newProcessStep: 'Nový krok procesu!',
+        stepLabel: 'Krok',
+        processProgress: '📊 Průběh procesu',
+        completed: 'dokončeno',
+        eveningReport: 'Večerní zpráva',
+        planVsFact: 'Plán vs Skutečnost',
+        eveningDone: 'Dokončeno',
+        eveningMissed: 'Nesplněno',
+        eveningTomorrow: 'Zítra',
     },
 };
 
@@ -1607,18 +1667,17 @@ exports.checkOverdueTasks = functions
                 if (task.overdueNotified) continue;
 
                 const overdueMinutes = Math.floor((now - deadline) / (1000 * 60));
-                let taskType = '📋 Розпорядження';
-                if (task.processId) taskType = '🟣 Бізнес-процес';
-                else if (task.regularTaskId) taskType = '🟠 Регулярна задача';
-
+                // taskType визначається per-user мовою нижче
                 // Notify assignee
                 if (task.assigneeId) {
                     const userDoc = await db.collection('companies').doc(companyId)
                         .collection('users').doc(task.assigneeId).get();
                     if (userDoc.exists && userDoc.data().telegramChatId) {
+                        const assigneeLang = await getUserLang(companyId, task.assigneeId);
+                        const assigneeTaskType = task.processId ? tg(assigneeLang, 'taskType_process') : (task.regularTaskId ? tg(assigneeLang, 'taskType_regular') : tg(assigneeLang, 'taskType_task'));
                         await sendWithButtons(userDoc.data().telegramChatId,
-                            `⚠️ <b>ПРОСТРОЧЕНО!</b>\n\n${taskType}\n📌 ${task.title}\n⏰ Прострочено на ${overdueMinutes} хв\n\nТерміново виконайте задачу!`,
-                            taskButtons(taskDoc.id, companyId)
+                            `${tg(assigneeLang, 'overdueTaskAlert')}\n\n${assigneeTaskType}\n📌 ${task.title}\n⏰ +${overdueMinutes} ${tg(assigneeLang, 'minutesShort')}`,
+                            taskButtons(taskDoc.id, companyId, assigneeLang)
                         );
                     }
                 }
@@ -1841,9 +1900,10 @@ exports.onProcessTaskCompleted = functions
                 const aDoc = await db.collection('companies').doc(companyId)
                     .collection('users').doc(assigneeId).get();
                 if (aDoc.exists && aDoc.data().telegramChatId) {
+                    const procAssigneeLang = await getUserLang(companyId, assigneeId);
                     await sendWithButtons(aDoc.data().telegramChatId,
-                        `🔔 <b>Новий етап процесу!</b>\n\n📋 ${process.name}${process.objectName ? ` [${process.objectName}]` : ''}\n📍 Етап ${nextStepIndex + 1}/${template.steps.length}: ${nextStep.title || nextStep.function}\n⏰ Дедлайн: ${deadlineDateStr}\n${nextStep.expectedResult ? `\n📋 ${nextStep.expectedResult}` : ''}`,
-                        taskButtons(newTaskRef.id, companyId)
+                        `🔔 <b>${tg(procAssigneeLang, 'newProcessStep') || 'Новий етап процесу!'}</b>\n\n📋 ${process.name}${process.objectName ? ` [${process.objectName}]` : ''}\n📍 ${tg(procAssigneeLang, 'stepLabel') || 'Етап'} ${nextStepIndex + 1}/${template.steps.length}: ${nextStep.title || nextStep.function}\n⏰ ${tg(procAssigneeLang, 'deadline') || 'Дедлайн'}: ${deadlineDateStr}\n${nextStep.expectedResult ? `\n📋 ${nextStep.expectedResult}` : ''}`,
+                        taskButtons(newTaskRef.id, companyId, procAssigneeLang)
                     );
                 }
             }
@@ -1855,8 +1915,9 @@ exports.onProcessTaskCompleted = functions
                 if (mDoc.id === assigneeId) continue;
                 const d = mDoc.data();
                 if (d.telegramChatId) {
+                    const procMgrLang = await getUserLang(companyId, mDoc.id);
                     await sendTelegramMessage(d.telegramChatId,
-                        `📊 <b>Прогрес процесу</b>\n\n📋 ${process.name}${process.objectName ? ` [${process.objectName}]` : ''}\n✅ Етап ${process.currentStep + 1} завершено\n▶️ Етап ${nextStepIndex + 1}: ${nextStep.title || nextStep.function}\n👤 ${assigneeName || '-'}`
+                        `📊 <b>${tg(procMgrLang, 'processProgress') || 'Прогрес процесу'}</b>\n\n📋 ${process.name}${process.objectName ? ` [${process.objectName}]` : ''}\n✅ ${tg(procMgrLang, 'stepLabel') || 'Етап'} ${process.currentStep + 1} ${tg(procMgrLang, 'completed') || 'завершено'}\n▶️ ${tg(procMgrLang, 'stepLabel') || 'Етап'} ${nextStepIndex + 1}: ${nextStep.title || nextStep.function}\n👤 ${assigneeName || '-'}`
                     );
                 }
             }
@@ -1964,17 +2025,16 @@ exports.sendReminders = functions
                 for (const rem of reminders) {
                     if (minUntil <= rem + 3 && minUntil >= rem - 3 && !sent.includes(rem)) {
                         const timeText = rem >= 60 ? `${Math.floor(rem / 60)} год` : `${rem} хв`;
-                        let taskType = '📋 Розпорядження';
-                        if (task.processId) taskType = '🟣 Процес';
-                        else if (task.regularTaskId) taskType = '🟠 Регулярне';
-
                         if (task.assigneeId) {
                             const uDoc = await db.collection('companies').doc(companyId)
                                 .collection('users').doc(task.assigneeId).get();
                             if (uDoc.exists && uDoc.data().telegramChatId) {
+                                const remLang = await getUserLang(companyId, task.assigneeId);
+                                const remTaskType = task.processId ? tg(remLang, 'taskType_process') : (task.regularTaskId ? tg(remLang, 'taskType_regular') : tg(remLang, 'taskType_task'));
+                                const remTimeText = rem >= 60 ? `${Math.floor(rem / 60)} ${tg(remLang, 'hoursShort') || 'год'}` : `${rem} ${tg(remLang, 'minutesShort') || 'хв'}`;
                                 await sendWithButtons(uDoc.data().telegramChatId,
-                                    `⏰ <b>Нагадування!</b>\n\n${taskType}\n📌 ${task.title}\n⏳ До дедлайну: ${timeText}`,
-                                    taskButtons(taskDoc.id, companyId)
+                                    `${tg(remLang, 'reminderPrefix')}: \n\n${remTaskType}\n📌 ${task.title}\n⏳ ${remTimeText}`,
+                                    taskButtons(taskDoc.id, companyId, remLang)
                                 );
                             }
                         }
@@ -1985,8 +2045,10 @@ exports.sendReminders = functions
                                 const uDoc = await db.collection('companies').doc(companyId)
                                     .collection('users').doc(uid).get();
                                 if (uDoc.exists && uDoc.data().telegramChatId) {
+                                    const ctrlLang = await getUserLang(companyId, uid);
+                                    const ctrlTimeText = rem >= 60 ? `${Math.floor(rem / 60)} ${tg(ctrlLang, 'hoursShort') || 'год'}` : `${rem} ${tg(ctrlLang, 'minutesShort') || 'хв'}`;
                                     await sendTelegramMessage(uDoc.data().telegramChatId,
-                                        `⏰ Контроль: <b>${task.title}</b>\n👤 ${task.assigneeName || '-'}\n⏳ ${timeText}`
+                                        `${tg(ctrlLang, 'escalationPrefix') || '⏰ Контроль'}: <b>${task.title}</b>\n👤 ${task.assigneeName || '-'}\n⏳ ${ctrlTimeText}`
                                     );
                                 }
                             }
@@ -2499,24 +2561,25 @@ exports.eveningDigest = functions
                 const score = planned > 0 ? Math.round((doneToday.length / planned) * 100) : 100;
                 const emoji = score >= 80 ? '🟢' : score >= 50 ? '🟡' : '🔴';
 
-                let msg = `🌆 <b>Вечірній звіт</b>\n👤 ${userName}\n\n`;
-                msg += `${emoji} <b>План vs Факт: ${doneToday.length}/${planned} (${score}%)</b>\n\n`;
+                const evLang = await getUserLang(companyId, uid);
+                let msg = `🌆 <b>${tg(evLang, 'eveningReport') || 'Вечірній звіт'}</b>\n👤 ${userName}\n\n`;
+                msg += `${emoji} <b>${tg(evLang, 'planVsFact') || 'План vs Факт'}: ${doneToday.length}/${planned} (${score}%)</b>\n\n`;
 
                 if (doneToday.length > 0) {
-                    msg += `✅ Виконано (${doneToday.length}):\n`;
+                    msg += `✅ ${tg(evLang, 'eveningDone') || 'Виконано'} (${doneToday.length}):\n`;
                     doneToday.slice(0, 5).forEach(t => { msg += `  • <s>${t.title}</s>\n`; });
-                    if (doneToday.length > 5) msg += `  ... ще ${doneToday.length - 5}\n`;
+                    if (doneToday.length > 5) msg += `  ... ${tg(evLang, 'moreItems') || 'ще'} ${doneToday.length - 5}\n`;
                     msg += `\n`;
                 }
 
                 if (missedToday.length > 0) {
-                    msg += `❌ Не виконано (${missedToday.length}):\n`;
+                    msg += `❌ ${tg(evLang, 'eveningMissed') || 'Не виконано'} (${missedToday.length}):\n`;
                     missedToday.forEach(t => { msg += `  • ${t.title}\n`; });
                     msg += `\n`;
                 }
 
                 if (overdue.length > 0) {
-                    msg += `⚠️ Прострочено (${overdue.length}):\n`;
+                    msg += `⚠️ ${tg(evLang, 'morningOverdue') || 'Прострочено'} (${overdue.length}):\n`;
                     overdue.slice(0, 3).forEach(t => {
                         msg += `  • ${t.title} (📅 ${t.deadlineDate})\n`;
                     });
