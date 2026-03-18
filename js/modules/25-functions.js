@@ -19,6 +19,15 @@
                     document.getElementById('functionName').value = f.name || '';
                     document.getElementById('functionHead').value = f.headId || '';
                     document.getElementById('functionDescription').value = f.description || '';
+                    document.getElementById('functionResult').value = f.result || '';
+                    document.getElementById('functionContacts').value = f.contacts || '';
+                    document.getElementById('functionKeywords').value = f.keywords?.join(', ') || '';
+                    document.getElementById('functionStatus').value = f.status || 'active';
+                    document.getElementById('functionColor').value = f.primaryColor || '#ffffff';
+                    document.getElementById('functionOwnerTempId').value = f.ownerTempId || '';
+                    document.getElementById('functionOwnerTempUntil').value = f.ownerTempUntil
+                        ? (f.ownerTempUntil.toDate ? f.ownerTempUntil.toDate().toISOString().split('T')[0] : f.ownerTempUntil)
+                        : '';
                     setTimeout(() => {
                         document.querySelectorAll('#functionAssignees input').forEach(cb => {
                             cb.checked = f.assigneeIds?.includes(cb.value);
@@ -29,14 +38,19 @@
                 editingId = null;
                 document.getElementById('functionModalTitle').textContent = window.t('newFunction');
                 document.getElementById('functionForm').reset();
+                document.getElementById('functionStatus').value = 'active';
+                document.getElementById('functionColor').value = '#ffffff';
             }
         }
 
         function updateFunctionAssignees() {
             const c = document.getElementById('functionAssignees');
             const h = document.getElementById('functionHead');
+            const t = document.getElementById('functionOwnerTempId');
+            const userOptions = users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             c.innerHTML = users.map(u => `<label class="assignee-checkbox"><input type="checkbox" value="${esc(u.id)}">${esc(u.name || u.email)}</label>`).join('');
-            h.innerHTML = `<option value="">${window.t('select')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            h.innerHTML = `<option value="">${window.t('select')}</option>` + userOptions;
+            if (t) t.innerHTML = `<option value="">— немає —</option>` + userOptions;
         }
 
         async function saveFunction(e) {
@@ -86,6 +100,13 @@
                     headId: headId,
                     headName: head?.name || head?.email || '',
                     description: document.getElementById('functionDescription').value.trim(),
+                    result: document.getElementById('functionResult').value.trim(),
+                    contacts: document.getElementById('functionContacts').value.trim(),
+                    keywords: document.getElementById('functionKeywords').value.split(',').map(k => k.trim()).filter(Boolean),
+                    status: document.getElementById('functionStatus').value || 'active',
+                    primaryColor: document.getElementById('functionColor').value || '#ffffff',
+                    ownerTempId: document.getElementById('functionOwnerTempId').value || '',
+                    ownerTempUntil: document.getElementById('functionOwnerTempUntil').value || '',
                     assigneeIds: assigneeIds,
                     assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || users.find(u => u.id === id)?.email || '').filter(Boolean)
                 };
@@ -310,17 +331,37 @@
                         <div style="text-align:center;color:#9ca3af;font-size:0.82rem;padding:0.5rem;">Завантаження...</div>
                     </div>`;
 
+                // Temp owner banner
+                const now = new Date();
+                const tempOwnerActive = f.ownerTempId && f.ownerTempUntil && new Date(f.ownerTempUntil) >= now;
+                const tempOwnerUser = tempOwnerActive ? users.find(u => u.id === f.ownerTempId) : null;
+                const tempOwnerBanner = tempOwnerActive && tempOwnerUser
+                    ? `<div style="background:#fef3c7;border:1px solid #fbbf24;border-radius:6px;padding:0.35rem 0.6rem;font-size:0.78rem;color:#92400e;margin-bottom:0.5rem;"><i data-lucide="user-check" class="icon icon-sm"></i> Тимч. власник: <strong>${esc(tempOwnerUser.name || tempOwnerUser.email)}</strong> до ${esc(f.ownerTempUntil)}</div>`
+                    : '';
+                // Status badge (show only non-active)
+                const statusBadge = f.status === 'draft'
+                    ? `<span style="font-size:0.7rem;background:#f3f4f6;color:#6b7280;border-radius:4px;padding:1px 6px;margin-left:6px;">📝 Чернетка</span>`
+                    : '';
+                // Border color by primaryColor
+                const cardBorderStyle = f.primaryColor && f.primaryColor !== '#ffffff'
+                    ? `border-left:4px solid ${esc(f.primaryColor)};`
+                    : '';
+
                 return `
-                <div class="function-card" style="cursor:pointer;" onclick="toggleFuncRegular('${escId(f.id)}', event)">
+                <div class="function-card" style="cursor:pointer;${cardBorderStyle}" onclick="toggleFuncRegular('${escId(f.id)}', event)">
+                    ${tempOwnerBanner}
                     <div class="function-header">
-                        <div class="function-title"><i data-lucide="settings" class="icon icon-sm"></i> ${esc(f.name)}</div>
+                        <div class="function-title"><i data-lucide="settings" class="icon icon-sm"></i> ${esc(f.name)}${statusBadge}</div>
                     </div>
                     ${f.description ? `<div class="function-description">${esc(f.description)}</div>` : ''}
+                    ${f.result ? `<div style="font-size:0.8rem;color:#374151;background:#f0fdf4;border-left:3px solid #22c55e;padding:0.35rem 0.6rem;border-radius:0 6px 6px 0;margin:0.4rem 0;"><i data-lucide="target" class="icon icon-sm" style="color:#16a34a;"></i> <em>${esc(f.result)}</em></div>` : ''}
                     ${mergedInfo}
                     <div class="function-assignees">
-                        ${f.headName ? `<span class="assignee-badge head"><i data-lucide="crown" class="icon icon-sm"></i> ${esc(f.headName)}</span>` : ''}
+                        ${f.headName ? `<span class="assignee-badge head"><i data-lucide="crown" class="icon icon-sm"></i> ${esc(f.headName)}</span>` : '<span style="font-size:0.75rem;color:#ef4444;border:1px solid #fca5a5;border-radius:4px;padding:1px 6px;">⚠️ Немає власника</span>'}
                         ${f.assigneeNames?.filter(n => n !== f.headName).map(n => `<span class="assignee-badge">${esc(n)}</span>`).join('') || ''}
                     </div>
+                    ${f.contacts ? `<div style="font-size:0.78rem;color:#6b7280;margin:0.3rem 0;"><i data-lucide="message-circle" class="icon icon-sm"></i> ${esc(f.contacts)}</div>` : ''}
+                    ${f.keywords?.length ? `<div style="display:flex;flex-wrap:wrap;gap:0.25rem;margin:0.3rem 0;">${f.keywords.map(k => `<span style="font-size:0.7rem;background:#eff6ff;color:#1d4ed8;border-radius:4px;padding:1px 6px;">${esc(k)}</span>`).join('')}</div>` : ''}
                     <div class="function-stats" style="flex-wrap:wrap;gap:0.5rem;">
                         <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
                             <span style="font-size:0.82rem;color:#525252;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks} ${window.t('active')} / ${doneTasks} ${window.t('doneLabel')}</span>
