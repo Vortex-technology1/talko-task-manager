@@ -662,7 +662,6 @@ exports.telegramWebhook = functions
         // Secret validation disabled — webhook secured by obscure URL
 
         const update = req.body;
-        console.log('[TG DEBUG] update keys:', Object.keys(update).join(','), '| from:', update.message?.from?.id || update.edited_message?.from?.id || 'unknown', '| text:', update.message?.text || update.edited_message?.text || 'none');
 
         // ---- CALLBACK QUERY (кнопки в повідомленнях) ----
         if (update.callback_query) {
