@@ -528,7 +528,14 @@
             area.style.width = maxX + 'px';
             area.style.height = maxY + 'px';
             area.innerHTML = svg + cards;
-            setCanvasMode(_canvasMode);
+            // Підсвічуємо активну кнопку без рекурсії (НЕ викликаємо setCanvasMode щоб не було infinite loop)
+            document.querySelectorAll('.canvas-mode-btn').forEach(function(b) {
+                const active = b.dataset.cmode === _canvasMode;
+                b.style.background = active ? '#1e40af' : 'white';
+                b.style.color = active ? 'white' : '#374151';
+                b.style.borderColor = active ? '#1e40af' : '#d1d5db';
+                b.style.fontWeight = active ? '600' : '400';
+            });
         };
 
         let _cdDragging = null, _cdOffX = 0, _cdOffY = 0;
