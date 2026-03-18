@@ -121,6 +121,7 @@ function _renderShell() {
         ['activities', I.calendar,  window.t('crmTabActivities')],
         ['analytics',  I.chart,     window.t('crmTabAnalytics')],
         ['settings',   I.settings,  window.t('crmTabSettings')],
+        ['howto',      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', 'Як це працює'],
     ];
 
     if (isMobile) {
@@ -190,6 +191,7 @@ function _renderShell() {
             <div id="crmViewActivities" style="height:100%;overflow:auto;display:none;padding:.75rem;"></div>
             <div id="crmViewAnalytics" style="height:100%;overflow:auto;display:none;padding:.75rem;"></div>
             <div id="crmViewSettings" style="height:100%;overflow:auto;display:none;padding:.75rem;"></div>
+            <div id="crmViewHowto" style="height:100%;overflow:auto;display:none;padding:.75rem;"></div>
         </div>
     </div>`;
 
@@ -258,6 +260,7 @@ function _renderShell() {
             <div id="crmViewActivities" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
             <div id="crmViewAnalytics" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
             <div id="crmViewSettings" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
+            <div id="crmViewHowto" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
         </div>
     </div>`;
     }
@@ -414,7 +417,7 @@ window.crmSetViewMode = function(mode) {
 window.crmSwitchTab = function(tab) {
     crm.subTab = tab;
     const isMobile = window.innerWidth < 768;
-    ['todo','kanban','clients','activities','analytics','settings'].forEach(t => {
+    ['todo','kanban','clients','activities','analytics','settings','howto'].forEach(t => {
         const view = document.getElementById('crmView' + t.charAt(0).toUpperCase() + t.slice(1));
         const btn  = document.getElementById('crmTab_' + t);
         if (view) view.style.display = t === tab ? '' : 'none';
@@ -452,6 +455,7 @@ window.crmSwitchTab = function(tab) {
     if (tab === 'activities') _renderActivitiesTab();
     if (tab === 'analytics')  _renderAnalytics();
     if (tab === 'settings')   _renderCRMSettings();
+    if (tab === 'howto')      _renderCRMHowto();
     // Хуки для зовнішніх модулів (77g-crm-forms та ін.)
     if (Array.isArray(window.crmSwitchTabHooks)) {
         window.crmSwitchTabHooks.forEach(function (fn) { try { fn(tab); } catch(e) {} });
@@ -5245,5 +5249,386 @@ function _startRemindersScheduler() {
         crm.pipelines = [];
         crm.pipeline  = null;
     };
+
+// ══════════════════════════════════════════════════════════════
+// CRM — ЯК ЦЕ ПРАЦЮЄ
+// ══════════════════════════════════════════════════════════════
+function _renderCRMHowto() {
+    const c = document.getElementById('crmViewHowto');
+    if (!c) return;
+
+    const p = (color, text) => `<span style="background:${color}18;color:${color};padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;">${text}</span>`;
+    const path = (text) => `<span style="background:#f0f9ff;border:1px solid #bae6fd;padding:2px 8px;border-radius:4px;font-size:0.78rem;color:#0369a1;font-weight:600;">${text}</span>`;
+    const mono = (text) => `<span style="background:#f1f5f9;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:0.78rem;color:#374151;">${text}</span>`;
+
+    c.innerHTML = `<div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+      <!-- ЗАГОЛОВОК -->
+      <div style="background:linear-gradient(135deg,#1a1f3c,#1d4ed8);border-radius:14px;padding:1.5rem;color:white;">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">CRM TALKO — Система управління продажами</div>
+        <div style="font-size:0.85rem;line-height:1.7;opacity:0.92;">
+          CRM вирішує одну головну проблему: <b>ліди і клієнти існують в голові менеджера, в Excel і в месенджерах — власник не бачить що відбувається.</b>
+          Менеджер звільнився — база пішла з ним. Клієнт написав — забули передзвонити. Угода є — але де вона і на якому етапі — ніхто не знає.
+          CRM збирає все в одне місце: від першого дотику до оплати. Власник бачить воронку в реальному часі. Менеджер не забуває. База залишається в компанії.
+        </div>
+      </div>
+
+      <!-- ПРОБЛЕМИ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Які проблеми вирішує</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          ${[
+            ['Ліди в голові або в блокноті менеджера', 'Менеджер звільнився — база клієнтів пішла з ним', 'Всі ліди і клієнти зберігаються в системі, незалежно від менеджера'],
+            ['Клієнт написав — забули передзвонити', 'Втрачений лід, клієнт пішов до конкурента', 'Система нагадує про прострочені контакти кожні 30 хвилин + Browser Push'],
+            ['Власник не знає що відбувається в продажах', 'Не можна планувати дохід, не знаєш де проблема', 'Аналітика в реальному часі: конверсія, velocity, прогноз, джерела'],
+            ['Угода є але ніхто не знає на якому вона етапі', 'Клієнт чекає, менеджер "розбирається", всі плутаються', 'Kanban воронка — кожна угода на своїй стадії, видно всім'],
+            ['Рахунок в Excel, задача в месенджері, угода в таблиці', 'Інформація розкидана, нічого не пов\'язано', 'Все в одному місці: угода → задача → рахунок → кошторис'],
+            ['Не знають звідки приходять клієнти', 'Вкладають гроші в маркетинг який не працює', 'Аналітика по джерелах: конверсія і revenue по кожному каналу'],
+          ].map(([pain, impact, fix]) => `
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid #f3f4f6;border-radius:10px;overflow:hidden;font-size:0.8rem;">
+            <div style="padding:0.65rem 0.85rem;background:#fef2f2;border-right:1px solid #f3f4f6;">
+              <div style="font-size:0.68rem;font-weight:700;color:#dc2626;margin-bottom:2px;">ПРОБЛЕМА</div>
+              <div style="color:#7f1d1d;line-height:1.5;">${pain}</div>
+            </div>
+            <div style="padding:0.65rem 0.85rem;background:#fff7ed;border-right:1px solid #f3f4f6;">
+              <div style="font-size:0.68rem;font-weight:700;color:#ea580c;margin-bottom:2px;">НАСЛІДОК</div>
+              <div style="color:#7c2d12;line-height:1.5;">${impact}</div>
+            </div>
+            <div style="padding:0.65rem 0.85rem;background:#f0fdf4;">
+              <div style="font-size:0.68rem;font-weight:700;color:#16a34a;margin-bottom:2px;">РІШЕННЯ В CRM</div>
+              <div style="color:#14532d;line-height:1.5;">${fix}</div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- СТРУКТУРА CRM -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Структура CRM — 6 вкладок</div>
+        <div style="display:grid;gap:0.6rem;">
+          ${[
+            ['#f59e0b','Todo — Список справ','Відкриваєш зранку і одразу бачиш кому треба зателефонувати сьогодні. Всі угоди де прострочений або сьогоднішній контакт — в одному місці. Не треба гортати всю воронку щоб знайти "горячих" клієнтів.'],
+            ['#3b82f6','Воронка (Kanban)','Головний робочий екран менеджера. Угоди рухаються по стадіях зліва направо перетягуванням або кліком. Видно суму кожної угоди, дату контакту, відповідального, теги і мітку "Гаряча угода". Є два режими: Kanban (картки) і Список (таблиця).'],
+            ['#8b5cf6','Клієнти','База всіх клієнтів незалежно від угод. В картці клієнта: всі контакти, всі угоди, вся активність, кошторис. Можна одразу створити нову угоду з картки клієнта — дані заповнюються автоматично.'],
+            ['#10b981','Активності','Хронологічний журнал всіх дій по всіх угодах: дзвінки, зустрічі, листи, нотатки, задачі, зміни стадій. Фільтр по типу активності. Нову активність можна додати прямо тут — вибираєш угоду і тип дії.'],
+            ['#ef4444','Аналітика','Метрики, графіки за 6 місяців, аналіз по джерелах і стадіях. Конверсія, revenue, середній чек, velocity (час від ліда до закриття), прогноз доходу. Відповідає на питання: звідки клієнти, де втрачаємо, скільки заробимо.'],
+            ['#6b7280','Налаштування','Управління воронками і стадіями: створення, перейменування, зміна кольорів, перетягування порядку. Обов\'язкові поля для кожної стадії. Аналітика по джерелах лідів. Імпорт клієнтів з CSV.'],
+          ].map(([color, title, desc]) => `
+          <div style="border:1px solid #f3f4f6;border-radius:10px;overflow:hidden;">
+            <div style="background:#f9fafb;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;border-bottom:1px solid #f3f4f6;">
+              <div style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#111827;">${title}</span>
+            </div>
+            <div style="padding:0.7rem 1rem;font-size:0.82rem;color:#374151;line-height:1.65;">${desc}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- КАРТКА УГОДИ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Картка угоди — що всередині</div>
+
+        <!-- Вкладки картки -->
+        <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.05em;">4 вкладки:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;">
+          ${[
+            ['Деталі','Всі поля угоди + омніканал зв\'язку + доставка + оплата + товари зі складу'],
+            ['Активність','Хронологічний журнал всіх дій по цій угоді: дзвінки, зустрічі, нотатки, зміни стадій'],
+            ['Задачі','Всі завдання прив\'язані до цієї угоди. Можна позначити виконаною або створити нову'],
+            ['AI','AI аналізує дані угоди і дає рекомендації: що зробити далі, який ризик, як підвищити шанс закриття'],
+          ].map(([tab, desc]) => `
+          <div style="border:1px solid #e5e7eb;border-radius:8px;padding:0.65rem 0.85rem;font-size:0.8rem;">
+            <div style="font-weight:700;color:#111827;margin-bottom:0.25rem;">${tab}</div>
+            <div style="color:#6b7280;line-height:1.5;">${desc}</div>
+          </div>`).join('')}
+        </div>
+
+        <!-- Поля деталей -->
+        <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.05em;">Поля вкладки "Деталі":</div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;">
+          ${[
+            ['Назва угоди + Стадія + Сума','Основні параметри угоди'],
+            ['Клієнт + Ніша','Хто клієнт і в якій галузі'],
+            ['Омніканал','Кнопки: Дзвінок / WhatsApp / Viber / Telegram / Instagram / Email — одним кліком без пошуку в телефоні'],
+            ['Телефон / Email / Telegram / Instagram','Контактні дані клієнта'],
+            ['Джерело ліда','Звідки прийшов: Instagram, сайт, рекомендація, холодний дзвінок, бот тощо'],
+            ['Наступний контакт (дата)','Система нагадує про цю дату — показує попередження і Browser Push сповіщення'],
+            ['Відповідальний менеджер','Хто веде угоду'],
+            ['Ймовірність закриття (%)','Використовується для розрахунку прогнозу доходу в Аналітиці'],
+            ['Теги','Довільні мітки для групування угод'],
+            ['Опис і нотатки','Довільний текст про угоду'],
+            ['ТТН Нової Пошти + кнопка відстеження','Номер накладної + кнопка відкриває tracking на сайті НП'],
+            ['Статус оплати','Очікує / Оплачено / Частково / Повернено'],
+            ['Monobank посилання на оплату','Поле для вставки посилання, клієнт переходить і платить'],
+            ['Передоплата + Залишок','Фіксуєш передоплату — залишок рахується автоматично'],
+            ['Товари зі складу','Додаєш товари зі складу прямо в угоду — ім\'я, кількість, ціна'],
+            ['Кошторис','Прив\'язка до кошторису матеріалів по проекту'],
+          ].map(([field, desc]) => `
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:0.5rem 0.75rem;background:#f9fafb;border-radius:7px;font-size:0.8rem;">
+            <div style="font-weight:600;color:#111827;min-width:200px;flex-shrink:0;">${field}</div>
+            <div style="color:#6b7280;line-height:1.5;">${desc}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- ВОРОНКА ДЕТАЛЬНО -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Воронка — як рухаються угоди</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:1rem;">
+          Стандартна воронка має стадії: <b>Новий лід → Контакт → Переговори → Пропозиція → Виграно / Програно</b>.
+          Стадії повністю кастомізуються — назви, кольори, порядок, кількість. Можна додати будь-яку стадію під свій бізнес-процес.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          ${[
+            ['Drag & Drop','Перетягуєш картку в іншу колонку → стадія змінюється → в системі фіксується подія DEAL_STAGE_CHANGED → можна налаштувати автоматизацію'],
+            ['Причина програшу','При переміщенні в "Програно" система запитує причину: Ціна / Конкурент / Не цільовий / Не відповідає / Відклав / Немає бюджету / Інше. Це дозволяє аналізувати де бізнес втрачає клієнтів'],
+            ['Гаряча угода','Мітка вогонь на картці — для пріоритетних клієнтів яких треба закрити в першу чергу'],
+            ['Дублювання угоди','Кнопка "Дублювати" — копіює угоду з усіма полями. Корисно для повторних замовлень того самого клієнта'],
+            ['Конвертація ліда','Кнопка "Конвертувати лід" — переводить угоду з стадії "Лід" в наступну і фіксує дату конвертації'],
+            ['Булкові дії','Вибираєш кілька угод → Змінити стадію всім / Перепризначити менеджера / Додати тег / Видалити'],
+            ['Множинні воронки','Можна створити кілька окремих воронок для різних напрямів: Роздріб / Оптові / Сервіс. Угоди можна переміщати між воронками'],
+          ].map(([title, desc]) => `
+          <div style="border-left:3px solid #3b82f6;padding:0.6rem 0.85rem;background:#f9fafb;border-radius:0 8px 8px 0;font-size:0.82rem;">
+            <div style="font-weight:700;color:#111827;margin-bottom:0.2rem;">${title}</div>
+            <div style="color:#6b7280;line-height:1.55;">${desc}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- НАГАДУВАННЯ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Система нагадувань — менеджер не забуває</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:1rem;">
+          У кожній угоді є поле <b>"Наступний контакт"</b> — дата коли треба зателефонувати або написати клієнту.
+          Без цього менеджер тримає все в голові і забуває. З цим — система сама нагадує.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          ${[
+            ['При відкритті CRM','Система одразу перевіряє всі угоди з простроченою датою і показує toast-сповіщення'],
+            ['Кожні 30 хвилин','Поки CRM відкритий — перевірка повторюється автоматично'],
+            ['Browser Push','Сповіщення навіть якщо вкладка закрита (якщо дозволено в браузері)'],
+            ['Вкладка Todo','Окремий список тільки тих угод де контакт сьогодні або прострочений'],
+            ['Червоне підсвічування','Дата контакту на картці стає червоною якщо прострочена'],
+            ['Автоматичний перехід','Натискаєш на сповіщення → відкривається вкладка Todo з потрібними угодами'],
+          ].map(([title, desc]) => `
+          <div style="padding:0.6rem 0.85rem;background:#fff7ed;border:1px solid #fde68a;border-radius:8px;font-size:0.8rem;">
+            <div style="font-weight:700;color:#92400e;margin-bottom:0.2rem;">${title}</div>
+            <div style="color:#78350f;line-height:1.5;">${desc}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- АКТИВНОСТІ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Журнал активностей — повна історія контактів</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
+          Кожна взаємодія з клієнтом фіксується в хронологічному журналі. Власник бачить хто, коли і що робив по кожній угоді.
+          Менеджер не може сказати "я дзвонив" якщо немає запису в журналі.
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;">
+          ${[
+            ['Дзвінок','Вхідний або вихідний телефонний дзвінок'],
+            ['Зустріч','Особиста зустріч або відеодзвінок'],
+            ['Email','Лист надісланий або отриманий'],
+            ['Нотатка','Довільна нотатка про угоду'],
+            ['Задача','Задача створена по угоді'],
+            ['Зміна стадії','Автоматично фіксується коли угода переходить між стадіями'],
+            ['Дзвінок прийнятий','Автоматична позначка від телефонії'],
+            ['Дзвінок пропущений','Важливий сигнал — клієнт чекає передзвону'],
+            ['SMS надіслано','Повідомлення відправлено'],
+            ['Контакт оновлено','Автоматично при зміні даних клієнта'],
+            ['Угода створена','Автоматично при створенні угоди'],
+          ].map(([type, desc]) => `
+          <div style="padding:0.5rem 0.65rem;background:#f9fafb;border-radius:7px;font-size:0.78rem;">
+            <div style="font-weight:600;color:#111827;margin-bottom:0.15rem;">${type}</div>
+            <div style="color:#9ca3af;line-height:1.4;">${desc}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- ОБОВ'ЯЗКОВІ ПОЛЯ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Обов'язкові поля по стадіях — контроль якості даних</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
+          Для кожної стадії воронки можна вказати які поля <b>обов'язкові</b> для переходу на наступну стадію.
+          Менеджер не може перевести угоду далі поки не заповнить ці поля.
+        </div>
+        <div style="background:#f8fafc;border-radius:10px;padding:0.85rem 1rem;margin-bottom:0.75rem;font-family:monospace;font-size:0.8rem;line-height:2;color:#1e293b;">
+          Стадія "Переговори" → обов'язкові: ${p('#3b82f6','Телефон')} ${p('#f59e0b','Сума')}<br>
+          Стадія "Пропозиція" → обов'язкові: ${p('#3b82f6','Телефон')} ${p('#f59e0b','Сума')} ${p('#8b5cf6','Наступний контакт')}<br>
+          Стадія "Виграно" &nbsp;&nbsp; → обов'язкові: ${p('#3b82f6','Телефон')} ${p('#f59e0b','Сума')} ${p('#10b981','Статус оплати')}
+        </div>
+        <div style="font-size:0.8rem;color:#6b7280;line-height:1.6;">
+          Доступні поля для обов'язкового заповнення: <b>Сума угоди, Дата наступного контакту, Відповідальний менеджер, Телефон клієнта, Ніша клієнта.</b>
+          Налаштовується в ${path('CRM → Налаштування → Стадії')}.
+        </div>
+      </div>
+
+      <!-- АНАЛІТИКА -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Аналітика — відповіді на головні питання</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-bottom:1rem;">
+          ${[
+            ['Конверсія','% виграних від загальної кількості закритих угод (виграно + програно)','#22c55e'],
+            ['Revenue','Загальна сума всіх виграних угод за весь час','#16a34a'],
+            ['Avg Deal','Середній чек — скільки в середньому коштує виграна угода','#3b82f6'],
+            ['Програно','Кількість програних угод за весь час','#ef4444'],
+            ['Velocity','Середній час від створення ліда до закриття угоди в днях','#8b5cf6'],
+            ['Прогноз','Активні угоди × ймовірність закриття = очікуваний дохід','#f59e0b'],
+          ].map(([metric, desc, color]) => `
+          <div style="border:1px solid ${color}30;border-radius:10px;overflow:hidden;">
+            <div style="background:${color}10;padding:0.5rem 0.75rem;font-weight:700;font-size:0.85rem;color:${color};">${metric}</div>
+            <div style="padding:0.5rem 0.75rem;font-size:0.78rem;color:#6b7280;line-height:1.5;">${desc}</div>
+          </div>`).join('')}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <div style="padding:0.6rem 0.85rem;background:#f9fafb;border-radius:8px;font-size:0.82rem;"><b>Графіки за 6 місяців:</b> нові угоди / виграні / програні / revenue по місяцях</div>
+          <div style="padding:0.6rem 0.85rem;background:#f9fafb;border-radius:8px;font-size:0.82rem;"><b>Аналітика по джерелах:</b> звідки лід, скільки конверсія і revenue по кожному каналу (Instagram, сайт, рекомендація, бот тощо)</div>
+          <div style="padding:0.6rem 0.85rem;background:#f9fafb;border-radius:8px;font-size:0.82rem;"><b>Аналітика по стадіях:</b> скільки угод і на яку суму знаходиться на кожній стадії воронки прямо зараз</div>
+        </div>
+      </div>
+
+      <!-- ЗВ'ЯЗКИ З МОДУЛЯМИ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Зв'язки з іншими модулями</div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+          <div style="border:1px solid #bfdbfe;border-radius:10px;overflow:hidden;">
+            <div style="background:#eff6ff;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#1d4ed8;">Завдання ${path('Мій день / Всі завдання')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              З картки угоди кнопкою "Створити задачу" → відкривається стандартна модалка завдання з автозаповненням клієнта.
+              Задача зберігається з <b>dealId</b> — видна і в картці угоди (вкладка Задачі) і в загальному списку завдань і в Моєму Дні менеджера.
+              Менеджер не може "загубити" задачу — вона прив'язана до конкретної угоди.
+            </div>
+          </div>
+
+          <div style="border:1px solid #fed7aa;border-radius:10px;overflow:hidden;">
+            <div style="background:#fff7ed;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#f97316;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#c2410c;">Фінанси ${path('Бізнес → Фінанси → Рахунки')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              Кнопка "Виставити рахунок" в картці угоди → відкривається модуль Фінанси з автозаповненням: клієнт, сума угоди, dealId.
+              Рахунок зберігається з прив'язкою до угоди. <b>Важливо:</b> автоматичного підтвердження оплати немає — менеджер вручну змінює статус оплати в угоді.
+            </div>
+          </div>
+
+          <div style="border:1px solid #bbf7d0;border-radius:10px;overflow:hidden;">
+            <div style="background:#f0fdf4;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#10b981;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#065f46;">Склад ${path('Бізнес → Склад')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              В картці угоди можна додати товари зі складу: вибрати позицію, вказати кількість і ціну.
+              Це швидкий спосіб показати які товари входять в угоду без створення повноцінного кошторису.
+            </div>
+          </div>
+
+          <div style="border:1px solid #ddd6fe;border-radius:10px;overflow:hidden;">
+            <div style="background:#f5f3ff;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#8b5cf6;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#5b21b6;">Кошторис ${path('Бізнес → Кошторис')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              Кошторис матеріалів можна прив'язати до угоди через поле "Угода CRM" при його створенні.
+              Менеджер відкриває картку клієнта → бачить суму матеріалів по кошторису → може точно озвучити вартість проекту клієнту.
+              Корисно для будівельних і виробничих компаній.
+            </div>
+          </div>
+
+          <div style="border:1px solid #fde68a;border-radius:10px;overflow:hidden;">
+            <div style="background:#fffbeb;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#b45309;">Боти і воронки ${path('Бізнес → Боти')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              Клієнт написав в Telegram-бота і пройшов воронку → <b>автоматично створюється угода в CRM</b> з джерелом "bot".
+              В картці угоди кнопка "Чат" відкриває переписку з цим клієнтом прямо всередині CRM — менеджер може відповідати не виходячи з системи.
+              Якщо клієнт не писав через бота — чат показує "не підключено".
+            </div>
+          </div>
+
+          <div style="border:1px solid #bae6fd;border-radius:10px;overflow:hidden;">
+            <div style="background:#f0f9ff;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#0ea5e9;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#0369a1;">Сайт і форми ${path('Бізнес → Сайти')}</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              Клієнт заповнив форму на сайті → <b>автоматично створюється угода в CRM</b> з джерелом "site_form".
+              Менеджер одразу бачить новий лід у воронці — не треба перевіряти пошту або форму вручну.
+            </div>
+          </div>
+
+          <div style="border:1px solid #e9d5ff;border-radius:10px;overflow:hidden;">
+            <div style="background:#faf5ff;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#9333ea;flex-shrink:0;"></div>
+              <span style="font-weight:700;font-size:0.88rem;color:#7e22ce;">Event Bus — тригери для автоматизацій</span>
+            </div>
+            <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">
+              Кожна дія в CRM генерує подію яку можна використати для автоматизації:<br>
+              <div style="background:#f8fafc;border-radius:8px;padding:0.65rem 0.85rem;margin-top:0.5rem;font-family:monospace;font-size:0.78rem;line-height:2;">
+                ${mono('DEAL_STAGE_CHANGED')} → угода перейшла на нову стадію<br>
+                ${mono('DEAL_WON')} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ угода виграна<br>
+                ${mono('DEAL_LOST')} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ угода програна<br>
+                ${mono('deal.prepayment_received')} → зафіксована передоплата<br>
+                ${mono('deal.measurement_assigned')} → призначено замірника<br>
+                ${mono('deal.installation_assigned')} → призначено монтажника
+              </div>
+              На ці події можна налаштувати: надіслати повідомлення в Telegram, створити задачу, запустити процес, відправити email.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ІМПОРТ -->
+      <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Імпорт клієнтів з CSV ${path('CRM → Налаштування → Імпорт')}</div>
+        <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
+          Якщо у тебе вже є база клієнтів в Excel або іншій CRM — переноси її в систему:
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          ${[
+            '1. Завантаж готовий шаблон CSV з правильними колонками',
+            '2. Заповни своїми даними: ім\'я, телефон, email, джерело, стадія, сума',
+            '3. Завантаж файл назад в систему',
+            '4. Система показує попередній перегляд — перевіряєш перед імпортом',
+            '5. Підтверджуєш — всі клієнти і угоди з\'являються в CRM',
+          ].map(step => `<div style="padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;font-size:0.8rem;color:#374151;">${step}</div>`).join('')}
+        </div>
+      </div>
+
+      <!-- РЕЗУЛЬТАТ -->
+      <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem;">
+        <div style="font-weight:700;font-size:0.95rem;color:#065f46;margin-bottom:0.75rem;">Що отримуєш через місяць роботи з CRM</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          ${[
+            'База клієнтів не йде з менеджером — залишається в компанії назавжди',
+            'Знаєш конверсію, середній чек і velocity — можеш керувати продажами цифрами',
+            'Менеджер не забуває зателефонувати — система нагадує автоматично',
+            'Знаєш звідки найприбутковіші клієнти — вкладаєш гроші в правильний маркетинг',
+            'Від ліда до оплати — все в одному місці без Excel і месенджерів',
+            'Ліди з сайту і бота одразу в воронці — менеджер не пропускає жодного',
+            'Прогноз доходу — знаєш скільки заробиш наступного місяця',
+            'Власник бачить стан продажів в реальному часі без нарад і звітів',
+          ].map(r => `
+          <div style="display:flex;align-items:flex-start;gap:0.4rem;padding:0.5rem 0.75rem;background:white;border-radius:8px;font-size:0.8rem;color:#166534;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>${r}</span>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:1rem;text-align:center;">
+          <button onclick="crmSwitchTab('kanban')"
+            style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.65rem 1.5rem;background:#10b981;color:white;border:none;border-radius:9px;font-size:0.9rem;font-weight:700;cursor:pointer;">
+            Відкрити воронку →
+          </button>
+        </div>
+      </div>
+
+    </div>`; // end c.innerHTML
+}
 
 })();
