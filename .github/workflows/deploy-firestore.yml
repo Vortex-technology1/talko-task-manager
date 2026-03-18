@@ -1,0 +1,24 @@
+name: Deploy Firestore Indexes & Rules
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'firestore.indexes.json'
+      - 'firestore.rules'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy Firestore indexes and rules
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only firestore
+        env:
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT_ID: task-manager-44e84
