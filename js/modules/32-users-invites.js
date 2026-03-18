@@ -30,7 +30,9 @@
 
                 const userRegular = regularTasks.filter(rt => {
                     const func = functions.find(f => f.name === rt.function && f.status !== 'archived');
-                    return func?.assigneeIds?.includes(u.id);
+                    if (!func?.assigneeIds?.includes(u.id)) return false;
+                    // Якщо rt.assigneeId вказаний — тільки ця людина виконує; якщо порожній — всі функції
+                    return !rt.assigneeId || rt.assigneeId === u.id;
                 });
                 let weeklyMin = 0;
                 userRegular.forEach(rt => {
@@ -44,7 +46,8 @@
                         if (dur <= 0) dur = 60;
                     }
                     let dpw = 1;
-                    if (rt.period === 'daily') dpw = 5;
+                    // skipWeekends враховуємо: false → 7 днів, true → 5 днів
+                    if (rt.period === 'daily') dpw = rt.skipWeekends === false ? 7 : 5;
                     else if (rt.period === 'weekly' && rt.daysOfWeek) dpw = rt.daysOfWeek.length;
                     else if (rt.period === 'monthly') dpw = 0.25;
                     weeklyMin += dur * dpw;
@@ -495,7 +498,8 @@
                 // Regular tasks & weekly hours
                 const userRegular = regularTasks.filter(rt => {
                     const func = functions.find(f => f.name === rt.function && f.status !== 'archived');
-                    return func?.assigneeIds?.includes(u.id);
+                    if (!func?.assigneeIds?.includes(u.id)) return false;
+                    return !rt.assigneeId || rt.assigneeId === u.id;
                 });
                 let weeklyMin = 0;
                 userRegular.forEach(rt => {
@@ -509,7 +513,7 @@
                         if (dur <= 0) dur = 60;
                     }
                     let dpw = 1;
-                    if (rt.period === 'daily') dpw = 5;
+                    if (rt.period === 'daily') dpw = rt.skipWeekends === false ? 7 : 5;
                     else if (rt.period === 'weekly' && rt.daysOfWeek) dpw = rt.daysOfWeek.length;
                     else if (rt.period === 'monthly') dpw = 0.25;
                     weeklyMin += dur * dpw;

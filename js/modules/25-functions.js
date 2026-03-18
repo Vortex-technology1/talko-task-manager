@@ -257,7 +257,7 @@
                         if (durMin <= 0) durMin = 60;
                     }
                     let daysPerWeek = 1;
-                    if (rt.period === 'daily') daysPerWeek = 5;
+                    if (rt.period === 'daily') daysPerWeek = rt.skipWeekends === false ? 7 : 5;
                     else if (rt.period === 'weekly' && rt.daysOfWeek) daysPerWeek = rt.daysOfWeek.length;
                     else if (rt.period === 'monthly') daysPerWeek = 0.25;
                     weeklyMinutes += durMin * daysPerWeek;
