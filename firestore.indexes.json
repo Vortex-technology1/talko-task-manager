@@ -1111,16 +1111,6 @@
       ]
     },
     {
-      "collectionGroup": "finance_transactions",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "date",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "crm_deals",
       "queryScope": "COLLECTION",
       "fields": [
