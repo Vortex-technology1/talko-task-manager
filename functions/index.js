@@ -631,9 +631,12 @@ async function getUserLang(companyId, userId) {
     try {
         const uDoc = await db.collection('companies').doc(companyId)
             .collection('users').doc(userId).get();
-        if (uDoc.exists && uDoc.data().language) {
-            const lang = uDoc.data().language;
-            return TG_LANG[lang] ? lang : 'ua';
+        if (uDoc.exists) {
+            const data = uDoc.data();
+            // telegramLanguage — пріоритет (встановлюється через /lang в боті)
+            // language — мова інтерфейсу платформи (може перезаписуватись при зміні UI)
+            const lang = data.telegramLanguage || data.language;
+            if (lang && TG_LANG[lang]) return lang;
         }
         // Fallback: мова на рівні компанії
         const cDoc = await db.collection('companies').doc(companyId).get();
@@ -1250,10 +1253,11 @@ exports.telegramWebhook = functions
                         `${tg(curLang, 'langMenuTitle')}\n\n${tg(curLang, 'langCurrent')}: ${LANG_NAMES[curLang] || curLang}\n\n${tg(curLang, 'langChange')}\n${langList}`
                     );
                 } else {
-                    // Зберігаємо нову мову в Firestore
+                    // Зберігаємо нову мову в Firestore (telegramLanguage — окреме поле)
+                    // НЕ перезаписує мову інтерфейсу (language) яка керується платформою
                     await db.collection('companies').doc(langCompanyId)
                         .collection('users').doc(langUid)
-                        .update({ language: requestedLang });
+                        .update({ telegramLanguage: requestedLang });
                     await sendTelegramMessage(chatId,
                         tg(requestedLang, 'langChanged') ||
                         `✅ ${LANG_NAMES[requestedLang]} — мову встановлено!\n\nВсі наступні сповіщення будуть цією мовою.`
