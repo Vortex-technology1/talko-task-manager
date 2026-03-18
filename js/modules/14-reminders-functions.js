@@ -127,7 +127,7 @@
             }
             
             try {
-                const assigneeId = document.getElementById('taskAssignee').value;
+                const assigneeId = (document.getElementById('taskAssignee').value || '').trim() || currentUser?.uid || '';
                 const assignee = users.find(u => u.id === assigneeId);
                 
                 // Warn if assignee has critical overdue tasks
@@ -180,7 +180,11 @@
                     deadlineTime: deadlineTime,
                     timeEnd: timeEnd,
                     duration: duration,
-                    deadline: deadlineDate + (deadlineTime ? 'T' + deadlineTime : ''), // для сумісності
+                    deadline: deadlineDate
+                        ? firebase.firestore.Timestamp.fromDate(
+                            new Date(deadlineDate + 'T' + (deadlineTime || '23:59') + ':00')
+                          )
+                        : null, // Timestamp для cloud functions (checkOverdueTasks/sendReminders)
                     estimatedTime: document.getElementById('taskEstimatedTime').value,
                     priority: document.getElementById('taskPriority').value,
                     status: statusVal,
@@ -252,6 +256,15 @@
                     // Зберігаємо попередній projectId для автостатусу
                     _prevProjectId = existingTask?.projectId || '';
                     
+                    // БАГ FIX: скидаємо overdueNotified і sentReminders якщо дедлайн змінився
+                    if (existingTask && (
+                        existingTask.deadlineDate !== data.deadlineDate ||
+                        existingTask.deadlineTime !== data.deadlineTime
+                    )) {
+                        data.overdueNotified = false;
+                        data.sentReminders = [];
+                    }
+
                     // Concurrency check: warn if another user modified this task
                     if (existingTask?._openedAt) {
                         try {

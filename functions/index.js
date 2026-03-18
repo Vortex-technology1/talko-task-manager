@@ -1041,7 +1041,9 @@ exports.telegramWebhook = functions
 
                     await taskRef.update({
                         deadlineDate: newDate,
-                        deadline: newDate + 'T' + (task.deadlineTime || '18:00'),
+                        deadline: admin.firestore.Timestamp.fromDate(
+                            new Date(newDate + 'T' + (task.deadlineTime || '18:00') + ':00')
+                        ),
                         overdueNotified: false,
                         sentReminders: []
                     });
