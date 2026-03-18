@@ -65,7 +65,7 @@ function renderBookingShell() {
     const container = document.getElementById('bookingContainer');
     if (!container) return;
     container.innerHTML = `
-<div id="bk-admin" style="max-width:900px;margin:0 auto;padding:.5rem 0 2rem">
+<div id="bk-admin" style="padding:.5rem 0 2rem">
   <div id="bk-view-root"></div>
 </div>`;
     injectBookingStyles();
