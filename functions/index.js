@@ -2918,3 +2918,187 @@ exports.migrateDeadlines = functions
             return res.status(500).json({ ok: false, error: e.message });
         }
     });
+
+// ===========================
+// ТЗ ПРІОРИТЕТ 16: FUNCTION OWNER CLOUD FUNCTIONS
+// ===========================
+
+// 16a. Щотижневий звіт власнику функції (щопонеділка 9:00)
+exports.weeklyFunctionReport = functions
+    .region(REGION)
+    .runWith({})
+    .pubsub.schedule('0 9 * * 1')
+    .timeZone('Europe/Kyiv')
+    .onRun(async (context) => {
+        const now = new Date();
+        const weekAgo = new Date(now);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+
+        const companiesSnap = await db.collection('companies').limit(200).get();
+
+        for (const companyDoc of companiesSnap.docs) {
+            const companyId = companyDoc.id;
+
+            // Завантажуємо функції компанії
+            const functionsSnap = await companyDoc.ref.collection('functions')
+                .where('status', '!=', 'archived').get();
+            if (functionsSnap.empty) continue;
+
+            // Завантажуємо задачі за тиждень
+            const tasksSnap = await companyDoc.ref.collection('tasks').get();
+            const allTasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+            // Регулярні задачі
+            const regSnap = await companyDoc.ref.collection('regularTasks').get();
+            const allRegular = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+            const todayStr = now.toISOString().split('T')[0];
+
+            for (const funcDoc of functionsSnap.docs) {
+                const func = funcDoc.data();
+                if (!func.headId) continue;
+
+                // Тимчасовий власник якщо активний
+                const ownerId = (func.ownerTempId && func.ownerTempUntil && func.ownerTempUntil >= todayStr)
+                    ? func.ownerTempId : func.headId;
+
+                // Отримуємо telegramChatId власника
+                const ownerDoc = await companyDoc.ref.collection('users').doc(ownerId).get();
+                if (!ownerDoc.exists) continue;
+                const owner = ownerDoc.data();
+                if (!owner.telegramChatId) continue;
+                if (owner.weeklyFunctionReportEnabled === false) continue;
+
+                // Задачі функції
+                const funcTasks = allTasks.filter(t => t.function === func.name || t.ownerFunctionId === funcDoc.id);
+                const doneThisWeek = funcTasks.filter(t => {
+                    if (t.status !== 'done' || !t.completedAt) return false;
+                    const dt = t.completedAt.toDate ? t.completedAt.toDate() : new Date(t.completedAt);
+                    return dt >= weekAgo;
+                });
+                const overdue = funcTasks.filter(t =>
+                    t.status !== 'done' && t.deadlineDate && t.deadlineDate < todayStr
+                );
+                const active = funcTasks.filter(t => t.status !== 'done');
+
+                // Регулярні задачі функції
+                const funcRegular = allRegular.filter(rt => rt.function === func.name);
+
+                const lang = owner.lang || 'ua';
+                const locale = lang === 'en' ? 'en-US' : 'uk-UA';
+
+                let report = `📊 <b>Тижневий звіт функції: ${func.name}</b>\n`;
+                report += `📅 ${weekAgo.toLocaleDateString(locale)} — ${now.toLocaleDateString(locale)}\n\n`;
+                report += `✅ Виконано задач: <b>${doneThisWeek.length}</b>\n`;
+                report += `🔄 Активних: <b>${active.length}</b>\n`;
+                if (overdue.length > 0) {
+                    report += `⚠️ Прострочено: <b>${overdue.length}</b>\n`;
+                    overdue.slice(0, 3).forEach(t => {
+                        report += `  • ${t.title} (${t.deadlineDate})\n`;
+                    });
+                }
+                report += `🔁 Регулярних задач: <b>${funcRegular.length}</b>\n`;
+
+                if (func.result) {
+                    report += `\n🎯 ЦКП: <i>${func.result}</i>\n`;
+                }
+
+                await sendTelegramMessage(owner.telegramChatId, report);
+            }
+        }
+        return null;
+    });
+
+// 16b. Перевірка ownerTempUntil (щодня о 8:00)
+exports.checkOwnerTempExpiry = functions
+    .region(REGION)
+    .runWith({})
+    .pubsub.schedule('0 8 * * *')
+    .timeZone('Europe/Kyiv')
+    .onRun(async (context) => {
+        const today = new Date().toISOString().split('T')[0];
+        const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+        const companiesSnap = await db.collection('companies').limit(200).get();
+
+        for (const companyDoc of companiesSnap.docs) {
+            const functionsSnap = await companyDoc.ref.collection('functions')
+                .where('ownerTempId', '!=', '').get();
+
+            for (const funcDoc of functionsSnap.docs) {
+                const func = funcDoc.data();
+                if (!func.ownerTempId || !func.ownerTempUntil) continue;
+
+                // Термін закінчився — скидаємо тимчасового власника
+                if (func.ownerTempUntil < today) {
+                    await funcDoc.ref.update({
+                        ownerTempId: '',
+                        ownerTempUntil: ''
+                    });
+                    console.log(`[OwnerTempExpiry] Cleared temp owner for ${func.name} in ${companyDoc.id}`);
+                    continue;
+                }
+
+                // Нагадування за день до закінчення
+                if (func.ownerTempUntil === tomorrow && func.headId) {
+                    const ownerDoc = await companyDoc.ref.collection('users').doc(func.headId).get();
+                    const owner = ownerDoc.data();
+                    if (owner?.telegramChatId) {
+                        const tempOwnerDoc = await companyDoc.ref.collection('users').doc(func.ownerTempId).get();
+                        const tempOwnerName = tempOwnerDoc.data()?.name || func.ownerTempId;
+                        await sendTelegramMessage(
+                            owner.telegramChatId,
+                            `⏰ <b>Нагадування</b>\n\nЗавтра закінчуються повноваження тимчасового власника функції <b>${func.name}</b>.\n\nТимчасовий власник: ${tempOwnerName}\nДата: ${func.ownerTempUntil}\n\nПісля цієї дати права повернуться до вас.`
+                        );
+                    }
+                }
+            }
+        }
+        return null;
+    });
+
+// 16c. Обробка ескалацій (кожні 30 хвилин)
+exports.processEscalations = functions
+    .region(REGION)
+    .runWith({})
+    .pubsub.schedule('every 30 minutes')
+    .timeZone('Europe/Kyiv')
+    .onRun(async (context) => {
+        const cutoff = new Date(Date.now() - 30 * 60 * 1000); // 30 хв тому
+
+        const companiesSnap = await db.collection('companies').limit(200).get();
+
+        for (const companyDoc of companiesSnap.docs) {
+            const escSnap = await companyDoc.ref.collection('escalations')
+                .where('handled', '==', false)
+                .get();
+
+            for (const escDoc of escSnap.docs) {
+                const esc = escDoc.data();
+                const createdAt = esc.createdAt?.toDate ? esc.createdAt.toDate() : new Date(esc.createdAt);
+
+                // Обробляємо тільки ескалації старші 30 хв
+                if (createdAt > cutoff) continue;
+
+                try {
+                    // Надсилаємо сповіщення власнику батьківської функції
+                    if (esc.parentOwnerId) {
+                        const ownerDoc = await companyDoc.ref.collection('users').doc(esc.parentOwnerId).get();
+                        const owner = ownerDoc.data();
+                        if (owner?.telegramChatId) {
+                            await sendTelegramMessage(
+                                owner.telegramChatId,
+                                `🔺 <b>Ескалація</b>\n\nФункція <b>${esc.functionName}</b> має ${esc.overdueCount} прострочених задач.\n\nПотребує вашої уваги як керівника вищого рівня.`
+                            );
+                        }
+                    }
+
+                    // Позначаємо як оброблену
+                    await escDoc.ref.update({ handled: true, handledAt: admin.firestore.FieldValue.serverTimestamp() });
+                } catch (e) {
+                    console.error('[processEscalations] Error:', e.message);
+                }
+            }
+        }
+        return null;
+    });
