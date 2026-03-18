@@ -173,8 +173,15 @@
                 const fab = document.getElementById('fabAdd');
                 if (fab) fab.style.display = 'flex';
                 
-                // Real-time listener для нових завдань з процесів
+                // Real-time listeners для нових завдань і змін
                 initTasksListener();
+                // Manager real-time listener (після завантаження даних)
+                document.addEventListener('companyLoaded', function _onCompanyLoaded() {
+                    document.removeEventListener('companyLoaded', _onCompanyLoaded);
+                    if (typeof window.initManagerTasksListener === 'function') {
+                        window.initManagerTasksListener();
+                    }
+                }, { once: true });
             } else {
                 window.currentUser = null;    // cleanup аліасів
                 window.currentCompany = null;

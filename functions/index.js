@@ -2832,3 +2832,89 @@ exports.onMetricCreate = functions
         return null;
     });
 // trigger-1773262405
+
+// ===========================
+// MIGRATION: deadline string → Timestamp
+// One-time migration for all existing tasks
+// Trigger: GET https://REGION-PROJECT.cloudfunctions.net/migrateDeadlines?secret=TALKO_MIGRATE_2026
+// ===========================
+exports.migrateDeadlines = functions
+    .region(REGION)
+    .runWith({ timeoutSeconds: 540, memory: '512MB' })
+    .https.onRequest(async (req, res) => {
+        // Simple secret check
+        if (req.query.secret !== 'TALKO_MIGRATE_2026') {
+            return res.status(403).send('Forbidden');
+        }
+
+        let total = 0, migrated = 0, skipped = 0, errors = 0;
+
+        try {
+            const companiesSnap = await db.collection('companies').limit(500).get();
+
+            for (const companyDoc of companiesSnap.docs) {
+                const companyId = companyDoc.id;
+                let lastDoc = null;
+
+                // Paginate through all tasks
+                while (true) {
+                    let q = companyDoc.ref.collection('tasks').limit(400);
+                    if (lastDoc) q = q.startAfter(lastDoc);
+                    const tasksSnap = await q.get();
+                    if (tasksSnap.empty) break;
+                    lastDoc = tasksSnap.docs[tasksSnap.docs.length - 1];
+
+                    const batch = db.batch();
+                    let batchCount = 0;
+
+                    for (const taskDoc of tasksSnap.docs) {
+                        total++;
+                        const t = taskDoc.data();
+
+                        // Skip if deadline already Timestamp
+                        if (t.deadline && t.deadline.toDate) { skipped++; continue; }
+
+                        // Skip if no deadline info at all
+                        if (!t.deadlineDate && !t.deadline) { skipped++; continue; }
+
+                        // Build Timestamp from deadlineDate + deadlineTime
+                        const dateStr = t.deadlineDate || (t.deadline ? t.deadline.split('T')[0] : null);
+                        const timeStr = t.deadlineTime || (t.deadline && t.deadline.includes('T') ? t.deadline.split('T')[1]?.slice(0,5) : null) || '23:59';
+
+                        if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) { skipped++; continue; }
+
+                        try {
+                            const ts = admin.firestore.Timestamp.fromDate(new Date(`${dateStr}T${timeStr}:00`));
+                            const upd = { deadline: ts };
+                            // Also reset overdueNotified if deadline was in future (so reminders fire)
+                            if (t.overdueNotified === true) {
+                                const now = new Date();
+                                const deadlineDate = new Date(`${dateStr}T${timeStr}:00`);
+                                // If deadline is in future — reset so it gets checked again
+                                if (deadlineDate > now) {
+                                    upd.overdueNotified = false;
+                                    upd.sentReminders = [];
+                                }
+                            }
+                            batch.update(taskDoc.ref, upd);
+                            batchCount++;
+                            migrated++;
+                        } catch(e) {
+                            errors++;
+                        }
+                    }
+
+                    if (batchCount > 0) await batch.commit();
+                    if (tasksSnap.docs.length < 400) break;
+                }
+            }
+
+            const result = { total, migrated, skipped, errors };
+            console.log('[migrateDeadlines]', result);
+            return res.status(200).json({ ok: true, ...result });
+
+        } catch(e) {
+            console.error('[migrateDeadlines] Fatal:', e);
+            return res.status(500).json({ ok: false, error: e.message });
+        }
+    });

@@ -67,10 +67,10 @@ service cloud.firestore {
         allow update: if isManagerOrOwner(companyId) || 
           (isAuthenticated() && memberId == userId() && 
            request.resource.data.role == resource.data.role) ||
-          // Юзер може зберегти свою мову інтерфейсу (для weekly-report)
+          // Юзер може зберегти свою мову інтерфейсу та Telegram мову
           (isAuthenticated() && memberId == userId() &&
            request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['language', 'interfaceLang', 'updatedAt']));
+             .hasOnly(['language', 'interfaceLang', 'telegramLanguage', 'updatedAt', 'telegramChatId', 'telegramUserId', 'telegramCode']));
         allow delete: if isManagerOrOwner(companyId) && 
           resource.data.role != 'owner';
       }

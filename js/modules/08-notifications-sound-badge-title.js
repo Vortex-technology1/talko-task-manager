@@ -5,6 +5,65 @@
         window.tasksUnsubscribe = null;
         let lastTaskCount = 0;
         
+        // Real-time listener для Manager/Owner — відстежує зміни в tasks[]
+        // Оновлює масив при змінах статусу, перепризначення, нових задачах
+        window._managerTasksUnsub = null;
+        window._managerTasksLastSnap = new Map(); // id → updatedAt millis
+
+        window.initManagerTasksListener = function() {
+            if (!currentCompany || !currentUser) return;
+            const role = currentUserData?.role;
+            if (role !== 'owner' && role !== 'manager' && role !== 'admin') return;
+
+            if (window._managerTasksUnsub) {
+                window._managerTasksUnsub();
+                window._managerTasksUnsub = null;
+            }
+
+            let isFirst = true;
+            // Слухаємо останні 200 активних задач — нові і змінені
+            window._managerTasksUnsub = db.collection('companies').doc(currentCompany)
+                .collection('tasks')
+                .where('status', 'in', ['new', 'progress', 'review'])
+                .orderBy('updatedAt', 'desc')
+                .limit(200)
+                .onSnapshot(snap => {
+                    if (isFirst) {
+                        // Зберігаємо початковий стан
+                        snap.docs.forEach(d => {
+                            const ts = d.data().updatedAt;
+                            window._managerTasksLastSnap.set(d.id, ts?.toMillis?.() || 0);
+                        });
+                        isFirst = false;
+                        return;
+                    }
+
+                    let changed = false;
+                    snap.docs.forEach(d => {
+                        const data = d.data();
+                        const prevTs = window._managerTasksLastSnap.get(d.id) || 0;
+                        const currTs = data.updatedAt?.toMillis?.() || 0;
+
+                        if (currTs > prevTs) {
+                            // Оновлюємо tasks[] інкрементально
+                            if (pendingDeleteIds && pendingDeleteIds.has(d.id)) return;
+                            const idx = tasks.findIndex(t => t.id === d.id);
+                            if (idx >= 0) {
+                                tasks[idx] = { ...tasks[idx], ...data, id: d.id };
+                            } else {
+                                tasks.unshift({ id: d.id, ...data });
+                            }
+                            window._managerTasksLastSnap.set(d.id, currTs);
+                            changed = true;
+                        }
+                    });
+
+                    if (changed) scheduleRender();
+                }, err => {
+                    console.warn('[ManagerListener] error:', err.message);
+                });
+        };
+
         window.initTasksListener = function initTasksListener() {
             if (!currentCompany || !currentUser) return;
             
