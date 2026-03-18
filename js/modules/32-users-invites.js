@@ -2,6 +2,317 @@
         // USERS & INVITES
         // =====================
 'use strict';
+
+        // ---- WORKLOAD DASHBOARD ----
+        window.renderWorkloadDashboard = function() {
+            const container = document.getElementById('usersSubContent-workload');
+            if (!container) return;
+            const todayStr = getLocalDateStr(new Date());
+
+            // --- розрахунок по кожному юзеру ---
+            const rows = users.map(u => {
+                const userTasks = tasks.filter(tk => tk.assigneeId === u.id);
+                const active = userTasks.filter(tk => tk.status !== 'done');
+                const done = userTasks.filter(tk => tk.status === 'done');
+                const overdue = active.filter(tk => tk.deadlineDate && tk.deadlineDate < todayStr);
+                const returned = userTasks.filter(tk => tk.reviewRejectedAt);
+                const doneNoReturn = done.filter(tk => !tk.reviewRejectedAt).length;
+                const autonomy = done.length > 0 ? Math.round(doneNoReturn / done.length * 100) : 0;
+
+                const userRegular = regularTasks.filter(rt => {
+                    const func = functions.find(f => f.name === rt.function);
+                    return func?.assigneeIds?.includes(u.id);
+                });
+                let weeklyMin = 0;
+                userRegular.forEach(rt => {
+                    const start = rt.timeStart || rt.time || '';
+                    const end = rt.timeEnd || '';
+                    let dur = rt.estimatedTime || 60;
+                    if (start && end) {
+                        const [sh,sm] = start.split(':').map(Number);
+                        const [eh,em] = end.split(':').map(Number);
+                        dur = (eh*60+em)-(sh*60+sm);
+                        if (dur <= 0) dur = 60;
+                    }
+                    let dpw = 1;
+                    if (rt.period === 'daily') dpw = 5;
+                    else if (rt.period === 'weekly' && rt.daysOfWeek) dpw = rt.daysOfWeek.length;
+                    else if (rt.period === 'monthly') dpw = 0.25;
+                    weeklyMin += dur * dpw;
+                });
+                const weeklyHrs = Math.round(weeklyMin / 60 * 10) / 10;
+                const overloadFlag = weeklyHrs > 45 || overdue.length >= 3;
+                const attentionFlag = !overloadFlag && (weeklyHrs > 35 || overdue.length >= 1);
+
+                const userFuncs = functions.filter(f => f.assigneeIds?.includes(u.id));
+                return { u, active, overdue, autonomy, weeklyHrs, overloadFlag, attentionFlag, userFuncs, returned };
+            });
+
+            // Сортування: перевантажені → увага → за кількістю активних
+            rows.sort((a,b) => {
+                if (b.overloadFlag !== a.overloadFlag) return b.overloadFlag - a.overloadFlag;
+                if (b.attentionFlag !== a.attentionFlag) return b.attentionFlag - a.attentionFlag;
+                return b.active.length - a.active.length;
+            });
+
+            // --- Summary cards ---
+            const totalPeople = users.length;
+            const overloadedCount = rows.filter(r => r.overloadFlag).length;
+            const totalOverdue = rows.reduce((s,r) => s + r.overdue.length, 0);
+            const avgAutonomy = rows.length > 0 ? Math.round(rows.reduce((s,r) => s + r.autonomy, 0) / rows.length) : 0;
+
+            const summaryHTML = `
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
+                ${[
+                    { label: window.t('totalPeople'), val: totalPeople, color: '#0284c7', bg: '#f0f9ff' },
+                    { label: window.t('overloadedPeople'), val: overloadedCount, color: overloadedCount > 0 ? '#ef4444' : '#16a34a', bg: overloadedCount > 0 ? '#fef2f2' : '#f0fdf4' },
+                    { label: window.t('totalOverdue'), val: totalOverdue, color: totalOverdue > 0 ? '#ef4444' : '#16a34a', bg: totalOverdue > 0 ? '#fef2f2' : '#f0fdf4' },
+                    { label: window.t('avgAutonomy'), val: avgAutonomy + '%', color: avgAutonomy >= 80 ? '#16a34a' : avgAutonomy >= 50 ? '#f59e0b' : '#ef4444', bg: '#f9fafb' },
+                ].map(c => `<div style="background:${c.bg};border-radius:10px;padding:0.75rem;text-align:center;">
+                    <div style="font-size:1.6rem;font-weight:700;color:${c.color};">${c.val}</div>
+                    <div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;">${c.label}</div>
+                </div>`).join('')}
+            </div>`;
+
+            // --- Table ---
+            const tableHTML = `
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:1.25rem;">
+                <div style="padding:0.75rem 1rem;border-bottom:1px solid #f3f4f6;font-weight:600;font-size:0.95rem;">
+                    📊 ${window.t('workloadTitle')}
+                </div>
+                <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+                    <thead>
+                        <tr style="background:#f9fafb;border-bottom:1px solid #e5e7eb;">
+                            <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;color:#374151;">Співробітник</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;color:#374151;">Функції</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('regularHoursWeek')}</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('activeTasksCount')}</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('overdueStatus')}</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">${window.t('autonomyIndex')}</th>
+                            <th style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:#374151;">Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows.map(r => {
+                            const statusText = r.overloadFlag ? `🔴 ${window.t('workloadOverloaded')}` : r.attentionFlag ? `🟡 ${window.t('workloadAttention')}` : `🟢 ${window.t('workloadNorm')}`;
+                            const hrsColor = r.weeklyHrs > 35 ? '#ef4444' : '#0284c7';
+                            const autoColor = r.autonomy >= 80 ? '#16a34a' : r.autonomy >= 50 ? '#f59e0b' : '#ef4444';
+                            return `<tr style="border-bottom:1px solid #f3f4f6;${r.overloadFlag ? 'background:#fff5f5;' : ''}">
+                                <td style="padding:0.5rem 0.75rem;">
+                                    <div style="font-weight:500;">${esc(r.u.name || r.u.email)}</div>
+                                    <div style="font-size:0.7rem;color:#9ca3af;">${getRoleText(r.u.role)}</div>
+                                </td>
+                                <td style="padding:0.5rem 0.75rem;">
+                                    <div style="display:flex;flex-wrap:wrap;gap:3px;">
+                                        ${r.userFuncs.map(f => `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 6px;border-radius:4px;">${esc(f.name)}</span>`).join('')}
+                                    </div>
+                                </td>
+                                <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${hrsColor};">${r.weeklyHrs}</td>
+                                <td style="padding:0.5rem 0.75rem;text-align:center;">${r.active.length}</td>
+                                <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${r.overdue.length > 0 ? '#ef4444' : '#6b7280'};">${r.overdue.length}</td>
+                                <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${autoColor};">${r.autonomy}%</td>
+                                <td style="padding:0.5rem 0.75rem;text-align:center;font-size:0.8rem;">${statusText}</td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
+                </div>
+            </div>`;
+
+            // --- Top-5 progress bars ---
+            const top5 = [...rows].sort((a,b) => b.weeklyHrs - a.weeklyHrs).slice(0,5);
+            const maxHrs = top5.length > 0 ? Math.max(...top5.map(r => r.weeklyHrs), 1) : 1;
+            const top5HTML = `
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;margin-bottom:1.25rem;">
+                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;">🏋️ Топ-5 найбільш завантажених</div>
+                ${top5.map(r => {
+                    const pct = Math.round(r.weeklyHrs / maxHrs * 100);
+                    const barColor = r.overloadFlag ? '#ef4444' : r.attentionFlag ? '#f59e0b' : '#22c55e';
+                    return `<div style="margin-bottom:0.6rem;">
+                        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.2rem;">
+                            <span style="font-weight:500;">${esc(r.u.name || r.u.email)}</span>
+                            <span style="color:#6b7280;">${r.weeklyHrs} год/тижд + ${r.active.length} задач ${r.overloadFlag ? '⚠️' : ''}</span>
+                        </div>
+                        <div style="background:#f3f4f6;border-radius:4px;height:8px;">
+                            <div style="background:${barColor};width:${pct}%;height:8px;border-radius:4px;transition:width 0.3s;"></div>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>`;
+
+            // --- Навантаження по функціях ---
+            const funcStatsHTML = `
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;">⚙️ Навантаження по функціях</div>
+                ${functions.filter(f => f.status !== 'archived').map(f => {
+                    const fTasks = tasks.filter(tk => tk.function === f.name);
+                    const fActive = fTasks.filter(tk => tk.status !== 'done');
+                    const fNew = fTasks.filter(tk => tk.status === 'new').length;
+                    const fProgress = fTasks.filter(tk => tk.status === 'progress').length;
+                    const fReview = fTasks.filter(tk => tk.status === 'review').length;
+                    const fDone = fTasks.filter(tk => tk.status === 'done').length;
+                    const assigneesCount = f.assigneeIds?.length || 0;
+                    const fRegular = regularTasks.filter(rt => rt.function === f.name);
+                    let fMin = 0;
+                    fRegular.forEach(rt => {
+                        let dur = rt.estimatedTime || 60;
+                        const start = rt.timeStart || rt.time || '';
+                        const end = rt.timeEnd || '';
+                        if (start && end) {
+                            const [sh,sm] = start.split(':').map(Number);
+                            const [eh,em] = end.split(':').map(Number);
+                            dur = (eh*60+em)-(sh*60+sm);
+                            if (dur<=0) dur=60;
+                        }
+                        let dpw = 1;
+                        if (rt.period==='daily') dpw=5;
+                        else if (rt.period==='weekly' && rt.daysOfWeek) dpw=rt.daysOfWeek.length;
+                        else if (rt.period==='monthly') dpw=0.25;
+                        fMin += dur*dpw;
+                    });
+                    const fHrs = Math.round(fMin/60*10)/10;
+                    const total = fNew+fProgress+fReview+fDone || 1;
+                    return `<div style="padding:0.5rem 0;border-bottom:1px solid #f3f4f6;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
+                        <div style="flex:1;min-width:120px;">
+                            <span style="font-weight:600;font-size:0.85rem;">${esc(f.name)}</span>
+                            <span style="font-size:0.72rem;color:#6b7280;margin-left:0.5rem;">${assigneesCount} викон.</span>
+                        </div>
+                        <div style="font-size:0.78rem;color:#6b7280;">${fActive.length} активних · ${fHrs} год/тижд</div>
+                        <div style="display:flex;gap:2px;min-width:120px;">
+                            <div style="flex:${fNew};background:#eff6ff;border-radius:3px 0 0 3px;height:12px;" title="Нових: ${fNew}"></div>
+                            <div style="flex:${fProgress};background:#fefce8;height:12px;" title="В роботі: ${fProgress}"></div>
+                            <div style="flex:${fReview};background:#f3e8ff;height:12px;" title="На перевірці: ${fReview}"></div>
+                            <div style="flex:${fDone};background:#dcfce7;border-radius:0 3px 3px 0;height:12px;" title="Виконано: ${fDone}"></div>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>`;
+
+            container.innerHTML = `<div style="padding-top:1rem;">${summaryHTML}${tableHTML}${top5HTML}${funcStatsHTML}</div>`;
+        };
+
+        // ---- USERS HOWTO ----
+        window.renderUsersHowto = function() {
+            const container = document.getElementById('usersSubContent-howto');
+            if (!container) return;
+            container.innerHTML = _buildUsersHowto();
+            if (typeof refreshIcons === 'function') refreshIcons();
+        };
+
+        function _buildUsersHowto() {
+            return `<div style="padding-top:1rem;display:flex;flex-direction:column;gap:1rem;">
+
+            <div style="background:linear-gradient(135deg,#1e3a5f,#0f2040);border-radius:14px;padding:1.25rem 1.5rem;color:white;">
+                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;">👤 Картка співробітника</div>
+                <div style="color:#93c5fd;font-size:0.88rem;line-height:1.5;">Це не просто контакт. Це повний зріз: що людина робить, як завантажена і наскільки самостійна.</div>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">❓ Яку проблему вирішує</div>
+                <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+                    <thead><tr style="background:#f9fafb;">
+                        <th style="padding:0.5rem;text-align:left;color:#ef4444;border-bottom:2px solid #fecaca;">ПРОБЛЕМА</th>
+                        <th style="padding:0.5rem;text-align:left;color:#f59e0b;border-bottom:2px solid #fde68a;">НАСЛІДОК</th>
+                        <th style="padding:0.5rem;text-align:left;color:#16a34a;border-bottom:2px solid #bbf7d0;">РІШЕННЯ</th>
+                    </tr></thead>
+                    <tbody>
+                        ${[
+                            ['Не знають реальне навантаження','Хтось перевантажений, хтось пустує','Система рахує год/тижд і активні задачі по кожному'],
+                            ['Не видно якість роботи людини','Хтось "виконує" але постійно повертають','Індекс автономності: % задач без повернення'],
+                            ['Не знають кому делегувати','Власник усе тримає у себе','Дашборд навантаження — видно хто вільний прямо зараз'],
+                            ['Людина не знає свої пріоритети','Робить другорядне, важливе відкладає','Мій день: всі задачі відсортовані за пріоритетом'],
+                            ['При наймі не знають скільки часу є','Беруть людину без розуміння завантаження','Система показує вільні години/тиждень до перевантаження'],
+                        ].map(([p,n,r]) => `<tr style="border-bottom:1px solid #f3f4f6;">
+                            <td style="padding:0.5rem;color:#374151;">${p}</td>
+                            <td style="padding:0.5rem;color:#6b7280;">${n}</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${r}</td>
+                        </tr>`).join('')}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">📋 Що показує картка</div>
+                ${[
+                    ['🟢 Функції', 'Ролі в компанії де людина є виконавцем. Звідси приходять регулярні завдання і кроки процесів.'],
+                    ['📊 Pipeline', 'Нових / В роботі / На перевірці / Виконано — стан задач прямо зараз.'],
+                    ['🎯 Індекс автономності', '% задач виконаних без повернення керівником. 80%+ = можна делегувати складне. <50% = більше контролю.'],
+                    ['🕐 Годин/тиждень', 'Скільки годин займають регулярні завдання. >35 = перевантажений, не давати нового.'],
+                    ['🔴 Прострочені', 'Задачі де минув дедлайн. Сигнал: або завдань забагато, або людина не справляється.'],
+                    ['🟡 Повернені', 'Скільки задач повернули на доопрацювання. Багато — проблема з якістю або розумінням завдань.'],
+                ].map(([k,v]) => `<div style="display:flex;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
+                    <div style="min-width:160px;font-weight:500;font-size:0.82rem;">${k}</div>
+                    <div style="font-size:0.82rem;color:#6b7280;">${v}</div>
+                </div>`).join('')}
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🎯 Індекс автономності — як читати</div>
+                <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                    <div style="background:#f0fdf4;border-radius:8px;padding:0.75rem;border-left:4px solid #16a34a;">
+                        <div style="font-weight:600;color:#16a34a;">🟢 ≥ 80% — Норма</div>
+                        <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Людина працює самостійно. Можна делегувати складні завдання без детального контролю.</div>
+                    </div>
+                    <div style="background:#fffbeb;border-radius:8px;padding:0.75rem;border-left:4px solid #f59e0b;">
+                        <div style="font-weight:600;color:#b45309;">🟡 50–79% — Увага</div>
+                        <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Перевіряй виконання, уточнюй очікуваний результат. Є зони покращення.</div>
+                    </div>
+                    <div style="background:#fef2f2;border-radius:8px;padding:0.75rem;border-left:4px solid #ef4444;">
+                        <div style="font-weight:600;color:#dc2626;">🔴 &lt; 50% — Системні проблеми</div>
+                        <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Або завдання ставляться нечітко, або людина не розуміє стандарт якості, або потрібне навчання.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">📊 Дашборд навантаження</div>
+                <div style="background:#f0f9ff;border-radius:8px;padding:0.75rem;font-size:0.82rem;color:#374151;line-height:1.5;">
+                    Вкладка <strong>"Навантаження"</strong> — загальна картина команди. Таблиця де видно кожну людину: скільки годин регулярної роботи, скільки активних задач, індекс автономності, статус (Норма / Увага / Перевантажений). Відразу видно де проблема — без нарад і дзвінків.
+                </div>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🔗 Взаємозв'язки</div>
+                <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">СПІВРОБІТНИК
+│
+├──→ ФУНКЦІЇ — ролі в компанії, звідси регулярні завдання і кроки процесів
+├──→ МІЙ ДЕНЬ — задачі на сьогодні: регулярні + поточні + прострочені
+├──→ ЗАВДАННЯ — всі задачі де assigneeId = ця людина
+├──→ TELEGRAM — нова задача → сповіщення, крок процесу → кнопки
+├──→ КООРДИНАЦІЇ — фільтр задач по учасниках
+├──→ ОСОБИСТА АНАЛІТИКА — динаміка продуктивності, виконані/прострочені
+└──→ ПРАВА ДОСТУПУ — роль (Власник/Менеджер/Співробітник) = набір дозволів</pre>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🚀 Як правильно налаштувати команду</div>
+                ${[
+                    ['1','Система → Функції','Створи всі ролі компанії ПЕРЕД додаванням людей'],
+                    ['2','Система → Співробітники → Запросити','Відправ запрошення на email'],
+                    ['3','Після прийняття → картка людини','Відкрий → редагуй → вибери функції'],
+                    ['4','Система → Функції','Для кожної функції додай регулярні завдання (кнопка 🔁 на картці)'],
+                    ['5','Вкладка "Навантаження"','У всіх має бути статус "Норма"'],
+                    ['6','Система → Інтеграції → Telegram','Скопіюй код → відправ боту /connect КОД'],
+                ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
+                    <div style="min-width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">${n}</div>
+                    <div>
+                        <div style="font-weight:500;font-size:0.82rem;">${title}</div>
+                        <div style="font-size:0.78rem;color:#6b7280;">${desc}</div>
+                    </div>
+                </div>`).join('')}
+                <div style="margin-top:1rem;">
+                    <button class="btn btn-success" onclick="switchUsersSubTab('invite')">
+                        <i data-lucide="user-plus" class="icon icon-sm"></i> Запросити співробітника
+                    </button>
+                </div>
+            </div>
+
+            </div>`;
+        }
+
         function openInviteModal() {
             document.getElementById('inviteModal').style.display = 'block';
             document.getElementById('inviteForm').reset();

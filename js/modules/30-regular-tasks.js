@@ -108,7 +108,7 @@
             });
         });
         
-        function openRegularTaskModal(id = null) {
+        function openRegularTaskModal(id = null, prefillFunction = null) {
             document.getElementById('regularTaskModal').style.display = 'block';
             updateRegularTaskFunctions();
             updatePeriodOptions();
@@ -200,6 +200,14 @@
                 
                 // За замовчуванням сповіщуємо творця
                 setRegularNotifyUsersCheckboxes([currentUser?.uid]);
+                
+                // Якщо передана функція — прив'язуємо
+                if (prefillFunction) {
+                    setTimeout(() => {
+                        const funcSelect = document.getElementById('regularTaskFunction');
+                        if (funcSelect) funcSelect.value = prefillFunction;
+                    }, 50);
+                }
             }
         }
         

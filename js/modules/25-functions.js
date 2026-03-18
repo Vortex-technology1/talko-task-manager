@@ -331,6 +331,9 @@
                             <button class="btn btn-small" onclick="toggleFuncFinance('${escId(f.id)}')" title=${window.t('financeWord2')} style="color:#22c55e;border-color:#d1fae5;">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                             </button>
+                            <button class="btn btn-small" onclick="openRegularTaskModal(null, '${escId(f.name)}')" title="${window.t('addRegularToFunction') || 'Додати регулярне завдання'}" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;">
+                                <i data-lucide="repeat" class="icon icon-sm"></i>+
+                            </button>
                             <button class="btn btn-small" onclick="openFunctionModal('${escId(f.id)}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>
                             <button class="btn btn-small btn-danger" onclick="deleteFunction('${escId(f.id)}')"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                         </div>
@@ -379,4 +382,135 @@
             } else {
                 el.innerHTML = '<div style="color:#ef4444;padding:0.5rem;font-size:0.82rem;">' + window.t('finModuleNotLoaded2') + '</div>';
             }
+        }
+
+        window.toggleFunctionsHowto = function() {
+            const panel = document.getElementById('functionsHowtoPanel');
+            if (!panel) return;
+            if (panel.style.display !== 'none') { panel.style.display = 'none'; return; }
+            panel.style.display = 'block';
+            panel.innerHTML = _buildFunctionsHowto();
+            if (typeof refreshIcons === 'function') refreshIcons();
+        };
+
+        function _buildFunctionsHowto() {
+            return `<div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:1rem;">
+
+            <div style="background:linear-gradient(135deg,#1e3a5f,#0f2040);border-radius:14px;padding:1.25rem 1.5rem;color:white;position:relative;">
+                <button onclick="toggleFunctionsHowto()" style="position:absolute;top:0.75rem;right:0.75rem;background:rgba(255,255,255,0.15);border:none;color:white;border-radius:6px;padding:0.2rem 0.5rem;cursor:pointer;font-size:0.8rem;">✕</button>
+                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;">⚙️ Функції — це ролі, а не люди</div>
+                <div style="color:#93c5fd;font-size:0.88rem;line-height:1.5;">Завдання ставляться функції — система сама знає хто її виконує. Змінилась людина — задачі й процеси продовжують працювати.</div>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">❓ Яку проблему вирішує</div>
+                <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+                    <thead><tr style="background:#f9fafb;">
+                        <th style="padding:0.5rem;text-align:left;color:#ef4444;border-bottom:2px solid #fecaca;">ПРОБЛЕМА</th>
+                        <th style="padding:0.5rem;text-align:left;color:#f59e0b;border-bottom:2px solid #fde68a;">НАСЛІДОК</th>
+                        <th style="padding:0.5rem;text-align:left;color:#16a34a;border-bottom:2px solid #bbf7d0;">РІШЕННЯ</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid #f3f4f6;">
+                            <td style="padding:0.5rem;">Завдання ставиться людині Іванову</td>
+                            <td style="padding:0.5rem;color:#6b7280;">Іванов звільнився — 40 задач підвисли</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Завдання ставиться функції — при заміні людини задачі до нового автоматично</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #f3f4f6;">
+                            <td style="padding:0.5rem;">Власник не знає хто вільний</td>
+                            <td style="padding:0.5rem;color:#6b7280;">Ставить задачі вручну, не рівномірно</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Smart Assign — система вибирає найменш завантаженого</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #f3f4f6;">
+                            <td style="padding:0.5rem;">Регулярна робота тримається в голові</td>
+                            <td style="padding:0.5rem;color:#6b7280;">Забули → не зробили → проблема</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Регулярне завдання прив'язане до функції → виконавець отримує задачу автоматично</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #f3f4f6;">
+                            <td style="padding:0.5rem;">Не видно реальне навантаження</td>
+                            <td style="padding:0.5rem;color:#6b7280;">Хтось перевантажений, хтось пустує</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Система рахує год/тиждень і активних задач по кожній людині</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0.5rem;">Процеси "ламаються" при заміні людей</td>
+                            <td style="padding:0.5rem;color:#6b7280;">Новий не знає що робити</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Крок процесу = функція. Змінив людину → процеси продовжують працювати</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">📦 Що таке функція (приклад)</div>
+                <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">Функція "Менеджер з продажів"
+├── Керівник: Марія Коваль (приймає рішення по функції)
+├── Виконавці: Марія, Іван, Олег (3 людини)
+├── Регулярні завдання:
+│   ├── Обдзвін лідів — щодня 9:00–10:00 (5 год/тиждень)
+│   └── Заповнення CRM — щодня 18:00–18:30 (2.5 год/тиждень)
+├── Тижневе навантаження регулярними: 7.5 год
+└── Зараз активних задач: 12</pre>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🔄 Що відбувається при заміні виконавця</div>
+                ${[
+                    ['1','Іванов звільняється','Відкриваєш функцію → прибираєш Іванова, додаєш Сидорова'],
+                    ['2','Регулярні завдання','Всі регулярні завдання функції тепер виконує Сидоров автоматично'],
+                    ['3','Бізнес-процеси','Всі кроки процесів де була ця функція — автоматично оновлюються'],
+                    ['4','Smart Assign','Тепер враховує Сидорова при розподілі задач'],
+                ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
+                    <div style="min-width:24px;height:24px;background:#0284c7;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">${n}</div>
+                    <div><div style="font-weight:500;font-size:0.82rem;">${title}</div><div style="font-size:0.78rem;color:#6b7280;">${desc}</div></div>
+                </div>`).join('')}
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🔗 Взаємозв'язки</div>
+                <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">ФУНКЦІЯ
+│
+├──→ РЕГУЛЯРНІ ЗАВДАННЯ — щодня/щотижня задача до виконавця автоматично
+├──→ ЗАВДАННЯ — task.function = назва; фільтрація, аналітика, Smart Assign
+├──→ БІЗНЕС-ПРОЦЕСИ — крок = функція; при запуску Smart Assign з виконавців
+├──→ КООРДИНАЦІЇ — фільтр задач "по функціях учасників"
+├──→ СТРУКТУРА БІЗНЕСУ — канвас де функції з'єднані стрілками
+└──→ ФІНАНСИ — витрати і доходи по функції</pre>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">💡 Smart Assign — формула</div>
+                <div style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.8rem;line-height:1.8;">
+                    <div style="margin-bottom:0.5rem;">При постановці задачі — система рахує навантаження кожного виконавця функції:</div>
+                    <div style="font-family:monospace;background:#1e293b;color:#86efac;padding:0.5rem 0.75rem;border-radius:6px;font-size:0.75rem;">
+                        навантаження = активні задачі + прострочені × 2<br>
+                        Менеджер А: 5 активних + 1 прострочена = <strong style="color:#fca5a5;">7</strong><br>
+                        Менеджер Б: 3 активних + 0 прострочених = <strong style="color:#86efac;">3 ← ОБИРАЄТЬСЯ</strong><br>
+                        Менеджер В: 4 активних + 2 прострочених = <strong style="color:#fca5a5;">8</strong>
+                    </div>
+                    <div style="margin-top:0.5rem;color:#6b7280;font-size:0.75rem;">Прострочені × 2 — бо вони важливіші і займають більше уваги</div>
+                </div>
+            </div>
+
+            <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;">🚀 Покрокове налаштування</div>
+                ${[
+                    ['1','+ Функція','Назва ролі в компанії (не посада — роль: "Менеджер продажів", а не "Іванов Іван")'],
+                    ['2','Вибери керівника і виконавців','1 або більше людей з команди'],
+                    ['3','🔁+ на картці функції','Додай регулярну роботу з розкладом і часом виконання'],
+                    ['4','Система → Процеси','В кроках шаблонів вибери функції (не людей)'],
+                    ['5','При постановці задачі','Вибери функцію → Smart Assign автоматично підбере виконавця'],
+                ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
+                    <div style="min-width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">${n}</div>
+                    <div><div style="font-weight:500;font-size:0.82rem;">${title}</div><div style="font-size:0.78rem;color:#6b7280;">${desc}</div></div>
+                </div>`).join('')}
+                <div style="margin-top:1rem;">
+                    <button class="btn btn-success" onclick="openFunctionModal(); toggleFunctionsHowto();">
+                        <i data-lucide="plus" class="icon icon-sm"></i> Додати функцію
+                    </button>
+                </div>
+            </div>
+
+            </div>`;
         }

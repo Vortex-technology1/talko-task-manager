@@ -356,3 +356,59 @@
             return Array.from(container.querySelectorAll('input[name="notifyUser"]:checked'))
                 .map(cb => cb.value);
         }
+
+        window.triggerSmartAssign = function() {
+            const funcName = document.getElementById('taskFunction')?.value;
+            const hint = document.getElementById('smartAssignHint');
+            const result = document.getElementById('smartAssignResult');
+            if (!hint || !result) return;
+            if (!funcName) { hint.style.display = 'none'; return; }
+
+            const func = (typeof functions !== 'undefined' ? functions : []).find(f => f.name === funcName);
+            if (!func?.assigneeIds?.length) { hint.style.display = 'none'; return; }
+
+            const today = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().slice(0,10);
+            const allTasks = (typeof tasks !== 'undefined') ? tasks : [];
+            const allUsers = (typeof users !== 'undefined') ? users : [];
+
+            const loads = func.assigneeIds.map(uid => {
+                const person = allUsers.find(u => u.id === uid);
+                const activeTasks = allTasks.filter(t => t.assigneeId === uid && t.status !== 'done').length;
+                const overdueTasks = allTasks.filter(t =>
+                    t.assigneeId === uid && t.status !== 'done' &&
+                    t.deadlineDate && t.deadlineDate < today
+                ).length;
+                const load = activeTasks + overdueTasks * 2;
+                return { uid, name: person?.name || person?.email || uid, activeTasks, overdueTasks, load };
+            }).sort((a, b) => a.load - b.load);
+
+            if (!loads.length) { hint.style.display = 'none'; return; }
+            const best = loads[0];
+
+            result.innerHTML = `
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.5rem 0.75rem;font-size:0.8rem;">
+                <div style="font-weight:600;color:#16a34a;margin-bottom:0.3rem;">
+                  💡 ${window.t ? window.t('smartAssignRecommend') : 'Рекомендований виконавець'}:
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                  <strong>${esc ? esc(best.name) : best.name}</strong>
+                  <span style="color:#6b7280;">${best.activeTasks} активних${best.overdueTasks > 0 ? ', ' + best.overdueTasks + ' прострочених' : ''}</span>
+                  <button onclick="applySmartAssign('${best.uid}')"
+                    style="padding:0.25rem 0.6rem;background:#16a34a;color:white;border:none;border-radius:5px;font-size:0.75rem;cursor:pointer;font-weight:600;">
+                    ${window.t ? window.t('smartAssignApply') : 'Призначити'}
+                  </button>
+                </div>
+                ${loads.length > 1 ? `
+                <div style="margin-top:0.4rem;font-size:0.75rem;color:#6b7280;">
+                  Інші: ${loads.slice(1, 3).map(l =>
+                    `<span onclick="applySmartAssign('${l.uid}')" style="cursor:pointer;text-decoration:underline;margin-right:0.4rem;">${esc ? esc(l.name) : l.name} (${l.activeTasks})</span>`
+                  ).join('')}
+                </div>` : ''}
+              </div>`;
+            hint.style.display = 'block';
+        };
+
+        window.applySmartAssign = function(userId) {
+            const sel = document.getElementById('taskAssignee');
+            if (sel) { sel.value = userId; }
+        };

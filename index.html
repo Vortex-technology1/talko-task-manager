@@ -1472,13 +1472,15 @@ document.addEventListener('mousedown', function(e) {
                     <button class="btn btn-success" onclick="openFunctionModal()" data-i18n="addFunction">+ Функція</button>
                     <button class="btn" onclick="openMergeFunctionsModal()" id="mergeFunctionsBtn" style="display:none;"><i data-lucide="git-merge" class="icon"></i> <span data-i18n="mergeFunctions">Об'єднати</span></button>
                     <button class="btn" onclick="openAiGeneratorModal()" id="aiStructureBtnDesktop" style="display:none;background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:white;"><i data-lucide="sparkles" class="icon"></i> AI Структура</button>
+                    <button class="btn hide-mobile" onclick="toggleFunctionsHowto()" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;">ℹ️ <span data-i18n="howItWorksBtn">Як це працює</span></button>
                     <div style="margin-left:auto;display:flex;gap:2px;background:#f3f4f6;border-radius:8px;padding:2px;">
                         <button class="calendar-view-btn active" onclick="setFunctionsView('cards')" data-fview="cards" style="padding:0.35rem 0.7rem;font-size:0.8rem;border:none;border-radius:6px;cursor:pointer;background:white;font-weight:500;"><i data-lucide="layout-grid" class="icon icon-sm"></i> <span data-i18n="cardsView">Картки</span></button>
                         <button class="calendar-view-btn" onclick="setFunctionsView('structure')" data-fview="structure" style="padding:0.35rem 0.7rem;font-size:0.8rem;border:none;border-radius:6px;cursor:pointer;background:transparent;font-weight:500;"><i data-lucide="columns" class="icon icon-sm"></i> <span data-i18n="structureView">Структура</span></button>
                     </div>
                 </div>
+                <div id="functionsHowtoPanel" style="display:none;margin-bottom:1rem;"></div>
                 <div id="functionsContainer" class="cards-grid">
-                    <div class="loading"><div class="spinner"></div></div>
+                    <div class="loading"><div class="spinner"></div>
                 </div>
                 <div id="functionsStructureContainer" style="display:none;"></div>
             </div>
@@ -1510,6 +1512,14 @@ document.addEventListener('mousedown', function(e) {
                             style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:none;align-items:center;gap:0.35rem;"
                             class="owner-only-el">
                             <i data-lucide="settings" class="icon icon-sm"></i> <span data-i18n="subTabCompany">Компанія</span>
+                        </button>
+                        <button id="usersSubTab-workload" onclick="switchUsersSubTab('workload')"
+                            style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
+                            📊 <span data-i18n="workloadTab">Навантаження</span>
+                        </button>
+                        <button id="usersSubTab-howto" onclick="switchUsersSubTab('howto')"
+                            style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
+                            ℹ️ <span data-i18n="howItWorksBtn">Як це працює</span>
                         </button>
                     </div>
                 </div>
@@ -1734,6 +1744,8 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                     </div>
                 </div>
+                <div id="usersSubContent-workload" style="display:none;"></div>
+                <div id="usersSubContent-howto" style="display:none;"></div>
             </div>
 
             <!-- ANALYTICS -->
@@ -1944,7 +1956,10 @@ document.addEventListener('mousedown', function(e) {
                 <form id="taskForm" onsubmit="saveTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="taskTitle" class="form-input" required aria-required="true"></div>
-                        <div class="form-group"><label class="form-label" data-i18n="function">Функція</label><select id="taskFunction" class="form-select"><option value="" data-i18n="noFunction">Без функції</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="function">Функція</label><select id="taskFunction" class="form-select" onchange="triggerSmartAssign()"><option value="" data-i18n="noFunction">Без функції</option></select></div>
+                        <div id="smartAssignHint" style="display:none;margin-top:-0.5rem;margin-bottom:0.25rem;">
+                          <div id="smartAssignResult"></div>
+                        </div>
                         <div class="form-group"><label class="form-label">Проєкт</label><select id="taskProject" class="form-select" onchange="onTaskProjectChange()"><option value="" data-i18n="noProject">Без проєкту</option></select></div>
                         <div class="form-group"><label class="form-label">Етап</label><select id="taskStage" class="form-select"><option value="">Без етапу</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець *</label><select id="taskAssignee" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
@@ -4015,7 +4030,7 @@ document.addEventListener('mousedown', function(e) {
 
     // ---- USERS SUB-TABS ----
     function switchUsersSubTab(tab) {
-        ['list','invite','roles','company'].forEach(function(t) {
+        ['list','invite','roles','company','workload','howto'].forEach(function(t) {
             var cont = document.getElementById('usersSubContent-' + t);
             var btn = document.getElementById('usersSubTab-' + t);
             if (cont) cont.style.display = t === tab ? '' : 'none';
@@ -4037,6 +4052,12 @@ document.addEventListener('mousedown', function(e) {
         if (tab === 'company') {
             if (typeof loadCompanySettings === 'function') loadCompanySettings();
             if (typeof loadCompanyProfile === 'function') loadCompanyProfile();
+        }
+        if (tab === 'workload') {
+            if (typeof renderWorkloadDashboard === 'function') renderWorkloadDashboard();
+        }
+        if (tab === 'howto') {
+            if (typeof renderUsersHowto === 'function') renderUsersHowto();
         }
     }
 
