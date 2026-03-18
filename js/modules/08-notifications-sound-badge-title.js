@@ -470,7 +470,7 @@
                         if (!myFuncNames.includes(task.function)) return;
                         // Показуємо toast власнику функції
                         _showFuncOwnerToast(
-                            `📋 Нова задача у вашій функції «${task.function}»`,
+                            `Нова задача у вашій функції «${task.function}»`,
                             task.title || '(без назви)',
                             '#8b5cf6'
                         );
@@ -496,7 +496,7 @@
 
                 // Toast власнику функції якщо є прострочені
                 _showFuncOwnerToast(
-                    `⚠️ Прострочені задачі у функції «${f.name}»`,
+                    `Прострочені задачі у функції «${f.name}»`,
                     `${overdue.length} задач ${overdue.length > 1 ? 'прострочено' : 'прострочена'}`,
                     '#ef4444'
                 );

@@ -407,7 +407,7 @@
                     : '';
                 // Status badge (show only non-active)
                 const statusBadge = f.status === 'draft'
-                    ? `<span style="font-size:0.7rem;background:#f3f4f6;color:#6b7280;border-radius:4px;padding:1px 6px;margin-left:6px;">📝 Чернетка</span>`
+                    ? `<span style="font-size:0.7rem;background:#f3f4f6;color:#6b7280;border-radius:4px;padding:1px 6px;margin-left:6px;display:inline-flex;align-items:center;gap:2px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Чернетка</span>`
                     : '';
                 // Border color by primaryColor
                 const cardBorderStyle = f.primaryColor && f.primaryColor !== '#ffffff'
@@ -444,10 +444,10 @@
                             // Try to get latest actual value from window._metricEntries or skip
                             const periodLabel = targetPeriod === 'week' ? '/тиж' : targetPeriod === 'quarter' ? '/кв' : '/міс';
                             if (!target) {
-                                return `<span style="font-size:0.72rem;background:#f3f4f6;color:#374151;border-radius:4px;padding:1px 7px;">📊 ${esc(m.name)}</span>`;
+                                return `<span style="font-size:0.72rem;background:#f3f4f6;color:#374151;border-radius:4px;padding:1px 7px;display:inline-flex;align-items:center;gap:3px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> ${esc(m.name)}</span>`;
                             }
                             const formatted = target >= 1000 ? Math.round(target/1000)+'к' : target;
-                            return `<span style="font-size:0.72rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 7px;" title="${esc(m.name)}: ціль ${target}${periodLabel}">📊 ${esc(m.name)}: ${formatted}${m.unit||''}${periodLabel}</span>`;
+                            return `<span style="font-size:0.72rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 7px;display:inline-flex;align-items:center;gap:3px;" title="${esc(m.name)}: ціль ${target}${periodLabel}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> ${esc(m.name)}: ${formatted}${m.unit||''}${periodLabel}</span>`;
                         }).join('');
                         return `<div style="display:flex;flex-wrap:wrap;gap:0.25rem;margin:0.3rem 0;">${metricItems}${funcMetrics.length > 3 ? `<span style="font-size:0.72rem;color:#9ca3af;">+${funcMetrics.length-3}</span>` : ''}</div>`;
                     })()}
@@ -677,33 +677,33 @@
             // Build 9 steps
             const steps = [
                 {
-                    num: 1, icon: '👋', title: 'Ласкаво просимо',
+                    num: 1, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>', title: 'Ласкаво просимо',
                     content: `<p style="font-size:0.9rem;margin:0 0 0.5rem;">Твоя функція: <strong>${esc(f.name)}</strong></p>
                     <div style="background:#f0fdf4;border-left:3px solid #22c55e;padding:0.5rem 0.75rem;border-radius:0 8px 8px 0;font-size:0.85rem;font-style:italic;">${esc(f.result || 'ЦКП не заповнений — попроси керівника функції оновити.')}</div>`
                 },
                 {
-                    num: 2, icon: '👤', title: 'Твій керівник',
+                    num: 2, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>', title: 'Твій керівник',
                     content: ownerUser
                         ? `<div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:#f8fafc;border-radius:8px;">
-                            <div style="width:40px;height:40px;background:#e0e7ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">👤</div>
+                            <div style="width:40px;height:40px;background:#e0e7ff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
                             <div><div style="font-weight:700;">${esc(ownerUser.name || ownerUser.email)}</div>
                             <div style="font-size:0.8rem;color:#6b7280;">${esc(f.contacts || ownerUser.email || '')}</div></div></div>`
-                        : `<p style="color:#ef4444;">⚠️ Власник функції не призначений. Зверніться до адміністратора.</p>`
+                        : `<p style="color:#ef4444;display:flex;align-items:center;gap:0.4rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Власник функції не призначений. Зверніться до адміністратора.</p>`
                 },
                 {
-                    num: 3, icon: '📋', title: 'Твоя функція',
+                    num: 3, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>', title: 'Твоя функція',
                     content: `<p style="font-size:0.85rem;color:#374151;margin:0 0 0.5rem;">${esc(f.description || 'Опис функції не заповнений.')}</p>
                     ${f.keywords?.length ? `<div style="display:flex;flex-wrap:wrap;gap:4px;">${f.keywords.map(k => `<span style="background:#eff6ff;color:#1d4ed8;border-radius:4px;padding:2px 8px;font-size:0.75rem;">${esc(k)}</span>`).join('')}</div>` : ''}`
                 },
                 {
-                    num: 4, icon: '🏢', title: 'Місце в компанії',
+                    num: 4, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>', title: 'Місце в компанії',
                     content: reportsToFunc
                         ? `<p style="font-size:0.85rem;">Функція <strong>${esc(f.name)}</strong> підпорядковується: <strong>${esc(reportsToFunc.name)}</strong></p>
                            <p style="font-size:0.82rem;color:#6b7280;">Власник вищої функції: ${esc(users.find(u=>u.id===reportsToFunc.headId)?.name || '—')}</p>`
                         : `<p style="font-size:0.85rem;color:#6b7280;">Функція не має явного підпорядкування. Перегляньте схему в розділі <strong>Система → Структура → Канвас</strong>.</p>`
                 },
                 {
-                    num: 5, icon: '🔗', title: 'З ким взаємодієш',
+                    num: 5, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>', title: 'З ким взаємодієш',
                     content: f.communicatesWith?.length
                         ? `<div style="display:flex;flex-direction:column;gap:0.4rem;">${f.communicatesWith.map(cw => {
                             const cf = functions.find(fn => fn.id === cw.functionId);
@@ -718,7 +718,7 @@
                         : `<p style="font-size:0.85rem;color:#6b7280;">Комунікаційні лінії не налаштовані. Перегляньте схему в Структурі.</p>`
                 },
                 {
-                    num: 6, icon: '🔄', title: 'Регулярні задачі',
+                    num: 6, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>', title: 'Регулярні задачі',
                     content: funcRegularTasks.length
                         ? `<div style="display:flex;flex-direction:column;gap:0.3rem;">${funcRegularTasks.slice(0,5).map(rt => {
                             const time = (rt.timeStart || rt.time || '') + (rt.timeEnd ? '–'+rt.timeEnd : '');
@@ -729,7 +729,7 @@
                         : `<p style="font-size:0.85rem;color:#6b7280;">Регулярних задач поки немає.</p>`
                 },
                 {
-                    num: 7, icon: '✅', title: 'Перші задачі',
+                    num: 7, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>', title: 'Перші задачі',
                     content: funcTasks.length
                         ? `<div style="display:flex;flex-direction:column;gap:0.3rem;">${funcTasks.map(t => `<div style="padding:0.4rem 0.6rem;background:#f9fafb;border-radius:6px;font-size:0.82rem;display:flex;justify-content:space-between;">
                             <span>${esc(t.title)}</span>
@@ -737,17 +737,18 @@
                         : `<p style="font-size:0.85rem;color:#6b7280;">Активних задач в цій функції немає.</p>`
                 },
                 {
-                    num: 8, icon: '🎓', title: 'Навчання',
+                    num: 8, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>', title: 'Навчання',
                     content: funcLessons.length
                         ? `<p style="font-size:0.85rem;margin:0 0 0.5rem;">Уроки для твоєї функції (${funcLessons.length}):</p>
-                           <div style="display:flex;flex-direction:column;gap:0.3rem;">${funcLessons.slice(0,4).map(l => `<div style="padding:0.4rem 0.6rem;background:#fdf4ff;border-radius:6px;font-size:0.82rem;">🎓 ${esc(l.title || l.name || '')}</div>`).join('')}</div>`
+                           <div style="display:flex;flex-direction:column;gap:0.3rem;">${funcLessons.slice(0,4).map(l => `<div style="padding:0.4rem 0.6rem;background:#fdf4ff;border-radius:6px;font-size:0.82rem;display:flex;align-items:center;gap:0.4rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> ${esc(l.title || l.name || '')}</div>`).join('')}</div>`
                         : `<p style="font-size:0.85rem;color:#6b7280;">Перейди до розділу <strong>Навчання</strong> і пройди уроки, що стосуються твоєї ролі.</p>`
                 },
                 {
-                    num: 9, icon: '👥', title: 'Команда функції',
+                    num: 9, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>', title: 'Команда функції',
                     content: funcUsers.length
                         ? `<div style="display:flex;flex-wrap:wrap;gap:0.5rem;">${funcUsers.map(u => `<div style="padding:0.4rem 0.75rem;background:#f0fdf4;border-radius:8px;font-size:0.82rem;display:flex;align-items:center;gap:0.4rem;">
-                            <span>👤</span><span>${esc(u.name || u.email)}</span></div>`).join('')}</div>`
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <span>${esc(u.name || u.email)}</span></div>`).join('')}</div>`
                         : `<p style="font-size:0.85rem;color:#6b7280;">Учасників функції не знайдено.</p>`
                 }
             ];
@@ -776,7 +777,7 @@
                 </div>
                 ${f.onboardingChecklist?.length ? `
                 <div style="margin-top:1rem;padding:0.75rem;background:#fffbeb;border-radius:10px;border:1px solid #fde68a;">
-                    <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">📝 Специфічний чекліст функції</div>
+                    <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Специфічний чекліст функції</div>
                     ${f.onboardingChecklist.map(item => `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;font-size:0.82rem;">
                         <input type="checkbox" style="accent-color:#f59e0b;"> <span>${esc(item)}</span>
                     </div>`).join('')}

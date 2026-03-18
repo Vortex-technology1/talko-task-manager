@@ -634,7 +634,9 @@
                         const roleInFunc = u.functionRoles?.[f.id];
                         const bg = isPrimary ? '#fef9c3' : '#e8f5e9';
                         const color = isPrimary ? '#854d0e' : '#2e7d32';
-                        const prefix = isPrimary ? '⭐ ' : (roleInFunc === 'owner' ? '👑 ' : '');
+                        const prefix = isPrimary
+                            ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="#854d0e" stroke="#854d0e" stroke-width="1" style="margin-right:2px;vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+                            : (roleInFunc === 'owner' ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" style="margin-right:2px;vertical-align:-1px;"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>` : '');
                         return `<span style="font-size:0.65rem;background:${bg};color:${color};padding:1px 6px;border-radius:4px;">${prefix}${esc(f.name)}</span>`;
                     }).join('')}</div>` : ''}
                     <div style="display:flex;gap:2px;margin-bottom:0.4rem;">
@@ -751,8 +753,8 @@
                 return `<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
                     <span style="flex:1;font-size:0.82rem;">${esc(f.name)}</span>
                     <select data-role-func="${esc(fId)}" class="form-select" style="width:auto;font-size:0.78rem;padding:2px 6px;">
-                        <option value="owner" ${currentRole==='owner'?'selected':''}>👑 Власник</option>
-                        <option value="member" ${currentRole==='member'?'selected':''}>👤 Учасник</option>
+                        <option value="owner" ${currentRole==='owner'?'selected':''}>&#9670; Власник</option>
+                        <option value="member" ${currentRole==='member'?'selected':''}>&#9671; Учасник</option>
                     </select>
                 </div>`;
             }).join('');

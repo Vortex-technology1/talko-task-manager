@@ -449,7 +449,7 @@
             // Функція є — фільтруємо: спершу виконавці функції, потім інші (сірим)
             let opts = `<option value="">${window.t ? window.t('select') : 'Оберіть'}</option>`;
             if (funcUsers.length) {
-                opts += `<optgroup label="👥 Виконавці функції">` +
+                opts += `<optgroup label="Виконавці функції">` +
                     funcUsers.map(u => `<option value="${esc(u.id)}" ${u.id === currentAssignee ? 'selected' : ''}>${esc(u.name || u.email)}</option>`).join('') +
                     `</optgroup>`;
             }
