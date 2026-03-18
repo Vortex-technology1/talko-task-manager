@@ -43,9 +43,9 @@
                     document.getElementById('taskTitle').value = task.title || '';
                     document.getElementById('taskFunction').value = task.function || '';
                     // Smart Assign: показуємо підказку для існуючої функції
-                    if (task.function && typeof triggerSmartAssign === 'function') {
-                        setTimeout(triggerSmartAssign, 80);
-                    }
+                    // Smart Assign: НЕ показуємо при редагуванні (не перезаписуємо виконавця)
+                    const _saHint2 = document.getElementById('smartAssignHint');
+                    if (_saHint2) _saHint2.style.display = 'none';
                     updateProjectSelects(task.projectId);
                     document.getElementById('taskProject').value = task.projectId || '';
                     // Load stages for this project
@@ -371,23 +371,25 @@
             if (!hint || !result) return;
             if (!funcName) { hint.style.display = 'none'; return; }
 
-            const func = (typeof functions !== 'undefined' ? functions : []).find(f => f.name === funcName);
+            const func = (typeof functions !== 'undefined' ? functions : []).find(f => f.name === funcName && f.status !== 'archived');
             if (!func?.assigneeIds?.length) { hint.style.display = 'none'; return; }
 
             const today = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().slice(0,10);
             const allTasks = (typeof tasks !== 'undefined') ? tasks : [];
             const allUsers = (typeof users !== 'undefined') ? users : [];
 
-            const loads = func.assigneeIds.map(uid => {
-                const person = allUsers.find(u => u.id === uid);
-                const activeTasks = allTasks.filter(t => t.assigneeId === uid && t.status !== 'done').length;
-                const overdueTasks = allTasks.filter(t =>
-                    t.assigneeId === uid && t.status !== 'done' &&
-                    t.deadlineDate && t.deadlineDate < today
-                ).length;
-                const load = activeTasks + overdueTasks * 2;
-                return { uid, name: person?.name || person?.email || uid, activeTasks, overdueTasks, load };
-            }).sort((a, b) => a.load - b.load);
+            const loads = func.assigneeIds
+                .filter(uid => allUsers.find(u => u.id === uid))
+                .map(uid => {
+                    const person = allUsers.find(u => u.id === uid);
+                    const activeTasks = allTasks.filter(t => t.assigneeId === uid && t.status !== 'done').length;
+                    const overdueTasks = allTasks.filter(t =>
+                        t.assigneeId === uid && t.status !== 'done' &&
+                        t.deadlineDate && t.deadlineDate < today
+                    ).length;
+                    const load = activeTasks + overdueTasks * 2;
+                    return { uid, name: person?.name || person?.email || uid, activeTasks, overdueTasks, load };
+                }).sort((a, b) => a.load - b.load);
 
             if (!loads.length) { hint.style.display = 'none'; return; }
             const best = loads[0];
@@ -399,7 +401,7 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
                   <strong>${esc ? esc(best.name) : best.name}</strong>
-                  <span style="color:#6b7280;">${best.activeTasks} активних${best.overdueTasks > 0 ? ', ' + best.overdueTasks + ' прострочених' : ''}</span>
+                  <span style="color:#6b7280;">${best.activeTasks} ${window.t ? window.t('activeTasksCount') || 'активних' : 'активних'}${best.overdueTasks > 0 ? ', ' + best.overdueTasks + ' ' + (window.t ? window.t('overdueStatus') || 'прострочених' : 'прострочених') : ''}</span>
                   <button onclick="applySmartAssign('${best.uid}')"
                     style="padding:0.25rem 0.6rem;background:#16a34a;color:white;border:none;border-radius:5px;font-size:0.75rem;cursor:pointer;font-weight:600;">
                     ${window.t ? window.t('smartAssignApply') : 'Призначити'}
@@ -407,7 +409,7 @@
                 </div>
                 ${loads.length > 1 ? `
                 <div style="margin-top:0.4rem;font-size:0.75rem;color:#6b7280;">
-                  Інші: ${loads.slice(1, 3).map(l =>
+                  ${window.t ? window.t('othersLabel') || 'Інші' : 'Інші'}: ${loads.slice(1, 3).map(l =>
                     `<span onclick="applySmartAssign('${l.uid}')" style="cursor:pointer;text-decoration:underline;margin-right:0.4rem;">${esc ? esc(l.name) : l.name} (${l.activeTasks})</span>`
                   ).join('')}
                 </div>` : ''}

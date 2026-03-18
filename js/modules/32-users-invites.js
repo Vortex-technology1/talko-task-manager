@@ -7,6 +7,15 @@
         window.renderWorkloadDashboard = function() {
             const container = document.getElementById('usersSubContent-workload');
             if (!container) return;
+            // Показуємо loading якщо дані ще не завантажились
+            if (typeof isLoading !== 'undefined' && isLoading) {
+                container.innerHTML = '<div style="padding:2rem;text-align:center;"><div class="spinner"></div></div>';
+                return;
+            }
+            if (!users || users.length === 0) {
+                container.innerHTML = '<div style="padding:2rem;text-align:center;color:#6b7280;font-size:0.9rem;">' + (window.t ? window.t('noUsers') || 'Немає користувачів' : 'Немає користувачів') + '</div>';
+                return;
+            }
             const todayStr = getLocalDateStr(new Date());
 
             // --- розрахунок по кожному юзеру ---
@@ -17,7 +26,7 @@
                 const overdue = active.filter(tk => tk.deadlineDate && tk.deadlineDate < todayStr);
                 const returned = userTasks.filter(tk => tk.reviewRejectedAt);
                 const doneNoReturn = done.filter(tk => !tk.reviewRejectedAt).length;
-                const autonomy = done.length > 0 ? Math.round(doneNoReturn / done.length * 100) : 0;
+                const autonomy = done.length > 0 ? Math.round(doneNoReturn / done.length * 100) : null;
 
                 const userRegular = regularTasks.filter(rt => {
                     const func = functions.find(f => f.name === rt.function && f.status !== 'archived');
@@ -59,7 +68,8 @@
             const totalPeople = users.length;
             const overloadedCount = rows.filter(r => r.overloadFlag).length;
             const totalOverdue = rows.reduce((s,r) => s + r.overdue.length, 0);
-            const avgAutonomy = rows.length > 0 ? Math.round(rows.reduce((s,r) => s + r.autonomy, 0) / rows.length) : 0;
+            const _autoRows = rows.filter(r => r.autonomy !== null);
+            const avgAutonomy = _autoRows.length > 0 ? Math.round(_autoRows.reduce((s,r) => s + r.autonomy, 0) / _autoRows.length) : null;
 
             const summaryHTML = `
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
@@ -67,7 +77,7 @@
                     { label: window.t('totalPeople'), val: totalPeople, color: '#0284c7', bg: '#f0f9ff' },
                     { label: window.t('overloadedPeople'), val: overloadedCount, color: overloadedCount > 0 ? '#ef4444' : '#16a34a', bg: overloadedCount > 0 ? '#fef2f2' : '#f0fdf4' },
                     { label: window.t('totalOverdue'), val: totalOverdue, color: totalOverdue > 0 ? '#ef4444' : '#16a34a', bg: totalOverdue > 0 ? '#fef2f2' : '#f0fdf4' },
-                    { label: window.t('avgAutonomy'), val: avgAutonomy + '%', color: avgAutonomy >= 80 ? '#16a34a' : avgAutonomy >= 50 ? '#f59e0b' : '#ef4444', bg: '#f9fafb' },
+                    { label: window.t('avgAutonomy'), val: avgAutonomy !== null ? avgAutonomy + '%' : '—', color: avgAutonomy === null ? '#9ca3af' : avgAutonomy >= 80 ? '#16a34a' : avgAutonomy >= 50 ? '#f59e0b' : '#ef4444', bg: '#f9fafb' },
                 ].map(c => `<div style="background:${c.bg};border-radius:10px;padding:0.75rem;text-align:center;">
                     <div style="font-size:1.6rem;font-weight:700;color:${c.color};">${c.val}</div>
                     <div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;">${c.label}</div>
@@ -97,7 +107,7 @@
                         ${rows.map(r => {
                             const statusText = r.overloadFlag ? `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;vertical-align:-1px;margin-right:3px;"></span>${window.t('workloadOverloaded')}` : r.attentionFlag ? `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f59e0b;vertical-align:-1px;margin-right:3px;"></span>${window.t('workloadAttention')}` : `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#16a34a;vertical-align:-1px;margin-right:3px;"></span>${window.t('workloadNorm')}`;
                             const hrsColor = r.weeklyHrs > 35 ? '#ef4444' : '#0284c7';
-                            const autoColor = r.autonomy >= 80 ? '#16a34a' : r.autonomy >= 50 ? '#f59e0b' : '#ef4444';
+                            const autoColor = r.autonomy === null ? '#9ca3af' : r.autonomy >= 80 ? '#16a34a' : r.autonomy >= 50 ? '#f59e0b' : '#ef4444';
                             return `<tr style="border-bottom:1px solid #f3f4f6;${r.overloadFlag ? 'background:#fff5f5;' : ''}">
                                 <td style="padding:0.5rem 0.75rem;">
                                     <div style="font-weight:500;">${esc(r.u.name || r.u.email)}</div>
@@ -111,7 +121,7 @@
                                 <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${hrsColor};">${r.weeklyHrs}</td>
                                 <td style="padding:0.5rem 0.75rem;text-align:center;">${r.active.length}</td>
                                 <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${r.overdue.length > 0 ? '#ef4444' : '#6b7280'};">${r.overdue.length}</td>
-                                <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${autoColor};">${r.autonomy}%</td>
+                                <td style="padding:0.5rem 0.75rem;text-align:center;font-weight:600;color:${autoColor};">${r.autonomy === null ? '—' : r.autonomy + '%'}</td>
                                 <td style="padding:0.5rem 0.75rem;text-align:center;font-size:0.8rem;">${statusText}</td>
                             </tr>`;
                         }).join('')}
