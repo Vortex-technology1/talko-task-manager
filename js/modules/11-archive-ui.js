@@ -286,7 +286,7 @@
                         assigneeName: assignee?.name || assignee?.email || '',
                         deadlineDate: todayStr,
                         deadlineTime: rt.timeStart || rt.time || '18:00',
-                        deadline: todayStr + 'T' + (rt.timeStart || rt.time || '18:00'),
+                        deadline: firebase.firestore.Timestamp.fromDate(new Date(todayStr + 'T' + (rt.timeStart || rt.time || '18:00') + ':00')),
                         expectedResult: rt.expectedResult || '',
                         reportFormat: rt.reportFormat || '',
                         description: rt.instruction || '',

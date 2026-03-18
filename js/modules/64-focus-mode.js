@@ -352,7 +352,7 @@
                         assigneeName: currentUserData?.name || currentUser.email,
                         deadlineDate: todayStr,
                         deadlineTime: task.time || '18:00',
-                        deadline: todayStr + 'T' + (task.time || '18:00'),
+                        deadline: firebase.firestore.Timestamp.fromDate(new Date(todayStr + 'T' + (task.time || '18:00') + ':00')),
                         status: 'done',
                         priority: rt?.priority || 'medium',
                         pinned: false,

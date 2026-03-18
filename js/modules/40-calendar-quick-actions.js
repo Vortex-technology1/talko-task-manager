@@ -219,15 +219,23 @@
             const minutes = oldDeadline ? oldDeadline.getMinutes() : 0;
             
             const newTime = hour.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
-            const newDeadline = dateStr + 'T' + newTime;
+            // FIX: deadline як Timestamp + скидаємо overdueNotified/sentReminders
+            const newDeadlineTs = firebase.firestore.Timestamp.fromDate(new Date(dateStr + 'T' + newTime + ':00'));
+            const oldDateStr = task.deadlineDate || null;
             
             // Update task
-            await db.collection('companies').doc(currentCompany).collection('tasks').doc(draggedTaskId).update({
+            const calendarHourUpdate = {
                 deadlineDate: dateStr,
                 deadlineTime: newTime,
-                deadline: newDeadline,
+                deadline: newDeadlineTs,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
+            };
+            // Скидаємо якщо дата або час змінились
+            if (oldDateStr !== dateStr || task.deadlineTime !== newTime) {
+                calendarHourUpdate.overdueNotified = false;
+                calendarHourUpdate.sentReminders = [];
+            }
+            await db.collection('companies').doc(currentCompany).collection('tasks').doc(draggedTaskId).update(calendarHourUpdate);
             // AUDIT LOG — deadline change via drag
             const dragTask = tasks.find(t => t.id === draggedTaskId);
             logTaskChange(draggedTaskId, 'deadline', { deadlineDate: dateStr, deadlineTime: newTime }, { deadlineDate: dragTask?.deadlineDate, deadlineTime: dragTask?.deadlineTime });
@@ -242,7 +250,7 @@
             // Локальне оновлення
             task.deadlineDate = dateStr;
             task.deadlineTime = newTime;
-            task.deadline = dateStr + 'T' + newTime;
+            task.deadline = newDeadlineTs;
             
             draggedTaskId = null;
             renderMyDay();

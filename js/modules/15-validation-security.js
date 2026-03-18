@@ -473,19 +473,29 @@
                 const _subtasksSnap = await db.collection('companies').doc(currentCompany)
                     .collection('tasks').where('parentId', '==', id).limit(500).get(); // safety: Firestore batch limit
                 
-                if (_subtasksSnap.empty) {
-                    // Немає підзавдань — просте видалення
-                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
-                } else {
-                    // Є підзавдання — batch delete (атомарно)
-                    const _batch = db.batch();
+                // Cascade: збираємо всі docs для batch delete
+                const _batch = db.batch();
+                const _taskRef = db.collection('companies').doc(currentCompany).collection('tasks').doc(id);
+
+                // Видаляємо коментарі (subcollection — Firestore не видаляє автоматично)
+                try {
+                    const _commentsSnap = await _taskRef.collection('comments').limit(500).get();
+                    _commentsSnap.docs.forEach(d => _batch.delete(d.ref));
+                } catch(_e) { /* non-critical */ }
+
+                // Видаляємо підзавдання
+                if (!_subtasksSnap.empty) {
                     _subtasksSnap.docs.forEach(d => {
                         _batch.delete(d.ref);
                         pendingDeleteIds.add(d.id);
                     });
-                    _batch.delete(db.collection('companies').doc(currentCompany).collection('tasks').doc(id));
-                    await _batch.commit();
-                    // Видаляємо підзавдання з локального масиву
+                }
+
+                // Видаляємо саму задачу
+                _batch.delete(_taskRef);
+                await _batch.commit();
+
+                if (!_subtasksSnap.empty) {
                     const _subtaskIds = _subtasksSnap.docs.map(d => d.id);
                     tasks = tasks.filter(t => !_subtaskIds.includes(t.id));
                     _subtaskIds.forEach(sid => pendingDeleteIds.delete(sid));

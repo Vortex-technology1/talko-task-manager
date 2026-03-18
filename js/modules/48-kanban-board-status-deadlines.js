@@ -408,11 +408,27 @@
                 const oldDl = task.deadlineDate || null;
                 try {
                     const ref = db.collection(`companies/${currentCompany}/tasks`).doc(task.id);
-                    await ref.update({ deadlineDate: newDeadline || firebase.firestore.FieldValue.delete(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    // FIX: оновлюємо deadline як Timestamp (для checkOverdueTasks/sendReminders)
+                    // + скидаємо overdueNotified і sentReminders якщо дедлайн змінився
+                    const deadlineTs = newDeadline
+                        ? firebase.firestore.Timestamp.fromDate(
+                            new Date(newDeadline + 'T' + (task.deadlineTime || '23:59') + ':00')
+                          )
+                        : null;
+                    const deadlineUpdate = {
+                        deadlineDate: newDeadline || firebase.firestore.FieldValue.delete(),
+                        deadline: deadlineTs || firebase.firestore.FieldValue.delete(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                    // Скидаємо якщо дедлайн змінився
+                    if (oldDl !== newDeadline) {
+                        deadlineUpdate.overdueNotified = false;
+                        deadlineUpdate.sentReminders = [];
+                    }
+                    await ref.update(deadlineUpdate);
                     await logTaskChange(task.id, 'edit', { field: 'deadlineDate', from: oldDl, to: newDeadline });
                     task.deadlineDate = newDeadline;
-                    // BUG-X FIX: also update composite deadline field used by parseDeadline()
-                    task.deadline = newDeadline ? (newDeadline + (task.deadlineTime ? 'T' + task.deadlineTime : '')) : null;
+                    task.deadline = deadlineTs;
                     showToast(newDeadline ? `${window.t('deadlineChanged')} → ${newDeadline}` : window.t('deadlineRemoved'), 'success');
                 } catch(err) {
                     console.error('Kanban deadline drop error:', err);
