@@ -148,7 +148,13 @@
             </div>
             ${catTabsHTML}
             <div class="learning-modules-list" id="learningModulesList">
-                ${filteredModules.map(module => renderModuleCard(module, filteredModules)).join('')}
+                ${filteredModules.length === 0
+                    ? `<div style="padding:2.5rem 1rem;text-align:center;color:#9ca3af;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin-bottom:0.75rem;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        <div style="font-size:0.95rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">${window.t('learningComingSoon') || 'Уроки скоро появляться'}</div>
+                        <div style="font-size:0.82rem;color:#9ca3af;">${window.t('learningComingSoonSub') || 'Контент в розробці'}</div>
+                      </div>`
+                    : filteredModules.map(module => renderModuleCard(module, filteredModules)).join('')}
             </div>
         </div>`;
 
