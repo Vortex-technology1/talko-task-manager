@@ -8606,6 +8606,81 @@ Bist du dabei?</div>
             icon: 'trending-up',
             color: '#3b82f6'
         },
+        {
+            id: 'hr',
+            title: 'Найм та адаптація',
+            title_ru: 'Найм и адаптация',
+            title_en: 'Hiring & Onboarding',
+            title_pl: 'Rekrutacja i onboarding',
+            title_de: 'Einstellung & Onboarding',
+            title_cs: 'Nábor a onboarding',
+            icon: 'users',
+            color: '#8b5cf6'
+        },
+        {
+            id: 'strategy',
+            title: 'Стратегія та бізнес-модель',
+            title_ru: 'Стратегия и бизнес-модель',
+            title_en: 'Strategy & Business Model',
+            title_pl: 'Strategia i model biznesowy',
+            title_de: 'Strategie & Geschäftsmodell',
+            title_cs: 'Strategie a obchodní model',
+            icon: 'target',
+            color: '#f59e0b'
+        },
+        {
+            id: 'finance',
+            title: 'Фінансове планування',
+            title_ru: 'Финансовое планирование',
+            title_en: 'Financial Planning',
+            title_pl: 'Planowanie finansowe',
+            title_de: 'Finanzplanung',
+            title_cs: 'Finanční plánování',
+            icon: 'bar-chart-2',
+            color: '#ef4444'
+        },
     ];
 
+})();
+
+// ============================================================
+// КУРС 3: НАЙМ ТА АДАПТАЦІЯ СПІВРОБІТНИКІВ
+// Уроки додаються поступово
+// ============================================================
+(function() {
+'use strict';
+    const hrCourseData = [
+        // id: 201, 202, 203...
+    ];
+    if (window.learningCourseData) {
+        window.learningCourseData = window.learningCourseData.concat(hrCourseData);
+    }
+})();
+
+// ============================================================
+// КУРС 4: СТРАТЕГІЯ ТА БІЗНЕС-МОДЕЛЬ
+// Уроки додаються поступово
+// ============================================================
+(function() {
+'use strict';
+    const strategyCourseData = [
+        // id: 301, 302, 303...
+    ];
+    if (window.learningCourseData) {
+        window.learningCourseData = window.learningCourseData.concat(strategyCourseData);
+    }
+})();
+
+// ============================================================
+// КУРС 5: ФІНАНСОВЕ ПЛАНУВАННЯ
+// Уроки додаються поступово
+// ============================================================
+(function() {
+'use strict';
+    const financeCourseData = [
+        // id: 401, 402, 403...
+    ];
+    if (window.learningCourseData) {
+        window.learningCourseData = window.learningCourseData.concat(financeCourseData);
+    }
 })();
