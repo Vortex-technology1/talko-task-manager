@@ -32,6 +32,11 @@
                         document.querySelectorAll('#functionAssignees input').forEach(cb => {
                             cb.checked = f.assigneeIds?.includes(cb.value);
                         });
+                        // reportsTo
+                        const rtEl = document.getElementById('functionReportsTo');
+                        if (rtEl) rtEl.value = f.reportsTo || '';
+                        // communicatesWith rows
+                        renderCommunicatesWithRows(f.communicatesWith || []);
                     }, 50);
                 }
             } else {
@@ -40,6 +45,8 @@
                 document.getElementById('functionForm').reset();
                 document.getElementById('functionStatus').value = 'active';
                 document.getElementById('functionColor').value = '#ffffff';
+                const cwContainer = document.getElementById('communicatesWithRows');
+                if (cwContainer) cwContainer.innerHTML = '';
             }
         }
 
@@ -51,6 +58,61 @@
             c.innerHTML = users.map(u => `<label class="assignee-checkbox"><input type="checkbox" value="${esc(u.id)}">${esc(u.name || u.email)}</label>`).join('');
             h.innerHTML = `<option value="">${window.t('select')}</option>` + userOptions;
             if (t) t.innerHTML = `<option value="">— немає —</option>` + userOptions;
+            // Populate reportsTo select (all functions except currently editing)
+            const rt = document.getElementById('functionReportsTo');
+            if (rt) {
+                const otherFuncs = functions.filter(f => f.status !== 'archived' && f.id !== editingId);
+                rt.innerHTML = `<option value="">— не підпорядковується —</option>` +
+                    otherFuncs.map(f => `<option value="${esc(f.id)}">${esc(f.name)}</option>`).join('');
+            }
+        }
+
+        // --- communicatesWith UI ---
+        function renderCommunicatesWithRows(data) {
+            const container = document.getElementById('communicatesWithRows');
+            if (!container) return;
+            container.innerHTML = '';
+            (data || []).forEach((row, i) => addCommunicatesWithRow(row, i));
+        }
+
+        window.addCommunicatesWithRow = function(existing, idx) {
+            const container = document.getElementById('communicatesWithRows');
+            if (!container) return;
+            const rowId = 'cwRow_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+            const funcOptions = functions
+                .filter(f => f.status !== 'archived' && f.id !== editingId)
+                .map(f => `<option value="${esc(f.id)}" ${existing?.functionId === f.id ? 'selected' : ''}>${esc(f.name)}</option>`)
+                .join('');
+            const dirOptions = [
+                {v:'bidirectional', l:'↔ Двостороння'},
+                {v:'outgoing', l:'→ Вихідна'},
+                {v:'incoming', l:'← Вхідна'}
+            ].map(d => `<option value="${d.v}" ${existing?.direction === d.v ? 'selected' : ''}>${d.l}</option>`).join('');
+            const div = document.createElement('div');
+            div.id = rowId;
+            div.style.cssText = 'display:grid;grid-template-columns:1fr 1fr auto auto;gap:0.4rem;align-items:center;background:#f9fafb;border-radius:8px;padding:0.5rem;';
+            div.innerHTML = `
+                <select class="form-select cw-func-select" style="font-size:0.82rem;">
+                    <option value="">— оберіть функцію —</option>${funcOptions}
+                </select>
+                <input type="text" class="form-input cw-topics-input" placeholder="теми: рахунки, бюджет" value="${esc(existing?.topics?.join(', ') || '')}" style="font-size:0.82rem;">
+                <select class="form-select cw-dir-select" style="font-size:0.82rem;min-width:130px;">${dirOptions}</select>
+                <button type="button" onclick="document.getElementById('${rowId}').remove()" style="background:none;border:1px solid #fca5a5;border-radius:6px;color:#ef4444;padding:0.25rem 0.5rem;cursor:pointer;font-size:0.82rem;">✕</button>`;
+            container.appendChild(div);
+        };
+
+        function collectCommunicatesWith() {
+            const rows = document.querySelectorAll('#communicatesWithRows > div');
+            const result = [];
+            rows.forEach(row => {
+                const funcId = row.querySelector('.cw-func-select')?.value;
+                if (!funcId) return;
+                const topics = (row.querySelector('.cw-topics-input')?.value || '')
+                    .split(',').map(t => t.trim()).filter(Boolean);
+                const direction = row.querySelector('.cw-dir-select')?.value || 'bidirectional';
+                result.push({ functionId: funcId, topics, direction });
+            });
+            return result;
         }
 
         async function saveFunction(e) {
@@ -107,6 +169,8 @@
                     primaryColor: document.getElementById('functionColor').value || '#ffffff',
                     ownerTempId: document.getElementById('functionOwnerTempId').value || '',
                     ownerTempUntil: document.getElementById('functionOwnerTempUntil').value || '',
+                    reportsTo: document.getElementById('functionReportsTo')?.value || '',
+                    communicatesWith: collectCommunicatesWith(),
                     assigneeIds: assigneeIds,
                     assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || users.find(u => u.id === id)?.email || '').filter(Boolean)
                 };
@@ -362,6 +426,12 @@
                     </div>
                     ${f.contacts ? `<div style="font-size:0.78rem;color:#6b7280;margin:0.3rem 0;"><i data-lucide="message-circle" class="icon icon-sm"></i> ${esc(f.contacts)}</div>` : ''}
                     ${f.keywords?.length ? `<div style="display:flex;flex-wrap:wrap;gap:0.25rem;margin:0.3rem 0;">${f.keywords.map(k => `<span style="font-size:0.7rem;background:#eff6ff;color:#1d4ed8;border-radius:4px;padding:1px 6px;">${esc(k)}</span>`).join('')}</div>` : ''}
+                    ${(f.communicatesWith?.length) ? `<div style="font-size:0.78rem;color:#6b7280;margin:0.3rem 0;display:flex;flex-wrap:wrap;gap:0.3rem;align-items:center;"><i data-lucide="share-2" class="icon icon-sm"></i>${f.communicatesWith.slice(0,3).map(c => {
+                        const cf = functions.find(fn => fn.id === c.functionId);
+                        if (!cf) return '';
+                        const arrow = c.direction === 'outgoing' ? '→' : c.direction === 'incoming' ? '←' : '↔';
+                        return `<span style="background:#f3f0ff;color:#7c3aed;border-radius:4px;padding:1px 6px;">${arrow} ${esc(cf.name)}${c.topics?.length ? ': ' + esc(c.topics.join(', ')) : ''}</span>`;
+                    }).filter(Boolean).join('')}${f.communicatesWith.length > 3 ? `<span style="color:#9ca3af;">+${f.communicatesWith.length - 3}</span>` : ''}</div>` : ''}
                     <div class="function-stats" style="flex-wrap:wrap;gap:0.5rem;">
                         <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
                             <span style="font-size:0.82rem;color:#525252;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks} ${window.t('active')} / ${doneTasks} ${window.t('doneLabel')}</span>
