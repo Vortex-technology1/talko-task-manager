@@ -619,8 +619,20 @@
                 finView.style.display = view === 'finance' ? '' : 'none';
                 if (view === 'finance') {
                     const pid = document.getElementById('projectDetailContent')?.dataset?.projectId;
-                    if (pid && typeof window._renderProjectFinance === 'function') {
-                        window._renderProjectFinance(pid, finView);
+                    if (pid) {
+                        if (typeof window._renderProjectFinance === 'function') {
+                            window._renderProjectFinance(pid, finView);
+                        } else {
+                            // 98-finance.js ще не завантажений — завантажуємо і рендеримо
+                            finView.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading') || 'Завантаження фінансів...'}</div>`;
+                            if (typeof lazyLoad === 'function') {
+                                lazyLoad('finance', function() {
+                                    if (typeof window._renderProjectFinance === 'function') {
+                                        window._renderProjectFinance(pid, finView);
+                                    }
+                                });
+                            }
+                        }
                     }
                 }
             }

@@ -380,7 +380,14 @@
             if (typeof window._renderProjectFinance === 'function') {
                 window._renderProjectFinance(null, el, { mode: 'function', id: funcId });
             } else {
-                el.innerHTML = '<div style="color:#ef4444;padding:0.5rem;font-size:0.82rem;">' + window.t('finModuleNotLoaded2') + '</div>';
+                el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:1rem;font-size:0.82rem;">' + (window.t('finLoading') || 'Завантаження...') + '</div>';
+                if (typeof lazyLoad === 'function') {
+                    lazyLoad('finance', function() {
+                        if (typeof window._renderProjectFinance === 'function') {
+                            window._renderProjectFinance(null, el, { mode: 'function', id: funcId });
+                        }
+                    });
+                }
             }
         }
 
