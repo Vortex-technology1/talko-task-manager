@@ -410,6 +410,8 @@
             importance: document.getElementById('metricImportance')?.value || 'critical',
             isInverse: document.getElementById('metricIsInverse')?.checked || false,
             responsibleId: document.getElementById('metricResponsible')?.value || '',
+            functionId: document.getElementById('metricFunctionId')?.value || '',
+            targetPeriod: document.getElementById('metricTargetPeriod')?.value || 'month',
             boundFunctions: {},
             autoSpec: null,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -730,11 +732,19 @@
         const fl = document.getElementById('metricFunctionsList');
         if (fl) {
             const fs = typeof functions !== 'undefined' ? functions : [];
-            fl.innerHTML = fs.map(f =>
+            fl.innerHTML = fs.filter(f => f.status !== 'archived').map(f =>
                 '<label style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.7rem;background:#f3f4f6;border-radius:10px;font-size:0.8rem;cursor:pointer;">' +
                 '<input type="checkbox" value="' + f.id + '" class="metric-func-cb" style="accent-color:var(--primary);"> ' + esc(f.name || f.title || '') +
                 '</label>'
             ).join('');
+        }
+
+        // Populate metricFunctionId select (основна функція-власник)
+        const funcIdSel = document.getElementById('metricFunctionId');
+        if (funcIdSel) {
+            const fs = typeof functions !== 'undefined' ? functions.filter(f => f.status !== 'archived') : [];
+            funcIdSel.innerHTML = '<option value="">— не прив\'язана до функції —</option>' +
+                fs.map(f => '<option value="' + f.id + '">' + esc(f.name || '') + '</option>').join('');
         }
 
         // Show/hide delete button
@@ -778,6 +788,11 @@
                         cb.checked = !!m.boundFunctions[cb.value];
                     });
                 }
+                // functionId (основна функція)
+                if (funcIdSel && m.functionId) funcIdSel.value = m.functionId;
+                // targetPeriod
+                const tpSel = document.getElementById('metricTargetPeriod');
+                if (tpSel && m.targetPeriod) tpSel.value = m.targetPeriod;
             }
         } else {
             document.getElementById('metricModalTitle').textContent = 'Новий показник';

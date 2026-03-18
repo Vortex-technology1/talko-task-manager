@@ -432,6 +432,22 @@
                         const arrow = c.direction === 'outgoing' ? '→' : c.direction === 'incoming' ? '←' : '↔';
                         return `<span style="background:#f3f0ff;color:#7c3aed;border-radius:4px;padding:1px 6px;">${arrow} ${esc(cf.name)}${c.topics?.length ? ': ' + esc(c.topics.join(', ')) : ''}</span>`;
                     }).filter(Boolean).join('')}${f.communicatesWith.length > 3 ? `<span style="color:#9ca3af;">+${f.communicatesWith.length - 3}</span>` : ''}</div>` : ''}
+                    ${(() => {
+                        const funcMetrics = (window._metrics || []).filter(m => m.functionId === f.id || (m.boundFunctions && m.boundFunctions[f.id]));
+                        if (!funcMetrics.length) return '';
+                        const metricItems = funcMetrics.slice(0, 3).map(m => {
+                            const target = m.defaultTarget || m.target || 0;
+                            const targetPeriod = m.targetPeriod || m.frequency || '';
+                            // Try to get latest actual value from window._metricEntries or skip
+                            const periodLabel = targetPeriod === 'week' ? '/тиж' : targetPeriod === 'quarter' ? '/кв' : '/міс';
+                            if (!target) {
+                                return `<span style="font-size:0.72rem;background:#f3f4f6;color:#374151;border-radius:4px;padding:1px 7px;">📊 ${esc(m.name)}</span>`;
+                            }
+                            const formatted = target >= 1000 ? Math.round(target/1000)+'к' : target;
+                            return `<span style="font-size:0.72rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 7px;" title="${esc(m.name)}: ціль ${target}${periodLabel}">📊 ${esc(m.name)}: ${formatted}${m.unit||''}${periodLabel}</span>`;
+                        }).join('');
+                        return `<div style="display:flex;flex-wrap:wrap;gap:0.25rem;margin:0.3rem 0;">${metricItems}${funcMetrics.length > 3 ? `<span style="font-size:0.72rem;color:#9ca3af;">+${funcMetrics.length-3}</span>` : ''}</div>`;
+                    })()}
                     <div class="function-stats" style="flex-wrap:wrap;gap:0.5rem;">
                         <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
                             <span style="font-size:0.82rem;color:#525252;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks} ${window.t('active')} / ${doneTasks} ${window.t('doneLabel')}</span>

@@ -3803,6 +3803,24 @@ document.addEventListener('mousedown', function(e) {
                 <div id="metricFunctionsList" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;"></div>
             </div>
 
+            <!-- Primary functionId (одна основна функція-власник метрики) -->
+            <div>
+                <label style="font-size:0.8rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.4rem;"><i data-lucide="target" style="width:13px;height:13px;vertical-align:-2px;"></i> Основна функція-власник метрики</label>
+                <select id="metricFunctionId" style="width:100%;box-sizing:border-box;padding:0.6rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:12px;font-size:0.88rem;background:#fff;">
+                    <option value="">— не прив'язана до функції —</option>
+                </select>
+            </div>
+
+            <!-- targetPeriod: за який період рахується ціль -->
+            <div>
+                <label style="font-size:0.8rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.4rem;">Період цілі (targetPeriod)</label>
+                <select id="metricTargetPeriod" style="width:100%;box-sizing:border-box;padding:0.6rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:12px;font-size:0.88rem;background:#fff;">
+                    <option value="week">Тиждень</option>
+                    <option value="month" selected>Місяць</option>
+                    <option value="quarter">Квартал</option>
+                </select>
+            </div>
+
             <!-- Hidden fields for backward compat -->
             <input type="hidden" id="metricInputType" value="manual">
             <input type="hidden" id="metricFormula" value="">
