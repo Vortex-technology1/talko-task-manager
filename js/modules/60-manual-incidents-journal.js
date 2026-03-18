@@ -76,7 +76,7 @@ window.loadIncidentsForJournal = async function () {
   }
 };
 
-// Лічильник відкритих збоїв по functionName (для 25-functions.js)
+// Лічильник відкритих збоїв по functionId/functionName (для 25-functions.js)
 window.getOpenIncidentsByFunction = async function () {
   try {
     const snap = await window.companyRef()
@@ -85,8 +85,9 @@ window.getOpenIncidentsByFunction = async function () {
       .get();
     const counts = {};
     snap.docs.forEach(d => {
-      const fn = d.data().functionName;
-      if (fn) counts[fn] = (counts[fn] || 0) + 1;
+      const data = d.data();
+      const key = data.functionId || data.functionName;
+      if (key) counts[key] = (counts[key] || 0) + 1;
     });
     return counts;
   } catch (e) {
@@ -326,6 +327,11 @@ window._saveIncidentFromAi = async function () {
     severity:      parseInt(get('prev_severity')?.value || '2'),
     status:        get('prev_status')?.value || 'new',
     functionName:  get('prev_functionName')?.value?.trim() || '',
+    functionId:    (() => {
+      const name = get('prev_functionName')?.value?.trim() || '';
+      const fns = window.functions || [];
+      return fns.find(f => f.name === name)?.id || '';
+    })(),
     responsible:   get('prev_responsible')?.value?.trim() || '',
     participants,
     failedProcess: get('prev_failedProcess')?.value?.trim() || '',
@@ -387,7 +393,7 @@ async function _openManualForm(incidentId) {
   ).join('');
 
   const fnOpts = `<option value="">— не вказано —</option>` +
-    functions.map(f => `<option value="${_esc(f)}" ${e.functionName === f ? 'selected' : ''}>${_esc(f)}</option>`).join('');
+    functions.map(f => `<option value="${_esc(f.id)}" data-fname="${_esc(f.name)}" ${e.functionId === f.id ? 'selected' : ''}>${_esc(f.name)}</option>`).join('');
 
   const participantsVal = Array.isArray(e.participants) ? e.participants.join(', ') : '';
 
@@ -510,7 +516,13 @@ window._saveManualIncident = async function (existingId) {
     severity:      parseInt(get('if_severity')?.value || '2'),
     status:        get('if_status')?.value || 'new',
     responsible:   get('if_responsible')?.value?.trim() || '',
-    functionName:  get('if_functionName')?.value || '',
+    functionName:  (() => {
+      const sel = get('if_functionName');
+      if (!sel) return '';
+      const opt = sel.options[sel.selectedIndex];
+      return opt?.dataset?.fname || opt?.text || '';
+    })(),
+    functionId:    get('if_functionName')?.value || '',
     participants,
     failedProcess: get('if_failedProcess')?.value?.trim() || '',
     cause:         get('if_cause')?.value?.trim() || '',
@@ -570,9 +582,8 @@ function _getAiKey() {
 
 function _getFunctionsList() {
   try {
-    // window.functions — масив функцій з 25-functions.js
     const fns = window.functions || window.businessFunctions || [];
-    return fns.map(f => f.name || f.title || f).filter(Boolean);
+    return fns.filter(f => f.status !== 'archived').map(f => ({ id: f.id || '', name: f.name || f.title || '' })).filter(f => f.name);
   } catch (_) { return []; }
 }
 

@@ -240,7 +240,7 @@
   };
 
   // ── Операції складу ──────────────────────────────────────
-  window.whDoOperation = async function ({ itemId, type, qty, locationId, price, note, dealId }) {
+  window.whDoOperation = async function ({ itemId, type, qty, locationId, price, note, dealId, functionId }) {
     if (!itemId || !type || qty == null) throw new Error('whDoOperation: missing params');
     qty = Number(qty);
     if (isNaN(qty) || qty <= 0) throw new Error(window.t('qtyMustBePos'));
@@ -283,6 +283,7 @@
         price: price != null ? Number(price) : (item.costPrice || 0),
         note: note || '',
         dealId: dealId || null,
+        functionId: functionId || null,
         userId: window.currentUser?.uid || null,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });

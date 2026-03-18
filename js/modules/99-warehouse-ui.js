@@ -765,6 +765,13 @@
             <label style="font-size:0.78rem;color:#6b7280;">Примітка</label>
             <input id="wh_op_note" style="${_inp()}" placeholder=${window.t('fromSupplierPh')}>
           </div>
+          <div>
+            <label style="font-size:0.78rem;color:#6b7280;">Функція (яка запросила)</label>
+            <select id="wh_op_function" style="${_inp()}">
+              <option value="">— без функції —</option>
+              ${(typeof functions !== 'undefined' ? functions : []).filter(f => f.status !== 'archived').map(f => `<option value="${f.id}">${_whEscHtml(f.name)}</option>`).join('')}
+            </select>
+          </div>
           <div id="wh_op_stock_info" style="font-size:0.8rem;color:#6b7280;background:#f9fafb;padding:0.5rem;border-radius:6px;display:none;"></div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
@@ -795,12 +802,13 @@
     const price  = parseFloat(document.getElementById('wh_op_price')?.value) || 0;
     const locId  = document.getElementById('wh_op_loc')?.value;
     const note   = document.getElementById('wh_op_note')?.value?.trim();
+    const funcId = document.getElementById('wh_op_function')?.value || null;
     if (!itemId || !qty || isNaN(qty) || qty <= 0) {
       if (window.showToast) showToast('Оберіть товар і вкажіть кількість', 'error');
       return;
     }
     try {
-      const result = await window.whDoOperation({ itemId, type, qty, locationId: locId, price, note });
+      const result = await window.whDoOperation({ itemId, type, qty, locationId: locId, price, note, functionId: funcId });
       // Фінансова транзакція при надходженні
       if (type === 'IN' && price > 0) {
         const item = window.whGetItems().find(i => i.id === itemId);
