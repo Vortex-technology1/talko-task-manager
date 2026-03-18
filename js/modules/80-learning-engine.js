@@ -100,52 +100,76 @@
         const root = document.getElementById('learningTab');
         if (!root) return;
 
-        const stats = getLearningStats();
         const lang = getLearningLang();
+
+        // Активна категорія
+        if (!window._learningActiveCategory) window._learningActiveCategory = 'systematization';
+        const activeCat = window._learningActiveCategory;
+
+        // Вкладки категорій
+        const categories = window.learningCategories || [];
+        const catTabsHTML = categories.length > 1 ? `
+        <div style="display:flex;gap:0;overflow-x:auto;border-bottom:2px solid #e5e7eb;margin-bottom:0;padding:0 0.5rem;">
+            ${categories.map(cat => {
+                const isActive = cat.id === activeCat;
+                const catTitle = cat['title_' + lang] || cat.title;
+                return '<button onclick="window._switchLearningCategory(\'' + cat.id + '\')"'
+                    + ' style="padding:0.5rem 1rem;font-size:0.85rem;font-weight:' + (isActive?'700':'500') + ';border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid ' + (isActive?cat.color:'transparent') + ';margin-bottom:-2px;color:' + (isActive?cat.color:'#6b7280') + ';display:flex;align-items:center;gap:0.4rem;">'
+                    + '<i data-lucide="' + cat.icon + '" class="icon" style="width:14px;height:14px;"></i>'
+                    + catTitle + '</button>';
+            }).join('')}
+        </div>` : '';
+
+        // Модулі активної категорії
+        const filteredModules = learningCourseData.filter(m => (m.category || 'systematization') === activeCat);
+        const catDone = filteredModules.filter(m => m.completed).length;
+        const catPct = filteredModules.length > 0 ? Math.round(catDone / filteredModules.length * 100) : 0;
 
         root.innerHTML = `
         <div class="learning-wrap">
-            <!-- Header -->
             <div class="learning-header">
                 <div class="learning-header-title">
                     <i data-lucide="graduation-cap" class="icon" style="color:#22c55e;width:24px;height:24px;"></i>
                     <span>${window.t('learningTitle')}</span>
                 </div>
-    
             </div>
-
-            <!-- Stats bar -->
             <div class="learning-stats">
                 <div class="learning-stat">
-                    <div class="learning-stat-value">${stats.pct}%</div>
+                    <div class="learning-stat-value">${catPct}%</div>
                     <div class="learning-stat-label">${window.t('learningProgress')}</div>
                 </div>
                 <div class="learning-stat">
-                    <div class="learning-stat-value">${stats.completed}/${stats.total}</div>
+                    <div class="learning-stat-value">${catDone}/${filteredModules.length}</div>
                     <div class="learning-stat-label">${window.t('learningModules')}</div>
                 </div>
                 <div class="learning-progress-bar-wrap">
-                    <div class="learning-progress-bar" style="width:${stats.pct}%"></div>
+                    <div class="learning-progress-bar" style="width:${catPct}%"></div>
                 </div>
             </div>
-
-            <!-- Modules list -->
+            ${catTabsHTML}
             <div class="learning-modules-list" id="learningModulesList">
-                ${learningCourseData.map(module => renderModuleCard(module)).join('')}
+                ${filteredModules.map(module => renderModuleCard(module, filteredModules)).join('')}
             </div>
         </div>`;
 
         if (window.refreshIcons) window.refreshIcons();
     }
 
-    function renderModuleCard(module) {
+    window._switchLearningCategory = function(catId) {
+        window._learningActiveCategory = catId;
+        renderLearning();
+    };
+
+    function renderModuleCard(module, moduleList) {
         const lang = getLearningLang();
         const title = getLangField(module, 'title', lang);
         const subtitle = getLangField(module, 'subtitle', lang);
         const isCompleted = module.completed;
-        const moduleIndex = learningCourseData.findIndex(m => m.id === module.id);
-        // Перші 3 модулі (індекси 0,1,2) — завжди доступні; далі — тільки після завершення попереднього
-        const isAvailable = moduleIndex <= 2 || (moduleIndex > 0 && learningCourseData[moduleIndex - 1] && learningCourseData[moduleIndex - 1].completed);
+        // Використовуємо moduleList (filtered by category) для визначення доступності
+        const list = moduleList || learningCourseData;
+        const moduleIndex = list.findIndex(m => m.id === module.id);
+        // Перші 3 модулі категорії — завжди доступні; далі — тільки після завершення попереднього
+        const isAvailable = moduleIndex <= 2 || (moduleIndex > 0 && list[moduleIndex - 1] && list[moduleIndex - 1].completed);
 
         return `
         <div class="l-module-card ${isCompleted ? 'completed' : ''} ${!isAvailable ? 'locked' : ''}" 

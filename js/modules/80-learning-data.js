@@ -9,6 +9,7 @@
     const learningCourseData = [
             {
                 id: 0,
+                category: 'systematization',
                 title: "МАРШРУТ ПРОГРАМИ",
                 title_ru: "МАРШРУТ ПРОГРАММЫ",
                 title_en: "PROGRAM ROADMAP",
@@ -344,6 +345,7 @@
             },
             {
                 id: 1,
+                category: 'systematization',
                 title: "ЯК ПРАЦЮВАТИ З GOOGLE ДИСКОМ",
                 title_ru: "КАК РАБОТАТЬ С GOOGLE ДИСКОМ",
                 title_en: "HOW TO WORK WITH GOOGLE DRIVE",
@@ -823,6 +825,7 @@
             },
             {
                 id: 2,
+                category: 'systematization',
                 title: "СЛОВНИК ТЕРМІНІВ + ЕФЕКТИВНЕ НАВЧАННЯ",
                 title_ru: "СЛОВАРЬ ТЕРМИНОВ + ЭФФЕКТИВНОЕ ОБУЧЕНИЕ",
                 title_en: "GLOSSARY + EFFECTIVE LEARNING",
@@ -1288,6 +1291,7 @@
             },
             {
                 id: 3,
+                category: 'systematization',
                 title: "НАЛАШТУВАННЯ ДОСТУПУ ДО AI",
                 title_ru: "НАСТРОЙКА ДОСТУПА К AI",
                 title_en: "SETTING UP AI ACCESS",
@@ -1706,6 +1710,7 @@
             },
             {
                 id: 4,
+                category: 'systematization',
                 title: "СИСТЕМА РОЗПОРЯДЖЕНЬ",
                 title_ru: "СИСТЕМА РАСПОРЯЖЕНИЙ",
                 title_en: "ORDER SYSTEM",
@@ -2245,6 +2250,7 @@
             },
             {
                 id: 5,
+                category: 'systematization',
                 title: "СИСТЕМА РАДАР",
                 title_ru: "СИСТЕМА РАДАР",
                 title_en: "RADAR SYSTEM",
@@ -3041,6 +3047,7 @@
             },
             {
                 id: 6,
+                category: 'systematization',
                 title: "ТЕХНІЧНИЙ ПРОВІДНИК",
                 title_ru: "ТЕХНИЧЕСКИЙ ПРОВОДНИК",
                 title_en: "TECHNICAL GUIDE",
@@ -3597,6 +3604,7 @@
             },
             {
                 id: 7,
+                category: 'systematization',
                 title: "ПІДГОТОВКА КОМАНДИ ДО ЗМІН",
                 title_ru: "ПОДГОТОВКА КОМАНДЫ К ИЗМЕНЕНИЯМ",
                 title_en: "PREPARING THE TEAM FOR CHANGE",
@@ -4586,6 +4594,7 @@ Bist du dabei?</div>
             },
             {
                 id: 8,
+                category: 'systematization',
                 title: "АНАЛІЗ ВУЗЬКОГО МІСЦЯ БІЗНЕСУ",
                 title_ru: "АНАЛИЗ УЗКОГО МЕСТА БИЗНЕСА",
                 title_en: "BUSINESS BOTTLENECK ANALYSIS",
@@ -5004,6 +5013,7 @@ Bist du dabei?</div>
             },
             {
                 id: 9,
+                category: 'systematization',
                 title: "ЦІЛЬ, ЗАДУМ, ПРОДУКТ ОРГАНІЗАЦІЇ. ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
                 title_ru: "ЦЕЛЬ, ЗАМЫСЕЛ, ПРОДУКТ ОРГАНИЗАЦИИ. ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
                 title_en: "GOAL, VISION, PRODUCT & STRUCTURE",
@@ -5663,6 +5673,7 @@ Bist du dabei?</div>
             },
             {
                 id: 10,
+                category: 'systematization',
                 title: "ЦІЛЬ І ЗАДУМ",
                 title_ru: "ЦЕЛЬ И ЗАМЫСЕЛ",
                 title_en: "GOAL & VISION",
@@ -6270,6 +6281,7 @@ Bist du dabei?</div>
             },
             {
                 id: 11,
+                category: 'systematization',
                 title: "ПРОДУКТ ОРГАНІЗАЦІЇ",
                 title_ru: "ПРОДУКТ ОРГАНИЗАЦИИ",
                 title_en: "PRODUCT OF THE ORGANIZATION",
@@ -6724,6 +6736,7 @@ Bist du dabei?</div>
             },
             {
                 id: 12,
+                category: 'systematization',
                 title: "ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
                 title_ru: "ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
                 title_en: "FUNCTIONAL STRUCTURE & ROLES",
@@ -7885,6 +7898,7 @@ Bist du dabei?</div>
             },
             {
                 id: 13,
+                category: 'systematization',
                 title: "СИСТЕМА СТАТИСТИК",
                 title_ru: "СИСТЕМА СТАТИСТИК",
                 title_en: "STATISTICS SYSTEM",
@@ -8164,6 +8178,7 @@ Bist du dabei?</div>
             },
             {
                 id: 14,
+                category: 'systematization',
                 title: "КООРДИНАЦІЯ КОМАНДИ",
                 title_ru: "КООРДИНАЦИЯ КОМАНДЫ",
                 title_en: "TEAM COORDINATION",
@@ -8409,6 +8424,7 @@ Bist du dabei?</div>
             },
             {
                 id: 15,
+                category: 'systematization',
                 title: "ВПРОВАДЖЕННЯ НА ПЛАТФОРМІ",
                 title_ru: "ВНЕДРЕНИЕ НА ПЛАТФОРМЕ",
                 title_en: "PLATFORM IMPLEMENTATION",
@@ -8545,3 +8561,215 @@ Bist du dabei?</div>
     window.learningCourseData = learningCourseData;
 
 })(); // END 80-learning-data
+
+// ============================================================
+// КУРС 2: МАРКЕТИНГ І ПРОДАЖІ
+// ============================================================
+(function() {
+'use strict';
+
+    const marketingCourseData = [
+        {
+            id: 101,
+            category: 'marketing',
+            title: "МАРКЕТИНГ — СТАРТ",
+            title_ru: "МАРКЕТИНГ — СТАРТ",
+            title_en: "MARKETING — START",
+            title_pl: "MARKETING — START",
+            title_cs: "MARKETING — START",
+            title_de: "MARKETING — START",
+            subtitle: "Що таке маркетинг у МСБ і чому більшість витрачає бюджет даремно",
+            subtitle_ru: "Что такое маркетинг в МСБ и почему большинство тратит бюджет впустую",
+            subtitle_en: "What marketing is in SMB and why most businesses waste their budget",
+            subtitle_pl: "Czym jest marketing w MŚP i dlaczego większość marnuje budżet",
+            subtitle_cs: "Co je marketing v MSP a proč většina plýtvá rozpočtem",
+            subtitle_de: "Was Marketing im KMU ist und warum die meisten ihr Budget verschwenden",
+            time: 20,
+            videoLink: null,
+            materialsLink: null,
+            hideAiBlock: false,
+
+            lessonContent: `
+<div class="lesson-block intro">
+  <div class="lesson-block-header"><div class="lesson-block-title">Мета уроку</div></div>
+  <div class="lesson-block-content">
+    <p>Після цього уроку ти розумієш:</p>
+    <div style="display:grid;gap:8px;margin-top:12px">
+      <div style="padding:10px 12px;background:#f0fdf4;border-radius:8px;border-left:4px solid #22c55e">Чим <strong>маркетинг відрізняється від реклами</strong></div>
+      <div style="padding:10px 12px;background:#eff6ff;border-radius:8px;border-left:4px solid #3b82f6">Чому МСБ <strong>витрачає бюджет без результату</strong></div>
+      <div style="padding:10px 12px;background:#faf5ff;border-radius:8px;border-left:4px solid #8b5cf6">Як виглядає <strong>система маркетингу</strong>, що реально приносить клієнтів</div>
+    </div>
+  </div>
+</div>
+
+<div class="lesson-block step">
+  <div class="lesson-block-header"><div class="lesson-block-title">ЧАСТИНА 1. Маркетинг ≠ Реклама</div></div>
+  <div class="lesson-block-content">
+    <p>Більшість власників МСБ плутають маркетинг з рекламою. Це фундаментальна помилка.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0">
+      <div style="padding:14px;background:#fef2f2;border-radius:10px;border:1px solid #fecaca">
+        <p style="margin:0;font-weight:700;color:#dc2626">Реклама</p>
+        <p style="margin:8px 0 0;font-size:13px;color:#7f1d1d">Інструмент. Один з десятків каналів залучення клієнтів. Таргет, банер, пост — це реклама.</p>
+      </div>
+      <div style="padding:14px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0">
+        <p style="margin:0;font-weight:700;color:#16a34a">Маркетинг</p>
+        <p style="margin:8px 0 0;font-size:13px;color:#166534">Система. Хто твій клієнт, що він хоче почути, через який канал, з яким повідомленням, щоб він купив.</p>
+      </div>
+    </div>
+    <div style="padding:14px;background:#fef3c7;border-radius:8px;border-left:4px solid #f59e0b;margin-top:8px">
+      <p style="margin:0;font-weight:600">Аналогія:</p>
+      <p style="margin:6px 0 0;font-size:13px">Реклама — це гармата. Маркетинг — це знати <em>куди</em> стріляти, <em>чим</em> заряджати і <em>коли</em> стріляти.</p>
+    </div>
+  </div>
+</div>
+
+<div class="lesson-block warning">
+  <div class="lesson-block-header"><div class="lesson-block-title">Чому МСБ зливає бюджет</div></div>
+  <div class="lesson-block-content">
+    <p>3 типові причини:</p>
+    <div style="display:grid;gap:10px;margin-top:12px">
+      <div style="padding:12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca">
+        <p style="margin:0;font-weight:700;color:#dc2626">1. Немає портрету клієнта</p>
+        <p style="margin:6px 0 0;font-size:13px">Реклама запускається "на всіх" → дорого, неефективно. Без чіткого ICP (Ideal Customer Profile) будь-який бюджет — лотерея.</p>
+      </div>
+      <div style="padding:12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca">
+        <p style="margin:0;font-weight:700;color:#dc2626">2. Немає офера</p>
+        <p style="margin:6px 0 0;font-size:13px">Реклама веде на "у нас найкраще". Клієнт не розуміє ЧОМУ треба обрати тебе. Оффер = конкретна обіцянка результату для конкретного клієнта.</p>
+      </div>
+      <div style="padding:12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca">
+        <p style="margin:0;font-weight:700;color:#dc2626">3. Нема воронки</p>
+        <p style="margin:6px 0 0;font-size:13px">Клієнт побачив рекламу → зайшов на сторінку → нікого нема, не передзвонили, не написали. Реклама є, система продажів — ні.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lesson-block step">
+  <div class="lesson-block-header"><div class="lesson-block-title">ЧАСТИНА 2. Система маркетингу МСБ</div></div>
+  <div class="lesson-block-content">
+    <p>Маркетинг що працює = 4 блоки в правильному порядку:</p>
+    <div style="display:grid;gap:10px;margin:16px 0">
+      <div style="display:flex;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;align-items:flex-start">
+        <span style="background:#3b82f6;color:white;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;flex-shrink:0">1</span>
+        <div><p style="margin:0;font-weight:600">ХТО — Портрет клієнта (ICP)</p><p style="margin:4px 0 0;font-size:12px;color:#6b7280">Вік, біль, бажання, заперечення, де шукає рішення. Без цього кроку всі наступні — гроші на вітер.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;align-items:flex-start">
+        <span style="background:#22c55e;color:white;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;flex-shrink:0">2</span>
+        <div><p style="margin:0;font-weight:600">ЩО — Оффер і повідомлення</p><p style="margin:4px 0 0;font-size:12px;color:#6b7280">Конкретна обіцянка: що отримає клієнт, за скільки часу, з якою гарантією. Одне чітке речення.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;align-items:flex-start">
+        <span style="background:#8b5cf6;color:white;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;flex-shrink:0">3</span>
+        <div><p style="margin:0;font-weight:600">ДЕ — Канали залучення</p><p style="margin:4px 0 0;font-size:12px;color:#6b7280">Instagram, Google, сарафан, партнери, SEO — вибираєш 1-2 канали де є твій ICP, а не "де всі".</p></div>
+      </div>
+      <div style="display:flex;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;align-items:flex-start">
+        <span style="background:#f59e0b;color:white;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;flex-shrink:0">4</span>
+        <div><p style="margin:0;font-weight:600">ЯК — Воронка і обробка ліда</p><p style="margin:4px 0 0;font-size:12px;color:#6b7280">Що відбувається ПІСЛЯ кліку: лендінг → заявка → дзвінок → продаж. Кожен крок прописаний.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lesson-block success">
+  <div class="lesson-block-header"><div class="lesson-block-title">Підсумок уроку</div></div>
+  <div class="lesson-block-content">
+    <div style="display:grid;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;font-size:14px;color:#166534;font-weight:500">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+        Маркетинг — система, реклама — один з інструментів
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;font-size:14px;color:#166534;font-weight:500">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+        МСБ зливає бюджет через відсутність ICP, офера і воронки
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;font-size:14px;color:#166534;font-weight:500">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+        Система = Хто → Що → Де → Як
+      </div>
+    </div>
+    <p style="margin-top:14px;padding:12px;background:#eff6ff;border-radius:8px;border-left:4px solid #3b82f6;font-size:13px">
+      <strong>Наступний урок:</strong> Портрет ідеального клієнта (ICP) — як скласти за 30 хвилин і не помилитись
+    </p>
+  </div>
+</div>`,
+
+            lessonContent_ru: `
+<div class="lesson-block intro">
+  <div class="lesson-block-header"><div class="lesson-block-title">Цель урока</div></div>
+  <div class="lesson-block-content">
+    <p>После этого урока ты понимаешь:</p>
+    <div style="display:grid;gap:8px;margin-top:12px">
+      <div style="padding:10px 12px;background:#f0fdf4;border-radius:8px;border-left:4px solid #22c55e">Чем <strong>маркетинг отличается от рекламы</strong></div>
+      <div style="padding:10px 12px;background:#eff6ff;border-radius:8px;border-left:4px solid #3b82f6">Почему МСБ <strong>тратит бюджет без результата</strong></div>
+      <div style="padding:10px 12px;background:#faf5ff;border-radius:8px;border-left:4px solid #8b5cf6">Как выглядит <strong>система маркетинга</strong>, реально приносящая клиентов</div>
+    </div>
+  </div>
+</div>
+
+<div class="lesson-block step">
+  <div class="lesson-block-header"><div class="lesson-block-title">ЧАСТЬ 1. Маркетинг ≠ Реклама</div></div>
+  <div class="lesson-block-content">
+    <p>Большинство владельцев МСБ путают маркетинг с рекламой. Это фундаментальная ошибка.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0">
+      <div style="padding:14px;background:#fef2f2;border-radius:10px;border:1px solid #fecaca">
+        <p style="margin:0;font-weight:700;color:#dc2626">Реклама</p>
+        <p style="margin:8px 0 0;font-size:13px;color:#7f1d1d">Инструмент. Один из десятков каналов привлечения клиентов.</p>
+      </div>
+      <div style="padding:14px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0">
+        <p style="margin:0;font-weight:700;color:#16a34a">Маркетинг</p>
+        <p style="margin:8px 0 0;font-size:13px;color:#166534">Система. Кто твой клиент, что он хочет услышать, через какой канал, чтобы купил.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lesson-block warning">
+  <div class="lesson-block-header"><div class="lesson-block-title">Почему МСБ сливает бюджет</div></div>
+  <div class="lesson-block-content">
+    <div style="display:grid;gap:10px;margin-top:12px">
+      <div style="padding:12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"><p style="margin:0;font-weight:700;color:#dc2626">1. Нет портрета клиента (ICP)</p><p style="margin:6px 0 0;font-size:13px">Реклама "на всех" → дорого, неэффективно.</p></div>
+      <div style="padding:12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"><p style="margin:0;font-weight:700;color:#dc2626">2. Нет оффера</p><p style="margin:6px 0 0;font-size:13px">Клиент не понимает ПОЧЕМУ выбрать именно тебя.</p></div>
+      <div style="padding:12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"><p style="margin:0;font-weight:700;color:#dc2626">3. Нет воронки</p><p style="margin:6px 0 0;font-size:13px">Реклама есть, система продаж — нет.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="lesson-block step">
+  <div class="lesson-block-header"><div class="lesson-block-title">ЧАСТЬ 2. Система маркетинга МСБ</div></div>
+  <div class="lesson-block-content">
+    <div style="display:grid;gap:10px;margin:16px 0">
+      <div style="display:flex;gap:12px;padding:12px;background:#f9fafb;border-radius:8px"><span style="background:#3b82f6;color:white;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;flex-shrink:0">1</span><div><p style="margin:0;font-weight:600">КТО — Портрет клиента (ICP)</p><p style="margin:4px 0 0;font-size:12px;color:#6b7280">Возраст, боль, желание, возражения, где ищет решение.</p></div></div>
+      <div style="display:flex;gap:12px;padding:12px;background:#f9fafb;border-radius:8px"><span style="background:#22c55e;color:white;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;flex-shrink:0">2</span><div><p style="margin:0;font-weight:600">ЧТО — Оффер и сообщение</p><p style="margin:4px 0 0;font-size:12px;color:#6b7280">Конкретное обещание результата для конкретного клиента.</p></div></div>
+      <div style="display:flex;gap:12px;padding:12px;background:#f9fafb;border-radius:8px"><span style="background:#8b5cf6;color:white;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;flex-shrink:0">3</span><div><p style="margin:0;font-weight:600">ГДЕ — Каналы привлечения</p><p style="margin:4px 0 0;font-size:12px;color:#6b7280">1-2 канала где есть твой ICP, а не "где все".</p></div></div>
+      <div style="display:flex;gap:12px;padding:12px;background:#f9fafb;border-radius:8px"><span style="background:#f59e0b;color:white;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;flex-shrink:0">4</span><div><p style="margin:0;font-weight:600">КАК — Воронка и обработка лида</p><p style="margin:4px 0 0;font-size:12px;color:#6b7280">Что происходит ПОСЛЕ клика: лендинг → заявка → звонок → продажа.</p></div></div>
+    </div>
+  </div>
+</div>`,
+
+            homework: `<ol>
+<li>Запиши одним реченням: <strong>хто твій ідеальний клієнт</strong> (вік, ситуація, проблема)</li>
+<li>Запиши свій поточний <strong>оффер</strong> — що саме ти пропонуєш і яку конкретну проблему вирішуєш</li>
+<li>Перерахуй <strong>всі канали маркетингу</strong> які зараз використовуєш. Скільки з них реально приносять клієнтів?</li>
+</ol>`,
+
+            homework_ru: `<ol>
+<li>Запиши одним предложением: <strong>кто твой идеальный клиент</strong> (возраст, ситуация, проблема)</li>
+<li>Запиши свой текущий <strong>оффер</strong> — что именно предлагаешь и какую конкретную проблему решаешь</li>
+<li>Перечисли <strong>все каналы маркетинга</strong> которые сейчас используешь. Сколько реально приносят клиентов?</li>
+</ol>`,
+        },
+    ];
+
+    // Merge marketing data into main course data
+    if (window.learningCourseData) {
+        window.learningCourseData = window.learningCourseData.concat(marketingCourseData);
+    } else {
+        window.learningCourseData = marketingCourseData;
+    }
+
+    // Expose categories list
+    window.learningCategories = window.learningCategories || [
+        { id: 'systematization', title: 'Систематизація бізнесу', title_ru: 'Систематизация бизнеса', title_en: 'Business Systematization', title_pl: 'Systematyzacja biznesu', title_de: 'Geschäftssystematisierung', title_cs: 'Systematizace podnikání', icon: 'settings', color: '#22c55e' },
+        { id: 'marketing', title: 'Маркетинг і продажі', title_ru: 'Маркетинг и продажи', title_en: 'Marketing & Sales', title_pl: 'Marketing i sprzedaż', title_de: 'Marketing & Vertrieb', title_cs: 'Marketing a prodej', icon: 'trending-up', color: '#3b82f6' },
+    ];
+
+})();
