@@ -4048,19 +4048,21 @@ function addTransaction(forceType) {
   const color    = type === 'income' ? '#22c55e' : '#ef4444';
   const label    = type === 'income' ? window.t('incomeWordLc') : 'витрату';
 
-  // Функції для прив'язки
-  let functionsHtml = '<option value="">— не вибрано —</option>';
-  (_state.functions || []).forEach(f => {
+  // Функції для прив'язки — глобальний functions[] + fallback до _state.functions
+  const _finFunctions = (typeof functions !== 'undefined' && functions.length > 0)
+      ? functions
+      : (_state.functions || []);
+  let functionsHtml = `<option value="">— ${window.t ? window.t('select') || 'не вибрано' : 'не вибрано'} —</option>`;
+  _finFunctions.filter(f => f.status !== 'archived').forEach(f => {
     functionsHtml += `<option value="${f.id}">${escHtml(f.name)}</option>`;
   });
 
-  // Проекти для прив'язки
-  let projectsHtml = '<option value="">— не вибрано —</option>';
-  if (window._projectsCache) {
-    window._projectsCache.forEach(p => {
-      projectsHtml += `<option value="${p.id}">${p.name || p.title || p.id}</option>`;
-    });
-  }
+  // Проекти для прив'язки — використовуємо глобальний projects[]
+  const _finProjects = (typeof projects !== 'undefined' ? projects : (window.projects || []));
+  let projectsHtml = `<option value="">— ${window.t ? window.t('select') || 'не вибрано' : 'не вибрано'} —</option>`;
+  _finProjects.filter(p => p.status !== 'archived').forEach(p => {
+    projectsHtml += `<option value="${p.id}">${escHtml(p.name || p.title || p.id)}</option>`;
+  });
 
   const modal = document.createElement('div');
   modal.id = 'financeModal';

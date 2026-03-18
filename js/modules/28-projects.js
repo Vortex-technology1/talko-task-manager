@@ -627,7 +627,9 @@
                             finView.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading') || 'Завантаження фінансів...'}</div>`;
                             if (typeof lazyLoad === 'function') {
                                 lazyLoad('finance', function() {
-                                    if (typeof window._renderProjectFinance === 'function') {
+                                    // Перевіряємо що вкладка ще активна після lazy load
+                                    if (typeof window._renderProjectFinance === 'function'
+                                        && finView.style.display !== 'none') {
                                         window._renderProjectFinance(pid, finView);
                                     }
                                 });
