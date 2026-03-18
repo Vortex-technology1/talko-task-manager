@@ -2569,6 +2569,16 @@ document.addEventListener('mousedown', function(e) {
                             <label class="form-label" data-i18n="userFunctions">Функції співробітника</label>
                             <div id="userFunctions" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"></div>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label"><i data-lucide="star" class="icon icon-sm"></i> Основна функція (пріоритет задач)</label>
+                            <select id="userPrimaryFunction" class="form-select">
+                                <option value="">— не вибрано —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i data-lucide="shield" class="icon icon-sm"></i> Роль у функції</label>
+                            <div id="userFunctionRoles" style="margin-top:0.3rem;font-size:0.82rem;color:#6b7280;">Вибери функції вище, щоб налаштувати ролі</div>
+                        </div>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn" onclick="closeModal('userModal')" data-i18n="cancel">Скасувати</button>

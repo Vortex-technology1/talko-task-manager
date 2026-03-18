@@ -629,7 +629,14 @@
                         </div>
                         <span class="role-badge ${u.role}" style="flex-shrink:0;">${getRoleText(u.role)}</span>
                     </div>
-                    ${userFunctions.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.4rem;">${userFunctions.map(f => `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 6px;border-radius:4px;">${esc(f.name)}</span>`).join('')}</div>` : ''}
+                    ${userFunctions.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.4rem;">${userFunctions.map(f => {
+                        const isPrimary = u.primaryFunctionId === f.id;
+                        const roleInFunc = u.functionRoles?.[f.id];
+                        const bg = isPrimary ? '#fef9c3' : '#e8f5e9';
+                        const color = isPrimary ? '#854d0e' : '#2e7d32';
+                        const prefix = isPrimary ? '⭐ ' : (roleInFunc === 'owner' ? '👑 ' : '');
+                        return `<span style="font-size:0.65rem;background:${bg};color:${color};padding:1px 6px;border-radius:4px;">${prefix}${esc(f.name)}</span>`;
+                    }).join('')}</div>` : ''}
                     <div style="display:flex;gap:2px;margin-bottom:0.4rem;">
                         <div style="flex:1;text-align:center;padding:2px 0;background:#eff6ff;border-radius:4px 0 0 4px;font-size:0.78rem;font-weight:600;color:#2563eb;" title="${window.t('statusNew')}">${newTasks.length}</div>
                         <div style="flex:1;text-align:center;padding:2px 0;background:#fefce8;font-size:0.78rem;font-weight:600;color:#ca8a04;" title="${window.t('inProgressStatus')}">${inProgress.length}</div>
@@ -679,11 +686,11 @@
             const adminOpt = document.querySelector('#userRole option[value="admin"]');
             if (adminOpt) adminOpt.style.display = currentUserData?.role === 'owner' ? '' : 'none';
             
-            // Заповнюємо список функцій
+            // Заповнюємо список функцій з onchange для оновлення ролей і primary
             const userFunctionsDiv = document.getElementById('userFunctions');
-            userFunctionsDiv.innerHTML = functions.map(f => `
+            userFunctionsDiv.innerHTML = functions.filter(f => f.status !== 'archived').map(f => `
                 <label class="assignee-checkbox">
-                    <input type="checkbox" value="${f.id}" data-fname="${esc(f.name)}">
+                    <input type="checkbox" value="${esc(f.id)}" data-fname="${esc(f.name)}" onchange="updateUserFunctionRolesUI()">
                     ${esc(f.name)}
                 </label>
             `).join('') || `<p style="color:#7f8c8d;">${window.t('noFunctions')}</p>`;
@@ -697,20 +704,70 @@
                     document.getElementById('userPosition').value = user.position || '';
                     document.getElementById('userModalTitle').textContent = window.t('editEmployee');
                     
-                    // Відмічаємо функції користувача
-                    const userFunctions = functions.filter(f => f.assigneeIds?.includes(userId));
-                    userFunctions.forEach(f => {
-                        const checkbox = userFunctionsDiv.querySelector(`input[value="${f.id}"]`);
+                    // Відмічаємо функції (з assigneeIds в functions АБО з user.functionIds)
+                    const userFunctionIds = user.functionIds || functions.filter(f => f.assigneeIds?.includes(userId)).map(f => f.id);
+                    userFunctionIds.forEach(fId => {
+                        const checkbox = userFunctionsDiv.querySelector(`input[value="${fId}"]`);
                         if (checkbox) checkbox.checked = true;
                     });
+
+                    // primaryFunctionId
+                    _refreshPrimaryFunctionSelect(userFunctionIds, user.primaryFunctionId || '');
+                    // functionRoles
+                    _refreshFunctionRolesUI(userFunctionIds, user.functionRoles || {});
                 }
             } else {
                 document.getElementById('userForm').reset();
                 document.getElementById('userModalTitle').textContent = window.t('addEmployee');
+                _refreshPrimaryFunctionSelect([], '');
+                document.getElementById('userFunctionRoles').textContent = 'Вибери функції вище, щоб налаштувати ролі';
             }
             
             modal.style.display = 'block';
         }
+
+        function _refreshPrimaryFunctionSelect(selectedFuncIds, currentPrimary) {
+            const sel = document.getElementById('userPrimaryFunction');
+            if (!sel) return;
+            const opts = selectedFuncIds.map(fId => {
+                const f = functions.find(fn => fn.id === fId);
+                if (!f) return '';
+                return `<option value="${esc(f.id)}" ${currentPrimary === f.id ? 'selected' : ''}>${esc(f.name)}</option>`;
+            }).join('');
+            sel.innerHTML = `<option value="">— не вибрано —</option>` + opts;
+        }
+
+        function _refreshFunctionRolesUI(selectedFuncIds, existingRoles) {
+            const container = document.getElementById('userFunctionRoles');
+            if (!container) return;
+            if (selectedFuncIds.length === 0) {
+                container.textContent = 'Вибери функції вище, щоб налаштувати ролі';
+                return;
+            }
+            container.innerHTML = selectedFuncIds.map(fId => {
+                const f = functions.find(fn => fn.id === fId);
+                if (!f) return '';
+                const currentRole = existingRoles[fId] || 'member';
+                return `<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+                    <span style="flex:1;font-size:0.82rem;">${esc(f.name)}</span>
+                    <select data-role-func="${esc(fId)}" class="form-select" style="width:auto;font-size:0.78rem;padding:2px 6px;">
+                        <option value="owner" ${currentRole==='owner'?'selected':''}>👑 Власник</option>
+                        <option value="member" ${currentRole==='member'?'selected':''}>👤 Учасник</option>
+                    </select>
+                </div>`;
+            }).join('');
+        }
+
+        window.updateUserFunctionRolesUI = function() {
+            const checkedIds = Array.from(document.querySelectorAll('#userFunctions input:checked')).map(cb => cb.value);
+            // Зберігаємо поточні ролі перед перерендером
+            const existingRoles = {};
+            document.querySelectorAll('[data-role-func]').forEach(sel => {
+                existingRoles[sel.dataset.roleFunc] = sel.value;
+            });
+            _refreshPrimaryFunctionSelect(checkedIds, document.getElementById('userPrimaryFunction')?.value || '');
+            _refreshFunctionRolesUI(checkedIds, existingRoles);
+        };
         
         async function saveUser(e) {
             e.preventDefault();
@@ -728,17 +785,25 @@
             }
             
             try {
-                // Оновлюємо дані користувача
+                // Збираємо нові дані функцій
+                const selectedFunctions = Array.from(document.querySelectorAll('#userFunctions input:checked')).map(cb => cb.value);
+                const primaryFunctionId = document.getElementById('userPrimaryFunction')?.value || '';
+                const functionRoles = {};
+                document.querySelectorAll('[data-role-func]').forEach(sel => {
+                    if (sel.value) functionRoles[sel.dataset.roleFunc] = sel.value;
+                });
+
+                // Оновлюємо дані користувача + нові поля функцій
                 await db.collection('companies').doc(currentCompany).collection('users').doc(editingUserId).update({
                     name: name,
                     role: role,
-                    position: position
+                    position: position,
+                    functionIds: selectedFunctions,
+                    primaryFunctionId: primaryFunctionId,
+                    functionRoles: functionRoles
                 });
                 
-                // Оновлюємо функції
-                const selectedFunctions = Array.from(document.querySelectorAll('#userFunctions input:checked')).map(cb => cb.value);
-                
-                // Для кожної функції перевіряємо чи потрібно додати/видалити користувача
+                // Оновлюємо функції (assigneeIds в documents functions)
                 for (const func of functions) {
                     const funcRef = db.collection('companies').doc(currentCompany).collection('functions').doc(func.id);
                     const isSelected = selectedFunctions.includes(func.id);
@@ -762,13 +827,16 @@
                 if (userIdx >= 0) {
                     users[userIdx] = { 
                         ...users[userIdx], 
-                        name: document.getElementById('userName').value.trim(),
-                        role: document.getElementById('userRole').value,
-                        position: document.getElementById('userPosition').value.trim()
+                        name,
+                        role,
+                        position,
+                        functionIds: selectedFunctions,
+                        primaryFunctionId,
+                        functionRoles
                     };
                 }
                 
-                // Локальне оновлення функцій (використовуємо selectedFunctions з рядка вище)
+                // Локальне оновлення функцій
                 functions.forEach(func => {
                     const isSelected = selectedFunctions.includes(func.id);
                     const isCurrentlyAssigned = func.assigneeIds?.includes(editingUserId);
