@@ -24,7 +24,8 @@
                     creatorName: t.creatorName,
                     deadlineDate: t.deadlineDate,
                     deadlineTime: t.deadlineTime,
-                    deadline: t.deadline,
+                    // deadline: не серіалізуємо Timestamp (стає {} через JSON)
+                    // deadlineDate + deadlineTime достатньо для parseDeadline
                     function: t.function,
                     priority: t.priority,
                     pinned: t.pinned,
