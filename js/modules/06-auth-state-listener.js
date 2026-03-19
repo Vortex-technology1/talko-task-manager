@@ -112,9 +112,9 @@
                 document.getElementById('aiStructureBtnDesktop').style.display = 'none'; // temporarily disabled
                 
                 showMainInterface();
-                initCalendar();
-                initRegularView();
-                initGoogleCalendar();
+                if (typeof initCalendar === 'function') initCalendar();
+                if (typeof initRegularView === 'function') initRegularView();
+                if (typeof initGoogleCalendar === 'function') initGoogleCalendar();
                 loadAllData();
                 // Синхронізуємо обидва stats tab buttons (desktop + mobile) одразу після login
                 if (typeof showStatsTabIfAllowed === 'function') showStatsTabIfAllowed();
