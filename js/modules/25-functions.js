@@ -533,6 +533,62 @@
 
         function _buildFunctionsHowto() {
             const t = window.t;
+
+            // helper: numbered step row
+            function stepRow(n, bgColor, title, desc) {
+                return '<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">'
+                    + '<div style="min-width:24px;height:24px;background:' + bgColor + ';color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">' + n + '</div>'
+                    + '<div><div style="font-weight:500;font-size:0.82rem;">' + title + '</div><div style="font-size:0.78rem;color:#6b7280;">' + desc + '</div></div>'
+                    + '</div>';
+            }
+
+            // replace block
+            var replaceRows = [
+                [t('fnHowtoReplace1t'), t('fnHowtoReplace1d')],
+                [t('fnHowtoReplace2t'), t('fnHowtoReplace2d')],
+                [t('fnHowtoReplace3t'), t('fnHowtoReplace3d')],
+                [t('fnHowtoReplace4t'), t('fnHowtoReplace4d')],
+            ].map(function(row, i) { return stepRow(i + 1, '#0284c7', row[0], row[1]); }).join('');
+
+            // setup block
+            var setupRows = [
+                [t('fnHowtoSetup1t'), t('fnHowtoSetup1d')],
+                [t('fnHowtoSetup2t'), t('fnHowtoSetup2d')],
+                [t('fnHowtoSetup3t'), t('fnHowtoSetup3d')],
+                [t('fnHowtoSetup4t'), t('fnHowtoSetup4d')],
+                [t('fnHowtoSetup5t'), t('fnHowtoSetup5d')],
+            ].map(function(row, i) { return stepRow(i + 1, '#22c55e', row[0], row[1]); }).join('');
+
+            // glossary block
+            var glossaryItems = [
+                ['core',   'ЦКП — Цінний Кінцевий Продукт',  'Одна фраза: що саме виробляє ця функція',               'Відповідь на питання «що станеться, якщо цього відділу не буде?». Не «що вони роблять», а «що зʼявляється завдяки їм».', 'Погано: «Відповідає за записи». Добре: «Заповнений розклад без простоїв». Система показує ЦКП кожному новому співробітнику в перший день.'],
+                ['process','Процес',                           'Послідовність дій, яка проходить через кілька відділів', 'Пацієнт зателефонував → адміністратор записав → лікар прийняв → каса виставила рахунок. Кожен крок — Етап, кожен Етап — у своїй Функції.', 'Без системи: адміністратор записав і забув повідомити лікаря. З TALKO: коли закрив свій етап — лікар автоматично отримав задачу.'],
+                ['process','Етап процесу',                    'Один крок у процесі за який відповідає конкретна функція','Якщо Процес — це естафета, то Етап — це відрізок, який біжить один конкретний учасник. Він отримує задачу, виконує, передає далі.', 'Процес «Прийом пацієнта»: 1) Запис (Адміністрування) → 2) Огляд (Лікування) → 3) Рахунок (Фінанси) → 4) Оплата (Фінанси).'],
+                ['core',   'Власник функції',                  'Конкретна людина яка відповідає за результат функції',   'Не посада, не відділ — конкретне імʼя. Якщо у функції немає власника — система підсвітить червоним і повідомить тебе. Власник бачить всі задачі відділу і отримує сповіщення.', 'Марія — власник Адміністрування. Іде у відпустку → призначаємо тимчасового власника до конкретної дати. Після — права повертаються автоматично.'],
+                ['core',   'Метрика / KPI',                    'Цифра яка показує чи виконує функція свій ЦКП',          'Якщо ЦКП — це ціль, то Метрика — термометр. Зелений — норма. Жовтий — увага. Червоний — проблема. Кожна метрика привʼязана до функції — одразу зрозуміло хто відповідає.', 'Функція «Адміністрування» → метрика «Заповненість розкладу» → план 90%, факт 72% → жовтий. Хто відповідає — відразу видно.'],
+                ['auto',   'Ескалація',                        'Автоматичне підняття проблеми вище по ієрархії',         'Коли задача прострочена — система спочатку нагадує відповідальному. Якщо немає реакції 24 год — нагадує керівнику. Ще 24 год — пише тобі. Ти отримуєш тільки те що не вирішилось без тебе.', 'Прострочена задача: 0 год → власнику функції. +24 год → його керівнику. +48 год → тобі як власнику бізнесу.'],
+                ['auto',   'Онбординг',                        'Автоматичне знайомство нового співробітника з компанією', 'Раніше: 2-3 години пояснень хто є хто. З TALKO: призначаєш людину у функцію — система сама генерує 9-крокове знайомство з даних функції.', 'Новий лікар з першого входу: знає хто керівник, де задачі, з ким взаємодіяти, які уроки пройти. Власник нічого не пояснував.'],
+            ].map(function(item) {
+                var type = item[0], name = item[1], short = item[2], analogy = item[3], example = item[4];
+                var tagBg  = type === 'core' ? '#dbeafe' : type === 'process' ? '#dcfce7' : '#fef9c3';
+                var tagCol = type === 'core' ? '#1d4ed8' : type === 'process' ? '#166534' : '#854d0e';
+                var tagLabel = type === 'core' ? t('fnHowtoTagCore') : type === 'process' ? t('fnHowtoTagProcess') : t('fnHowtoTagAuto');
+                return '<div style="border:1px solid #f3f4f6;border-radius:8px;overflow:hidden;">'
+                    + '<div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'block\'?\'none\':\'block\';this.querySelector(\'.chv\').style.transform=this.nextElementSibling.style.display===\'block\'?\'rotate(180deg)\':\'rotate(0deg)\'" style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.75rem;cursor:pointer;background:#fafafa;">'
+                    + '<div style="display:flex;align-items:center;gap:8px;">'
+                    + '<span style="font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:4px;background:' + tagBg + ';color:' + tagCol + ';">' + tagLabel + '</span>'
+                    + '<span style="font-size:0.82rem;font-weight:600;color:#111;">' + name + '</span>'
+                    + '<span style="font-size:0.75rem;color:#6b7280;">' + short + '</span>'
+                    + '</div>'
+                    + '<span class="chv" style="font-size:10px;color:#9ca3af;transition:transform 0.2s;">▼</span>'
+                    + '</div>'
+                    + '<div style="display:none;padding:0.75rem;border-top:1px solid #f3f4f6;background:white;">'
+                    + '<p style="font-size:0.78rem;color:#374151;line-height:1.6;margin:0 0 0.5rem;">' + analogy + '</p>'
+                    + '<div style="background:#f9fafb;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.75rem;color:#6b7280;line-height:1.5;">' + example + '</div>'
+                    + '</div>'
+                    + '</div>';
+            }).join('');
+
             return `<div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:1rem;">
 
             <div style="background:linear-gradient(135deg,#1e3a5f,#0f2040);border-radius:14px;padding:1.25rem 1.5rem;color:white;position:relative;">
@@ -551,31 +607,11 @@
                         <th style="padding:0.5rem;text-align:left;color:#16a34a;border-bottom:2px solid #bbf7d0;">${t('fnHowtoColSolution')}</th>
                     </tr></thead>
                     <tbody>
-                        <tr style="border-bottom:1px solid #f3f4f6;">
-                            <td style="padding:0.5rem;">${t('fnHowtoRow1p')}</td>
-                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow1c')}</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow1s')}</td>
-                        </tr>
-                        <tr style="border-bottom:1px solid #f3f4f6;">
-                            <td style="padding:0.5rem;">${t('fnHowtoRow2p')}</td>
-                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow2c')}</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow2s')}</td>
-                        </tr>
-                        <tr style="border-bottom:1px solid #f3f4f6;">
-                            <td style="padding:0.5rem;">${t('fnHowtoRow3p')}</td>
-                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow3c')}</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow3s')}</td>
-                        </tr>
-                        <tr style="border-bottom:1px solid #f3f4f6;">
-                            <td style="padding:0.5rem;">${t('fnHowtoRow4p')}</td>
-                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow4c')}</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow4s')}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:0.5rem;">${t('fnHowtoRow5p')}</td>
-                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow5c')}</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow5s')}</td>
-                        </tr>
+                        <tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:0.5rem;">${t('fnHowtoRow1p')}</td><td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow1c')}</td><td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow1s')}</td></tr>
+                        <tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:0.5rem;">${t('fnHowtoRow2p')}</td><td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow2c')}</td><td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow2s')}</td></tr>
+                        <tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:0.5rem;">${t('fnHowtoRow3p')}</td><td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow3c')}</td><td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow3s')}</td></tr>
+                        <tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:0.5rem;">${t('fnHowtoRow4p')}</td><td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow4c')}</td><td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow4s')}</td></tr>
+                        <tr><td style="padding:0.5rem;">${t('fnHowtoRow5p')}</td><td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow5c')}</td><td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow5s')}</td></tr>
                     </tbody>
                 </table>
                 </div>
@@ -595,15 +631,7 @@
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
                 <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>${t('fnHowtoReplaceTitle')}</div>
-                ${[
-                    ['1', t('fnHowtoReplace1t'), t('fnHowtoReplace1d')],
-                    ['2', t('fnHowtoReplace2t'), t('fnHowtoReplace2d')],
-                    ['3', t('fnHowtoReplace3t'), t('fnHowtoReplace3d')],
-                    ['4', t('fnHowtoReplace4t'), t('fnHowtoReplace4d')],
-                ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
-                    <div style="min-width:24px;height:24px;background:#0284c7;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">\${n}</div>
-                    <div><div style="font-weight:500;font-size:0.82rem;">\${title}</div><div style="font-size:0.78rem;color:#6b7280;">\${desc}</div></div>
-                </div>`).join('')}
+                ${replaceRows}
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
@@ -634,16 +662,7 @@
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
                 <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>${t('fnHowtoSetupTitle')}</div>
-                ${[
-                    ['1', t('fnHowtoSetup1t'), t('fnHowtoSetup1d')],
-                    ['2', t('fnHowtoSetup2t'), t('fnHowtoSetup2d')],
-                    ['3', t('fnHowtoSetup3t'), t('fnHowtoSetup3d')],
-                    ['4', t('fnHowtoSetup4t'), t('fnHowtoSetup4d')],
-                    ['5', t('fnHowtoSetup5t'), t('fnHowtoSetup5d')],
-                ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
-                    <div style="min-width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">\${n}</div>
-                    <div><div style="font-weight:500;font-size:0.82rem;">\${title}</div><div style="font-size:0.78rem;color:#6b7280;">\${desc}</div></div>
-                </div>`).join('')}
+                ${setupRows}
                 <div style="margin-top:1rem;">
                     <button class="btn btn-success" onclick="const p=document.getElementById('functionsHowtoPanel');if(p)p.style.display='none';openFunctionModal();">
                         <i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addFunction') || 'Додати функцію'}
@@ -651,43 +670,15 @@
                 </div>
             </div>
 
-            <!-- СЛОВНИК ТЕРМІНІВ -->
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
                 <div style="font-weight:600;margin-bottom:0.25rem;color:#374151;display:flex;align-items:center;gap:6px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                     ${t('fnHowtoGlossaryTitle')}
                 </div>
                 <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.75rem;">${t('fnHowtoGlossaryHint')}</div>
-                <div style="display:flex;flex-direction:column;gap:6px;">
-                ${[
-                    ['core','ЦКП — Цінний Кінцевий Продукт','Одна фраза: що саме виробляє ця функція','Відповідь на питання «що станеться, якщо цього відділу не буде?». Не «що вони роблять», а «що зʼявляється завдяки їм».','Погано: «Відповідає за записи». Добре: «Заповнений розклад без простоїв». Система показує ЦКП кожному новому співробітнику в перший день.'],
-                    ['process','Процес','Послідовність дій, яка проходить через кілька відділів','Пацієнт зателефонував → адміністратор записав → лікар прийняв → каса виставила рахунок. Кожен крок — Етап, кожен Етап — у своїй Функції.','Без системи: адміністратор записав і забув повідомити лікаря. З TALKO: коли закрив свій етап — лікар автоматично отримав задачу.'],
-                    ['process','Етап процесу','Один крок у процесі за який відповідає конкретна функція','Якщо Процес — це естафета, то Етап — це відрізок, який біжить один конкретний учасник. Він отримує задачу, виконує, передає далі.','Процес «Прийом пацієнта»: 1) Запис (Адміністрування) → 2) Огляд (Лікування) → 3) Рахунок (Фінанси) → 4) Оплата (Фінанси).'],
-                    ['core','Власник функції','Конкретна людина яка відповідає за результат функції','Не посада, не відділ — конкретне імʼя. Якщо у функції немає власника — система підсвітить червоним і повідомить тебе. Власник бачить всі задачі відділу і отримує сповіщення.','Марія — власник Адміністрування. Іде у відпустку → призначаємо тимчасового власника до конкретної дати. Після — права повертаються автоматично.'],
-                    ['core','Метрика / KPI','Цифра яка показує чи виконує функція свій ЦКП','Якщо ЦКП — це ціль, то Метрика — термометр. Зелений — норма. Жовтий — увага. Червоний — проблема. Кожна метрика привʼязана до функції — одразу зрозуміло хто відповідає.','Функція «Адміністрування» → метрика «Заповненість розкладу» → план 90%, факт 72% → жовтий. Хто відповідає — відразу видно.'],
-                    ['auto','Ескалація','Автоматичне підняття проблеми вище по ієрархії','Коли задача прострочена — система спочатку нагадує відповідальному. Якщо немає реакції 24 год — нагадує керівнику. Ще 24 год — пише тобі. Ти отримуєш тільки те що не вирішилось без тебе.','Прострочена задача: 0 год → власнику функції. +24 год → його керівнику. +48 год → тобі як власнику бізнесу.'],
-                    ['auto','Онбординг','Автоматичне знайомство нового співробітника з компанією','Раніше: 2-3 години пояснень хто є хто. З TALKO: призначаєш людину у функцію — система сама генерує 9-крокове знайомство з даних функції.','Новий лікар з першого входу: знає хто керівник, де задачі, з ким взаємодіяти, які уроки пройти. Власник нічого не пояснював.'],
-                ].map(([type,name,short,analogy,example]) => `
-                    <div style="border:1px solid #f3f4f6;border-radius:8px;overflow:hidden;">
-                        <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.chv').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)'"
-                            style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.75rem;cursor:pointer;background:#fafafa;">
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                <span style="font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:4px;background:\${type==='core'?'#dbeafe':type==='process'?'#dcfce7':'#fef9c3'};color:\${type==='core'?'#1d4ed8':type==='process'?'#166534':'#854d0e'};">\${type==='core'?t('fnHowtoTagCore'):type==='process'?t('fnHowtoTagProcess'):t('fnHowtoTagAuto')}</span>
-                                <span style="font-size:0.82rem;font-weight:600;color:#111;">\${name}</span>
-                                <span style="font-size:0.75rem;color:#6b7280;">\${short}</span>
-                            </div>
-                            <span class="chv" style="font-size:10px;color:#9ca3af;transition:transform 0.2s;">▼</span>
-                        </div>
-                        <div style="display:none;padding:0.75rem;border-top:1px solid #f3f4f6;background:white;">
-                            <p style="font-size:0.78rem;color:#374151;line-height:1.6;margin:0 0 0.5rem;">\${analogy}</p>
-                            <div style="background:#f9fafb;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.75rem;color:#6b7280;line-height:1.5;">\${example}</div>
-                        </div>
-                    </div>
-                `).join('')}
-                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;">${glossaryItems}</div>
             </div>
 
-            <!-- ДЕТАЛЬНІ ВЗАЄМОЗВ'ЯЗКИ -->
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
                 <div style="font-weight:600;margin-bottom:0.25rem;color:#374151;display:flex;align-items:center;gap:6px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
