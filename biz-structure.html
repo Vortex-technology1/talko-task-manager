@@ -5429,20 +5429,17 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     }
     
     const auth = firebase.auth();
+    // Новий API кешування (firebase-firestore v10.7+)
+    // Замінює застарілий enablePersistence()
     const db = firebase.firestore();
-    
-    // Налаштування Firestore для офлайн режиму
-    // synchronizeTabs вимкнено - викликає помилки "Unexpected state"
-    db.enablePersistence({ synchronizeTabs: false }).catch(err => {
-        if (err.code === 'failed-precondition') {
-            // Вже відкрито в іншій вкладці - це нормально
-            console.warn('[FIRESTORE] Persistence вже активовано в іншій вкладці');
-        } else if (err.code === 'unimplemented') {
-            console.warn('[FIRESTORE] Persistence не підтримується браузером');
-        } else {
-            console.warn('[FIRESTORE] Persistence помилка:', err.code);
-        }
-    });
+    try {
+        firebase.firestore().settings({
+            cache: { kind: 'persistent' }
+        });
+    } catch(e) {
+        // Якщо вже ініціалізовано або не підтримується — ігноруємо
+        console.warn('[FIRESTORE] Cache settings:', e.code || e.message);
+    }
     
     // Глобальний обробник помилок Firestore
     db.onSnapshotsInSync(() => {
