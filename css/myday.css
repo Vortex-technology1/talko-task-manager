@@ -220,6 +220,23 @@
         .myday-refresh-btn.spinning .icon { animation: spin 0.5s linear; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
+        /* ---- AI кнопка в картці ---- */
+        .myday-ai-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 6px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 5px;
+            font-size: 0.65rem;
+            color: #16a34a;
+            text-decoration: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .myday-ai-btn:hover { background: #dcfce7; }
+
         /* ---- Mobile ---- */
         @media (max-width: 767px) {
             .myday-header {
@@ -232,11 +249,23 @@
                 flex-wrap: nowrap;
                 gap: 0.5rem;
             }
-            .myday-date h2 { font-size: 1rem; }
-            .myday-date-text { font-size: 0.78rem; }
-            .myday-progress { gap: 0.5rem; }
-            .myday-progress-bar { width: 70px; }
-            .myday-progress-text { font-size: 0.78rem; }
+            .myday-date {
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+                min-width: 0;
+            }
+            .myday-date h2 {
+                font-size: 0.95rem;
+                white-space: nowrap;
+            }
+            .myday-date-text {
+                font-size: 0.75rem;
+                white-space: nowrap;
+            }
+            .myday-progress { gap: 0.4rem; flex-shrink: 0; }
+            .myday-progress-bar { width: 60px; }
+            .myday-progress-text { font-size: 0.75rem; }
             .myday-section {
                 border-radius: 8px;
                 padding: 0.5rem 0.6rem;
@@ -262,6 +291,9 @@
                 position: absolute;
                 top: -8px; right: -8px; bottom: -8px; left: -8px;
             }
+            /* AI label ховаємо на мобайлі — тільки іконка */
+            .myday-ai-label { display: none; }
+            .myday-ai-btn { padding: 2px 4px; }
         }
         
         .controls { 

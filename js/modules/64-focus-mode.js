@@ -18,9 +18,9 @@
     function getAiHelpButton(taskTitle, taskDescription, taskFunction, size) {
         const url = getAiHelpUrl(taskTitle, taskDescription, taskFunction);
         if (size === 'small') {
-            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:0.7rem;color:#16a34a;text-decoration:none;white-space:nowrap;" title="${window.t('askAI')}">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                AI
+            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" class="myday-ai-btn" title="${window.t('askAI')}">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span class="myday-ai-label">AI</span>
             </a>`;
         }
         if (size === 'medium') {
