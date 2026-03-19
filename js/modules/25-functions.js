@@ -686,50 +686,52 @@
                 </div>
                 <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.75rem;">${t('fnHowtoConnectionsHint')}</div>
                 <div style="display:flex;flex-direction:column;gap:6px;">
-                ${[
-                    ['Функція ↔ Задачі','Задача без адреси — хто відповідає коли людина пішла?',
-                        'Кожна задача прив\'язана до функції. Виконавець змінився — функція задачі залишається. Звільнилась Марія — задачі залишаються в Адмініструванні, не губляться.',
-                        '✓ Новий власник функції одразу бачить всі відкриті задачі відділу. Нічого не треба передавати вручну.',
-                        '✗ Без зв\'язку: звільнилась Марія → 23 задачі зависли → клієнти не отримали відповідь → 3-4 втрачених пацієнти на місяць.'],
-                    ['Функція ↔ Процеси','Хтось зробив свою частину — і забув передати далі',
-                        'Кожен етап процесу прив\'язаний до своєї функції. Адміністратор закрила запис (свій етап) → система автоматично сповістила лікаря і призначила задачу. Без дзвінків.',
-                        '✓ Процес рухається сам. Власник бачить де зараз кожен процес і в якій функції він застряг.',
-                        '✗ Без зв\'язку: пацієнт записаний але лікар не знає → простій 30-40 хвилин → 2-3 конфлікти на тиждень → репутаційні втрати.'],
-                    ['Функція ↔ Люди','Людина в двох відділах — де її пріоритет?',
-                        'У кожної людини є основна функція і додаткові. Задачі основної функції показуються першими. Плюс роль: власник (відповідає за результат) або учасник (виконує задачі).',
-                        '✓ Адміністратор-бухгалтер знає: коли задачі з обох відділів — спочатку Адміністрування.',
-                        '✗ Без зв\'язку: людина з двох відділів завжди робить що зручніше → важливе чекає → власник дізнається про проблему коли вже пізно.'],
-                    ['Функція ↔ Метрики','KPI є, але незрозуміло хто за нього відповідає',
-                        'Кожна метрика прив\'язана до функції. Виручка → Продажі. Заповненість → Адміністрування. Якщо метрика впала нижче 50% плану — автоматичне сповіщення тобі.',
-                        '✓ Відкриваєш картку Адміністрування — бачиш всі KPI відділу: план/факт, колір. Одна точка для аналізу.',
-                        '✗ Без зв\'язку: виручка впала на 30% → 2-3 дні щоб зрозуміти де проблема → ще тиждень щоб виправити → разом ~2 тижні і -150,000 грн.'],
-                    ['Функція ↔ Фінанси + Склад','Скільки коштує кожен відділ — незрозуміло',
-                        'Витрати прив\'язані до функцій двома шляхами: прямі фінансові витрати (зарплата, послуги) і матеріали зі складу. Система підсумовує обидва потоки.',
-                        '✓ Функція «Лікування» за місяць: зарплата 85,000 + матеріали 18,000 = 103,000 грн. Виручка 240,000. Маржа 57%. Видно одразу.',
-                        '✗ Без зв\'язку: відділ Закупівель витрачає на 40% більше бюджету → перевитрата 60,000 на квартал → дізнаєшся тільки на квартальному звіті.'],
-                    ['Функція ↔ Онбординг','Кожен новий співробітник — 2-3 години пояснень',
-                        'При призначенні людини у функцію — система сама генерує 9-крокове знайомство: керівник, ЦКП, з ким взаємодіяти, перші задачі, уроки. Все з даних функції автоматично.',
-                        '✓ Новий адміністратор з першого входу: знає хто керівник, куди писати, які задачі сьогодні. Ти нічого не пояснював.',
-                        '✗ Без зв\'язку: новий лікар перші 2 тижні щодня питає колег → 5-6 годин втраченого часу команди на одного нового співробітника.'],
-                ].map(([title,problem,how,result,loss]) => `
-                    <div style="border:1px solid #f3f4f6;border-radius:8px;overflow:hidden;">
-                        <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.chv2').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)'"
-                            style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.75rem;cursor:pointer;background:#fafafa;gap:8px;">
-                            <div>
-                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
-                                    <span style="font-size:0.8rem;font-weight:600;color:#0369a1;background:#e0f2fe;padding:2px 7px;border-radius:4px;">${title}</span>
-                                </div>
-                                <div style="font-size:0.73rem;color:#6b7280;">${problem}</div>
-                            </div>
-                            <span class="chv2" style="font-size:10px;color:#9ca3af;transition:transform 0.2s;flex-shrink:0;">▼</span>
-                        </div>
-                        <div style="display:none;padding:0.75rem;border-top:1px solid #f3f4f6;background:white;">
-                            <div style="font-size:0.78rem;color:#374151;line-height:1.6;">${how}</div>
-                            <div style="background:#f0fdf4;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.75rem;color:#166534;line-height:1.5;">${result}</div>
-                            <div style="background:#fef2f2;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.75rem;color:#991b1b;line-height:1.5;">${loss}</div>
-                        </div>
-                    </div>
-                `).join('')}
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                ${(function() {
+                    var t = window.t;
+                    function infoRow(label, text) {
+                        return '<div style="display:flex;gap:8px;padding:4px 0;font-size:0.75rem;"><span style="min-width:52px;color:#9ca3af;flex-shrink:0;">' + label + '</span><span style="color:#374151;">' + text + '</span></div>';
+                    }
+                    var rows = [
+                        ['Функція ↔ Задачі', 'Задача без адреси — хто відповідає коли людина пішла?',
+                            'Кожна задача прив\'язана до функції. Виконавець змінився — функція задачі залишається. Звільнилась Марія — задачі залишаються в Адмініструванні, не губляться.',
+                            '✓ Новий власник функції одразу бачить всі відкриті задачі відділу. Нічого не треба передавати вручну.',
+                            '✗ Без зв\'язку: звільнилась Марія → 23 задачі зависли → клієнти не отримали відповідь → 3-4 втрачених пацієнти на місяць.'],
+                        ['Функція ↔ Процеси', 'Хтось зробив свою частину — і забув передати далі',
+                            'Кожен етап процесу прив\'язаний до своєї функції. Адміністратор закрила запис (свій етап) → система автоматично сповістила лікаря і призначила задачу. Без дзвінків.',
+                            '✓ Процес рухається сам. Власник бачить де зараз кожен процес і в якій функції він застряг.',
+                            '✗ Без зв\'язку: пацієнт записаний але лікар не знає → простій 30-40 хвилин → 2-3 конфлікти на тиждень → репутаційні втрати.'],
+                        ['Функція ↔ Люди', 'Людина в двох відділах — де її пріоритет?',
+                            'У кожної людини є основна функція і додаткові. Задачі основної функції показуються першими. Плюс роль: власник (відповідає за результат) або учасник (виконує задачі).',
+                            '✓ Адміністратор-бухгалтер знає: коли задачі з обох відділів — спочатку Адміністрування.',
+                            '✗ Без зв\'язку: людина з двох відділів завжди робить що зручніше → важливе чекає → власник дізнається про проблему коли вже пізно.'],
+                        ['Функція ↔ Метрики', 'KPI є, але незрозуміло хто за нього відповідає',
+                            'Кожна метрика прив\'язана до функції. Виручка → Продажі. Заповненість → Адміністрування. Якщо метрика впала нижче 50% плану — автоматичне сповіщення тобі.',
+                            '✓ Відкриваєш картку Адміністрування — бачиш всі KPI відділу: план/факт, колір. Одна точка для аналізу.',
+                            '✗ Без зв\'язку: виручка впала на 30% → 2-3 дні щоб зрозуміти де проблема → ще тиждень щоб виправити → разом ~2 тижні і -150,000 грн.'],
+                        ['Функція ↔ Фінанси + Склад', 'Скільки коштує кожен відділ — незрозуміло',
+                            'Витрати прив\'язані до функцій двома шляхами: прямі фінансові витрати (зарплата, послуги) і матеріали зі складу. Система підсумовує обидва потоки.',
+                            '✓ Функція «Лікування» за місяць: зарплата 85,000 + матеріали 18,000 = 103,000 грн. Виручка 240,000. Маржа 57%. Видно одразу.',
+                            '✗ Без зв\'язку: відділ Закупівель витрачає на 40% більше бюджету → перевитрата 60,000 на квартал → дізнаєшся тільки на квартальному звіті.'],
+                        ['Функція ↔ Онбординг', 'Кожен новий співробітник — 2-3 години пояснень',
+                            'При призначенні людини у функцію — система сама генерує 9-крокове знайомство: керівник, ЦКП, з ким взаємодіяти, перші задачі, уроки. Все з даних функції автоматично.',
+                            '✓ Новий адміністратор з першого входу: знає хто керівник, куди писати, які задачі сьогодні. Ти нічого не пояснював.',
+                            '✗ Без зв\'язку: новий лікар перші 2 тижні щодня питає колег → 5-6 годин втраченого часу команди на одного нового співробітника.'],
+                    ];
+                    return rows.map(function(row) {
+                        return '<div style="border:1px solid #f3f4f6;border-radius:8px;overflow:hidden;">'
+                            + '<div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'block\'?\'none\':\'block\';this.querySelector(\'.chv2\').style.transform=this.nextElementSibling.style.display===\'block\'?\'rotate(180deg)\':\'rotate(0deg)\'" style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.75rem;cursor:pointer;background:#fafafa;gap:8px;">'
+                            + '<div><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:0.8rem;font-weight:600;color:#0369a1;background:#e0f2fe;padding:2px 7px;border-radius:4px;">' + row[0] + '</span></div>'
+                            + '<div style="font-size:0.73rem;color:#6b7280;">' + row[1] + '</div></div>'
+                            + '<span class="chv2" style="font-size:10px;color:#9ca3af;transition:transform 0.2s;flex-shrink:0;">▼</span>'
+                            + '</div>'
+                            + '<div style="display:none;padding:0.75rem;border-top:1px solid #f3f4f6;background:white;">'
+                            + '<div style="font-size:0.78rem;color:#374151;line-height:1.6;">' + row[2] + '</div>'
+                            + '<div style="background:#f0fdf4;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.75rem;color:#166534;line-height:1.5;">' + row[3] + '</div>'
+                            + '<div style="background:#fef2f2;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.75rem;color:#991b1b;line-height:1.5;">' + row[4] + '</div>'
+                            + '</div></div>';
+                    }).join('');
+                })()}
                 </div>
             </div>
 
@@ -737,48 +739,51 @@
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
                 <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;display:flex;align-items:center;gap:6px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                    Три автоматичні механіки
+                    ${t('fnHowtoMechanicsTitle')}
                 </div>
                 <div style="display:flex;flex-direction:column;gap:8px;">
-
-                    <div style="border:1px solid #fee2e2;border-radius:8px;padding:0.75rem;background:#fff5f5;">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
-                            <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;"></span>
-                            <span style="font-size:0.82rem;font-weight:600;color:#111;">Ескалація по ієрархії</span>
-                        </div>
-                        <p style="font-size:0.75rem;color:#6b7280;line-height:1.5;margin:0 0 0.6rem;">Система сама знає куди передавати проблему. Ти отримуєш сповіщення тільки коли інші вже не можуть вирішити без тебе.</p>
-                        ${[['0 год','Задача прострочена → сповіщення власнику функції'],['+ 24 год','Немає реакції → сповіщення керівнику вищої функції'],['+ 48 год','Знову немає реакції → сповіщення тобі як власнику бізнесу'],['Те саме','Для: метрика впала, інцидент не закрито, онбординг не завершено']].map(([n,t])=>`<div style="display:flex;gap:8px;padding:4px 0;font-size:0.75rem;"><span style="min-width:52px;color:#9ca3af;flex-shrink:0;">${n}</span><span style="color:#374151;">${t}</span></div>`).join('')}
-                    </div>
-
-                    <div style="border:1px solid #d1fae5;border-radius:8px;padding:0.75rem;background:#f0fdf4;">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
-                            <span style="width:8px;height:8px;border-radius:50%;background:#16a34a;flex-shrink:0;"></span>
-                            <span style="font-size:0.82rem;font-weight:600;color:#111;">Тимчасовий власник + автоповернення</span>
-                        </div>
-                        <p style="font-size:0.75rem;color:#6b7280;line-height:1.5;margin:0 0 0.6rem;">Власник йде у відпустку — не треба вручну переналаштовувати. Система сама переключить і сама поверне.</p>
-                        ${[['Крок 1','Призначаєш тимчасового власника і вказуєш дату повернення'],['Активно','Всі сповіщення і права йдуть до тимчасового власника'],['За день','Нагадування: «завтра права повертаються до основного власника»'],['Авто','Після дати — права повертаються автоматично. Нічого вручну.']].map(([n,t])=>`<div style="display:flex;gap:8px;padding:4px 0;font-size:0.75rem;"><span style="min-width:52px;color:#9ca3af;flex-shrink:0;">${n}</span><span style="color:#374151;">${t}</span></div>`).join('')}
-                    </div>
-
-                    <div style="border:1px solid #bfdbfe;border-radius:8px;padding:0.75rem;background:#eff6ff;">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
-                            <span style="width:8px;height:8px;border-radius:50%;background:#2563eb;flex-shrink:0;"></span>
-                            <span style="font-size:0.82rem;font-weight:600;color:#111;">Щотижневий звіт менеджеру</span>
-                        </div>
-                        <p style="font-size:0.75rem;color:#6b7280;line-height:1.5;margin:0 0 0.6rem;">Кожен понеділок о 9:00 кожен власник функції автоматично отримує звіт про свій відділ. Без твоєї участі.</p>
-                        ${[['Задачі','Виконано за тиждень: X (порівняння з минулим тижнем)'],['Прострочені','Кількість + список — хто має розібратись'],['Метрики','Ключові KPI функції: план / факт / статус кольором'],['Процеси','Активні процеси де є етапи цієї функції — поточний стан']].map(([n,t])=>`<div style="display:flex;gap:8px;padding:4px 0;font-size:0.75rem;"><span style="min-width:68px;color:#9ca3af;flex-shrink:0;">${n}</span><span style="color:#374151;">${t}</span></div>`).join('')}
-                    </div>
-
+                ${(function() {
+                    var t = window.t;
+                    function miniRow(minW, label, text) {
+                        return '<div style="display:flex;gap:8px;padding:4px 0;font-size:0.75rem;"><span style="min-width:' + minW + ';color:#9ca3af;flex-shrink:0;">' + label + '</span><span style="color:#374151;">' + text + '</span></div>';
+                    }
+                    var escRows = miniRow('52px', t('fnHowtoTimeLabel0'), t('fnHowtoEsc0'))
+                        + miniRow('52px', t('fnHowtoTimeLabel24'), t('fnHowtoEsc24'))
+                        + miniRow('52px', t('fnHowtoTimeLabel48'), t('fnHowtoEsc48'))
+                        + miniRow('52px', t('fnHowtoTimeLabelSame'), t('fnHowtoEscSame'));
+                    var tempRows = miniRow('52px', t('fnHowtoTempLabelStep1'), t('fnHowtoTempStep1'))
+                        + miniRow('52px', t('fnHowtoTempLabelActive'), t('fnHowtoTempActive'))
+                        + miniRow('52px', t('fnHowtoTempLabelDay'), t('fnHowtoTempDay'))
+                        + miniRow('52px', t('fnHowtoTempLabelAuto'), t('fnHowtoTempAuto'));
+                    var weeklyRows = miniRow('68px', t('fnHowtoLabelTasks'), t('fnHowtoWeeklyTasks'))
+                        + miniRow('68px', t('fnHowtoLabelOverdue'), t('fnHowtoWeeklyOverdue'))
+                        + miniRow('68px', t('fnHowtoLabelMetrics'), t('fnHowtoWeeklyMetrics'))
+                        + miniRow('68px', t('fnHowtoLabelProcesses'), t('fnHowtoWeeklyProcesses'));
+                    return '<div style="border:1px solid #fee2e2;border-radius:8px;padding:0.75rem;background:#fff5f5;">'
+                        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;"><span style="width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;"></span><span style="font-size:0.82rem;font-weight:600;color:#111;">' + t('fnHowtoEscTitle') + '</span></div>'
+                        + '<p style="font-size:0.75rem;color:#6b7280;line-height:1.5;margin:0 0 0.6rem;">' + t('fnHowtoEscDesc') + '</p>'
+                        + escRows + '</div>'
+                        + '<div style="border:1px solid #d1fae5;border-radius:8px;padding:0.75rem;background:#f0fdf4;">'
+                        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;"><span style="width:8px;height:8px;border-radius:50%;background:#16a34a;flex-shrink:0;"></span><span style="font-size:0.82rem;font-weight:600;color:#111;">' + t('fnHowtoTempOwnerTitle') + '</span></div>'
+                        + '<p style="font-size:0.75rem;color:#6b7280;line-height:1.5;margin:0 0 0.6rem;">' + t('fnHowtoTempOwnerDesc') + '</p>'
+                        + tempRows + '</div>'
+                        + '<div style="border:1px solid #bfdbfe;border-radius:8px;padding:0.75rem;background:#eff6ff;">'
+                        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;"><span style="width:8px;height:8px;border-radius:50%;background:#2563eb;flex-shrink:0;"></span><span style="font-size:0.82rem;font-weight:600;color:#111;">' + t('fnHowtoWeeklyTitle') + '</span></div>'
+                        + '<p style="font-size:0.75rem;color:#6b7280;line-height:1.5;margin:0 0 0.6rem;">' + t('fnHowtoWeeklyDesc') + '</p>'
+                        + weeklyRows + '</div>';
+                })()}
                 </div>
             </div>
 
             <div style="margin-top:1rem;">
-                    <button class="btn btn-success" onclick="const p=document.getElementById('functionsHowtoPanel');if(p)p.style.display='none';openFunctionModal();">
-                        <i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addFunction') || 'Додати функцію'}
-                    </button>
+                <button class="btn btn-success" onclick="const p=document.getElementById('functionsHowtoPanel');if(p)p.style.display='none';openFunctionModal();">
+                    <i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addFunction') || 'Додати функцію'}
+                </button>
             </div>
 
             </div>`;
         }
+
 
         // =====================
         // EMPLOYEE ONBOARDING (ТЗ пріоритет 10)
