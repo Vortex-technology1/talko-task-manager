@@ -149,16 +149,7 @@ module.exports = async (req, res) => {
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('X-Content-Type-Options', 'nosniff');
         res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-        res.setHeader('Content-Security-Policy',
-            "default-src 'self'; " +
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net https://www.facebook.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.tiktok.com https://www.gstatic.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://accounts.google.com https://apis.google.com; " +
-            "connect-src 'self' https://connect.facebook.net https://www.facebook.com https://*.facebook.com https://graph.facebook.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://analytics.tiktok.com https://*.googleapis.com https://api.anthropic.com https://*.firebaseio.com wss://*.firebaseio.com https://*.cloudfunctions.net https://api.telegram.org https://chatapi.viber.com https://api.novaposhta.ua https://api.monobank.ua https://api.qrserver.com; " +
-            "img-src 'self' data: blob: https: http:; " +
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-            "font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com data:; " +
-            "frame-src 'self' https://www.facebook.com https://www.googletagmanager.com; " +
-            "worker-src 'self' blob:;"
-        );
+
 
         // rawHtml режим — довіряємо власнику сайту, але захищаємо від clickjacking
         if (site.mode === 'html' && site.rawHtml) {
