@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-03-18-v13.0';
+const CACHE_VERSION = '2026-03-19-v14.0';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache — core shell only (JS modules via network-first)
@@ -178,6 +178,12 @@ self.addEventListener('fetch', (event) => {
       })
     );
     return;
+  }
+
+  // Публічні сайти клієнтів — завжди network-only, ніколи не кешуємо
+  // Щоб CSP заголовки завжди були свіжі від сервера
+  if (url.pathname.startsWith('/s/') || url.pathname.startsWith('/book/')) {
+    return; // SW не перехоплює — браузер йде напряму на сервер
   }
 
   // JS модулі — network-first з cache: 'no-store'
