@@ -18,7 +18,7 @@
                 editingId = id;
                 const f = functions.find(x => x.id === id);
                 if (f) {
-                    document.getElementById('functionModalTitle').textContent = window.t('editTask');
+                    document.getElementById('functionModalTitle').textContent = window.t('editFunction');
                     document.getElementById('functionName').value = f.name || '';
                     document.getElementById('functionHead').value = f.headId || '';
                     document.getElementById('functionDescription').value = f.description || '';
@@ -532,48 +532,49 @@
         };
 
         function _buildFunctionsHowto() {
+            const t = window.t;
             return `<div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:1rem;">
 
             <div style="background:linear-gradient(135deg,#1e3a5f,#0f2040);border-radius:14px;padding:1.25rem 1.5rem;color:white;position:relative;">
                 <button onclick="toggleFunctionsHowto()" style="position:absolute;top:0.75rem;right:0.75rem;background:rgba(255,255,255,0.15);border:none;color:white;border-radius:6px;padding:0.2rem 0.5rem;cursor:pointer;font-size:0.8rem;">✕</button>
-                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Функції — це ролі, а не люди</div>
-                <div style="color:#93c5fd;font-size:0.88rem;line-height:1.5;">Завдання ставляться функції — система сама знає хто її виконує. Змінилась людина — задачі й процеси продовжують працювати.</div>
+                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>${t('fnHowtoTitle')}</div>
+                <div style="color:#93c5fd;font-size:0.88rem;line-height:1.5;">${t('fnHowtoSubtitle')}</div>
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Яку проблему вирішує</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>${t('fnHowtoProblem')}</div>
                 <div style="overflow-x:auto;">
                 <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
                     <thead><tr style="background:#f9fafb;">
-                        <th style="padding:0.5rem;text-align:left;color:#ef4444;border-bottom:2px solid #fecaca;">ПРОБЛЕМА</th>
-                        <th style="padding:0.5rem;text-align:left;color:#f59e0b;border-bottom:2px solid #fde68a;">НАСЛІДОК</th>
-                        <th style="padding:0.5rem;text-align:left;color:#16a34a;border-bottom:2px solid #bbf7d0;">РІШЕННЯ</th>
+                        <th style="padding:0.5rem;text-align:left;color:#ef4444;border-bottom:2px solid #fecaca;">${t('fnHowtoColProblem')}</th>
+                        <th style="padding:0.5rem;text-align:left;color:#f59e0b;border-bottom:2px solid #fde68a;">${t('fnHowtoColConsequence')}</th>
+                        <th style="padding:0.5rem;text-align:left;color:#16a34a;border-bottom:2px solid #bbf7d0;">${t('fnHowtoColSolution')}</th>
                     </tr></thead>
                     <tbody>
                         <tr style="border-bottom:1px solid #f3f4f6;">
-                            <td style="padding:0.5rem;">Завдання ставиться людині Іванову</td>
-                            <td style="padding:0.5rem;color:#6b7280;">Іванов звільнився — 40 задач підвисли</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Завдання ставиться функції — при заміні людини задачі до нового автоматично</td>
+                            <td style="padding:0.5rem;">${t('fnHowtoRow1p')}</td>
+                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow1c')}</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow1s')}</td>
                         </tr>
                         <tr style="border-bottom:1px solid #f3f4f6;">
-                            <td style="padding:0.5rem;">Власник не знає хто вільний</td>
-                            <td style="padding:0.5rem;color:#6b7280;">Ставить задачі вручну, не рівномірно</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Smart Assign — система вибирає найменш завантаженого</td>
+                            <td style="padding:0.5rem;">${t('fnHowtoRow2p')}</td>
+                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow2c')}</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow2s')}</td>
                         </tr>
                         <tr style="border-bottom:1px solid #f3f4f6;">
-                            <td style="padding:0.5rem;">Регулярна робота тримається в голові</td>
-                            <td style="padding:0.5rem;color:#6b7280;">Забули → не зробили → проблема</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Регулярне завдання прив'язане до функції → виконавець отримує задачу автоматично</td>
+                            <td style="padding:0.5rem;">${t('fnHowtoRow3p')}</td>
+                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow3c')}</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow3s')}</td>
                         </tr>
                         <tr style="border-bottom:1px solid #f3f4f6;">
-                            <td style="padding:0.5rem;">Не видно реальне навантаження</td>
-                            <td style="padding:0.5rem;color:#6b7280;">Хтось перевантажений, хтось пустує</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Система рахує год/тиждень і активних задач по кожній людині</td>
+                            <td style="padding:0.5rem;">${t('fnHowtoRow4p')}</td>
+                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow4c')}</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow4s')}</td>
                         </tr>
                         <tr>
-                            <td style="padding:0.5rem;">Процеси "ламаються" при заміні людей</td>
-                            <td style="padding:0.5rem;color:#6b7280;">Новий не знає що робити</td>
-                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">Крок процесу = функція. Змінив людину → процеси продовжують працювати</td>
+                            <td style="padding:0.5rem;">${t('fnHowtoRow5p')}</td>
+                            <td style="padding:0.5rem;color:#6b7280;">${t('fnHowtoRow5c')}</td>
+                            <td style="padding:0.5rem;color:#16a34a;font-weight:500;">${t('fnHowtoRow5s')}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -581,7 +582,7 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Що таке функція (приклад)</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>${t('fnHowtoExample')}</div>
                 <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">Функція "Менеджер з продажів"
 ├── Керівник: Марія Коваль (приймає рішення по функції)
 ├── Виконавці: Марія, Іван, Олег (3 людини)
@@ -593,20 +594,20 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Що відбувається при заміні виконавця</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>${t('fnHowtoReplaceTitle')}</div>
                 ${[
-                    ['1','Іванов звільняється','Відкриваєш функцію → прибираєш Іванова, додаєш Сидорова'],
-                    ['2','Регулярні завдання','Всі регулярні завдання функції тепер виконує Сидоров автоматично'],
-                    ['3','Бізнес-процеси','Всі кроки процесів де була ця функція — автоматично оновлюються'],
-                    ['4','Smart Assign','Тепер враховує Сидорова при розподілі задач'],
+                    ['1', t('fnHowtoReplace1t'), t('fnHowtoReplace1d')],
+                    ['2', t('fnHowtoReplace2t'), t('fnHowtoReplace2d')],
+                    ['3', t('fnHowtoReplace3t'), t('fnHowtoReplace3d')],
+                    ['4', t('fnHowtoReplace4t'), t('fnHowtoReplace4d')],
                 ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
-                    <div style="min-width:24px;height:24px;background:#0284c7;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">${n}</div>
-                    <div><div style="font-weight:500;font-size:0.82rem;">${title}</div><div style="font-size:0.78rem;color:#6b7280;">${desc}</div></div>
+                    <div style="min-width:24px;height:24px;background:#0284c7;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">\${n}</div>
+                    <div><div style="font-weight:500;font-size:0.82rem;">\${title}</div><div style="font-size:0.78rem;color:#6b7280;">\${desc}</div></div>
                 </div>`).join('')}
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Взаємозв'язки</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>${t('fnHowtoConnections')}</div>
                 <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">ФУНКЦІЯ
 │
 ├──→ РЕГУЛЯРНІ ЗАВДАННЯ — щодня/щотижня задача до виконавця автоматично
@@ -618,9 +619,9 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Smart Assign — формула</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>${t('fnHowtoSmartAssign')}</div>
                 <div style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.8rem;line-height:1.8;">
-                    <div style="margin-bottom:0.5rem;">При постановці задачі — система рахує навантаження кожного виконавця функції:</div>
+                    <div style="margin-bottom:0.5rem;">${t('fnHowtoSmartAssignDesc')}</div>
                     <div style="font-family:monospace;background:#1e293b;color:#86efac;padding:0.5rem 0.75rem;border-radius:6px;font-size:0.75rem;">
                         навантаження = активні задачі + прострочені × 2<br>
                         Менеджер А: 5 активних + 1 прострочена = <strong style="color:#fca5a5;">7</strong><br>
@@ -632,16 +633,16 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Покрокове налаштування</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>${t('fnHowtoSetupTitle')}</div>
                 ${[
-                    ['1','+ Функція','Назва ролі в компанії (не посада — роль: "Менеджер продажів", а не "Іванов Іван")'],
-                    ['2','Вибери керівника і виконавців','1 або більше людей з команди'],
-                    ['3','Кнопка repeat+ на картці функції','Додай регулярну роботу з розкладом і часом виконання'],
-                    ['4','Система → Процеси','В кроках шаблонів вибери функції (не людей)'],
-                    ['5','При постановці задачі','Вибери функцію → Smart Assign автоматично підбере виконавця'],
+                    ['1', t('fnHowtoSetup1t'), t('fnHowtoSetup1d')],
+                    ['2', t('fnHowtoSetup2t'), t('fnHowtoSetup2d')],
+                    ['3', t('fnHowtoSetup3t'), t('fnHowtoSetup3d')],
+                    ['4', t('fnHowtoSetup4t'), t('fnHowtoSetup4d')],
+                    ['5', t('fnHowtoSetup5t'), t('fnHowtoSetup5d')],
                 ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
-                    <div style="min-width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">${n}</div>
-                    <div><div style="font-weight:500;font-size:0.82rem;">${title}</div><div style="font-size:0.78rem;color:#6b7280;">${desc}</div></div>
+                    <div style="min-width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">\${n}</div>
+                    <div><div style="font-weight:500;font-size:0.82rem;">\${title}</div><div style="font-size:0.78rem;color:#6b7280;">\${desc}</div></div>
                 </div>`).join('')}
                 <div style="margin-top:1rem;">
                     <button class="btn btn-success" onclick="const p=document.getElementById('functionsHowtoPanel');if(p)p.style.display='none';openFunctionModal();">
@@ -654,12 +655,11 @@
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
                 <div style="font-weight:600;margin-bottom:0.25rem;color:#374151;display:flex;align-items:center;gap:6px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                    Словник термінів — простою мовою
+                    ${t('fnHowtoGlossaryTitle')}
                 </div>
-                <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.75rem;">Натисни на термін щоб розгорнути пояснення</div>
+                <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.75rem;">${t('fnHowtoGlossaryHint')}</div>
                 <div style="display:flex;flex-direction:column;gap:6px;">
                 ${[
-                    ['core','Функція','Не відділ на папері — жива одиниця відповідальності','Уяви компанію як завод. Кожен цех — це Функція. У кожного цеху є: назва, що він виробляє, хто відповідає, з ким взаємодіє. Адміністрування, Продажі, Лікування, Закупівля — кожна є Функцією в TALKO.','Приклад: Функція «Адміністрування» в клініці. Відповідальна — Марія. Результат — заповнений розклад без простоїв.'],
                     ['core','ЦКП — Цінний Кінцевий Продукт','Одна фраза: що саме виробляє ця функція','Відповідь на питання «що станеться, якщо цього відділу не буде?». Не «що вони роблять», а «що зʼявляється завдяки їм».','Погано: «Відповідає за записи». Добре: «Заповнений розклад без простоїв». Система показує ЦКП кожному новому співробітнику в перший день.'],
                     ['process','Процес','Послідовність дій, яка проходить через кілька відділів','Пацієнт зателефонував → адміністратор записав → лікар прийняв → каса виставила рахунок. Кожен крок — Етап, кожен Етап — у своїй Функції.','Без системи: адміністратор записав і забув повідомити лікаря. З TALKO: коли закрив свій етап — лікар автоматично отримав задачу.'],
                     ['process','Етап процесу','Один крок у процесі за який відповідає конкретна функція','Якщо Процес — це естафета, то Етап — це відрізок, який біжить один конкретний учасник. Він отримує задачу, виконує, передає далі.','Процес «Прийом пацієнта»: 1) Запис (Адміністрування) → 2) Огляд (Лікування) → 3) Рахунок (Фінанси) → 4) Оплата (Фінанси).'],
@@ -672,15 +672,15 @@
                         <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.chv').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)'"
                             style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.75rem;cursor:pointer;background:#fafafa;">
                             <div style="display:flex;align-items:center;gap:8px;">
-                                <span style="font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:4px;background:${type==='core'?'#dbeafe':type==='process'?'#dcfce7':'#fef9c3'};color:${type==='core'?'#1d4ed8':type==='process'?'#166534':'#854d0e'};">${type==='core'?'Ключове':type==='process'?'Процеси':'Автоматика'}</span>
-                                <span style="font-size:0.82rem;font-weight:600;color:#111;">${name}</span>
-                                <span style="font-size:0.75rem;color:#6b7280;">${short}</span>
+                                <span style="font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:4px;background:\${type==='core'?'#dbeafe':type==='process'?'#dcfce7':'#fef9c3'};color:\${type==='core'?'#1d4ed8':type==='process'?'#166534':'#854d0e'};">\${type==='core'?t('fnHowtoTagCore'):type==='process'?t('fnHowtoTagProcess'):t('fnHowtoTagAuto')}</span>
+                                <span style="font-size:0.82rem;font-weight:600;color:#111;">\${name}</span>
+                                <span style="font-size:0.75rem;color:#6b7280;">\${short}</span>
                             </div>
                             <span class="chv" style="font-size:10px;color:#9ca3af;transition:transform 0.2s;">▼</span>
                         </div>
                         <div style="display:none;padding:0.75rem;border-top:1px solid #f3f4f6;background:white;">
-                            <p style="font-size:0.78rem;color:#374151;line-height:1.6;margin:0 0 0.5rem;">${analogy}</p>
-                            <div style="background:#f9fafb;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.75rem;color:#6b7280;line-height:1.5;">${example}</div>
+                            <p style="font-size:0.78rem;color:#374151;line-height:1.6;margin:0 0 0.5rem;">\${analogy}</p>
+                            <div style="background:#f9fafb;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.75rem;color:#6b7280;line-height:1.5;">\${example}</div>
                         </div>
                     </div>
                 `).join('')}
@@ -691,9 +691,9 @@
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
                 <div style="font-weight:600;margin-bottom:0.25rem;color:#374151;display:flex;align-items:center;gap:6px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                    Детальні взаємозв'язки — кожен вирішує проблему
+                    ${t('fnHowtoConnectionsTitle')}
                 </div>
-                <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.75rem;">Натисни щоб розгорнути: що вирішує + скільки втрачає бізнес без цього</div>
+                <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.75rem;">${t('fnHowtoConnectionsHint')}</div>
                 <div style="display:flex;flex-direction:column;gap:6px;">
                 ${[
                     ['Функція ↔ Задачі','Задача без адреси — хто відповідає коли людина пішла?',
