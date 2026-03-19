@@ -473,10 +473,25 @@
 .stats-period-row td:first-child { font-size: 13px; color: #37352f; }
 
 /* ---- Секція заголовок ---- */
-.stats-section { padding: 0.5rem 0 0.35rem; }
+.stats-section {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 0 0.35rem;
+}
 .stats-section-title { font-size: 13px; font-weight: 600; color: #37352f; }
 .stats-section-count { font-size: 12px; color: #9b9a97; }
-.stats-section-icon { width: 22px; height: 22px; border-radius: 4px; }
+.stats-section-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 13px;
+}
+.stats-section-icon svg { width: 13px; height: 13px; color: white; }
 
 /* ---- Порожній стан ---- */
 .stats-empty { padding: 3rem 1rem; }
@@ -529,13 +544,122 @@
    ══════════════════════════════════════════ */
 @media (max-width: 767px) {
 
-    /* Обгортка таблиці — скрол з тінями */
+    /* ---- Header: компактний, горизонтальний скрол кнопок ---- */
+    .stats-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+        padding: 0.5rem 0 0.25rem;
+    }
+    .stats-header-title {
+        font-size: 1rem;
+    }
+    .stats-header-actions {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 0.35rem;
+        width: 100%;
+        margin-left: 0;
+        padding-bottom: 2px;
+        scrollbar-width: none;
+    }
+    .stats-header-actions::-webkit-scrollbar { display: none; }
+    .stats-header-actions .stats-pill {
+        flex-shrink: 0;
+    }
+
+    /* ---- Stats bar: горизонтальний скрол без переносу ---- */
+    .stats-bar {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 0.35rem;
+        padding: 0.35rem 0 0.25rem;
+        scrollbar-width: none;
+        align-items: center;
+    }
+    .stats-bar::-webkit-scrollbar { display: none; }
+    .stats-bar .stats-pill {
+        flex-shrink: 0;
+    }
+    .stats-bar-sep {
+        flex-shrink: 0;
+        height: 18px;
+    }
+    .stats-period-nav {
+        flex-shrink: 0;
+    }
+
+    /* ---- Секція заголовок (Щотижня / Щоденно) ---- */
+    .stats-section {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 0 0.3rem;
+    }
+    .stats-section-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 12px;
+    }
+    .stats-section-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #37352f;
+    }
+    .stats-section-count {
+        font-size: 12px;
+        color: #9b9a97;
+    }
+
+    /* ---- Debt banner — компактний ---- */
+    .stats-debt-banner {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 0.6rem;
+        padding: 0.55rem 0.75rem;
+        border-radius: 10px;
+        margin-bottom: 0.5rem;
+    }
+    .stats-debt-text {
+        flex: 1;
+        min-width: 0;
+    }
+    .stats-debt-text strong {
+        font-size: 0.8rem;
+        display: block;
+    }
+    .stats-debt-text span {
+        font-size: 0.7rem;
+        margin-top: 2px;
+        /* Обрізаємо довгий список в 2 рядки */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.4;
+    }
+    .stats-debt-banner .stats-pill {
+        flex-shrink: 0;
+        align-self: center;
+        white-space: nowrap;
+    }
+
+    /* ---- Обгортка таблиці — скрол з тінями ---- */
     .stats-table-wrap {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        border-radius: 12px;
-        margin: 0 -0.25rem;
-        /* Тінь щоб показати що є скрол */
+        border-radius: 10px;
+        margin: 0;
         background:
             linear-gradient(to right, white 30%, rgba(255,255,255,0)) left center,
             linear-gradient(to left, white 30%, rgba(255,255,255,0)) right center,
@@ -546,7 +670,7 @@
         background-attachment: local, local, scroll, scroll;
     }
 
-    /* Таблиця — фіксована ширина колонок */
+    /* ---- Таблиця ---- */
     .stats-table {
         font-size: 11px;
         width: max-content;
@@ -565,7 +689,6 @@
         width: 90px !important;
         box-shadow: 2px 0 6px rgba(0,0,0,0.06);
     }
-
     .stats-table tbody td:first-child {
         background: #fff !important;
         font-size: 10px;
@@ -582,17 +705,14 @@
         padding: 6px 3px 22px !important;
     }
 
-    /* Назва метрики в заголовку — менша */
     .stats-table thead th .th-metric-name {
         font-size: 10px !important;
         max-width: 80px !important;
         line-height: 1.2 !important;
     }
-
     .stats-table thead th .th-metric-meta {
         font-size: 9px !important;
     }
-
     .stats-table thead th .th-inner {
         min-height: 40px !important;
         gap: 3px !important;
@@ -611,22 +731,9 @@
         height: 16px !important;
     }
 
-    /* Фільтри статистики */
-    .stats-filters-row,
-    .stats-controls {
-        flex-wrap: wrap !important;
-        gap: 0.4rem !important;
-    }
-
     .stats-pill {
-        font-size: 0.75rem !important;
-        padding: 0.3rem 0.55rem !important;
-    }
-
-    /* Секція заголовок */
-    .stats-section-header {
-        flex-wrap: wrap;
-        gap: 0.4rem;
+        font-size: 0.72rem !important;
+        padding: 0.28rem 0.5rem !important;
     }
 
     /* Хінт про скрол */
