@@ -8,12 +8,13 @@
 
   // ── Стан модуля ──────────────────────────────────────────
   const _wh = {
-    items:      [],   // каталог
-    stock:      {},   // { itemId: { qty, reserved, minStock } }
-    locations:  [],   // локації
-    operations: [],   // журнал (останні 100)
-    suppliers:  [],   // постачальники
-    listeners:  [],   // unsubscribe functions
+    items:           [],   // каталог
+    stock:           {},   // { itemId: { qty, reserved, minStock } } — загальний
+    stockByLocation: {},   // { locationId: { itemId: { qty } } } — по локаціях
+    locations:       [],   // локації
+    operations:      [],   // журнал (останні 100)
+    suppliers:       [],   // постачальники
+    listeners:       [],   // unsubscribe functions
     initialized: false,
     companyId: null,
   };
@@ -36,6 +37,7 @@
       _whListenStock(),
       _whListenLocations(),
       _whListenSuppliers(),
+      _whListenStockByLocation(),
     ]);
     _whListenOperations();
   };
@@ -104,6 +106,27 @@
             .filter(s => s.deleted !== true);
           resolve();
         }, err => { console.error('[wh] suppliers', err); resolve(); });
+      _wh.listeners.push(unsub);
+    });
+  }
+
+  function _whListenStockByLocation() {
+    return new Promise(resolve => {
+      const unsub = col('warehouse_stock_locations')
+        .onSnapshot(snap => {
+          _wh.stockByLocation = {};
+          snap.docs.forEach(d => {
+            const data = d.data();
+            if (data.deleted === true) return;
+            const locId  = data.locationId;
+            const itemId = data.itemId;
+            if (!locId || !itemId) return;
+            if (!_wh.stockByLocation[locId]) _wh.stockByLocation[locId] = {};
+            _wh.stockByLocation[locId][itemId] = data;
+          });
+          window.dispatchEvent(new CustomEvent('wh:locationStockUpdated'));
+          resolve();
+        }, err => { console.error('[wh] stock_locations', err); resolve(); });
       _wh.listeners.push(unsub);
     });
   }
@@ -240,34 +263,63 @@
   };
 
   // ── Операції складу ──────────────────────────────────────
-  window.whDoOperation = async function ({ itemId, type, qty, locationId, price, note, dealId, functionId }) {
+  window.whDoOperation = async function ({ itemId, type, qty, locationId, toLocationId, price, note, dealId, functionId }) {
     if (!itemId || !type || qty == null) throw new Error('whDoOperation: missing params');
     qty = Number(qty);
     if (isNaN(qty) || qty <= 0) throw new Error(window.t('qtyMustBePos'));
 
+    // TRANSFER — окрема логіка: OUT з fromLocation + IN на toLocation
+    if (type === 'TRANSFER') {
+      if (!locationId || !toLocationId) throw new Error('TRANSFER потребує locationId і toLocationId');
+      return _whDoTransfer({ itemId, qty, fromLocationId: locationId, toLocationId, note });
+    }
+
     // Refs визначаємо ДО транзакції — col() не можна викликати всередині tx
-    const db2    = firebase.firestore();
-    const cRef   = compRef();
+    const db2      = firebase.firestore();
+    const cRef     = compRef();
     const itemRef  = cRef.collection('warehouse_items').doc(itemId);
     const stockRef = cRef.collection('warehouse_stock').doc(itemId);
-    const opRef    = cRef.collection('warehouse_operations').doc(); // новий doc
+    const opRef    = cRef.collection('warehouse_operations').doc();
+
+    // Ref для stock по локації (якщо вказана)
+    const locId       = locationId || null;
+    const locStockRef = locId
+      ? cRef.collection('warehouse_stock_locations').doc(`${locId}_${itemId}`)
+      : null;
 
     return db2.runTransaction(async tx => {
-      const [itemDoc, stockDoc] = await Promise.all([tx.get(itemRef), tx.get(stockRef)]);
+      const gets = [tx.get(itemRef), tx.get(stockRef)];
+      if (locStockRef) gets.push(tx.get(locStockRef));
+      const [itemDoc, stockDoc, locStockDoc] = await Promise.all(gets);
+
       if (!itemDoc.exists) throw new Error('Товар не знайдено');
 
-      const item  = itemDoc.data();
-      const stock = stockDoc.exists ? stockDoc.data() : { qty: 0, reserved: 0 };
-      const prevQty = stock.qty || 0;
-      let newQty = prevQty;
+      const item     = itemDoc.data();
+      const stock    = stockDoc.exists ? stockDoc.data() : { qty: 0, reserved: 0 };
+      const locStock = locStockDoc?.exists ? locStockDoc.data() : { qty: 0 };
 
-      if (type === 'IN')             newQty = prevQty + qty;
-      else if (type === 'OUT')       newQty = prevQty - qty;
-      else if (type === 'WRITE_OFF') newQty = prevQty - qty;
-      else if (type === 'ADJUST')    newQty = qty;
+      const prevQty    = stock.qty || 0;
+      const prevLocQty = locStock.qty || 0;
+      let newQty    = prevQty;
+      let newLocQty = prevLocQty;
+
+      if (type === 'IN') {
+        newQty    = prevQty + qty;
+        newLocQty = prevLocQty + qty;
+      } else if (type === 'OUT' || type === 'WRITE_OFF') {
+        newQty    = prevQty - qty;
+        newLocQty = prevLocQty - qty;
+      } else if (type === 'ADJUST') {
+        // ADJUST: встановлює залишок на локації, коригує загальний на різницю
+        const diff = qty - prevLocQty;
+        newLocQty = qty;
+        newQty    = prevQty + diff;
+      }
 
       if (newQty < 0) throw new Error(`${window.t('notEnoughStock2').replace('{V}',item.name).replace('{V}',prevQty).replace('{V}',qty)}`);
+      if (locStockRef && newLocQty < 0) throw new Error(`Недостатньо на локації: ${item.name} (є ${prevLocQty} ${item.unit||'шт'})`);
 
+      // Оновлюємо загальний stock
       tx.set(stockRef, {
         itemId, qty: newQty,
         reserved: stock.reserved || 0,
@@ -276,10 +328,23 @@
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       }, { merge: true });
 
+      // Оновлюємо stock по локації
+      if (locStockRef) {
+        tx.set(locStockRef, {
+          itemId, locationId: locId,
+          qty: newLocQty,
+          unit: item.unit || 'шт',
+          name: item.name,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+      }
+
+      // Запис операції
       tx.set(opRef, {
         itemId, itemName: item.name,
         type, qty, prevQty, newQty,
-        locationId: locationId || 'main',
+        locationId: locId || 'main',
+        toLocationId: null,
         price: price != null ? Number(price) : (item.costPrice || 0),
         note: note || '',
         dealId: dealId || null,
@@ -291,6 +356,61 @@
       return { newQty, prevQty, opId: opRef.id, item };
     });
   };
+
+  // ── TRANSFER: переміщення між локаціями ──────────────────
+  async function _whDoTransfer({ itemId, qty, fromLocationId, toLocationId, note }) {
+    const db2      = firebase.firestore();
+    const cRef     = compRef();
+    const itemRef  = cRef.collection('warehouse_items').doc(itemId);
+    const stockRef = cRef.collection('warehouse_stock').doc(itemId);
+    const fromRef  = cRef.collection('warehouse_stock_locations').doc(`${fromLocationId}_${itemId}`);
+    const toRef    = cRef.collection('warehouse_stock_locations').doc(`${toLocationId}_${itemId}`);
+    const opRef    = cRef.collection('warehouse_operations').doc();
+
+    return db2.runTransaction(async tx => {
+      const [itemDoc, stockDoc, fromDoc, toDoc] = await Promise.all([
+        tx.get(itemRef), tx.get(stockRef), tx.get(fromRef), tx.get(toRef),
+      ]);
+
+      if (!itemDoc.exists) throw new Error('Товар не знайдено');
+      const item     = itemDoc.data();
+      const fromQty  = fromDoc.exists ? (fromDoc.data().qty || 0) : 0;
+      const toQty    = toDoc.exists   ? (toDoc.data().qty   || 0) : 0;
+      const totalQty = stockDoc.exists ? (stockDoc.data().qty || 0) : 0;
+
+      if (fromQty < qty) throw new Error(`Недостатньо на локації відправника: ${item.name} (є ${fromQty} ${item.unit||'шт'})`);
+
+      // Загальний stock не змінюється при переміщенні
+      tx.set(fromRef, {
+        itemId, locationId: fromLocationId,
+        qty: fromQty - qty,
+        unit: item.unit || 'шт', name: item.name,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true });
+
+      tx.set(toRef, {
+        itemId, locationId: toLocationId,
+        qty: toQty + qty,
+        unit: item.unit || 'шт', name: item.name,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true });
+
+      tx.set(opRef, {
+        itemId, itemName: item.name,
+        type: 'TRANSFER', qty,
+        prevQty: totalQty, newQty: totalQty, // загальний не змінюється
+        locationId: fromLocationId,
+        toLocationId: toLocationId,
+        price: item.costPrice || 0,
+        note: note || '',
+        dealId: null, functionId: null,
+        userId: window.currentUser?.uid || null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+
+      return { fromQty: fromQty - qty, toQty: toQty + qty, opId: opRef.id, item };
+    });
+  }
 
   // ── Масове списання при угоді Won ────────────────────────
   window.whDealWon = async function (deal) {
@@ -366,6 +486,29 @@
   window.whGetLocations  = () => _wh.locations;
   window.whGetSuppliers  = () => _wh.suppliers;
   window.whGetOperations = () => _wh.operations;
+
+  // Залишок товару на конкретній локації
+  window.whGetStockByLocation = function (itemId, locationId) {
+    const s = _wh.stockByLocation[locationId]?.[itemId];
+    return { qty: s?.qty || 0, unit: s?.unit || 'шт' };
+  };
+
+  // Всі локації з залишком для конкретного товару
+  window.whGetAllLocationStocks = function (itemId) {
+    return _wh.locations.map(loc => ({
+      locationId: loc.id,
+      locationName: loc.name,
+      locationType: loc.type || 'warehouse',
+      qty: _wh.stockByLocation[loc.id]?.[itemId]?.qty || 0,
+    }));
+  };
+
+  // Загальний залишок по всіх локаціях для товару (сума)
+  window.whGetTotalLocationStock = function (itemId) {
+    return Object.values(_wh.stockByLocation).reduce((sum, locStock) => {
+      return sum + (locStock[itemId]?.qty || 0);
+    }, 0);
+  };
 
   // ── Фінансова транзакція при надходженні ─────────────────
   window.whFinanceOnIn = async function (item, qty, price) {
