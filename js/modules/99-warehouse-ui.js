@@ -101,6 +101,7 @@
       { id: 'by-location',   icon: 'map',               label: 'По точках' },
       { id: 'transfer',      icon: 'arrow-right-left',  label: 'Переміщення' },
       { id: 'inventory',     icon: 'clipboard-check',   label: 'Інвентаризація' },
+      { id: 'reports',       icon: 'bar-chart-2',       label: 'Звіти' },
       { id: 'operations',    icon: 'arrow-left-right',  label: window.t('operationsWord') },
       { id: 'suppliers',     icon: 'truck',             label: window.t('whSuppliers') },
       { id: 'locations',     icon: 'map-pin',           label: window.t('locationsWord') },
@@ -172,6 +173,7 @@
     if (_currentView === 'by-location') return _renderByLocation();
     if (_currentView === 'transfer')    return _renderTransfer();
     if (_currentView === 'inventory')   return _renderInventory();
+    if (_currentView === 'reports')     return _renderReports();
     if (_currentView === 'operations')  return _renderOperations();
     if (_currentView === 'suppliers')   return _renderSuppliers();
     if (_currentView === 'locations')   return _renderLocations();
@@ -1691,6 +1693,334 @@
     await _origInitUI();
     await _whLoadInvList();
   };
+
+  // ══════════════════════════════════════════════════════════
+  //  ЗВІТИ
+  // ══════════════════════════════════════════════════════════
+  let _repType     = 'monthly';   // 'monthly' | 'compare' | 'yearly'
+  let _repLocId    = '';
+  let _repItemId   = '';
+  let _repYear     = String(new Date().getFullYear());
+
+  function _renderReports() {
+    const locations = window.whGetLocations ? window.whGetLocations() : [];
+    const items     = window.whGetItems     ? window.whGetItems()     : [];
+    const ops       = window.whGetOperations ? window.whGetOperations() : [];
+
+    const locMap = {};
+    locations.forEach(l => { locMap[l.id] = l.name; });
+
+    const tabStyle = (id) => `
+      padding:0.4rem 1rem;border-radius:8px;border:none;cursor:pointer;font-size:0.83rem;font-weight:600;
+      background:${_repType===id?'#6366f1':'#f3f4f6'};
+      color:${_repType===id?'white':'#374151'};`;
+
+    const filters = `
+      <div style="padding:0.85rem 1rem;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:1rem;display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
+        <div style="display:flex;gap:0.4rem;">
+          <button style="${tabStyle('monthly')}"  onclick="window._whRepSet('monthly')">По місяцях</button>
+          <button style="${tabStyle('compare')}"  onclick="window._whRepSet('compare')">Порівняння салонів</button>
+          <button style="${tabStyle('yearly')}"   onclick="window._whRepSet('yearly')">Річний огляд</button>
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-left:auto;flex-wrap:wrap;align-items:center;">
+          <select onchange="window._whRepSetLoc(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;">
+            <option value="">Всі локації</option>
+            ${locations.map(l=>`<option value="${l.id}" ${_repLocId===l.id?'selected':''}>${_whEscHtml(l.name)}</option>`).join('')}
+          </select>
+          <select onchange="window._whRepSetItem(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;max-width:180px;">
+            <option value="">Всі товари</option>
+            ${items.map(i=>`<option value="${i.id}" ${_repItemId===i.id?'selected':''}>${_whEscHtml(i.name)}</option>`).join('')}
+          </select>
+          <select onchange="window._whRepSetYear(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;">
+            ${[2024,2025,2026,2027].map(y=>`<option value="${y}" ${_repYear===String(y)?'selected':''}>${y}</option>`).join('')}
+          </select>
+        </div>
+      </div>`;
+
+    let content = '';
+    if (_repType === 'monthly')  content = _repRenderMonthly(ops, locations, items, locMap);
+    if (_repType === 'compare')  content = _repRenderCompare(ops, locations, items, locMap);
+    if (_repType === 'yearly')   content = _repRenderYearly(ops, locations, items, locMap);
+
+    return `<div>${filters}${content}</div>`;
+  }
+
+  window._whRepSet     = (v) => { _repType   = v; _render(); };
+  window._whRepSetLoc  = (v) => { _repLocId  = v; _render(); };
+  window._whRepSetItem = (v) => { _repItemId = v; _render(); };
+  window._whRepSetYear = (v) => { _repYear   = v; _render(); };
+
+  // ── Агрегація операцій ───────────────────────────────────
+  function _repFilterOps(ops) {
+    return ops.filter(op => {
+      if (op.type === 'TRANSFER' || op.type === 'ADJUST') return false; // не рахуємо переміщення
+      if (_repLocId  && op.locationId !== _repLocId)  return false;
+      if (_repItemId && op.itemId     !== _repItemId) return false;
+      const ts = op.createdAt?.toDate ? op.createdAt.toDate() : null;
+      if (!ts) return false;
+      if (String(ts.getFullYear()) !== _repYear) return false;
+      return true;
+    });
+  }
+
+  function _repGetMonth(op) {
+    const ts = op.createdAt?.toDate ? op.createdAt.toDate() : null;
+    if (!ts) return null;
+    return `${ts.getFullYear()}-${String(ts.getMonth()+1).padStart(2,'0')}`;
+  }
+
+  function _repMonthLabel(ym) {
+    const months = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+    const [y, m] = ym.split('-');
+    return `${months[parseInt(m)-1]} ${y}`;
+  }
+
+  // ── Звіт 1: По місяцях ───────────────────────────────────
+  function _repRenderMonthly(ops, locations, items, locMap) {
+    const filtered = _repFilterOps(ops);
+
+    // Агрегація: { 'YYYY-MM': { in: 0, out: 0, writeOff: 0 } }
+    const agg = {};
+    filtered.forEach(op => {
+      const m = _repGetMonth(op);
+      if (!m) return;
+      if (!agg[m]) agg[m] = { in: 0, out: 0, writeOff: 0 };
+      if (op.type === 'IN')         agg[m].in       += op.qty || 0;
+      if (op.type === 'OUT')        agg[m].out      += op.qty || 0;
+      if (op.type === 'WRITE_OFF')  agg[m].writeOff += op.qty || 0;
+    });
+
+    // 12 місяців поточного року
+    const months = Array.from({length:12},(_,i)=>`${_repYear}-${String(i+1).padStart(2,'0')}`);
+
+    if (filtered.length === 0) return _repEmpty('Немає операцій за обраний рік і фільтри');
+
+    const thS = 'padding:0.55rem 0.75rem;text-align:right;font-size:0.78rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
+    const thSL= 'padding:0.55rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
+    const tdS = 'padding:0.5rem 0.75rem;text-align:right;font-size:0.82rem;border-bottom:1px solid #f3f4f6;';
+    const tdSL= 'padding:0.5rem 0.75rem;text-align:left;font-size:0.82rem;border-bottom:1px solid #f3f4f6;';
+
+    const rows = months.map((m, ri) => {
+      const d = agg[m] || { in:0, out:0, writeOff:0 };
+      if (!agg[m]) return ''; // пропускаємо порожні місяці
+      const bg = ri%2===0?'white':'#fafafa';
+      const total = d.out + d.writeOff;
+      return `
+        <tr style="background:${bg};">
+          <td style="${tdSL}font-weight:500;">${_repMonthLabel(m)}</td>
+          <td style="${tdS}color:#22c55e;">${fmt(d.in)}</td>
+          <td style="${tdS}color:#ef4444;">${fmt(d.out)}</td>
+          <td style="${tdS}color:#f59e0b;">${fmt(d.writeOff)}</td>
+          <td style="${tdS}font-weight:700;color:#1e3a5f;">${fmt(total)}</td>
+        </tr>`;
+    }).filter(Boolean).join('');
+
+    const totIn  = months.reduce((s,m)=>(agg[m]?.in||0)+s,0);
+    const totOut = months.reduce((s,m)=>(agg[m]?.out||0)+s,0);
+    const totWo  = months.reduce((s,m)=>(agg[m]?.writeOff||0)+s,0);
+
+    return `
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
+        <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-size:0.82rem;color:#6b7280;">
+          Надходження і витрати по місяцях · ${_repYear}
+          ${_repLocId ? ` · ${locMap[_repLocId]||''}` : ''}
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead style="background:#f9fafb;">
+              <tr>
+                <th style="${thSL}">Місяць</th>
+                <th style="${thS}color:#22c55e;">↓ Надійшло</th>
+                <th style="${thS}color:#ef4444;">↑ Видано</th>
+                <th style="${thS}color:#f59e0b;">✕ Списано</th>
+                <th style="${thS}">Всього витрачено</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+              <tr style="background:#f0f9ff;font-weight:700;">
+                <td style="${tdSL}">Разом за рік</td>
+                <td style="${tdS}color:#22c55e;">${fmt(totIn)}</td>
+                <td style="${tdS}color:#ef4444;">${fmt(totOut)}</td>
+                <td style="${tdS}color:#f59e0b;">${fmt(totWo)}</td>
+                <td style="${tdS}color:#1e3a5f;">${fmt(totOut+totWo)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  // ── Звіт 2: Порівняння салонів ───────────────────────────
+  function _repRenderCompare(ops, locations, items, locMap) {
+    // Фільтр: тільки OUT+WRITE_OFF по обраному році
+    const filtered = _repFilterOps(ops);
+    if (filtered.length === 0) return _repEmpty('Немає операцій за обраний рік і фільтри');
+
+    // Агрегація: { itemId: { locationId: qty } }
+    const agg = {};
+    filtered.forEach(op => {
+      if (op.type === 'IN') return;
+      const iid = op.itemId;
+      const lid = op.locationId;
+      if (!agg[iid]) agg[iid] = {};
+      agg[iid][lid] = (agg[iid][lid]||0) + (op.qty||0);
+    });
+
+    const visItems = _repItemId
+      ? items.filter(i => i.id === _repItemId)
+      : items.filter(i => agg[i.id]);
+
+    if (visItems.length === 0) return _repEmpty('Немає даних для відображення');
+
+    const visLocs = _repLocId ? locations.filter(l=>l.id===_repLocId) : locations;
+
+    const thS  = 'padding:0.55rem 0.6rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;white-space:nowrap;';
+    const thSL = 'padding:0.55rem 0.75rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
+    const tdS  = 'padding:0.45rem 0.6rem;text-align:right;font-size:0.8rem;border-bottom:1px solid #f3f4f6;';
+    const tdSL = 'padding:0.45rem 0.75rem;text-align:left;font-size:0.8rem;border-bottom:1px solid #f3f4f6;';
+
+    const locHeaders = visLocs.map(l=>`<th style="${thS}">${_whEscHtml(l.name)}</th>`).join('');
+
+    const rows = visItems.map((item, ri) => {
+      const itemAgg = agg[item.id] || {};
+      const locCells = visLocs.map(l => {
+        const q = itemAgg[l.id] || 0;
+        // Знаходимо макс для підсвічування
+        return { locId: l.id, q };
+      });
+      const maxQ = Math.max(...locCells.map(c=>c.q), 1);
+      const cells = locCells.map(({q}) => {
+        const intensity = maxQ > 0 ? Math.round((q/maxQ)*80) : 0;
+        const bg = q > 0 ? `rgba(99,102,241,${intensity/100})` : 'transparent';
+        const color = intensity > 50 ? 'white' : '#374151';
+        return `<td style="${tdS}background:${bg};color:${color};">${q>0?fmt(q):'—'}</td>`;
+      }).join('');
+      const total = locCells.reduce((s,c)=>s+c.q,0);
+      const bg = ri%2===0?'white':'#fafafa';
+      return `
+        <tr style="background:${bg};">
+          <td style="${tdSL}font-weight:500;">${_whEscHtml(item.name)} <span style="color:#9ca3af;font-size:0.72rem;">${_whEscHtml(item.unit||'шт')}</span></td>
+          ${cells}
+          <td style="${tdS}font-weight:700;color:#1e3a5f;">${fmt(total)}</td>
+        </tr>`;
+    }).join('');
+
+    const totalRow = (() => {
+      const totals = visLocs.map(l => visItems.reduce((s,i)=>(agg[i.id]?.[l.id]||0)+s, 0));
+      const grandTotal = totals.reduce((s,t)=>s+t,0);
+      return `
+        <tr style="background:#f0f9ff;font-weight:700;">
+          <td style="${tdSL}">Разом</td>
+          ${totals.map(t=>`<td style="${tdS}color:#1e3a5f;">${fmt(t)}</td>`).join('')}
+          <td style="${tdS}color:#1e3a5f;">${fmt(grandTotal)}</td>
+        </tr>`;
+    })();
+
+    return `
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
+        <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-size:0.82rem;color:#6b7280;">
+          Витрати по салонах · ${_repYear} · темніший колір = більше витрат
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead style="background:#f9fafb;">
+              <tr>
+                <th style="${thSL}">Товар</th>
+                ${locHeaders}
+                <th style="${thS}background:#eef6ff;">Разом</th>
+              </tr>
+            </thead>
+            <tbody>${rows}${totalRow}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  // ── Звіт 3: Річний огляд (12 місяців в рядку) ───────────
+  function _repRenderYearly(ops, locations, items, locMap) {
+    const filtered = _repFilterOps(ops).filter(op => op.type !== 'IN');
+    if (filtered.length === 0) return _repEmpty('Немає операцій за обраний рік і фільтри');
+
+    const months = Array.from({length:12},(_,i)=>String(i+1).padStart(2,'0'));
+    const shortMonths = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+
+    // Агрегація { itemId: { '01': qty, '02': qty ... } }
+    const agg = {};
+    filtered.forEach(op => {
+      const ts = op.createdAt?.toDate ? op.createdAt.toDate() : null;
+      if (!ts || String(ts.getFullYear()) !== _repYear) return;
+      const m  = String(ts.getMonth()+1).padStart(2,'0');
+      const id = op.itemId;
+      if (!agg[id]) agg[id] = {};
+      agg[id][m] = (agg[id][m]||0) + (op.qty||0);
+    });
+
+    const visItems = _repItemId
+      ? items.filter(i => i.id === _repItemId)
+      : items.filter(i => agg[i.id]);
+
+    if (visItems.length === 0) return _repEmpty('Немає даних для відображення');
+
+    const thS  = 'padding:0.45rem 0.5rem;text-align:right;font-size:0.72rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;white-space:nowrap;';
+    const thSL = 'padding:0.45rem 0.75rem;text-align:left;font-size:0.72rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
+    const tdS  = 'padding:0.4rem 0.5rem;text-align:right;font-size:0.78rem;border-bottom:1px solid #f3f4f6;';
+    const tdSL = 'padding:0.4rem 0.75rem;text-align:left;font-size:0.78rem;border-bottom:1px solid #f3f4f6;';
+
+    const rows = visItems.map((item, ri) => {
+      const itemAgg = agg[item.id] || {};
+      const yearTotal = months.reduce((s,m)=>s+(itemAgg[m]||0),0);
+      const maxM = Math.max(...months.map(m=>itemAgg[m]||0), 1);
+      const cells = months.map((m,mi) => {
+        const q = itemAgg[m] || 0;
+        const intensity = maxM > 0 ? Math.round((q/maxM)*70) : 0;
+        const bg = q > 0 ? `rgba(99,102,241,${intensity/100})` : 'transparent';
+        const color = intensity > 50 ? 'white' : q > 0 ? '#374151' : '#d1d5db';
+        return `<td style="${tdS}background:${bg};color:${color};">${q>0?fmt(q):'·'}</td>`;
+      }).join('');
+      const bg = ri%2===0?'white':'#fafafa';
+      return `
+        <tr style="background:${bg};">
+          <td style="${tdSL}font-weight:500;white-space:nowrap;">${_whEscHtml(item.name)}</td>
+          ${cells}
+          <td style="${tdS}font-weight:700;color:#1e3a5f;">${fmt(yearTotal)}</td>
+        </tr>`;
+    }).join('');
+
+    const totalRow = (() => {
+      const totals = months.map(m => visItems.reduce((s,i)=>(agg[i.id]?.[m]||0)+s,0));
+      const grand  = totals.reduce((s,t)=>s+t,0);
+      return `
+        <tr style="background:#f0f9ff;font-weight:700;">
+          <td style="${tdSL}">Разом</td>
+          ${totals.map(t=>`<td style="${tdS}color:#1e3a5f;">${t>0?fmt(t):'·'}</td>`).join('')}
+          <td style="${tdS}color:#1e3a5f;">${fmt(grand)}</td>
+        </tr>`;
+    })();
+
+    return `
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
+        <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-size:0.82rem;color:#6b7280;">
+          Річний огляд витрат · ${_repYear} · темніший = більше витрат за місяць
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead style="background:#f9fafb;">
+              <tr>
+                <th style="${thSL}">Товар</th>
+                ${shortMonths.map(m=>`<th style="${thS}">${m}</th>`).join('')}
+                <th style="${thS}background:#eef6ff;">Рік</th>
+              </tr>
+            </thead>
+            <tbody>${rows}${totalRow}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  function _repEmpty(msg) {
+    return `<div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);padding:3rem;text-align:center;color:#9ca3af;">${msg}</div>`;
+  }
 
   console.log('[warehouse-ui] loaded');
 })();
