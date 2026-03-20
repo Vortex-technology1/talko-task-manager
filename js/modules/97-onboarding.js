@@ -733,6 +733,28 @@ const OB_STEPS = [
     tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Встановіть мінімальний запас для критичних матеріалів — система буде попереджати автоматично.',
 },
 {
+    id: 'warehouse_multiloc', block: 'business', color: '#6366f1',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>',
+    title: 'Склад: точки, переміщення, інвентаризація', subtitle: 'Блок 8 · Бізнес', est: '15 хв',
+    description: '<b>Біль без цього:</b> є головний склад і кілька точок — але невідомо де що лежить, скільки витратив кожен салон, і куди зникають матеріали між інвентаризаціями.<br><br>'
+      + '<div style="display:grid;gap:6px;margin:8px 0;">'
+      + '<div style="background:#eef6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.6rem .9rem;"><b style="color:#1e3a5f;font-size:.72rem;">📍 ПО ТОЧКАХ</b><br>Таблиця: товар → скільки є на складі і кожному салоні одночасно. Фільтр по одній точці.</div>'
+      + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.6rem .9rem;"><b style="color:#166534;font-size:.72rem;">⇄ ПЕРЕМІЩЕННЯ</b><br>Передати товар зі складу в салон або між салонами. Система фіксує хто, коли, скільки і куди.</div>'
+      + '<div style="background:#fff8e1;border:1px solid #fde68a;border-radius:8px;padding:.6rem .9rem;"><b style="color:#92400e;font-size:.72rem;">📋 ІНВЕНТАРИЗАЦІЯ</b><br>Щомісяця по кожній точці: вводите фактичну кількість → система порівнює з очікуваним → показує відхилення → коригує залишки автоматично.</div>'
+      + '<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:8px;padding:.6rem .9rem;"><b style="color:#6b21a8;font-size:.72rem;">📊 ЗВІТИ</b><br>По місяцях · Порівняння салонів · Річний огляд. Бачите де витрати вищі і як змінюється динаміка.</div>'
+      + '</div>'
+      + '<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента</a>',
+    tasks: [
+        { id:'wml1', text:'Перевірити локації: Склад → Локації', detail:'Переконайтесь що кожна точка створена з правильною назвою. Якщо потрібно — додайте або перейменуйте.' },
+        { id:'wml2', text:'Відкрити «По точках» — переглянути таблицю залишків', detail:'Склад → вкладка «По точках». Після першої інвентаризації тут з\'являться реальні залишки по кожній точці.' },
+        { id:'wml3', text:'Зробити перше переміщення товару між локаціями', detail:'«Переміщення» → «Нове переміщення» → оберіть товар, звідки, куди, кількість. Перевірте що залишки оновились у «По точках».' },
+        { id:'wml4', text:'Провести першу інвентаризацію по одній точці', detail:'«Інвентаризація» → «Нова інвентаризація» → оберіть локацію і місяць → введіть фактичну кількість → «Підтвердити і скоригувати». Це перенесе реальні залишки в систему.' },
+        { id:'wml5', text:'Переглянути звіт по місяцях', detail:'«Звіти» → «По місяцях» → оберіть рік. Після кількох операцій тут з\'являться дані по витратах кожної точки.' },
+    ],
+    action: { label:'Відкрити склад', tab:'warehouse' },
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Перша інвентаризація — найважливіший крок. Саме вона заповнює реальні залишки по точках. Без неї вкладка «По точках» буде порожньою.',
+},
+{
     id: 'estimate_norms', block: 'business', color: '#f97316',
     icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 8.7 8.7 21.3c-1 1-2.5 1-3.4 0l-2.6-2.6c-1-1-1-2.5 0-3.4L15.3 2.7c1-1 2.5-1 3.4 0l2.6 2.6c1 1 1 2.5 0 3.4Z"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m13.5 4.5 2 2"/><path d="m4.5 13.5 2 2"/></svg>',
     title: 'Довідник норм матеріалів', subtitle: 'Блок 8 · Бізнес', est: '10 хв',
