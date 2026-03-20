@@ -96,13 +96,14 @@
   function _renderHeader() {
     const alertsCount = window.whAlertsCount ? window.whAlertsCount() : 0;
     const tabs = [
-      { id: 'dashboard',    icon: 'layout-dashboard', label: window.t('whDashboard') },
-      { id: 'catalog',      icon: 'package',           label: window.t('whCatalog') },
-      { id: 'by-location',  icon: 'map',               label: 'По точках' },
-      { id: 'transfer',     icon: 'arrow-right-left',  label: 'Переміщення' },
-      { id: 'operations',   icon: 'arrow-left-right',  label: window.t('operationsWord') },
-      { id: 'suppliers',    icon: 'truck',             label: window.t('whSuppliers') },
-      { id: 'locations',    icon: 'map-pin',           label: window.t('locationsWord') },
+      { id: 'dashboard',     icon: 'layout-dashboard', label: window.t('whDashboard') },
+      { id: 'catalog',       icon: 'package',           label: window.t('whCatalog') },
+      { id: 'by-location',   icon: 'map',               label: 'По точках' },
+      { id: 'transfer',      icon: 'arrow-right-left',  label: 'Переміщення' },
+      { id: 'inventory',     icon: 'clipboard-check',   label: 'Інвентаризація' },
+      { id: 'operations',    icon: 'arrow-left-right',  label: window.t('operationsWord') },
+      { id: 'suppliers',     icon: 'truck',             label: window.t('whSuppliers') },
+      { id: 'locations',     icon: 'map-pin',           label: window.t('locationsWord') },
     ];
     return `
       <div style="background:white;border-bottom:1px solid #e5e7eb;padding:0 1rem;display:flex;align-items:center;gap:0;height:48px;flex-shrink:0;overflow-x:auto;scrollbar-width:none;">
@@ -135,6 +136,11 @@
             <i data-lucide="trash-2" style="width:15px;height:15px;"></i> Списання
           </button>
         ` : ''}
+        ${_currentView === 'inventory' ? `
+          <button onclick="window.whOpenInventoryForm()" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;white-space:nowrap;">
+            <i data-lucide="plus" style="width:15px;height:15px;"></i> Нова інвентаризація
+          </button>
+        ` : ''}
         ${_currentView === 'transfer' ? `
           <button onclick="window.whOpenTransferForm()" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;white-space:nowrap;">
             <i data-lucide="arrow-right-left" style="width:15px;height:15px;"></i> Нове переміщення
@@ -165,6 +171,7 @@
     if (_currentView === 'catalog')     return _renderCatalog();
     if (_currentView === 'by-location') return _renderByLocation();
     if (_currentView === 'transfer')    return _renderTransfer();
+    if (_currentView === 'inventory')   return _renderInventory();
     if (_currentView === 'operations')  return _renderOperations();
     if (_currentView === 'suppliers')   return _renderSuppliers();
     if (_currentView === 'locations')   return _renderLocations();
@@ -1354,6 +1361,336 @@
       }, 300);
     }
   })();
+
+  // ══════════════════════════════════════════════════════════
+  //  ІНВЕНТАРИЗАЦІЯ
+  // ══════════════════════════════════════════════════════════
+
+  // Стан активної форми інвентаризації
+  let _invState = {
+    locationId: '',
+    month: '',
+    items: [], // [{ itemId, name, unit, expected, actual }]
+    docId: null,
+  };
+
+  function _renderInventory() {
+    const locations = window.whGetLocations ? window.whGetLocations() : [];
+    if (locations.length === 0) {
+      return `<div style="text-align:center;padding:3rem;color:#6b7280;">Спочатку створіть локації у вкладці «Локації»</div>`;
+    }
+
+    // Завантажуємо список збережених інвентаризацій
+    const invList = window._whInvList || [];
+    const locMap  = {};
+    locations.forEach(l => { locMap[l.id] = l.name; });
+
+    const rows = invList.length === 0
+      ? `<tr><td colspan="5" style="text-align:center;padding:2rem;color:#9ca3af;">Інвентаризацій ще не проводилось</td></tr>`
+      : invList.map(inv => {
+          const statusColor = inv.status === 'confirmed' ? '#22c55e' : '#f59e0b';
+          const statusLabel = inv.status === 'confirmed' ? 'Підтверджено' : 'Чернетка';
+          const diffTotal = (inv.items||[]).reduce((s,i) => s + ((i.actual||0)-(i.expected||0)), 0);
+          const diffColor = diffTotal < 0 ? '#ef4444' : diffTotal > 0 ? '#f59e0b' : '#22c55e';
+          return `
+            <tr style="border-bottom:1px solid #f3f4f6;cursor:pointer;" onclick="window.whOpenInventoryDoc('${inv.id}')">
+              <td style="padding:0.65rem 0.75rem;font-size:0.83rem;font-weight:500;">${_whEscHtml(inv.month||'')}</td>
+              <td style="padding:0.65rem 0.75rem;font-size:0.83rem;">${_whEscHtml(locMap[inv.locationId]||inv.locationId||'—')}</td>
+              <td style="padding:0.65rem 0.75rem;font-size:0.83rem;">${(inv.items||[]).length} позицій</td>
+              <td style="padding:0.65rem 0.75rem;font-size:0.83rem;color:${diffColor};">
+                ${diffTotal >= 0 ? '+' : ''}${fmt(diffTotal)}
+              </td>
+              <td style="padding:0.65rem 0.75rem;">
+                <span style="background:${statusColor}20;color:${statusColor};border-radius:6px;padding:2px 8px;font-size:0.75rem;font-weight:600;">${statusLabel}</span>
+              </td>
+            </tr>`;
+        }).join('');
+
+    return `
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
+        <div style="padding:1rem;border-bottom:1px solid #f3f4f6;">
+          <p style="margin:0;font-size:0.85rem;color:#6b7280;">
+            Щомісячна інвентаризація по кожній точці. Введіть фактичні залишки — система покаже відхилення і скоригує stock.
+          </p>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead style="background:#f9fafb;">
+            <tr>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Місяць</th>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Локація</th>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Позицій</th>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Відхилення (сума)</th>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Статус</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  // ── Відкрити форму нової інвентаризації ──────────────────
+  window.whOpenInventoryForm = function () {
+    const locations = window.whGetLocations ? window.whGetLocations() : [];
+    const items     = window.whGetItems     ? window.whGetItems()     : [];
+    if (locations.length === 0) { showToast('Спочатку створіть локації', 'warning'); return; }
+    if (items.length === 0)     { showToast('Каталог товарів порожній', 'warning'); return; }
+
+    const now   = new Date();
+    const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+    const existing = document.getElementById('whInvModal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'whInvModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99998;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:white;border-radius:16px;width:580px;max-width:97vw;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+        <!-- Заголовок -->
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+          <h3 style="margin:0;font-size:1.05rem;font-weight:700;color:#111827;">📋 Нова інвентаризація</h3>
+          <button onclick="document.getElementById('whInvModal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#6b7280;">✕</button>
+        </div>
+        <!-- Налаштування -->
+        <div style="padding:1rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;gap:1rem;flex-shrink:0;flex-wrap:wrap;">
+          <div style="flex:1;min-width:160px;">
+            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Локація</label>
+            <select id="invLocId" onchange="window._whInvLoadItems()" style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;">
+              ${locations.map(l => `<option value="${l.id}">${_whEscHtml(l.name)}</option>`).join('')}
+            </select>
+          </div>
+          <div style="flex:1;min-width:140px;">
+            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Місяць</label>
+            <input id="invMonth" type="month" value="${month}" style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;box-sizing:border-box;">
+          </div>
+        </div>
+        <!-- Таблиця товарів -->
+        <div id="invItemsTable" style="flex:1;overflow-y:auto;padding:0.5rem 1.5rem;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead style="position:sticky;top:0;background:#f9fafb;z-index:1;">
+              <tr>
+                <th style="padding:0.5rem 0.5rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">Товар</th>
+                <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Очікувано</th>
+                <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Фактично</th>
+                <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Відхилення</th>
+              </tr>
+            </thead>
+            <tbody id="invItemsTbody">
+              ${_whInvRenderRows(items, locations[0]?.id || '')}
+            </tbody>
+          </table>
+        </div>
+        <!-- Кнопки -->
+        <div style="padding:1rem 1.5rem;border-top:1px solid #f3f4f6;display:flex;gap:0.75rem;flex-shrink:0;">
+          <button onclick="document.getElementById('whInvModal').remove()"
+            style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;font-size:0.88rem;color:#374151;">Скасувати</button>
+          <button onclick="window._whSaveInventory(false)"
+            style="padding:0.6rem 1rem;border:1px solid #6366f1;background:white;color:#6366f1;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:600;">Зберегти чернетку</button>
+          <button onclick="window._whSaveInventory(true)"
+            style="flex:1;padding:0.6rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:600;">Підтвердити і скоригувати</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  };
+
+  // ── Рендер рядків таблиці інвентаризації ─────────────────
+  function _whInvRenderRows(items, locationId) {
+    if (!items || items.length === 0) return '<tr><td colspan="4" style="text-align:center;padding:1rem;color:#9ca3af;">Немає товарів</td></tr>';
+    return items.map((item, ri) => {
+      const expected = window.whGetStockByLocation
+        ? (window.whGetStockByLocation(item.id, locationId).qty || 0)
+        : 0;
+      const bg = ri % 2 === 0 ? 'white' : '#fafafa';
+      return `
+        <tr style="background:${bg};border-bottom:1px solid #f3f4f6;" id="invRow_${item.id}">
+          <td style="padding:0.45rem 0.5rem;font-size:0.82rem;">${_whEscHtml(item.name)} <span style="color:#9ca3af;font-size:0.72rem;">${_whEscHtml(item.unit||'шт')}</span></td>
+          <td style="padding:0.45rem 0.5rem;text-align:right;font-size:0.82rem;color:#6b7280;" id="invExp_${item.id}">${fmt(expected)}</td>
+          <td style="padding:0.45rem 0.5rem;text-align:right;">
+            <input type="number" min="0" step="any" value=""
+              placeholder="${fmt(expected)}"
+              data-item-id="${item.id}"
+              data-expected="${expected}"
+              oninput="window._whInvUpdateDiff(this)"
+              style="width:80px;padding:0.25rem 0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;text-align:right;outline:none;">
+          </td>
+          <td style="padding:0.45rem 0.5rem;text-align:right;font-size:0.82rem;color:#9ca3af;" id="invDiff_${item.id}">—</td>
+        </tr>`;
+    }).join('');
+  }
+
+  // ── Оновлення відхилення при введенні ────────────────────
+  window._whInvUpdateDiff = function(input) {
+    const itemId   = input.dataset.itemId;
+    const expected = parseFloat(input.dataset.expected) || 0;
+    const actual   = parseFloat(input.value);
+    const diffEl   = document.getElementById(`invDiff_${itemId}`);
+    if (!diffEl) return;
+    if (isNaN(actual)) { diffEl.textContent = '—'; diffEl.style.color = '#9ca3af'; return; }
+    const diff = actual - expected;
+    diffEl.textContent = (diff >= 0 ? '+' : '') + fmt(diff);
+    diffEl.style.color = diff < 0 ? '#ef4444' : diff > 0 ? '#f59e0b' : '#22c55e';
+  };
+
+  // ── Перезавантажити рядки при зміні локації ──────────────
+  window._whInvLoadItems = function() {
+    const locId = document.getElementById('invLocId')?.value;
+    const tbody = document.getElementById('invItemsTbody');
+    if (!tbody || !locId) return;
+    const items = window.whGetItems ? window.whGetItems() : [];
+    tbody.innerHTML = _whInvRenderRows(items, locId);
+  };
+
+  // ── Зберегти інвентаризацію ──────────────────────────────
+  window._whSaveInventory = async function(confirm) {
+    const locId = document.getElementById('invLocId')?.value;
+    const month = document.getElementById('invMonth')?.value;
+    if (!locId || !month) { showToast('Оберіть локацію і місяць', 'warning'); return; }
+
+    const inputs = document.querySelectorAll('#invItemsTbody input[data-item-id]');
+    const invItems = [];
+    inputs.forEach(inp => {
+      const itemId   = inp.dataset.itemId;
+      const expected = parseFloat(inp.dataset.expected) || 0;
+      const actual   = inp.value !== '' ? parseFloat(inp.value) : null;
+      invItems.push({ itemId, expected, actual: actual !== null ? actual : expected, diff: actual !== null ? actual - expected : 0 });
+    });
+
+    const btn = document.querySelector('#whInvModal button[onclick*="true"]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Зберігаю...'; }
+
+    try {
+      const cRef = window.companyRef ? window.companyRef()
+        : firebase.firestore().collection('companies').doc(window.currentCompanyId);
+
+      const payload = {
+        locationId: locId,
+        month,
+        items: invItems,
+        status: confirm ? 'confirmed' : 'draft',
+        createdBy: window.currentUser?.uid || null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      };
+
+      await cRef.collection('warehouse_inventories').add(payload);
+
+      // Якщо підтверджено — скоригувати stock по локації через ADJUST
+      if (confirm) {
+        for (const it of invItems) {
+          if (it.actual === it.expected) continue; // без змін — пропускаємо
+          try {
+            await window.whDoOperation({
+              itemId: it.itemId,
+              type: 'ADJUST',
+              qty: it.actual,
+              locationId: locId,
+              note: `Інвентаризація ${month}`,
+            });
+          } catch(e) {
+            console.warn('[inv] adjust failed', it.itemId, e.message);
+          }
+        }
+        showToast('Інвентаризацію підтверджено, залишки скориговано', 'success');
+      } else {
+        showToast('Чернетку збережено', 'success');
+      }
+
+      document.getElementById('whInvModal')?.remove();
+      await _whLoadInvList();
+      _render();
+    } catch(e) {
+      showToast(e.message || 'Помилка збереження', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Підтвердити і скоригувати'; }
+    }
+  };
+
+  // ── Завантаження списку інвентаризацій ───────────────────
+  async function _whLoadInvList() {
+    try {
+      const cRef = window.companyRef ? window.companyRef()
+        : firebase.firestore().collection('companies').doc(window.currentCompanyId);
+      const snap = await cRef.collection('warehouse_inventories')
+        .orderBy('createdAt', 'desc').limit(50).get();
+      window._whInvList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) {
+      // fallback без orderBy якщо індекс не готовий
+      try {
+        const cRef = window.companyRef ? window.companyRef()
+          : firebase.firestore().collection('companies').doc(window.currentCompanyId);
+        const snap = await cRef.collection('warehouse_inventories').limit(50).get();
+        window._whInvList = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a,b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
+      } catch(e2) { window._whInvList = []; }
+    }
+  }
+
+  // ── Відкрити збережену інвентаризацію (перегляд) ─────────
+  window.whOpenInventoryDoc = function(docId) {
+    const inv = (window._whInvList || []).find(i => i.id === docId);
+    if (!inv) return;
+    const locations = window.whGetLocations ? window.whGetLocations() : [];
+    const locMap = {};
+    locations.forEach(l => { locMap[l.id] = l.name; });
+
+    const existing = document.getElementById('whInvViewModal');
+    if (existing) existing.remove();
+
+    const statusLabel = inv.status === 'confirmed' ? '✅ Підтверджено' : '📝 Чернетка';
+    const rows = (inv.items||[]).map((it, ri) => {
+      const items = window.whGetItems ? window.whGetItems() : [];
+      const item  = items.find(i => i.id === it.itemId);
+      const name  = item ? item.name : it.itemId;
+      const unit  = item ? (item.unit||'шт') : 'шт';
+      const diff  = (it.actual||0) - (it.expected||0);
+      const diffColor = diff < 0 ? '#ef4444' : diff > 0 ? '#f59e0b' : '#22c55e';
+      return `
+        <tr style="background:${ri%2===0?'white':'#fafafa'};border-bottom:1px solid #f3f4f6;">
+          <td style="padding:0.5rem 0.75rem;font-size:0.82rem;">${_whEscHtml(name)} <span style="color:#9ca3af;font-size:0.72rem;">${_whEscHtml(unit)}</span></td>
+          <td style="padding:0.5rem 0.75rem;text-align:right;font-size:0.82rem;color:#6b7280;">${fmt(it.expected||0)}</td>
+          <td style="padding:0.5rem 0.75rem;text-align:right;font-size:0.82rem;font-weight:600;">${fmt(it.actual||0)}</td>
+          <td style="padding:0.5rem 0.75rem;text-align:right;font-size:0.82rem;color:${diffColor};">${diff>=0?'+':''}${fmt(diff)}</td>
+        </tr>`;
+    }).join('');
+
+    const modal = document.createElement('div');
+    modal.id = 'whInvViewModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99998;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:white;border-radius:16px;width:540px;max-width:97vw;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+          <div>
+            <h3 style="margin:0;font-size:1rem;font-weight:700;color:#111827;">Інвентаризація · ${_whEscHtml(inv.month)}</h3>
+            <p style="margin:0.2rem 0 0;font-size:0.8rem;color:#6b7280;">${_whEscHtml(locMap[inv.locationId]||inv.locationId||'—')} · ${statusLabel}</p>
+          </div>
+          <button onclick="document.getElementById('whInvViewModal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#6b7280;">✕</button>
+        </div>
+        <div style="flex:1;overflow-y:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead style="background:#f9fafb;position:sticky;top:0;">
+              <tr>
+                <th style="padding:0.5rem 0.75rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">Товар</th>
+                <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Очікувано</th>
+                <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Фактично</th>
+                <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Відхилення</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <div style="padding:1rem 1.5rem;border-top:1px solid #f3f4f6;text-align:right;flex-shrink:0;">
+          <button onclick="document.getElementById('whInvViewModal').remove()"
+            style="padding:0.6rem 1.5rem;background:#f3f4f6;border:none;border-radius:8px;cursor:pointer;font-size:0.88rem;color:#374151;">Закрити</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  };
+
+  // Завантажуємо список при ініціалізації
+  const _origInitUI = window.initWarehouseUI;
+  window.initWarehouseUI = async function() {
+    await _origInitUI();
+    await _whLoadInvList();
+  };
 
   console.log('[warehouse-ui] loaded');
 })();
