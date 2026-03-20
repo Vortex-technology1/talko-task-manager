@@ -62,9 +62,10 @@
     window.whStartAlertWatch();
 
     if (!_listenersAttached) {
-      window.addEventListener('wh:itemsUpdated', _rerender);
-      window.addEventListener('wh:stockUpdated', _rerender);
-      window.addEventListener('wh:operationsUpdated', _rerender);
+      window.addEventListener('wh:itemsUpdated',         _rerender);
+      window.addEventListener('wh:stockUpdated',         _rerender);
+      window.addEventListener('wh:operationsUpdated',    _rerender);
+      window.addEventListener('wh:locationStockUpdated', _rerender);
       _listenersAttached = true;
     }
 
@@ -95,11 +96,13 @@
   function _renderHeader() {
     const alertsCount = window.whAlertsCount ? window.whAlertsCount() : 0;
     const tabs = [
-      { id: 'dashboard',  icon: 'layout-dashboard', label: window.t('whDashboard') },
-      { id: 'catalog',    icon: 'package',           label: window.t('whCatalog') },
-      { id: 'operations', icon: 'arrow-left-right',  label: window.t('operationsWord') },
-      { id: 'suppliers',  icon: 'truck',             label: window.t('whSuppliers') },
-      { id: 'locations',  icon: 'map-pin',           label: window.t('locationsWord') },
+      { id: 'dashboard',    icon: 'layout-dashboard', label: window.t('whDashboard') },
+      { id: 'catalog',      icon: 'package',           label: window.t('whCatalog') },
+      { id: 'by-location',  icon: 'map',               label: 'По точках' },
+      { id: 'transfer',     icon: 'arrow-right-left',  label: 'Переміщення' },
+      { id: 'operations',   icon: 'arrow-left-right',  label: window.t('operationsWord') },
+      { id: 'suppliers',    icon: 'truck',             label: window.t('whSuppliers') },
+      { id: 'locations',    icon: 'map-pin',           label: window.t('locationsWord') },
     ];
     return `
       <div style="background:white;border-bottom:1px solid #e5e7eb;padding:0 1rem;display:flex;align-items:center;gap:0;height:48px;flex-shrink:0;overflow-x:auto;scrollbar-width:none;">
@@ -132,6 +135,11 @@
             <i data-lucide="trash-2" style="width:15px;height:15px;"></i> Списання
           </button>
         ` : ''}
+        ${_currentView === 'transfer' ? `
+          <button onclick="window.whOpenTransferForm()" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;white-space:nowrap;">
+            <i data-lucide="arrow-right-left" style="width:15px;height:15px;"></i> Нове переміщення
+          </button>
+        ` : ''}
         ${_currentView === 'suppliers' ? `
           <button onclick="window.whOpenSupplierForm()" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;white-space:nowrap;">
             <i data-lucide="plus" style="width:15px;height:15px;"></i> Додати
@@ -153,11 +161,13 @@
 
   // ── View router ──────────────────────────────────────────
   function _renderView() {
-    if (_currentView === 'dashboard')  return _renderDashboard();
-    if (_currentView === 'catalog')    return _renderCatalog();
-    if (_currentView === 'operations') return _renderOperations();
-    if (_currentView === 'suppliers')  return _renderSuppliers();
-    if (_currentView === 'locations')  return _renderLocations();
+    if (_currentView === 'dashboard')   return _renderDashboard();
+    if (_currentView === 'catalog')     return _renderCatalog();
+    if (_currentView === 'by-location') return _renderByLocation();
+    if (_currentView === 'transfer')    return _renderTransfer();
+    if (_currentView === 'operations')  return _renderOperations();
+    if (_currentView === 'suppliers')   return _renderSuppliers();
+    if (_currentView === 'locations')   return _renderLocations();
     return '';
   }
 
@@ -438,6 +448,240 @@
   window._whFilterCategory = function (c) { _categoryFilter = c; _render(); };
 
   // ══════════════════════════════════════════════════════════
+  //  ПО ТОЧКАХ
+  // ══════════════════════════════════════════════════════════
+  let _locFilterId = ''; // фільтр по конкретній локації
+
+  function _renderByLocation() {
+    const items     = window.whGetItems     ? window.whGetItems()     : [];
+    const locations = window.whGetLocations ? window.whGetLocations() : [];
+
+    if (locations.length === 0) {
+      return `<div style="text-align:center;padding:3rem;color:#6b7280;">Спочатку створіть локації у вкладці «Локації»</div>`;
+    }
+
+    // Фільтровані локації
+    const visLocs = _locFilterId ? locations.filter(l => l.id === _locFilterId) : locations;
+
+    // Фільтр товарів по пошуку
+    const query = _searchQuery.toLowerCase();
+    const visItems = query
+      ? items.filter(i => (i.name||'').toLowerCase().includes(query) || (i.category||'').toLowerCase().includes(query))
+      : items;
+
+    if (visItems.length === 0) {
+      return `<div style="text-align:center;padding:3rem;color:#6b7280;">Каталог товарів порожній. Спочатку додайте товари.</div>`;
+    }
+
+    // Шапка таблиці: Товар | од | loc1 | loc2 | ... | Разом
+    const thStyle = 'padding:0.6rem 0.75rem;text-align:right;font-size:0.78rem;font-weight:600;color:#374151;white-space:nowrap;border-bottom:2px solid #e5e7eb;';
+    const thStyleL = 'padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;white-space:nowrap;border-bottom:2px solid #e5e7eb;';
+    const tdStyle  = 'padding:0.55rem 0.75rem;text-align:right;font-size:0.83rem;color:#374151;border-bottom:1px solid #f3f4f6;';
+    const tdStyleL = 'padding:0.55rem 0.75rem;text-align:left;font-size:0.83rem;color:#374151;border-bottom:1px solid #f3f4f6;';
+
+    const rows = visItems.map((item, ri) => {
+      const locQtys = visLocs.map(loc => {
+        const q = window.whGetStockByLocation ? window.whGetStockByLocation(item.id, loc.id).qty : 0;
+        const color = q === 0 ? '#9ca3af' : '#111827';
+        return `<td style="${tdStyle}color:${color};">${fmt(q)}</td>`;
+      }).join('');
+
+      const total = window.whGetTotalLocationStock
+        ? window.whGetTotalLocationStock(item.id)
+        : (window.whGetStock ? window.whGetStock(item.id).qty : 0);
+
+      const bg = ri % 2 === 0 ? 'white' : '#fafafa';
+      return `
+        <tr style="background:${bg};">
+          <td style="${tdStyleL}font-weight:500;">${_whEscHtml(item.name)}</td>
+          <td style="${tdStyle}color:#6b7280;">${_whEscHtml(item.unit||'шт')}</td>
+          ${locQtys}
+          <td style="${tdStyle}font-weight:700;color:#1e3a5f;">${fmt(total)}</td>
+        </tr>`;
+    }).join('');
+
+    const locHeaders = visLocs.map(loc => {
+      const icon = loc.type === 'salon' ? '✂️' : '🏭';
+      return `<th style="${thStyle}">${icon} ${_whEscHtml(loc.name)}</th>`;
+    }).join('');
+
+    return `
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
+        <!-- Фільтри -->
+        <div style="padding:0.75rem 1rem;display:flex;gap:0.75rem;align-items:center;border-bottom:1px solid #f3f4f6;flex-wrap:wrap;">
+          <input
+            type="text"
+            placeholder="Пошук товару..."
+            value="${_whEscHtml(_searchQuery)}"
+            oninput="window._whByLocSearch(this.value)"
+            style="padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;width:200px;outline:none;">
+          <select onchange="window._whByLocFilter(this.value)"
+            style="padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;color:#374151;">
+            <option value="">Всі локації</option>
+            ${locations.map(l => `<option value="${l.id}" ${_locFilterId===l.id?'selected':''}>${_whEscHtml(l.name)}</option>`).join('')}
+          </select>
+          <span style="font-size:0.8rem;color:#6b7280;margin-left:auto;">${visItems.length} товарів · ${visLocs.length} локацій</span>
+        </div>
+        <!-- Таблиця -->
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;min-width:600px;">
+            <thead style="background:#f9fafb;">
+              <tr>
+                <th style="${thStyleL}">Товар</th>
+                <th style="${thStyle}">Од.</th>
+                ${locHeaders}
+                <th style="${thStyle}background:#eef6ff;">Разом</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  window._whByLocSearch = function(val) {
+    _searchQuery = val;
+    _render();
+  };
+  window._whByLocFilter = function(val) {
+    _locFilterId = val;
+    _render();
+  };
+
+  // ══════════════════════════════════════════════════════════
+  //  ПЕРЕМІЩЕННЯ
+  // ══════════════════════════════════════════════════════════
+  function _renderTransfer() {
+    const ops = (window.whGetOperations ? window.whGetOperations() : [])
+      .filter(o => o.type === 'TRANSFER');
+    const locations = window.whGetLocations ? window.whGetLocations() : [];
+    const locMap = {};
+    locations.forEach(l => { locMap[l.id] = l.name; });
+
+    const typeLabel = { IN:'↓ Прихід', OUT:'↑ Видача', WRITE_OFF:'✕ Списання', TRANSFER:'⇄ Переміщення', ADJUST:'≡ Коригування' };
+
+    const rows = ops.length === 0
+      ? `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#6b7280;">Переміщень ще не було</td></tr>`
+      : ops.map(op => `
+          <tr style="border-bottom:1px solid #f3f4f6;">
+            <td style="padding:0.6rem 0.75rem;font-size:0.83rem;">${fmtDate(op.createdAt)}</td>
+            <td style="padding:0.6rem 0.75rem;font-size:0.83rem;font-weight:500;">${_whEscHtml(op.itemName||'')}</td>
+            <td style="padding:0.6rem 0.75rem;font-size:0.83rem;text-align:right;">${fmt(op.qty)}</td>
+            <td style="padding:0.6rem 0.75rem;font-size:0.83rem;color:#6b7280;">${_whEscHtml(locMap[op.locationId]||op.locationId||'—')}</td>
+            <td style="padding:0.6rem 0.75rem;font-size:0.83rem;color:#6b7280;">→ ${_whEscHtml(locMap[op.toLocationId]||op.toLocationId||'—')}</td>
+            <td style="padding:0.6rem 0.75rem;font-size:0.83rem;color:#6b7280;">${_whEscHtml(op.note||'—')}</td>
+          </tr>`).join('');
+
+    return `
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
+        <div style="padding:1rem;border-bottom:1px solid #f3f4f6;">
+          <p style="margin:0;font-size:0.85rem;color:#6b7280;">Журнал переміщень між локаціями. Нове переміщення — кнопка вгорі праворуч.</p>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead style="background:#f9fafb;">
+              <tr>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Дата</th>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Товар</th>
+                <th style="padding:0.6rem 0.75rem;text-align:right;font-size:0.78rem;font-weight:600;color:#374151;">Кількість</th>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Звідки</th>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Куди</th>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Примітка</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  // ── Форма переміщення ────────────────────────────────────
+  window.whOpenTransferForm = function () {
+    const items     = window.whGetItems     ? window.whGetItems()     : [];
+    const locations = window.whGetLocations ? window.whGetLocations() : [];
+
+    if (items.length === 0) { showToast('Каталог товарів порожній', 'warning'); return; }
+    if (locations.length < 2) { showToast('Потрібно мінімум 2 локації для переміщення', 'warning'); return; }
+
+    const existing = document.getElementById('whTransferModal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'whTransferModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:99998;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:white;border-radius:16px;padding:1.5rem;width:420px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+          <h3 style="margin:0;font-size:1.05rem;font-weight:700;color:#111827;">⇄ Переміщення товару</h3>
+          <button onclick="document.getElementById('whTransferModal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#6b7280;">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.85rem;">
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Товар</label>
+            <select id="wtItemId" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;outline:none;">
+              ${items.map(i => `<option value="${i.id}">${_whEscHtml(i.name)} (${_whEscHtml(i.unit||'шт')})</option>`).join('')}
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+            <div>
+              <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Звідки</label>
+              <select id="wtFromLoc" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;outline:none;">
+                ${locations.map(l => `<option value="${l.id}">${_whEscHtml(l.name)}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Куди</label>
+              <select id="wtToLoc" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;outline:none;">
+                ${locations.map((l,i) => `<option value="${l.id}" ${i===1?'selected':''}>${_whEscHtml(l.name)}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Кількість</label>
+            <input id="wtQty" type="number" min="0.001" step="any" placeholder="0"
+              style="width:100%;padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Примітка (опціонально)</label>
+            <input id="wtNote" type="text" placeholder="Причина переміщення..."
+              style="width:100%;padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box;">
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
+          <button onclick="document.getElementById('whTransferModal').remove()"
+            style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;font-size:0.88rem;color:#374151;">Скасувати</button>
+          <button onclick="window._whDoTransferSubmit()"
+            style="flex:1;padding:0.6rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:600;">Перемістити</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  };
+
+  window._whDoTransferSubmit = async function () {
+    const itemId        = document.getElementById('wtItemId')?.value;
+    const fromLocationId = document.getElementById('wtFromLoc')?.value;
+    const toLocationId  = document.getElementById('wtToLoc')?.value;
+    const qty           = parseFloat(document.getElementById('wtQty')?.value);
+    const note          = document.getElementById('wtNote')?.value || '';
+
+    if (!itemId || !fromLocationId || !toLocationId) { showToast('Заповніть всі поля', 'warning'); return; }
+    if (fromLocationId === toLocationId) { showToast('Локації «Звідки» і «Куди» повинні різнитись', 'warning'); return; }
+    if (!qty || qty <= 0) { showToast('Введіть кількість більше 0', 'warning'); return; }
+
+    const btn = document.querySelector('#whTransferModal button[onclick*="TransferSubmit"]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Зберігаю...'; }
+
+    try {
+      await window.whDoOperation({ itemId, type: 'TRANSFER', qty, locationId: fromLocationId, toLocationId, note });
+      document.getElementById('whTransferModal')?.remove();
+      showToast('Переміщення виконано', 'success');
+      window._whSetView('transfer');
+    } catch(e) {
+      showToast(e.message || 'Помилка переміщення', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Перемістити'; }
+    }
+  };
+
   //  ОПЕРАЦІЇ
   // ══════════════════════════════════════════════════════════
   function _renderOperations() {
