@@ -815,6 +815,7 @@
                 </div>
                 ${s.phone ? `<div style="font-size:0.82rem;color:#6b7280;margin-top:0.3rem;"><i data-lucide="phone" style="width:12px;height:12px;display:inline;"></i> ${s.phone}</div>` : ''}
                 ${s.email ? `<div style="font-size:0.82rem;color:#6b7280;"><i data-lucide="mail" style="width:12px;height:12px;display:inline;"></i> ${s.email}</div>` : ''}
+                ${s.url ? `<div style="font-size:0.82rem;margin-top:0.2rem;"><a href="${_whEscHtml(s.url)}" target="_blank" style="color:#6366f1;text-decoration:none;display:inline-flex;align-items:center;gap:3px;"><i data-lucide="external-link" style="width:11px;height:11px;"></i> Сайт</a></div>` : ''}
                 ${s.note ? `<div style="font-size:0.78rem;color:#9ca3af;margin-top:0.4rem;">${_whEscHtml(s.note)}</div>` : ''}
               </div>
             `).join('')}
@@ -928,6 +929,13 @@
             </div>
           </div>
           <div>
+            <label style="font-size:0.78rem;color:#6b7280;">Постачальник</label>
+            <select id="wh_supplier" style="${_inp()}">
+              <option value="">— без постачальника —</option>
+              ${(window.whGetSuppliers ? window.whGetSuppliers() : []).map(s => `<option value="${s.id}" ${item.supplierId === s.id ? 'selected' : ''}>${_whEscHtml(s.name)}</option>`).join('')}
+            </select>
+          </div>
+          <div>
             <label style="font-size:0.78rem;color:#6b7280;">Опис</label>
             <textarea id="wh_desc" style="${_inp()}height:56px;resize:none;" placeholder="Додатковий опис...">${_whEscHtml(item.description || '')}</textarea>
           </div>
@@ -957,6 +965,7 @@
         niche: document.getElementById('wh_niche')?.value,
         barcode: document.getElementById('wh_barcode')?.value?.trim(),
         description: document.getElementById('wh_desc')?.value?.trim(),
+        supplierId: document.getElementById('wh_supplier')?.value || null,
       }, id || null);
       window._whCloseModal();
       if (window.showToast) showToast('Товар збережено ✓', 'success');
@@ -983,6 +992,16 @@
     const locs  = window.whGetLocations ? window.whGetLocations() : [];
     const typeLabels = { IN: window.t('goodsIncoming'), OUT: 'Видача / Продаж', WRITE_OFF: 'Списання' };
     const typeColors = { IN: '#22c55e', OUT: '#ef4444', WRITE_OFF: '#f59e0b' };
+
+    // Для OUT показуємо поле "Куди (локація призначення)"
+    const toLocField = (type === 'OUT') ? `
+          <div>
+            <label style="font-size:0.78rem;color:#6b7280;">Куди (локація призначення)</label>
+            <select id="wh_op_to_loc" style="${_inp()}">
+              <option value="">— продаж / без переміщення —</option>
+              ${locs.map(l => `<option value="${l.id}">${_whEscHtml(l.name)}</option>`).join('')}
+            </select>
+          </div>` : '';
 
     _showModal(`
       <div style="padding:1.25rem;">
@@ -1014,6 +1033,7 @@
               ${locs.length > 0 ? locs.map(l => `<option value="${l.id}">${_whEscHtml(l.name)}</option>`).join('') : '<option value="main">Головний склад</option>'}
             </select>
           </div>
+          ${toLocField}
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Примітка</label>
             <input id="wh_op_note" style="${_inp()}" placeholder=${window.t('fromSupplierPh')}>
@@ -1050,25 +1070,37 @@
   };
 
   window._whSubmitOp = async function (type) {
-    const itemId = document.getElementById('wh_op_item')?.value;
-    const qty    = parseFloat(document.getElementById('wh_op_qty')?.value);
-    const price  = parseFloat(document.getElementById('wh_op_price')?.value) || 0;
-    const locId  = document.getElementById('wh_op_loc')?.value;
-    const note   = document.getElementById('wh_op_note')?.value?.trim();
-    const funcId = document.getElementById('wh_op_function')?.value || null;
+    const itemId  = document.getElementById('wh_op_item')?.value;
+    const qty     = parseFloat(document.getElementById('wh_op_qty')?.value);
+    const price   = parseFloat(document.getElementById('wh_op_price')?.value) || 0;
+    const locId   = document.getElementById('wh_op_loc')?.value;
+    const toLocId = document.getElementById('wh_op_to_loc')?.value || null;
+    const note    = document.getElementById('wh_op_note')?.value?.trim();
+    const funcId  = document.getElementById('wh_op_function')?.value || null;
+
     if (!itemId || !qty || isNaN(qty) || qty <= 0) {
       if (window.showToast) showToast('Оберіть товар і вкажіть кількість', 'error');
       return;
     }
+    // Якщо OUT і вибрана локація призначення — це переміщення TRANSFER
+    const actualType = (type === 'OUT' && toLocId) ? 'TRANSFER' : type;
     try {
-      const result = await window.whDoOperation({ itemId, type, qty, locationId: locId, price, note, functionId: funcId });
+      const result = await window.whDoOperation({
+        itemId, type: actualType, qty,
+        locationId: locId,
+        toLocationId: toLocId || null,
+        price, note, functionId: funcId,
+      });
       // Фінансова транзакція при надходженні
       if (type === 'IN' && price > 0) {
         const item = window.whGetItems().find(i => i.id === itemId);
         if (item) window.whFinanceOnIn(item, qty, price).catch(() => {});
       }
       window._whCloseModal();
-      if (window.showToast) showToast(`${window.t('whOpDone').replace('{V}', result.newQty)}`, 'success');
+      const doneMsg = actualType === 'TRANSFER'
+        ? `Переміщено ${qty} → ${document.getElementById('wh_op_to_loc')?.selectedOptions[0]?.text || ''}`
+        : `${window.t('whOpDone').replace('{V}', result.newQty)}`;
+      if (window.showToast) showToast(doneMsg, 'success');
     } catch (e) {
       if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
@@ -1096,6 +1128,10 @@
             </div>
           </div>
           <div>
+            <label style="font-size:0.78rem;color:#6b7280;">Посилання (сайт / каталог)</label>
+            <input id="wh_sup_url" value="${s.url || ''}" style="${_inp()}" placeholder="https://...">
+          </div>
+          <div>
             <label style="font-size:0.78rem;color:#6b7280;">Примітка</label>
             <textarea id="wh_sup_note" style="${_inp()}height:56px;resize:none;">${_whEscHtml(s.note || '')}</textarea>
           </div>
@@ -1117,6 +1153,7 @@
         name,
         phone: document.getElementById('wh_sup_phone')?.value?.trim(),
         email: document.getElementById('wh_sup_email')?.value?.trim(),
+        url:   document.getElementById('wh_sup_url')?.value?.trim(),
         note:  document.getElementById('wh_sup_note')?.value?.trim(),
       }, id || null);
       window._whCloseModal();
@@ -1717,10 +1754,11 @@
 
     const filters = `
       <div style="padding:0.85rem 1rem;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:1rem;display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
-        <div style="display:flex;gap:0.4rem;">
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
           <button style="${tabStyle('monthly')}"  onclick="window._whRepSet('monthly')">По місяцях</button>
           <button style="${tabStyle('compare')}"  onclick="window._whRepSet('compare')">Порівняння салонів</button>
           <button style="${tabStyle('yearly')}"   onclick="window._whRepSet('yearly')">Річний огляд</button>
+          <button style="${tabStyle('inv_cost')}" onclick="window._whRepSet('inv_cost')">Витрати по інвентаризації</button>
         </div>
         <div style="display:flex;gap:0.5rem;margin-left:auto;flex-wrap:wrap;align-items:center;">
           <select onchange="window._whRepSetLoc(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;">
@@ -1741,6 +1779,7 @@
     if (_repType === 'monthly')  content = _repRenderMonthly(ops, locations, items, locMap);
     if (_repType === 'compare')  content = _repRenderCompare(ops, locations, items, locMap);
     if (_repType === 'yearly')   content = _repRenderYearly(ops, locations, items, locMap);
+    if (_repType === 'inv_cost') content = _repRenderInvCost(locations, items, locMap);
 
     return `<div>${filters}${content}</div>`;
   }
@@ -2014,6 +2053,96 @@
             </thead>
             <tbody>${rows}${totalRow}</tbody>
           </table>
+        </div>
+      </div>`;
+  }
+
+  // ── Звіт 4: Витрати по інвентаризаціях ──────────────────
+  function _repRenderInvCost(locations, items, locMap) {
+    const invList = window._whInvList || [];
+    if (invList.length === 0) return _repEmpty('Інвентаризацій ще не проводилось. Проведіть першу інвентаризацію у вкладці «Інвентаризація».');
+
+    const itemMap = {};
+    items.forEach(i => { itemMap[i.id] = i; });
+
+    // Фільтр по локації і року
+    const filtered = invList.filter(inv => {
+      if (_repLocId && inv.locationId !== _repLocId) return false;
+      if (inv.month && !inv.month.startsWith(_repYear)) return false;
+      return inv.status === 'confirmed';
+    });
+
+    if (filtered.length === 0) return _repEmpty('Немає підтверджених інвентаризацій за обраний рік і фільтри. Показуються тільки підтверджені.');
+
+    const thS  = 'padding:0.55rem 0.75rem;text-align:right;font-size:0.78rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
+    const thSL = 'padding:0.55rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
+    const tdS  = 'padding:0.5rem 0.75rem;text-align:right;font-size:0.82rem;border-bottom:1px solid #f3f4f6;';
+    const tdSL = 'padding:0.5rem 0.75rem;text-align:left;font-size:0.82rem;border-bottom:1px solid #f3f4f6;';
+
+    const rows = filtered.map((inv, ri) => {
+      // Рахуємо витрати: позиції де actual < expected — витрачено (expected - actual)
+      let totalCost = 0;
+      let totalDiff = 0;
+      const details = (inv.items || []).map(it => {
+        const item = itemMap[it.itemId];
+        const cost = item?.costPrice || 0;
+        const diff = (it.actual || 0) - (it.expected || 0); // від'ємне = витрачено більше очікуваного
+        const spent = it.expected - (it.actual || 0); // скільки пішло (може бути від'ємним якщо стало більше)
+        const spentCost = Math.max(0, spent) * cost;
+        totalCost += spentCost;
+        totalDiff += diff;
+        return { item, diff, spent, spentCost, cost };
+      }).filter(d => d.spent !== 0);
+
+      const bg = ri % 2 === 0 ? 'white' : '#fafafa';
+      const diffColor = totalDiff < 0 ? '#ef4444' : totalDiff > 0 ? '#f59e0b' : '#22c55e';
+
+      return `
+        <tr style="background:${bg};border-bottom:1px solid #f3f4f6;">
+          <td style="${tdSL}font-weight:500;">${_whEscHtml(inv.month || '—')}</td>
+          <td style="${tdSL}">${_whEscHtml(locMap[inv.locationId] || inv.locationId || '—')}</td>
+          <td style="${tdS}">${(inv.items||[]).length}</td>
+          <td style="${tdS}color:${diffColor};">${totalDiff >= 0 ? '+' : ''}${fmt(totalDiff)}</td>
+          <td style="${tdS}font-weight:700;color:#1e3a5f;">${fmtMoney(totalCost)}</td>
+        </tr>`;
+    }).join('');
+
+    const grandTotal = filtered.reduce((s, inv) => {
+      return s + (inv.items || []).reduce((ss, it) => {
+        const item = itemMap[it.itemId];
+        const cost = item?.costPrice || 0;
+        const spent = Math.max(0, (it.expected || 0) - (it.actual || 0));
+        return ss + spent * cost;
+      }, 0);
+    }, 0);
+
+    return `
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
+        <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-size:0.82rem;color:#6b7280;">
+          Витрати по матеріалах з інвентаризацій · ${_repYear} · тільки підтверджені · вартість = кількість витрат × собівартість
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead style="background:#f9fafb;">
+              <tr>
+                <th style="${thSL}">Місяць</th>
+                <th style="${thSL}">Локація</th>
+                <th style="${thS}">Позицій</th>
+                <th style="${thS}">Відхилення (кількість)</th>
+                <th style="${thS}">Вартість витрат ₴</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+              <tr style="background:#f0f9ff;font-weight:700;">
+                <td style="${tdSL}" colspan="4">Разом за рік</td>
+                <td style="${tdS}color:#1e3a5f;">${fmtMoney(grandTotal)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:0.75rem 1rem;background:#fffbeb;border-top:1px solid #fde68a;font-size:0.78rem;color:#92400e;">
+          ⚠️ Вартість рахується тільки якщо у товара заповнена «Собівартість» в каталозі. Заповніть собівартість для точного обліку.
         </div>
       </div>`;
   }
