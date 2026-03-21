@@ -36,6 +36,13 @@ window.crmStartCall = function (dealId, phone, clientName) {
     setTimeout(() => _crmShowCallLogModal(), 1500);
 };
 
+// Дефолтна дата +2 дні через локальну timezone (не UTC)
+function _crmCallDefaultDate() {
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
 function _crmShowCallLogModal() {
     const existing = document.getElementById('crmCallLogModal');
     if (existing) existing.remove();
@@ -72,6 +79,14 @@ function _crmShowCallLogModal() {
             <div style="flex:1;">
                 <div style="font-weight:700;font-size:0.92rem;color:#111827;">${_escStr(call.clientName || window.t('crmClient2'))}</div>
                 <div style="font-size:0.78rem;color:#6b7280;">${_escStr(call.phone)}</div>
+                ${(()=>{
+                    const deal = window.crm?.deals?.find(d=>d.id===call.dealId);
+                    const stages = window.crm?.pipeline?.stages||[];
+                    const stageObj = deal ? stages.find(s=>s.id===deal.stage) : null;
+                    return stageObj
+                        ? '<span style="font-size:0.7rem;font-weight:600;padding:1px 7px;border-radius:8px;background:'+stageObj.color+'18;color:'+stageObj.color+';border:1px solid '+stageObj.color+'33;margin-top:2px;display:inline-block;">'+_escStr(stageObj.label)+'</span>'
+                        : '';
+                })()}
             </div>
             <div id="crmCallTimer" style="font-size:0.82rem;color:#22c55e;font-weight:700;font-family:monospace;">0:00</div>
         </div>
@@ -106,7 +121,7 @@ function _crmShowCallLogModal() {
                 <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.3rem;">Наступний контакт</div>
                 <div style="display:flex;gap:0.35rem;">
                     <input id="crmCallNextDate" type="date"
-                        value="${new Date(Date.now()+86400000*2).toISOString().split('T')[0]}"
+                        value="${_crmCallDefaultDate()}"
                         style="flex:1;padding:0.4rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;min-width:0;">
                     <input id="crmCallNextTime" type="time"
                         value="10:00"
@@ -125,7 +140,7 @@ function _crmShowCallLogModal() {
 
         <!-- Кнопки -->
         <div style="display:flex;gap:0.5rem;">
-            <button onclick="document.getElementById('crmCallLogModal').remove();window._crmActiveCall=null;"
+            <button onclick="if(document.getElementById('crmCallNote')?.value.trim()||window._crmSelectedCallResult!=='answered'){if(!confirm('Скасувати запис дзвінка?'))return;}document.getElementById('crmCallLogModal').remove();window._crmActiveCall=null;"
                 style="flex:1;padding:0.6rem;background:#f4f5f7;border:1px solid #e8eaed;
                 border-radius:8px;cursor:pointer;font-size:0.82rem;color:#374151;">
                 Скасувати
@@ -245,9 +260,17 @@ window.crmSaveCallLog = async function () {
 
         document.getElementById('crmCallLogModal')?.remove();
         window._crmActiveCall = null;
+        // Оновлюємо список "Що робити зараз" якщо він активний
+        if (typeof window.renderCrmTodo === 'function' &&
+            document.getElementById('crmViewTodo')) {
+            window.renderCrmTodo();
+        }
     } catch (e) {
         if (window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
-        if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = window.t('saveCallBtn'); }
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти дзвінок';
+        }
     }
 };
 
@@ -258,6 +281,8 @@ window.crmLogCallManual = function (dealId, clientName, phone) {
 };
 
 // ── Хелпер ─────────────────────────────────────────────────
+// Використовуємо глобальний _crmEsc якщо доступний, інакше локальний fallback
 function _escStr(s) {
+    if (typeof window._crmEsc === 'function') return window._crmEsc(s);
     return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }

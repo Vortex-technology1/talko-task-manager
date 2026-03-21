@@ -26,9 +26,14 @@ const TI = {
     confirm: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
 };
 
-const _esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// Використовуємо глобальний _crmEsc якщо завантажений 77-crm.js, інакше локальний fallback
+const _esc = s => typeof window._crmEsc === 'function'
+    ? window._crmEsc(s)
+    : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 function _todayStr() {
+    // Використовуємо глобальний _crmToday якщо доступний
+    if (typeof _crmToday === 'function') return _crmToday();
     const d = new Date();
     return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }

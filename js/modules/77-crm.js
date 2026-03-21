@@ -139,7 +139,7 @@ function _renderShell() {
                 background:#f4f5f7;border-radius:7px;padding:.3rem .6rem;">
                 ${I.search}
                 <input id="crmSearchInput" placeholder="${window.t('crmSearchPh')||'Пошук...'}"
-                    oninput="crmApplyFilters()"
+                    oninput="crmApplyFilters();const m=document.getElementById('crmSearchInputMobile');if(m)m.value=this.value;"
                     style="border:none;background:none;outline:none;font-size:.8rem;flex:1;min-width:0;">
                 <button onclick="document.getElementById('crmSearchInput').value='';crmApplyFilters()"
                     style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:.9rem;line-height:1;">×</button>
@@ -217,10 +217,10 @@ function _renderShell() {
                 <div id="crmSearchWrap" style="display:none;align-items:center;gap:0.3rem;
                     background:#f4f5f7;border-radius:7px;padding:0.3rem 0.6rem;">
                     ${I.search}
-                    <input id="crmSearchInput" placeholder="${window.t('crmSearchPh')||'Пошук угод...'}"
-                        oninput="crmApplyFilters()"
+                    <input id="crmSearchInputMobile" placeholder="${window.t('crmSearchPh')||'Пошук угод...'}"
+                        oninput="crmApplyFiltersMobile()"
                         style="border:none;background:none;outline:none;font-size:0.8rem;width:160px;">
-                    <button onclick="document.getElementById('crmSearchInput').value='';crmApplyFilters()"
+                    <button onclick="document.getElementById('crmSearchInputMobile').value='';crmApplyFiltersMobile()"
                         style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;">×</button>
                 </div>
                 <div id="crmViewToggle" style="display:none;gap:2px;">
@@ -305,6 +305,14 @@ function _filteredDeals() {
 
 // IMP 1: debounce для текстового пошуку і числових фільтрів (select — без debounce, реагує одразу)
 let _crmFilterDebounceTimer = null;
+// Синхронізуємо мобільний пошук з десктопним
+window.crmApplyFiltersMobile = function() {
+    const mobileVal = document.getElementById('crmSearchInputMobile')?.value || '';
+    const desktopEl = document.getElementById('crmSearchInput');
+    if (desktopEl) desktopEl.value = mobileVal;
+    crmApplyFilters();
+};
+
 window.crmApplyFilters = function(fromKanbanBar, immediate) {
     const _apply = () => {
         const q = document.getElementById('crmSearchInput')?.value || '';
@@ -844,12 +852,12 @@ function _renderListView() {
     </div>` : '';
 
     const stages = crm.pipeline?.stages || [];
-    const today = new Date().toISOString().split('T')[0];
+    const today = _crmToday();
 
     // ── MOBILE: card list instead of table ──────────────
     if (isMobile) {
         const stages = crm.pipeline?.stages || [];
-        const today = new Date().toISOString().split('T')[0];
+        const today = _crmToday();
         listEl.innerHTML = `
     <div style="padding:.6rem .75rem;">
         <!-- Mobile filter row -->
@@ -1395,7 +1403,7 @@ function _dealCard(deal) {
             </span>
             <span style="font-size:0.62rem;color:${stageTimeColor};font-weight:${daysInStage>=7?'600':'400'};" title=${window.t('timeInStage')}>${isActive ? '⏱ '+stageTimeLabel : date}</span>
         </div>
-        ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#3b82f6'};"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${deal.nextContactDate}</div>` : ''}
+        ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < _crmToday() ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < _crmToday() ? '#ef4444' : '#3b82f6'};"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${deal.nextContactDate}</div>` : ''}
         ${(deal.tags||[]).length ? `<div style="margin-top:0.3rem;display:flex;flex-wrap:wrap;gap:2px;">${(deal.tags||[]).map(tag=>`<span style="font-size:0.6rem;padding:1px 5px;background:#f3f4f6;color:#6b7280;border-radius:3px;">${_esc(tag)}</span>`).join('')}</div>` : ''}
         ${deal.isHot ? `<div style="position:absolute;top:6px;right:6px;color:#f97316;">${I.hot}</div>` : ''}
         ${isStale ? `<div style="position:absolute;top:6px;right:${deal.isHot?'22px':'6px'};color:#9ca3af;" title="${staleDays} днів без активності">${I.clock}</div>` : ''}
@@ -1819,7 +1827,7 @@ window.crmOpenDeal = function(dealId) {
                     <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">
                         ${_esc(deal.clientName || '')}
                         ${deal.clientNiche ? ` · ${_esc(deal.clientNiche)}` : ''}
-                        ${deal.nextContactDate ? `<span style="margin-left:6px;padding:1px 7px;border-radius:8px;font-size:0.68rem;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#f0fdf4'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#16a34a'};"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${deal.nextContactDate}</span>` : ''}
+                        ${deal.nextContactDate ? `<span style="margin-left:6px;padding:1px 7px;border-radius:8px;font-size:0.68rem;font-weight:600;background:${deal.nextContactDate < _crmToday() ? '#fef2f2' : '#f0fdf4'};color:${deal.nextContactDate < _crmToday() ? '#ef4444' : '#16a34a'};"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${deal.nextContactDate}</span>` : ''}
                     </div>
                 </div>
                 <div style="display:flex;gap:0.4rem;align-items:center;">
@@ -2039,7 +2047,7 @@ function _renderDealDetails(deal) {
         <div>
             <label style="${lbl}">Наступний контакт</label>
             <div style="display:flex;gap:0.35rem;">
-                <input id="dd_nextContact" type="date" value="${deal.nextContactDate||''}" style="${inp}${deal.nextContactDate && deal.nextContactDate < new Date().toISOString().split('T')[0] ? 'border-color:#ef4444;' : ''}flex:1;min-width:0;">
+                <input id="dd_nextContact" type="date" value="${deal.nextContactDate||''}" style="${inp}${deal.nextContactDate && deal.nextContactDate < _crmToday() ? 'border-color:#ef4444;' : ''}flex:1;min-width:0;">
                 <input id="dd_nextContactTime" type="time" value="${deal.nextContactTime||''}" style="padding:0.45rem 0.4rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;width:82px;">
             </div>
         </div>
@@ -2701,7 +2709,7 @@ async function _loadTasksTab(deal) {
         }
         const statusColors = { new:'#6b7280', in_progress:'#3b82f6', done:'#22c55e', overdue:'#ef4444' };
         const statusLabels = { new:window.t('crmTaskStatusNew'), in_progress:window.t('crmTaskStatusWork'), done:window.t('crmTaskStatusDone'), overdue:window.t('crmTaskStatusOver') };
-        const today = new Date().toISOString().split('T')[0];
+        const today = _crmToday();
         const usersArr = (typeof users !== 'undefined') ? users : [];
 
         let rows = '';
@@ -2757,7 +2765,7 @@ async function _loadTasksTab(deal) {
 
 window.crmMarkTaskDone = async function(taskId) {
     try {
-        const todayStr = new Date().toISOString().split('T')[0];
+        const todayStr = _crmToday();
         await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks').doc(taskId).update({
             status: 'done',
             completedDate: todayStr, // FIX BH: потрібен для статистики, owner dashboard, аналітики
@@ -4714,6 +4722,20 @@ window.crmStageDrop = function(e, targetId) {
 // ══════════════════════════════════════════════════════════
 // HELPERS
 // ══════════════════════════════════════════════════════════
+// ── Хелпери локальної дати і екранування ─────────────────
+// new Date().toISOString() повертає UTC — баг для UTC+2/+3
+// Ця функція завжди повертає локальну дату YYYY-MM-DD
+function _crmToday() {
+    const d = new Date();
+    return d.getFullYear() + '-' +
+        String(d.getMonth() + 1).padStart(2, '0') + '-' +
+        String(d.getDate()).padStart(2, '0');
+}
+// Глобальний HTML escape — використовується в 77b і 78
+window._crmEsc = function(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+};
+
 function _esc(s) {
     // Shared via TALKO.utils.esc — local fallback for load order safety
     if (window.TALKO?.utils?.esc) return window.TALKO.utils.esc(s);
@@ -5150,7 +5172,7 @@ window.crmDoImport = async function() {
 // НАГАДУВАННЯ ПО nextContactDate — перевірка при відкритті CRM
 // ══════════════════════════════════════════════════════════
 function _checkContactReminders() {
-    const today = new Date().toISOString().split('T')[0];
+    const today = _crmToday();
 
     // Прострочені (до сьогодні) і сьогоднішні — окремо
     const overdue = crm.deals.filter(d =>
@@ -5163,7 +5185,7 @@ function _checkContactReminders() {
     );
 
     // Toast — показуємо один раз за сесію (не флудимо при повторному відкритті CRM)
-    const toastKey = 'crm-toast-' + new Date().toISOString().split('T')[0];
+    const toastKey = 'crm-toast-' + _crmToday();
     let toastShown = false;
     try { toastShown = !!sessionStorage.getItem(toastKey); } catch(e) {}
     if (!toastShown) {
