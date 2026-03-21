@@ -397,6 +397,7 @@
 
         const data = {
             name,
+            description: (document.getElementById('metricDescription')?.value || '').trim(),
             unit: document.getElementById('metricUnit')?.value || 'шт',
             frequency: document.getElementById('metricFrequency')?.value || 'weekly',
             inputType: document.getElementById('metricInputType')?.value || 'manual',
@@ -756,6 +757,8 @@
             if (m) {
                 document.getElementById('metricModalTitle').textContent = 'Редагувати показник';
                 document.getElementById('metricName').value = m.name || '';
+                const descEl = document.getElementById('metricDescription');
+                if (descEl) descEl.value = m.description || '';
                 document.getElementById('metricFrequency').value = m.frequency || 'weekly';
                 document.getElementById('metricFrequency').disabled = true;
                 document.getElementById('metricTarget').value = m.defaultTarget || '';
@@ -797,6 +800,8 @@
         } else {
             document.getElementById('metricModalTitle').textContent = 'Новий показник';
             document.getElementById('metricName').value = '';
+            const _descEl = document.getElementById('metricDescription');
+            if (_descEl) _descEl.value = '';
             document.getElementById('metricFrequency').value = 'weekly';
             document.getElementById('metricFrequency').disabled = false;
             document.getElementById('metricTarget').value = '';
@@ -1101,10 +1106,17 @@
             }
             const role = getUserRole();
             const canEdit = (typeof hasPermission === 'function') ? hasPermission('editMetrics') : (role === 'owner' || role === 'admin' || role === 'manager');
-            html += `<th title="${esc(m.name)}${respName ? ' · ' + respName : ''}" style="position:relative;">
+            // Tooltip: назва + опис + відповідальний
+            const tooltipText = [
+                m.name,
+                m.description ? m.description : null,
+                respName ? ('Відп: ' + respName) : null,
+            ].filter(Boolean).join('\n');
+
+            html += `<th title="${esc(tooltipText)}" style="position:relative;cursor:help;" ${m.description ? `data-tooltip="${esc(m.description)}"` : ''}>
                 <div class="th-inner">
-                    <div class="th-metric-name">
-                        <span style="color:${impColor};font-size:8px;margin-right:2px;">▸</span>${esc(m.name)}${inverse}${privacy}
+                    <div class="th-metric-name" style="display:flex;align-items:center;gap:2px;">
+                        <span style="color:${impColor};font-size:8px;margin-right:2px;">▸</span>${esc(m.name)}${inverse}${privacy}${m.description ? `<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" style="flex-shrink:0;margin-left:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>` : ''}
                     </div>
                     <div class="th-metric-meta">
                         ${m.unit ? `<span class="th-unit">${esc(m.unit)}</span>` : ''}

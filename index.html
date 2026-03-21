@@ -673,7 +673,7 @@ document.addEventListener('mousedown', function(e) {
                     <input id="mobileSearchInput" type="text" placeholder="Пошук завдань, людей, функцій..." data-i18n-placeholder="searchSystemMobilePh" autocomplete="off"
                         style="flex:1;background:none;border:none;outline:none;color:white;font-size:0.85rem;padding:0.5rem 0;"
                         oninput="globalSearch(this.value, 'mobile')">
-                    <button onclick="closeMobileSearch()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:0.2rem;font-size:1.1rem;">✕</button>
+                    <button onclick="closeMobileSearch()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:0.2rem;font-size:1.1rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                 </div>
                 <div id="mobileSearchResults" style="display:none;background:white;border-radius:10px;margin-top:0.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.2);max-height:55vh;overflow-y:auto;"></div>
             </div>
@@ -3719,6 +3719,17 @@ document.addEventListener('mousedown', function(e) {
                 <input type="text" id="metricName" placeholder="Виручка, Ліди, Конверсія..."
                     style="width:100%;box-sizing:border-box;padding:0.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:14px;font-size:0.95rem;outline:none;background:#fff;"
                     onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label style="font-size:0.8rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.4rem;">
+                    Опис
+                    <span style="font-weight:400;color:#9ca3af;margin-left:4px;">— показується при наведенні на назву в таблиці</span>
+                </label>
+                <textarea id="metricDescription" placeholder="Що вимірює ця метрика? Як розрахувати? Який результат вважається хорошим?" rows="2"
+                    style="width:100%;box-sizing:border-box;padding:0.65rem 1rem;border:1.5px solid #e5e7eb;border-radius:14px;font-size:0.85rem;outline:none;background:#fff;resize:vertical;font-family:inherit;"
+                    onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
             </div>
 
             <!-- Responsible -->
