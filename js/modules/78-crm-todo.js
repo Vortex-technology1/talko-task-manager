@@ -88,7 +88,7 @@ function _fmtDate(dateStr) {
     if (dateStr < today) {
         const days = Math.round((new Date(today)-new Date(dateStr))/86400000);
         // Показуємо кількість днів прострочення для оцінки терміновості
-        const label = days === 1 ? 'Вчора' : days <= 6 ? '+' + days + ' дн.' : '+' + days + ' дн.';
+        const label = days === 1 ? 'Вчора' : '+' + days + ' дн.';
         return { label, days, overdue:true, today:false };
     }
     if (dateStr === today) return { label:window.t('todayWord'), overdue:false, today:true };
@@ -100,6 +100,14 @@ function _fmtDate(dateStr) {
 
 // FIX: Таймер для retry (щоб уникнути memory leak)
 let _crmTodoRetryTimer = null;
+
+// Очищаємо таймер при переході на іншу вкладку
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden && _crmTodoRetryTimer) {
+        clearTimeout(_crmTodoRetryTimer);
+        _crmTodoRetryTimer = null;
+    }
+});
 
 // ── ГОЛОВНИЙ РЕНДЕР ────────────────────────────────────────
 window.renderCrmTodo = function() {
@@ -130,9 +138,6 @@ window.renderCrmTodo = function() {
     const filter = window._crmTodoFilter || '';
     const deals  = filter ? all.filter(d => d.stage === filter) : all;
     const today  = _todayStr();
-    // Debug
-    console.log("[CrmTodo] total deals:", window.crm.deals.length, "| active:", all.length, "| pipeline:", window.crm.pipeline&&window.crm.pipeline.id);
-
     const overdue   = all.filter(d => d.nextContactDate && d.nextContactDate < today);
     const todayList = all.filter(d => d.nextContactDate === today);
     const noDate    = all.filter(d => !d.nextContactDate);
@@ -311,11 +316,15 @@ window.crmTodoOpenCard = async function(dealId) {
     if (!deal) return;
 
     let history = [];
+    let historyError = false;
     try {
         const snap = await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
             .doc(dealId).collection('history').orderBy('at','desc').limit(8).get();
         history = snap.docs.map(d=>({id:d.id,...d.data()}));
-    } catch(e) {}
+    } catch(e) {
+        historyError = true;
+        console.warn('[crmTodo] history load failed:', e.message);
+    }
 
     const stages   = (window.crm&&window.crm.pipeline&&window.crm.pipeline.stages)||[];
     const stageObj = stages.find(s=>s.id===deal.stage);
@@ -325,6 +334,13 @@ window.crmTodoOpenCard = async function(dealId) {
     const lbl      = 'font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;letter-spacing:.04em;';
 
     document.getElementById('crmTodoCardOverlay')&&document.getElementById('crmTodoCardOverlay').remove();
+    // Додаємо keyframe анімацію один раз
+    if (!document.getElementById('crmSlideInStyle')) {
+        const s = document.createElement('style');
+        s.id = 'crmSlideInStyle';
+        s.textContent = '@keyframes crmSlideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}';
+        document.head.appendChild(s);
+    }
 
     document.body.insertAdjacentHTML('beforeend',`
     <div id="crmTodoCardOverlay" onclick="if(event.target===this)_crmTodoCloseCard()"
@@ -332,7 +348,6 @@ window.crmTodoOpenCard = async function(dealId) {
       <div style="background:#fff;width:100%;max-width:520px;height:100%;overflow-y:auto;
         box-shadow:-8px 0 32px rgba(0,0,0,0.15);
         animation:crmSlideIn 0.22s cubic-bezier(0.16,1,0.3,1);">
-      <style>@keyframes crmSlideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}</style>
 
         <!-- Хедер картки -->
         <div style="padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;">
@@ -421,11 +436,16 @@ window.crmTodoOpenCard = async function(dealId) {
             Наступний контакт <span style="color:#ef4444;">*</span>
             <span id="crmTodoNextError" style="display:none;color:#ef4444;font-size:0.68rem;font-weight:500;text-transform:none;margin-left:4px;">— вкажіть дату!</span>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0.5rem;align-items:end;">
             <div>
               <label style="${lbl}">Дата <span style="color:#ef4444;">*</span></label>
               <input id="crmTodoNextDate" type="date" style="${inp}" oninput="_crmTodoValidate()"
                 value="${deal.nextContactDate||_tomorrowStr()}">
+            </div>
+            <div>
+              <label style="${lbl}">Час</label>
+              <input id="crmTodoNextTime" type="time" style="padding:0.45rem 0.4rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;width:80px;"
+                value="${deal.nextContactTime||''}">
             </div>
             <div>
               <label style="${lbl}">Коментар</label>
@@ -456,7 +476,11 @@ window.crmTodoOpenCard = async function(dealId) {
         </div>
 
         <!-- Історія -->
-        ${history.length?`
+        ${historyError?`
+        <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;">
+          <div style="font-size:0.78rem;color:#9ca3af;font-style:italic;">Не вдалося завантажити історію</div>
+        </div>`:
+        history.length?`
         <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;">
           <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em;margin-bottom:0.5rem;">Останні дії</div>
           ${history.slice(0,5).map(h=>{
@@ -468,7 +492,7 @@ window.crmTodoOpenCard = async function(dealId) {
                 <div style="font-size:0.75rem;color:#374151;">${_esc(h.text||h.type||'')}</div>
               </div>`;
           }).join('')}
-        </div>`:'' }
+        </div>`:''}
 
       </div>
     </div>`);
@@ -523,8 +547,9 @@ window._crmTodoSelectResult = function(type, dealId) {
             </div>
           </div>`;
     } else if (type === 'missed') {
+        // Примусово ставимо завтра — поле вже заповнене, умова !el.value не спрацює
         const el = document.getElementById('crmTodoNextDate');
-        if (el && !el.value) el.value = _tomorrowStr();
+        if (el) el.value = _tomorrowStr();
         form.innerHTML = `<div style="background:#fef2f2;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.78rem;color:#dc2626;display:flex;align-items:center;gap:0.4rem;">
             Не взяв. Контакт перенесений на завтра. Змініть дату вище якщо потрібно.</div>`;
     } else if (type === 'sms') {
@@ -556,15 +581,21 @@ window._crmTodoSave = async function(dealId) {
 
     if (!nextDate) { _crmTodoValidate(); return; }
 
+    // Зберігаємо скрол ДО збереження (close викликається після)
+    const todoEl = document.getElementById('crmViewTodo');
+    if (todoEl) window._crmTodoScrollPos = todoEl.scrollTop;
+
     const btn = document.getElementById('crmTodoSaveBtn');
     if (btn) { btn.disabled=true; btn.textContent='Збереження...'; }
 
     try {
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
+        const nextTime = (document.getElementById('crmTodoNextTime')?.value || '').trim();
         const updates = {
             nextContactDate: nextDate,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         };
+        if (nextTime) updates.nextContactTime = nextTime;
         if (nextNote) updates.note = nextNote;
 
         // НОВИНКА: зберігаємо стадію з select якщо вона змінилась
@@ -616,6 +647,7 @@ window._crmTodoSave = async function(dealId) {
         const localDeal = window.crm && window.crm.deals && window.crm.deals.find(x=>x.id===dealId);
         if (localDeal) {
             localDeal.nextContactDate = nextDate;
+            if (nextTime) localDeal.nextContactTime = nextTime;
             if (nextNote) localDeal.note = nextNote;
             if (updates.stage) { localDeal.stage = updates.stage; localDeal.stageEnteredAt = { toDate:()=>new Date(), toMillis:()=>Date.now() }; }
         }
@@ -634,7 +666,7 @@ window._crmTodoSave = async function(dealId) {
         }
 
     } catch(e) {
-        if(btn){btn.disabled=false;btn.textContent=window.t('flowSave');}
+        if(btn){btn.disabled=false;btn.textContent='Зберегти';}
         if(window.showToast)showToast(window.t('errPfx2')+e.message,'error');
     }
 };
@@ -753,6 +785,11 @@ window._crmTodoSaveConsultation = async function(dealId) {
 
 // ── Підтвердити консультацію ─────────────────────────────
 window._crmTodoConfirmConsultation = async function(dealId) {
+    // Захист від подвійного кліку
+    const deal = window.crm?.deals?.find(x => x.id === dealId);
+    if (!deal || deal.consultationConfirmed) return;
+    deal.consultationConfirmed = true; // оптимістично блокуємо одразу
+    if (typeof renderCrmTodo === 'function') renderCrmTodo(); // оновлюємо UI
     try {
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
         await ref.update({
@@ -765,19 +802,19 @@ window._crmTodoConfirmConsultation = async function(dealId) {
             at:   firebase.firestore.FieldValue.serverTimestamp(),
             by:   window.currentUser?.email || 'manager',
         });
-        const deal = window.crm?.deals?.find(x => x.id === dealId);
-        if (deal) deal.consultationConfirmed = true;
         if (window.showToast) showToast('Консультацію підтверджено ✓', 'success');
-        if (typeof renderCrmTodo === 'function') renderCrmTodo();
     } catch(e) {
+        // Відкочуємо оптимістичне оновлення при помилці
+        const d = window.crm?.deals?.find(x => x.id === dealId);
+        if (d) d.consultationConfirmed = false;
+        if (typeof renderCrmTodo === 'function') renderCrmTodo();
         if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
 };
 
 window._crmTodoCloseCard = function() {
-    // Зберігаємо позицію скролу списку
-    const todoEl = document.getElementById('crmViewTodo');
-    if (todoEl) window._crmTodoScrollPos = todoEl.scrollTop;
+    // Знімаємо підсвітку активного рядка
+    document.querySelectorAll('[data-crm-row]').forEach(r => r.style.outline = '');
     const el = document.getElementById('crmTodoCardOverlay');
     if (el) {
         el.style.transition = 'opacity 0.15s';
