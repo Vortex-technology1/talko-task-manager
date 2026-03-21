@@ -597,8 +597,8 @@ window.openNormModal = function(normId) {
     window.normMaterialsRowsHtml = materialsHtml;
 
     const html = `
-    <div id="normModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)closeNormModal()">
-      <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div id="normModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:flex;align-items:flex-start;justify-content:center;padding:4rem 1rem 1rem;overflow-y:auto;" onclick="if(event.target===this)closeNormModal()">
+      <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:700px;max-height:calc(100vh - 5rem);overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);" onclick="event.stopPropagation()">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
           <h3 style="margin:0;font-size:1.1rem;font-weight:700;">${normId?'Редагувати норму':'Нова норма витрат'}</h3>
           <button onclick="closeNormModal()" style="background:none;border:none;cursor:pointer;color:#9ca3af;">${_estIco.x}</button>
@@ -887,8 +887,8 @@ window.openEstimateModal = function(estimateId) {
     window.renderEstSectionsHtml = renderSections;
 
     const html = `
-    <div id="estimateModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;">
-      <div style="background:#f9fafb;border-radius:16px;width:100%;max-width:800px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div id="estimateModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:flex;align-items:flex-start;justify-content:center;padding:4rem 1rem 1rem;overflow-y:auto;">
+      <div style="background:#f9fafb;border-radius:16px;width:100%;max-width:800px;max-height:calc(100vh - 5rem);overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
         <div style="background:white;border-radius:16px 16px 0 0;padding:1.25rem 1.5rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1;">
           <h3 style="margin:0;font-size:1.05rem;font-weight:700;">${estimateId?'Редагувати кошторис':'Новий кошторис'}</h3>
           <button onclick="closeEstimateModal()" style="background:none;border:none;cursor:pointer;color:#9ca3af;">${_estIco.x}</button>
