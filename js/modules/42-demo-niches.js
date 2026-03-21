@@ -322,14 +322,15 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     const stageOps = [];
     for (const proj of projDocs) {
         let stages = [];
-        if (proj.name && proj.name.includes('шоурум')) {
+        const pn = proj.name || '';
+        if (pn.includes('шоурум') || pn.includes('Шоурум') || pn.includes('Сагайдачного')) {
             stages = [
                 {name:'Ремонт та підготовка приміщення', status:'done',       order:1, start:_demoDate(-30), end:_demoDate(-10)},
                 {name:'Закупівля обладнання та меблів',  status:'in_progress',order:2, start:_demoDate(-10), end:_demoDate(10) },
                 {name:'Оформлення та розстановка',       status:'planned',    order:3, start:_demoDate(10),  end:_demoDate(30) },
                 {name:'Відкриття та маркетинг',          status:'planned',    order:4, start:_demoDate(35),  end:_demoDate(45) },
             ];
-        } else if (proj.name && proj.name.includes('ІТ Хаб')) {
+        } else if (pn.includes('ІТ Хаб') || pn.includes('іт хаб') || pn.includes('Дмитренко')) {
             stages = [
                 {name:'Погодження ТЗ та договір',        status:'done',       order:1, start:_demoDate(-14), end:_demoDate(-12)},
                 {name:'Закупівля матеріалів',             status:'done',       order:2, start:_demoDate(-12), end:_demoDate(-8) },
@@ -338,7 +339,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
                 {name:'Доставка та монтаж',               status:'planned',    order:5, start:_demoDate(13),  end:_demoDate(15) },
                 {name:'Здача та оплата залишку',          status:'planned',    order:6, start:_demoDate(15),  end:_demoDate(17) },
             ];
-        } else if (proj.name && proj.name.includes('Еко')) {
+        } else if (pn.includes('Еко') || pn.includes('еко') || pn.includes('Дерево')) {
             stages = [
                 {name:'Дизайн та прототипи',             status:'in_progress',order:1, start:_demoDate(-60), end:_demoDate(-20)},
                 {name:'Виготовлення зразків (3 моделі)', status:'planned',    order:2, start:_demoDate(-10), end:_demoDate(20) },
@@ -375,7 +376,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
 
     const projEstOps = [];
     for (const proj of projDocs) {
-        if (proj.name && proj.name.includes('ІТ Хаб') && tableNorm) {
+        if ((proj.name||'').includes('ІТ Хаб') && tableNorm) {
             // Кошторис для ІТ Хаб — 12 столів
             const sections = [{
                 normId:   tableNorm.id,
@@ -411,7 +412,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
                 estimateBudget: totalMat, updatedAt: now,
             }});
         }
-        if (proj.name && proj.name.includes('шоурум')) {
+        if ((proj.name||'').includes('шоурум') || (proj.name||'').includes('Шоурум')) {
             // Кошторис для шоуруму — демонстраційні меблі
             projEstOps.push({type:'set', ref:cr.collection('project_estimates').doc(), data:{
                 title:     'Кошторис — оснащення шоуруму (демозразки)',
@@ -902,7 +903,20 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         {ci:8,acc:2,amt:6500, note:'Реклама — січень',                    d:-55,type:'expense'},
     ];
     const txOps2 = [];
+    // Зберігаємо projectId для деяких транзакцій після запису проєктів
+    const _txProjIds = {};
+    try {
+        const _tpSnap = await cr.collection('projects').get();
+        _tpSnap.docs.forEach(d => {
+            const n = d.data().name || '';
+            if (n.includes('ІТ Хаб')) _txProjIds['ithub'] = d.id;
+            if (n.includes('шоурум') || n.includes('Шоурум')) _txProjIds['showroom'] = d.id;
+        });
+    } catch(e) {}
+
     for (const tx of TXS2) {
+        // Прив'язуємо транзакції ІТ Хаб до проєкту
+        const projId = tx.note && tx.note.includes('ІТ Хаб') ? (_txProjIds['ithub'] || '') : '';
         txOps2.push({type:'set', ref:cr.collection('finance_transactions').doc(), data:{
             categoryId:   catRefs2[tx.ci].id,
             categoryName: FIN_CATS2[tx.ci].name,
@@ -910,6 +924,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             accountName:  ACCOUNTS[tx.acc].name,
             type:tx.type, amount:tx.amt, currency:'UAH',
             note:tx.note, date:_demoDate(tx.d),
+            projectId:    projId,
             createdBy:uid, createdAt:now,
         }});
     }
@@ -1321,60 +1336,90 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     await window.safeBatchCommit(newTplOps);
 
     // ── D. ЗАВДАННЯ ПРИВ'ЯЗАНІ ДО ПРОЄКТІВ ────────────────
-    // Отримуємо ID проєктів що вже створені
     const projSnap = await cr.collection('projects').get();
-    const projIds = projSnap.docs.map(d => d.id);
-    const projNames = projSnap.docs.map(d => d.data().name || '');
+    // Знаходимо проєкти по назві — незалежно від порядку
+    const _pByName = {};
+    projSnap.docs.forEach(d => {
+        const n = d.data().name || '';
+        if (n.includes('шоурум') || n.includes('Шоурум')) _pByName['showroom'] = {id:d.id, name:n};
+        if (n.includes('ІТ Хаб') || n.includes('іт хаб')) _pByName['ithub'] = {id:d.id, name:n};
+        if (n.includes('Еко') || n.includes('еко')) _pByName['eco'] = {id:d.id, name:n};
+    });
 
-    if (projIds.length >= 2) {
-        const projTaskOps = [];
-        // Завдання для проєкту "Шоурум"
+    const projTaskOps = [];
+
+    // Завдання для Шоурум
+    if (_pByName.showroom) {
+        const pid = _pByName.showroom.id, pname = _pByName.showroom.name;
         const showroomTasks = [
-            { title:'Замовити стелажі та вітрини для шоуруму',      ai:1, fi:5, d:3,  pr:'high',   est:60  },
-            { title:'Розробити планування шоуруму (розставка меблів)',ai:5,fi:2, d:2,  pr:'high',   est:180 },
-            { title:'Встановити освітлення та декор',                ai:6, fi:3, d:7,  pr:'medium', est:240 },
-            { title:'Підготувати каталог та цінники',                ai:2, fi:1, d:5,  pr:'medium', est:90  },
-            { title:'Провести відкриття шоуруму (запросити клієнтів)',ai:1,fi:0, d:14, pr:'high',   est:120 },
+            { title:'Замовити стелажі та вітрини для шоуруму',       ai:1, fi:5, d:3,  pr:'high',   est:60,  r:'Стелажі замовлені, дата доставки підтверджена' },
+            { title:'Розробити планування шоуруму (розстановка меблів)', ai:5, fi:2, d:2, pr:'high', est:180, r:'3 варіанти планування у PDF для власника' },
+            { title:'Встановити освітлення та декор',                 ai:6, fi:3, d:7,  pr:'medium', est:240, r:'Освітлення встановлене, фото готові' },
+            { title:'Підготувати каталог та цінники',                 ai:2, fi:1, d:5,  pr:'medium', est:90,  r:'Каталог надрукований, цінники встановлені' },
+            { title:'Провести відкриття — запросити 50 клієнтів',    ai:1, fi:0, d:14, pr:'high',   est:120, r:'50+ гостей, 5+ нових замовлень з відкриття' },
         ];
         for (const t of showroomTasks) {
             projTaskOps.push({type:'set', ref:cr.collection('tasks').doc(), data:{
-                title:t.title,
-                projectId:   projIds[0],
-                projectName: projNames[0],
-                functionId:  fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
-                assigneeId:  sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
+                title:t.title, projectId:pid, projectName:pname,
+                functionId:fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
+                assigneeId:sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
                 creatorId:uid, creatorName:STAFF[0].name,
                 status:'new', priority:t.pr,
                 deadlineDate:_demoDate(t.d), deadlineTime:'18:00',
-                estimatedTime:String(t.est), expectedResult:'',
+                estimatedTime:String(t.est), expectedResult:t.r,
                 requireReview:true, createdAt:now, updatedAt:now,
             }});
         }
-        // Завдання для проєкту "ІТ Хаб"
+    }
+
+    // Завдання для ІТ Хаб
+    if (_pByName.ithub) {
+        const pid = _pByName.ithub.id, pname = _pByName.ithub.name;
         const itHubTasks = [
-            { title:'Погодити фінальне планування меблів з замовником',ai:1,fi:1, d:1,  pr:'high',   est:60  },
-            { title:'Розкрій ЛДСП для 12 столів',                      ai:3,fi:3, d:2,  pr:'high',   est:360 },
-            { title:'Збірка каркасів столів (партія 1: 6 шт)',          ai:4,fi:3, d:4,  pr:'high',   est:480 },
-            { title:'Збірка партія 2 (6 шт) + тумби',                  ai:4,fi:3, d:7,  pr:'high',   est:480 },
-            { title:'Доставка та монтаж в офісі ІТ Хаб',               ai:6,fi:4, d:10, pr:'high',   est:240 },
-            { title:'Підписання акту виконаних робіт',                  ai:1,fi:1, d:11, pr:'medium', est:30  },
+            { title:'Погодити фінальне планування меблів з замовником', ai:1, fi:1, d:1,  pr:'high',   est:60,  r:'Планування підписано, специфікація фінальна' },
+            { title:'Розкрій ЛДСП для 12 столів',                       ai:3, fi:3, d:2,  pr:'high',   est:360, r:'Всі деталі розкроєні по кресленнях' },
+            { title:'Збірка каркасів столів (партія 1: 6 шт)',           ai:4, fi:3, d:4,  pr:'high',   est:480, r:'6 столів зібрані, пройшли ВТК' },
+            { title:'Збірка партія 2 (6 шт) + тумби',                   ai:4, fi:3, d:7,  pr:'high',   est:480, r:'Всі 12 столів + 12 тумб готові' },
+            { title:'Доставка та монтаж в офісі ІТ Хаб',                ai:6, fi:4, d:10, pr:'high',   est:240, r:'Меблі встановлені, клієнт підписав акт' },
+            { title:'Підписання акту та отримання фінальної оплати',    ai:1, fi:1, d:11, pr:'medium', est:30,  r:'Акт підписаний, оплата надійшла' },
         ];
         for (const t of itHubTasks) {
             projTaskOps.push({type:'set', ref:cr.collection('tasks').doc(), data:{
-                title:t.title,
-                projectId:   projIds.length > 1 ? projIds[1] : projIds[0],
-                projectName: projNames.length > 1 ? projNames[1] : projNames[0],
-                functionId:  fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
-                assigneeId:  sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
+                title:t.title, projectId:pid, projectName:pname,
+                functionId:fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
+                assigneeId:sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
                 creatorId:uid, creatorName:STAFF[0].name,
                 status:'new', priority:t.pr,
                 deadlineDate:_demoDate(t.d), deadlineTime:'18:00',
-                estimatedTime:String(t.est), expectedResult:'',
+                estimatedTime:String(t.est), expectedResult:t.r,
                 requireReview:true, createdAt:now, updatedAt:now,
             }});
         }
-        await window.safeBatchCommit(projTaskOps);
     }
+
+    // Завдання для Еко-Дерево
+    if (_pByName.eco) {
+        const pid = _pByName.eco.id, pname = _pByName.eco.name;
+        const ecoTasks = [
+            { title:'Розробити ескізи 8 моделей (концепт)',             ai:5, fi:2, d:10, pr:'high',   est:480, r:'8 ескізів затверджені власником' },
+            { title:'Підібрати постачальника масиву дерева',            ai:7, fi:5, d:7,  pr:'medium', est:60,  r:'Постачальник обраний, ціни погоджені' },
+            { title:'Виготовити прототип стола (перша модель)',         ai:3, fi:3, d:21, pr:'medium', est:480, r:'Прототип готовий, якість перевірена' },
+        ];
+        for (const t of ecoTasks) {
+            projTaskOps.push({type:'set', ref:cr.collection('tasks').doc(), data:{
+                title:t.title, projectId:pid, projectName:pname,
+                functionId:fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
+                assigneeId:sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
+                creatorId:uid, creatorName:STAFF[0].name,
+                status:'new', priority:t.pr,
+                deadlineDate:_demoDate(t.d), deadlineTime:'18:00',
+                estimatedTime:String(t.est), expectedResult:t.r,
+                requireReview:true, createdAt:now, updatedAt:now,
+            }});
+        }
+    }
+
+    if (projTaskOps.length) await window.safeBatchCommit(projTaskOps);
 
     // ── E. ФІНАНСОВЕ ПЛАНУВАННЯ (бюджети по місяцях) ──────
     // Отримуємо категорії витрат щоб прив'язати бюджет
