@@ -4,6 +4,18 @@
 // ============================================================
 'use strict';
 
+// Патчимо safeBatchCommit щоб автоматично додавав isDemo:true до set операцій
+const _origSafeBatch = window.safeBatchCommit;
+window.safeBatchCommit = async function(ops) {
+    const markedOps = (ops || []).map(op => {
+        if (op.type === 'set' && op.data && !op.data.isDemo) {
+            return { ...op, data: { ...op.data, isDemo: true } };
+        }
+        return op;
+    });
+    return _origSafeBatch(markedOps);
+};
+
 function _demoDate(offsetDays) {
     offsetDays = offsetDays || 0;
     const d = new Date();
@@ -562,6 +574,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
 
     const pipRef = cr.collection('crm_pipeline').doc();
     await pipRef.set({
+        isDemo: true,
         name:'Продажі меблів',
         stages:[
             {id:'new',          label:'Новий лід',        color:'#6b7280', order:1},
@@ -976,7 +989,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     const finSettingsRef = cr.collection('finance_settings').doc('main');
     // Завжди перезаписуємо finance_settings + видаляємо старі accounts щоб оновити валюту
     await finSettingsRef.set({
-        version: 1, region: 'UA', currency: 'UAH', niche: 'furniture',
+        isDemo: true, version: 1, region: 'UA', currency: 'UAH', niche: 'furniture',
         initializedAt: now, initializedBy: uid, updatedAt: now,
     });
     // Видаляємо старі рахунки (EUR) через safeBatchCommit
@@ -1869,6 +1882,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             };
         });
         await cr.collection('warehouse_inventories').add({
+            isDemo: true,
             locationId: locIds[0],
             month:      invMonth,
             items:      invItems,

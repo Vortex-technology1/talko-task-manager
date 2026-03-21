@@ -97,14 +97,16 @@
             
             try {
                 const companyRef = db.collection('companies').doc(currentCompany);
-                const collections = ['tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive', 'crm_deals', 'crm_pipelines', 'metrics', 'metricEntries', 'metricTargets', 'financeTransactions', 'financeCategories', 'finance_accounts', 'finance_settings', 'finance_recurring', 'warehouse_items', 'warehouse_stock', 'warehouse_operations', 'estimates', 'estimate_norms', 'project_estimates', 'projectStages', 'workStandards', 'coordination_sessions', 'coordinations', 'booking_calendars', 'booking_appointments', 'booking_schedules', 'warehouse_locations', 'warehouse_suppliers', 'warehouse_inventories', 'finance_transactions', 'finance_budgets', 'crm_pipeline'];
+                const collections = ['users', 'tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive', 'crm_deals', 'crm_pipeline', 'crm_clients', 'crm_activities', 'metrics', 'metricEntries', 'metricTargets', 'finance_transactions', 'finance_categories', 'finance_accounts', 'finance_settings', 'finance_recurring', 'finance_budgets', 'warehouse_items', 'warehouse_stock', 'warehouse_operations', 'warehouse_locations', 'warehouse_suppliers', 'warehouse_inventories', 'estimates', 'estimate_norms', 'project_estimates', 'projectStages', 'workStandards', 'coordinations', 'coordination_sessions', 'booking_calendars', 'booking_appointments', 'booking_schedules'];
                 
                 let totalDeleted = 0;
                 for (const col of collections) {
-                    const snap = await companyRef.collection(col).get();
+                    // Видаляємо ТІЛЬКИ демо-дані (isDemo:true)
+                    // Реальні дані клієнта залишаються
+                    const snap = await companyRef.collection(col)
+                        .where('isDemo', '==', true).get();
                     if (snap.empty) continue;
                     
-                    // Firestore batch max 500
                     const chunks = [];
                     let chunk = [];
                     snap.docs.forEach(doc => {
@@ -1044,14 +1046,16 @@
             
             try {
                 const companyRef = db.collection('companies').doc(currentCompany);
-                const collections = ['tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive', 'crm_deals', 'crm_pipelines', 'metrics', 'metricEntries', 'metricTargets', 'financeTransactions', 'financeCategories', 'finance_accounts', 'finance_settings', 'finance_recurring', 'warehouse_items', 'warehouse_stock', 'warehouse_operations', 'estimates', 'estimate_norms', 'coordinations', 'booking_calendars', 'booking_appointments', 'booking_schedules'];
+                const collections = ['users', 'tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive', 'crm_deals', 'crm_pipeline', 'crm_clients', 'metrics', 'metricEntries', 'metricTargets', 'finance_transactions', 'finance_categories', 'finance_accounts', 'finance_settings', 'finance_recurring', 'finance_budgets', 'warehouse_items', 'warehouse_stock', 'warehouse_operations', 'warehouse_locations', 'warehouse_suppliers', 'warehouse_inventories', 'estimates', 'estimate_norms', 'project_estimates', 'projectStages', 'workStandards', 'coordinations', 'coordination_sessions', 'booking_calendars', 'booking_appointments', 'booking_schedules'];
                 
                 let totalDeleted = 0;
                 for (const col of collections) {
-                    const snap = await companyRef.collection(col).get();
+                    // Видаляємо ТІЛЬКИ демо-дані (isDemo:true)
+                    // Реальні дані клієнта залишаються
+                    const snap = await companyRef.collection(col)
+                        .where('isDemo', '==', true).get();
                     if (snap.empty) continue;
                     
-                    // Firestore batch max 500
                     const chunks = [];
                     let chunk = [];
                     snap.docs.forEach(doc => {
