@@ -97,7 +97,7 @@
             
             try {
                 const companyRef = db.collection('companies').doc(currentCompany);
-                const collections = ['tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive'];
+                const collections = ['tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive', 'crm_deals', 'crm_pipelines', 'metrics', 'metricEntries', 'metricTargets', 'financeTransactions', 'financeCategories', 'finance_accounts', 'finance_settings', 'finance_recurring', 'warehouse_items', 'warehouse_stock', 'warehouse_operations', 'estimates', 'estimate_norms', 'coordinations', 'booking_calendars', 'booking_appointments', 'booking_schedules'];
                 
                 let totalDeleted = 0;
                 for (const col of collections) {
@@ -1044,7 +1044,7 @@
             
             try {
                 const companyRef = db.collection('companies').doc(currentCompany);
-                const collections = ['tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive'];
+                const collections = ['tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive', 'crm_deals', 'crm_pipelines', 'metrics', 'metricEntries', 'metricTargets', 'financeTransactions', 'financeCategories', 'finance_accounts', 'finance_settings', 'finance_recurring', 'warehouse_items', 'warehouse_stock', 'warehouse_operations', 'estimates', 'estimate_norms', 'coordinations', 'booking_calendars', 'booking_appointments', 'booking_schedules'];
                 
                 let totalDeleted = 0;
                 for (const col of collections) {

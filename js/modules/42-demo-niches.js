@@ -540,13 +540,17 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             createdAt:   now,
             updatedAt:   now,
         }});
-        // Додаємо записи значень для 3-4 останніх періодів
-        const periods = freq === 'daily' ? 7 : freq === 'weekly' ? 4 : 3;
+        // Записи для 12 тижнів / 8 місяців / 14 днів
+        const periods = freq === 'daily' ? 14 : freq === 'weekly' ? 12 : 8;
         for (let p = 0; p < periods; p++) {
-            const variance = (Math.random() - 0.5) * 0.15; // ±15% варіація
-            const val = Math.round(m.value * (1 + variance) * 10) / 10;
+            // Реалістична варіація з трендом — чим далі в минуле, тим менше значення
+            const trendFactor = 1 - (m.trend || 0) / 100 * p / periods;
+            const noise = (Math.random() - 0.5) * 0.12;
+            const rawVal = m.value * trendFactor * (1 + noise);
+            const val = m.unit === '%' || m.unit === 'бали'
+                ? Math.min(100, Math.max(0, Math.round(rawVal * 10) / 10))
+                : Math.max(0, Math.round(rawVal * 10) / 10);
             const entryRef = cr.collection('metricEntries').doc();
-            // periodKey: для weekly='YYYY-WNN', для monthly='YYYY-MM', для daily='YYYY-MM-DD'
             let pk;
             const d = new Date();
             if (freq === 'monthly') {
@@ -556,7 +560,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
                 d.setDate(d.getDate() - p);
                 pk = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
             } else {
-                // weekly — ISO week key
+                // weekly ISO week
                 d.setDate(d.getDate() - p * 7);
                 d.setHours(12,0,0,0);
                 const dow = d.getDay() || 7;
@@ -566,18 +570,18 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
                 pk = d.getFullYear() + '-W' + String(wn).padStart(2,'0');
             }
             mOps.push({type:'set', ref:entryRef, data:{
-                metricId:  mRef.id,
+                metricId:   mRef.id,
                 metricName: m.name || '',
-                unit:      m.unit || 'шт',
-                value:     (typeof val === 'number' && !isNaN(val)) ? val : 0,
-                periodKey: pk || '',
-                frequency: freq,
-                scope:     'company',   // правильне поле для getEntryForMetric
-                scopeType: 'company',   // додатково для сумісності
-                note:      '',
-                enteredBy: uid,
-                createdBy: uid,         // для my scope фільтрації
-                createdAt: now,
+                unit:       m.unit || 'шт',
+                value:      val,
+                periodKey:  pk || '',
+                frequency:  freq,
+                scope:      'company',
+                scopeType:  'company',
+                note:       '',
+                enteredBy:  uid,
+                createdBy:  uid,
+                createdAt:  now,
             }});
         }
     }
