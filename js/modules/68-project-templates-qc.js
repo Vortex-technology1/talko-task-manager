@@ -59,46 +59,111 @@
         const std = standardId ? workStandards.find(s => s.id === standardId) : null;
         const funcs = typeof functions !== 'undefined' ? functions : [];
 
+        const funcColor = funcs.find(f => f.id === std?.functionId)?.color || '#6b7280';
         const html = `
-        <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;">
-            <h2 style="font-size:1.1rem;font-weight:700;">${std ? window.t('editStd2') : window.t('newStd2')}</h2>
-            <span class="close" onclick="closeModal('standardModal')" style="font-size:1.5rem;cursor:pointer;">&times;</span>
+        <!-- Шапка -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem 0;">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:36px;height:36px;background:#f0f9ff;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:1rem;font-weight:700;color:#111827;">${std ? 'Редагувати стандарт' : 'Новий стандарт'}</div>
+                    ${std ? `<div style="font-size:0.75rem;color:#9ca3af;">Змінення зберігаються одразу</div>` : ''}
+                </div>
+            </div>
+            <button onclick="closeModal('standardModal')" style="width:32px;height:32px;border:none;background:#f3f4f6;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
         </div>
-        <div class="form-group">
-            <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Назва стандарту</label>
-            <input type="text" id="stdName" value="${std ? esc(std.name || '') : ''}" placeholder=${window.t('qcStageEx')} class="input" style="border-radius:14px;padding:0.7rem 1rem;">
+
+        <!-- Тіло -->
+        <div style="padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1rem;">
+
+            <!-- Назва -->
+            <div>
+                <label style="display:block;font-size:0.75rem;font-weight:600;color:#374151;margin-bottom:0.35rem;letter-spacing:0.02em;">НАЗВА СТАНДАРТУ</label>
+                <input type="text" id="stdName" value="${std ? esc(std.name || '') : ''}"
+                    placeholder="Наприклад: Стандарт здачі об'єкту клієнту"
+                    style="width:100%;padding:0.65rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.9rem;color:#111827;background:#fff;box-sizing:border-box;outline:none;transition:border-color 0.15s;"
+                    onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+            </div>
+
+            <!-- Функція -->
+            <div>
+                <label style="display:block;font-size:0.75rem;font-weight:600;color:#374151;margin-bottom:0.35rem;letter-spacing:0.02em;">ВІДПОВІДАЛЬНА ФУНКЦІЯ</label>
+                <select id="stdFunctionId"
+                    style="width:100%;padding:0.65rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.88rem;color:#111827;background:#fff;box-sizing:border-box;outline:none;cursor:pointer;"
+                    onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                    <option value="">— Не призначено</option>
+                    ${funcs.map(f => `<option value="${f.id}" ${std?.functionId === f.id ? 'selected' : ''}>${esc(f.name)}</option>`).join('')}
+                </select>
+            </div>
+
+            <!-- Чек-лист -->
+            <div>
+                <label style="display:block;font-size:0.75rem;font-weight:600;color:#374151;margin-bottom:0.35rem;letter-spacing:0.02em;">
+                    ЧЕК-ЛИСТ
+                    <span style="font-weight:400;color:#9ca3af;margin-left:4px;">— кожен пункт з нового рядка</span>
+                </label>
+                <div style="position:relative;">
+                    <textarea id="stdChecklist" rows="5"
+                        placeholder="Перевірити відповідність кресленню&#10;Сфотографувати результат&#10;Підписати акт у клієнта"
+                        style="width:100%;padding:0.65rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.85rem;color:#111827;background:#fff;box-sizing:border-box;outline:none;resize:vertical;line-height:1.6;font-family:inherit;"
+                        onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">${std?.checklist ? std.checklist.join('\n') : ''}</textarea>
+                </div>
+                ${std?.checklist?.length ? `<div style="font-size:0.72rem;color:#9ca3af;margin-top:0.25rem;">${std.checklist.length} пунктів</div>` : ''}
+            </div>
+
+            <!-- Критерії прийомки -->
+            <div>
+                <label style="display:block;font-size:0.75rem;font-weight:600;color:#374151;margin-bottom:0.35rem;letter-spacing:0.02em;">
+                    КРИТЕРІЇ ПРИЙОМКИ
+                    <span style="font-weight:400;color:#9ca3af;margin-left:4px;">— що вважається "зроблено"</span>
+                </label>
+                <textarea id="stdAcceptance" rows="3"
+                    placeholder="Акт підписаний клієнтом&#10;Фото збережені в системі&#10;Дефекти відсутні або зафіксовані"
+                    style="width:100%;padding:0.65rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.85rem;color:#111827;background:#fff;box-sizing:border-box;outline:none;resize:vertical;line-height:1.6;font-family:inherit;"
+                    onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">${std?.acceptanceCriteria ? std.acceptanceCriteria.join('\n') : ''}</textarea>
+            </div>
+
+            <!-- Інструкція -->
+            <div>
+                <label style="display:block;font-size:0.75rem;font-weight:600;color:#374151;margin-bottom:0.35rem;letter-spacing:0.02em;">
+                    ІНСТРУКЦІЯ
+                    <span style="font-weight:400;color:#9ca3af;margin-left:4px;">— пояснення для виконавця</span>
+                </label>
+                <textarea id="stdInstructions" rows="3"
+                    placeholder="Опишіть як виконувати цей стандарт, на що звертати увагу..."
+                    style="width:100%;padding:0.65rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.85rem;color:#374151;background:#fff;box-sizing:border-box;outline:none;resize:vertical;line-height:1.6;font-family:inherit;"
+                    onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">${std ? esc(std.instructionsHtml || '') : ''}</textarea>
+            </div>
+
         </div>
-        <div class="form-group">
-            <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Функція</label>
-            <select id="stdFunctionId" class="input" style="border-radius:14px;">
-                <option value="">—</option>
-                ${funcs.map(f => `<option value="${f.id}" ${std?.functionId === f.id ? 'selected' : ''}>${esc(f.name)}</option>`).join('')}
-            </select>
-        </div>
-        <div class="form-group">
-            <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Чек-лист (по рядку на пункт)</label>
-            <textarea id="stdChecklist" rows="6" class="input" style="border-radius:14px;padding:0.7rem 1rem;font-size:0.85rem;">${std?.checklist ? std.checklist.join('\n') : ''}</textarea>
-        </div>
-        <div class="form-group">
-            <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Інструкція</label>
-            <textarea id="stdInstructions" rows="4" class="input" style="border-radius:14px;padding:0.7rem 1rem;font-size:0.85rem;">${std ? esc(std.instructionsHtml || '') : ''}</textarea>
-        </div>
-        <div class="form-group">
-            <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Критерії прийомки (по рядку)</label>
-            <textarea id="stdAcceptance" rows="3" class="input" style="border-radius:14px;padding:0.7rem 1rem;font-size:0.85rem;">${std?.acceptanceCriteria ? std.acceptanceCriteria.join('\n') : ''}</textarea>
-        </div>
-        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
-            ${std ? `<button class="btn" onclick="deleteStandardUI('${std.id}')" style="width:48px;background:#fee2e2;color:#ef4444;border-radius:14px;padding:0;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+
+        <!-- Футер -->
+        <div style="display:flex;align-items:center;gap:0.75rem;padding:1rem 1.5rem;border-top:1px solid #f3f4f6;background:#fafafa;border-radius:0 0 16px 16px;">
+            ${std ? `
+            <button onclick="deleteStandardUI('${std.id}')"
+                style="width:40px;height:40px;border:1.5px solid #fecaca;background:#fff;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444;flex-shrink:0;"
+                title="Видалити стандарт">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
             </button>` : ''}
-            <button class="btn" onclick="closeModal('standardModal')" style="flex:1;padding:0.6rem;border-radius:14px;">Скасувати</button>
-            <button class="btn btn-success" onclick="saveStandardFromModal('${standardId || ''}')" style="flex:1;padding:0.6rem;border-radius:14px;">Зберегти</button>
+            <button onclick="closeModal('standardModal')"
+                style="flex:1;padding:0.65rem;border:1.5px solid #e5e7eb;background:#fff;border-radius:10px;font-size:0.88rem;font-weight:600;color:#374151;cursor:pointer;">
+                Скасувати
+            </button>
+            <button onclick="saveStandardFromModal('${standardId || ''}')"
+                style="flex:1;padding:0.65rem;border:none;background:#3b82f6;color:#fff;border-radius:10px;font-size:0.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.4rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Зберегти
+            </button>
         </div>`;
 
         let modal = document.getElementById('standardModal');
         if (!modal) {
             modal = document.createElement('div'); modal.id = 'standardModal'; modal.className = 'modal';
-            modal.innerHTML = '<div class="modal-content" style="max-width:520px;"></div>';
+            modal.innerHTML = '<div class="modal-content" style="max-width:560px;padding:0;border-radius:16px;overflow:hidden;"></div>';
             document.body.appendChild(modal);
         }
         modal.querySelector('.modal-content').innerHTML = html;
