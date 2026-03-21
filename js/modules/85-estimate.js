@@ -86,23 +86,28 @@ window.renderEstimateTab = function() {
     if (!container) return;
 
     container.innerHTML = `
-    <div style="padding:1rem;">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:1.25rem;">
-        <div>
-          <h2 style="margin:0;font-size:1.3rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:0.5rem;">${_estIco.clipboard} Кошторис матеріалів</h2>
-          <p style="margin:0.2rem 0 0;font-size:0.82rem;color:#6b7280;">Розрахунок потреби в матеріалах по проектах</p>
+    <div style="padding:1rem 1.25rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:1rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          ${_estIco.clipboard}
+          <div>
+            <h2 style="margin:0;font-size:1.1rem;font-weight:700;color:#111827;">Кошторис матеріалів</h2>
+            <p style="margin:0;font-size:0.78rem;color:#9ca3af;">Розрахунок потреби в матеріалах по проектах</p>
+          </div>
         </div>
-        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-          <button onclick="estimateSwitchSubTab('list')" id="estTabList"
-            style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:${window._estimateActiveTab==='list'?'#3b82f6':'white'};color:${window._estimateActiveTab==='list'?'white':'#374151'};">
-            ${_estIco.clipboard} Кошториси
-          </button>
-          <button onclick="estimateSwitchSubTab('norms')" id="estTabNorms"
-            style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:${window._estimateActiveTab==='norms'?'#3b82f6':'white'};color:${window._estimateActiveTab==='norms'?'white':'#374151'};">
-            ${_estIco.ruler} Довідник норм
-          </button>
-          <button onclick="estimateSwitchSubTab('howto')" id="estTabHowto"
-            style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:${window._estimateActiveTab==='howto'?'#3b82f6':'white'};color:${window._estimateActiveTab==='howto'?'white':'#374151'};">
+        <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+          <div style="display:flex;background:#f3f4f6;border-radius:8px;padding:3px;">
+            <button onclick="estimateSwitchSubTab('list')" id="estTabList"
+              style="display:flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:6px;font-size:0.82rem;font-weight:600;cursor:pointer;border:none;background:${window._estimateActiveTab==='list'?'white':'transparent'};color:${window._estimateActiveTab==='list'?'#111827':'#6b7280'};box-shadow:${window._estimateActiveTab==='list'?'0 1px 3px rgba(0,0,0,0.1)':'none'};">
+              ${_estIco.clipboard} Кошториси
+            </button>
+            <button onclick="estimateSwitchSubTab('norms')" id="estTabNorms"
+              style="display:flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:6px;font-size:0.82rem;font-weight:600;cursor:pointer;border:none;background:${window._estimateActiveTab==='norms'?'white':'transparent'};color:${window._estimateActiveTab==='norms'?'#111827':'#6b7280'};box-shadow:${window._estimateActiveTab==='norms'?'0 1px 3px rgba(0,0,0,0.1)':'none'};">
+              ${_estIco.ruler} Довідник норм
+            </button>
+          </div>
+          <button onclick="estimateSwitchSubTab('howto')" id="estTabHowto" title="Як це працює"
+            style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:8px;font-size:0.8rem;font-weight:500;cursor:pointer;border:1px solid #e5e7eb;background:${window._estimateActiveTab==='howto'?'#eff6ff':'white'};color:${window._estimateActiveTab==='howto'?'#3b82f6':'#6b7280'};">
             ${_estIco.info} Як це працює
           </button>
         </div>

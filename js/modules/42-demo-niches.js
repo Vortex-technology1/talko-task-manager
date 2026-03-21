@@ -396,6 +396,94 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
     if (stageOps.length) await window.safeBatchCommit(stageOps);
 
+    const normDefs = [
+        {
+            name:'Кухня пряма (на 1 пм)',
+            category:'production', inputUnit:'пм',
+            hasExtraParam:false, niche:'furniture',
+            materials:[
+                {name:'ЛДСП 16мм',        qty:2.8, unit:'лист', price:900,  coefficient:1},
+                {name:'МДФ фасад ПВХ',    qty:3.5, unit:'шт',   price:420,  coefficient:1},
+                {name:'Петлі Blum',        qty:4,   unit:'шт',   price:45,   coefficient:1},
+                {name:'Напрямні Blum 500', qty:1,   unit:'пара', price:280,  coefficient:1},
+                {name:'Кромка ПВХ 22мм',  qty:8,   unit:'пм',   price:1.6,  coefficient:1},
+                {name:'Робота виробн.',    qty:1,   unit:'пм',   price:6500, coefficient:1},
+            ],
+        },
+        {
+            name:'Шафа-купе (на 1 м² фронту)',
+            category:'production', inputUnit:'м²',
+            hasExtraParam:false, niche:'furniture',
+            materials:[
+                {name:'ЛДСП 16мм',         qty:1.2, unit:'лист', price:900,  coefficient:1},
+                {name:'Профіль алюм.',      qty:2.5, unit:'пм',   price:320,  coefficient:1},
+                {name:'Роликова система',   qty:1,   unit:'компл',price:1800, coefficient:1},
+                {name:'Наповнення шафи',    qty:0.8, unit:'компл',price:850,  coefficient:1},
+                {name:'Робота виробн.',     qty:1,   unit:'м²',   price:4500, coefficient:1},
+            ],
+        },
+        {
+            name:'Стіл офісний (1 шт)',
+            category:'production', inputUnit:'шт',
+            hasExtraParam:false, niche:'furniture',
+            materials:[
+                {name:'ЛДСП 16мм',          qty:1.5, unit:'лист', price:900,  coefficient:1},
+                {name:'Стільниця 38мм',      qty:1.6, unit:'пм',   price:1800, coefficient:1},
+                {name:'Ніжки металеві',      qty:4,   unit:'шт',   price:180,  coefficient:1},
+                {name:'Кромка ПВХ 22мм',    qty:6,   unit:'пм',   price:1.6,  coefficient:1},
+                {name:'Робота виробн.',      qty:1,   unit:'шт',   price:2800, coefficient:1},
+            ],
+        },
+        {
+            name:'Шафа розпашна (на 1 м² фронту)',
+            category:'production', inputUnit:'м²',
+            hasExtraParam:false, niche:'furniture',
+            materials:[
+                {name:'ЛДСП 16мм',          qty:2.0, unit:'лист', price:900,  coefficient:1},
+                {name:'МДФ фасад ПВХ',       qty:1.2, unit:'шт',   price:420,  coefficient:1},
+                {name:'Петлі Blum',          qty:3,   unit:'шт',   price:45,   coefficient:1},
+                {name:'Ручки меблеві',        qty:2,   unit:'шт',   price:85,   coefficient:1},
+                {name:'Кромка ПВХ 22мм',    qty:10,  unit:'пм',   price:1.6,  coefficient:1},
+                {name:'Робота виробн.',      qty:1,   unit:'м²',   price:3800, coefficient:1},
+            ],
+        },
+        {
+            name:'Дитяче ліжко-горище (1 шт)',
+            category:'production', inputUnit:'шт',
+            hasExtraParam:false, niche:'furniture',
+            materials:[
+                {name:'МДФ 18мм',            qty:2.5, unit:'лист', price:1100, coefficient:1},
+                {name:'ЛДСП 16мм',           qty:1.0, unit:'лист', price:900,  coefficient:1},
+                {name:'Ламелі берез.(90шт)', qty:1,   unit:'уп',   price:320,  coefficient:1},
+                {name:'Кріплення меблеві',   qty:1,   unit:'компл',price:150,  coefficient:1},
+                {name:'Робота виробн.',      qty:1,   unit:'шт',   price:4200, coefficient:1},
+            ],
+        },
+    ];
+    const normOps = [];
+    for (const n of normDefs) {
+        // Очищаємо materials від undefined полів
+        const cleanMaterials = (n.materials||[]).map(m => ({
+            name:        m.name        || '',
+            qty:         Number(m.qty) || 0,
+            unit:        m.unit        || 'шт',
+            price:       Number(m.price) || 0,
+            coefficient: Number(m.coefficient) || 1,
+        }));
+        normOps.push({type:'set', ref:cr.collection('estimate_norms').doc(), data:{
+            name:          n.name        || '',
+            category:      n.category    || 'production',
+            inputUnit:     n.inputUnit   || 'шт',    // inputUnit — правильне поле
+            hasExtraParam: n.hasExtraParam === true,
+            extraParamLabel: n.extraParamLabel || '',
+            niche:         n.niche       || 'furniture',
+            materials:     cleanMaterials,
+            createdBy:     uid,
+            createdAt:     now,
+        }});
+    }
+    await window.safeBatchCommit(normOps);
+
     // ── 6c. КОШТОРИСИ ПРОЄКТІВ ─────────────────────────────
     // Читаємо проєкти свіжо (після запису) щоб мати правильні ID
     const projSnapFresh = await cr.collection('projects').get();
@@ -977,9 +1065,37 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         });
     } catch(e) {}
 
+    // Маппінг категорій до функцій для "Фінанси по функціях"
+    const _catToFunc = {
+        'Кухня Коваль':       fRefs[1].id,  // Продажі
+        'ІТ Хаб':             fRefs[1].id,  // Продажі
+        'Шафа-купе':          fRefs[1].id,  // Продажі
+        'Марченко':           fRefs[1].id,  // Продажі
+        'ЛДСП':               fRefs[5].id,  // Фінанси/закупівлі
+        'МДФ':                fRefs[5].id,  // Фінанси/закупівлі
+        'Фурнітура':          fRefs[5].id,  // Фінанси/закупівлі
+        'Матеріали':          fRefs[5].id,  // Фінанси/закупівлі
+        'Оренда':             fRefs[5].id,  // Фінанси/закупівлі
+        'Зарплата':           fRefs[6].id,  // Люди/HR
+        'Пальне':             fRefs[4].id,  // Доставка
+        'Instagram':          fRefs[0].id,  // Маркетинг
+        'Facebook':           fRefs[0].id,  // Маркетинг
+        'реклама':            fRefs[0].id,  // Маркетинг
+        'Електроенергія':     fRefs[5].id,  // Фінанси
+        'обладнання':         fRefs[3].id,  // Виробництво
+        'DeWalt':             fRefs[3].id,  // Виробництво
+    };
+    function _getFuncIdForTx(note) {
+        if (!note) return '';
+        for (const [key, fid] of Object.entries(_catToFunc)) {
+            if (note.includes(key)) return fid;
+        }
+        return '';
+    }
+
     for (const tx of TXS2) {
-        // Прив'язуємо транзакції ІТ Хаб до проєкту
         const projId = tx.note && tx.note.includes('ІТ Хаб') ? (_txProjIds['ithub'] || '') : '';
+        const funcId = _getFuncIdForTx(tx.note);
         txOps2.push({type:'set', ref:cr.collection('finance_transactions').doc(), data:{
             categoryId:   catRefs2[tx.ci].id,
             categoryName: FIN_CATS2[tx.ci].name,
@@ -987,8 +1103,9 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             accountName:  ACCOUNTS[tx.acc].name,
             type:tx.type, amount:tx.amt, currency:'UAH',
             note:tx.note,
-            date:_demoTsFinance(tx.d),  // Timestamp — фінанси фільтрують по Timestamp
+            date:_demoTsFinance(tx.d),
             projectId:    projId,
+            functionId:   funcId,
             createdBy:uid, createdAt:now,
         }});
     }
@@ -1122,93 +1239,6 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     // ── 16. КОШТОРИС — меблеві норми (не будівельні) ────────
     // Замінюємо будівельні норми на меблеві
     // Правильна структура: category = ключ з categoryLabel, inputUnit = одиниця виміру
-    const normDefs = [
-        {
-            name:'Кухня пряма (на 1 пм)',
-            category:'production', inputUnit:'пм',
-            hasExtraParam:false, niche:'furniture',
-            materials:[
-                {name:'ЛДСП 16мм',        qty:2.8, unit:'лист', price:900,  coefficient:1},
-                {name:'МДФ фасад ПВХ',    qty:3.5, unit:'шт',   price:420,  coefficient:1},
-                {name:'Петлі Blum',        qty:4,   unit:'шт',   price:45,   coefficient:1},
-                {name:'Напрямні Blum 500', qty:1,   unit:'пара', price:280,  coefficient:1},
-                {name:'Кромка ПВХ 22мм',  qty:8,   unit:'пм',   price:1.6,  coefficient:1},
-                {name:'Робота виробн.',    qty:1,   unit:'пм',   price:6500, coefficient:1},
-            ],
-        },
-        {
-            name:'Шафа-купе (на 1 м² фронту)',
-            category:'production', inputUnit:'м²',
-            hasExtraParam:false, niche:'furniture',
-            materials:[
-                {name:'ЛДСП 16мм',         qty:1.2, unit:'лист', price:900,  coefficient:1},
-                {name:'Профіль алюм.',      qty:2.5, unit:'пм',   price:320,  coefficient:1},
-                {name:'Роликова система',   qty:1,   unit:'компл',price:1800, coefficient:1},
-                {name:'Наповнення шафи',    qty:0.8, unit:'компл',price:850,  coefficient:1},
-                {name:'Робота виробн.',     qty:1,   unit:'м²',   price:4500, coefficient:1},
-            ],
-        },
-        {
-            name:'Стіл офісний (1 шт)',
-            category:'production', inputUnit:'шт',
-            hasExtraParam:false, niche:'furniture',
-            materials:[
-                {name:'ЛДСП 16мм',          qty:1.5, unit:'лист', price:900,  coefficient:1},
-                {name:'Стільниця 38мм',      qty:1.6, unit:'пм',   price:1800, coefficient:1},
-                {name:'Ніжки металеві',      qty:4,   unit:'шт',   price:180,  coefficient:1},
-                {name:'Кромка ПВХ 22мм',    qty:6,   unit:'пм',   price:1.6,  coefficient:1},
-                {name:'Робота виробн.',      qty:1,   unit:'шт',   price:2800, coefficient:1},
-            ],
-        },
-        {
-            name:'Шафа розпашна (на 1 м² фронту)',
-            category:'production', inputUnit:'м²',
-            hasExtraParam:false, niche:'furniture',
-            materials:[
-                {name:'ЛДСП 16мм',          qty:2.0, unit:'лист', price:900,  coefficient:1},
-                {name:'МДФ фасад ПВХ',       qty:1.2, unit:'шт',   price:420,  coefficient:1},
-                {name:'Петлі Blum',          qty:3,   unit:'шт',   price:45,   coefficient:1},
-                {name:'Ручки меблеві',        qty:2,   unit:'шт',   price:85,   coefficient:1},
-                {name:'Кромка ПВХ 22мм',    qty:10,  unit:'пм',   price:1.6,  coefficient:1},
-                {name:'Робота виробн.',      qty:1,   unit:'м²',   price:3800, coefficient:1},
-            ],
-        },
-        {
-            name:'Дитяче ліжко-горище (1 шт)',
-            category:'production', inputUnit:'шт',
-            hasExtraParam:false, niche:'furniture',
-            materials:[
-                {name:'МДФ 18мм',            qty:2.5, unit:'лист', price:1100, coefficient:1},
-                {name:'ЛДСП 16мм',           qty:1.0, unit:'лист', price:900,  coefficient:1},
-                {name:'Ламелі берез.(90шт)', qty:1,   unit:'уп',   price:320,  coefficient:1},
-                {name:'Кріплення меблеві',   qty:1,   unit:'компл',price:150,  coefficient:1},
-                {name:'Робота виробн.',      qty:1,   unit:'шт',   price:4200, coefficient:1},
-            ],
-        },
-    ];
-    const normOps = [];
-    for (const n of normDefs) {
-        // Очищаємо materials від undefined полів
-        const cleanMaterials = (n.materials||[]).map(m => ({
-            name:        m.name        || '',
-            qty:         Number(m.qty) || 0,
-            unit:        m.unit        || 'шт',
-            price:       Number(m.price) || 0,
-            coefficient: Number(m.coefficient) || 1,
-        }));
-        normOps.push({type:'set', ref:cr.collection('estimate_norms').doc(), data:{
-            name:          n.name        || '',
-            category:      n.category    || 'production',
-            inputUnit:     n.inputUnit   || 'шт',    // inputUnit — правильне поле
-            hasExtraParam: n.hasExtraParam === true,
-            extraParamLabel: n.extraParamLabel || '',
-            niche:         n.niche       || 'furniture',
-            materials:     cleanMaterials,
-            createdBy:     uid,
-            createdAt:     now,
-        }});
-    }
-    await window.safeBatchCommit(normOps);
 
 
     // ── 6d. СТАНДАРТИ ВИРОБНИЦТВА (workStandards) ─────────
