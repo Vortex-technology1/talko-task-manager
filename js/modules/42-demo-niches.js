@@ -454,72 +454,72 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     await window.safeBatchCommit(ops);
 
     // ── 12. АНАЛІТИКА — метрики по 8 функціях + 18 виробничих чекпоїнтів ──
-    // frequency: weekly=щотижнева, monthly=щомісячна — для правильного групування в таблиці
-    // Тижневі: операційні (ліди, замовлення, виробництво, доставка, задачі)
-    // Місячні: фінансові, HR, чекпоїнти
+    // ── МЕТРИКИ — унікальні назви, правильні одиниці, реалістичні значення ──
+    // weekly: операційні показники (тижнева динаміка)
+    // monthly: фінансові та стратегічні (місячна динаміка)
+    // daily: оперативні (щоденний контроль)
     const METRICS = [
-        // ── ТИЖНЕВІ (weekly) — операційні показники ──
-        { name:'Нові ліди',              unit:'шт',  cat:'0. Маркетинг',  trend:15.4, freq:'weekly', value:8   },
-        { name:'Заявки з сайту',         unit:'шт',  cat:'0. Маркетинг',  trend:27.3, freq:'weekly', value:4   },
-        { name:'Нові замовлення',        unit:'шт',  cat:'1. Продажі',    trend:8.3,  freq:'weekly', value:3   },
-        { name:'Виручка',                unit:'грн', cat:'1. Продажі',    trend:12.1, freq:'weekly', value:72000},
-        { name:'Конверсія лід→договір',  unit:'%',   cat:'1. Продажі',    trend:5.2,  freq:'weekly', value:38  },
-        { name:'Замовлень у виробн.',    unit:'шт',  cat:'3. Виробництво',trend:5.9,  freq:'weekly', value:4   },
-        { name:'Відсоток браку',         unit:'%',   cat:'3. Виробництво',trend:-0.8, freq:'weekly', value:2.1 },
-        { name:'Виконання плану вир.',   unit:'%',   cat:'3. Виробництво',trend:2.0,  freq:'weekly', value:94  },
-        { name:'Доставок виконано',      unit:'шт',  cat:'4. Доставка',   trend:7.1,  freq:'weekly', value:4   },
-        { name:'Своєчасність доставки',  unit:'%',   cat:'4. Доставка',   trend:1.5,  freq:'weekly', value:93  },
-        { name:'Виконання задач вчасно', unit:'%',   cat:'7. Управління', trend:6.4,  freq:'weekly', value:84  },
-        { name:'Прострочені задачі',     unit:'шт',  cat:'7. Управління', trend:-2.0, freq:'weekly', value:3   },
-        { name:'Записи на консультацію', unit:'шт',  cat:'0. Маркетинг',  trend:22.0, freq:'weekly', value:6   },
-        { name:'Дизайн (проєктів)',      unit:'шт',  cat:'2. Підготовка', trend:5.0,  freq:'weekly', value:3   },
-        { name:'Ліди (вхідні)',          unit:'шт',  cat:'0. Маркетинг',  trend:15.0, freq:'weekly', value:8   },
-        { name:'Конверсія',              unit:'%',   cat:'1. Продажі',    trend:4.0,  freq:'weekly', value:38  },
-        { name:'Виручка',                unit:'грн', cat:'0. Маркетинг',  trend:10.0, freq:'weekly', value:72000},
-        { name:'Кількість лідів',        unit:'шт',  cat:'1. Продажі',    trend:12.0, freq:'weekly', value:8   },
-        { name:'Конверсія',              unit:'%',   cat:'0. Маркетинг',  trend:3.0,  freq:'weekly', value:3.2 },
-        { name:'Виручка',                unit:'грн', cat:'7. Управління', trend:9.0,  freq:'weekly', value:72000},
-        { name:'Кількість лідів',        unit:'шт',  cat:'7. Управління', trend:8.0,  freq:'weekly', value:8   },
-        // ── ЩОДЕННІ (daily) — оперативний контроль ──
-        { name:'Час відповіді на лід',   unit:'год', cat:'1. Продажі',    trend:-15.0,freq:'daily',  value:2.5 },
-        { name:'NPS клієнтів',           unit:'бали',cat:'1. Продажі',    trend:4.0,  freq:'daily',  value:72  },
-        // ── МІСЯЧНІ (monthly) — стратегічні показники ──
-        { name:'Вартість ліда (CPL)',     unit:'грн', cat:'0. Маркетинг',  trend:-8.5, freq:'monthly',value:535  },
-        { name:'Охоплення Instagram',    unit:'осіб',cat:'0. Маркетинг',  trend:18.3, freq:'monthly',value:12400},
-        { name:'Середній чек',           unit:'грн', cat:'1. Продажі',    trend:3.5,  freq:'monthly',value:23958},
-        { name:'Угод у воронці',         unit:'шт',  cat:'1. Продажі',    trend:2.0,  freq:'monthly',value:9   },
-        { name:'Час підготовки проєкту', unit:'дні', cat:'2. Підготовка', trend:-0.5, freq:'monthly',value:3.2 },
-        { name:'Правок від клієнта',     unit:'шт',  cat:'2. Підготовка', trend:-0.3, freq:'monthly',value:1.8 },
-        { name:'Середній час виробн.',   unit:'дні', cat:'3. Виробництво',trend:-1.2, freq:'monthly',value:16  },
-        { name:'Переробок (зміна замовл)',unit:'шт', cat:'3. Виробництво',trend:-2.0, freq:'monthly',value:3   },
-        { name:'Рекламацій після монтажу',unit:'шт', cat:'4. Доставка',   trend:-2.0, freq:'monthly',value:1   },
-        { name:'Чистий прибуток',        unit:'грн', cat:'5. Фінанси',    trend:9.3,  freq:'monthly',value:58400},
-        { name:'Маржинальність',         unit:'%',   cat:'5. Фінанси',    trend:1.8,  freq:'monthly',value:31.2},
-        { name:'Витрати на матеріали',   unit:'грн', cat:'5. Фінанси',    trend:6.2,  freq:'monthly',value:52700},
-        { name:'Витрати на зарплату',    unit:'грн', cat:'5. Фінанси',    trend:0.0,  freq:'monthly',value:56000},
-        { name:'Дебіторська заборг.',    unit:'грн', cat:'5. Фінанси',    trend:-5.1, freq:'monthly',value:145000},
-        { name:'Завантаженість майстрів',unit:'%',   cat:'6. Люди/HR',    trend:3.2,  freq:'monthly',value:87  },
-        { name:'Задоволеність команди',  unit:'бали',cat:'6. Люди/HR',    trend:0.5,  freq:'monthly',value:7.8 },
-        { name:'Завдань виконано',       unit:'шт',  cat:'7. Управління', trend:8.9,  freq:'monthly',value:67  },
-        // ВИРОБНИЧІ ЧЕКПОЇНТИ (monthly)
-        { name:'01 Перевірка замовлення',unit:'%',   cat:'Чекпоїнти',     trend:4.0,  freq:'monthly',value:92  },
-        { name:'02 Другий перегляд зам.',unit:'%',   cat:'Чекпоїнти',     trend:8.0,  freq:'monthly',value:78  },
-        { name:'03 Деталізація частин',  unit:'%',   cat:'Чекпоїнти',     trend:5.0,  freq:'monthly',value:88  },
-        { name:'04 Черговість робіт',    unit:'%',   cat:'Чекпоїнти',     trend:3.0,  freq:'monthly',value:82  },
-        { name:'05 Комплектність старт.',unit:'%',   cat:'Чекпоїнти',     trend:2.0,  freq:'monthly',value:96  },
-        { name:'06 Комплект. відправка', unit:'%',   cat:'Чекпоїнти',     trend:1.0,  freq:'monthly',value:94  },
-        { name:'07 Фіксація змін',       unit:'%',   cat:'Чекпоїнти',     trend:12.0, freq:'monthly',value:71  },
-        { name:'08 Габарити доставки',   unit:'%',   cat:'Чекпоїнти',     trend:6.0,  freq:'monthly',value:85  },
-        { name:'09 Завантаження цеху',   unit:'%',   cat:'Чекпоїнти',     trend:9.0,  freq:'monthly',value:79  },
-        { name:'10 Координація менедж.', unit:'%',   cat:'Чекпоїнти',     trend:14.0, freq:'monthly',value:68  },
-        { name:'11 Контроль якості',     unit:'%',   cat:'Чекпоїнти',     trend:4.0,  freq:'monthly',value:88  },
-        { name:'12 Розбір причин браку', unit:'%',   cat:'Чекпоїнти',     trend:18.0, freq:'monthly',value:60  },
-        { name:'13 Контроль задач',      unit:'%',   cat:'Чекпоїнти',     trend:6.0,  freq:'monthly',value:84  },
-        { name:'14 Щоденні планерки',    unit:'%',   cat:'Чекпоїнти',     trend:2.0,  freq:'monthly',value:91  },
-        { name:'15 Найм та онбординг',   unit:'%',   cat:'Чекпоїнти',     trend:22.0, freq:'monthly',value:55  },
-        { name:'16 Облік і звітність',   unit:'%',   cat:'Чекпоїнти',     trend:8.0,  freq:'monthly',value:82  },
-        { name:'17 Планування вироб.',   unit:'%',   cat:'Чекпоїнти',     trend:11.0, freq:'monthly',value:76  },
-        { name:'18 Закупівлі та запаси', unit:'%',   cat:'Чекпоїнти',     trend:3.0,  freq:'monthly',value:88  },
+        // ── ЩОТИЖНЕВІ (weekly) ─────────────────────────────
+        { name:'Нові ліди',               unit:'шт',  cat:'Маркетинг',     trend:12.0, freq:'weekly',  value:8    },
+        { name:'Заявки з сайту',          unit:'шт',  cat:'Маркетинг',     trend:20.0, freq:'weekly',  value:4    },
+        { name:'Записи на консультацію',  unit:'шт',  cat:'Маркетинг',     trend:15.0, freq:'weekly',  value:6    },
+        { name:'Нові замовлення',         unit:'шт',  cat:'Продажі',       trend:8.0,  freq:'weekly',  value:3    },
+        { name:'Виручка (тиждень)',       unit:'грн', cat:'Продажі',       trend:10.0, freq:'weekly',  value:72000},
+        { name:'Конверсія лід→договір',   unit:'%',   cat:'Продажі',       trend:5.0,  freq:'weekly',  value:38   },
+        { name:'Замовлень у виробн.',     unit:'шт',  cat:'Виробництво',   trend:6.0,  freq:'weekly',  value:4    },
+        { name:'Відсоток браку',          unit:'%',   cat:'Виробництво',   trend:-8.0, freq:'weekly',  value:2.1  },
+        { name:'Виконання плану вир.',    unit:'%',   cat:'Виробництво',   trend:3.0,  freq:'weekly',  value:94   },
+        { name:'Доставок виконано',       unit:'шт',  cat:'Доставка',      trend:7.0,  freq:'weekly',  value:4    },
+        { name:'Своєчасність доставки',   unit:'%',   cat:'Доставка',      trend:2.0,  freq:'weekly',  value:93   },
+        { name:'Виконання задач вчасно',  unit:'%',   cat:'Управління',    trend:6.0,  freq:'weekly',  value:84   },
+        { name:'Прострочені задачі',      unit:'шт',  cat:'Управління',    trend:-15.0,freq:'weekly',  value:3    },
+        { name:'Дизайн-проєктів',         unit:'шт',  cat:'Підготовка',    trend:5.0,  freq:'weekly',  value:3    },
+        { name:'Ліди (вхідні)',           unit:'шт',  cat:'Маркетинг',     trend:10.0, freq:'weekly',  value:8    },
+        // ── ЩОДЕННІ (daily) ────────────────────────────────
+        { name:'Час відповіді на лід',    unit:'год', cat:'Продажі',       trend:-20.0,freq:'daily',   value:2.5  },
+        { name:'NPS клієнтів',            unit:'бали',cat:'Продажі',       trend:4.0,  freq:'daily',   value:72   },
+        // ── ЩОМІСЯЧНІ (monthly) ────────────────────────────
+        // Маркетинг
+        { name:'Охоплення Instagram',     unit:'осіб',cat:'Маркетинг',     trend:15.0, freq:'monthly', value:12400},
+        { name:'Вартість ліда (CPL)',      unit:'грн', cat:'Маркетинг',     trend:-10.0,freq:'monthly', value:535  },
+        // Продажі
+        { name:'Виручка (місяць)',         unit:'грн', cat:'Продажі',       trend:10.0, freq:'monthly', value:287500},
+        { name:'Середній чек',            unit:'грн', cat:'Продажі',       trend:3.0,  freq:'monthly', value:23958},
+        { name:'Угод у воронці',          unit:'шт',  cat:'Продажі',       trend:5.0,  freq:'monthly', value:9    },
+        // Виробництво
+        { name:'Замовлень виготовлено',   unit:'шт',  cat:'Виробництво',   trend:6.0,  freq:'monthly', value:18   },
+        { name:'Середній час виробн.',    unit:'дні', cat:'Виробництво',   trend:-8.0, freq:'monthly', value:16   },
+        { name:'Переробок (зміна замовл)',unit:'шт',  cat:'Виробництво',   trend:-20.0,freq:'monthly', value:3    },
+        // Фінанси
+        { name:'Чистий прибуток',         unit:'грн', cat:'Фінанси',       trend:9.0,  freq:'monthly', value:58400},
+        { name:'Маржинальність',          unit:'%',   cat:'Фінанси',       trend:2.0,  freq:'monthly', value:31.2 },
+        { name:'Витрати на матеріали',    unit:'грн', cat:'Фінанси',       trend:5.0,  freq:'monthly', value:52700},
+        { name:'Витрати на зарплату',     unit:'грн', cat:'Фінанси',       trend:0.0,  freq:'monthly', value:56000},
+        { name:'Дебіторська заборг.',     unit:'грн', cat:'Фінанси',       trend:-5.0, freq:'monthly', value:145000},
+        // HR
+        { name:'Завантаженість майстрів', unit:'%',   cat:'Люди/HR',       trend:3.0,  freq:'monthly', value:87   },
+        { name:'Задоволеність команди',   unit:'бали',cat:'Люди/HR',       trend:1.0,  freq:'monthly', value:7.8  },
+        // Управління
+        { name:'Завдань виконано',        unit:'шт',  cat:'Управління',    trend:8.0,  freq:'monthly', value:67   },
+        // Виробничі чекпоїнти
+        { name:'01 Перевірка замовлення', unit:'%',   cat:'Чекпоїнти',     trend:4.0,  freq:'monthly', value:92   },
+        { name:'02 Другий перегляд зам.', unit:'%',   cat:'Чекпоїнти',     trend:8.0,  freq:'monthly', value:78   },
+        { name:'03 Деталізація частин',   unit:'%',   cat:'Чекпоїнти',     trend:5.0,  freq:'monthly', value:88   },
+        { name:'04 Черговість робіт',     unit:'%',   cat:'Чекпоїнти',     trend:3.0,  freq:'monthly', value:82   },
+        { name:'05 Комплектність старт.', unit:'%',   cat:'Чекпоїнти',     trend:2.0,  freq:'monthly', value:96   },
+        { name:'06 Комплект. відправка',  unit:'%',   cat:'Чекпоїнти',     trend:1.0,  freq:'monthly', value:94   },
+        { name:'07 Фіксація змін',        unit:'%',   cat:'Чекпоїнти',     trend:12.0, freq:'monthly', value:71   },
+        { name:'08 Габарити доставки',    unit:'%',   cat:'Чекпоїнти',     trend:6.0,  freq:'monthly', value:85   },
+        { name:'09 Завантаження цеху',    unit:'%',   cat:'Чекпоїнти',     trend:9.0,  freq:'monthly', value:79   },
+        { name:'10 Координація менедж.',  unit:'%',   cat:'Чекпоїнти',     trend:14.0, freq:'monthly', value:68   },
+        { name:'11 Контроль якості',      unit:'%',   cat:'Чекпоїнти',     trend:4.0,  freq:'monthly', value:88   },
+        { name:'12 Розбір причин браку',  unit:'%',   cat:'Чекпоїнти',     trend:18.0, freq:'monthly', value:60   },
+        { name:'13 Контроль задач',       unit:'%',   cat:'Чекпоїнти',     trend:6.0,  freq:'monthly', value:84   },
+        { name:'14 Щоденні планерки',     unit:'%',   cat:'Чекпоїнти',     trend:2.0,  freq:'monthly', value:91   },
+        { name:'15 Найм та онбординг',    unit:'%',   cat:'Чекпоїнти',     trend:22.0, freq:'monthly', value:55   },
+        { name:'16 Облік і звітність',    unit:'%',   cat:'Чекпоїнти',     trend:8.0,  freq:'monthly', value:82   },
+        { name:'17 Планування вироб.',    unit:'%',   cat:'Чекпоїнти',     trend:11.0, freq:'monthly', value:76   },
+        { name:'18 Закупівлі та запаси',  unit:'%',   cat:'Чекпоїнти',     trend:3.0,  freq:'monthly', value:88   },
     ];
 
     // Зберігаємо метрики + записи значень для поточного і попередніх тижнів/місяців
