@@ -1030,60 +1030,6 @@
             document.getElementById('demoDataModal').style.display = 'none';
         }
         
-        async function clearAllCompanyData() {
-            if (!isSuperAdmin) return;
-            if (!currentCompany) return;
-            
-            const confirmText = window.t('deleteAllConfirmText');
-            const input = await (window.showInputModal ? showInputModal(`Введіть "${confirmText}" щоб підтвердити повне видалення всіх даних компанії (крім користувачів):`, '', {placeholder: confirmText}) : (async()=>prompt(`Введіть "${confirmText}" щоб підтвердити повне видалення всіх даних компанії (крім користувачів):`))());
-            if (input !== confirmText) {
-                if (input !== null) showToast(window.t('textMismatch'), 'error');
-                return;
-            }
-            
-            closeDemoDataModal();
-            showToast(window.t('deletingData'), 'info');
-            
-            try {
-                const companyRef = db.collection('companies').doc(currentCompany);
-                const collections = ['users', 'tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive', 'crm_deals', 'crm_pipeline', 'crm_clients', 'metrics', 'metricEntries', 'metricTargets', 'finance_transactions', 'finance_categories', 'finance_accounts', 'finance_settings', 'finance_recurring', 'finance_budgets', 'warehouse_items', 'warehouse_stock', 'warehouse_operations', 'warehouse_locations', 'warehouse_suppliers', 'warehouse_inventories', 'estimates', 'estimate_norms', 'project_estimates', 'projectStages', 'workStandards', 'coordinations', 'coordination_sessions', 'booking_calendars', 'booking_appointments', 'booking_schedules'];
-                
-                let totalDeleted = 0;
-                for (const col of collections) {
-                    // Видаляємо ТІЛЬКИ демо-дані (isDemo:true)
-                    // Реальні дані клієнта залишаються
-                    const snap = await companyRef.collection(col)
-                        .where('isDemo', '==', true).get();
-                    if (snap.empty) continue;
-                    
-                    const chunks = [];
-                    let chunk = [];
-                    snap.docs.forEach(doc => {
-                        chunk.push(doc.ref);
-                        if (chunk.length === 499) { chunks.push(chunk); chunk = []; }
-                    });
-                    if (chunk.length) chunks.push(chunk);
-                    
-                    for (const refs of chunks) {
-                        const batch = db.batch();
-                        refs.forEach(ref => batch.delete(ref));
-                        await batch.commit();
-                        totalDeleted += refs.length;
-                    }
-                }
-                
-                // Очистити локальні масиви
-                tasks = []; regularTasks = []; functions = []; processes = []; processTemplates = []; projects = [];
-                openProjectId = null;
-                
-                await loadAllData();
-                showToast(window.t('deletedNRecords').replace('{n}', totalDeleted), 'success');
-            } catch (e) {
-                console.error('[ClearData]', e);
-                showToast(window.t('deleteError') + ': ' + e.message, 'error');
-            }
-        }
-        
         async function loadDemoData(type) {
             if (!currentCompany) {
                 showAlertModal(window.t('createCompanyFirst'));

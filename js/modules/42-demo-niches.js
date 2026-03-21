@@ -629,57 +629,8 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
     await window.safeBatchCommit(dealOps);
 
-    // ── 8. ФІНАНСИ ─────────────────────────────────────────
-    const FIN_CATS = [
-        { name:'Виручка від замовлень',     type:'income',  color:'#22c55e' },
-        { name:'Матеріали (ЛДСП, МДФ)',     type:'expense', color:'#ef4444' },
-        { name:'Фурнітура та комплектуючі', type:'expense', color:'#f59e0b' },
-        { name:'Оренда цеху та шоуруму',    type:'expense', color:'#8b5cf6' },
-        { name:'Зарплата команди',          type:'expense', color:'#f97316' },
-        { name:'Транспорт та доставка',     type:'expense', color:'#0ea5e9' },
-        { name:'Маркетинг та реклама',      type:'expense', color:'#ec4899' },
-        { name:'Комунальні послуги',        type:'expense', color:'#6b7280' },
-        { name:'Обладнання',                type:'expense', color:'#14b8a6' },
-        { name:'Аванси від клієнтів',       type:'income',  color:'#84cc16' },
-    ];
-    const catRefs = FIN_CATS.map(() => cr.collection('finance_categories').doc());
-    FIN_CATS.forEach((c,i) => ops.push({type:'set', ref:catRefs[i], data:{
-        name:c.name, type:c.type, color:c.color, createdAt:now,
-    }}));
-
-    await window.safeBatchCommit(ops); ops = [];
-
-    const TXS = [
-        // Поточний місяць
-        {ci:0, amt:87500, note:'Оплата кухні — Коваль П.І.',              d:-1,  type:'income'},
-        {ci:9, amt:45000, note:'Аванс 50% — ІТ Хаб Київ',                d:-3,  type:'income'},
-        {ci:0, amt:32000, note:'Оплата шафи-купе — Іваненко М.О.',        d:-5,  type:'income'},
-        {ci:9, amt:25000, note:'Аванс — Марченко С. (спальня)',            d:-7,  type:'income'},
-        {ci:1, amt:38500, note:'ЛДСП 16мм — Кромтех',                     d:-2,  type:'expense'},
-        {ci:2, amt:14200, note:'Фурнітура Blum — 5 комплектів',            d:-4,  type:'expense'},
-        {ci:3, amt:18000, note:'Оренда цеху 600м² — березень',             d:-1,  type:'expense'},
-        {ci:3, amt:8500,  note:'Оренда шоуруму — березень',                d:-1,  type:'expense'},
-        {ci:4, amt:56000, note:'Зарплата команди — аванс березень',        d:-10, type:'expense'},
-        {ci:5, amt:4800,  note:'Пальне + амортизація авто доставки',       d:-6,  type:'expense'},
-        {ci:6, amt:7500,  note:'Instagram/Facebook реклама — березень',    d:-8,  type:'expense'},
-        {ci:7, amt:5200,  note:'Електроенергія цех + шоурум',              d:-3,  type:'expense'},
-        // Минулий місяць
-        {ci:0, amt:78000, note:'Спальня Тарасенків — фінальна оплата',     d:-32, type:'income'},
-        {ci:0, amt:42000, note:'Дитяча Сидоренків — фінальна оплата',      d:-28, type:'income'},
-        {ci:0, amt:65000, note:'Кухня Литвиненко — оплата',                d:-25, type:'income'},
-        {ci:9, amt:35000, note:'Аванси — 3 замовлення лютий',              d:-35, type:'income'},
-        {ci:1, amt:42000, note:'МДФ та ЛДСП — лютий',                      d:-30, type:'expense'},
-        {ci:4, amt:112000,note:'Зарплата команди — лютий повна',            d:-5,  type:'expense'},
-        {ci:2, amt:18600, note:'Фурнітура — лютий',                         d:-29, type:'expense'},
-        {ci:3, amt:26500, note:'Оренда цех + шоурум — лютий',              d:-31, type:'expense'},
-        {ci:8, amt:12000, note:'Фрезер DeWalt — нове обладнання',           d:-27, type:'expense'},
-        // Позаминулий місяць
-        {ci:0, amt:95000, note:'Виручка замовлення — січень',               d:-58, type:'income'},
-        {ci:9, amt:48000, note:'Аванси — січень',                           d:-62, type:'income'},
-        {ci:1, amt:39000, note:'Матеріали — січень',                        d:-60, type:'expense'},
-        {ci:4, amt:112000,note:'Зарплата — січень',                         d:-36, type:'expense'},
-    ];
-    // TXS записи замінено TXS2 з accountId
+    // ── 8. ФІНАНСИ — категорії, рахунки, транзакції ────────
+    // (FIN_CATS видалено — використовується тільки FIN_CATS2 нижче з повним набором полів)
 
     // ── 9. СКЛАД ───────────────────────────────────────────
     const STOCK = [
@@ -1346,10 +1297,11 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     if (whOpRecs.length) await window.safeBatchCommit(whOpRecs);
 
     // ── 15. БРОНЮВАННЯ — консультації та виїзні заміри ──────
+    // Використовуємо safeBatchCommit щоб isDemo:true додалось автоматично
     const bookingCalRef = cr.collection('booking_calendars').doc();
     const bookingSchedRef = cr.collection('booking_schedules').doc(bookingCalRef.id);
-    await firebase.firestore().batch()
-        .set(bookingCalRef, {
+    await window.safeBatchCommit([
+        {type:'set', ref:bookingCalRef, data:{
             name: 'Виїзний замір та консультація',
             slug: 'meble-zamiry',
             ownerName: STAFF[1].name,
@@ -1372,8 +1324,8 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             requirePayment: false,
             price: 0,
             createdAt: now, updatedAt: now,
-        })
-        .set(bookingSchedRef, {
+        }},
+        {type:'set', ref:bookingSchedRef, data:{
             weeklyHours: {
                 mon:[{start:'09:00',end:'18:00'}],
                 tue:[{start:'09:00',end:'18:00'}],
@@ -1385,8 +1337,8 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             },
             dateOverrides: {},
             updatedAt: now,
-        })
-        .commit();
+        }},
+    ]);
 
     // Бронювання (записи клієнтів)
     const apptDefs = [
@@ -1722,10 +1674,10 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             goal:     bm.goal,
             // Планові витрати по категоріях
             ...(finCatMap['Матеріали (ЛДСП, МДФ)']      ? {['cat_'+finCatMap['Матеріали (ЛДСП, МДФ)']]:      45000} : {}),
-            ...(finCatMap['Фурнітура та комплектуючі']   ? {['cat_'+finCatMap['Фурнітура та комплектуючі)']]: 15000} : {}),
+            ...(finCatMap['Фурнітура та комплектуючі']   ? {['cat_'+finCatMap['Фурнітура та комплектуючі']]:  15000} : {}),
             ...(finCatMap['Оренда цеху та шоуруму']      ? {['cat_'+finCatMap['Оренда цеху та шоуруму']]:     26500} : {}),
             ...(finCatMap['Зарплата команди']             ? {['cat_'+finCatMap['Зарплата команди']]:           112000} : {}),
-            ...(finCatMap['Маркетинг та реклама']         ? {['cat_'+finCatMap['Маркетинг та реклама]']]:      8000} : {}),
+            ...(finCatMap['Маркетинг та реклама']         ? {['cat_'+finCatMap['Маркетинг та реклама']]:        8000} : {}),
             updatedAt: now,
         };
         budgetOps.push({type:'set',
