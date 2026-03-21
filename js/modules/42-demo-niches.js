@@ -591,42 +591,63 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     });
 
     const DEALS = [
-        { name:'Кухня 4м горіх',            client:'Коваль Петро',         phone:'+380671234001', src:'instagram',  stage:'production',   amt:87500,  nc:2,  note:'Кухня 4м, горіх, МДФ фасади. Аванс 50% отримано.' },
-        { name:'Шафа-купе 3-дверна',         client:'Іваненко Марина',      phone:'+380671234002', src:'site_form',  stage:'delivery',     amt:32000,  nc:1,  note:'Дзеркало + ЛДСП білий глянець. Монтаж завтра 10:00.' },
-        { name:'Меблі для спальні',          client:'Марченко Сергій',      phone:'+380671234003', src:'referral',   stage:'design',       amt:65000,  nc:3,  note:'Ліжко 180×200 + тумбочки + шафа. Стиль Loft.' },
-        { name:'Офісні меблі 60 місць',      client:'ІТ Хаб (Дмитренко)',  phone:'+380671234004', src:'cold_call',  stage:'production',   amt:380000, nc:7,  note:'Договір підписано. Аванс 50% отримано.' },
-        { name:'Комод та туалетний столик',  client:'Петрова Тетяна',       phone:'+380671234005', src:'instagram',  stage:'proposal',     amt:18500,  nc:1,  note:'Стиль Прованс, білий матовий. Жде КП до п\'ятниці.' },
-        { name:'Дитяча кімната',             client:'Бойко Олена',          phone:'+380671234006', src:'site_form',  stage:'measurement',  amt:45000,  nc:0,  note:'Ліжко-горище + стіл + шафа. Дитині 8 років.' },
-        { name:'Кухня + вітальня',           client:'Романова Юлія',        phone:'+380671234007', src:'referral',   stage:'consultation', amt:120000, nc:0,  note:'Велике замовлення. Бюджет гнучкий.' },
-        { name:'Шафа для передпокою',        client:'Мельник Андрій',       phone:'+380671234008', src:'google',     stage:'new',          amt:14000,  nc:0,  note:'Залишив заявку вночі. Ще не дзвонили.' },
-        { name:'Ресторанні меблі "Смачно"',  client:'Гриценко Василь',      phone:'+380671234009', src:'cold_call',  stage:'consultation', amt:95000,  nc:1,  note:'Столи та стільці для 40 місць.' },
-        { name:'Кухня — програна угода',     client:'Литвиненко Катерина',  phone:'+380671234010', src:'instagram',  stage:'lost',         amt:55000,  nc:null, note:'Пішла до конкурентів. Різниця 8 000 грн.' },
-        { name:'Спальня Тарасенків',         client:'Тарасенко Ігор',       phone:'+380671234011', src:'referral',   stage:'won',          amt:78000,  nc:null, note:'Виконано вчасно. 5 зірок у Google.' },
-        { name:'Дитяча Сидоренків',          client:'Сидоренко Ніна',       phone:'+380671234012', src:'site_form',  stage:'won',          amt:42000,  nc:null, note:'Успішний проєкт. Клієнт дав рекомендацію другу.' },
+        { name:'Кухня 4м горіх',            client:'Коваль Петро',         phone:'+380671234001', email:'koval@gmail.com',      src:'instagram',  stage:'production',   amt:87500,  nc:2,  note:'Кухня 4м, горіх, МДФ фасади. Аванс 50% отримано.' },
+        { name:'Шафа-купе 3-дверна',         client:'Іваненко Марина',      phone:'+380671234002', email:'ivanenko@ukr.net',      src:'site_form',  stage:'delivery',     amt:32000,  nc:1,  note:'Дзеркало + ЛДСП білий глянець. Монтаж завтра 10:00.' },
+        { name:'Меблі для спальні',          client:'Марченко Сергій',      phone:'+380671234003', email:'marchenko@gmail.com',   src:'referral',   stage:'design',       amt:65000,  nc:3,  note:'Ліжко 180×200 + тумбочки + шафа. Стиль Loft.' },
+        { name:'Офісні меблі 60 місць',      client:'ІТ Хаб (Дмитренко)',  phone:'+380671234004', email:'ithub@company.ua',      src:'cold_call',  stage:'production',   amt:380000, nc:7,  note:'Договір підписано. Аванс 50% отримано.' },
+        { name:'Комод та туалетний столик',  client:'Петрова Тетяна',       phone:'+380671234005', email:'petrova@gmail.com',     src:'instagram',  stage:'proposal',     amt:18500,  nc:1,  note:'Стиль Прованс, білий матовий. Жде КП до п\'ятниці.' },
+        { name:'Дитяча кімната',             client:'Бойко Олена',          phone:'+380671234006', email:'boyko@ukr.net',         src:'site_form',  stage:'measurement',  amt:45000,  nc:0,  note:'Ліжко-горище + стіл + шафа. Дитині 8 років.' },
+        { name:'Кухня + вітальня',           client:'Романова Юлія',        phone:'+380671234007', email:'romanova@gmail.com',    src:'referral',   stage:'consultation', amt:120000, nc:0,  note:'Велике замовлення. Бюджет гнучкий.' },
+        { name:'Шафа для передпокою',        client:'Мельник Андрій',       phone:'+380671234008', email:'melnyk@gmail.com',      src:'google',     stage:'new',          amt:14000,  nc:0,  note:'Залишив заявку вночі. Ще не дзвонили.' },
+        { name:'Ресторанні меблі "Смачно"',  client:'Гриценко Василь',      phone:'+380671234009', email:'grytsenko@gmail.com',   src:'cold_call',  stage:'consultation', amt:95000,  nc:1,  note:'Столи та стільці для 40 місць.' },
+        { name:'Кухня — програна угода',     client:'Литвиненко Катерина',  phone:'+380671234010', email:'lytvynenko@ukr.net',    src:'instagram',  stage:'lost',         amt:55000,  nc:null, note:'Пішла до конкурентів. Різниця 8 000 грн.' },
+        { name:'Спальня Тарасенків',         client:'Тарасенко Ігор',       phone:'+380671234011', email:'tarasenko@gmail.com',   src:'referral',   stage:'won',          amt:78000,  nc:null, note:'Виконано вчасно. 5 зірок у Google.' },
+        { name:'Дитяча Сидоренків',          client:'Сидоренко Ніна',       phone:'+380671234012', email:'sydorenko@gmail.com',   src:'site_form',  stage:'won',          amt:42000,  nc:null, note:'Успішний проєкт. Клієнт дав рекомендацію другу.' },
     ];
-    // Deals записуємо ОКРЕМИМ батчем одразу після pipeline
-    const dealOps = [];
+
+    // ── Крок 1: crm_clients — спочатку клієнти, потім deals з clientId ──
+    const clientRefs = DEALS.map(() => cr.collection('crm_clients').doc());
+    const clientOps = [];
     const _ages = [1,2,3,5,7,10,14,21];
-    for (const d of DEALS) {
+    DEALS.forEach((d, i) => {
+        clientOps.push({type:'set', ref:clientRefs[i], data:{
+            name:      d.client,
+            phone:     d.phone,
+            email:     d.email || '',
+            telegram:  '',
+            type:      'person',
+            source:    d.src,
+            niche:     'furniture',
+            createdAt: _demoTs(-_ages[Math.floor(Math.random()*_ages.length)]),
+            updatedAt: now,
+        }});
+    });
+    await window.safeBatchCommit(clientOps);
+
+    // ── Крок 2: crm_deals з clientId прив'язаним до crm_clients ──
+    const dealOps = [];
+    DEALS.forEach((d, i) => {
         dealOps.push({type:'set', ref:cr.collection('crm_deals').doc(), data:{
-            pipelineId:     pipRef.id,
-            title:          d.name,
-            clientName:     d.client,
-            phone:          d.phone,
-            source:         d.src,
-            stage:          d.stage,
-            amount:         d.amt,
-            note:           d.note,
+            pipelineId:      pipRef.id,
+            title:           d.name,
+            clientName:      d.client,
+            clientId:        clientRefs[i].id,
+            phone:           d.phone,
+            email:           d.email || '',
+            source:          d.src,
+            stage:           d.stage,
+            amount:          d.amt,
+            note:            d.note,
             nextContactDate: d.nc !== null ? _demoDate(d.nc) : null,
             nextContactTime: d.nc === 0 ? '14:00' : null,
-            assigneeId:     sRefs[1].id,
-            assigneeName:   STAFF[1].name,
-            deleted:        false,
-            tags:           [],
-            createdAt:      _demoTs(-_ages[Math.floor(Math.random()*_ages.length)]),
-            updatedAt:      now,
+            assigneeId:      sRefs[1].id,
+            assigneeName:    STAFF[1].name,
+            deleted:         false,
+            tags:            [],
+            createdAt:       _demoTs(-_ages[Math.floor(Math.random()*_ages.length)]),
+            updatedAt:       now,
         }});
-    }
+    });
     await window.safeBatchCommit(dealOps);
 
     // ── 8. ФІНАНСИ — категорії, рахунки, транзакції ────────
@@ -1833,8 +1854,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
                 diff:     actualQty - expectedQty,
             };
         });
-        await cr.collection('warehouse_inventories').add({
-            isDemo: true,
+        await window.safeBatchCommit([{type:'set', ref:cr.collection('warehouse_inventories').doc(), data:{
             locationId: locIds[0],
             month:      invMonth,
             items:      invItems,
@@ -1842,7 +1862,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             createdBy:  uid,
             createdAt:  _demoTs(-15),
             updatedAt:  _demoTs(-15),
-        });
+        }}]);
     }
 
     // ── J. CRM TODO — дзвінки на сьогодні ────────────────
@@ -1852,24 +1872,35 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     const todayDeals = [
         {
             name:'Первинний дзвінок — Ковтун Марія',
-            client:'Ковтун Марія Василівна', phone:'+380671234050',
+            client:'Ковтун Марія Василівна', phone:'+380671234050', email:'kovtun@gmail.com',
             src:'instagram', stage:'new', amt:0, nc:0,
             note:'Залишила коментар під постом про кухні. Хоче дізнатись ціни і терміни.',
         },
         {
             name:'Нагадування — Бондар Олег (заміри)',
-            client:'Бондар Олег', phone:'+380671234051',
+            client:'Бондар Олег', phone:'+380671234051', email:'bondar@ukr.net',
             src:'referral', stage:'consultation', amt:45000, nc:0,
             note:'Домовились перетелефонувати сьогодні після 14:00. Погодити дату виїзду.',
         },
     ];
+    // Спочатку клієнти, потім deals з clientId
+    const todayClientRefs = todayDeals.map(() => cr.collection('crm_clients').doc());
+    const todayClientOps = todayDeals.map((d, i) => ({type:'set', ref:todayClientRefs[i], data:{
+        name: d.client, phone: d.phone, email: d.email || '',
+        telegram: '', type: 'person', source: d.src, niche: 'furniture',
+        createdAt: _demoTs(-1), updatedAt: now,
+    }}));
+    await window.safeBatchCommit(todayClientOps);
+
     const todayDealOps = [];
-    for (const d of todayDeals) {
+    todayDeals.forEach((d, i) => {
         todayDealOps.push({type:'set', ref:cr.collection('crm_deals').doc(), data:{
             pipelineId:      pipRef.id,
             title:           d.name,
             clientName:      d.client,
+            clientId:        todayClientRefs[i].id,
             phone:           d.phone,
+            email:           d.email || '',
             source:          d.src,
             stage:           d.stage,
             amount:          d.amt,
@@ -1881,7 +1912,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             createdAt:       _demoTs(-1),
             updatedAt:       now,
         }});
-    }
+    });
     await window.safeBatchCommit(todayDealOps);
 
     // ── 12. Профіль компанії ────────────────────────────────

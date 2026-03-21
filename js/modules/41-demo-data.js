@@ -123,6 +123,16 @@
                     }
                 }
                 
+                // finance_settings/main — фіксований ID, не підпадає під where(isDemo==true)
+                // Видаляємо явно якщо є isDemo:true
+                try {
+                    const fsDoc = await companyRef.collection('finance_settings').doc('main').get();
+                    if (fsDoc.exists && fsDoc.data()?.isDemo === true) {
+                        await companyRef.collection('finance_settings').doc('main').delete();
+                        totalDeleted++;
+                    }
+                } catch(e) { console.warn('[ClearData] finance_settings/main:', e.message); }
+
                 // Очистити локальні масиви
                 tasks = []; regularTasks = []; functions = []; processes = []; processTemplates = []; projects = [];
                 openProjectId = null;
