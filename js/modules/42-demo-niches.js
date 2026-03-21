@@ -209,6 +209,28 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         { t:'Звірка бухгалтерії та виплата зарплати',
           type:'monthly', dom:25, fi:5, ai:7, tm:'10:00', est:120,
           result:'Зарплата нарахована та виплачена, звіт для власника' },
+        // Додаткові регулярні по функціях
+        { t:'Обновлення прайс-листа та каталогу',
+          type:'monthly', dom:1, fi:0, ai:5, tm:'11:00', est:60,
+          result:'Актуальний прайс на сайті та в офісі' },
+        { t:'Аналіз конкурентів (ціни, новинки)',
+          type:'monthly', dom:3, fi:0, ai:1, tm:'14:00', est:90,
+          result:'Звіт по 3 конкурентах, висновки для власника' },
+        { t:'Перевірка якості виконаних замовлень (вибірка 3 шт)',
+          type:'weekly', dow:5, fi:3, ai:3, tm:'15:00', est:60,
+          result:'Акт перевірки, виявлені відхилення усунені' },
+        { t:'Дзвінок задоволеному клієнту — запит на відгук',
+          type:'weekly', dow:4, fi:1, ai:2, tm:'16:00', est:30,
+          result:'Відгук в Google або Rozetka отримано' },
+        { t:'Перевірка касових залишків та інкасація',
+          type:'weekly', dow:5, fi:5, ai:7, tm:'17:30', est:20,
+          result:'Каса звірена, надлишок здано в банк' },
+        { t:'Планування виробництва на наступний тиждень',
+          type:'weekly', dow:5, fi:3, ai:3, tm:'16:00', est:45,
+          result:'Розподіл замовлень по майстрах, матеріали заявлені' },
+        { t:'Перевірка та відповідь на повідомлення в Instagram',
+          type:'daily', fi:0, ai:5, tm:'10:00', est:20,
+          result:'Всі повідомлення оброблені, ліди переведені в CRM' },
     ];
     for (const r of REGS) {
         const dows = r.type === 'weekly' && r.dow != null ? [r.dow] : null;
@@ -375,6 +397,9 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     if (stageOps.length) await window.safeBatchCommit(stageOps);
 
     // ── 6c. КОШТОРИСИ ПРОЄКТІВ ─────────────────────────────
+    // Читаємо проєкти свіжо (після запису) щоб мати правильні ID
+    const projSnapFresh = await cr.collection('projects').get();
+    const projDocsFresh = projSnapFresh.docs.map(d => ({id:d.id, ...d.data()}));
     // Отримуємо нори кошторису
     const normSnap = await cr.collection('estimate_norms').get();
     const normDocs = normSnap.docs.map(d => ({id:d.id, ...d.data()}));
@@ -382,7 +407,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     const tableNorm   = normDocs.find(n => n.name && n.name.includes('Стіл'));
 
     const projEstOps = [];
-    for (const proj of projDocs) {
+    for (const proj of projDocsFresh) {
         if ((proj.name||'').includes('ІТ Хаб') && tableNorm) {
             // Кошторис для ІТ Хаб — 12 столів
             const sections = [{
@@ -743,7 +768,9 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         const periods = freq === 'daily' ? 14 : freq === 'weekly' ? 12 : 8;
         for (let p = 0; p < periods; p++) {
             const trendFactor = 1 - (m.trend || 0) / 100 * p / periods;
-            const noise = (Math.random() - 0.5) * 0.12;
+            // Менший шум для великих фінансових значень
+            const noiseScale = m.value > 10000 ? 0.06 : (m.int ? 0.15 : 0.10);
+            const noise = (Math.random() - 0.5) * noiseScale;
             const rawVal = m.value * trendFactor * (1 + noise);
             let val;
             if (m.int) {
