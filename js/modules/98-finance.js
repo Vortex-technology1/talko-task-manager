@@ -1939,7 +1939,7 @@ function renderRecurring(el) {
   const currency = _state.currency || 'UAH';
 
   el.innerHTML = `
-    <div style="max-width:860px;margin:0 auto;">
+    <div style="width:100%;">
 
       <!-- Заголовок -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
