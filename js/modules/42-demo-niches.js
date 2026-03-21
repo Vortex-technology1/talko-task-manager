@@ -364,6 +364,69 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
     if (stageOps.length) await window.safeBatchCommit(stageOps);
 
+    // ── 6c. КОШТОРИСИ ПРОЄКТІВ ─────────────────────────────
+    // Отримуємо нори кошторису
+    const normSnap = await cr.collection('estimate_norms').get();
+    const normDocs = normSnap.docs.map(d => ({id:d.id, ...d.data()}));
+    const kitchenNorm = normDocs.find(n => n.name && n.name.includes('Кухня'));
+    const tableNorm   = normDocs.find(n => n.name && n.name.includes('Стіл'));
+
+    const projEstOps = [];
+    for (const proj of projDocs) {
+        if (proj.name && proj.name.includes('ІТ Хаб') && tableNorm) {
+            // Кошторис для ІТ Хаб — 12 столів
+            const sections = [{
+                normId:   tableNorm.id,
+                normName: tableNorm.name,
+                inputValue: 12,
+                inputUnit: 'шт',
+                extraParam: null,
+                calculatedMaterials: (tableNorm.materials||[]).map(m => ({
+                    name:     m.name,
+                    unit:     m.unit,
+                    required: Math.round(m.qty * 12 * 10) / 10,
+                    inStock:  0,
+                    deficit:  Math.round(m.qty * 12 * 10) / 10,
+                    pricePerUnit: m.price || 0,
+                    total:    Math.round(m.qty * 12 * (m.price||0)),
+                })),
+            }];
+            const totalMat = sections[0].calculatedMaterials.reduce((s,m) => s + m.total, 0);
+            projEstOps.push({type:'set', ref:cr.collection('project_estimates').doc(), data:{
+                title:     'Кошторис — офісні меблі ІТ Хаб (12 столів)',
+                projectId: proj.id,
+                dealId:    '',
+                functionId:'',
+                status:    'approved',
+                sections,
+                totals: { totalMaterialsCost: totalMat, totalDeficitCost: totalMat, currency:'UAH' },
+                deleted:   false,
+                createdBy: uid, approvedBy: uid,
+                createdAt: now, updatedAt: now,
+            }});
+            // Оновлюємо бюджет проєкту
+            projEstOps.push({type:'update', ref:cr.collection('projects').doc(proj.id), data:{
+                estimateBudget: totalMat, updatedAt: now,
+            }});
+        }
+        if (proj.name && proj.name.includes('шоурум')) {
+            // Кошторис для шоуруму — демонстраційні меблі
+            projEstOps.push({type:'set', ref:cr.collection('project_estimates').doc(), data:{
+                title:     'Кошторис — оснащення шоуруму (демозразки)',
+                projectId: proj.id,
+                dealId:    '',
+                functionId:'',
+                status:    'draft',
+                sections:  [],
+                totals: { totalMaterialsCost: 85000, totalDeficitCost: 0, currency:'UAH' },
+                deleted:   false,
+                createdBy: uid, approvedBy: '',
+                createdAt: now, updatedAt: now,
+            }});
+        }
+    }
+    if (projEstOps.length) await window.safeBatchCommit(projEstOps);
+
     // ── 7. CRM PIPELINE + УГОДИ ────────────────────────────
     const pipRef = cr.collection('crm_pipelines').doc();
     ops.push({type:'set', ref:pipRef, data:{
