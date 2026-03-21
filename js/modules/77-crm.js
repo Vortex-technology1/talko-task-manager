@@ -1247,24 +1247,32 @@ window.crmBulkDelete = async function() {
         : showConfirmModal('Видалити ' + count + ' угод?', {danger:true}));
     if (!confirmed) return;
     const ids = Array.from(crm.selectedIds);
-    let done = 0;
-    for (const dealId of ids) {
+    // Паралельне видалення chunks по 10 (не флудимо Firestore всіма одразу)
+    const PARALLEL_CHUNK = 10;
+    const allResults = [];
+    for (let i = 0; i < ids.length; i += PARALLEL_CHUNK) {
+        const chunk = ids.slice(i, i + PARALLEL_CHUNK);
+        const chunkResults = await Promise.allSettled(chunk.map(async (dealId) => {
+        const dealRef = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
         try {
-            const dealRef = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
-            // FIX A: видаляємо history субколекцію перед видаленням угоди
-            try {
-                const histSnap = await dealRef.collection('history').limit(100).get();
-                if (!histSnap.empty) {
-                    const batch = firebase.firestore().batch();
-                    histSnap.docs.forEach(d => batch.delete(d.ref));
-                    await batch.commit();
-                }
-            } catch(he) { console.warn('[Bulk delete] history cleanup:', he.message); }
-            await dealRef.delete();
-            crm.deals = crm.deals.filter(function(d){ return d.id !== dealId; });
-            done++;
-        } catch(e) { console.error('[Bulk delete]', e); }
+            const histSnap = await dealRef.collection('history').limit(100).get();
+            if (!histSnap.empty) {
+                const batch = firebase.firestore().batch();
+                histSnap.docs.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+            }
+        } catch(he) { console.warn('[Bulk delete] history cleanup:', he.message); }
+        await dealRef.delete();
+        return dealId;
+    }));
+        allResults.push(...chunkResults);
     }
+    const deleteResults = allResults;
+    const deletedIds = new Set(
+        deleteResults.filter(r => r.status === 'fulfilled').map(r => r.value)
+    );
+    const done = deletedIds.size;
+    crm.deals = crm.deals.filter(d => !deletedIds.has(d.id));
     if (typeof showToast === 'function') showToast('Видалено ' + done + ' угод', 'success');
     crm.selectedIds = new Set();
     crm._bulkMode = false;
@@ -4440,17 +4448,33 @@ function _subscribeDeals() {
         _dealsQuery = _dealsQuery.limit(DEALS_LIMIT);
     }
     crm.dealUnsub = _dealsQuery.onSnapshot(snap => {
-            crm.deals = snap.docs.map(d => ({id:d.id,...d.data()}))
-                .sort((a,b) => (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
+            // Інкрементальне оновлення: тільки змінені документи
+            if (crm.deals.length > 0 && !snap.metadata.hasPendingWrites) {
+                const dealMap = new Map(crm.deals.map(d => [d.id, d]));
+                snap.docChanges().forEach(change => {
+                    if (change.type === 'added' || change.type === 'modified') {
+                        dealMap.set(change.doc.id, {id: change.doc.id, ...change.doc.data()});
+                    } else if (change.type === 'removed') {
+                        dealMap.delete(change.doc.id);
+                    }
+                });
+                crm.deals = snap.docs.map(d => dealMap.get(d.id) || {id:d.id,...d.data()});
+            } else {
+                // Зберігаємо порядок Firestore (updatedAt desc) — не перетасовуємо клієнтськи
+                crm.deals = snap.docs.map(d => ({id:d.id,...d.data()}));
+            }
             crm.loading = false;
-            window.crm = crm; // expose для 78-crm-todo і інших модулів
-            // FIX B: індикатор якщо досягнуто ліміт
+            window.crm = crm;
             crm._dealsLimitReached = snap.docs.length >= DEALS_LIMIT;
-            // FIX G: ре-рендеримо поточний subTab при оновленні deals
-            if (crm.subTab === 'kanban')     _renderKanban();
-            else if (crm.subTab === 'list')  _renderListView();
-            else if (crm.subTab === 'analytics')  _renderAnalytics();
-            else if (crm.subTab === 'todo' && typeof renderCrmTodo === 'function') renderCrmTodo();
+            // Throttle рендерингу — не більше 1 разу на 300мс при частих оновленнях (batch writes)
+            if (crm._renderTimer) clearTimeout(crm._renderTimer);
+            crm._renderTimer = setTimeout(() => {
+                crm._renderTimer = null;
+                if (crm.subTab === 'kanban')     _renderKanban();
+                else if (crm.subTab === 'list')  _renderListView();
+                else if (crm.subTab === 'analytics')  _renderAnalytics();
+                else if (crm.subTab === 'todo' && typeof renderCrmTodo === 'function') renderCrmTodo();
+            }, 300);
             // Якщо відкрита панель угоди — оновлюємо details tab
             if (crm.activeDealId) {
                 const activeDeal = crm.deals.find(d => d.id === crm.activeDealId);
@@ -4475,9 +4499,10 @@ window.crmLoadMore = async function() {
         if (!lastDeal) return;
         const lastSnap = await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
             .doc(lastDeal.id).get();
+        // Використовуємо той самий orderBy що і в _subscribeDeals (updatedAt desc)
         const moreSnap = await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
             .where('pipelineId','==', crm.pipeline?.id)
-            .orderBy('createdAt','desc')
+            .orderBy('updatedAt','desc')
             .startAfter(lastSnap)
             .limit(DEALS_LIMIT).get();
         const morDeals = moreSnap.docs.map(d => ({id:d.id,...d.data()}));

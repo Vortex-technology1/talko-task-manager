@@ -143,6 +143,12 @@
                 if (taskCount >= WARN_THRESHOLD) {
                     console.warn(`[loadAllData] Task limit reached: ${taskCount}`);
                     showToast(window.t('taskLimitWarning').replace('{n}', taskCount), 'warning');
+                    // Показуємо persistent банер в UI якщо є відповідний елемент
+                    const banner = document.getElementById('taskLimitBanner');
+                    if (banner) {
+                        banner.style.display = 'flex';
+                        banner.querySelector('.task-limit-count').textContent = taskCount;
+                    }
                 }
                 dbg(`[loadAllData] ${isEmployeeRole ? 'Employee' : 'Manager'} mode: ${taskCount} tasks`);
                 
@@ -173,8 +179,13 @@
                 // Sync functions to biz-structure canvas iframe
                 if (typeof sendFunctionsToIframe === 'function') sendFunctionsToIframe();
                 
-                // Авто-генерація регулярних завдань при вході
-                await autoGenerateRegularTasks();
+                // Авто-генерація регулярних завдань — в фоні після рендеру
+                // (не блокує UI — defer to after first render)
+                setTimeout(() => {
+                    autoGenerateRegularTasks().catch(e =>
+                        console.warn('[loadAllData] autoGenerateRegularTasks:', e.message)
+                    );
+                }, 500);
                 
                 // Одноразова міграція: задачі з deadline (Timestamp) без deadlineDate
                 const migrateKey = `migrated_${currentCompany}`;
