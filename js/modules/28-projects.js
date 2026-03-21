@@ -1620,7 +1620,7 @@ function _buildProcessHowto() {
       <div style="display:flex;justify-content:flex-end;">
         <button onclick="toggleProcessHowto()"
           style="padding:0.35rem 0.85rem;border:1px solid #e5e7eb;border-radius:7px;background:white;font-size:0.82rem;cursor:pointer;color:#6b7280;">
-          ✕ Закрити
+          &times; Закрити
         </button>
       </div>
 
@@ -1923,7 +1923,7 @@ function _buildProcessHowto() {
               </div>
             </div>
             <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;line-height:1.7;">${desc}</div>
-            ${tip ? `<div style="padding:0.5rem 1rem;background:#fffbeb;border-top:1px solid #fde68a;font-size:0.78rem;color:#92400e;">💡 ${tip}</div>` : ''}
+            ${tip ? `<div style="padding:0.5rem 1rem;background:#fffbeb;border-top:1px solid #fde68a;font-size:0.78rem;color:#92400e;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${tip}</div>` : ''}
           </div>`).join('')}
         </div>
       </div>

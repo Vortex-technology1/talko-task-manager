@@ -1061,9 +1061,40 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         _tpSnap.docs.forEach(d => {
             const n = d.data().name || '';
             if (n.includes('ІТ Хаб')) _txProjIds['ithub'] = d.id;
-            if (n.includes('шоурум') || n.includes('Шоурум')) _txProjIds['showroom'] = d.id;
+            if (n.includes('шоурум') || n.includes('Шоурум') || n.includes('Сагайдачного')) _txProjIds['showroom'] = d.id;
+            if (n.includes('Еко') || n.includes('Дерево')) _txProjIds['eco'] = d.id;
         });
     } catch(e) {}
+
+    // Додаткові транзакції для шоуруму
+    if (_txProjIds['showroom']) {
+        const showroomTxOps = [];
+        const _sr = _txProjIds['showroom'];
+        const _showroomTxs = [
+            { type:'expense', amt:38000, note:'Ремонт та оздоблення шоуруму',      d:-25, cat:'Оренда цеху та шоуруму',    fi:5 },
+            { type:'expense', amt:25000, note:'Меблі для шоуруму (зразки)',         d:-20, cat:'Матеріали (ЛДСП, МДФ)',      fi:3 },
+            { type:'expense', amt:12000, note:'Освітлення та електромонтаж',        d:-18, cat:'Обладнання та інструменти',  fi:5 },
+            { type:'expense', amt:8500,  note:'Брендування та вивіска',             d:-15, cat:'Маркетинг та реклама',       fi:0 },
+            { type:'expense', amt:4500,  note:'Каталоги та рекламні матеріали',    d:-10, cat:'Маркетинг та реклама',       fi:0 },
+            { type:'income',  amt:5000,  note:'Перше замовлення з шоуруму',        d:-5,  cat:'Виручка від замовлень',      fi:1 },
+        ];
+        for (const tx of _showroomTxs) {
+            const _catRef2 = catRefs2.find((_, i) => FIN_CATS2[i]?.name === tx.cat);
+            showroomTxOps.push({type:'set', ref:cr.collection('finance_transactions').doc(), data:{
+                categoryId:   _catRef2 ? _catRef2.id : catRefs2[0].id,
+                categoryName: tx.cat,
+                accountId:    accRefs[0].id,
+                accountName:  ACCOUNTS[0].name,
+                type:tx.type, amount:tx.amt, currency:'UAH',
+                note:tx.note,
+                date:_demoTsFinance(tx.d),
+                projectId:   _sr,
+                functionId:  fRefs[tx.fi].id,
+                createdBy:uid, createdAt:now,
+            }});
+        }
+        await window.safeBatchCommit(showroomTxOps);
+    }
 
     // Маппінг категорій до функцій для "Фінанси по функціях"
     const _catToFunc = {

@@ -4578,7 +4578,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
         <!-- Список транзакцій -->
         <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
           ${txs.length === 0
-            ? '<div style="text-align:center;padding:32px;color:#9ca3af;"><div style="font-size:1.8rem;margin-bottom:6px;">💰</div><div>Транзакцій по проекту ще немає</div></div>'
+            ? '<div style="text-align:center;padding:32px;color:#9ca3af;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin-bottom:8px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><div>Транзакцій по проекту ще немає</div></div>'
             : txs.map((tx, i) => {
                 const isIncome = tx.type === 'income';
                 const dateStr = tx.date ? fmtDate(tx.date) : '—';
