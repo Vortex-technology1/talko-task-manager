@@ -240,7 +240,7 @@
         <button class="sa-btn-icon sa-btn-stop" onclick="saStop()" title="Завершити дзвінок">■</button>
       </div>
       <div class="sa-hint-block">
-        <div class="sa-hint-label">💡 Підказка:</div>
+        <div class="sa-hint-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 017 7c0 2.5-1.5 4.5-3 6H8C6.5 13.5 5 11.5 5 9a7 7 0 017-7z"/></svg> Підказка:</div>
         <div id="saHintText" class="sa-hint-text">Слухаю розмову...</div>
       </div>
       <div class="sa-transcript-block">
@@ -291,10 +291,10 @@
     modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100000;display:flex;align-items:center;justify-content:center;';
     modal.innerHTML = `
       <div style="background:#fff;border-radius:16px;padding:2rem;max-width:500px;width:90%;max-height:85vh;overflow-y:auto;">
-        <h2 style="margin:0 0 1rem;font-size:1.2rem;color:#1E3A5F;">📊 Підсумок дзвінка</h2>
+        <h2 style="margin:0 0 1rem;font-size:1.2rem;color:#1E3A5F;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Підсумок дзвінка</h2>
         <div style="display:flex;gap:1rem;margin-bottom:1rem;">
           <div style="background:#EEF6FF;border-radius:8px;padding:0.75rem 1rem;flex:1;text-align:center;">
-            <div style="font-size:1.5rem;font-weight:700;color:#1E3A5F;">⭐ ${analysis.score || '-'}/10</div>
+            <div style="font-size:1.5rem;font-weight:700;color:#1E3A5F;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${analysis.score || '-'}/10</div>
             <div style="font-size:0.75rem;color:#666;">Оцінка дзвінка</div>
           </div>
           <div style="background:#EEF6FF;border-radius:8px;padding:0.75rem 1rem;flex:1;text-align:center;">

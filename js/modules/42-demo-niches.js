@@ -1410,6 +1410,14 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     // ── 13+. ДОПОВНЕННЯ — постачальники, локації, планування, процеси ─
 
     // ── A. ЛОКАЦІЇ СКЛАДУ ──────────────────────────────────
+    // Очищаємо старі локації перед записом нових
+    try {
+        const oldLocs = await cr.collection('warehouse_locations').get();
+        if (!oldLocs.empty) {
+            const delOps = oldLocs.docs.map(d => ({type:'delete', ref:d.ref}));
+            await window.safeBatchCommit(delOps);
+        }
+    } catch(e) {}
     const locDefs = [
         { name:'Головний цех (вул. Промислова 12)', type:'warehouse', isDefault:true  },
         { name:'Шоурум (вул. Сагайдачного 18)',     type:'showroom',  isDefault:false },

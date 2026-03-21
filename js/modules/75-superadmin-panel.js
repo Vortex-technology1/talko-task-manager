@@ -1067,7 +1067,7 @@ window.updateCompanyPlan = async function(companyId, plan) {
     if (!validPlans.includes(plan)) return;
     try {
         await firebase.firestore().collection('companies').doc(companyId).update({ plan });
-        const badge = { basic: '🔵 Basic', pro: '🟢 Pro', enterprise: '⭐ Enterprise' };
+        const badge = { basic: '🔵 Basic', pro: '🟢 Pro', enterprise: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Enterprise' };
         showToast && showToast('План змінено: ' + (badge[plan] || plan), 'success');
     } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
 };
@@ -1153,7 +1153,7 @@ window.openGlobalAISettings = async function() {
         // Дефолтні моделі — реальні назви API (не маркетингові)
         const defaultModels = {
             openai: [
-                ['gpt-4o-mini',  'GPT-4o mini — рекомендовано ✅'],
+                ['gpt-4o-mini',  'GPT-4o mini — рекомендовано <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'],
                 ['gpt-4o',       'GPT-4o'],
                 ['gpt-4.1-mini', 'GPT-4.1 mini'],
                 ['gpt-4.1',      'GPT-4.1'],
@@ -1425,11 +1425,11 @@ const DEFAULT_AGENTS = {
         where:       'Статистика → кнопка AI',
         defaultPrompt: `Ти бізнес-аналітик. Проаналізуй метрики компанії за вказаний період.
 Дай відповідь структуровано:
-📊 Діагноз — що відбувається з ключовими показниками
-🔍 Причини — чому метрики відхиляються від цілей
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Діагноз — що відбувається з ключовими показниками
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Причини — чому метрики відхиляються від цілей
 ⚠️ Ризики — що станеться якщо не змінити
-✅ Дії — 3 конкретні кроки з очікуваним результатом (+/- сума або %)
-📈 Прогноз — що буде через місяць якщо впровадити рекомендації
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Дії — 3 конкретні кроки з очікуваним результатом (+/- сума або %)
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Прогноз — що буде через місяць якщо впровадити рекомендації
 Відповідай українською, коротко і по суті. Максимум 5 речень на блок.`,
     },
     incidents: {
@@ -1451,7 +1451,7 @@ const DEFAULT_AGENTS = {
 - Якщо маржа вище норми — поясни чому і як утримати
 - Давай числові прогнози (+/- скільки грошей від конкретної дії)
 Відповідай українською, коротко і по суті.
-Формат: 📊 Діагноз → 🔍 Причина → ⚠️ Наслідок → ✅ Дія. Максимум 4-5 речень на блок.`,
+Формат: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Діагноз → <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Причина → ⚠️ Наслідок → <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Дія. Максимум 4-5 речень на блок.`,
     },
     coordination: {
         label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Координація</span>',

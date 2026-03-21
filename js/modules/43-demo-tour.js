@@ -220,7 +220,7 @@ furniture_factory: [
         question: 'Що відбувається з замовленням якщо ваш ключовий менеджер захворів?',
     },
     {
-        title: '📊 Процес — 9 кроків від заявки до монтажу',
+        title: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Процес — 9 кроків від заявки до монтажу',
         selector: '#processesTab',
         tab: 'processes',
         pitch: 'Від першого дзвінка клієнта до підписаного акту — 9 стандартних кроків. Замір, 3D-проєкт, договір, матеріали, виробництво, ВТК, монтаж. Новий співробітник на 3-й день вже знає весь цикл.',
@@ -243,7 +243,7 @@ furniture_factory: [
         question: 'Скільки зараз угод у вашій воронці? Ви можете назвати суму прямо зараз?',
     },
     {
-        title: '📈 Аналітика — 12 тижнів динаміки',
+        title: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Аналітика — 12 тижнів динаміки',
         selector: '[onclick*="statistics"]',
         tab: 'statistics',
         lazyGroup: 'statistics',
@@ -251,7 +251,7 @@ furniture_factory: [
         question: 'Скільки часу у вас іде на підготовку тижневого звіту по продажах?',
     },
     {
-        title: '🎯 KPI — цілі і факт',
+        title: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> KPI — цілі і факт',
         selector: '#statisticsContainer',
         tab: 'statistics',
         pitch: 'Зеленим — досягаємо цілі. Червоним — відстаємо. Конверсія 38% при цілі 45% — червона. Власник бачить це без нарад і питань. Менеджер сам бачить де він відстає від плану.',
@@ -272,7 +272,7 @@ furniture_factory: [
         question: 'Як ви розумієте що конкретний співробітник перевантажений — коли він вам про це скаже?',
     },
     {
-        title: '💰 Фінанси — повний контур',
+        title: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M9 9h4.5a2.5 2.5 0 010 5H9v2h6"/></svg> Фінанси — повний контур',
         selector: '[onclick*="finance"]',
         tab: 'finance',
         lazyGroup: 'finance',
@@ -287,7 +287,7 @@ furniture_factory: [
         question: 'Чи бувало що ви забули вчасно сплатити рахунок або зарплату?',
     },
     {
-        title: '📊 Фінансове планування',
+        title: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Фінансове планування',
         selector: '#financeTab',
         tab: 'finance',
         pitch: 'Ціль на березень — 320 000 грн. Факт — 287 500. Відставання 32 500 грн — видно одразу. Ви плануєте квітень з урахуванням березневих результатів. Фінансова дисципліна без бухгалтера який "порахує колись".',
@@ -354,7 +354,7 @@ furniture_factory: [
         question: 'Де ви зазвичай перевіряєте стан бізнесу — за комп\'ютером чи з телефону?',
     },
     {
-        title: '🚀 Що далі — система на автопілоті',
+        title: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/></svg> Що далі — система на автопілоті',
         selector: null,
         tab: null,
         isLast: true,
@@ -666,7 +666,7 @@ if (_origLoadFull) {
             // Затримка і пропозиція запустити тур
             setTimeout(() => {
                 if (typeof showToast === 'function') {
-                    showToast('🎯 Демо готове! Натисніть «Тур» щоб провести клієнта по системі', 'success');
+                    showToast('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Демо готове! Натисніть «Тур» щоб провести клієнта по системі', 'success');
                 }
             }, 1500);
         }
