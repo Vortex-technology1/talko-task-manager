@@ -97,7 +97,7 @@
             
             try {
                 const companyRef = db.collection('companies').doc(currentCompany);
-                const collections = ['tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive', 'crm_deals', 'crm_pipelines', 'metrics', 'metricEntries', 'metricTargets', 'financeTransactions', 'financeCategories', 'finance_accounts', 'finance_settings', 'finance_recurring', 'warehouse_items', 'warehouse_stock', 'warehouse_operations', 'estimates', 'estimate_norms', 'coordinations', 'booking_calendars', 'booking_appointments', 'booking_schedules'];
+                const collections = ['tasks', 'regularTasks', 'functions', 'processTemplates', 'processes', 'projects', 'completedTasks', 'tasksArchive', 'crm_deals', 'crm_pipelines', 'metrics', 'metricEntries', 'metricTargets', 'financeTransactions', 'financeCategories', 'finance_accounts', 'finance_settings', 'finance_recurring', 'warehouse_items', 'warehouse_stock', 'warehouse_operations', 'estimates', 'estimate_norms', 'project_estimates', 'projectStages', 'workStandards', 'coordination_sessions', 'coordinations', 'booking_calendars', 'booking_appointments', 'booking_schedules', 'warehouse_locations', 'warehouse_suppliers', 'warehouse_inventories', 'finance_transactions', 'finance_budgets', 'crm_pipeline'];
                 
                 let totalDeleted = 0;
                 for (const col of collections) {

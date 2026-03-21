@@ -87,9 +87,12 @@ window.initEstimateModule = function() {
 };
 
 // ── Головний рендер вкладки ───────────────────────────────────
+window._estimateHowtoOpen = false; // panel toggle стан
+
 window.renderEstimateTab = function() {
     const container = document.getElementById('estimateContainer');
     if (!container) return;
+    const howtoOpen = window._estimateHowtoOpen || false;
 
     container.innerHTML = `
     <div style="padding:1rem 1.25rem;">
@@ -112,18 +115,19 @@ window.renderEstimateTab = function() {
               ${_estIco.ruler} Довідник норм
             </button>
           </div>
-          <button onclick="estimateSwitchSubTab('howto')" id="estTabHowto" title="Як це працює"
-            style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:8px;font-size:0.8rem;font-weight:500;cursor:pointer;border:1px solid #e5e7eb;background:${window._estimateActiveTab==='howto'?'#eff6ff':'white'};color:${window._estimateActiveTab==='howto'?'#3b82f6':'#6b7280'};">
+          <button onclick="window._estimateHowtoOpen=!window._estimateHowtoOpen;renderEstimateTab();" title="Як це працює"
+            style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:8px;font-size:0.8rem;font-weight:500;cursor:pointer;border:1px solid ${howtoOpen?'#bae6fd':'#e5e7eb'};background:${howtoOpen?'#eff6ff':'white'};color:${howtoOpen?'#0369a1':'#6b7280'};">
             ${_estIco.info} Як це працює
           </button>
         </div>
       </div>
+      ${howtoOpen ? `<div style="margin-bottom:1rem;" id="estimateHowtoPanel"></div>` : ''}
       <div id="estimateSubContent"></div>
     </div>`;
 
+    if (howtoOpen) renderEstimateHowtoView('estimateHowtoPanel');
     if (window._estimateActiveTab === 'list') renderEstimateListView();
     else if (window._estimateActiveTab === 'norms') renderEstimateNormsView();
-    else if (window._estimateActiveTab === 'howto') renderEstimateHowtoView();
 };
 
 window.estimateSwitchSubTab = function(tab) {
@@ -134,8 +138,8 @@ window.estimateSwitchSubTab = function(tab) {
 // ══════════════════════════════════════════════════════════════
 // РОЗДІЛ 0 — ЯК ЦЕ ПРАЦЮЄ
 // ══════════════════════════════════════════════════════════════
-window.renderEstimateHowtoView = function() {
-    const sub = document.getElementById('estimateSubContent');
+window.renderEstimateHowtoView = function(targetId) {
+    const sub = document.getElementById(targetId || 'estimateSubContent');
     if (!sub) return;
 
     const s = (color, text) => `<span style="background:${color}18;color:${color};padding:1px 7px;border-radius:4px;font-size:0.78rem;font-weight:600;">${text}</span>`;
