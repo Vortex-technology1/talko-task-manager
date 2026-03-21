@@ -279,7 +279,9 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         { tpl:tpl2Ref, name:'Онбординг — Василь Коваленко',         step:3, ai:3 },
     ];
     for (const p of PROCS) {
-        const tplName = p.tpl === tpl1Ref ? 'Виконання замовлення меблів' : 'Онбординг нового співробітника';
+        const tplName = p.tpl === tpl1Ref
+            ? 'Виконання замовлення меблів'
+            : 'Онбординг нового співробітника';
         ops.push({type:'set', ref:cr.collection('processes').doc(), data:{
             templateId:   p.tpl.id,
             templateName: tplName,
