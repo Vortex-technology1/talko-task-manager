@@ -524,7 +524,7 @@ window.renderEstimateNormsView = function() {
             <tbody>
               ${norms.map(n=>`
               <tr style="border-bottom:1px solid #f3f4f6;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background=''">
-                <td style="padding:0.65rem 0.75rem;font-weight:500;color:#111827;">${esc(n.name)}</td>
+                <td style="padding:0.65rem 0.75rem;font-weight:500;color:#3b82f6;cursor:pointer;" onclick="openNormModal('${esc(n.id)}')" title="Відкрити норму">${esc(n.name)}</td>
                 <td style="padding:0.65rem 0.75rem;color:#6b7280;">${categoryLabel[n.category]||n.category||'—'}</td>
                 <td style="padding:0.65rem 0.75rem;text-align:center;"><span style="padding:0.2rem 0.5rem;background:#f0f9ff;color:#0ea5e9;border-radius:4px;font-weight:600;">${esc(n.inputUnit||'шт')}</span></td>
                 <td style="padding:0.65rem 0.75rem;text-align:center;color:#6b7280;">${(n.materials||[]).length} поз.</td>

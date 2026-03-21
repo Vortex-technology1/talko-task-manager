@@ -2874,7 +2874,67 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
         await cr.collection('projects').doc(boykoProj.id).update({estimateBudget:totalMat, updatedAt:now});
     }
 
-    // ── 11. БРОНЮВАННЯ ───────────────────────────────────────
+    // Кошторис для FinTech — офіс 180м²
+    const fintechProj = projSnapEst.docs.find(d => (d.data().name||'').includes('FinTech'));
+    if (fintechProj && plasterNorm && gklNorm && electricNorm) {
+        const ftSections = [];
+        let ftTotal = 0;
+        const addFT = (norm, area) => {
+            if (!norm) return;
+            const calced = (norm.materials||[]).map(m => ({
+                name:m.name, unit:m.unit,
+                required:Math.round(m.qty * area * 10)/10,
+                inStock:0, deficit:Math.round(m.qty * area * 10)/10,
+                pricePerUnit:m.price,
+                total:Math.round(m.qty * area * m.price),
+            }));
+            ftTotal += calced.reduce((s, m) => s + m.total, 0);
+            ftSections.push({normId:norm.id, normName:norm.name, inputValue:area, inputUnit:norm.inputUnit, extraParam:null, calculatedMaterials:calced});
+        };
+        addFT(plasterNorm, 420); // 180м² офіс × ~2.3 стіни
+        addFT(gklNorm,     180); // перегородки по всьому офісу
+        addFT(electricNorm, 3); // 3 зони = 3 к.к. еквівалент
+        await window.safeBatchCommit([{type:'set', ref:cr.collection('project_estimates').doc(), data:{
+            title:'Кошторис — офіс FinTech 180м² (оздоблення)',
+            projectId:fintechProj.id, dealId:'', functionId:'',
+            status:'approved', sections:ftSections,
+            totals:{totalMaterialsCost:ftTotal, totalDeficitCost:ftTotal, currency:'UAH'},
+            deleted:false, createdBy:uid, approvedBy:uid, createdAt:now, updatedAt:now,
+        }}]);
+        await cr.collection('projects').doc(fintechProj.id).update({estimateBudget:ftTotal, updatedAt:now});
+    }
+
+    // Кошторис для Петренків — квартира 95м²
+    const petrenkoProj = projSnapEst.docs.find(d => (d.data().name||'').includes('Петренків'));
+    if (petrenkoProj && plasterNorm && tileNorm && gklNorm && screedNorm && electricNorm) {
+        const ptSections = [];
+        let ptTotal = 0;
+        const addPT = (norm, area) => {
+            if (!norm) return;
+            const calced = (norm.materials||[]).map(m => ({
+                name:m.name, unit:m.unit,
+                required:Math.round(m.qty * area * 10)/10,
+                inStock:0, deficit:Math.round(m.qty * area * 10)/10,
+                pricePerUnit:m.price,
+                total:Math.round(m.qty * area * m.price),
+            }));
+            ptTotal += calced.reduce((s, m) => s + m.total, 0);
+            ptSections.push({normId:norm.id, normName:norm.name, inputValue:area, inputUnit:norm.inputUnit, extraParam:null, calculatedMaterials:calced});
+        };
+        addPT(plasterNorm, 240); // 95м² × ~2.5 стіни
+        addPT(tileNorm,    32);  // 2 ванні + 2 туалети преміум
+        addPT(gklNorm,     55);  // перегородки + короби
+        addPT(screedNorm,  95);  // вся площа
+        addPT(electricNorm, 3);  // 3-кімнатна
+        await window.safeBatchCommit([{type:'set', ref:cr.collection('project_estimates').doc(), data:{
+            title:'Кошторис — квартира Петренків 95м² преміум',
+            projectId:petrenkoProj.id, dealId:'', functionId:'',
+            status:'approved', sections:ptSections,
+            totals:{totalMaterialsCost:ptTotal, totalDeficitCost:ptTotal, currency:'UAH'},
+            deleted:false, createdBy:uid, approvedBy:uid, createdAt:now, updatedAt:now,
+        }}]);
+        await cr.collection('projects').doc(petrenkoProj.id).update({estimateBudget:ptTotal, updatedAt:now});
+    }
     const bookingCalRef = cr.collection('booking_calendars').doc();
     const bookingSchedRef = cr.collection('booking_schedules').doc(bookingCalRef.id);
     await window.safeBatchCommit([
