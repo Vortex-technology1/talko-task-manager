@@ -510,13 +510,16 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         const mRef = cr.collection('metrics').doc();
         const freq = m.freq || 'weekly';
         mOps.push({type:'set', ref:mRef, data:{
-            name:    m.name,
-            unit:    m.unit || 'шт',        // захист від undefined
-            category: m.cat || '',
-            frequency: freq,
-            scopeType: 'company',
+            name:        m.name,
+            unit:        m.unit || 'шт',
+            category:    m.cat || '',
+            frequency:   freq,
+            scope:       'company',
+            scopeType:   'company',
             description: m.cat || '',
-            createdBy:uid, createdAt:now, updatedAt:now,
+            createdBy:   uid,
+            createdAt:   now,
+            updatedAt:   now,
         }});
         // Додаємо записи значень для 3-4 останніх періодів
         const periods = freq === 'daily' ? 7 : freq === 'weekly' ? 4 : 3;
@@ -550,9 +553,11 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
                 value:     (typeof val === 'number' && !isNaN(val)) ? val : 0,
                 periodKey: pk || '',
                 frequency: freq,
-                scopeType: 'company',
+                scope:     'company',   // правильне поле для getEntryForMetric
+                scopeType: 'company',   // додатково для сумісності
                 note:      '',
                 enteredBy: uid,
+                createdBy: uid,         // для my scope фільтрації
                 createdAt: now,
             }});
         }
