@@ -559,6 +559,38 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
                 createdAt: now, updatedAt: now,
             }});
         }
+        if ((proj.name||'').includes('Еко') || (proj.name||'').includes('Дерево')) {
+            // Кошторис для Еко-Дерево — 8 моделей з масиву
+            const ecoSections = [{
+                normId:   '',
+                normName: 'Масив дерева (дуб/ясен)',
+                inputValue: 8,
+                inputUnit: 'шт',
+                extraParam: null,
+                calculatedMaterials: [
+                    { name:'Масив дуб 50мм (заготовки)', unit:'м³',  required:2.4, inStock:0, deficit:2.4, pricePerUnit:18000, total:43200 },
+                    { name:'Фурнітура натуральна',        unit:'компл', required:8, inStock:0, deficit:8,   pricePerUnit:850,   total:6800  },
+                    { name:'Лак паркетний Osmo',          unit:'л',   required:12,  inStock:0, deficit:12,  pricePerUnit:480,   total:5760  },
+                    { name:'Робота столяра (ручна)',      unit:'год',  required:160, inStock:0, deficit:160, pricePerUnit:250,   total:40000 },
+                ],
+            }];
+            const ecoMatTotal = ecoSections[0].calculatedMaterials.reduce((s,m) => s + m.total, 0);
+            projEstOps.push({type:'set', ref:cr.collection('project_estimates').doc(), data:{
+                title:     'Кошторис — нова лінійка Еко-Дерево (8 моделей)',
+                projectId: proj.id,
+                dealId:    '',
+                functionId:'',
+                status:    'approved',
+                sections:  ecoSections,
+                totals: { totalMaterialsCost: ecoMatTotal, totalDeficitCost: ecoMatTotal, currency:'UAH' },
+                deleted:   false,
+                createdBy: uid, approvedBy: uid,
+                createdAt: now, updatedAt: now,
+            }});
+            projEstOps.push({type:'update', ref:cr.collection('projects').doc(proj.id), data:{
+                estimateBudget: ecoMatTotal, updatedAt: now,
+            }});
+        }
     }
     if (projEstOps.length) await window.safeBatchCommit(projEstOps);
 
@@ -1216,6 +1248,35 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             }});
         }
         await window.safeBatchCommit(showroomTxOps);
+    }
+
+    // Транзакції для Еко-Дерево
+    if (_txProjIds['eco']) {
+        const ecoTxOps = [];
+        const _ec = _txProjIds['eco'];
+        const _ecoTxs = [
+            { type:'expense', amt:18000, note:'Масив дуб — перша партія (1.2 м³)',      d:-55, cat:'Матеріали (ЛДСП, МДФ)',      fi:3 },
+            { type:'expense', amt:12000, note:'Масив ясен — заготовки (0.8 м³)',         d:-40, cat:'Матеріали (ЛДСП, МДФ)',      fi:3 },
+            { type:'expense', amt:6800,  note:'Фурнітура натуральна — 8 комплектів',    d:-35, cat:'Фурнітура та комплектуючі',  fi:5 },
+            { type:'expense', amt:5760,  note:'Лак Osmo — 12л для покриття прототипів', d:-20, cat:'Матеріали (ЛДСП, МДФ)',      fi:3 },
+            { type:'expense', amt:8000,  note:'Зарплата столяра — прототипи Еко',       d:-15, cat:'Зарплата команди',           fi:6 },
+        ];
+        for (const tx of _ecoTxs) {
+            const _catRef2 = catRefs2.find((_, i) => FIN_CATS2[i]?.name === tx.cat);
+            ecoTxOps.push({type:'set', ref:cr.collection('finance_transactions').doc(), data:{
+                categoryId:   _catRef2 ? _catRef2.id : catRefs2[0].id,
+                categoryName: tx.cat,
+                accountId:    accRefs[0].id,
+                accountName:  ACCOUNTS[0].name,
+                type:tx.type, amount:tx.amt, currency:'UAH',
+                note:tx.note,
+                date:_demoTsFinance(tx.d),
+                projectId:   _ec,
+                functionId:  fRefs[tx.fi].id,
+                createdBy:uid, createdAt:now,
+            }});
+        }
+        await window.safeBatchCommit(ecoTxOps);
     }
 
     // Маппінг категорій до функцій для "Фінанси по функціях"
