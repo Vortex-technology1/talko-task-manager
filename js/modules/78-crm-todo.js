@@ -87,7 +87,9 @@ function _fmtDate(dateStr) {
     const today = _todayStr();
     if (dateStr < today) {
         const days = Math.round((new Date(today)-new Date(dateStr))/86400000);
-        return { label: days===1?'Вчора':days+' дн. тому', overdue:true, today:false };
+        // Показуємо кількість днів прострочення для оцінки терміновості
+        const label = days === 1 ? 'Вчора' : days <= 6 ? '+' + days + ' дн.' : '+' + days + ' дн.';
+        return { label, days, overdue:true, today:false };
     }
     if (dateStr === today) return { label:window.t('todayWord'), overdue:false, today:true };
     if (dateStr === _tomorrowStr()) return { label:'Завтра', overdue:false, today:false };
@@ -103,6 +105,8 @@ let _crmTodoRetryTimer = null;
 window.renderCrmTodo = function() {
     const el = document.getElementById('crmViewTodo');
     if (!el) return;
+    // Зберігаємо позицію скролу щоб не скидати після збереження
+    const scrollTop = el.scrollTop || 0;
 
     // Якщо дані ще завантажуються — показуємо spinner і чекаємо
     if (window.crm && window.crm.loading) {
@@ -196,9 +200,17 @@ window.renderCrmTodo = function() {
 function _renderRow(d, i) {
     const p         = _priority(d);
     const fmt       = _fmtDate(d.nextContactDate);
-    const borderClr = p===0?'#ef4444':p===1?'#f97316':p===2?'#9ca3af':'#22c55e';
-    const dateBg    = p===0?'#fef2f2':p===1?'#fff7ed':p===2?'#f9fafb':'#f0fdf4';
-    const dateClr   = p===0?'#dc2626':p===1?'#ea580c':p===2?'#9ca3af':'#16a34a';
+    // Прострочені — інтенсивність кольору залежить від кількості днів
+    const overdueDays = (p === 0 && fmt) ? (fmt.days || 1) : 0;
+    const borderClr = p===0
+        ? (overdueDays >= 7 ? '#b91c1c' : overdueDays >= 3 ? '#ef4444' : '#f97316')
+        : p===1 ? '#f97316' : p===2 ? '#9ca3af' : '#22c55e';
+    const dateBg    = p===0
+        ? (overdueDays >= 7 ? '#fee2e2' : '#fef2f2')
+        : p===1 ? '#fff7ed' : p===2 ? '#f9fafb' : '#f0fdf4';
+    const dateClr   = p===0
+        ? (overdueDays >= 7 ? '#991b1b' : '#dc2626')
+        : p===1 ? '#ea580c' : p===2 ? '#9ca3af' : '#16a34a';
     const stages    = (window.crm&&window.crm.pipeline&&window.crm.pipeline.stages)||[];
     const stageObj  = stages.find(s=>s.id===d.stage);
     const stageClr  = stageObj?stageObj.color:'#6b7280';
@@ -242,6 +254,7 @@ function _renderRow(d, i) {
 
     return `
     <div onclick="crmTodoOpenCard('${d.id}')"
+      data-crm-row="${d.id}"
       style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;
         border-bottom:1px solid #f3f4f6;background:${rowBg};cursor:pointer;
         border-left:3px solid ${borderClr};transition:background 0.1s;"
@@ -262,7 +275,7 @@ function _renderRow(d, i) {
       <div style="flex:1;min-width:0;">
         <div style="font-size:0.85rem;font-weight:600;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(name)}</div>
         ${note
-            ?`<div style="font-size:0.73rem;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(note)}</div>`
+            ?`<div style="font-size:0.73rem;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${_esc(note)}">${_esc(note)}</div>`
             :`<div style="font-size:0.73rem;color:#d1d5db;font-style:italic;">без нотатки</div>`
         }
       </div>
@@ -315,9 +328,11 @@ window.crmTodoOpenCard = async function(dealId) {
 
     document.body.insertAdjacentHTML('beforeend',`
     <div id="crmTodoCardOverlay" onclick="if(event.target===this)_crmTodoCloseCard()"
-      style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10050;
-      display:flex;align-items:flex-start;justify-content:center;padding:2rem 1.5rem;overflow-y:auto;">
-      <div style="background:#fff;border-radius:14px;width:100%;max-width:780px;box-shadow:0 24px 64px rgba(0,0,0,0.18);margin:auto;">
+      style="position:fixed;inset:0;background:rgba(0,0,0,0.25);z-index:10050;display:flex;justify-content:flex-end;">
+      <div style="background:#fff;width:100%;max-width:520px;height:100%;overflow-y:auto;
+        box-shadow:-8px 0 32px rgba(0,0,0,0.15);
+        animation:crmSlideIn 0.22s cubic-bezier(0.16,1,0.3,1);">
+      <style>@keyframes crmSlideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}</style>
 
         <!-- Хедер картки -->
         <div style="padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;">
@@ -374,10 +389,10 @@ window.crmTodoOpenCard = async function(dealId) {
           </div>`:''}
         </div>
 
-        <!-- Body: 2 колонки -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #f1f5f9;">
-        <!-- Ліва колонка: результат + деталі -->
-        <div style="border-right:1px solid #f1f5f9;">
+        <!-- Body: 1 колонка (slide-in панель) -->
+        <div style="display:flex;flex-direction:column;border-top:1px solid #f1f5f9;">
+        <!-- Результат + деталі -->
+        <div>
         <!-- Результат контакту -->
         <div style="padding:0.75rem 1.25rem;border-bottom:1px solid #f1f5f9;">
           <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em;margin-bottom:0.5rem;">Результат контакту</div>
@@ -397,8 +412,8 @@ window.crmTodoOpenCard = async function(dealId) {
         <!-- Деталі -->
         <div id="crmTodoDetailForm" style="display:none;padding:0.75rem 1.25rem;border-bottom:1px solid #f1f5f9;"></div>
 
-        </div><!-- end left col -->
-        <!-- Права колонка: наступний контакт + кнопки -->
+        </div>
+        <!-- Наступний контакт + кнопки -->
         <div>
         <!-- Наступний контакт -->
         <div style="padding:0.75rem 1.25rem;border-bottom:1px solid #f1f5f9;background:#f9fafb;">
@@ -437,8 +452,8 @@ window.crmTodoOpenCard = async function(dealId) {
               style="padding:7px 18px;border-radius:7px;border:none;background:#d1d5db;color:#9ca3af;font-size:0.82rem;font-weight:600;cursor:not-allowed;">Зберегти</button>
           </div>
         </div>
-        </div><!-- end right col -->
-        </div><!-- end 2col grid -->
+        </div>
+        </div>
 
         <!-- Історія -->
         ${history.length?`
@@ -458,9 +473,18 @@ window.crmTodoOpenCard = async function(dealId) {
       </div>
     </div>`);
 
+    // Підсвічуємо активний рядок у списку
+    document.querySelectorAll('[data-crm-row]').forEach(r => r.style.outline='');
+    const activeRow = document.querySelector(`[data-crm-row="${dealId}"]`);
+    if (activeRow) activeRow.style.outline = '2px solid #6366f1';
     document.getElementById('crmTodoCardOverlay')._dealId = dealId;
     document.getElementById('crmTodoCardOverlay')._result = null;
     _crmTodoValidate();
+    // Фокус на першу кнопку для keyboard nav
+    requestAnimationFrame(() => {
+        const btn = document.getElementById('crmTodoBtn_answered');
+        if (btn) btn.focus();
+    });
 };
 
 window._crmTodoSelectResult = function(type, dealId) {
@@ -597,7 +621,17 @@ window._crmTodoSave = async function(dealId) {
         }
         _crmTodoCloseCard();
         if (window.showToast) showToast(window.t('savedOk2'),'success');
-        if (typeof renderCrmTodo==='function') renderCrmTodo();
+        if (typeof renderCrmTodo==='function') {
+            renderCrmTodo();
+            // Відновлюємо скрол після ре-рендеру
+            requestAnimationFrame(() => {
+                const todoEl = document.getElementById('crmViewTodo');
+                if (todoEl && window._crmTodoScrollPos) {
+                    todoEl.scrollTop = window._crmTodoScrollPos;
+                    window._crmTodoScrollPos = 0;
+                }
+            });
+        }
 
     } catch(e) {
         if(btn){btn.disabled=false;btn.textContent=window.t('flowSave');}
@@ -741,8 +775,15 @@ window._crmTodoConfirmConsultation = async function(dealId) {
 };
 
 window._crmTodoCloseCard = function() {
+    // Зберігаємо позицію скролу списку
+    const todoEl = document.getElementById('crmViewTodo');
+    if (todoEl) window._crmTodoScrollPos = todoEl.scrollTop;
     const el = document.getElementById('crmTodoCardOverlay');
-    if (el) el.remove();
+    if (el) {
+        el.style.transition = 'opacity 0.15s';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 150);
+    }
 };
 
 document.addEventListener('keydown', function(e) {
