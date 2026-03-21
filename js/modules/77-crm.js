@@ -907,7 +907,7 @@ function _renderListView() {
                     background:${stage.color}18;color:${stage.color};">${_esc(stage.label)}</span>` : ''}
                 ${d.nextContactDate ? `<span style="font-size:.68rem;padding:2px 7px;border-radius:10px;font-weight:600;
                     background:${isOverdue?'#fef2f2':'#eff6ff'};color:${isOverdue?'#ef4444':'#3b82f6'};">
-                    📅 ${d.nextContactDate}</span>` : ''}
+                    📅 ${d.nextContactDate}${d.nextContactTime ? ' ' + d.nextContactTime : ''}</span>` : ''}
                 ${upd ? `<span style="font-size:.67rem;color:#9ca3af;margin-left:auto;">${upd}</span>` : ''}
             </div>
         </div>`; }).join('')}
@@ -1002,7 +1002,7 @@ function _renderListView() {
                             <td onclick="crmOpenDeal('${d.id}')" style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;">
                                 ${d.nextContactDate ? `<span style="font-size:0.72rem;padding:2px 7px;border-radius:10px;font-weight:600;
                                     background:${isOverdue?'#fef2f2':'#eff6ff'};color:${isOverdue?'#ef4444':'#3b82f6'};">
-                                    ${d.nextContactDate}</span>` : '—'}
+                                    ${d.nextContactDate}${d.nextContactTime ? ' ' + d.nextContactTime : ''}</span>` : '—'}
                             </td>
                             <td onclick="crmOpenDeal('${d.id}')" style="padding:0.6rem 0.75rem;font-size:0.72rem;color:#9ca3af;border-bottom:1px solid #f3f4f6;white-space:nowrap;">
                                 ${upd}

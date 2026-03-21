@@ -104,9 +104,14 @@ function _crmShowCallLogModal() {
             </div>
             <div style="flex:2;">
                 <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.3rem;">Наступний контакт</div>
-                <input id="crmCallNextDate" type="date"
-                    value="${new Date(Date.now()+86400000*2).toISOString().split('T')[0]}"
-                    style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
+                <div style="display:flex;gap:0.35rem;">
+                    <input id="crmCallNextDate" type="date"
+                        value="${new Date(Date.now()+86400000*2).toISOString().split('T')[0]}"
+                        style="flex:1;padding:0.4rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;min-width:0;">
+                    <input id="crmCallNextTime" type="time"
+                        value="10:00"
+                        style="width:80px;padding:0.4rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
+                </div>
             </div>
         </div>
 
@@ -178,6 +183,7 @@ window.crmSaveCallLog = async function () {
     const duration = parseInt(document.getElementById('crmCallDuration')?.value || '0') || 0;
     const note     = document.getElementById('crmCallNote')?.value.trim() || '';
     const nextDate = document.getElementById('crmCallNextDate')?.value || '';
+    const nextTime = document.getElementById('crmCallNextTime')?.value || '';
 
     const resultLabels = {
         answered: window.t('crmPickd'),
@@ -215,6 +221,7 @@ window.crmSaveCallLog = async function () {
             updatedAt:      now,
         };
         if (nextDate) upd.nextContactDate = nextDate;
+        if (nextTime) upd.nextContactTime = nextTime;
         await ref.update(upd);
 
         // Оновлення локального стану
@@ -222,6 +229,7 @@ window.crmSaveCallLog = async function () {
         if (deal) {
             deal.lastCallResult  = result;
             if (nextDate) deal.nextContactDate = nextDate;
+            if (nextTime) deal.nextContactTime = nextTime;
         }
 
         if (window.showToast) showToast('Дзвінок збережено', 'success');
