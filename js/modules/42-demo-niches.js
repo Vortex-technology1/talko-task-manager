@@ -17,6 +17,13 @@ function _demoTs(offsetDays) {
         new Date(Date.now() + (offsetDays||0) * 86400000)
     );
 }
+// Timestamp для фінансових транзакцій (фінанси фільтрують по Timestamp)
+function _demoTsFinance(offsetDays) {
+    const d = new Date();
+    d.setDate(d.getDate() + (offsetDays||0));
+    d.setHours(12, 0, 0, 0);
+    return firebase.firestore.Timestamp.fromDate(d);
+}
 function _dRand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 window._DEMO_NICHE_MAP = window._DEMO_NICHE_MAP || {};
@@ -923,7 +930,8 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             accountId:    accRefs[tx.acc].id,
             accountName:  ACCOUNTS[tx.acc].name,
             type:tx.type, amount:tx.amt, currency:'UAH',
-            note:tx.note, date:_demoDate(tx.d),
+            note:tx.note,
+            date:_demoTsFinance(tx.d),  // Timestamp — фінанси фільтрують по Timestamp
             projectId:    projId,
             createdBy:uid, createdAt:now,
         }});

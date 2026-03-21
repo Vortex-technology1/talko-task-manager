@@ -389,11 +389,12 @@ function _renderTourButton(niche) {
     if (!steps) return;
 
     const saved = _getSavedStep(niche);
-    const label = saved > 0 ? `▶ Тур (${saved+1}/${steps.length})` : '🎯 Тур';
+    // label тепер через SVG нижче
 
     const btn = document.createElement('button');
     btn.id = 'demoTourBtn';
-    btn.innerHTML = label;
+    const savedLabel = saved > 0 ? `${saved+1}/${steps.length}` : '';
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>${savedLabel ? ' '+savedLabel : ' Тур'}`;
     btn.title = 'Запустити демо-тур для клієнта';
     btn.onclick = () => startTour(niche);
     document.body.appendChild(btn);
@@ -467,7 +468,7 @@ function _finishTour() {
     card.id = 'demoTourCard';
     card.style.cssText = 'top:50%;left:50%;transform:translate(-50%,-50%);';
     card.innerHTML = `
-        <div class="tour-tag">✅ Тур завершено</div>
+        <div class="tour-tag">Тур завершено</div>
         <div class="tour-title">Готові до наступного кроку?</div>
         <div class="tour-pitch">
             Ви щойно побачили як виглядає бізнес на автопілоті.<br><br>
@@ -566,10 +567,10 @@ function _positionSpotlightAndCard(step, idx, total, pct, isFirst, isLast) {
     }
 
     card.innerHTML = `
-        <div class="tour-tag">🎯 Крок ${idx+1} з ${total}</div>
+        <div class="tour-tag">Крок ${idx+1} з ${total}</div>
         <div class="tour-title">${step.title}</div>
         <div class="tour-pitch">${step.pitch}</div>
-        ${step.question ? `<div class="tour-question"><strong>💬 Питання клієнту:</strong>${step.question}</div>` : ''}
+        ${step.question ? `<div class="tour-question"><strong>Питання клієнту:</strong>${step.question}</div>` : ''}
         <div class="tour-footer">
             <div class="tour-progress">${idx+1}/${total}</div>
             <div class="tour-progress-bar"><div class="tour-progress-fill" style="width:${pct}%"></div></div>
