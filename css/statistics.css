@@ -747,3 +747,41 @@
         letter-spacing: 0.05em;
     }
 }
+
+/* ── Повноекранна статистика — таблиця на всю ширину ────── */
+#statisticsTab {
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+#statisticsTab #statsHeaderBar {
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+#statisticsTab #statsScopeBar {
+    padding: 0.5rem 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+}
+#statisticsTab #statsKpiDebts {
+    padding: 0.5rem 1.25rem;
+}
+#statisticsTab #statisticsContainer {
+    padding: 0;
+}
+#statisticsTab .stats-table-wrap {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    margin-bottom: 1px;
+}
+#statisticsTab .stats-section {
+    padding: 0 1.25rem;
+}
+/* Регулярні платежі — UAH замість EUR label */
+#financeRegularTab .currency-label {
+    font-size: 0.9rem;
+}
