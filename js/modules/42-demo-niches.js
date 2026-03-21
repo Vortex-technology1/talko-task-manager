@@ -1029,6 +1029,97 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
     await window.safeBatchCommit(regPayOps);
 
+    // ── ПРОТОКОЛИ КООРДИНАЦІЙ ─────────────────────────────
+    // Завантажуємо ID координацій що були щойно записані
+    const coordSnap = await cr.collection('coordinations').get();
+    const coordDocs = coordSnap.docs.map(d => ({id:d.id, ...d.data()}));
+    const standupCoord = coordDocs.find(c => c.name && c.name.includes('стенд-ап'));
+    const weeklyCoord  = coordDocs.find(c => c.name && c.name.includes('нарада'));
+    const ownerCoord   = coordDocs.find(c => c.name && c.name.includes('власника') || c.name && c.name.includes('Рада'));
+
+    const sessionOps = [];
+
+    // Протокол 1 — Щоденний стенд-ап 2 дні тому
+    if (standupCoord) {
+        sessionOps.push({type:'set', ref:cr.collection('coordination_sessions').doc(), data:{
+            coordId:   standupCoord.id,
+            coordName: standupCoord.name,
+            coordType: 'daily',
+            startedAt: new Date(Date.now() - 2*86400000).toISOString(),
+            finishedAt:new Date(Date.now() - 2*86400000 + 15*60000).toISOString(), // 15хв
+            decisions: [
+                { text:'Тарас бере в роботу кухню Петрова №МБ-091 — старт сьогодні 08:00', taskId:'', authorId:uid },
+                { text:'Ірина передзвонює Романовій до 12:00 — узгодити день виїзду', taskId:'', authorId:uid },
+                { text:'Оксана готує рахунок для ІТ Хаб до кінця дня', taskId:'', authorId:uid },
+            ],
+            unresolved: [],
+            agendaDone: ['Стан замовлень', 'Пріоритети дня', 'Блокери'],
+            dynamicAgendaItems: [],
+            notes: 'Команда в нормі. Микола запізнився на 5 хв — попередили.',
+            conductedBy: uid,
+            participantIds: sRefs.map(s => s.id),
+            taskSnapshot: [],
+            createdAt: _demoTs(-2),
+        }});
+    }
+
+    // Протокол 2 — Тижнева нарада тиждень тому
+    if (weeklyCoord) {
+        sessionOps.push({type:'set', ref:cr.collection('coordination_sessions').doc(), data:{
+            coordId:   weeklyCoord.id,
+            coordName: weeklyCoord.name,
+            coordType: 'weekly',
+            startedAt: new Date(Date.now() - 7*86400000).toISOString(),
+            finishedAt:new Date(Date.now() - 7*86400000 + 45*60000).toISOString(), // 45хв
+            decisions: [
+                { text:'Запустити замовлення Ковалів у виробництво в понеділок', taskId:'', authorId:uid },
+                { text:'Закупити додатково 20 листів ЛДСП Горіх для квітневих замовлень', taskId:'', authorId:uid },
+                { text:'Перевести стенд шоуруму на нове місце до пятниці', taskId:'', authorId:uid },
+                { text:'Призначити Андрія відповідальним за доставки ІТ Хаб', taskId:'', authorId:uid },
+                { text:'Повторно обговорити причини затримки замовлення Гриценка на наступній нараді', taskId:'', authorId:uid },
+            ],
+            unresolved: [
+                { text:'Проблема з постачальником МДФ — терміни затримуються на 3 дні', authorId:uid, addedAt:new Date(Date.now() - 7*86400000).toISOString() },
+            ],
+            agendaDone: ['Підсумки тижня', 'Виробничий план', 'Продажі', 'Фінанси', 'Блокери та ризики'],
+            dynamicAgendaItems: [
+                { text:'Ситуація з браком на фасадах Марченків', authorId:uid, addedAt:new Date(Date.now() - 7*86400000 - 3600000).toISOString() },
+            ],
+            notes: 'Продуктивна нарада. Команда виконала 87% плану тижня. Ризик — постачальник МДФ.',
+            conductedBy: uid,
+            participantIds: sRefs.map(s => s.id),
+            taskSnapshot: [],
+            createdAt: _demoTs(-7),
+        }});
+    }
+
+    // Протокол 3 — Рада власника минулого тижня
+    if (ownerCoord) {
+        sessionOps.push({type:'set', ref:cr.collection('coordination_sessions').doc(), data:{
+            coordId:   ownerCoord.id,
+            coordName: ownerCoord.name,
+            coordType: 'council_own',
+            startedAt: new Date(Date.now() - 8*86400000).toISOString(),
+            finishedAt:new Date(Date.now() - 8*86400000 + 60*60000).toISOString(), // 60хв
+            decisions: [
+                { text:'Затвердити бюджет на відкриття шоуруму — 95 000 грн', taskId:'', authorId:uid },
+                { text:'Запустити Instagram-рекламу на квітень бюджет 5 000 грн', taskId:'', authorId:uid },
+                { text:'Підвищити ціни на кухні на 7% з 1 квітня 2026', taskId:'', authorId:uid },
+                { text:'Найняти другого менеджера продажів до 15 квітня', taskId:'', authorId:uid },
+            ],
+            unresolved: [],
+            agendaDone: ['Фінансові підсумки місяця', 'Стратегія квітня', 'HR питання', 'Ціноутворення'],
+            dynamicAgendaItems: [],
+            notes: 'Березень — рекордний місяць по виручці. Цілі на квітень підвищені на 10%.',
+            conductedBy: uid,
+            participantIds: [uid, sRefs[1].id, sRefs[7].id],
+            taskSnapshot: [],
+            createdAt: _demoTs(-8),
+        }});
+    }
+
+    if (sessionOps.length) await window.safeBatchCommit(sessionOps);
+
     // Рахунки
     const accRefs = [
         cr.collection('finance_accounts').doc(),

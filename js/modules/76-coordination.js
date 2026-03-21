@@ -814,16 +814,16 @@
 
     function htmlDynAgenda() {
         return `<div id="coordDynAgendaModal" class="modal" role="dialog" style="display:none;z-index:10015;">
-          <div class="modal-content" style="max-width:480px;max-height:80vh;overflow-y:auto;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem;">
-              <h2 id="dynAgendaTitle" style="margin:0;font-size:1rem;"><i data-lucide="list-checks" style="width:12px;height:12px;margin-right:4px;"></i>${ct('agendaTitle')}</h2>
-              <button onclick="closeDynAgenda()" style="background:none;border:none;cursor:pointer;color:#9ca3af;">${XSVG}</button>
+          <div class="modal-content" style="max-width:480px;width:90vw;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
+              <h2 id="dynAgendaTitle" style="margin:0;font-size:1rem;font-weight:700;"><i data-lucide="list-checks" style="width:14px;height:14px;margin-right:4px;vertical-align:-2px;"></i>${ct('agendaTitle')}</h2>
+              <button onclick="closeDynAgenda()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;line-height:1;">&times;</button>
             </div>
-            <div style="font-size:.78rem;color:#6b7280;margin-bottom:.65rem;">${ct('agendaHint')}</div>
-            <div id="dynAgendaList" style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.65rem;"></div>
-            <div style="display:flex;gap:.45rem;">
-              <input id="dynAgendaInput" type="text" class="form-control" placeholder="Ваше питання..." style="flex:1;" onkeydown="if(event.key==='Enter')addDynAgendaItem()">
-              <button onclick="addDynAgendaItem()" class="btn btn-success" style="padding:.38rem .7rem;">Додати</button>
+            <div style="font-size:.78rem;color:#6b7280;margin-bottom:.6rem;padding:.5rem .65rem;background:#f9fafb;border-radius:8px;">${ct('agendaHint')}</div>
+            <div id="dynAgendaList" style="display:flex;flex-direction:column;gap:.3rem;margin-bottom:.6rem;min-height:40px;"></div>
+            <div style="display:flex;gap:.4rem;">
+              <input id="dynAgendaInput" type="text" class="form-control" placeholder="Ваше питання..." style="flex:1;font-size:.85rem;" onkeydown="if(event.key==='Enter')addDynAgendaItem()">
+              <button onclick="addDynAgendaItem()" class="btn btn-success" style="white-space:nowrap;">Додати</button>
             </div>
           </div>
         </div>`;
