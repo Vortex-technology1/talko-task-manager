@@ -1414,7 +1414,7 @@
                                     <div style="display:flex;align-items:center;gap:0.75rem;">
                                         <span style="color:${statusColor};font-weight:600;width:20px;">${statusIcon}</span>
                                         <div style="flex:1;">
-                                            <div style="font-weight:500;">${esc(step.title || step.function)} ${slaHtml} ${checkpointBadge}</div>
+                                            <div style="font-weight:500;">${esc(step.name || step.title || step.function || "")} ${slaHtml} ${checkpointBadge}</div>
                                             <div style="font-size:0.78rem;color:var(--gray);">${esc(step.function)}${step.expectedResult ? ` — ${esc(step.expectedResult)}` : ''}</div>
                                         </div>
                                         ${isCurrent ? `
