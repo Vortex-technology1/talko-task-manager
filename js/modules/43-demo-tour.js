@@ -727,22 +727,9 @@ function _injectStyles() {
 
 // ── Кнопка запуску тура ────────────────────────────────────
 function _renderTourButton(niche) {
+    // Floating кнопка більше не потрібна — є кнопка Тур в хедері
     const existing = document.getElementById('demoTourBtn');
     if (existing) existing.remove();
-
-    const steps = TOURS[niche];
-    if (!steps) return;
-
-    const saved = _getSavedStep(niche);
-    // label тепер через SVG нижче
-
-    const btn = document.createElement('button');
-    btn.id = 'demoTourBtn';
-    const savedLabel = saved > 0 ? `${saved+1}/${steps.length}` : '';
-    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>${savedLabel ? ' '+savedLabel : ' Тур'}`;
-    btn.title = 'Запустити демо-тур для клієнта';
-    btn.onclick = () => startTour(niche);
-    document.body.appendChild(btn);
 }
 
 // ── Збереження позиції ─────────────────────────────────────
