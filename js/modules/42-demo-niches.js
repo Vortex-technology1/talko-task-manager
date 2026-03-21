@@ -515,6 +515,295 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
     await window.safeBatchCommit(mOps);
 
+    // ── 13. ФІНАНСИ — налаштування UAH + рахунки + транзакції ─
+    const finSettingsRef = cr.collection('finance_settings').doc('main');
+    const finSnap = await finSettingsRef.get();
+    if (!finSnap.exists) {
+        await finSettingsRef.set({
+            version: 1, region: 'UA', currency: 'UAH', niche: 'furniture',
+            initializedAt: now, initializedBy: uid,
+        });
+    } else {
+        await finSettingsRef.update({ currency: 'UAH', region: 'UA', updatedAt: now });
+    }
+
+    // Рахунки
+    const accRefs = [
+        cr.collection('finance_accounts').doc(),
+        cr.collection('finance_accounts').doc(),
+        cr.collection('finance_accounts').doc(),
+    ];
+    const ACCOUNTS = [
+        { name:'Розрахунковий рахунок (Приватбанк)', type:'bank',  balance:287500, currency:'UAH', isDefault:true  },
+        { name:'Каса (готівка в офісі)',             type:'cash',  balance:45000,  currency:'UAH', isDefault:false },
+        { name:'Картка (виробничі витрати)',         type:'card',  balance:18500,  currency:'UAH', isDefault:false },
+    ];
+    const finOps = [];
+    ACCOUNTS.forEach((a,i) => finOps.push({type:'set', ref:accRefs[i], data:{
+        ...a, createdBy:uid, createdAt:now, updatedAt:now,
+    }}));
+
+    // Категорії доходів/витрат
+    const FIN_CATS2 = [
+        { name:'Оплата замовлень (готівка)',  type:'income',  color:'#22c55e', icon:'shopping-bag' },
+        { name:'Оплата замовлень (безгот.)',  type:'income',  color:'#16a34a', icon:'credit-card'  },
+        { name:'Аванси від клієнтів',         type:'income',  color:'#84cc16', icon:'dollar-sign'  },
+        { name:'Матеріали (ЛДСП, МДФ)',       type:'expense', color:'#ef4444', icon:'package'      },
+        { name:'Фурнітура та комплектуючі',   type:'expense', color:'#f59e0b', icon:'tool'         },
+        { name:'Оренда цеху та шоуруму',      type:'expense', color:'#8b5cf6', icon:'home'         },
+        { name:'Зарплата команди',            type:'expense', color:'#f97316', icon:'users'        },
+        { name:'Транспорт та доставка',       type:'expense', color:'#0ea5e9', icon:'truck'        },
+        { name:'Маркетинг та реклама',        type:'expense', color:'#ec4899', icon:'trending-up'  },
+        { name:'Комунальні послуги',          type:'expense', color:'#6b7280', icon:'zap'          },
+        { name:'Обладнання та інструменти',   type:'expense', color:'#14b8a6', icon:'settings'     },
+    ];
+    const catRefs2 = FIN_CATS2.map(() => cr.collection('finance_categories').doc());
+    FIN_CATS2.forEach((c,i) => finOps.push({type:'set', ref:catRefs2[i], data:{
+        name:c.name, type:c.type, color:c.color, icon:c.icon,
+        isDefault:false, createdBy:uid, createdAt:now,
+    }}));
+    await window.safeBatchCommit(finOps);
+
+    // Транзакції (3 місяці детально)
+    const TXS2 = [
+        // Березень — поточний
+        {ci:1,acc:0,amt:87500,note:'Кухня Коваль П.І. — фінальна оплата',d:-1, type:'income'},
+        {ci:2,acc:0,amt:43750,note:'Аванс 50% ІТ Хаб Київ (190 000 грн)',d:-3, type:'income'},
+        {ci:1,acc:1,amt:32000,note:'Шафа-купе Іваненко — готівка',       d:-5, type:'income'},
+        {ci:2,acc:0,amt:25000,note:'Аванс — Марченко С. (спальня)',       d:-7, type:'income'},
+        {ci:0,acc:1,amt:18500,note:'Петрова — передоплата готівка',       d:-9, type:'income'},
+        {ci:3,acc:0,amt:38500,note:'ЛДСП 16мм — Кромтех (45 листів)',    d:-2, type:'expense'},
+        {ci:4,acc:0,amt:14200,note:'Фурнітура Blum — 5 комплектів',       d:-4, type:'expense'},
+        {ci:5,acc:2,amt:18000,note:'Оренда цеху 600м² — березень',        d:-1, type:'expense'},
+        {ci:5,acc:2,amt:8500, note:'Оренда шоуруму — березень',           d:-1, type:'expense'},
+        {ci:6,acc:0,amt:56000,note:'Зарплата команди — аванс березень',   d:-10,type:'expense'},
+        {ci:7,acc:2,amt:4800, note:'Пальне + амортизація авто',           d:-6, type:'expense'},
+        {ci:8,acc:2,amt:7500, note:'Instagram/Facebook реклама березень', d:-8, type:'expense'},
+        {ci:9,acc:2,amt:5200, note:'Електроенергія цех + шоурум',         d:-3, type:'expense'},
+        // Лютий
+        {ci:1,acc:0,amt:78000,note:'Спальня Тарасенків — фінальна',       d:-32,type:'income'},
+        {ci:1,acc:0,amt:42000,note:'Дитяча Сидоренків — фінальна',        d:-28,type:'income'},
+        {ci:1,acc:1,amt:32000,note:'Кухня Литвиненко — готівка',          d:-25,type:'income'},
+        {ci:2,acc:0,amt:35000,note:'Аванси — 3 замовлення лютий',         d:-35,type:'income'},
+        {ci:3,acc:0,amt:42000,note:'МДФ та ЛДСП — лютий',                 d:-30,type:'expense'},
+        {ci:6,acc:0,amt:112000,note:'Зарплата команди — лютий повна',     d:-5, type:'expense'},
+        {ci:4,acc:0,amt:18600,note:'Фурнітура — лютий',                   d:-29,type:'expense'},
+        {ci:5,acc:2,amt:26500,note:'Оренда цех + шоурум — лютий',         d:-31,type:'expense'},
+        {ci:10,acc:0,amt:12000,note:'Фрезер DeWalt — нове обладнання',    d:-27,type:'expense'},
+        // Січень
+        {ci:1,acc:0,amt:95000,note:'Виручка замовлення — січень',         d:-58,type:'income'},
+        {ci:2,acc:0,amt:48000,note:'Аванси — січень',                     d:-62,type:'income'},
+        {ci:3,acc:0,amt:39000,note:'Матеріали — січень',                  d:-60,type:'expense'},
+        {ci:6,acc:0,amt:112000,note:'Зарплата — січень',                  d:-36,type:'expense'},
+        {ci:8,acc:2,amt:6500, note:'Реклама — січень',                    d:-55,type:'expense'},
+    ];
+    const txOps2 = [];
+    for (const tx of TXS2) {
+        txOps2.push({type:'set', ref:cr.collection('finance_transactions').doc(), data:{
+            categoryId:   catRefs2[tx.ci].id,
+            categoryName: FIN_CATS2[tx.ci].name,
+            accountId:    accRefs[tx.acc].id,
+            accountName:  ACCOUNTS[tx.acc].name,
+            type:tx.type, amount:tx.amt, currency:'UAH',
+            note:tx.note, date:_demoDate(tx.d),
+            createdBy:uid, createdAt:now,
+        }});
+    }
+    await window.safeBatchCommit(txOps2);
+
+    // ── 14. СКЛАД — операції для звітів + деякі товари нижче мінімуму ─
+    // Оновлюємо деякі позиції нижче мінімального рівня (для "потребує замовлення")
+    // Спочатку отримуємо items зі складу
+    const stockSnap = await cr.collection('warehouse_stock').get();
+    const whOps = [];
+    stockSnap.docs.forEach(doc => {
+        const data = doc.data();
+        const name = data.itemName || data.name || '';
+        // Клей і наждачний — нижче мінімуму (critical)
+        if (name.includes('Клей') || name.includes('Наждач')) {
+            whOps.push({type:'update', ref:cr.collection('warehouse_stock').doc(doc.id),
+                data:{ qty:2, available:2, updatedAt:now }});
+        }
+        // Кромка — низький рівень (low)
+        if (name.includes('Кромка')) {
+            whOps.push({type:'update', ref:cr.collection('warehouse_stock').doc(doc.id),
+                data:{ qty:4, available:4, updatedAt:now }});
+        }
+        // Конфірмат — низький рівень
+        if (name.includes('Конфірмат')) {
+            whOps.push({type:'update', ref:cr.collection('warehouse_stock').doc(doc.id),
+                data:{ qty:8, available:8, updatedAt:now }});
+        }
+    });
+
+    // Операції (IN/OUT) для звітів
+    const itemsSnap = await cr.collection('warehouse_items').get();
+    const itemIds = itemsSnap.docs.map(d => d.id);
+    const whOpDefs = itemIds.slice(0,6).map((id,i) => ([
+        // Прихід
+        { itemId:id, type:'IN',  qty:[15,12,10,80,5,120][i],  price:[850,920,1100,380,320,45][i],
+          note:`Закупівля — ${['ЛДСП біл.','ЛДСП гор.','МДФ','Фасади','Кромка','Петлі'][i]}`, d:-3 },
+        // Видача у виробництво
+        { itemId:id, type:'OUT', qty:[8,6,5,30,2,60][i],     price:[850,920,1100,380,320,45][i],
+          note:`Видача у виробництво — замовл. №МБ-${89+i}`, d:-1 },
+    ])).flat();
+
+    const whOpRecs = [];
+    for (const op of whOpDefs) {
+        whOpRecs.push({type:'set', ref:cr.collection('warehouse_operations').doc(), data:{
+            itemId: op.itemId,
+            type: op.type,
+            qty: op.qty,
+            price: op.price,
+            totalPrice: op.qty * op.price,
+            note: op.note,
+            date: _demoDate(op.d),
+            createdBy: uid, createdAt: _demoTs(op.d),
+        }});
+    }
+    if (whOps.length) await window.safeBatchCommit(whOps);
+    if (whOpRecs.length) await window.safeBatchCommit(whOpRecs);
+
+    // ── 15. БРОНЮВАННЯ — консультації та виїзні заміри ──────
+    const bookingCalRef = cr.collection('booking_calendars').doc();
+    const bookingSchedRef = cr.collection('booking_schedules').doc(bookingCalRef.id);
+    await firebase.firestore().batch()
+        .set(bookingCalRef, {
+            name: 'Виїзний замір та консультація',
+            slug: 'meble-zamiry',
+            ownerName: STAFF[1].name,
+            ownerId: sRefs[1].id,
+            duration: 60,
+            bufferBefore: 15,
+            bufferAfter: 15,
+            timezone: 'Europe/Kiev',
+            confirmationType: 'manual',
+            color: '#22c55e',
+            location: 'Виїзд до клієнта (Київ та область)',
+            isActive: true,
+            phoneRequired: true,
+            questions: [
+                { id:'q1', text:'Що плануєте замовити?', type:'text', required:true },
+                { id:'q2', text:'Адреса для виїзду', type:'text', required:true },
+                { id:'q3', text:'Приблизний бюджет (грн)', type:'text', required:false },
+            ],
+            maxBookingsPerSlot: 1,
+            requirePayment: false,
+            price: 0,
+            createdAt: now, updatedAt: now,
+        })
+        .set(bookingSchedRef, {
+            weeklyHours: {
+                mon:[{start:'09:00',end:'18:00'}],
+                tue:[{start:'09:00',end:'18:00'}],
+                wed:[{start:'09:00',end:'18:00'}],
+                thu:[{start:'09:00',end:'18:00'}],
+                fri:[{start:'09:00',end:'17:00'}],
+                sat:[{start:'10:00',end:'15:00'}],
+                sun:[],
+            },
+            dateOverrides: {},
+            updatedAt: now,
+        })
+        .commit();
+
+    // Бронювання (записи клієнтів)
+    const apptDefs = [
+        { name:'Коваль Петро',    phone:'+380671234001', email:'koval@gmail.com',   date:_demoDate(1),  time:'10:00', status:'confirmed', note:'Кухня 4м, стиль мінімалізм' },
+        { name:'Бойко Олена',     phone:'+380671234006', email:'boyko@gmail.com',   date:_demoDate(2),  time:'14:00', status:'confirmed', note:'Дитяча кімната, дівчинка 8 років' },
+        { name:'Романова Юлія',   phone:'+380671234007', email:'romanova@ukr.net',  date:_demoDate(3),  time:'11:00', status:'pending',   note:'Кухня + вітальня, бюджет ~120 000' },
+        { name:'Мельник Андрій',  phone:'+380671234008', email:'melnyk@gmail.com',  date:_demoDate(4),  time:'16:00', status:'pending',   note:'Шафа в передпокій' },
+        { name:'Тарасенко Ірина', phone:'+380671234020', email:'tarасенко@ukr.net', date:_demoDate(-3), time:'10:00', status:'confirmed', note:'Спальня — ліжко + шафа' },
+        { name:'Лисенко Олег',    phone:'+380671234021', email:'lysenko@gmail.com', date:_demoDate(-7), time:'15:00', status:'confirmed', note:'Офіс 4 робочих місця' },
+    ];
+    const apptOps = [];
+    for (const a of apptDefs) {
+        apptOps.push({type:'set', ref:cr.collection('booking_appointments').doc(), data:{
+            calendarId:  bookingCalRef.id,
+            calendarName:'Виїзний замір та консультація',
+            guestName:   a.name,
+            guestPhone:  a.phone,
+            guestEmail:  a.email,
+            date:        a.date,
+            startTime:   a.time,
+            endTime:     a.time.replace(/(\d+)/,(h)=>String(parseInt(h)+1).padStart(2,'0')),
+            status:      a.status,
+            note:        a.note,
+            answers:     [{questionId:'q1',answer:a.note},{questionId:'q2',answer:'Київ'}],
+            createdAt:   _demoTs(-Math.floor(Math.random()*14)),
+            updatedAt:   now,
+        }});
+    }
+    await window.safeBatchCommit(apptOps);
+
+    // ── 16. КОШТОРИС — меблеві норми (не будівельні) ────────
+    // Замінюємо будівельні норми на меблеві
+    const normDefs = [
+        {
+            name:'Кухня пряма (погонний метр)',
+            category:'Кухні', unit:'пм',
+            materials:[
+                {name:'ЛДСП 16мм',         qty:2.8, unit:'лист', price:900},
+                {name:'МДФ фасад ПВХ',     qty:3.5, unit:'шт',   price:420},
+                {name:'Петлі Blum',         qty:4,   unit:'шт',   price:45},
+                {name:'Напрямні Blum 500',  qty:1,   unit:'пара', price:280},
+                {name:'Кромка ПВХ 22мм',   qty:8,   unit:'пм',   price:1.6},
+            ],
+        },
+        {
+            name:'Шафа-купе (кв.м. фронту)',
+            category:'Шафи-купе', unit:'м²',
+            materials:[
+                {name:'ЛДСП 16мм',          qty:1.2, unit:'лист', price:900},
+                {name:'Профіль алюм.',       qty:2.5, unit:'пм',   price:320},
+                {name:'Роликова система',    qty:1,   unit:'компл',price:1800},
+                {name:'Наповнення шафи',     qty:0.8, unit:'компл',price:850},
+            ],
+        },
+        {
+            name:'Стіл офісний (шт)',
+            category:'Офісні меблі', unit:'шт',
+            materials:[
+                {name:'ЛДСП 16мм',           qty:1.5, unit:'лист', price:900},
+                {name:'Стільниця 38мм',       qty:1.6, unit:'пм',   price:1800},
+                {name:'Ніжки металеві',       qty:4,   unit:'шт',   price:180},
+                {name:'Кромка ПВХ 22мм',     qty:6,   unit:'пм',   price:1.6},
+                {name:'Конфірмат 7×50',       qty:20,  unit:'шт',   price:0.4},
+            ],
+        },
+        {
+            name:'Шафа розпашна (кв.м. фронту)',
+            category:'Шафи', unit:'м²',
+            materials:[
+                {name:'ЛДСП 16мм',           qty:2.0, unit:'лист', price:900},
+                {name:'МДФ фасад ПВХ',        qty:1.2, unit:'шт',   price:420},
+                {name:'Петлі Blum',           qty:3,   unit:'шт',   price:45},
+                {name:'Ручки меблеві',         qty:2,   unit:'шт',   price:85},
+                {name:'Кромка ПВХ 22мм',     qty:10,  unit:'пм',   price:1.6},
+            ],
+        },
+        {
+            name:'Дитяче ліжко (шт)',
+            category:'Дитячі меблі', unit:'шт',
+            materials:[
+                {name:'МДФ 18мм',             qty:2.5, unit:'лист', price:1100},
+                {name:'ЛДСП 16мм',            qty:1.0, unit:'лист', price:900},
+                {name:'Ламелі берез. (90шт)', qty:1,   unit:'уп',   price:320},
+                {name:'Кріплення меблеві',    qty:1,   unit:'компл',price:150},
+            ],
+        },
+    ];
+    const normOps = [];
+    for (const n of normDefs) {
+        normOps.push({type:'set', ref:cr.collection('estimate_norms').doc(), data:{
+            name:n.name, category:n.category, unit:n.unit,
+            materials:n.materials,
+            niche:'furniture',
+            createdBy:uid, createdAt:now,
+        }});
+    }
+    await window.safeBatchCommit(normOps);
+
     // ── 12. Профіль компанії ────────────────────────────────
     await cr.update({
         name:'МеблеМайстер',
