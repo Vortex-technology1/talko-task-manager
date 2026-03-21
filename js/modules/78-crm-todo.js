@@ -623,6 +623,33 @@ window._crmTodoSave = async function(dealId) {
             hist.type='call_answered'; hist.text=agreed||'Взяв трубку. Наступний контакт: '+nextDate;
         } else if (result === 'missed') {
             hist.type='call_missed'; hist.text='Не взяв трубку. Перенесено на: '+nextDate;
+            // Авто-завдання: передзвонити
+            try {
+                const missedDeal = window.crm?.deals?.find(x=>x.id===dealId);
+                if (missedDeal) {
+                    const nextTime2 = (document.getElementById('crmTodoNextTime')?.value) || null;
+                    const tData = {
+                        title: 'Передзвонити: ' + (missedDeal.clientName || missedDeal.title || ''),
+                        note: 'Не взяв трубку ' + _todayStr(),
+                        status: 'new',
+                        deadlineDate: nextDate,
+                        deadlineTime: nextTime2,
+                        crmDealId: dealId,
+                        crmClientName: missedDeal.clientName || '',
+                        assigneeId:   window.currentUser?.uid || '',
+                        assigneeName: window.currentUserData?.name || window.currentUser?.email || '',
+                        creatorId:    window.currentUser?.uid || '',
+                        creatorName:  window.currentUserData?.name || window.currentUser?.email || '',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    };
+                    const tRef = await window.companyRef()
+                        .collection(window.DB_COLS?.TASKS || 'tasks').add(tData);
+                    if (typeof tasks !== 'undefined' && Array.isArray(tasks)) {
+                        tasks.unshift({ id: tRef.id, ...tData, createdAt: new Date() });
+                    }
+                }
+            } catch(tErr) { console.warn('[CRM] auto-task missed failed:', tErr.message); }
         } else if (result === 'sms') {
             const txt=(document.getElementById('crmTodoSmsText')&&document.getElementById('crmTodoSmsText').value||'').trim();
             hist.type='sms_sent'; hist.text=txt?'Повідомлення: '+txt:window.t('messageSent');
@@ -787,8 +814,38 @@ window._crmTodoSaveConsultation = async function(dealId) {
             deal.consultationNote = note;
             deal.consultationConfirmed = false;
         }
+        // Автоматично створюємо завдання «Провести консультацію»
+        try {
+            const deal2 = window.crm?.deals?.find(x => x.id === dealId);
+            if (deal2) {
+                const taskData = {
+                    title: 'Консультація: ' + (deal2.clientName || deal2.title || ''),
+                    note: note || '',
+                    status: 'new',
+                    deadlineDate: date,
+                    deadlineTime: time || null,
+                    crmDealId: dealId,
+                    crmClientName: deal2.clientName || '',
+                    assigneeId:   window.currentUser?.uid || '',
+                    assigneeName: window.currentUserData?.name || window.currentUser?.email || '',
+                    creatorId:    window.currentUser?.uid || '',
+                    creatorName:  window.currentUserData?.name || window.currentUser?.email || '',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                };
+                const taskRef = await window.companyRef()
+                    .collection(window.DB_COLS?.TASKS || 'tasks').add(taskData);
+                // Прив'язуємо taskId до консультації
+                await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+                    .update({ consultationTaskId: taskRef.id });
+                if (typeof tasks !== 'undefined' && Array.isArray(tasks)) {
+                    tasks.unshift({ id: taskRef.id, ...taskData, createdAt: new Date() });
+                }
+            }
+        } catch(tErr) { console.warn('[CRM] auto-task for consultation failed:', tErr.message); }
+
         document.getElementById('crmConsultModal')?.remove();
-        if (window.showToast) showToast('Консультацію призначено', 'success');
+        if (window.showToast) showToast('Консультацію призначено ✓ Завдання створено', 'success');
         if (typeof renderCrmTodo === 'function') renderCrmTodo();
     } catch(e) {
         if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Призначити'; }

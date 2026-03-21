@@ -535,8 +535,19 @@ function _listenEventBus() {
     crm._eventBusBound = true;
     window.addEventListener('talko:event', function(e) {
         const ev = e.detail;
-        if (ev && ev.type === window.TALKO_EVENTS?.DEAL_CREATED) {
+        if (!ev) return;
+        if (ev.type === window.TALKO_EVENTS?.DEAL_CREATED) {
             if (typeof showToast === 'function') showToast(window.t('crmNewLeadEvent'), 'success');
+        }
+        // Оновлюємо список todo при зміні стадії
+        if (ev.type === window.TALKO_EVENTS?.DEAL_STAGE_CHANGED) {
+            const deal = crm.deals && crm.deals.find(d => d.id === ev.dealId);
+            if (deal) {
+                deal.stage = ev.toStage;
+                if (typeof renderCrmTodo === 'function' && document.getElementById('crmViewTodo')) {
+                    renderCrmTodo();
+                }
+            }
         }
     });
 }
@@ -2537,7 +2548,13 @@ window.crmSaveDeal = async function(dealId) {
         const prevPrepayment       = deal.prepayment       || 0;
 
         Object.assign(deal, updates);
-        if (stageChanged) deal.stageEnteredAt = { toMillis: () => Date.now() };
+        if (stageChanged) {
+            deal.stageEnteredAt = { toMillis: () => Date.now() };
+            // Оновлюємо список todo якщо він відкритий
+            if (typeof renderCrmTodo === 'function' && document.getElementById('crmViewTodo')) {
+                setTimeout(renderCrmTodo, 100);
+            }
+        }
 
         // ── Emit подій для нових полів замовлення (штори) ──
         if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
@@ -2705,7 +2722,11 @@ async function _loadTasksTab(deal) {
                 .where('crmDealId','==', deal.id).orderBy('createdAt','desc').get();
             dealTasks = snap.docs.map(d => ({ id:d.id, ...d.data() }));
         } catch(qErr) {
-            if (typeof tasks !== 'undefined') dealTasks = tasks.filter(t => t.crmDealId === deal.id);
+            // Fallback на локальний масив — з захистом від undefined і порожнього масиву
+            console.warn('[CRM] tasks query failed (можливо немає composite index):', qErr.message);
+            if (typeof tasks !== 'undefined' && Array.isArray(tasks)) {
+                dealTasks = tasks.filter(t => t.crmDealId === deal.id);
+            }
         }
         const statusColors = { new:'#6b7280', in_progress:'#3b82f6', done:'#22c55e', overdue:'#ef4444' };
         const statusLabels = { new:window.t('crmTaskStatusNew'), in_progress:window.t('crmTaskStatusWork'), done:window.t('crmTaskStatusDone'), overdue:window.t('crmTaskStatusOver') };
@@ -2766,6 +2787,9 @@ async function _loadTasksTab(deal) {
 window.crmMarkTaskDone = async function(taskId) {
     try {
         const todayStr = _crmToday();
+        const allTasks = (typeof tasks !== 'undefined' && Array.isArray(tasks)) ? tasks : [];
+        const taskObj  = allTasks.find(t => t.id === taskId);
+
         await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks').doc(taskId).update({
             status: 'done',
             completedDate: todayStr, // FIX BH: потрібен для статистики, owner dashboard, аналітики
@@ -2773,9 +2797,25 @@ window.crmMarkTaskDone = async function(taskId) {
             doneAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
+
+        // Якщо завдання прив'язане до угоди — логуємо в history CRM
+        if (taskObj?.crmDealId) {
+            try {
+                await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
+                    .doc(taskObj.crmDealId).collection('history').add({
+                        type: 'task_done',
+                        text: 'Завдання виконано: ' + (taskObj.title || taskId),
+                        taskId,
+                        by: window.currentUser?.email || 'manager',
+                        at: firebase.firestore.FieldValue.serverTimestamp(),
+                    });
+            } catch(hErr) { console.warn('[CRM] history write failed:', hErr.message); }
+        }
+
         if(window.showToast) showToast(window.t('crmTaskDone'), 'success');
-        if (crm.activeDealId) {
-            const deal = crm.deals.find(function(d){return d.id === crm.activeDealId;});
+        const activeDealId = window._crmActiveDealId || crm.activeDealId;
+        if (activeDealId) {
+            const deal = crm.deals.find(function(d){return d.id === activeDealId;});
             if (deal) _loadTasksTab(deal);
         }
     } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
@@ -4800,23 +4840,25 @@ window.crmCreateTaskFromDeal = function(dealId) {
     if (typeof openAddTask === 'function') {
         crmCloseDeal();
         // Передаємо контекст угоди через глобальний стейт
+        // Snapshot даних в момент виклику — захист від race condition
+        const _snapId    = deal.id;
+        const _snapTitle = `[CRM] ${deal.clientName || deal.title || ''} — ${(crm.pipeline?.stages||[]).find(s=>s.id===deal.stage)?.label||deal.stage}`;
+        const _snapNote  = deal.note || '';
         window._crmTaskContext = {
-            dealId:     deal.id,
+            dealId:     _snapId,
             dealTitle:  deal.title || deal.clientName || '',
             clientName: deal.clientName || '',
         };
         openAddTask();
-        // Заповнюємо поля через setTimeout після рендеру модалки
-        // PROB 5 FIX: зберігаємо ID таймера щоб очистити при повторному виклику
         if (window._crmTaskFillTimer) clearTimeout(window._crmTaskFillTimer);
         window._crmTaskFillTimer = setTimeout(() => {
             window._crmTaskFillTimer = null;
+            // Перевіряємо що контекст не змінився поки чекали
+            if (window._crmTaskContext?.dealId !== _snapId) return;
             const titleEl = document.getElementById('taskTitle') || document.getElementById('newTaskTitle');
-            if (titleEl && !titleEl.value) {
-                titleEl.value = `[CRM] ${deal.clientName || deal.title || ''} — ${(crm.pipeline?.stages||[]).find(s=>s.id===deal.stage)?.label||deal.stage}`;
-            }
+            if (titleEl && !titleEl.value) titleEl.value = _snapTitle;
             const noteEl = document.getElementById('taskNote') || document.getElementById('taskDescription');
-            if (noteEl && !noteEl.value && deal.note) noteEl.value = deal.note;
+            if (noteEl && !noteEl.value && _snapNote) noteEl.value = _snapNote;
         }, 200);
         return;
     }

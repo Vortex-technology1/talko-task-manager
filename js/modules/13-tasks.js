@@ -221,6 +221,19 @@
                             reviewActions.style.display = 'none';
                         }
                     }
+
+                    // ── Кнопка «Відкрити угоду» для CRM-завдань ──────────
+                    const crmBtn = document.getElementById('taskCrmDealBtn');
+                    if (crmBtn) {
+                        if (task.crmDealId && typeof window.crmOpenDeal === 'function') {
+                            crmBtn.style.display = 'flex';
+                            crmBtn.dataset.dealId = task.crmDealId;
+                            crmBtn.querySelector('.task-crm-name').textContent =
+                                task.crmClientName ? '👤 ' + task.crmClientName : 'Відкрити угоду CRM';
+                        } else {
+                            crmBtn.style.display = 'none';
+                        }
+                    }
                 }
             } else {
                 editingId = null;
