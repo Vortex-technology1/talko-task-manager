@@ -509,25 +509,25 @@
         const root = document.getElementById('coordinationRoot');
         if (!root) return;
         root.innerHTML = `
-        <div style="padding:1rem 1rem 0;">
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;margin-bottom:.5rem;">
-            <h3 style="margin:0;font-size:1.1rem;display:flex;align-items:center;gap:.5rem;">
+        <div class="page-toolbar">
+          <div class="page-toolbar-left">
+            <h3 class="page-toolbar-title">
               <i data-lucide="calendar-check" class="icon"></i> ${ct('title')}
-              <span id="coordCount" style="background:var(--primary);color:#fff;padding:2px 8px;border-radius:10px;font-size:.8rem;"></span>
+              <span id="coordCount" style="background:var(--primary);color:#fff;padding:2px 8px;border-radius:10px;font-size:.78rem;"></span>
             </h3>
-            <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-              <a href="https://chatgpt.com/g/g-695e001cf1c48191a9c08cb8184ff767-ai-coordination-module"
-                target="_blank" rel="noopener noreferrer"
-                style="padding:.42rem 1rem;font-size:.83rem;border-radius:10px;border:1.5px solid #8b5cf6;background:#f5f3ff;cursor:pointer;color:#6d28d9;display:flex;align-items:center;gap:.4rem;text-decoration:none;font-weight:600;">
-                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span> AI Асистент
-              </a>
-              <button id="coordHowBtn" onclick="toggleCoordHowItWorks()"
-                style="padding:.42rem 1rem;font-size:.83rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;display:flex;align-items:center;gap:.4rem;">
-                <i data-lucide="help-circle" style="width:14px;height:14px;"></i> ${ct('howItWorks')}
-              </button>
-              ${isManager()?`<button class="btn btn-success" onclick="openCoordModal()" style="padding:.42rem 1rem;font-size:.83rem;"><i data-lucide="plus" class="icon"></i> ${ct('newCoord')}</button>`:''}
-            </div>
           </div>
+          <div class="page-toolbar-right">
+            <a href="https://chatgpt.com/g/g-695e001cf1c48191a9c08cb8184ff767-ai-coordination-module"
+              target="_blank" rel="noopener noreferrer" class="btn-ai hide-mobile">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg> AI Асистент
+            </a>
+            <button id="coordHowBtn" onclick="toggleCoordHowItWorks()" class="btn-howto hide-mobile">
+              <i data-lucide="help-circle" style="width:14px;height:14px;"></i> ${ct('howItWorks')}
+            </button>
+            ${isManager()?`<button class="btn btn-success" onclick="openCoordModal()"><i data-lucide="plus" class="icon"></i> ${ct('newCoord')}</button>`:''}
+          </div>
+        </div>
+        <div style="padding:0 1rem;">
           <div id="coordHowPanel" style="display:none;margin-bottom:1rem;">${buildHowPanel()}</div>
           <div id="coordList"></div>
         </div>
