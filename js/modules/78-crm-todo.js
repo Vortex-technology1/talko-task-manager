@@ -22,6 +22,8 @@ const TI = {
     sms:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
     chat:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="13" y2="14"/></svg>',
     stage:   '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
+    cal:     '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    confirm: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
 };
 
 const _esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -215,6 +217,29 @@ function _renderRow(d, i) {
     const slaDays = _slaBreached(d);
     const slaTag = slaDays>0 ? `<span style="background:#fdf4ff;border:1px solid #e9d5ff;color:#7c3aed;font-size:0.65rem;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:4px;">SLA +${slaDays}д</span>` : '';
 
+    // Час дзвінка
+    const timeTag = d.nextContactTime
+        ? `<div style="font-size:0.68rem;color:${dateClr};font-weight:700;display:flex;align-items:center;gap:2px;margin-top:2px;">${TI.clock} ${d.nextContactTime}</div>`
+        : '';
+
+    // Кнопки консультації
+    const hasConsultation = !!d.consultationDate;
+    const isConfirmed     = d.consultationConfirmed === true;
+    const consultBtn = hasConsultation
+        ? isConfirmed
+            ? `<span onclick="event.stopPropagation()"
+                style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
+                background:#f0fdf4;border:1px solid #86efac;color:#16a34a;font-size:0.72rem;font-weight:600;white-space:nowrap;flex-shrink:0;">
+                ${TI.confirm} Підтверджено</span>`
+            : `<button onclick="event.stopPropagation();_crmTodoConfirmConsultation('${d.id}')"
+                style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
+                background:#fffbeb;border:1px solid #fde68a;color:#b45309;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                ${TI.cal} ${d.consultationDate} ${d.consultationTime||''} — Підтвердити</button>`
+        : `<button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
+            style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
+            background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+            ${TI.cal} Консультація</button>`;
+
     return `
     <div onclick="crmTodoOpenCard('${d.id}')"
       style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;
@@ -223,12 +248,13 @@ function _renderRow(d, i) {
       onmouseover="this.style.background='#f8fffe'"
       onmouseout="this.style.background='${rowBg}'">
 
-      <!-- Дата/пріоритет -->
+      <!-- Дата + час -->
       <div style="min-width:70px;text-align:center;flex-shrink:0;">
         <div style="background:${dateBg};border-radius:6px;padding:3px 6px;display:inline-block;">
           <div style="font-size:0.72rem;font-weight:700;color:${dateClr};white-space:nowrap;">
             ${fmt?fmt.label:'Нова'}
           </div>
+          ${timeTag}
         </div>
       </div>
 
@@ -240,6 +266,9 @@ function _renderRow(d, i) {
             :`<div style="font-size:0.73rem;color:#d1d5db;font-style:italic;">без нотатки</div>`
         }
       </div>
+
+      <!-- Кнопка консультації -->
+      ${consultBtn}
 
       <!-- Телефон -->
       ${phone?`
@@ -602,6 +631,112 @@ window._crmTodoOpenChat = async function(dealId) {
     } else if (typeof window.bpOpenChat === 'function') {
         if (typeof window.bpSwitch === 'function') window.bpSwitch('chat');
         setTimeout(() => window.bpOpenChat(contactId), 150);
+    }
+};
+
+// ── Призначити консультацію ──────────────────────────────
+window._crmTodoScheduleConsultation = function(dealId) {
+    const existing = document.getElementById('crmConsultModal');
+    if (existing) existing.remove();
+
+    const tomorrow = (() => {
+        const d = new Date(); d.setDate(d.getDate()+1);
+        return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    })();
+
+    const modal = document.createElement('div');
+    modal.id = 'crmConsultModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:14px;padding:1.5rem;width:360px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+          <h3 style="margin:0;font-size:1rem;font-weight:700;color:#111827;">📅 Призначити консультацію</h3>
+          <button onclick="document.getElementById('crmConsultModal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#9ca3af;">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.85rem;">
+          <div>
+            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Дата консультації</label>
+            <input id="consultDate" type="date" value="${tomorrow}"
+              style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Час</label>
+            <input id="consultTime" type="time" value="10:00"
+              style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Примітка</label>
+            <input id="consultNote" type="text" placeholder="Тема консультації..."
+              style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;">
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
+          <button onclick="document.getElementById('crmConsultModal').remove()"
+            style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;font-size:0.88rem;color:#374151;">Скасувати</button>
+          <button onclick="window._crmTodoSaveConsultation('${dealId}')"
+            style="flex:2;padding:0.6rem;background:#0369a1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:600;">Призначити</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+};
+
+window._crmTodoSaveConsultation = async function(dealId) {
+    const date = document.getElementById('consultDate')?.value;
+    const time = document.getElementById('consultTime')?.value || '';
+    const note = document.getElementById('consultNote')?.value || '';
+    if (!date) { if(window.showToast) showToast('Вкажіть дату', 'warning'); return; }
+
+    try {
+        const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
+        await ref.update({
+            consultationDate:      date,
+            consultationTime:      time,
+            consultationNote:      note,
+            consultationConfirmed: false,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        await ref.collection('history').add({
+            type: 'consultation_scheduled',
+            text: `Консультація призначена на ${date}${time?' о '+time:''}${note?' — '+note:''}`,
+            at:   firebase.firestore.FieldValue.serverTimestamp(),
+            by:   window.currentUser?.email || 'manager',
+        });
+        // Оновлюємо локальний стан
+        const deal = window.crm?.deals?.find(x => x.id === dealId);
+        if (deal) {
+            deal.consultationDate = date;
+            deal.consultationTime = time;
+            deal.consultationNote = note;
+            deal.consultationConfirmed = false;
+        }
+        document.getElementById('crmConsultModal')?.remove();
+        if (window.showToast) showToast('Консультацію призначено', 'success');
+        if (typeof renderCrmTodo === 'function') renderCrmTodo();
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+// ── Підтвердити консультацію ─────────────────────────────
+window._crmTodoConfirmConsultation = async function(dealId) {
+    try {
+        const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
+        await ref.update({
+            consultationConfirmed: true,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        await ref.collection('history').add({
+            type: 'consultation_confirmed',
+            text: 'Консультацію підтверджено клієнтом',
+            at:   firebase.firestore.FieldValue.serverTimestamp(),
+            by:   window.currentUser?.email || 'manager',
+        });
+        const deal = window.crm?.deals?.find(x => x.id === dealId);
+        if (deal) deal.consultationConfirmed = true;
+        if (window.showToast) showToast('Консультацію підтверджено ✓', 'success');
+        if (typeof renderCrmTodo === 'function') renderCrmTodo();
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
 };
 
