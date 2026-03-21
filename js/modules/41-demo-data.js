@@ -114,9 +114,9 @@
                     if (chunk.length) chunks.push(chunk);
                     
                     for (const refs of chunks) {
-                        const _batchOps = [];
+                        const batch = db.batch();
                         refs.forEach(ref => batch.delete(ref));
-                        await window.safeBatchCommit(_batchOps);
+                        await batch.commit();
                         totalDeleted += refs.length;
                     }
                 }
@@ -1061,9 +1061,9 @@
                     if (chunk.length) chunks.push(chunk);
                     
                     for (const refs of chunks) {
-                        const _batchOps = [];
+                        const batch = db.batch();
                         refs.forEach(ref => batch.delete(ref));
-                        await window.safeBatchCommit(_batchOps);
+                        await batch.commit();
                         totalDeleted += refs.length;
                     }
                 }
