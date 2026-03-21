@@ -48,11 +48,13 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     const fRefs = FUNCS.map(() => cr.collection('functions').doc());
     // Власники функцій призначаються після створення staffRefs
     // Тимчасово зберігаємо без ownerId — оновимо після створення staff
+    // assigneeIds — після створення sRefs, тому заповнюємо після їх створення
     FUNCS.forEach((f,i) => ops.push({type:'set', ref:fRefs[i], data:{
         name:f.name, description:f.desc, color:f.color,
         order: i,
-        ownerId: uid,        // власник компанії як тимчасовий власник
+        ownerId:   uid,
         ownerName: 'Олексій Мороз',
+        // assigneeIds: заповнюємо після staffRefs
         status:'active', createdBy:uid, createdAt:now, updatedAt:now,
     }}));
 
@@ -95,6 +97,26 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     });
 
     await window.safeBatchCommit(ops); ops = [];
+
+    // Оновлюємо функції з правильними assigneeIds
+    const funcUpdateOps = [];
+    const funcAssignees = {
+        0: [sRefs[0].id],                          // Маркетинг: власник
+        1: [sRefs[1].id, sRefs[2].id],             // Продажі: 2 менеджери
+        2: [sRefs[5].id],                          // Підготовка: дизайнер
+        3: [sRefs[3].id, sRefs[4].id],             // Виробництво: 2 майстри
+        4: [sRefs[6].id],                          // Доставка: монтажник
+        5: [sRefs[7].id],                          // Фінанси: бухгалтер
+        6: [sRefs[0].id],                          // Люди: власник
+        7: [sRefs[0].id],                          // Управління: власник
+    };
+    for (const [fi, aids] of Object.entries(funcAssignees)) {
+        funcUpdateOps.push({type:'update', ref:fRefs[parseInt(fi)], data:{
+            assigneeIds: aids,
+            updatedAt: now,
+        }});
+    }
+    await window.safeBatchCommit(funcUpdateOps);
 
     // ── 3. ЗАВДАННЯ (22 шт) ────────────────────────────────
     // fi: 0=маркетинг, 1=продажі, 2=підготовка, 3=виробництво, 4=доставка, 5=фінанси, 6=люди, 7=управління
@@ -144,25 +166,72 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
 
     // ── 4. РЕГУЛЯРНІ ЗАВДАННЯ ──────────────────────────────
     const REGS = [
-        { t:'Щотижневий звіт продажів',              type:'weekly', dow:5, fi:1, ai:1, tm:'17:00' },
-        { t:'Планова нарада виробництва',            type:'weekly', dow:1, fi:3, ai:3, tm:'08:30' },
-        { t:'Перевірка залишків матеріалів на складі',type:'weekly', dow:1, fi:5, ai:7, tm:'09:00' },
-        { t:'Фінансовий звіт за тиждень',            type:'weekly', dow:5, fi:5, ai:7, tm:'16:00' },
-        { t:'Обдзвін клієнтів — статус замовлень',   type:'weekly', dow:3, fi:1, ai:2, tm:'14:00' },
-        { t:'ТО верстатів та обладнання',            type:'monthly',dom:1, fi:3, ai:3, tm:'08:00' },
-        { t:'Аналіз NPS та відгуків клієнтів',       type:'monthly',dom:5, fi:1, ai:1, tm:'11:00' },
-        { t:'Звірка бухгалтерії та виплата зарплати',type:'monthly',dom:25,fi:5, ai:7, tm:'10:00' },
-        { t:'Публікація кейсів у соціальних мережах',type:'weekly', dow:4, fi:0, ai:5, tm:'12:00' },
-        { t:'Щоденний stand-up 5хв',                 type:'daily',       fi:7, ai:0, tm:'08:00' },
+        // Щоденні
+        { t:'Щоденний stand-up 5хв (план на день)',
+          type:'daily', fi:7, ai:0, tm:'08:00', est:10,
+          result:'Кожен знає свої 3 пріоритети на день' },
+        // Щотижневі — понеділок
+        { t:'Планова нарада виробництва (понеділок)',
+          type:'weekly', dow:1, fi:3, ai:3, tm:'08:30', est:30,
+          result:'Розподіл замовлень на тиждень, вирішені блокери' },
+        { t:'Перевірка залишків матеріалів на складі',
+          type:'weekly', dow:1, fi:5, ai:7, tm:'09:00', est:20,
+          result:'Список позицій нижче мінімуму, заявка на закупівлю' },
+        // Щотижневі — середа
+        { t:'Обдзвін клієнтів — статус замовлення',
+          type:'weekly', dow:3, fi:1, ai:2, tm:'14:00', est:90,
+          result:'Кожен клієнт в роботі отримав дзвінок, нотатка в CRM' },
+        // Щотижневі — четвер
+        { t:'Публікація кейсу в Instagram/Facebook',
+          type:'weekly', dow:4, fi:0, ai:5, tm:'12:00', est:60,
+          result:'Пост опублікований з фото та описом готового проєкту' },
+        // Щотижневі — п'ятниця
+        { t:'Щотижневий звіт продажів (кількість, сума, конверсія)',
+          type:'weekly', dow:5, fi:1, ai:1, tm:'17:00', est:45,
+          result:'Таблиця з показниками: нові ліди, замовлення, виручка, конверсія' },
+        { t:'Фінансовий звіт за тиждень',
+          type:'weekly', dow:5, fi:5, ai:7, tm:'16:00', est:30,
+          result:'Доходи vs витрати, залишок на рахунках, прострочені платежі' },
+        // Щомісячні
+        { t:'ТО верстатів та обладнання цеху',
+          type:'monthly', dom:1, fi:3, ai:3, tm:'08:00', est:180,
+          result:'Акт ТО підписаний, несправності усунені, верстати готові' },
+        { t:'Аналіз NPS та відгуків клієнтів',
+          type:'monthly', dom:5, fi:1, ai:1, tm:'11:00', est:60,
+          result:'Звіт по відгуках, відповіді опубліковані, план покращень' },
+        { t:'Звірка бухгалтерії та виплата зарплати',
+          type:'monthly', dom:25, fi:5, ai:7, tm:'10:00', est:120,
+          result:'Зарплата нарахована та виплачена, звіт для власника' },
     ];
     for (const r of REGS) {
+        const dows = r.type === 'weekly' && r.dow != null ? [r.dow] : null;
+        // Розраховуємо timeEnd з timeStart + duration
+        let timeEnd = null;
+        if (r.tm && r.est) {
+            const [hh, mm] = r.tm.split(':').map(Number);
+            const totalMin = hh * 60 + mm + (r.est || 30);
+            timeEnd = String(Math.floor(totalMin/60)).padStart(2,'0') + ':' + String(totalMin%60).padStart(2,'0');
+        }
         ops.push({type:'set', ref:cr.collection('regularTasks').doc(), data:{
-            title:r.t, type:r.type,
-            dayOfWeek:r.dow||null, dayOfMonth:r.dom||null,
-            time:r.tm,
-            functionId:fRefs[r.fi].id, functionName:FUNCS[r.fi].name,
-            assigneeId:sRefs[r.ai].id, assigneeName:STAFF[r.ai].name,
-            creatorId:uid, status:'active', requireReview:false, createdAt:now,
+            title:           r.t,
+            period:          r.type,
+            daysOfWeek:      dows,
+            dayOfMonth:      r.dom || null,
+            skipWeekends:    r.type === 'daily',
+            timeStart:       r.tm,
+            timeEnd:         timeEnd,
+            duration:        r.est || 30,
+            function:        FUNCS[r.fi].name,
+            assigneeId:      sRefs[r.ai].id,
+            expectedResult:  r.result || '',
+            reportFormat:    'Короткий звіт у вільній формі',
+            instruction:     '',
+            priority:        'medium',
+            requireReview:   false,
+            notifyOnComplete:[],
+            checklist:       [],
+            status:          'active',
+            createdAt:       now,
         }});
     }
 
@@ -210,12 +279,20 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         { tpl:tpl2Ref, name:'Онбординг — Василь Коваленко',         step:3, ai:3 },
     ];
     for (const p of PROCS) {
+        const tplName = p.tpl === tpl1Ref ? 'Виконання замовлення меблів' : 'Онбординг нового співробітника';
         ops.push({type:'set', ref:cr.collection('processes').doc(), data:{
-            templateId:p.tpl.id,
-            name:p.name, currentStep:p.step, status:'active',
-            assigneeId:sRefs[p.ai].id, assigneeName:STAFF[p.ai].name,
-            startDate:_demoDate(-7), deadline:_demoDate(21),
-            createdBy:uid, createdAt:now, updatedAt:now,
+            templateId:   p.tpl.id,
+            templateName: tplName,
+            name:         p.name,
+            currentStep:  p.step,
+            status:       'active',
+            assigneeId:   sRefs[p.ai].id,
+            assigneeName: STAFF[p.ai].name,
+            startDate:    _demoDate(-7),
+            deadline:     _demoDate(21),
+            createdBy:    uid,
+            createdAt:    now,
+            updatedAt:    now,
         }});
     }
 
@@ -235,6 +312,57 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
 
     await window.safeBatchCommit(ops); ops = [];
+
+    // ── 6b. ЕТАПИ ПРОЄКТІВ + ФІНАНСИ ПРОЄКТІВ ─────────────
+    const projSnapNow = await cr.collection('projects').get();
+    const projDocs = projSnapNow.docs.map(d => ({id:d.id, ...d.data()}));
+
+    const stageOps = [];
+    for (const proj of projDocs) {
+        let stages = [];
+        if (proj.name && proj.name.includes('шоурум')) {
+            stages = [
+                {name:'Ремонт та підготовка приміщення', status:'done',       order:1, start:_demoDate(-30), end:_demoDate(-10)},
+                {name:'Закупівля обладнання та меблів',  status:'in_progress',order:2, start:_demoDate(-10), end:_demoDate(10) },
+                {name:'Оформлення та розстановка',       status:'planned',    order:3, start:_demoDate(10),  end:_demoDate(30) },
+                {name:'Відкриття та маркетинг',          status:'planned',    order:4, start:_demoDate(35),  end:_demoDate(45) },
+            ];
+        } else if (proj.name && proj.name.includes('ІТ Хаб')) {
+            stages = [
+                {name:'Погодження ТЗ та договір',        status:'done',       order:1, start:_demoDate(-14), end:_demoDate(-12)},
+                {name:'Закупівля матеріалів',             status:'done',       order:2, start:_demoDate(-12), end:_demoDate(-8) },
+                {name:'Виробництво партія 1 (6 столів)', status:'in_progress',order:3, start:_demoDate(-5),  end:_demoDate(4)  },
+                {name:'Виробництво партія 2 (6 столів)', status:'planned',    order:4, start:_demoDate(5),   end:_demoDate(12) },
+                {name:'Доставка та монтаж',               status:'planned',    order:5, start:_demoDate(13),  end:_demoDate(15) },
+                {name:'Здача та оплата залишку',          status:'planned',    order:6, start:_demoDate(15),  end:_demoDate(17) },
+            ];
+        } else if (proj.name && proj.name.includes('Еко')) {
+            stages = [
+                {name:'Дизайн та прототипи',             status:'in_progress',order:1, start:_demoDate(-60), end:_demoDate(-20)},
+                {name:'Виготовлення зразків (3 моделі)', status:'planned',    order:2, start:_demoDate(-10), end:_demoDate(20) },
+                {name:'Тестування та доопрацювання',     status:'planned',    order:3, start:_demoDate(20),  end:_demoDate(50) },
+                {name:'Фото та запуск продажів',         status:'planned',    order:4, start:_demoDate(55),  end:_demoDate(90) },
+            ];
+        }
+        for (const s of stages) {
+            stageOps.push({type:'set', ref:cr.collection('projectStages').doc(), data:{
+                projectId:        proj.id,
+                name:             s.name,
+                order:            s.order,
+                status:           s.status,
+                plannedStartDate: s.start,
+                plannedEndDate:   s.end,
+                actualStartDate:  s.status === 'done' ? s.start : null,
+                actualEndDate:    s.status === 'done' ? s.end   : null,
+                ownerFunctionId:  '',
+                responsibleUserId:'',
+                progressPct:      s.status === 'done' ? 100 : s.status === 'in_progress' ? 50 : 0,
+                blockedReason:    null,
+                createdAt:        now, updatedAt: now,
+            }});
+        }
+    }
+    if (stageOps.length) await window.safeBatchCommit(stageOps);
 
     // ── 7. CRM PIPELINE + УГОДИ ────────────────────────────
     const pipRef = cr.collection('crm_pipelines').doc();
