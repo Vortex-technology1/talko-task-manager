@@ -40,38 +40,44 @@ window._estimateActiveTab  = 'list'; // 'list' | 'norms'
 // ── Ініціалізація підписок ───────────────────────────────────
 window.initEstimateModule = function() {
     if (!currentCompany) return;
+    window._estimateActiveTab = 'list'; // завжди починаємо з кошторисів
     (window._estimateUnsubs || []).forEach(fn => { try { fn(); } catch(e) {} });
     window._estimateUnsubs = [];
 
     const cRef = db.collection('companies').doc(currentCompany);
 
     const unsubNorms = cRef.collection('estimate_norms')
-        .where('deleted', '==', false)
         .orderBy('name')
         .onSnapshot(snap => {
-            window._estimateNorms = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            window._estimateNorms = snap.docs
+                .map(d => ({ id: d.id, ...d.data() }))
+                .filter(d => d.deleted !== true);
             if (window._estimateActiveTab === 'norms') renderEstimateNormsView();
         }, err => {
+            // Fallback без orderBy
             cRef.collection('estimate_norms')
-                .where('deleted', '==', false)
                 .get().then(snap2 => {
-                    window._estimateNorms = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
+                    window._estimateNorms = snap2.docs
+                        .map(d => ({ id: d.id, ...d.data() }))
+                        .filter(d => d.deleted !== true);
                     if (window._estimateActiveTab === 'norms') renderEstimateNormsView();
                 });
         });
     window._estimateUnsubs.push(unsubNorms);
 
     const unsubEst = cRef.collection('project_estimates')
-        .where('deleted', '==', false)
         .orderBy('createdAt', 'desc')
         .onSnapshot(snap => {
-            window._projectEstimates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            window._projectEstimates = snap.docs
+                .map(d => ({ id: d.id, ...d.data() }))
+                .filter(d => d.deleted !== true);
             if (window._estimateActiveTab === 'list') renderEstimateListView();
         }, err => {
             cRef.collection('project_estimates')
-                .where('deleted', '==', false)
                 .get().then(snap2 => {
-                    window._projectEstimates = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
+                    window._projectEstimates = snap2.docs
+                        .map(d => ({ id: d.id, ...d.data() }))
+                        .filter(d => d.deleted !== true);
                     if (window._estimateActiveTab === 'list') renderEstimateListView();
                 });
         });
