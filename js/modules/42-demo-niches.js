@@ -428,8 +428,9 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     if (projEstOps.length) await window.safeBatchCommit(projEstOps);
 
     // ── 7. CRM PIPELINE + УГОДИ ────────────────────────────
+    // Спочатку зберігаємо pipeline окремо щоб отримати реальний ID
     const pipRef = cr.collection('crm_pipelines').doc();
-    ops.push({type:'set', ref:pipRef, data:{
+    await pipRef.set({
         name:'Продажі меблів',
         stages:[
             {id:'new',          label:'Новий лід',        color:'#6b7280', order:1},
@@ -443,7 +444,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             {id:'lost',         label:'Програно',           color:'#ef4444', order:9},
         ],
         createdBy:uid, createdAt:now, isDefault:true,
-    }});
+    });
 
     const DEALS = [
         { name:'Кухня 4м горіх',            client:'Коваль Петро',         phone:'+380671234001', src:'instagram',  stage:'production',   amt:87500,  nc:2,  note:'Кухня 4м, горіх, МДФ фасади. Аванс 50% отримано.' },
