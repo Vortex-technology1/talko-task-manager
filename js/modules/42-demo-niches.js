@@ -944,6 +944,193 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
     await window.safeBatchCommit(normOps);
 
+
+    // ── 13+. ДОПОВНЕННЯ — постачальники, локації, планування, процеси ─
+
+    // ── A. ЛОКАЦІЇ СКЛАДУ ──────────────────────────────────
+    const locDefs = [
+        { name:'Головний цех (вул. Промислова 12)', type:'warehouse', isDefault:true  },
+        { name:'Шоурум (вул. Сагайдачного 18)',     type:'showroom',  isDefault:false },
+        { name:'Виїзний склад (авто)',               type:'mobile',    isDefault:false },
+    ];
+    const locRefs = locDefs.map(() => cr.collection('warehouse_locations').doc());
+    const locOps = [];
+    locDefs.forEach((l,i) => locOps.push({type:'set', ref:locRefs[i], data:{
+        name:l.name, type:l.type, isDefault:l.isDefault||false,
+        deleted:false, createdAt:now, updatedAt:now,
+    }}));
+    await window.safeBatchCommit(locOps);
+
+    // ── B. ПОСТАЧАЛЬНИКИ СКЛАДУ ────────────────────────────
+    const supplierDefs = [
+        { name:'Кромтех',        phone:'+380443456789', email:'sales@kromtech.ua',    url:'kromtech.ua',      note:'ЛДСП, МДФ. Доставка 3-5 днів. Відстрочка 14 днів.' },
+        { name:'Blum Ukraine',   phone:'+380442223344', email:'info@blum.com.ua',     url:'blum.com.ua',      note:'Петлі, напрямні, підйомники. Офіційний дилер.' },
+        { name:'ПВХ-Декор',      phone:'+380671112233', email:'pvhdecor@gmail.com',   url:'pvhdecor.com.ua',  note:'Кромка ПВХ, плівки, фасадні матеріали.' },
+        { name:'МеталПроф',      phone:'+380502223344', email:'metal@metalprof.ua',   url:'metalprof.ua',     note:'Профілі алюмінієві, ніжки, кріплення.' },
+        { name:'Hafele Ukraine', phone:'+380444455566', email:'hafele@hafele.ua',     url:'hafele.com',       note:'Системи ковзання, підвісні системи, аксесуари.' },
+    ];
+    const suppOps = supplierDefs.map(s => ({type:'set',
+        ref: cr.collection('warehouse_suppliers').doc(), data:{
+            name:s.name, phone:s.phone, email:s.email,
+            url:s.url, note:s.note,
+            deleted:false, createdAt:now, updatedAt:now,
+        }
+    }));
+    await window.safeBatchCommit(suppOps);
+
+    // ── C. ДОДАТКОВІ ПРОЦЕС-ШАБЛОНИ (5 загалом) ───────────
+    const tpl3Ref = cr.collection('processTemplates').doc();
+    const tpl4Ref = cr.collection('processTemplates').doc();
+    const tpl5Ref = cr.collection('processTemplates').doc();
+    const newTplOps = [];
+    newTplOps.push({type:'set', ref:tpl3Ref, data:{
+        name:'Рекламація та гарантійний ремонт',
+        description:'Обробка скарги клієнта, виїзна діагностика, ремонт або заміна',
+        steps:[
+            {id:'s1',name:'Прийом скарги та реєстрація',         functionId:fRefs[1].id,functionName:FUNCS[1].name,durationDays:1,order:1},
+            {id:'s2',name:'Виїзна діагностика майстром',          functionId:fRefs[4].id,functionName:FUNCS[4].name,durationDays:1,order:2},
+            {id:'s3',name:'Погодження рішення з клієнтом',        functionId:fRefs[1].id,functionName:FUNCS[1].name,durationDays:1,order:3},
+            {id:'s4',name:'Виконання ремонту або заміни',         functionId:fRefs[3].id,functionName:FUNCS[3].name,durationDays:3,order:4},
+            {id:'s5',name:'Закриття рекламації, відгук клієнта',  functionId:fRefs[1].id,functionName:FUNCS[1].name,durationDays:1,order:5},
+        ],
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }});
+    newTplOps.push({type:'set', ref:tpl4Ref, data:{
+        name:'Закупівля матеріалів',
+        description:'Від виявлення потреби до приходу на склад',
+        steps:[
+            {id:'s1',name:'Формування заявки на матеріали',        functionId:fRefs[5].id,functionName:FUNCS[5].name,durationDays:1,order:1},
+            {id:'s2',name:'Отримання КП від 2-3 постачальників',   functionId:fRefs[5].id,functionName:FUNCS[5].name,durationDays:2,order:2},
+            {id:'s3',name:'Погодження та оплата рахунку',          functionId:fRefs[5].id,functionName:FUNCS[5].name,durationDays:1,order:3},
+            {id:'s4',name:'Прийом та перевірка якості на складі',  functionId:fRefs[5].id,functionName:FUNCS[5].name,durationDays:1,order:4},
+            {id:'s5',name:'Оприбуткування в системі',              functionId:fRefs[5].id,functionName:FUNCS[5].name,durationDays:1,order:5},
+        ],
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }});
+    newTplOps.push({type:'set', ref:tpl5Ref, data:{
+        name:'Маркетингова кампанія',
+        description:'Запуск рекламної кампанії від ідеї до аналізу результатів',
+        steps:[
+            {id:'s1',name:'Визначення цілі та бюджету кампанії',   functionId:fRefs[0].id,functionName:FUNCS[0].name,durationDays:2,order:1},
+            {id:'s2',name:'Підготовка контенту та креативів',       functionId:fRefs[2].id,functionName:FUNCS[2].name,durationDays:5,order:2},
+            {id:'s3',name:'Налаштування та запуск реклами',         functionId:fRefs[0].id,functionName:FUNCS[0].name,durationDays:1,order:3},
+            {id:'s4',name:'Ведення та оптимізація кампанії',        functionId:fRefs[0].id,functionName:FUNCS[0].name,durationDays:14,order:4},
+            {id:'s5',name:'Аналіз результатів та звіт',             functionId:fRefs[7].id,functionName:FUNCS[7].name,durationDays:2,order:5},
+        ],
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }});
+
+    // Додаткові активні процеси
+    newTplOps.push({type:'set', ref:cr.collection('processes').doc(), data:{
+        templateId:tpl3Ref.id, templateName:'Рекламація та гарантійний ремонт',
+        name:'Рекламація — Шафа Петренка (дверь не закривається)', currentStep:2, status:'active',
+        assigneeId:sRefs[6].id, assigneeName:STAFF[6].name,
+        startDate:_demoDate(-2), deadline:_demoDate(5),
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }});
+    newTplOps.push({type:'set', ref:cr.collection('processes').doc(), data:{
+        templateId:tpl4Ref.id, templateName:'Закупівля матеріалів',
+        name:'Закупівля ЛДСП та МДФ — квітнева партія', currentStep:1, status:'active',
+        assigneeId:sRefs[7].id, assigneeName:STAFF[7].name,
+        startDate:_demoDate(0), deadline:_demoDate(7),
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }});
+    newTplOps.push({type:'set', ref:cr.collection('processes').doc(), data:{
+        templateId:tpl5Ref.id, templateName:'Маркетингова кампанія',
+        name:'Instagram-кампанія "Весняні меблі" — квітень 2026', currentStep:3, status:'active',
+        assigneeId:sRefs[5].id, assigneeName:STAFF[5].name,
+        startDate:_demoDate(-5), deadline:_demoDate(20),
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }});
+    await window.safeBatchCommit(newTplOps);
+
+    // ── D. ЗАВДАННЯ ПРИВ'ЯЗАНІ ДО ПРОЄКТІВ ────────────────
+    // Отримуємо ID проєктів що вже створені
+    const projSnap = await cr.collection('projects').get();
+    const projIds = projSnap.docs.map(d => d.id);
+    const projNames = projSnap.docs.map(d => d.data().name || '');
+
+    if (projIds.length >= 2) {
+        const projTaskOps = [];
+        // Завдання для проєкту "Шоурум"
+        const showroomTasks = [
+            { title:'Замовити стелажі та вітрини для шоуруму',      ai:1, fi:5, d:3,  pr:'high',   est:60  },
+            { title:'Розробити планування шоуруму (розставка меблів)',ai:5,fi:2, d:2,  pr:'high',   est:180 },
+            { title:'Встановити освітлення та декор',                ai:6, fi:3, d:7,  pr:'medium', est:240 },
+            { title:'Підготувати каталог та цінники',                ai:2, fi:1, d:5,  pr:'medium', est:90  },
+            { title:'Провести відкриття шоуруму (запросити клієнтів)',ai:1,fi:0, d:14, pr:'high',   est:120 },
+        ];
+        for (const t of showroomTasks) {
+            projTaskOps.push({type:'set', ref:cr.collection('tasks').doc(), data:{
+                title:t.title,
+                projectId:   projIds[0],
+                projectName: projNames[0],
+                functionId:  fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
+                assigneeId:  sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
+                creatorId:uid, creatorName:STAFF[0].name,
+                status:'new', priority:t.pr,
+                deadlineDate:_demoDate(t.d), deadlineTime:'18:00',
+                estimatedTime:String(t.est), expectedResult:'',
+                requireReview:true, createdAt:now, updatedAt:now,
+            }});
+        }
+        // Завдання для проєкту "ІТ Хаб"
+        const itHubTasks = [
+            { title:'Погодити фінальне планування меблів з замовником',ai:1,fi:1, d:1,  pr:'high',   est:60  },
+            { title:'Розкрій ЛДСП для 12 столів',                      ai:3,fi:3, d:2,  pr:'high',   est:360 },
+            { title:'Збірка каркасів столів (партія 1: 6 шт)',          ai:4,fi:3, d:4,  pr:'high',   est:480 },
+            { title:'Збірка партія 2 (6 шт) + тумби',                  ai:4,fi:3, d:7,  pr:'high',   est:480 },
+            { title:'Доставка та монтаж в офісі ІТ Хаб',               ai:6,fi:4, d:10, pr:'high',   est:240 },
+            { title:'Підписання акту виконаних робіт',                  ai:1,fi:1, d:11, pr:'medium', est:30  },
+        ];
+        for (const t of itHubTasks) {
+            projTaskOps.push({type:'set', ref:cr.collection('tasks').doc(), data:{
+                title:t.title,
+                projectId:   projIds.length > 1 ? projIds[1] : projIds[0],
+                projectName: projNames.length > 1 ? projNames[1] : projNames[0],
+                functionId:  fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
+                assigneeId:  sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
+                creatorId:uid, creatorName:STAFF[0].name,
+                status:'new', priority:t.pr,
+                deadlineDate:_demoDate(t.d), deadlineTime:'18:00',
+                estimatedTime:String(t.est), expectedResult:'',
+                requireReview:true, createdAt:now, updatedAt:now,
+            }});
+        }
+        await window.safeBatchCommit(projTaskOps);
+    }
+
+    // ── E. ФІНАНСОВЕ ПЛАНУВАННЯ (бюджети по місяцях) ──────
+    // Отримуємо категорії витрат щоб прив'язати бюджет
+    const finCatSnap = await cr.collection('finance_categories').get();
+    const finCatMap = {};
+    finCatSnap.docs.forEach(d => { finCatMap[d.data().name] = d.id; });
+
+    const budgetMonths = [
+        { month: _demoDate(0).slice(0,7), goal:320000 }, // поточний місяць
+        { month: _demoDate(-30).slice(0,7), goal:290000 }, // минулий
+        { month: _demoDate(30).slice(0,7), goal:350000 }, // наступний
+    ];
+    const budgetOps = [];
+    for (const bm of budgetMonths) {
+        const budData = {
+            month:    bm.month,
+            goal:     bm.goal,
+            // Планові витрати по категоріях
+            ...(finCatMap['Матеріали (ЛДСП, МДФ)']      ? {['cat_'+finCatMap['Матеріали (ЛДСП, МДФ)']]:      45000} : {}),
+            ...(finCatMap['Фурнітура та комплектуючі']   ? {['cat_'+finCatMap['Фурнітура та комплектуючі)']]: 15000} : {}),
+            ...(finCatMap['Оренда цеху та шоуруму']      ? {['cat_'+finCatMap['Оренда цеху та шоуруму']]:     26500} : {}),
+            ...(finCatMap['Зарплата команди']             ? {['cat_'+finCatMap['Зарплата команди']]:           112000} : {}),
+            ...(finCatMap['Маркетинг та реклама']         ? {['cat_'+finCatMap['Маркетинг та реклама]']]:      8000} : {}),
+            updatedAt: now,
+        };
+        budgetOps.push({type:'set',
+            ref: cr.collection('finance_budgets').doc(bm.month),
+            data: budData
+        });
+    }
+    await window.safeBatchCommit(budgetOps);
+
     // ── 12. Профіль компанії ────────────────────────────────
     await cr.update({
         name:           'МеблеМайстер',
