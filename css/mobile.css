@@ -710,3 +710,220 @@
                 touch-action: pan-y;
                 transition: transform 0.2s ease-out;
             }
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE UX — iPhone-style: щільність, центрування, touch
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+
+    /* ── 1. Модалка завдання — повноекранна, без зазорів ── */
+    #taskModal .modal-content,
+    #regularTaskModal .modal-content {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        min-height: 100dvh !important;
+        max-height: 100dvh !important;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ── 2. Modal body — компактний padding, весь простір ── */
+    #taskModal .modal-body,
+    #regularTaskModal .modal-body {
+        padding: 0.65rem 0.75rem !important;
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── 3. form-grid — завжди 1 колонка на мобільному ──── */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.55rem !important;
+    }
+    .form-group.full-width {
+        grid-column: span 1 !important;
+    }
+
+    /* ── 4. form-group — щільніше (iPhone Settings стиль) ─ */
+    .form-group {
+        margin-bottom: 0 !important;
+    }
+    .form-label {
+        font-size: 0.78rem !important;
+        margin-bottom: 0.25rem !important;
+        color: #6b7280 !important;
+        font-weight: 500 !important;
+    }
+
+    /* ── 5. Inputs — висота 44px (Apple HIG мінімум) ─────── */
+    .form-input,
+    .form-select {
+        padding: 0.6rem 0.75rem !important;
+        font-size: 16px !important; /* запобігає zoom на iOS */
+        min-height: 44px !important;
+        border-radius: 10px !important;
+        border: 1.5px solid #e5e7eb !important;
+        background: #fafafa !important;
+    }
+    .form-input:focus,
+    .form-select:focus {
+        background: #fff !important;
+        border-color: #22c55e !important;
+    }
+    .form-textarea {
+        font-size: 16px !important;
+        padding: 0.6rem 0.75rem !important;
+        border-radius: 10px !important;
+        border: 1.5px solid #e5e7eb !important;
+        min-height: 80px !important;
+    }
+
+    /* ── 6. Два поля в рядку → стек на мобільному ────────── */
+    [style*="grid-template-columns:1fr 1fr"],
+    [style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+    [style*="grid-template-columns:1fr 2fr"],
+    [style*="grid-template-columns: 1fr 2fr"] {
+        grid-template-columns: 1fr !important;
+    }
+    [style*="grid-template-columns:2fr 1fr"],
+    [style*="grid-template-columns: 2fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+    [style*="grid-template-columns:repeat(auto-fit"],
+    [style*="grid-template-columns: repeat(auto-fit"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* ── 7. Кнопки дій — великі, повна ширина ────────────── */
+    .form-actions {
+        padding: 0.75rem !important;
+        gap: 0.5rem !important;
+        position: sticky;
+        bottom: 0;
+        background: white;
+        border-top: 1px solid #f0f0f0;
+        margin-top: 0 !important;
+    }
+    .form-actions .btn {
+        flex: 1 !important;
+        min-height: 48px !important;
+        font-size: 0.95rem !important;
+        border-radius: 12px !important;
+        justify-content: center;
+    }
+
+    /* ── 8. Modal header — компактний ────────────────────── */
+    .modal-header {
+        padding: 0.75rem 1rem !important;
+        min-height: 52px;
+    }
+    .modal-header h2 {
+        font-size: 0.95rem !important;
+    }
+
+    /* ── 9. Accordion розширені налаштування ─────────────── */
+    #taskAdvancedToggle {
+        min-height: 44px !important;
+        font-size: 0.82rem !important;
+    }
+    #taskAdvancedPanel {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* ── 10. CRM slide-in — повна висота, без обрізання ──── */
+    #crmTodoCardOverlay > div {
+        max-width: 100% !important;
+        width: 100% !important;
+        border-radius: 0 !important;
+    }
+
+    /* ── 11. CRM форма угоди — compact ───────────────────── */
+    #crmDealModal .modal-content,
+    #crmCreateDealModal .modal-content {
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        min-height: 100dvh !important;
+    }
+
+    /* ── 12. CRM список лідів — рядки щільніше ───────────── */
+    [data-crm-row] {
+        padding: 0.55rem 0.75rem !important;
+        gap: 0.5rem !important;
+    }
+    [data-crm-row] > div:first-child {
+        min-width: 58px !important;
+    }
+
+    /* ── 13. CRM кнопки консультації — текст коротший ─────── */
+    [data-crm-row] button[onclick*="Consultation"] {
+        font-size: 0.68rem !important;
+        padding: 3px 6px !important;
+    }
+
+    /* ── 14. taskReviewActions — компактний ──────────────── */
+    #taskReviewActions {
+        padding: 0.6rem 0.75rem !important;
+        margin: 0.35rem 0 !important;
+    }
+
+    /* ── 15. Чеклист і підзавдання — touch-friendly ──────── */
+    #subtasksSection,
+    .checklist-item {
+        padding: 0.6rem 0.75rem !important;
+    }
+
+    /* ── 16. Кнопка «Відкрити угоду CRM» в завданні ──────── */
+    #taskCrmDealBtn {
+        min-height: 44px !important;
+        border-radius: 12px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* ── 17. Розширені чекбокси — touch area ─────────────── */
+    #taskAdvancedPanel label[style*="display:flex"] {
+        min-height: 44px !important;
+        padding: 0.6rem 0.75rem !important;
+        border-radius: 10px !important;
+    }
+
+    /* ── 18. Scrollable content — без горизонтального scroll */
+    #taskModal *,
+    #regularTaskModal * {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* ── 19. Section separators — iOS-style групування ────── */
+    .form-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.5rem 0 0.2rem;
+    }
+
+    /* ── 20. Time tracking — горизонтальний flex ─────────── */
+    #timeTrackingSection [style*="display:flex;gap:1rem"] {
+        gap: 0.5rem !important;
+        flex-wrap: nowrap !important;
+    }
+}
+
+/* ── dvh підтримка для старих iOS ────────────────────────── */
+@supports not (height: 100dvh) {
+    @media (max-width: 767px) {
+        #taskModal .modal-content,
+        #regularTaskModal .modal-content {
+            min-height: -webkit-fill-available !important;
+            max-height: -webkit-fill-available !important;
+        }
+    }
+}
