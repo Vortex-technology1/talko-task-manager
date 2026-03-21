@@ -463,7 +463,15 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     if (projEstOps.length) await window.safeBatchCommit(projEstOps);
 
     // ── 7. CRM PIPELINE + УГОДИ ────────────────────────────
-    // Спочатку зберігаємо pipeline окремо щоб отримати реальний ID
+    // Спочатку видаляємо всі старі pipelines (включаючи дефолтний що міг створитись)
+    try {
+        const oldPips = await cr.collection('crm_pipeline').get();
+        if (!oldPips.empty) {
+            const pipDelOps = oldPips.docs.map(d => ({type:'delete', ref:d.ref}));
+            await window.safeBatchCommit(pipDelOps);
+        }
+    } catch(e) { console.warn('[demo] cleanup pipelines:', e.message); }
+
     const pipRef = cr.collection('crm_pipeline').doc();
     await pipRef.set({
         name:'Продажі меблів',
@@ -495,18 +503,30 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         { name:'Спальня Тарасенків',         client:'Тарасенко Ігор',       phone:'+380671234011', src:'referral',   stage:'won',          amt:78000,  nc:null, note:'Виконано вчасно. 5 зірок у Google.' },
         { name:'Дитяча Сидоренків',          client:'Сидоренко Ніна',       phone:'+380671234012', src:'site_form',  stage:'won',          amt:42000,  nc:null, note:'Успішний проєкт. Клієнт дав рекомендацію другу.' },
     ];
+    // Deals записуємо ОКРЕМИМ батчем одразу після pipeline
+    const dealOps = [];
+    const _ages = [1,2,3,5,7,10,14,21];
     for (const d of DEALS) {
-        ops.push({type:'set', ref:cr.collection('crm_deals').doc(), data:{
-            pipelineId:pipRef.id,
-            title:d.name, clientName:d.client, phone:d.phone,
-            source:d.src, stage:d.stage, amount:d.amt,
-            note:d.note,
+        dealOps.push({type:'set', ref:cr.collection('crm_deals').doc(), data:{
+            pipelineId:     pipRef.id,
+            title:          d.name,
+            clientName:     d.client,
+            phone:          d.phone,
+            source:         d.src,
+            stage:          d.stage,
+            amount:         d.amt,
+            note:           d.note,
             nextContactDate: d.nc !== null ? _demoDate(d.nc) : null,
-            assigneeId:sRefs[1].id, assigneeName:STAFF[1].name,
-            createdAt:_demoTs(-[1,2,3,5,7,10,14,21][Math.floor(Math.random()*8)]),
-            updatedAt:now,
+            nextContactTime: d.nc === 0 ? '14:00' : null,
+            assigneeId:     sRefs[1].id,
+            assigneeName:   STAFF[1].name,
+            deleted:        false,
+            tags:           [],
+            createdAt:      _demoTs(-_ages[Math.floor(Math.random()*_ages.length)]),
+            updatedAt:      now,
         }});
     }
+    await window.safeBatchCommit(dealOps);
 
     // ── 8. ФІНАНСИ ─────────────────────────────────────────
     const FIN_CATS = [
