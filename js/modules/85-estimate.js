@@ -118,16 +118,21 @@ window.renderEstimateTab = function() {
           <button onclick="window._estimateHowtoOpen=!window._estimateHowtoOpen;renderEstimateTab();" title="Як це працює"
             style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:8px;font-size:0.8rem;font-weight:500;cursor:pointer;border:1px solid ${howtoOpen?'#bae6fd':'#e5e7eb'};background:${howtoOpen?'#eff6ff':'white'};color:${howtoOpen?'#0369a1':'#6b7280'};">
             ${_estIco.info} Як це працює
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition:transform 0.2s;transform:rotate(${howtoOpen?'180':'0'}deg)"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
         </div>
       </div>
-      ${howtoOpen ? `<div style="margin-bottom:1rem;" id="estimateHowtoPanel"></div>` : ''}
+      <!-- Контент завжди зверху -->
       <div id="estimateSubContent"></div>
+      <!-- Як це працює — accordion знизу -->
+      ${howtoOpen ? `
+        <div style="margin-top:1.5rem;border-top:1px solid #e5e7eb;padding-top:1.25rem;" id="estimateHowtoPanel"></div>
+      ` : ''}
     </div>`;
 
-    if (howtoOpen) renderEstimateHowtoView('estimateHowtoPanel');
     if (window._estimateActiveTab === 'list') renderEstimateListView();
     else if (window._estimateActiveTab === 'norms') renderEstimateNormsView();
+    if (howtoOpen) renderEstimateHowtoView('estimateHowtoPanel');
 };
 
 window.estimateSwitchSubTab = function(tab) {
