@@ -885,11 +885,24 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     ];
     const normOps = [];
     for (const n of normDefs) {
+        // Очищаємо materials від undefined полів
+        const cleanMaterials = (n.materials||[]).map(m => ({
+            name:        m.name        || '',
+            qty:         Number(m.qty) || 0,
+            unit:        m.unit        || 'шт',
+            price:       Number(m.price) || 0,
+            coefficient: Number(m.coefficient) || 1,
+        }));
         normOps.push({type:'set', ref:cr.collection('estimate_norms').doc(), data:{
-            name:n.name, category:n.category, unit:n.unit,
-            materials:n.materials,
-            niche:'furniture',
-            createdBy:uid, createdAt:now,
+            name:          n.name        || '',
+            category:      n.category    || 'production',
+            inputUnit:     n.inputUnit   || 'шт',    // inputUnit — правильне поле
+            hasExtraParam: n.hasExtraParam === true,
+            extraParamLabel: n.extraParamLabel || '',
+            niche:         n.niche       || 'furniture',
+            materials:     cleanMaterials,
+            createdBy:     uid,
+            createdAt:     now,
         }});
     }
     await window.safeBatchCommit(normOps);

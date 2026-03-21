@@ -1,0 +1,145 @@
+/* css/sales-assistant.css */
+
+#saOverlay {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 340px;
+  z-index: 99999;
+  background: rgba(10, 18, 35, 0.95);
+  backdrop-filter: blur(14px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+/* ── Header ── */
+.sa-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: move;
+  user-select: none;
+}
+
+.sa-rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: saRecPulse 1.4s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes saRecPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.sa-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex: 1;
+  letter-spacing: 0.02em;
+}
+
+.sa-timer {
+  font-size: 0.76rem;
+  font-family: monospace;
+  color: #22c55e;
+  font-weight: 700;
+}
+
+.sa-btn-icon {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: background 0.15s;
+  line-height: 1;
+}
+
+.sa-btn-icon:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.sa-btn-stop {
+  color: #ef4444;
+}
+
+/* ── Hint block ── */
+.sa-hint-block {
+  padding: 0.85rem 1rem;
+  background: rgba(30, 58, 95, 0.5);
+  transition: background 0.4s;
+  min-height: 70px;
+}
+
+.sa-hint-label {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sa-hint-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Кольори блоку підказки по типу action */
+#saOverlay[data-action='question'] .sa-hint-block { background: rgba(30, 58, 95, 0.75); }
+#saOverlay[data-action='response'] .sa-hint-block { background: rgba(20, 58, 30, 0.75); }
+#saOverlay[data-action='close']    .sa-hint-block { background: rgba(58, 20, 20, 0.75); }
+#saOverlay[data-action='listen']   .sa-hint-block { background: rgba(40, 40, 10, 0.6); }
+#saOverlay[data-action='warn']     .sa-hint-block { background: rgba(90, 15, 15, 0.95); }
+
+/* Анімація появи нової підказки */
+.sa-hint-new {
+  animation: saHintIn 0.35s ease;
+}
+
+@keyframes saHintIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Transcript ── */
+.sa-transcript-block {
+  padding: 0.5rem 1rem 0.7rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sa-transcript-label {
+  font-size: 0.66rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sa-transcript-text {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.5);
+  max-height: 2.5rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-style: italic;
+}
