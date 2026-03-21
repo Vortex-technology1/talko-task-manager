@@ -510,11 +510,12 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         const mRef = cr.collection('metrics').doc();
         const freq = m.freq || 'weekly';
         mOps.push({type:'set', ref:mRef, data:{
-            name:m.name, unit:m.unit,
-            category:m.cat,
+            name:    m.name,
+            unit:    m.unit || 'шт',        // захист від undefined
+            category: m.cat || '',
             frequency: freq,
             scopeType: 'company',
-            description: m.cat,
+            description: m.cat || '',
             createdBy:uid, createdAt:now, updatedAt:now,
         }});
         // Додаємо записи значень для 3-4 останніх періодів
@@ -543,12 +544,14 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
                 pk = d.getFullYear() + '-W' + String(wn).padStart(2,'0');
             }
             mOps.push({type:'set', ref:entryRef, data:{
-                metricId: mRef.id,
-                value: val,
-                periodKey: pk,
+                metricId:  mRef.id,
+                metricName: m.name || '',
+                unit:      m.unit || 'шт',
+                value:     (typeof val === 'number' && !isNaN(val)) ? val : 0,
+                periodKey: pk || '',
                 frequency: freq,
                 scopeType: 'company',
-                note: '',
+                note:      '',
                 enteredBy: uid,
                 createdAt: now,
             }});
@@ -558,11 +561,20 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
 
     // ── 13. ФІНАНСИ — налаштування UAH + рахунки + транзакції ─
     const finSettingsRef = cr.collection('finance_settings').doc('main');
-    // Завжди перезаписуємо finance_settings — set з merge:false гарантує UAH
+    // Завжди перезаписуємо finance_settings + видаляємо старі accounts щоб оновити валюту
     await finSettingsRef.set({
         version: 1, region: 'UA', currency: 'UAH', niche: 'furniture',
         initializedAt: now, initializedBy: uid, updatedAt: now,
     });
+    // Видаляємо старі рахунки якщо є (з EUR) — перезапишемо нові з UAH
+    try {
+        const oldAccs = await cr.collection('finance_accounts').get();
+        if (!oldAccs.empty) {
+            const delBatch = firebase.firestore().batch();
+            oldAccs.docs.forEach(d => delBatch.delete(d.ref));
+            await delBatch.commit();
+        }
+    } catch(e) { console.warn('[demo] cleanup accounts:', e.message); }
 
     // Регулярні платежі (щомісячні фіксовані витрати)
     const regPayDefs = [
