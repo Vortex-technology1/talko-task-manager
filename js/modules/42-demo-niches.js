@@ -594,15 +594,24 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         version: 1, region: 'UA', currency: 'UAH', niche: 'furniture',
         initializedAt: now, initializedBy: uid, updatedAt: now,
     });
-    // Видаляємо старі рахунки якщо є (з EUR) — перезапишемо нові з UAH
+    // Видаляємо старі рахунки (EUR) через safeBatchCommit
     try {
         const oldAccs = await cr.collection('finance_accounts').get();
         if (!oldAccs.empty) {
-            const delBatch = firebase.firestore().batch();
-            oldAccs.docs.forEach(d => delBatch.delete(d.ref));
-            await delBatch.commit();
+            const delOps = oldAccs.docs.map(d => ({type:'delete', ref:d.ref}));
+            await window.safeBatchCommit(delOps);
         }
     } catch(e) { console.warn('[demo] cleanup accounts:', e.message); }
+    // Видаляємо старі транзакції та категорії (EUR)
+    try {
+        for (const col of ['finance_transactions','finance_categories','finance_recurring']) {
+            const snap = await cr.collection(col).get();
+            if (!snap.empty) {
+                const ops = snap.docs.map(d => ({type:'delete', ref:d.ref}));
+                await window.safeBatchCommit(ops);
+            }
+        }
+    } catch(e) { console.warn('[demo] cleanup finance:', e.message); }
 
     // Регулярні платежі (щомісячні фіксовані витрати)
     const regPayDefs = [
