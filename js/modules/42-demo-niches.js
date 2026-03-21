@@ -1131,6 +1131,202 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
     await window.safeBatchCommit(budgetOps);
 
+
+    // ── F. ЗАВДАННЯ ВІДХИЛЕНІ НА ПЕРЕВІРЦІ ────────────────
+    const rejectedTasks = [
+        {
+            title:'Оновити прайс-лист на сайті',
+            fi:1, ai:2, pr:'low', d:-3,
+            reason:'Ціни не узгоджені з власником. Потрібно додати нові позиції по кухнях.',
+        },
+        {
+            title:'Налаштувати email-розсилку по базі клієнтів',
+            fi:0, ai:1, pr:'medium', d:-5,
+            reason:'Текст листа не відповідає стилю бренду. Переписати більш особисто.',
+        },
+        {
+            title:'Підготувати план закупівель на квітень',
+            fi:5, ai:7, pr:'high', d:-2,
+            reason:'Бюджет перевищений на 18 000 грн. Скоротити позиції або обґрунтувати.',
+        },
+    ];
+    const rejOps = [];
+    for (const t of rejectedTasks) {
+        rejOps.push({type:'set', ref:cr.collection('tasks').doc(), data:{
+            title: t.title,
+            functionId: fRefs[t.fi].id, functionName: FUNCS[t.fi].name,
+            assigneeId: sRefs[t.ai].id, assigneeName: STAFF[t.ai].name,
+            creatorId: uid, creatorName: STAFF[0].name,
+            status: 'progress',
+            priority: t.pr,
+            deadlineDate: _demoDate(t.d), deadlineTime: '18:00',
+            requireReview: true,
+            // Відхилено з перевірки
+            reviewRejectedAt: new Date(Date.now() + t.d * 86400000).toISOString(),
+            reviewRejectedBy: uid,
+            reviewRejectReason: t.reason,
+            createdAt: now, updatedAt: now,
+        }});
+    }
+    await window.safeBatchCommit(rejOps);
+
+    // ── G. KPI ЦІЛІ ПО МЕТРИКАХ ───────────────────────────
+    // Завантажуємо ID метрик і додаємо targets для ключових
+    const mSnap = await cr.collection('metrics').get();
+    const mMap = {};
+    mSnap.docs.forEach(d => { mMap[d.data().name] = d.id; });
+
+    const targetDefs = [
+        { name:'Виручка (тиждень)',        target:80000,  period:'weekly'  },
+        { name:'Нові замовлення',          target:4,      period:'weekly'  },
+        { name:'Конверсія лід→договір',    target:45,     period:'weekly'  },
+        { name:'Відсоток браку',           target:1.5,    period:'weekly'  },
+        { name:'Своєчасність доставки',    target:95,     period:'weekly'  },
+        { name:'Виконання задач вчасно',   target:90,     period:'weekly'  },
+        { name:'Виручка (місяць)',         target:320000, period:'monthly' },
+        { name:'Чистий прибуток',          target:70000,  period:'monthly' },
+        { name:'Маржинальність',           target:35,     period:'monthly' },
+        { name:'NPS клієнтів',             target:80,     period:'daily'   },
+        { name:'Нові ліди',                target:10,     period:'weekly'  },
+        { name:'Замовлень виготовлено',    target:22,     period:'monthly' },
+    ];
+    const tgtOps = [];
+    // Поточні periodKeys
+    const curWeek = (() => {
+        const d = new Date(); d.setHours(12,0,0,0);
+        const dow = d.getDay()||7; d.setDate(d.getDate()-dow+4);
+        const j1 = new Date(d.getFullYear(),0,1);
+        const wn = Math.ceil(((d-j1)/864e5+j1.getDay()+1)/7);
+        return d.getFullYear()+'-W'+String(wn).padStart(2,'0');
+    })();
+    const curMonth = new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
+    const curDay   = _demoDate(0);
+
+    for (const t of targetDefs) {
+        const mid = mMap[t.name];
+        if (!mid) continue;
+        const pk = t.period === 'monthly' ? curMonth : t.period === 'daily' ? curDay : curWeek;
+        // Додаємо для кількох минулих періодів теж
+        const periods = t.period === 'monthly' ? 3 : t.period === 'daily' ? 7 : 4;
+        for (let p = 0; p < periods; p++) {
+            let periodKey = pk;
+            if (p > 0) {
+                const d2 = new Date();
+                if (t.period === 'monthly') { d2.setMonth(d2.getMonth()-p); periodKey = d2.getFullYear()+'-'+String(d2.getMonth()+1).padStart(2,'0'); }
+                else if (t.period === 'daily') { d2.setDate(d2.getDate()-p); periodKey = d2.getFullYear()+'-'+String(d2.getMonth()+1).padStart(2,'0')+'-'+String(d2.getDate()).padStart(2,'0'); }
+                else { d2.setDate(d2.getDate()-p*7); d2.setHours(12,0,0,0); const dow=d2.getDay()||7; d2.setDate(d2.getDate()-dow+4); const j1=new Date(d2.getFullYear(),0,1); const wn=Math.ceil(((d2-j1)/864e5+j1.getDay()+1)/7); periodKey=d2.getFullYear()+'-W'+String(wn).padStart(2,'0'); }
+            }
+            tgtOps.push({type:'set', ref:cr.collection('metricTargets').doc(), data:{
+                metricId:    mid,
+                periodKey:   periodKey,
+                periodType:  t.period,
+                scope:       'company',
+                scopeId:     cr.id,
+                targetValue: t.target,
+                setBy:       uid,
+                createdAt:   now,
+            }});
+        }
+    }
+    if (tgtOps.length) await window.safeBatchCommit(tgtOps);
+
+    // ── H. СКЛАД — ПЕРЕМІЩЕННЯ МІЖ ЛОКАЦІЯМИ ──────────────
+    // Отримуємо ID локацій і товарів
+    const locSnap2 = await cr.collection('warehouse_locations').get();
+    const locIds = locSnap2.docs.map(d => d.id);
+    const itemSnap2 = await cr.collection('warehouse_items').get();
+    const itemData = itemSnap2.docs.map(d => ({id:d.id, name:d.data().name}));
+
+    if (locIds.length >= 2 && itemData.length >= 3) {
+        const transferOps = [];
+        // Переміщення: цех → шоурум (зразки для демонстрації)
+        const transfers = [
+            { itemIdx:3, qty:5,  note:'Зразки фасадів для шоуруму — для демонстрації клієнтам' },
+            { itemIdx:0, qty:2,  note:'ЛДСП для виставкового стенду' },
+            { itemIdx:5, qty:20, note:'Петлі на виїзний монтаж Іваненків' },
+        ];
+        for (const t of transfers) {
+            const item = itemData[t.itemIdx] || itemData[0];
+            transferOps.push({type:'set', ref:cr.collection('warehouse_operations').doc(), data:{
+                itemId:     item.id,
+                itemName:   item.name || '',
+                type:       'TRANSFER',
+                qty:        t.qty,
+                fromLocationId: locIds[0],
+                toLocationId:   locIds[1] || locIds[0],
+                note:       t.note,
+                date:       _demoDate(-2),
+                createdBy:  uid,
+                createdAt:  _demoTs(-2),
+            }});
+        }
+        await window.safeBatchCommit(transferOps);
+    }
+
+    // ── I. ІНВЕНТАРИЗАЦІЯ ──────────────────────────────────
+    if (locIds.length > 0 && itemData.length > 0) {
+        const invMonth = _demoDate(-15).slice(0,7); // минулий місяць
+        const invItems = itemData.slice(0,8).map((item, i) => {
+            const expectedQty = [45,28,32,120,15,340,85,22][i] || 10;
+            const actualQty   = expectedQty + [-2,0,1,-3,0,2,-1,0][i]; // невеликі відхилення
+            return {
+                itemId:   item.id,
+                itemName: item.name || '',
+                expected: expectedQty,
+                actual:   actualQty,
+                diff:     actualQty - expectedQty,
+            };
+        });
+        await cr.collection('warehouse_inventories').add({
+            locationId: locIds[0],
+            month:      invMonth,
+            items:      invItems,
+            status:     'confirmed',
+            createdBy:  uid,
+            createdAt:  _demoTs(-15),
+            updatedAt:  _demoTs(-15),
+        });
+    }
+
+    // ── J. CRM TODO — дзвінки на сьогодні ────────────────
+    // nextContactDate вже встановлений в CRM угодах (d:0 = сьогодні)
+    // Переконуємось що є угоди на сьогодні і завтра — вже є в DEALS
+    // Додаємо ще 2 угоди спеціально для CRM todo списку
+    const todayDeals = [
+        {
+            name:'Первинний дзвінок — Ковтун Марія',
+            client:'Ковтун Марія Василівна', phone:'+380671234050',
+            src:'instagram', stage:'new', amt:0, nc:0,
+            note:'Залишила коментар під постом про кухні. Хоче дізнатись ціни і терміни.',
+        },
+        {
+            name:'Нагадування — Бондар Олег (заміри)',
+            client:'Бондар Олег', phone:'+380671234051',
+            src:'referral', stage:'consultation', amt:45000, nc:0,
+            note:'Домовились перетелефонувати сьогодні після 14:00. Погодити дату виїзду.',
+        },
+    ];
+    const todayDealOps = [];
+    for (const d of todayDeals) {
+        todayDealOps.push({type:'set', ref:cr.collection('crm_deals').doc(), data:{
+            pipelineId:      pipRef.id,
+            title:           d.name,
+            clientName:      d.client,
+            phone:           d.phone,
+            source:          d.src,
+            stage:           d.stage,
+            amount:          d.amt,
+            note:            d.note,
+            nextContactDate: _demoDate(d.nc),
+            nextContactTime: d.nc === 0 ? '14:00' : '10:00',
+            assigneeId:      sRefs[1].id,
+            assigneeName:    STAFF[1].name,
+            createdAt:       _demoTs(-1),
+            updatedAt:       now,
+        }});
+    }
+    await window.safeBatchCommit(todayDealOps);
+
     // ── 12. Профіль компанії ────────────────────────────────
     await cr.update({
         name:           'МеблеМайстер',
