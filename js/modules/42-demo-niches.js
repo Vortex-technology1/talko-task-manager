@@ -431,7 +431,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
 
     // ── 7. CRM PIPELINE + УГОДИ ────────────────────────────
     // Спочатку зберігаємо pipeline окремо щоб отримати реальний ID
-    const pipRef = cr.collection('crm_pipelines').doc();
+    const pipRef = cr.collection('crm_pipeline').doc();
     await pipRef.set({
         name:'Продажі меблів',
         stages:[
@@ -488,7 +488,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         { name:'Обладнання',                type:'expense', color:'#14b8a6' },
         { name:'Аванси від клієнтів',       type:'income',  color:'#84cc16' },
     ];
-    const catRefs = FIN_CATS.map(() => cr.collection('financeCategories').doc());
+    const catRefs = FIN_CATS.map(() => cr.collection('finance_categories').doc());
     FIN_CATS.forEach((c,i) => ops.push({type:'set', ref:catRefs[i], data:{
         name:c.name, type:c.type, color:c.color, createdAt:now,
     }}));
@@ -525,14 +525,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         {ci:1, amt:39000, note:'Матеріали — січень',                        d:-60, type:'expense'},
         {ci:4, amt:112000,note:'Зарплата — січень',                         d:-36, type:'expense'},
     ];
-    for (const tx of TXS) {
-        ops.push({type:'set', ref:cr.collection('financeTransactions').doc(), data:{
-            categoryId:catRefs[tx.ci].id, categoryName:FIN_CATS[tx.ci].name,
-            type:tx.type, amount:tx.amt, note:tx.note,
-            date:_demoDate(tx.d),
-            createdBy:uid, createdAt:now,
-        }});
-    }
+    // TXS записи замінено TXS2 з accountId
 
     // ── 9. СКЛАД ───────────────────────────────────────────
     const STOCK = [
@@ -1138,6 +1131,95 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
     await window.safeBatchCommit(normOps);
 
+
+    // ── 6d. СТАНДАРТИ ВИРОБНИЦТВА (workStandards) ─────────
+    const stdOps = [];
+    const STD_DEFS = [
+        {
+            name:'Стандарт якості виготовлення кухні',
+            functionId: fRefs[3].id,
+            checklist: [
+                'Перевірити відповідність розмірів кресленню (±2мм)',
+                'Перевірити якість кромкування (без відшарувань)',
+                'Перевірити роботу петель та напрямних',
+                'Перевірити відсутність подряпин на фасадах',
+                'Перевірити щільність прилягання дверей',
+            ],
+            acceptanceCriteria: [
+                'Всі розміри в допуску ±2мм',
+                'Кромка без дефектів на 100% периметру',
+                'Фурнітура працює плавно без заїдань',
+            ],
+            instructionsHtml: '<p>Перевірка виконується майстром ВТК перед відвантаженням. Фото обовязкове.</p>',
+        },
+        {
+            name:'Стандарт прийому замовлення від клієнта',
+            functionId: fRefs[1].id,
+            checklist: [
+                'Уточнити розміри та конфігурацію',
+                'Узгодити колір та матеріал фасадів',
+                'Уточнити бюджет та терміни',
+                'Зафіксувати контактні дані клієнта',
+                'Погодити дату виїзного заміру',
+            ],
+            acceptanceCriteria: [
+                'Заповнена картка клієнта в CRM',
+                'Визначена орієнтовна сума замовлення',
+                'Погоджена дата наступного кроку',
+            ],
+            instructionsHtml: '<p>Менеджер заповнює картку в CRM одразу під час дзвінка.</p>',
+        },
+        {
+            name:'Стандарт виїзного заміру',
+            functionId: fRefs[2].id,
+            checklist: [
+                'Заміряти всі стіни та прорізи (висота, ширина, глибина)',
+                'Зафіксувати розміщення розеток та виводів',
+                'Сфотографувати приміщення (мін. 5 фото)',
+                'Перевірити рівень стін і підлоги',
+                'Уточнити побажання клієнта на місці',
+            ],
+            acceptanceCriteria: [
+                'Всі заміри занесені в форму',
+                'Фото прикріплені до картки клієнта',
+                'Узгоджені нестандартні рішення',
+            ],
+            instructionsHtml: '<p>Замір виконується дизайнером або майстром. Подвійний контроль обовязковий.</p>',
+        },
+        {
+            name:'Стандарт пакування та підготовки до відвантаження',
+            functionId: fRefs[4].id,
+            checklist: [
+                'Пронумерувати всі деталі згідно схеми монтажу',
+                'Загорнути фасади в захисну плівку',
+                'Укласти фурнітуру в окремий пакет з маркуванням',
+                'Перевірити комплектність по специфікації',
+                'Скласти акт пакування',
+            ],
+            acceptanceCriteria: [
+                'Всі деталі пронумеровані та зафіксовані',
+                'Акт пакування підписаний',
+                'Нічого не загублено при транспортуванні',
+            ],
+            instructionsHtml: '<p>Пакування виконується день до відвантаження. Фото комплектації обовязкове.</p>',
+        },
+    ];
+    for (const s of STD_DEFS) {
+        stdOps.push({type:'set', ref:cr.collection('workStandards').doc(), data:{
+            name:               s.name,
+            functionId:         s.functionId,
+            checklist:          s.checklist,
+            acceptanceCriteria: s.acceptanceCriteria,
+            instructionsHtml:   s.instructionsHtml,
+            createdBy:          uid,
+            createdAt:          now,
+            updatedAt:          now,
+        }});
+    }
+    await window.safeBatchCommit(stdOps);
+
+    // Транзакції прив'язані до проєктів
+    // (оновлюємо частину транзакцій з projectId після запису проєктів)
 
     // ── 13+. ДОПОВНЕННЯ — постачальники, локації, планування, процеси ─
 
