@@ -362,27 +362,66 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }});
 
     // ── 11. КООРДИНАЦІЇ ─────────────────────────────────────
+    // Структура: name, type, chairmanId, participantIds, schedule:{day,time}
+    // types: daily, weekly, monthly, council_rec, council_dir, council_own, oneoff
     const COORDS = [
         {
-            title:'Тижнева нарада — виробництво та продажі',
-            date:_demoDate(-1), time:'09:00', dur:45, status:'completed',
-            agenda:['Статус поточних замовлень','Проблеми у виробництві','Нові замовлення на тиждень','Закупівлі матеріалів'],
-            decisions:['Запустити замовлення Ковалів з понеділка','Закупити ЛДСП горіх — 15 листів до середи','Тарас відповідає за монтаж Іваненків'],
+            name:'Тижнева нарада — виробництво та продажі',
+            type:'weekly',
+            chairmanId: sRefs[0].id,
+            participantIds:[sRefs[0].id, sRefs[1].id, sRefs[3].id, sRefs[4].id],
+            schedule:{ day:1, time:'09:00' }, // Понеділок 09:00
+            status:'active',
+            agendaItems:['stats','execution','reports','questions','tasks'],
+            dynamicAgenda:[
+                { id:'da1', text:'Статус замовлення Ковалів', authorId:sRefs[1].id, createdAt:new Date().toISOString() },
+                { id:'da2', text:'Закупівля ЛДСП — терміново', authorId:sRefs[3].id, createdAt:new Date().toISOString() },
+            ],
         },
         {
-            title:'Оперативка з дизайнерами',
-            date:_demoDate(-3), time:'11:00', dur:30, status:'completed',
-            agenda:['Статус проєктів','Правки по кухні Романової','Нові заявки на дизайн'],
-            decisions:['Катерина завершує 3D Марченків до четверга','Нові ТЗ погоджувати з клієнтом до запуску у виробництво'],
+            name:'Щоденний стенд-ап цеху',
+            type:'daily',
+            chairmanId: sRefs[3].id,
+            participantIds:[sRefs[3].id, sRefs[4].id, sRefs[6].id],
+            schedule:{ day:null, time:'08:00' },
+            status:'active',
+            agendaItems:['execution','tasks'],
+            dynamicAgenda:[],
+        },
+        {
+            name:'Оперативка з дизайнерами',
+            type:'weekly',
+            chairmanId: sRefs[5].id,
+            participantIds:[sRefs[0].id, sRefs[1].id, sRefs[5].id],
+            schedule:{ day:3, time:'11:00' }, // Середа 11:00
+            status:'active',
+            agendaItems:['reports','questions','tasks'],
+            dynamicAgenda:[
+                { id:'da3', text:'Правки по кухні Романової', authorId:sRefs[5].id, createdAt:new Date().toISOString() },
+            ],
+        },
+        {
+            name:'Рада власника — підсумки місяця',
+            type:'council_own',
+            chairmanId: sRefs[0].id,
+            participantIds:[sRefs[0].id, sRefs[1].id, sRefs[7].id],
+            schedule:{ day:5, time:'17:00' }, // П'ятниця 17:00
+            status:'active',
+            agendaItems:['stats','execution','reports','decisions'],
+            dynamicAgenda:[],
         },
     ];
     for (const c of COORDS) {
         ops.push({type:'set', ref:cr.collection('coordinations').doc(), data:{
-            title:c.title, date:c.date, time:c.time, duration:c.dur, status:c.status,
-            agenda:c.agenda, decisions:c.decisions,
-            participants:[sRefs[0].id, sRefs[1].id, sRefs[3].id],
-            participantNames:[STAFF[0].name, STAFF[1].name, STAFF[3].name],
-            createdBy:uid, createdAt:now,
+            name: c.name,
+            type: c.type,
+            chairmanId: c.chairmanId,
+            participantIds: c.participantIds,
+            schedule: c.schedule,
+            status: c.status,
+            agendaItems: c.agendaItems,
+            dynamicAgenda: c.dynamicAgenda,
+            createdBy: uid, createdAt: now, updatedAt: now,
         }});
     }
 

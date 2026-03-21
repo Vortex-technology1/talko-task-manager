@@ -663,37 +663,95 @@
     }
 
     function coordCard(c) {
-        const type = TYPES[c.type]||{ label:c.type, icon:'', color:'#6b7280', duration:60 };
-        const chair = coordUsers.find(u => u.id === c.chairmanId);
-        const chairName = chair ? (chair.name||chair.email).split(' ')[0] : '—';
-        const cnt = (c.participantIds||[]).length;
-        const sched = c.schedule?.day && c.schedule?.time ? `${DAYS_UK[c.schedule.day]||''} ${c.schedule.time}` : (c.schedule?.time||'');
-        const active = c.status !== 'paused';
+        const type    = TYPES[c.type]||{ label:c.type, icon:'', color:'#6b7280', duration:60 };
+        const chair   = coordUsers.find(u => u.id === c.chairmanId);
+        const chairName = chair ? (chair.name||chair.email) : '—';
+        const chairInitial = chair ? (chair.name||chair.email||'?')[0].toUpperCase() : '?';
+        const participants = (c.participantIds||[]).map(pid => coordUsers.find(u=>u.id===pid)).filter(Boolean);
+        const cnt     = participants.length;
+        const sched   = c.schedule?.day != null && c.schedule?.time
+            ? `${DAYS_UK[c.schedule.day]||''} ${c.schedule.time}`
+            : (c.schedule?.time||'');
+        const active  = c.status !== 'paused';
+        const dynCnt  = (c.dynamicAgenda||[]).length;
         const escalType = ESCALATION_CHAIN[c.type];
         const hasEscalated = (escalType && coordinations.find(x=>x.type===escalType)) || c.escalTargetId;
-        return `<div style="background:#fff;border-radius:14px;padding:1rem 1.1rem;border:1.5px solid ${active?'#f0f0f0':'#fde68a'};box-shadow:0 1px 4px rgba(0,0,0,.05);transition:box-shadow .15s;" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.1)'" onmouseleave="this.style.boxShadow='0 1px 4px rgba(0,0,0,.05)'">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.45rem;">
-            <div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:0;">
-              <span style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:${type.color}18;flex-shrink:0;"><i data-lucide="${COORD_LUCIDE_ICONS[c.type]||'calendar'}" style="width:15px;height:15px;color:${type.color};"></i></span>
-              <span style="font-weight:700;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(c.name)}">${esc(c.name)}</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:.25rem;flex-shrink:0;">
-              <span style="width:7px;height:7px;border-radius:50%;background:${active?'#22c55e':'#fbbf24'};display:inline-block;"></span>
-              ${isManager()?`<button onclick="openCoordModal('${c.id}')" style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:2px 3px;"><i data-lucide="pencil" style="width:13px;height:13px;"></i></button><button onclick="deleteCoord('${c.id}')" style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px 3px;"><i data-lucide="trash-2" style="width:13px;height:13px;"></i></button>`:''}
+        // Колір лівого бордера по типу
+        const borderLeft = `4px solid ${type.color}`;
+
+        return `<div style="background:#fff;border-radius:16px;border:1px solid #f0f0f0;border-left:${borderLeft};
+            box-shadow:0 2px 8px rgba(0,0,0,.04);transition:all .18s;cursor:default;overflow:hidden;"
+            onmouseenter="this.style.boxShadow='0 6px 20px rgba(0,0,0,.09)';this.style.transform='translateY(-1px)'"
+            onmouseleave="this.style.boxShadow='0 2px 8px rgba(0,0,0,.04)';this.style.transform='none'">
+
+          <!-- Кольоровий топ-бар -->
+          <div style="background:${type.color}10;padding:.65rem 1rem .55rem;border-bottom:1px solid ${type.color}20;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+              <div style="display:flex;align-items:center;gap:.55rem;flex:1;min-width:0;">
+                <span style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;background:${type.color}22;flex-shrink:0;">
+                  <i data-lucide="${COORD_LUCIDE_ICONS[c.type]||'calendar'}" style="width:16px;height:16px;color:${type.color};"></i>
+                </span>
+                <div style="min-width:0;">
+                  <div style="font-weight:700;font-size:.88rem;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(c.name)}">${esc(c.name)}</div>
+                  <div style="font-size:.68rem;font-weight:600;color:${type.color};margin-top:1px;">${type.label}</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:.2rem;flex-shrink:0;">
+                <span style="display:flex;align-items:center;gap:3px;font-size:.68rem;color:${active?'#16a34a':'#b45309'};background:${active?'#f0fdf4':'#fef3c7'};padding:2px 7px;border-radius:10px;font-weight:600;">
+                  <span style="width:5px;height:5px;border-radius:50%;background:${active?'#22c55e':'#f59e0b'};display:inline-block;"></span>
+                  ${active?'Активна':'Пауза'}
+                </span>
+                ${isManager()?`<button onclick="openCoordModal('${c.id}')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:3px;border-radius:6px;" onmouseenter="this.style.color='#374151'" onmouseleave="this.style.color='#9ca3af'"><i data-lucide="pencil" style="width:13px;height:13px;"></i></button>
+                <button onclick="deleteCoord('${c.id}')" style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:3px;border-radius:6px;" onmouseenter="this.style.color='#ef4444'" onmouseleave="this.style.color='#fca5a5'"><i data-lucide="trash-2" style="width:13px;height:13px;"></i></button>`:''}
+              </div>
             </div>
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.55rem;">
-            <span style="background:${type.color}18;color:${type.color};padding:.1rem .4rem;border-radius:5px;font-size:.7rem;font-weight:600;">${type.label}</span>
-            ${sched?`<span style="background:#f3f4f6;color:#6b7280;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span> ${esc(sched)}</span>`:''}
-            <span style="background:#f0fdf4;color:#16a34a;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;"><i data-lucide="users" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:2px;"></i>${cnt}</span>
-            <span style="background:#f3f4f6;color:#6b7280;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span> ~${type.duration}хв</span>
-            ${(c.dynamicAgenda||[]).length?`<span style="background:#fef3c7;color:#d97706;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;"><i data-lucide="help-circle" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:2px;"></i>${c.dynamicAgenda.length}</span>`:''}
+
+          <!-- Тіло картки -->
+          <div style="padding:.7rem 1rem;">
+
+            <!-- Розклад + тривалість -->
+            <div style="display:flex;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap;">
+              ${sched?`<div style="display:flex;align-items:center;gap:4px;background:#f3f4f6;border-radius:8px;padding:3px 9px;font-size:.72rem;color:#374151;font-weight:600;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                ${esc(sched)}
+              </div>`:''}
+              <div style="display:flex;align-items:center;gap:4px;background:#f3f4f6;border-radius:8px;padding:3px 9px;font-size:.72rem;color:#6b7280;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                ~${type.duration} хв
+              </div>
+              ${dynCnt?`<div style="display:flex;align-items:center;gap:4px;background:#fef3c7;border-radius:8px;padding:3px 9px;font-size:.72rem;color:#b45309;font-weight:600;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                ${dynCnt} питань
+              </div>`:''}
+              ${hasEscalated?`<div style="background:#fdf4ff;border-radius:8px;padding:3px 9px;font-size:.68rem;color:#7c3aed;">↑ ${window.t('escalationArrow2')||'ескалація'}</div>`:''}
+            </div>
+
+            <!-- Голова + учасники -->
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
+              <div style="display:flex;align-items:center;gap:.4rem;">
+                <div style="width:22px;height:22px;border-radius:50%;background:${type.color};display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:#fff;flex-shrink:0;">${chairInitial}</div>
+                <span style="font-size:.75rem;color:#374151;font-weight:500;">${esc(chairName.split(' ')[0])}</span>
+              </div>
+              <!-- Аватари учасників -->
+              <div style="display:flex;align-items:center;">
+                ${participants.slice(0,4).map((u,i) => `<div style="width:22px;height:22px;border-radius:50%;background:#${['6366f1','f59e0b','22c55e','0ea5e9'][i%4]};border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:#fff;margin-left:${i?'-6':'0'}px;flex-shrink:0;" title="${esc(u.name||u.email)}">${(u.name||u.email||'?')[0].toUpperCase()}</div>`).join('')}
+                ${cnt>4?`<div style="width:22px;height:22px;border-radius:50%;background:#e5e7eb;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:.58rem;color:#6b7280;margin-left:-6px;">+${cnt-4}</div>`:''}
+              </div>
+            </div>
           </div>
-          <div style="font-size:.77rem;color:#6b7280;margin-bottom:.55rem;">Голова: <strong style="color:#374151;">${esc(chairName)}</strong>${hasEscalated?` <span style="color:#9ca3af;font-size:.7rem;">${window.t('escalationArrow2')}</span>`:''}</div>
-          <div style="display:flex;gap:.4rem;">
-            <button onclick="startCoordSession('${c.id}')" class="btn btn-success" style="flex:1;padding:.35rem;font-size:.78rem;border-radius:9px;"><i data-lucide="play" style="width:13px;height:13px;"></i> Розпочати</button>
-            <button onclick="openDynAgenda('${c.id}')" style="padding:.35rem .55rem;border-radius:9px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;" title="${ct('agendaTitle')}"><i data-lucide="list" style="width:14px;height:14px;"></i></button>
-            <button onclick="viewCoordHistory('${c.id}')" style="padding:.35rem .55rem;border-radius:9px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;" title="Протоколи">${si('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>')}</button>
+
+          <!-- Кнопки дій -->
+          <div style="padding:.5rem .75rem .65rem;border-top:1px solid #f3f4f6;display:flex;gap:.4rem;">
+            <button onclick="startCoordSession('${c.id}')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:.45rem;border-radius:10px;border:none;background:#22c55e;color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;transition:background .15s;" onmouseenter="this.style.background='#16a34a'" onmouseleave="this.style.background='#22c55e'">
+              <i data-lucide="play" style="width:13px;height:13px;"></i> Розпочати
+            </button>
+            <button onclick="openDynAgenda('${c.id}')" style="display:flex;align-items:center;justify-content:center;padding:.45rem .65rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;transition:all .15s;" onmouseenter="this.style.borderColor='#22c55e';this.style.color='#16a34a'" onmouseleave="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'" title="Порядок денний">
+              <i data-lucide="list" style="width:14px;height:14px;"></i>
+            </button>
+            <button onclick="viewCoordHistory('${c.id}')" style="display:flex;align-items:center;justify-content:center;padding:.45rem .65rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;transition:all .15s;" onmouseenter="this.style.borderColor='#6366f1';this.style.color='#6366f1'" onmouseleave="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'" title="Протоколи">
+              ${si('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>')}
+            </button>
           </div>
         </div>`;
     }
