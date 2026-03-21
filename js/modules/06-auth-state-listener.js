@@ -104,6 +104,10 @@
                 const showDemo = isSuperAdmin || currentUserData?.role === 'owner';
                 document.getElementById('demoDataBtnDesktop').style.display = showDemo ? 'flex' : 'none';
                 document.getElementById('demoDataBtn').style.display = showDemo ? 'flex' : 'none';
+
+                // Кнопка Тур: для всіх залогінених
+                const tourBtn = document.getElementById('tourBtnDesktop');
+                if (tourBtn) tourBtn.style.display = 'flex';
                 
                 // AI buttons: Generator + Import = owner only, AI config = admin/superadmin only
                 const isOwnerRole = currentUserData?.role === 'owner';
