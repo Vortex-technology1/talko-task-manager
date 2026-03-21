@@ -2038,7 +2038,10 @@ function _renderDealDetails(deal) {
         </div>
         <div>
             <label style="${lbl}">Наступний контакт</label>
-            <input id="dd_nextContact" type="date" value="${deal.nextContactDate||''}" style="${inp}${deal.nextContactDate && deal.nextContactDate < new Date().toISOString().split('T')[0] ? 'border-color:#ef4444;' : ''}">
+            <div style="display:flex;gap:0.35rem;">
+                <input id="dd_nextContact" type="date" value="${deal.nextContactDate||''}" style="${inp}${deal.nextContactDate && deal.nextContactDate < new Date().toISOString().split('T')[0] ? 'border-color:#ef4444;' : ''}flex:1;min-width:0;">
+                <input id="dd_nextContactTime" type="time" value="${deal.nextContactTime||''}" style="padding:0.45rem 0.4rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;width:82px;">
+            </div>
         </div>
     </div>
     <div style="${row}">
@@ -2473,6 +2476,7 @@ window.crmSaveDeal = async function(dealId) {
             phone, email, telegram, instagram, source,
             ttn: ttn || null, payStatus: payStatus || null,
             expectedClose: expClose||null, nextContactDate: nextContact||null,
+            nextContactTime: document.getElementById('dd_nextContactTime')?.value || null,
             assigneeId: assigneeId||deal.assigneeId||null,
             // ── Поля замовлення (штори) ──
             branch: branch || null,
@@ -5158,15 +5162,21 @@ function _checkContactReminders() {
         d.stage !== 'won' && d.stage !== 'lost'
     );
 
-    // Toast — завжди показуємо
-    if (overdue.length > 0) {
+    // Toast — показуємо один раз за сесію (не флудимо при повторному відкритті CRM)
+    const toastKey = 'crm-toast-' + new Date().toISOString().split('T')[0];
+    let toastShown = false;
+    try { toastShown = !!sessionStorage.getItem(toastKey); } catch(e) {}
+    if (!toastShown) {
+        try { sessionStorage.setItem(toastKey, '1'); } catch(e) {}
+    }
+    if (!toastShown && overdue.length > 0) {
         const label = overdue[0].clientName || overdue[0].title || window.t('crmDeal');
         const msg = overdue.length === 1
             ? `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> Прострочений контакт: ${label}`
             : `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> ${overdue.length} ${window.t('crmOverdueContacts')}`;
         if (typeof showToast === 'function') showToast(msg, 'error');
     }
-    if (dueToday.length > 0) {
+    if (!toastShown && dueToday.length > 0) {
         const label = dueToday[0].clientName || dueToday[0].title || window.t('crmDeal');
         const msg = dueToday.length === 1
             ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Контакт сьогодні: ${label}`

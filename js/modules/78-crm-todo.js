@@ -347,7 +347,8 @@ window.crmTodoOpenCard = async function(dealId) {
       style="position:fixed;inset:0;background:rgba(0,0,0,0.25);z-index:10050;display:flex;justify-content:flex-end;">
       <div style="background:#fff;width:100%;max-width:520px;height:100%;overflow-y:auto;
         box-shadow:-8px 0 32px rgba(0,0,0,0.15);
-        animation:crmSlideIn 0.22s cubic-bezier(0.16,1,0.3,1);">
+        animation:crmSlideIn 0.22s cubic-bezier(0.16,1,0.3,1);
+        padding-bottom:env(safe-area-inset-bottom,0px);">
 
         <!-- Хедер картки -->
         <div style="padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;">
@@ -375,8 +376,8 @@ window.crmTodoOpenCard = async function(dealId) {
           <div style="display:flex;gap:0.4rem;margin-top:0.65rem;flex-wrap:wrap;align-items:center;">
             ${deal.phone?`
               <a href="tel:${_esc(deal.phone)}" style="display:flex;align-items:center;gap:4px;background:#f3f4f6;border-radius:6px;padding:4px 10px;font-size:0.78rem;color:#374151;text-decoration:none;font-weight:500;">${TI.phone} ${_esc(deal.phone)}</a>
-              <a href="https://wa.me/${deal.phone.replace(/\D/g,'')}" target="_blank" style="background:#f0fdf4;border-radius:6px;padding:4px 8px;font-size:0.72rem;color:#16a34a;text-decoration:none;">WA</a>
-              <a href="viber://chat?number=${deal.phone.replace(/\D/g,'')}" target="_blank" style="background:#faf5ff;border-radius:6px;padding:4px 8px;font-size:0.72rem;color:#7c3aed;text-decoration:none;">Viber</a>
+              <a href="https://wa.me/${_esc(deal.phone.replace(/\D/g,''))}" target="_blank" style="background:#f0fdf4;border-radius:6px;padding:4px 8px;font-size:0.72rem;color:#16a34a;text-decoration:none;">WA</a>
+              <a href="viber://chat?number=${_esc(deal.phone.replace(/\D/g,''))}" target="_blank" style="background:#faf5ff;border-radius:6px;padding:4px 8px;font-size:0.72rem;color:#7c3aed;text-decoration:none;">Viber</a>
             `:''}
             ${deal.telegram?`<a href="https://t.me/${deal.telegram.replace('@','')}" target="_blank" style="display:flex;align-items:center;gap:4px;background:#f0f9ff;border-radius:6px;padding:4px 10px;font-size:0.78rem;color:#0ea5e9;text-decoration:none;font-weight:500;">${TI.tg} ${_esc(deal.telegram)}</a>`:''}
           </div>
@@ -552,6 +553,8 @@ window._crmTodoSelectResult = function(type, dealId) {
         if (el) el.value = _tomorrowStr();
         form.innerHTML = `<div style="background:#fef2f2;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.78rem;color:#dc2626;display:flex;align-items:center;gap:0.4rem;">
             Не взяв. Контакт перенесений на завтра. Змініть дату вище якщо потрібно.</div>`;
+        // Після програмного встановлення дати — оновлюємо стан кнопки
+        _crmTodoValidate();
     } else if (type === 'sms') {
         form.innerHTML = `<div><label style="${lbl}">Текст повідомлення</label>
             <textarea id="crmTodoSmsText" rows="2" placeholder="Текст..." style="${inp}resize:none;"></textarea></div>`;
@@ -752,6 +755,10 @@ window._crmTodoSaveConsultation = async function(dealId) {
     const note = document.getElementById('consultNote')?.value || '';
     if (!date) { if(window.showToast) showToast('Вкажіть дату', 'warning'); return; }
 
+    // Захист від подвійного кліку
+    const saveBtn = document.querySelector('#crmConsultModal button[onclick*="SaveConsultation"]');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Зберігаю...'; }
+
     try {
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
         await ref.update({
@@ -779,6 +786,7 @@ window._crmTodoSaveConsultation = async function(dealId) {
         if (window.showToast) showToast('Консультацію призначено', 'success');
         if (typeof renderCrmTodo === 'function') renderCrmTodo();
     } catch(e) {
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Призначити'; }
         if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
 };
@@ -842,7 +850,9 @@ window._getCrmTodoForMyDay = function() {
                 title:d.note||d.notes||'(без нотатки)',
                 client:d.clientName||d.title||'',
                 phone:d.phone||'', telegram:d.telegram||'',
-                date:d.nextContactDate||null, overdue:fmt&&fmt.overdue||false,
+                date:d.nextContactDate||null,
+                time:d.nextContactTime||null,
+                overdue:fmt&&fmt.overdue||false,
                 stage:d.stage, onClick:()=>crmTodoOpenCard(d.id),
             };
         });
