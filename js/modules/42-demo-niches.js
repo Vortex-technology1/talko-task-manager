@@ -46,13 +46,32 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         { name:'7. Управління',               color:'#374151', desc:'Координація, планування, KPI, стратегія, контроль виконання' },
     ];
     const fRefs = FUNCS.map(() => cr.collection('functions').doc());
+    // Власники функцій призначаються після створення staffRefs
+    // Тимчасово зберігаємо без ownerId — оновимо після створення staff
     FUNCS.forEach((f,i) => ops.push({type:'set', ref:fRefs[i], data:{
         name:f.name, description:f.desc, color:f.color,
         order: i,
+        ownerId: uid,        // власник компанії як тимчасовий власник
+        ownerName: 'Олексій Мороз',
         status:'active', createdBy:uid, createdAt:now, updatedAt:now,
     }}));
 
     // ── 2. СПІВРОБІТНИКИ ────────────────────────────────────
+    // Спочатку видаляємо старих demo-юзерів щоб уникнути дублікатів
+    try {
+        const oldUsers = await cr.collection('users').get();
+        if (!oldUsers.empty) {
+            const delOps = [];
+            // Видаляємо тільки demo-акаунти (не поточного власника)
+            oldUsers.docs.forEach(d => {
+                if (d.id !== uid) {
+                    delOps.push({type:'delete', ref:cr.collection('users').doc(d.id)});
+                }
+            });
+            if (delOps.length) await window.safeBatchCommit(delOps);
+        }
+    } catch(e) { console.warn('[demo] cleanup users:', e.message); }
+
     const STAFF = [
         { name:'Олексій Мороз',    role:'owner',    fi:null, pos:'Власник / Директор' },
         { name:'Ірина Сидоренко',  role:'manager',  fi:1,    pos:'Менеджер з продажів' },

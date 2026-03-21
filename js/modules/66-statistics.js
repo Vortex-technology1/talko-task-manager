@@ -1002,11 +1002,16 @@
         c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;"><div class="spinner" style="margin:0 auto;"></div></div>';
 
         try {
-            // Збираємо periodKeys тільки для ПОТОЧНОГО типу частоти
-            // Уникаємо cross-type запитів: daily(14)+weekly(12)+monthly(8) = 35 ключів > 30 Firestore 'in' ліміт → 400
+            // Завантажуємо entries для ВСІХ частот — бо renderFrequencyGroup
+            // показує всі групи (weekly, monthly, daily) незалежно від statsPeriodType
             const allPeriodKeys = new Set([pk]);
+            // Поточний тип
             const _pkCount = statsPeriodType === 'daily' ? 14 : statsPeriodType === 'monthly' ? 8 : 12;
             for (let i = 1; i < _pkCount; i++) allPeriodKeys.add(getStatsPeriodKey(-i));
+            // Додаємо monthly (8 місяців) і weekly (12 тижнів) незалежно від поточного типу
+            for (let i = 0; i < 8; i++) allPeriodKeys.add(getStatsPeriodKey(-i, 'monthly'));
+            for (let i = 0; i < 12; i++) allPeriodKeys.add(getStatsPeriodKey(-i, 'weekly'));
+            for (let i = 0; i < 7; i++) allPeriodKeys.add(getStatsPeriodKey(-i, 'daily'));
             await Promise.all([
                 loadMetrics(),
                 loadEntriesMulti([...allPeriodKeys]),
