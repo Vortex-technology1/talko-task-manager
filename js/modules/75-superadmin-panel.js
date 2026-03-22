@@ -21,27 +21,51 @@ const FEATURES = [
 
 window.deleteEmptyCompanies = async function() {
     if (!window.isSuperAdmin) return;
+
+    const confirmed = window.showConfirmModal
+        ? await window.showConfirmModal('Видалити всі компанії без юзерів і задач?', { danger: true })
+        : confirm('Видалити всі порожні компанії?');
     if (!confirmed) return;
+
+    const db = firebase.firestore();
+    if (typeof showToast === 'function') showToast('Перевіряємо компанії...', 'info');
 
     try {
         const snap = await db.collection('companies').get();
         let deleted = 0;
+        const toDelete = [];
+
         for (const doc of snap.docs) {
-            const data = doc.data();
-            // Пропускаємо компанії з власником або назвою що містить реальні дані
-            const usersSnap = await db.collection('companies').doc(doc.id).collection('users').limit(1).get();
-            const tasksSnap = await db.collection('companies').doc(doc.id).collection('tasks').limit(1).get();
-            
+            const [usersSnap, tasksSnap] = await Promise.all([
+                db.collection('companies').doc(doc.id).collection('users').limit(1).get(),
+                db.collection('companies').doc(doc.id).collection('tasks').limit(1).get(),
+            ]);
             if (usersSnap.empty && tasksSnap.empty) {
-                await db.collection('companies').doc(doc.id).delete();
-                deleted++;
-                console.log('[Admin] Deleted empty company:', doc.id, data.name || '—');
+                toDelete.push(doc);
             }
         }
-        if (typeof showToast==='function') showToast(`Видалено ${deleted} пустих компаній ✓`, 'success');
+
+        if (toDelete.length === 0) {
+            if (typeof showToast === 'function') showToast('Порожніх компаній не знайдено', 'info');
+            return;
+        }
+
+        // Show what will be deleted
+        const names = toDelete.map(d => d.data().name || d.id).join(', ');
+        const confirmed2 = window.showConfirmModal
+            ? await window.showConfirmModal(`Буде видалено ${toDelete.length} компаній: ${names}`, { danger: true })
+            : confirm(`Видалити ${toDelete.length} компаній: ${names}?`);
+        if (!confirmed2) return;
+
+        for (const doc of toDelete) {
+            await db.collection('companies').doc(doc.id).delete();
+            deleted++;
+        }
+
+        if (typeof showToast === 'function') showToast(`Видалено ${deleted} порожніх компаній ✓`, 'success');
         loadSuperadminData();
     } catch(e) {
-        if (typeof showToast==='function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
     }
 };
 
@@ -85,7 +109,7 @@ async function loadSuperadminData() {
                     aiRecSnap, snapshotSnap, weeklyLogSnap,
                     aiUsageTodaySnap, aiUsageMonthSnap,
                     notesSnap,
-                    allTasksSnap, crmDealsSnap, crmClientsSnap,
+                    crmDealsSnap, _unused, crmClientsSnap,
                     bookingSnap, financeSnap, metricsSnap, metricEntriesSnap
                 ] = await Promise.all([
                     db.collection('companies').doc(cid).collection('users').get().catch(()=>({docs:[]})),
@@ -103,8 +127,10 @@ async function loadSuperadminData() {
                         .where('month','==',monthKey).get().catch(()=>({docs:[]})),
                     db.collection('companies').doc(cid).collection('sa_notes').orderBy('createdAt','desc').limit(5).get().catch(()=>({docs:[]})),
                     // Doc counts (lightweight — count only, limit 1000)
-                    db.collection('companies').doc(cid).collection('tasks').limit(1000).get().catch(()=>({docs:[]})),
+                    // Note: tasks reuse tasksSnap below — skip separate read
                     db.collection('companies').doc(cid).collection('crm_deals').limit(1000).get().catch(()=>({docs:[]})),
+                    // placeholder to keep array indices — resolved immediately
+                    Promise.resolve({docs:[]}),
                     db.collection('companies').doc(cid).collection('crm_clients').limit(1000).get().catch(()=>({docs:[]})),
                     db.collection('companies').doc(cid).collection('booking_appointments').limit(500).get().catch(()=>({docs:[]})),
                     db.collection('companies').doc(cid).collection('finance_transactions').limit(1000).get().catch(()=>({docs:[]})),
@@ -133,13 +159,24 @@ async function loadSuperadminData() {
                 const ownerRatio = snap?.signals?.ownerTaskRatio || 0;
 
                 let health = 100;
-                if (!hasEvents) health -= 30;                          // немає активності
-                else if (eventsSnap.docs.length < 10) health -= 15;   // мало активності
-                if (overdueRatio > 0.3) health -= 20;                 // >30% просрочено
+                // Активність (30 балів)
+                if (!hasEvents) health -= 30;
+                else if (eventsSnap.docs.length < 10) health -= 15;
+                else if (eventsSnap.docs.length < 30) health -= 5;
+                // Прострочені задачі (20 балів)
+                if (overdueRatio > 0.3) health -= 20;
                 else if (overdueRatio > 0.1) health -= 10;
-                if (ownerRatio > 0.4) health -= 15;                   // власник завантажений
-                if (users.length > 0 && tgLinked === 0) health -= 10; // ніхто не підключив TG
-                if (c.aiEnabled === false) health -= 5;               // AI вимкнено
+                else if (overdueRatio === 0 && activeTasks > 0) health += 5; // бонус: все вчасно
+                // Власник перевантажений (15 балів)
+                if (ownerRatio > 0.4) health -= 15;
+                else if (ownerRatio > 0.25) health -= 7;
+                // TG підключення (10 балів)
+                if (users.length > 0 && tgLinked === 0) health -= 10;
+                else if (tgLinked >= users.length * 0.5) health += 3; // бонус: >50% з TG
+                // AI вимкнено (5 балів)
+                if (c.aiEnabled === false) health -= 5;
+                // Нова компанія (< 3 події — не карати сильно)
+                if (eventsSnap.docs.length < 3 && users.length <= 1) health = Math.max(health, 50);
                 health = Math.max(0, Math.min(100, health));
 
                 // ── Feature adoption (які вкладки відкривали) ────────
@@ -155,7 +192,7 @@ async function loadSuperadminData() {
 
                 // ── Doc counts → Firestore usage estimate ───────────────
                 const docCounts = {
-                    tasks:       allTasksSnap.docs.length,
+                    tasks:       tasksSnap.docs.length, // reuse existing snap
                     deals:       crmDealsSnap.docs.length,
                     clients:     crmClientsSnap.docs.length,
                     bookings:    bookingSnap.docs.length,
@@ -244,14 +281,14 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
     container.innerHTML = `
 <!-- KPI Strip -->
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:0.5rem;margin-bottom:1rem;">
-    ${_saKpi('Компаній',   compDocs.length,          '#3b82f6')}
-    ${_saKpi('Юзерів',     totalUsers,               '#8b5cf6')}
-    ${_saKpi('Задач',      totalActive,              '#f59e0b')}
-    ${_saKpi('Простроч.',  totalOverdue, totalOverdue>0?'#ef4444':'#22c55e')}
-    ${_saKpi('Health avg', avgHealth+'%', avgHealth>=70?'#22c55e':avgHealth>=40?'#f59e0b':'#ef4444')}
-    ${_saKpi('Events 7д',  totalEvents,              '#06b6d4')}
-    ${_saKpi('TG підкл.',  totalTg,                  '#22c55e')}
-    ${_saKpi('Алертів',    alertCount, alertCount>0?'#ef4444':'#22c55e')}
+    ${_saKpi('Компаній',   compDocs.length,          '#3b82f6', 'Загальна кількість компаній на платформі')}
+    ${_saKpi('Юзерів',     totalUsers,               '#8b5cf6', 'Сума всіх співробітників у всіх компаніях')}
+    ${_saKpi('Задач',      totalActive,              '#f59e0b', 'Активні задачі (не виконані) по всіх компаніях')}
+    ${_saKpi('Простроч.',  totalOverdue, totalOverdue>0?'#ef4444':'#22c55e', 'Задачі з дедлайном у минулому — показник дисципліни')}
+    ${_saKpi('Health avg', avgHealth+'%', avgHealth>=70?'#22c55e':avgHealth>=40?'#f59e0b':'#ef4444', 'Середній Health Score: 100% = активна компанія без проблем. Знижується за відсутність активності, прострочені задачі, відсутність TG')}
+    ${_saKpi('Events 7д',  totalEvents,              '#06b6d4', 'Кількість дій (кліків, відкриттів вкладок) за останні 7 днів — показник реального використання')}
+    ${_saKpi('TG підкл.',  totalTg,                  '#22c55e', 'Кількість юзерів з підключеним Telegram — отримують нотифікації і тижневий звіт')}
+    ${_saKpi('Алертів',    alertCount, alertCount>0?'#ef4444':'#22c55e', 'Компанії з Health < 50% або без активності 3+ днів — потребують уваги')}
 </div>
 
 <!-- Tab Bar -->
@@ -516,6 +553,26 @@ function _saRenderUsers(pc) {
 }
 
 // ── TAB 4: ACTIVITY ─────────────────────────────────────────
+const EVENT_LABELS = {
+    page_view:        'Відкрито сторінку',
+    tab_switch:       'Перемикання вкладки',
+    task_create:      'Створено задачу',
+    task_complete:    'Виконано задачу',
+    task_update:      'Оновлено задачу',
+    task_delete:      'Видалено задачу',
+    login:            'Вхід в систему',
+    crm_deal_create:  'Новий лід/угода',
+    crm_deal_update:  'Оновлено угоду',
+    metric_entry:     'Додано метрику',
+    finance_tx:       'Фінансова операція',
+    booking_created:  'Новий запис',
+    process_start:    'Запущено процес',
+    coordination:     'Координація',
+    ai_request:       'AI запит',
+    user_invite:      'Запрошено юзера',
+    regular_task:     'Регулярна задача',
+};
+
 function _saRenderActivity(pc) {
     const eventTotals = {};
     pc.forEach(c=>Object.entries(c.eventCounts||{}).forEach(([k,v])=>{eventTotals[k]=(eventTotals[k]||0)+v;}));
@@ -525,7 +582,7 @@ function _saRenderActivity(pc) {
 
     const evRows = sorted.map(([name,cnt])=>`
         <div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid #f3f4f6;">
-            <span style="font-size:0.75rem;font-family:monospace;min-width:190px;color:#374151;">${_saEsc(name)}</span>
+            <span style="font-size:0.75rem;min-width:190px;color:#374151;" title="${name}">${_saEsc(EVENT_LABELS[name] || name)}</span>
             <div style="flex:1;background:#f3f4f6;border-radius:3px;height:6px;overflow:hidden;">
                 <div style="width:${Math.round(cnt/maxVal*100)}%;background:#3b82f6;height:100%;border-radius:3px;"></div>
             </div>
@@ -939,34 +996,65 @@ function _saRenderSystem() {
     return `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div style="border:1px solid #e5e7eb;border-radius:10px;padding:1rem;">
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;">AI Налаштування</div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                AI Налаштування
+            </div>
             <button onclick="openGlobalAISettings()"
                 style="width:100%;padding:0.55rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
                 Глобальні налаштування (ключі, агенти, моделі)
             </button>
         </div>
         <div style="border:1px solid #e5e7eb;border-radius:10px;padding:1rem;">
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;">Обслуговування</div>
-            <button onclick="deleteEmptyCompanies()"
-                style="width:100%;padding:0.55rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">
-                Видалити порожні компанії
-            </button>
-            <button onclick="saExportCsv()"
-                style="width:100%;padding:0.55rem;background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">
-                Export CSV (всі компанії)
-            </button>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" style="vertical-align:-2px;margin-right:5px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.27a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                Комунікації
+            </div>
             <button onclick="saBroadcastTelegram()"
                 style="width:100%;padding:0.55rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
                 Broadcast в Telegram (власники)
             </button>
+            <div style="font-size:0.7rem;color:#9ca3af;margin-top:0.4rem;padding:0 0.25rem;">
+                Надіслати повідомлення всім власникам з підключеним TG. Перед відправкою буде показано список отримувачів.
+            </div>
+        </div>
+        <div style="border:1px solid #e5e7eb;border-radius:10px;padding:1rem;grid-column:1/-1;">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Швидкі посилання
+            </div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <a href="https://console.firebase.google.com" target="_blank"
+                    style="padding:0.4rem 0.85rem;background:#fff7ed;border:1px solid #fed7aa;color:#c2410c;border-radius:7px;font-size:0.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    Firebase Console
+                </a>
+                <a href="https://vercel.com/dashboard" target="_blank"
+                    style="padding:0.4rem 0.85rem;background:#f8fafc;border:1px solid #e2e8f0;color:#374151;border-radius:7px;font-size:0.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    Vercel Dashboard
+                </a>
+                <a href="https://github.com/Vortex-technology1/talko-task-manager" target="_blank"
+                    style="padding:0.4rem 0.85rem;background:#f8fafc;border:1px solid #e2e8f0;color:#374151;border-radius:7px;font-size:0.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    GitHub Repo
+                </a>
+                <a href="https://taskmanagerai-vert.vercel.app" target="_blank"
+                    style="padding:0.4rem 0.85rem;background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;border-radius:7px;font-size:0.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    Відкрити Prod
+                </a>
+            </div>
         </div>
     </div>`;
 }
 
 // ── HELPERS ──────────────────────────────────────────────────
-function _saKpi(label, value, color) {
-    return `<div style="background:white;border:1px solid #e5e7eb;border-radius:10px;padding:0.65rem 0.85rem;border-top:3px solid ${color};">
-        <div style="font-size:0.65rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;">${_saEsc(label)}</div>
+function _saKpi(label, value, color, tooltip) {
+    const tip = tooltip ? ` title="${tooltip.replace(/"/g,"'")}"` : '';
+    const infoIcon = tooltip ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-left:3px;cursor:help;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>` : '';
+    return `<div style="background:white;border:1px solid #e5e7eb;border-radius:10px;padding:0.65rem 0.85rem;border-top:3px solid ${color};"${tip}>
+        <div style="font-size:0.65rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;">${_saEsc(label)}${infoIcon}</div>
         <div style="font-size:1.4rem;font-weight:800;color:${color};line-height:1.2;margin-top:2px;">${value}</div>
     </div>`;
 }
@@ -1220,9 +1308,12 @@ window.saBroadcastTelegram = async function() {
         return;
     }
 
+    // Show preview of recipients
+    const previewList = recipients.slice(0, 10).map(r => `• ${r.name || r.chatId} (${r.company})`).join('\n');
+    const moreCount   = recipients.length > 10 ? `\n... і ще ${recipients.length - 10}` : '';
     const confirmed = window.showConfirmModal
-        ? await showConfirmModal(`Надіслати повідомлення ${recipients.length} власникам з TG?`)
-        : confirm(`Надіслати ${recipients.length} власникам?`);
+        ? await showConfirmModal(`Надіслати ${recipients.length} власникам:\n${previewList}${moreCount}`)
+        : confirm(`Надіслати ${recipients.length} власникам?\n\n${previewList}${moreCount}`);
     if (!confirmed) return;
 
     let sent = 0;
@@ -1249,15 +1340,18 @@ window.updateCompanyPlan = async function(companyId, plan) {
     if (!validPlans.includes(plan)) return;
     try {
         await firebase.firestore().collection('companies').doc(companyId).update({ plan });
-        const badge = { basic: '🔵 Basic', pro: '🟢 Pro', enterprise: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Enterprise' };
-        showToast && showToast('План змінено: ' + (badge[plan] || plan), 'success');
+        const planLabel = { basic: 'Basic', pro: 'Pro', enterprise: 'Enterprise' };
+        showToast && showToast('План змінено → ' + (planLabel[plan] || plan), 'success');
+        // Refresh row without full reload
+        await loadSuperadminData();
     } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
 };
 
 window.toggleCompanyAI = async function(companyId, enabled) {
     try {
         await firebase.firestore().collection('companies').doc(companyId).update({ aiEnabled: enabled });
-        showToast && showToast(`AI ${enabled ? 'увімкнено' : 'вимкнено'}`, 'success');
+        showToast && showToast(`AI ${enabled ? 'увімкнено' : 'вимкнено'} ✓`, 'success');
+        await loadSuperadminData();
     } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
 };
 
