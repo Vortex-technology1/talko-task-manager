@@ -1682,6 +1682,69 @@ document.addEventListener('mousedown', function(e) {
                                     </div>
                                 </div>
 
+                                <!-- Модулі системи -->
+                                <div>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.5rem;">
+                                        Модулі системи
+                                        <span title="Вмикайте тільки ті модулі, які потрібні вашому бізнесу. Вимкнені модулі не відображаються в інтерфейсі."><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                    </label>
+
+                                    <!-- Пресети -->
+                                    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem;">
+                                        <button onclick="window._applyModulePreset('service')" style="padding:3px 10px;border:1px solid #e2e8f0;border-radius:20px;background:#fdf2f8;color:#be185d;font-size:0.72rem;font-weight:600;cursor:pointer;">💅 Сервіс (beauty/медицина)</button>
+                                        <button onclick="window._applyModulePreset('cleaning')" style="padding:3px 10px;border:1px solid #e2e8f0;border-radius:20px;background:#f0fdf4;color:#166534;font-size:0.72rem;font-weight:600;cursor:pointer;">🧹 Клінінг</button>
+                                        <button onclick="window._applyModulePreset('production')" style="padding:3px 10px;border:1px solid #e2e8f0;border-radius:20px;background:#eff6ff;color:#1e40af;font-size:0.72rem;font-weight:600;cursor:pointer;">🏗 Виробництво/Будівництво</button>
+                                        <button onclick="window._applyModulePreset('consulting')" style="padding:3px 10px;border:1px solid #e2e8f0;border-radius:20px;background:#faf5ff;color:#7c3aed;font-size:0.72rem;font-weight:600;cursor:pointer;">💼 Консалтинг</button>
+                                    </div>
+
+                                    <!-- Галочки модулів -->
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;" id="modulesChecklist">
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-scheduling" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>📅 Розклад співробітників</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-clientProfile" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>👤 Розширений профіль клієнта</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-loyalty" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>⭐ Програма лояльності</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-subscriptions" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>🎟 Абонементи / Сертифікати</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-reviews" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>⭐ Рейтинги та відгуки</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-winback" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>🔄 Win-back автоматика</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-notifications" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>🔔 Нагадування клієнтам</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-estimates" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>📋 Кошторис / Норми</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-warehouse" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>📦 Склад / Warehouse</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
+                                            <input type="checkbox" id="mod-booking" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <span>📆 Онлайн-запис (Booking)</span>
+                                        </label>
+                                    </div>
+                                    <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.4rem;">
+                                        Зберігається автоматично при зміні галочки
+                                    </div>
+                                </div>
+
                                 <!-- Мета -->
                                 <div>
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
@@ -4232,7 +4295,62 @@ document.addEventListener('mousedown', function(e) {
             if (el('settingCompanyName'))   el('settingCompanyName').value   = d.name            || '';
             if (el('settingTimezone'))      el('settingTimezone').value      = d.timezone        || 'Europe/Kyiv';
             if (el('settingWeeklyReport'))  el('settingWeeklyReport').checked = !!d.weeklyReport;
+            // Load modules checkboxes
+            const mods = d.modules || {};
+            ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','estimates','warehouse','booking'].forEach(k => {
+                const cb = el('mod-' + k);
+                if (cb) cb.checked = mods[k] === true;
+            });
+            window.currentCompanyData = window.currentCompanyData || {};
+            window.currentCompanyData.modules = mods;
         } catch(e) { console.warn('loadCompanyProfile:', e.message); }
+    };
+
+    // Modules: save
+    window._saveModules = async function() {
+        if (!window.currentCompany || !window.db) return;
+        const modKeys = ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','estimates','warehouse','booking'];
+        const modules = {};
+        modKeys.forEach(k => { const cb = document.getElementById('mod-' + k); if (cb) modules[k] = cb.checked; });
+        try {
+            await window.db.collection('companies').doc(window.currentCompany).set({ modules }, { merge: true });
+            window.currentCompanyData = window.currentCompanyData || {};
+            window.currentCompanyData.modules = modules;
+            if (typeof showToast === 'function') showToast('Модулі збережено', 'success');
+        } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
+    };
+
+    // Modules: presets
+    window._applyModulePreset = function(preset) {
+        const PRESETS = {
+            service:    {scheduling:true,clientProfile:true,loyalty:true,subscriptions:true,reviews:true,winback:true,notifications:true,estimates:false,warehouse:false,booking:true},
+            cleaning:   {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true},
+            production: {scheduling:false,clientProfile:false,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:false,estimates:true,warehouse:true,booking:false},
+            consulting: {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true},
+        };
+        const mods = PRESETS[preset];
+        if (!mods) return;
+        Object.entries(mods).forEach(([k,v]) => { const cb = document.getElementById('mod-'+k); if (cb) cb.checked = v; });
+        window._saveModules();
+    };
+
+    // Global: check if module enabled
+    window.hasModule = function(key) {
+        const mods = window.currentCompanyData?.modules;
+        if (mods && Object.keys(mods).length > 0) return mods[key] === true;
+        // Fallback: niche-based
+        const niche = window.currentCompanyData?.niche || '';
+        const NICHE_DEFAULTS = {
+            beauty_salon:  ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','booking'],
+            medical:       ['scheduling','clientProfile','reviews','notifications','booking'],
+            dental:        ['scheduling','clientProfile','reviews','notifications','booking'],
+            cleaning:      ['scheduling','clientProfile','winback','notifications','booking'],
+            construction:  ['estimates','warehouse'],
+            furniture:     ['estimates','warehouse'],
+            manufacturing: ['estimates','warehouse'],
+            consulting:    ['scheduling','clientProfile','winback','notifications','booking'],
+        };
+        return (NICHE_DEFAULTS[niche] || []).includes(key);
     };
     </script>
 

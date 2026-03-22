@@ -974,7 +974,7 @@ window._crmTodoAddTestDeals = async function() {
 // ════════════════════════════════════════════════════════════
 
 window._beautyCheckWinBack = async function() {
-    if (window.currentCompanyData?.niche !== 'beauty_salon') return;
+    if (!window.hasModule?.('scheduling') && window.currentCompanyData?.niche !== 'beauty_salon') return;
     if (!window.companyCol) return;
     try {
         const snap = await window.companyCol('crm_clients')

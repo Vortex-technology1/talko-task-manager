@@ -1111,7 +1111,7 @@ window._bkRenderApptRow = function(a, isGroup, calName) {
   <td></td>
   <td>
     ${a.status==='pending'?`<button class="bk-btn-sm bk-btn-confirm" onclick="window._bkConfirmAppt('${a.id}','',false)">${I.check}</button>`:''}
-    ${(window.currentCompanyData?.niche==='beauty_salon') && ['pending','confirmed'].includes(a.status)?`<button class="bk-btn-sm" onclick="window._bkCompleteAppointment('${a.id}',0)" style="background:#dcfce7;color:#16a34a;border:1px solid #bbf7d0;">✓ Завершити</button>`:''}
+    ${((window.hasModule?.('clientProfile') || window.currentCompanyData?.niche==='beauty_salon')) && ['pending','confirmed'].includes(a.status)?`<button class="bk-btn-sm" onclick="window._bkCompleteAppointment('${a.id}',0)" style="background:#dcfce7;color:#16a34a;border:1px solid #bbf7d0;">✓ Завершити</button>`:''}
     ${['pending','confirmed'].includes(a.status)?`<button class="bk-btn-sm bk-btn-cancel-appt" onclick="window._bkCancelAppt('${a.id}','',false)">${I.close}</button>`:''}
   </td>
 </tr>`;

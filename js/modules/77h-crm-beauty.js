@@ -238,7 +238,7 @@ window._createBeautyClientProfile = async function(dealId) {
 // ── Inject schedule tab button in user cards ─────────────
 // Runs after 32-users-invites renders — patches toggleUserDetail
 window._injectScheduleTabInUserCards = function() {
-    if (window.currentCompanyData?.niche !== 'beauty_salon') return;
+    if (!window.hasModule?.('scheduling') && window.currentCompanyData?.niche !== 'beauty_salon') return;
 
     const _orig = window.toggleUserDetail;
     if (!_orig || window._scheduleInjected) return;
