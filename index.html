@@ -804,6 +804,9 @@ document.addEventListener('mousedown', function(e) {
                         <button class="tab-btn _ntab" id="salesNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('sales',function(){switchTab('sales');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="receipt" class="icon icon-sm"></i><span id="navSpanSales">Реалізація</span>
                         </button>
+                        <button class="tab-btn _ntab" id="foodProductionNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('foodProduction',function(){switchTab('foodProduction');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="chef-hat" class="icon icon-sm"></i><span id="navSpanFoodProduction">Виробництво</span>
+                        </button>
                         <button class="tab-btn _ntab" id="sitesNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';switchTab('sites');" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="globe" class="icon icon-sm"></i><span data-i18n="tabSites" id="navSpanSites">Сайти</span>
                         </button>
@@ -1171,6 +1174,9 @@ document.addEventListener('mousedown', function(e) {
             <div id="salesTab" class="tab-content">
                 <div id="salesContainer"></div>
             </div>
+
+            <!-- Food Production Tab -->
+            <div id="foodProductionTab" class="tab-content"></div>
             </div>
 
             <div id="controlTab" class="tab-content">
@@ -4553,6 +4559,7 @@ document.addEventListener('mousedown', function(e) {
         integrations: ["js/modules/96-integrations.js?v=20260317v1"],
         booking:      ["js/modules/26-staff-schedule.js?v=20260322b1", "js/modules/100-booking.js?v=20260322b1", "js/modules/101-loyalty.js?v=20260322b1", "js/modules/102-subscriptions.js?v=20260322b1", "js/modules/103-notifications.js?v=20260322b1"],
         estimate:     ["js/modules/85-estimate.js?v=20260321v4"],
+        foodProduction: ["js/modules/105-food-production.js?v=20260322fp1"],
         sales:        ["js/modules/104-sales.js?v=20260322s2", "js/modules/104b-sales-pdf.js?v=20260322s2", "js/modules/104c-sales-shifts.js?v=20260322s2", "js/modules/104d-sales-vehicles.js?v=20260322s2", "js/modules/104e-sales-routes.js?v=20260322s2"],
     };
 

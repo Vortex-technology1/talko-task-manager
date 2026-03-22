@@ -6638,3 +6638,265 @@ window._DEMO_NICHE_MAP['logistics'] = async function() {
     });
 };
 if (window._NICHE_LABELS) window._NICHE_LABELS['logistics'] = 'Логіст Про — Вантажні перевезення';
+
+// ════════════════════════════════════════════════════════════════════════════
+// ХАРЧОВЕ ВИРОБНИЦТВО — food_production
+// ════════════════════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['food_production'] = async function() {
+    if (!window.currentCompanyId || !window.db) throw new Error('No company');
+    const cr = window.db.collection('companies').doc(window.currentCompanyId);
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    function dDate(d) { const dt = new Date(); dt.setDate(dt.getDate()+d); return dt.toISOString().slice(0,10); }
+    function dTs(d) { return firebase.firestore.Timestamp.fromDate(new Date(Date.now()+d*86400000)); }
+    let ops = [];
+
+    // STAFF
+    const STAFF = [
+        {name:'Галина Пономаренко',role:'Шеф-кухар / Технолог'},
+        {name:'Оксана Ковальчук',role:'Кухар виробництва'},
+        {name:'Микола Сердюк',role:'Кухар виробництва'},
+        {name:'Ірина Білоус',role:'Пекар'},
+        {name:'Тетяна Власенко',role:'Адміністратор/Логіст'},
+    ];
+    const sRefs = STAFF.map(() => cr.collection('staff').doc());
+    STAFF.forEach((s,i) => { ops.push({type:'set',ref:sRefs[i],data:{name:s.name,role:s.role,isActive:true,isDemo:true,createdAt:now}}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // WAREHOUSE (інгредієнти)
+    const INGREDIENTS = [
+        {name:'Борошно пшеничне в/с',qty:200,unit:'кг',price:28,cat:'Бакалія'},
+        {name:'Цукор',qty:80,unit:'кг',price:32,cat:'Бакалія'},
+        {name:'Масло вершкове 82.5%',qty:30,unit:'кг',price:280,cat:'Молочні'},
+        {name:'Яйця (С1)',qty:600,unit:'шт',price:5.5,cat:'Молочні'},
+        {name:'Молоко 3.2%',qty:100,unit:'л',price:32,cat:'Молочні'},
+        {name:'Сметана 20%',qty:40,unit:'кг',price:95,cat:'Молочні'},
+        {name:'Картопля',qty:150,unit:'кг',price:12,cat:'Овочі'},
+        {name:'Морква',qty:50,unit:'кг',price:16,cat:'Овочі'},
+        {name:'Буряк',qty:60,unit:'кг',price:14,cat:'Овочі'},
+        {name:'Капуста свіжа',qty:80,unit:'кг',price:10,cat:'Овочі'},
+        {name:'М\'ясо свинина (лопатка)',qty:50,unit:'кг',price:185,cat:'М\'ясо'},
+        {name:'Курятина (гомілка)',qty:40,unit:'кг',price:130,cat:'М\'ясо'},
+        {name:'Сіль',qty:20,unit:'кг',price:8,cat:'Спеції'},
+        {name:'Дріжджі сухі',qty:5,unit:'кг',price:220,cat:'Бакалія'},
+        {name:'Олія соняшникова',qty:30,unit:'л',price:65,cat:'Бакалія'},
+        {name:'Какао-порошок',qty:8,unit:'кг',price:380,cat:'Кондитерські'},
+        {name:'Шоколад чорний 70%',qty:10,unit:'кг',price:480,cat:'Кондитерські'},
+        {name:'Ванільний цукор',qty:3,unit:'кг',price:260,cat:'Кондитерські'},
+    ];
+    const iRefs = INGREDIENTS.map(() => cr.collection('warehouse_items').doc());
+    INGREDIENTS.forEach((it,i) => { ops.push({type:'set',ref:iRefs[i],data:{name:it.name,quantity:it.qty,price:it.price,unit:it.unit,category:it.cat,minQuantity:10,isActive:true,isDemo:true,createdAt:now}}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // RECIPES
+    const RECIPES = [
+        {
+            name:'Борщ класичний',cat:'Перші страви',yield:1000,portions:10,salePrice:95,tech:'Буряк відварити, натерти. Картоплю нарізати кубиками. Засмажку приготувати окремо. Скласти все в бульйон, варити 20 хв.',
+            ingredients:[
+                {name:'Буряк',grossQty:300,netQty:240,unit:'г',pricePerUnit:0.014,warehouseItemId:iRefs[9].id},
+                {name:'Картопля',grossQty:250,netQty:200,unit:'г',pricePerUnit:0.012,warehouseItemId:iRefs[6].id},
+                {name:'Морква',grossQty:80,netQty:65,unit:'г',pricePerUnit:0.016,warehouseItemId:iRefs[7].id},
+                {name:'Капуста',grossQty:200,netQty:190,unit:'г',pricePerUnit:0.010,warehouseItemId:iRefs[9].id},
+                {name:'М\'ясо свинина',grossQty:150,netQty:130,unit:'г',pricePerUnit:0.185,warehouseItemId:iRefs[10].id},
+                {name:'Олія',grossQty:30,netQty:30,unit:'мл',pricePerUnit:0.065,warehouseItemId:iRefs[14].id},
+                {name:'Сіль',grossQty:15,netQty:15,unit:'г',pricePerUnit:0.008,warehouseItemId:iRefs[12].id},
+            ],
+        },
+        {
+            name:'Котлета по-домашньому',cat:'Другі страви',yield:100,portions:1,salePrice:75,tech:'Фарш замісити з яйцем та сіллю. Сформувати котлету. Обсмажити на олії по 4 хв з кожного боку.',
+            ingredients:[
+                {name:'Свинина (фарш)',grossQty:120,netQty:120,unit:'г',pricePerUnit:0.185,warehouseItemId:iRefs[10].id},
+                {name:'Яйце',grossQty:1,netQty:1,unit:'шт',pricePerUnit:5.5,warehouseItemId:iRefs[3].id},
+                {name:'Сіль',grossQty:3,netQty:3,unit:'г',pricePerUnit:0.008,warehouseItemId:iRefs[12].id},
+                {name:'Олія',grossQty:15,netQty:15,unit:'мл',pricePerUnit:0.065,warehouseItemId:iRefs[14].id},
+            ],
+        },
+        {
+            name:'Шоколадний брауні (форма)',cat:'Кондитерські вироби',yield:600,portions:12,salePrice:85,tech:'Розтопити шоколад з маслом. Змішати з яйцями, цукром. Додати борошно. Випікати 25 хв при 180°C.',
+            ingredients:[
+                {name:'Шоколад чорний',grossQty:200,netQty:200,unit:'г',pricePerUnit:0.48,warehouseItemId:iRefs[16].id},
+                {name:'Масло вершкове',grossQty:150,netQty:150,unit:'г',pricePerUnit:0.28,warehouseItemId:iRefs[2].id},
+                {name:'Яйця',grossQty:4,netQty:4,unit:'шт',pricePerUnit:5.5,warehouseItemId:iRefs[3].id},
+                {name:'Цукор',grossQty:150,netQty:150,unit:'г',pricePerUnit:0.032,warehouseItemId:iRefs[1].id},
+                {name:'Борошно',grossQty:80,netQty:80,unit:'г',pricePerUnit:0.028,warehouseItemId:iRefs[0].id},
+                {name:'Какао',grossQty:30,netQty:30,unit:'г',pricePerUnit:0.38,warehouseItemId:iRefs[15].id},
+            ],
+        },
+        {
+            name:'Хліб пшеничний (буханка)',cat:'Хлібобулочні',yield:700,portions:1,salePrice:45,tech:'Замісити тісто. Залишити підходити 1 год. Сформувати хліб. Випікати 35 хв при 200°C.',
+            ingredients:[
+                {name:'Борошно',grossQty:500,netQty:500,unit:'г',pricePerUnit:0.028,warehouseItemId:iRefs[0].id},
+                {name:'Дріжджі',grossQty:7,netQty:7,unit:'г',pricePerUnit:0.22,warehouseItemId:iRefs[13].id},
+                {name:'Сіль',grossQty:10,netQty:10,unit:'г',pricePerUnit:0.008,warehouseItemId:iRefs[12].id},
+                {name:'Олія',grossQty:20,netQty:20,unit:'мл',pricePerUnit:0.065,warehouseItemId:iRefs[14].id},
+            ],
+        },
+    ];
+
+    const rRefs = RECIPES.map(() => cr.collection('fp_recipes').doc());
+    RECIPES.forEach((r,i) => {
+        let totalCost = 0;
+        r.ingredients.forEach(ing => {
+            let qty = ing.grossQty;
+            if (ing.unit==='г'||ing.unit==='мл') qty/=1000;
+            ing.cost = Math.round(qty*(ing.pricePerUnit||0)*100)/100;
+            totalCost += ing.cost;
+        });
+        const costPerPortion = Math.round(totalCost/r.portions*100)/100;
+        const margin = r.salePrice>0 ? Math.round((r.salePrice-costPerPortion)/r.salePrice*100) : null;
+        ops.push({type:'set',ref:rRefs[i],data:{
+            name:r.name,category:r.cat,yield:r.yield,portions:r.portions,
+            salePrice:r.salePrice,technology:r.tech,ingredients:r.ingredients,
+            totalCost:Math.round(totalCost*100)/100,costPerPortion,margin,
+            isDemo:true,createdAt:now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // PRODUCTION PLAN (today)
+    const today = new Date().toISOString().slice(0,10);
+    ops.push({type:'set',ref:cr.collection('fp_production_plan').doc(),data:{
+        recipeId:rRefs[0].id,recipeName:'Борщ класичний',portions:30,date:today,status:'planned',createdAt:now,
+    }});
+    ops.push({type:'set',ref:cr.collection('fp_production_plan').doc(),data:{
+        recipeId:rRefs[3].id,recipeName:'Хліб пшеничний',portions:20,date:today,status:'in_progress',createdAt:now,
+    }});
+    ops.push({type:'set',ref:cr.collection('fp_production_plan').doc(),data:{
+        recipeId:rRefs[2].id,recipeName:'Шоколадний брауні',portions:5,date:today,status:'done',createdAt:now,
+    }});
+    await window.safeBatchCommit(ops); ops = [];
+
+    await cr.update({
+        name:'КухняПро — Фабрика-кухня',niche:'food_production',
+        nicheLabel:'Харчове виробництво — фабрика-кухня, цех',
+        city:'Київ',employees:5,currency:'UAH',
+        avgCheck:75,monthlyRevenue:185000,
+        modules:{scheduling:false,clientProfile:false,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+    });
+};
+if (window._NICHE_LABELS) window._NICHE_LABELS['food_production'] = 'КухняПро — Харчове виробництво';
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// ХАРЧОВЕ ВИРОБНИЦТВО — food_production
+// ════════════════════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['food_production'] = async function() {
+    if (!window.currentCompanyId || !window.db) throw new Error('No company');
+    const cr = window.db.collection('companies').doc(window.currentCompanyId);
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    function dDate(d) { const dt = new Date(); dt.setDate(dt.getDate()+d); return dt.toISOString().slice(0,10); }
+    let ops = [];
+
+    const STAFF = [
+        {name:'Галина Пономаренко',role:'Шеф-кухар / Технолог'},
+        {name:'Оксана Ковальчук',role:'Кухар виробництва'},
+        {name:'Микола Сердюк',role:'Кухар виробництва'},
+        {name:'Ірина Білоус',role:'Пекар'},
+        {name:'Тетяна Власенко',role:'Адміністратор'},
+    ];
+    const sRefs = STAFF.map(() => cr.collection('staff').doc());
+    STAFF.forEach((s,i) => { ops.push({type:'set',ref:sRefs[i],data:{name:s.name,role:s.role,isActive:true,isDemo:true,createdAt:now}}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const INGREDIENTS = [
+        {name:'Борошно пшеничне в/с',qty:200,unit:'кг',price:28,cat:'Бакалія'},
+        {name:'Цукор',qty:80,unit:'кг',price:32,cat:'Бакалія'},
+        {name:'Масло вершкове 82.5%',qty:30,unit:'кг',price:280,cat:'Молочні'},
+        {name:'Яйця (С1)',qty:600,unit:'шт',price:5.5,cat:'Молочні'},
+        {name:'Молоко 3.2%',qty:100,unit:'л',price:32,cat:'Молочні'},
+        {name:'Картопля',qty:150,unit:'кг',price:12,cat:'Овочі'},
+        {name:'Морква',qty:50,unit:'кг',price:16,cat:'Овочі'},
+        {name:'Буряк',qty:60,unit:'кг',price:14,cat:'Овочі'},
+        {name:'Капуста свіжа',qty:80,unit:'кг',price:10,cat:'Овочі'},
+        {name:'Свинина (лопатка)',qty:50,unit:'кг',price:185,cat:'М\'ясо'},
+        {name:'Сіль',qty:20,unit:'кг',price:8,cat:'Спеції'},
+        {name:'Дріжджі сухі',qty:5,unit:'кг',price:220,cat:'Бакалія'},
+        {name:'Олія соняшникова',qty:30,unit:'л',price:65,cat:'Бакалія'},
+        {name:'Какао-порошок',qty:8,unit:'кг',price:380,cat:'Кондитерські'},
+        {name:'Шоколад чорний 70%',qty:10,unit:'кг',price:480,cat:'Кондитерські'},
+    ];
+    const iRefs = INGREDIENTS.map(() => cr.collection('warehouse_items').doc());
+    INGREDIENTS.forEach((it,i) => { ops.push({type:'set',ref:iRefs[i],data:{name:it.name,quantity:it.qty,price:it.price,unit:it.unit,category:it.cat,minQuantity:10,isActive:true,isDemo:true,createdAt:now}}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const today = new Date().toISOString().slice(0,10);
+
+    function calcRecipe(ingredients, portions, salePrice) {
+        let totalCost = 0;
+        ingredients.forEach(ing => {
+            let qty = ing.grossQty;
+            if (ing.unit==='г'||ing.unit==='мл') qty /= 1000;
+            ing.cost = Math.round(qty*(ing.pricePerUnit||0)*100)/100;
+            totalCost += ing.cost;
+        });
+        const costPerPortion = Math.round(totalCost/portions*100)/100;
+        const margin = salePrice>0 ? Math.round((salePrice-costPerPortion)/salePrice*100) : null;
+        return {totalCost:Math.round(totalCost*100)/100, costPerPortion, margin};
+    }
+
+    // Recipe 1: Борщ
+    const borshchIngr = [
+        {name:'Буряк',grossQty:300,netQty:240,unit:'г',pricePerUnit:0.014,warehouseItemId:iRefs[7].id,cost:0},
+        {name:'Картопля',grossQty:250,netQty:200,unit:'г',pricePerUnit:0.012,warehouseItemId:iRefs[5].id,cost:0},
+        {name:'Морква',grossQty:80,netQty:65,unit:'г',pricePerUnit:0.016,warehouseItemId:iRefs[6].id,cost:0},
+        {name:'Капуста',grossQty:200,netQty:190,unit:'г',pricePerUnit:0.010,warehouseItemId:iRefs[8].id,cost:0},
+        {name:'Свинина',grossQty:150,netQty:130,unit:'г',pricePerUnit:0.185,warehouseItemId:iRefs[9].id,cost:0},
+        {name:'Олія',grossQty:30,netQty:30,unit:'мл',pricePerUnit:0.065,warehouseItemId:iRefs[12].id,cost:0},
+        {name:'Сіль',grossQty:15,netQty:15,unit:'г',pricePerUnit:0.008,warehouseItemId:iRefs[10].id,cost:0},
+    ];
+    const b1 = calcRecipe(borshchIngr, 10, 95);
+    const r1Ref = cr.collection('fp_recipes').doc();
+    ops.push({type:'set',ref:r1Ref,data:{name:'Борщ класичний',category:'Перші страви',yield:1000,portions:10,salePrice:95,technology:'Буряк відварити, натерти. Картоплю нарізати. Засмажку зробити окремо. Варити 20 хв.',ingredients:borshchIngr,...b1,isDemo:true,createdAt:now}});
+
+    // Recipe 2: Котлета
+    const kotletaIngr = [
+        {name:'Свинина (фарш)',grossQty:120,netQty:120,unit:'г',pricePerUnit:0.185,warehouseItemId:iRefs[9].id,cost:0},
+        {name:'Яйце',grossQty:1,netQty:1,unit:'шт',pricePerUnit:5.5,warehouseItemId:iRefs[3].id,cost:0},
+        {name:'Сіль',grossQty:3,netQty:3,unit:'г',pricePerUnit:0.008,warehouseItemId:iRefs[10].id,cost:0},
+        {name:'Олія',grossQty:15,netQty:15,unit:'мл',pricePerUnit:0.065,warehouseItemId:iRefs[12].id,cost:0},
+    ];
+    const b2 = calcRecipe(kotletaIngr, 1, 75);
+    const r2Ref = cr.collection('fp_recipes').doc();
+    ops.push({type:'set',ref:r2Ref,data:{name:'Котлета по-домашньому',category:'Другі страви',yield:100,portions:1,salePrice:75,technology:'Замісити фарш. Сформувати котлети. Смажити по 4 хв з кожного боку.',ingredients:kotletaIngr,...b2,isDemo:true,createdAt:now}});
+
+    // Recipe 3: Шоколадний брауні
+    const brownieIngr = [
+        {name:'Шоколад чорний',grossQty:200,netQty:200,unit:'г',pricePerUnit:0.48,warehouseItemId:iRefs[14].id,cost:0},
+        {name:'Масло вершкове',grossQty:150,netQty:150,unit:'г',pricePerUnit:0.28,warehouseItemId:iRefs[2].id,cost:0},
+        {name:'Яйця',grossQty:4,netQty:4,unit:'шт',pricePerUnit:5.5,warehouseItemId:iRefs[3].id,cost:0},
+        {name:'Цукор',grossQty:150,netQty:150,unit:'г',pricePerUnit:0.032,warehouseItemId:iRefs[1].id,cost:0},
+        {name:'Борошно',grossQty:80,netQty:80,unit:'г',pricePerUnit:0.028,warehouseItemId:iRefs[0].id,cost:0},
+        {name:'Какао',grossQty:30,netQty:30,unit:'г',pricePerUnit:0.38,warehouseItemId:iRefs[13].id,cost:0},
+    ];
+    const b3 = calcRecipe(brownieIngr, 12, 85);
+    const r3Ref = cr.collection('fp_recipes').doc();
+    ops.push({type:'set',ref:r3Ref,data:{name:'Шоколадний брауні',category:'Кондитерські вироби',yield:600,portions:12,salePrice:85,technology:'Розтопити шоколад з маслом. Збити з яйцями і цукром. Додати борошно. Випікати 25 хв 180°C.',ingredients:brownieIngr,...b3,isDemo:true,createdAt:now}});
+
+    // Recipe 4: Хліб
+    const breadIngr = [
+        {name:'Борошно',grossQty:500,netQty:500,unit:'г',pricePerUnit:0.028,warehouseItemId:iRefs[0].id,cost:0},
+        {name:'Дріжджі',grossQty:7,netQty:7,unit:'г',pricePerUnit:0.22,warehouseItemId:iRefs[11].id,cost:0},
+        {name:'Сіль',grossQty:10,netQty:10,unit:'г',pricePerUnit:0.008,warehouseItemId:iRefs[10].id,cost:0},
+        {name:'Олія',grossQty:20,netQty:20,unit:'мл',pricePerUnit:0.065,warehouseItemId:iRefs[12].id,cost:0},
+    ];
+    const b4 = calcRecipe(breadIngr, 1, 45);
+    const r4Ref = cr.collection('fp_recipes').doc();
+    ops.push({type:'set',ref:r4Ref,data:{name:'Хліб пшеничний (буханка)',category:'Хлібобулочні',yield:700,portions:1,salePrice:45,technology:'Замісити тісто. Підходити 1 год. Сформувати. Випікати 35 хв 200°C.',ingredients:breadIngr,...b4,isDemo:true,createdAt:now}});
+
+    await window.safeBatchCommit(ops); ops = [];
+
+    // Production plan
+    ops.push({type:'set',ref:cr.collection('fp_production_plan').doc(),data:{recipeId:r1Ref.id,recipeName:'Борщ класичний',portions:30,date:today,status:'planned',isDemo:true,createdAt:now}});
+    ops.push({type:'set',ref:cr.collection('fp_production_plan').doc(),data:{recipeId:r4Ref.id,recipeName:'Хліб пшеничний',portions:20,date:today,status:'in_progress',isDemo:true,createdAt:now}});
+    ops.push({type:'set',ref:cr.collection('fp_production_plan').doc(),data:{recipeId:r3Ref.id,recipeName:'Шоколадний брауні',portions:5,date:today,status:'done',isDemo:true,createdAt:now}});
+    await window.safeBatchCommit(ops);
+
+    await cr.update({
+        name:'КухняПро — Фабрика-кухня',niche:'food_production',
+        nicheLabel:'Харчове виробництво — фабрика-кухня, цех',
+        city:'Київ',employees:5,currency:'UAH',avgCheck:75,monthlyRevenue:185000,
+        modules:{scheduling:false,clientProfile:false,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+    });
+};
+if (window._NICHE_LABELS) window._NICHE_LABELS['food_production'] = 'КухняПро — Харчове виробництво';
