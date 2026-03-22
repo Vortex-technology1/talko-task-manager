@@ -6351,3 +6351,748 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
 if (window._NICHE_LABELS) {
     window._NICHE_LABELS['beauty_salon'] = 'GlowStudio — Студія краси (Київ)';
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+// АВТОСЕРВІС — autoservice
+// ════════════════════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['autoservice'] = async function() {
+    if (!window.currentCompanyId || !window.db) throw new Error('No company');
+    const cr = window.db.collection('companies').doc(window.currentCompanyId);
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    function dDate(d) { const dt = new Date(); dt.setDate(dt.getDate() + d); return dt.toISOString().slice(0,10); }
+    function dTs(d) { return firebase.firestore.Timestamp.fromDate(new Date(Date.now() + d*86400000)); }
+
+    let ops = [];
+
+    // ── STAFF ──
+    const STAFF = [
+        { name:'Олексій Бондаренко', role:'Майстер-механік', phone:'+380671234561' },
+        { name:'Сергій Коваль',      role:'Майстер-автоелектрик', phone:'+380671234562' },
+        { name:'Василь Петренко',    role:'Майстер-шиномонтаж', phone:'+380671234563' },
+        { name:'Ірина Мельник',      role:'Адміністратор', phone:'+380671234564' },
+        { name:'Дмитро Сидоренко',   role:'Майстер-кузовний', phone:'+380671234565' },
+        { name:'Андрій Левченко',    role:'Помічник механіка', phone:'+380671234566' },
+    ];
+    const sRefs = STAFF.map(() => cr.collection('staff').doc());
+    STAFF.forEach((s, i) => {
+        ops.push({ type:'set', ref: sRefs[i], data: {
+            name: s.name, role: s.role, phone: s.phone,
+            isActive: true, isDemo: true, createdAt: now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── CRM CLIENTS ──
+    const CLIENTS = [
+        { name:'Іванченко Михайло', phone:'+380671111001' },
+        { name:'Ковальська Оксана', phone:'+380671111002' },
+        { name:'Шевченко Петро',    phone:'+380671111003' },
+        { name:'Бойко Андрій',      phone:'+380671111004' },
+        { name:'Ткаченко Юлія',     phone:'+380671111005' },
+        { name:'Марченко Василь',   phone:'+380671111006' },
+        { name:'Гриценко Наталія',  phone:'+380671111007' },
+        { name:'Олійник Сергій',    phone:'+380671111008' },
+    ];
+    const cRefs = CLIENTS.map(() => cr.collection('crm_clients').doc());
+    CLIENTS.forEach((c, i) => {
+        ops.push({ type:'set', ref: cRefs[i], data: {
+            name: c.name, phone: c.phone,
+            source: 'direct', status: 'active',
+            isDemo: true, createdAt: now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── VEHICLES ──
+    const VEHICLES = [
+        { plate:'AA1234BC', make:'Mazda',      model:'CX-5',    year:2019, color:'Сірий',   vin:'JMZKE1W2500123456', clientIdx:0 },
+        { plate:'KA5678HI', make:'Toyota',     model:'Camry',   year:2021, color:'Білий',   vin:'4T1BF1FK0CU123456', clientIdx:1 },
+        { plate:'ВА9012ЕН', make:'Volkswagen', model:'Passat',  year:2018, color:'Чорний',  vin:'WVWZZZ3CZ9E123456', clientIdx:2 },
+        { plate:'АА3456КМ', make:'BMW',        model:'X5',      year:2020, color:'Синій',   vin:'WBAKS410100E12345', clientIdx:3 },
+        { plate:'КА7890ОР', make:'Hyundai',    model:'Tucson',  year:2022, color:'Червоний',vin:'KMHJ3813BE123456',  clientIdx:4 },
+        { plate:'АА2345СТ', make:'Ford',       model:'Focus',   year:2017, color:'Зелений', vin:'WF0DXXGCHDHJ12345', clientIdx:5 },
+        { plate:'КА6789УФ', make:'Skoda',      model:'Octavia', year:2020, color:'Срібний', vin:'TMBEA7NE0L0123456', clientIdx:6 },
+        { plate:'АА0123ХЦ', make:'Renault',    model:'Duster',  year:2019, color:'Помаранч.',vin:'VF1HSRDB5H0123456',clientIdx:7 },
+    ];
+    const vRefs = VEHICLES.map(() => cr.collection('sales_vehicles').doc());
+    VEHICLES.forEach((v, i) => {
+        const c = CLIENTS[v.clientIdx];
+        ops.push({ type:'set', ref: vRefs[i], data: {
+            plate: v.plate, vin: v.vin, make: v.make, model: v.model,
+            year: v.year, color: v.color,
+            clientId: cRefs[v.clientIdx].id, clientName: c.name, clientPhone: c.phone,
+            mileageHistory: [{ date: dDate(-30), mileage: 80000 + i*5000, orderId:'' }],
+            notes: '', isDemo: true, createdAt: now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── WAREHOUSE (запчастини) ──
+    const PARTS = [
+        { name:'Масло моторне 5W-30 4л',  qty:20, price:840,  unit:'шт', category:'Мастила' },
+        { name:'Масло моторне 5W-40 4л',  qty:15, price:920,  unit:'шт', category:'Мастила' },
+        { name:'Фільтр оливи MANN',        qty:30, price:180,  unit:'шт', category:'Фільтри' },
+        { name:'Фільтр повітряний',        qty:20, price:220,  unit:'шт', category:'Фільтри' },
+        { name:'Фільтр салону',            qty:15, price:260,  unit:'шт', category:'Фільтри' },
+        { name:'Гальмівні колодки перед.',  qty:12, price:680,  unit:'компл', category:'Гальма' },
+        { name:'Гальмівні колодки зад.',    qty:10, price:520,  unit:'компл', category:'Гальма' },
+        { name:'Гальмівний диск 280мм',    qty:8,  price:1200, unit:'шт', category:'Гальма' },
+        { name:'Свічки запалювання (4шт)', qty:25, price:320,  unit:'компл', category:'Запалювання' },
+        { name:'Антифриз G12+ 1л',         qty:30, price:140,  unit:'шт', category:'Охолодження' },
+        { name:'Ремінь ГРМ',               qty:8,  price:680,  unit:'шт', category:'ГРМ' },
+        { name:'Ролик натяжний',            qty:6,  price:420,  unit:'шт', category:'ГРМ' },
+    ];
+    const pRefs = PARTS.map(() => cr.collection('warehouse_items').doc());
+    PARTS.forEach((p, i) => {
+        ops.push({ type:'set', ref: pRefs[i], data: {
+            name: p.name, quantity: p.qty, price: p.price, unit: p.unit,
+            category: p.category, minQuantity: 3,
+            isActive: true, isDemo: true, createdAt: now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── SALES PRODUCTS (роботи/послуги) ──
+    const SERVICES = [
+        { name:'Заміна масла та фільтра',     price:500,  unit:'послуга', category:'ТО' },
+        { name:'Діагностика двигуна',          price:300,  unit:'послуга', category:'Діагностика' },
+        { name:'Комп\'ютерна діагностика',     price:400,  unit:'послуга', category:'Діагностика' },
+        { name:'Заміна гальмівних колодок',    price:600,  unit:'послуга', category:'Гальма' },
+        { name:'Заміна ременя ГРМ',            price:800,  unit:'послуга', category:'ГРМ' },
+        { name:'Шиномонтаж (4 колеса)',        price:400,  unit:'послуга', category:'Шини' },
+        { name:'Балансування коліс',           price:280,  unit:'послуга', category:'Шини' },
+        { name:'Заміна антифризу',             price:350,  unit:'послуга', category:'Охолодження' },
+        { name:'Кузовний огляд',               price:200,  unit:'послуга', category:'Кузов' },
+        { name:'Зварювальні роботи (год)',      price:800,  unit:'год',     category:'Кузов' },
+    ];
+    const svcRefs = SERVICES.map(() => cr.collection('sales_products').doc());
+    SERVICES.forEach((s, i) => {
+        ops.push({ type:'set', ref: svcRefs[i], data: {
+            name: s.name, price: s.price, unit: s.unit, category: s.category,
+            isActive: true, isDemo: true, createdAt: now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── WORK ORDERS (наряди) ──
+    const ORDERS = [
+        { vIdx:0, cIdx:0, mIdx:0, status:'closed',  date:-5,  items:[{s:0,q:1},{s:1,q:1},{p:0,q:1},{p:2,q:1}] },
+        { vIdx:1, cIdx:1, mIdx:1, status:'paid',    date:-2,  items:[{s:3,q:1},{p:5,q:1}] },
+        { vIdx:2, cIdx:2, mIdx:0, status:'draft',   date:0,   items:[{s:4,q:1},{p:10,q:1},{p:11,q:1}] },
+        { vIdx:3, cIdx:3, mIdx:2, status:'sent',    date:-1,  items:[{s:5,q:1},{s:6,q:1}] },
+        { vIdx:4, cIdx:4, mIdx:0, status:'draft',   date:0,   items:[{s:0,q:1},{s:2,q:1},{p:0,q:1},{p:2,q:1}] },
+    ];
+    const woRefs = ORDERS.map(() => cr.collection('sales_orders').doc());
+    ORDERS.forEach((o, i) => {
+        const v = VEHICLES[o.vIdx];
+        const c = CLIENTS[o.cIdx];
+        const master = STAFF[o.mIdx];
+        const items = o.items.map(it => {
+            if (it.s !== undefined) {
+                const svc = SERVICES[it.s];
+                const total = svc.price * it.q;
+                return { id: String(i)+String(it.s), name: svc.name, qty: it.q, unit: svc.unit, price: svc.price, discount:0, total };
+            } else {
+                const part = PARTS[it.p];
+                const total = part.price * it.q;
+                return { id: String(i)+'p'+String(it.p), name: part.name, qty: it.q, unit: part.unit, price: part.price, discount:0, total, warehouseItemId: pRefs[it.p].id };
+            }
+        });
+        const total = items.reduce((s,x) => s+x.total, 0);
+        const year = new Date().getFullYear();
+        ops.push({ type:'set', ref: woRefs[i], data: {
+            type: 'work_order',
+            number: `WO-${year}-${String(i+1).padStart(4,'0')}`,
+            status: o.status,
+            clientId: cRefs[o.cIdx].id, clientName: c.name, clientPhone: c.phone,
+            vehicleId: vRefs[o.vIdx].id,
+            vehicleInfo: { plate:v.plate, vin:v.vin, make:v.make, model:v.model, year:v.year, mileage:85000+i*2000 },
+            masterId: sRefs[o.mIdx].id, masterName: master.name,
+            date: dDate(o.date),
+            items, subtotal: total, discountTotal: 0, total,
+            paymentMethod: 'cash', paymentStatus: o.status === 'paid' || o.status === 'closed' ? 'paid' : 'unpaid',
+            paidAmount: o.status === 'paid' || o.status === 'closed' ? total : 0,
+            notes: '', isDemo: true,
+            createdAt: dTs(o.date), updatedAt: now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── COMPANY PROFILE ──
+    await cr.update({
+        name: 'АвтоМайстер СТО', niche: 'autoservice',
+        nicheLabel: 'Автосервіс — ремонт та обслуговування авто',
+        city: 'Київ', employees: 6, currency: 'UAH',
+        avgCheck: 1820, monthlyRevenue: 145000,
+        modules: { scheduling:true, clientProfile:true, loyalty:false, subscriptions:false, reviews:true, winback:false, notifications:true, estimates:false, warehouse:true, booking:false, sales:true },
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+};
+if (window._NICHE_LABELS) window._NICHE_LABELS['autoservice'] = 'АвтоМайстер СТО — Автосервіс';
+
+// ════════════════════════════════════════════════════════════════════════════
+// HORECA — Кафе "Сонячне"
+// ════════════════════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['horeca'] = async function() {
+    if (!window.currentCompanyId || !window.db) throw new Error('No company');
+    const cr = window.db.collection('companies').doc(window.currentCompanyId);
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    function dDate(d) { const dt = new Date(); dt.setDate(dt.getDate() + d); return dt.toISOString().slice(0,10); }
+    function dTs(d) { return firebase.firestore.Timestamp.fromDate(new Date(Date.now() + d*86400000)); }
+
+    let ops = [];
+
+    // ── STAFF ──
+    const STAFF = [
+        { name:'Марина Ковальчук', role:'Адміністратор' },
+        { name:'Іван Приходько',   role:'Кухар (шеф)' },
+        { name:'Оля Захарченко',   role:'Кухар' },
+        { name:'Петро Мороз',      role:'Кухар' },
+        { name:'Тетяна Бондар',    role:'Офіціант' },
+        { name:'Микола Даценко',   role:'Офіціант' },
+        { name:'Ліля Гончаренко',  role:'Офіціант' },
+        { name:'Арсен Кириленко',  role:'Бармен' },
+        { name:'Аліна Сергієнко',  role:'Касир' },
+        { name:'Дмитро Власенко',  role:'Прибиральник' },
+    ];
+    const sRefs = STAFF.map(() => cr.collection('staff').doc());
+    STAFF.forEach((s, i) => {
+        ops.push({ type:'set', ref: sRefs[i], data: { name:s.name, role:s.role, isActive:true, isDemo:true, createdAt:now }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── MENU (sales_products) ──
+    const MENU = [
+        // Перші страви
+        { name:'Борщ з пампушками',      price:85,  unit:'порція', category:'Перші страви' },
+        { name:'Суп курячий з вермішеллю',price:75, unit:'порція', category:'Перші страви' },
+        // Другі страви
+        { name:'Котлета по-київськи',     price:145, unit:'порція', category:'Другі страви' },
+        { name:'Риба запечена з овочами', price:165, unit:'порція', category:'Другі страви' },
+        { name:'Стейк зі свинини',        price:195, unit:'порція', category:'Другі страви' },
+        { name:'Вареники з картоплею',    price:95,  unit:'порція', category:'Другі страви' },
+        // Гарніри
+        { name:'Пюре картопляне',         price:45,  unit:'порція', category:'Гарніри' },
+        { name:'Рис відварний',           price:40,  unit:'порція', category:'Гарніри' },
+        // Салати
+        { name:'Цезар з куркою',          price:135, unit:'порція', category:'Салати' },
+        { name:'Грецький салат',          price:115, unit:'порція', category:'Салати' },
+        { name:'Вінегрет',                price:65,  unit:'порція', category:'Салати' },
+        // Напої
+        { name:'Кава еспресо',            price:45,  unit:'шт',     category:'Напої' },
+        { name:'Капучино 300мл',          price:75,  unit:'шт',     category:'Напої' },
+        { name:'Чай трав\'яний',          price:55,  unit:'шт',     category:'Напої' },
+        { name:'Свіжовичавлений сік',     price:85,  unit:'шт',     category:'Напої' },
+        { name:'Компот домашній',         price:35,  unit:'шт',     category:'Напої' },
+        { name:'Вода мінеральна 0.5л',    price:30,  unit:'шт',     category:'Напої' },
+        // Десерти
+        { name:'Торт Наполеон (порція)',   price:85,  unit:'порція', category:'Десерти' },
+        { name:'Млинці з варенням',        price:75,  unit:'порція', category:'Десерти' },
+        { name:'Морозиво асорті',          price:65,  unit:'порція', category:'Десерти' },
+        // Бізнес-ланч
+        { name:'Бізнес-ланч (комплекс)',   price:135, unit:'порція', category:'Бізнес-ланч' },
+        // Хліб
+        { name:'Хліб (порція)',            price:15,  unit:'порція', category:'Хліб' },
+        { name:'Пампушки часникові',       price:25,  unit:'порція', category:'Хліб' },
+        // Алкоголь
+        { name:'Вино червоне (50мл)',      price:65,  unit:'шт',     category:'Алкоголь' },
+        { name:'Пиво "Львівське" 0.5л',   price:55,  unit:'шт',     category:'Алкоголь' },
+    ];
+    const mRefs = MENU.map(() => cr.collection('sales_products').doc());
+    MENU.forEach((m, i) => {
+        ops.push({ type:'set', ref: mRefs[i], data: { name:m.name, price:m.price, unit:m.unit, category:m.category, isActive:true, isDemo:true, createdAt:now }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── WAREHOUSE (продукти) ──
+    const INGREDIENTS = [
+        { name:'Борошно пшеничне вищ.с.', qty:50,  unit:'кг', price:18,   category:'Бакалія' },
+        { name:'М\'ясо свинина',           qty:30,  unit:'кг', price:180,  category:'М\'ясо' },
+        { name:'Курятина (грудка)',        qty:25,  unit:'кг', price:155,  category:'М\'ясо' },
+        { name:'Риба (судак)',              qty:15,  unit:'кг', price:220,  category:'Риба' },
+        { name:'Молоко 2.5% (1л)',         qty:40,  unit:'л',  price:28,   category:'Молочні' },
+        { name:'Масло вершкове',           qty:10,  unit:'кг', price:240,  category:'Молочні' },
+        { name:'Яйця (10шт)',              qty:20,  unit:'упак',price:65,  category:'Молочні' },
+        { name:'Картопля',                 qty:80,  unit:'кг', price:12,   category:'Овочі' },
+        { name:'Буряк',                    qty:20,  unit:'кг', price:14,   category:'Овочі' },
+        { name:'Морква',                   qty:15,  unit:'кг', price:16,   category:'Овочі' },
+        { name:'Капуста',                  qty:20,  unit:'кг', price:10,   category:'Овочі' },
+        { name:'Цибуля',                   qty:15,  unit:'кг', price:18,   category:'Овочі' },
+        { name:'Кава зернова',             qty:5,   unit:'кг', price:580,  category:'Кава/Чай' },
+        { name:'Чай трав\'яний (100г)',    qty:10,  unit:'упак',price:45,  category:'Кава/Чай' },
+        { name:'Олія соняшникова',         qty:20,  unit:'л',  price:55,   category:'Бакалія' },
+        { name:'Сіль, цукор (кг)',         qty:10,  unit:'кг', price:25,   category:'Бакалія' },
+    ];
+    const iRefs = INGREDIENTS.map(() => cr.collection('warehouse_items').doc());
+    INGREDIENTS.forEach((it, i) => {
+        ops.push({ type:'set', ref: iRefs[i], data: { name:it.name, quantity:it.qty, price:it.price, unit:it.unit, category:it.category, minQuantity:5, isActive:true, isDemo:true, createdAt:now }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── SHIFTS ──
+    const shiftYestRef = cr.collection('sales_shifts').doc();
+    const shiftTodRef  = cr.collection('sales_shifts').doc();
+    ops.push({ type:'set', ref: shiftYestRef, data: {
+        status:'closed', openedBy: sRefs[8].id, openedByName: STAFF[8].name,
+        openedAt: dTs(-1), closedAt: dTs(-0.5),
+        cashStart:500, cashEnd:4800,
+        totalCash:3200, totalTerminal:2100, totalTransfer:0,
+        totalRevenue:5300, ordersCount:22, avgCheck:241,
+        notes:'', isDemo:true, createdAt: dTs(-1),
+    }});
+    ops.push({ type:'set', ref: shiftTodRef, data: {
+        status:'open', openedBy: sRefs[8].id, openedByName: STAFF[8].name,
+        openedAt: dTs(0), closedAt: null,
+        cashStart:500, cashEnd:0,
+        totalCash:0, totalTerminal:0, totalTransfer:0,
+        totalRevenue:0, ordersCount:0, avgCheck:0,
+        notes:'', isDemo:true, createdAt: dTs(0),
+    }});
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── RECEIPTS (чеки) ──
+    const makeReceipt = (dayOffset, idx, clientName, menuIdxs, method) => {
+        const items = menuIdxs.map(mi => {
+            const m = MENU[mi];
+            return { id: String(idx)+String(mi), name:m.name, qty:1, unit:m.unit, price:m.price, discount:0, total:m.price };
+        });
+        const total = items.reduce((s,x) => s+x.total, 0);
+        const year = new Date().getFullYear();
+        return {
+            type:'receipt', number:`RCP-${year}-${String(idx).padStart(4,'0')}`,
+            status:'paid', clientName: clientName||'', clientPhone:'',
+            date: dDate(dayOffset),
+            items, subtotal:total, discountTotal:0, total,
+            paymentMethod:method, paymentStatus:'paid', paidAmount:total,
+            notes:'', isDemo:true, createdAt: dTs(dayOffset), updatedAt: now,
+            shiftId: dayOffset < 0 ? shiftYestRef.id : shiftTodRef.id,
+        };
+    };
+
+    const RECEIPTS = [
+        // Вчора
+        makeReceipt(-1, 1,  'Стіл 1', [0,6,12], 'cash'),
+        makeReceipt(-1, 2,  'Стіл 2', [2,8,11,16], 'terminal'),
+        makeReceipt(-1, 3,  'Стіл 3', [20,12,17], 'cash'),
+        makeReceipt(-1, 4,  'Стіл 4', [4,9,14,24], 'cash'),
+        makeReceipt(-1, 5,  'Стіл 5', [0,1,6,7,12,15], 'terminal'),
+        makeReceipt(-1, 6,  'Стіл 6', [3,10,13], 'cash'),
+        makeReceipt(-1, 7,  'Стіл 7', [2,6,11], 'terminal'),
+        makeReceipt(-1, 8,  'Стіл 8', [5,7,12,16], 'cash'),
+        makeReceipt(-1, 9,  '',       [20,12], 'cash'),
+        makeReceipt(-1, 10, '',       [20,13,16], 'terminal'),
+        // Сьогодні
+        makeReceipt(0, 11, 'Стіл 2', [0,6,12], 'cash'),
+        makeReceipt(0, 12, 'Стіл 3', [4,9,11], 'terminal'),
+        makeReceipt(0, 13, '',       [20,12,13], 'cash'),
+        makeReceipt(0, 14, 'Стіл 1', [2,8,14,16], 'terminal'),
+        makeReceipt(0, 15, 'Стіл 5', [5,6,12,17], 'cash'),
+    ];
+    RECEIPTS.forEach(r => {
+        const ref = cr.collection('sales_orders').doc();
+        ops.push({ type:'set', ref, data: r });
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── COMPANY PROFILE ──
+    await cr.update({
+        name:'Кафе "Сонячне"', niche:'horeca',
+        nicheLabel:'HoReCa — кафе, ресторан, бар',
+        city:'Київ', employees:10, currency:'UAH',
+        avgCheck:241, monthlyRevenue:158000,
+        modules:{ scheduling:true, clientProfile:true, loyalty:true, subscriptions:false, reviews:true, winback:false, notifications:true, estimates:false, warehouse:true, booking:false, sales:true },
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+};
+if (window._NICHE_LABELS) window._NICHE_LABELS['horeca'] = 'Кафе "Сонячне" — HoReCa';
+
+// ════════════════════════════════════════════════════════════════════════════
+// ЛОГІСТИКА — logistics
+// ════════════════════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['logistics'] = async function() {
+    if (!window.currentCompanyId || !window.db) throw new Error('No company');
+    const cr = window.db.collection('companies').doc(window.currentCompanyId);
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    function dDate(d) { const dt = new Date(); dt.setDate(dt.getDate() + d); return dt.toISOString().slice(0,10); }
+    function dTs(d) { return firebase.firestore.Timestamp.fromDate(new Date(Date.now() + d*86400000)); }
+
+    let ops = [];
+
+    // ── DRIVERS / STAFF ──
+    const DRIVERS = [
+        { name:'Іваненко Микола',   role:'Водій', phone:'+380671230001', plate:'AA1111BB' },
+        { name:'Коваленко Сергій',  role:'Водій', phone:'+380671230002', plate:'KA2222CC' },
+        { name:'Петренко Андрій',   role:'Водій', phone:'+380671230003', plate:'AA3333DD' },
+        { name:'Мороз Василь',      role:'Водій', phone:'+380671230004', plate:'KA4444EE' },
+        { name:'Захарченко Дмитро', role:'Водій', phone:'+380671230005', plate:'AA5555FF' },
+    ];
+    const STAFF_EXTRA = [
+        { name:'Олена Бондаренко',  role:'Диспетчер' },
+        { name:'Іван Ткаченко',     role:'Логіст' },
+    ];
+    const dRefs = DRIVERS.map(() => cr.collection('staff').doc());
+    const eRefs = STAFF_EXTRA.map(() => cr.collection('staff').doc());
+    DRIVERS.forEach((d, i) => {
+        ops.push({ type:'set', ref: dRefs[i], data: { name:d.name, role:d.role, phone:d.phone, isActive:true, isDemo:true, createdAt:now }});
+    });
+    STAFF_EXTRA.forEach((s, i) => {
+        ops.push({ type:'set', ref: eRefs[i], data: { name:s.name, role:s.role, isActive:true, isDemo:true, createdAt:now }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── CRM CLIENTS (вантажовідправники) ──
+    const CLIENTS = [
+        { name:'ТОВ БудМайстер',        phone:'+380441234561' },
+        { name:'ФОП Іванченко Логістик', phone:'+380441234562' },
+        { name:'ТОВ АгроТрейд',          phone:'+380441234563' },
+        { name:'ПП Карго Сервіс',        phone:'+380441234564' },
+        { name:'ТОВ Укрпромпостач',      phone:'+380441234565' },
+    ];
+    const cRefs = CLIENTS.map(() => cr.collection('crm_clients').doc());
+    CLIENTS.forEach((c, i) => {
+        ops.push({ type:'set', ref: cRefs[i], data: { name:c.name, phone:c.phone, source:'direct', status:'active', isDemo:true, createdAt:now }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── ROUTES ──
+    const ROUTES_DATA = [
+        { from:'Київ',   to:'Львів',   cargo:'Будматеріали',    wt:8, vol:24, tariff:9500,  dIdx:0, cIdx:0, fuel:1400, road:540, driver:1500, status:'closed', days:-8 },
+        { from:'Харків', to:'Одеса',   cargo:'Зернові',         wt:20,vol:60, tariff:14000, dIdx:1, cIdx:2, fuel:2200, road:820, driver:2000, status:'closed', days:-6 },
+        { from:'Київ',   to:'Дніпро',  cargo:'Обладнання',      wt:5, vol:15, tariff:7500,  dIdx:2, cIdx:3, fuel:980,  road:360, driver:1200, status:'closed', days:-4 },
+        { from:'Львів',  to:'Харків',  cargo:'Текстиль',        wt:3, vol:12, tariff:11000, dIdx:3, cIdx:1, fuel:1800, road:680, driver:1600, status:'paid',   days:-2 },
+        { from:'Київ',   to:'Полтава', cargo:'Продукти харч.',  wt:12,vol:35, tariff:6500,  dIdx:4, cIdx:4, fuel:780,  road:280, driver:1000, status:'sent',   days:-1 },
+        { from:'Одеса',  to:'Київ',    cargo:'Товари нар. спож.',wt:7, vol:21, tariff:8500,  dIdx:0, cIdx:2, fuel:1100, road:420, driver:1300, status:'draft',  days:0  },
+    ];
+    const year = new Date().getFullYear();
+    ROUTES_DATA.forEach((r, i) => {
+        const ref = cr.collection('sales_orders').doc();
+        const expenses = [
+            { type:'fuel',   amount:r.fuel,   note:'Паливо' },
+            { type:'road',   amount:r.road,   note:'Дорога/платні' },
+            { type:'driver', amount:r.driver, note:'Оплата водія' },
+        ];
+        const totalExpenses = r.fuel + r.road + r.driver;
+        const routeProfit = r.tariff - totalExpenses;
+        const d = DRIVERS[r.dIdx];
+        const c = CLIENTS[r.cIdx];
+        ops.push({ type:'set', ref, data: {
+            type:'route',
+            number:`RTE-${year}-${String(i+1).padStart(4,'0')}`,
+            status: r.status,
+            clientId: cRefs[r.cIdx].id, clientName: c.name, clientPhone: c.phone,
+            date: dDate(r.days),
+            routeFrom: r.from, routeTo: r.to,
+            cargoWeight: r.wt, cargoVolume: r.vol,
+            items: [{ id:'1', name:`Перевезення ${r.from}–${r.to}`, qty:1, unit:'рейс', price:r.tariff, discount:0, total:r.tariff }],
+            subtotal: r.tariff, discountTotal: 0, total: r.tariff,
+            paymentMethod: 'transfer',
+            paymentStatus: r.status === 'closed' || r.status === 'paid' ? 'paid' : 'unpaid',
+            paidAmount: r.status === 'closed' || r.status === 'paid' ? r.tariff : 0,
+            driverId: dRefs[r.dIdx].id, driverName: d.name, vehiclePlate: d.plate,
+            routeExpenses: expenses, routeProfit,
+            notes: `Вантаж: ${r.cargo} · ${r.wt}т · ${r.vol}м³`,
+            isDemo:true, createdAt: dTs(r.days), updatedAt: now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    // ── COMPANY PROFILE ──
+    await cr.update({
+        name:'Логіст Про', niche:'logistics',
+        nicheLabel:'Логістика — вантажні перевезення',
+        city:'Київ', employees:7, currency:'UAH',
+        avgCheck:9583, monthlyRevenue:228000,
+        modules:{ scheduling:false, clientProfile:true, loyalty:false, subscriptions:false, reviews:false, winback:false, notifications:true, estimates:false, warehouse:false, booking:false, sales:true },
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+};
+if (window._NICHE_LABELS) window._NICHE_LABELS['logistics'] = 'Логіст Про — Вантажні перевезення';
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// АВТОСЕРВІС — autoservice
+// ════════════════════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['autoservice'] = async function() {
+    if (!window.currentCompanyId || !window.db) throw new Error('No company');
+    const cr = window.db.collection('companies').doc(window.currentCompanyId);
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    function dDate(d) { const dt = new Date(); dt.setDate(dt.getDate() + d); return dt.toISOString().slice(0,10); }
+    function dTs(d) { return firebase.firestore.Timestamp.fromDate(new Date(Date.now() + d*86400000)); }
+    let ops = [];
+
+    const STAFF = [
+        { name:'Олексій Бондаренко', role:'Майстер-механік' },
+        { name:'Сергій Коваль',      role:'Майстер-автоелектрик' },
+        { name:'Василь Петренко',    role:'Шиномонтажник' },
+        { name:'Ірина Мельник',      role:'Адміністратор' },
+        { name:'Дмитро Сидоренко',   role:'Кузовний майстер' },
+        { name:'Андрій Левченко',    role:'Помічник механіка' },
+    ];
+    const sRefs = STAFF.map(() => cr.collection('staff').doc());
+    STAFF.forEach((s, i) => { ops.push({ type:'set', ref: sRefs[i], data: { name:s.name, role:s.role, isActive:true, isDemo:true, createdAt:now }}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const CLIENTS = [
+        { name:'Іванченко Михайло', phone:'+380671111001' },
+        { name:'Ковальська Оксана', phone:'+380671111002' },
+        { name:'Шевченко Петро',    phone:'+380671111003' },
+        { name:'Бойко Андрій',      phone:'+380671111004' },
+        { name:'Ткаченко Юлія',     phone:'+380671111005' },
+        { name:'Марченко Василь',   phone:'+380671111006' },
+        { name:'Гриценко Наталія',  phone:'+380671111007' },
+        { name:'Олійник Сергій',    phone:'+380671111008' },
+    ];
+    const cRefs = CLIENTS.map(() => cr.collection('crm_clients').doc());
+    CLIENTS.forEach((c, i) => { ops.push({ type:'set', ref: cRefs[i], data: { name:c.name, phone:c.phone, source:'direct', status:'active', isDemo:true, createdAt:now }}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const VEHICLES = [
+        { plate:'AA1234BC', make:'Mazda',      model:'CX-5',    year:2019, vin:'JMZKE1W2500123456', cIdx:0 },
+        { plate:'KA5678HI', make:'Toyota',     model:'Camry',   year:2021, vin:'4T1BF1FK0CU123456', cIdx:1 },
+        { plate:'AA9012EH', make:'Volkswagen', model:'Passat',  year:2018, vin:'WVWZZZ3CZ9E123456', cIdx:2 },
+        { plate:'AA3456KM', make:'BMW',        model:'X5',      year:2020, vin:'WBAKS410100E12345', cIdx:3 },
+        { plate:'KA7890OR', make:'Hyundai',    model:'Tucson',  year:2022, vin:'KMHJ3813BE123456',  cIdx:4 },
+        { plate:'AA2345ST', make:'Ford',       model:'Focus',   year:2017, vin:'WF0DXXGCHDHJ12345', cIdx:5 },
+        { plate:'KA6789UF', make:'Skoda',      model:'Octavia', year:2020, vin:'TMBEA7NE0L0123456', cIdx:6 },
+        { plate:'AA0123HC', make:'Renault',    model:'Duster',  year:2019, vin:'VF1HSRDB5H0123456', cIdx:7 },
+    ];
+    const vRefs = VEHICLES.map(() => cr.collection('sales_vehicles').doc());
+    VEHICLES.forEach((v, i) => {
+        const c = CLIENTS[v.cIdx];
+        ops.push({ type:'set', ref: vRefs[i], data: {
+            plate:v.plate, vin:v.vin, make:v.make, model:v.model, year:v.year, color:'',
+            clientId:cRefs[v.cIdx].id, clientName:c.name, clientPhone:c.phone,
+            mileageHistory:[{ date:dDate(-30), mileage:80000+i*5000, orderId:'' }],
+            notes:'', isDemo:true, createdAt:now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const PARTS = [
+        { name:'Масло 5W-30 4л',          qty:20, price:840,  unit:'шт',    category:'Мастила' },
+        { name:'Масло 5W-40 4л',           qty:15, price:920,  unit:'шт',    category:'Мастила' },
+        { name:'Фільтр оливи',             qty:30, price:180,  unit:'шт',    category:'Фільтри' },
+        { name:'Фільтр повітряний',        qty:20, price:220,  unit:'шт',    category:'Фільтри' },
+        { name:'Гальмівні колодки перед.', qty:12, price:680,  unit:'компл', category:'Гальма' },
+        { name:'Гальмівні колодки зад.',   qty:10, price:520,  unit:'компл', category:'Гальма' },
+        { name:'Гальмівний диск 280мм',    qty:8,  price:1200, unit:'шт',    category:'Гальма' },
+        { name:'Свічки (4шт)',             qty:25, price:320,  unit:'компл', category:'Запалювання' },
+        { name:'Антифриз G12+ 1л',         qty:30, price:140,  unit:'шт',    category:'Охолодження' },
+        { name:'Ремінь ГРМ',               qty:8,  price:680,  unit:'шт',    category:'ГРМ' },
+        { name:'Ролик натяжний',            qty:6,  price:420,  unit:'шт',    category:'ГРМ' },
+    ];
+    const pRefs = PARTS.map(() => cr.collection('warehouse_items').doc());
+    PARTS.forEach((p, i) => { ops.push({ type:'set', ref: pRefs[i], data: { name:p.name, quantity:p.qty, price:p.price, unit:p.unit, category:p.category, minQuantity:3, isActive:true, isDemo:true, createdAt:now }}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const SERVICES = [
+        { name:'Заміна масла та фільтра',  price:500,  unit:'послуга', category:'ТО' },
+        { name:'Діагностика двигуна',       price:300,  unit:'послуга', category:'Діагностика' },
+        { name:'Заміна гальмівних колодок', price:600,  unit:'послуга', category:'Гальма' },
+        { name:'Заміна ременя ГРМ',         price:800,  unit:'послуга', category:'ГРМ' },
+        { name:'Шиномонтаж (4 колеса)',     price:400,  unit:'послуга', category:'Шини' },
+    ];
+    const svcRefs = SERVICES.map(() => cr.collection('sales_products').doc());
+    SERVICES.forEach((s, i) => { ops.push({ type:'set', ref: svcRefs[i], data: { name:s.name, price:s.price, unit:s.unit, category:s.category, isActive:true, isDemo:true, createdAt:now }}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const year = new Date().getFullYear();
+    const WO_DATA = [
+        { vIdx:0, cIdx:0, mIdx:0, status:'closed', dOff:-5, svc:[0,1], parts:[{pi:0,q:1},{pi:2,q:1}] },
+        { vIdx:1, cIdx:1, mIdx:1, status:'paid',   dOff:-2, svc:[2],   parts:[{pi:4,q:1}] },
+        { vIdx:2, cIdx:2, mIdx:0, status:'draft',  dOff:0,  svc:[3],   parts:[{pi:9,q:1},{pi:10,q:1}] },
+        { vIdx:3, cIdx:3, mIdx:2, status:'sent',   dOff:-1, svc:[4],   parts:[] },
+        { vIdx:4, cIdx:4, mIdx:0, status:'draft',  dOff:0,  svc:[0,1], parts:[{pi:0,q:1},{pi:2,q:1}] },
+    ];
+    WO_DATA.forEach((o, i) => {
+        const ref = cr.collection('sales_orders').doc();
+        const v = VEHICLES[o.vIdx]; const c = CLIENTS[o.cIdx]; const m = STAFF[o.mIdx];
+        const items = [
+            ...o.svc.map(si => { const s=SERVICES[si]; return { id:'s'+si, name:s.name, qty:1, unit:s.unit, price:s.price, discount:0, total:s.price }; }),
+            ...o.parts.map(p => { const pt=PARTS[p.pi]; return { id:'p'+p.pi, name:pt.name, qty:p.q, unit:pt.unit, price:pt.price, discount:0, total:pt.price*p.q, warehouseItemId:pRefs[p.pi].id }; }),
+        ];
+        const total = items.reduce((s,x)=>s+x.total,0);
+        ops.push({ type:'set', ref, data: {
+            type:'work_order', number:`WO-${year}-${String(i+1).padStart(4,'0')}`,
+            status:o.status, clientId:cRefs[o.cIdx].id, clientName:c.name, clientPhone:c.phone,
+            vehicleId:vRefs[o.vIdx].id, vehicleInfo:{plate:v.plate,vin:v.vin,make:v.make,model:v.model,year:v.year,mileage:85000+i*2000},
+            masterId:sRefs[o.mIdx].id, masterName:m.name, date:dDate(o.dOff),
+            items, subtotal:total, discountTotal:0, total,
+            paymentMethod:'cash', paymentStatus:o.status==='paid'||o.status==='closed'?'paid':'unpaid',
+            paidAmount:o.status==='paid'||o.status==='closed'?total:0,
+            notes:'', isDemo:true, createdAt:dTs(o.dOff), updatedAt:now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    await cr.update({
+        name:'АвтоМайстер СТО', niche:'autoservice', nicheLabel:'Автосервіс', city:'Київ', employees:6, currency:'UAH',
+        avgCheck:1820, monthlyRevenue:145000,
+        modules:{ scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:true,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true },
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+    });
+};
+if (window._NICHE_LABELS) window._NICHE_LABELS['autoservice'] = 'АвтоМайстер СТО — Автосервіс';
+
+// ════════════════════════════════════════════════════════════════════════════
+// HORECA — Кафе "Сонячне"
+// ════════════════════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['horeca'] = async function() {
+    if (!window.currentCompanyId || !window.db) throw new Error('No company');
+    const cr = window.db.collection('companies').doc(window.currentCompanyId);
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    function dDate(d) { const dt = new Date(); dt.setDate(dt.getDate() + d); return dt.toISOString().slice(0,10); }
+    function dTs(d) { return firebase.firestore.Timestamp.fromDate(new Date(Date.now() + d*86400000)); }
+    let ops = [];
+
+    const STAFF = [
+        {name:'Марина Ковальчук',role:'Адміністратор'},{name:'Іван Приходько',role:'Шеф-кухар'},
+        {name:'Оля Захарченко',role:'Кухар'},{name:'Петро Мороз',role:'Кухар'},
+        {name:'Тетяна Бондар',role:'Офіціант'},{name:'Микола Даценко',role:'Офіціант'},
+        {name:'Ліля Гончаренко',role:'Офіціант'},{name:'Арсен Кириленко',role:'Бармен'},
+        {name:'Аліна Сергієнко',role:'Касир'},{name:'Дмитро Власенко',role:'Прибиральник'},
+    ];
+    const sRefs = STAFF.map(() => cr.collection('staff').doc());
+    STAFF.forEach((s,i) => { ops.push({type:'set',ref:sRefs[i],data:{name:s.name,role:s.role,isActive:true,isDemo:true,createdAt:now}}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const MENU = [
+        {name:'Борщ з пампушками',price:85,unit:'порція',cat:'Перші страви'},
+        {name:'Суп курячий',price:75,unit:'порція',cat:'Перші страви'},
+        {name:'Котлета по-київськи',price:145,unit:'порція',cat:'Другі страви'},
+        {name:'Риба запечена',price:165,unit:'порція',cat:'Другі страви'},
+        {name:'Стейк зі свинини',price:195,unit:'порція',cat:'Другі страви'},
+        {name:'Вареники з картоплею',price:95,unit:'порція',cat:'Другі страви'},
+        {name:'Пюре картопляне',price:45,unit:'порція',cat:'Гарніри'},
+        {name:'Цезар з куркою',price:135,unit:'порція',cat:'Салати'},
+        {name:'Грецький салат',price:115,unit:'порція',cat:'Салати'},
+        {name:'Вінегрет',price:65,unit:'порція',cat:'Салати'},
+        {name:'Кава еспресо',price:45,unit:'шт',cat:'Напої'},
+        {name:'Капучино 300мл',price:75,unit:'шт',cat:'Напої'},
+        {name:'Чай трав\'яний',price:55,unit:'шт',cat:'Напої'},
+        {name:'Свіжовичавлений сік',price:85,unit:'шт',cat:'Напої'},
+        {name:'Вода мінеральна',price:30,unit:'шт',cat:'Напої'},
+        {name:'Бізнес-ланч',price:135,unit:'порція',cat:'Бізнес-ланч'},
+        {name:'Торт Наполеон',price:85,unit:'порція',cat:'Десерти'},
+        {name:'Морозиво асорті',price:65,unit:'порція',cat:'Десерти'},
+        {name:'Млинці з варенням',price:75,unit:'порція',cat:'Десерти'},
+        {name:'Пиво Львівське 0.5л',price:55,unit:'шт',cat:'Алкоголь'},
+        {name:'Вино червоне 150мл',price:95,unit:'шт',cat:'Алкоголь'},
+    ];
+    const mRefs = MENU.map(() => cr.collection('sales_products').doc());
+    MENU.forEach((m,i) => { ops.push({type:'set',ref:mRefs[i],data:{name:m.name,price:m.price,unit:m.unit,category:m.cat,isActive:true,isDemo:true,createdAt:now}}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const shiftYRef = cr.collection('sales_shifts').doc();
+    const shiftTRef = cr.collection('sales_shifts').doc();
+    ops.push({type:'set',ref:shiftYRef,data:{status:'closed',openedByName:STAFF[8].name,openedAt:dTs(-1),closedAt:dTs(-0.5),cashStart:500,cashEnd:4800,totalCash:3200,totalTerminal:2100,totalTransfer:0,totalRevenue:5300,ordersCount:22,avgCheck:241,notes:'',isDemo:true,createdAt:dTs(-1)}});
+    ops.push({type:'set',ref:shiftTRef,data:{status:'open',openedByName:STAFF[8].name,openedAt:dTs(0),closedAt:null,cashStart:500,cashEnd:0,totalCash:0,totalTerminal:0,totalTransfer:0,totalRevenue:0,ordersCount:0,avgCheck:0,notes:'',isDemo:true,createdAt:dTs(0)}});
+    await window.safeBatchCommit(ops); ops = [];
+
+    const year = new Date().getFullYear();
+    const CHECKS = [
+        {day:-1,n:1,menuIs:[0,6,10],method:'cash'},{day:-1,n:2,menuIs:[2,7,11,14],method:'terminal'},
+        {day:-1,n:3,menuIs:[15,10,16],method:'cash'},{day:-1,n:4,menuIs:[4,8,13,19],method:'cash'},
+        {day:-1,n:5,menuIs:[0,1,6,10,14],method:'terminal'},{day:-1,n:6,menuIs:[3,9,12],method:'cash'},
+        {day:-1,n:7,menuIs:[2,6,11],method:'terminal'},{day:-1,n:8,menuIs:[5,6,10,14],method:'cash'},
+        {day:-1,n:9,menuIs:[15,10],method:'cash'},{day:-1,n:10,menuIs:[15,12,14],method:'terminal'},
+        {day:0,n:11,menuIs:[0,6,10],method:'cash'},{day:0,n:12,menuIs:[4,8,11],method:'terminal'},
+        {day:0,n:13,menuIs:[15,10,12],method:'cash'},{day:0,n:14,menuIs:[2,7,13,14],method:'terminal'},
+        {day:0,n:15,menuIs:[5,6,10,16],method:'cash'},
+    ];
+    CHECKS.forEach(ch => {
+        const ref = cr.collection('sales_orders').doc();
+        const items = ch.menuIs.map(mi => { const m=MENU[mi]; return {id:String(mi),name:m.name,qty:1,unit:m.unit,price:m.price,discount:0,total:m.price}; });
+        const total = items.reduce((s,x)=>s+x.total,0);
+        ops.push({type:'set',ref,data:{
+            type:'receipt',number:`RCP-${year}-${String(ch.n).padStart(4,'0')}`,status:'paid',
+            clientName:'',date:dDate(ch.day),items,subtotal:total,discountTotal:0,total,
+            paymentMethod:ch.method,paymentStatus:'paid',paidAmount:total,
+            shiftId:ch.day<0?shiftYRef.id:shiftTRef.id,notes:'',isDemo:true,createdAt:dTs(ch.day),updatedAt:now,
+        }});
+    });
+    await window.safeBatchCommit(ops); ops = [];
+
+    await cr.update({
+        name:'Кафе "Сонячне"',niche:'horeca',nicheLabel:'HoReCa — кафе, ресторан',city:'Київ',employees:10,currency:'UAH',
+        avgCheck:241,monthlyRevenue:158000,
+        modules:{scheduling:true,clientProfile:true,loyalty:true,subscriptions:false,reviews:true,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+    });
+};
+if (window._NICHE_LABELS) window._NICHE_LABELS['horeca'] = 'Кафе "Сонячне" — HoReCa';
+
+// ════════════════════════════════════════════════════════════════════════════
+// ЛОГІСТИКА — logistics
+// ════════════════════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['logistics'] = async function() {
+    if (!window.currentCompanyId || !window.db) throw new Error('No company');
+    const cr = window.db.collection('companies').doc(window.currentCompanyId);
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    function dDate(d) { const dt = new Date(); dt.setDate(dt.getDate() + d); return dt.toISOString().slice(0,10); }
+    function dTs(d) { return firebase.firestore.Timestamp.fromDate(new Date(Date.now() + d*86400000)); }
+    let ops = [];
+
+    const DRIVERS = [
+        {name:'Іваненко Микола',  role:'Водій',phone:'+380671230001',plate:'AA1111BB'},
+        {name:'Коваленко Сергій', role:'Водій',phone:'+380671230002',plate:'KA2222CC'},
+        {name:'Петренко Андрій',  role:'Водій',phone:'+380671230003',plate:'AA3333DD'},
+        {name:'Мороз Василь',     role:'Водій',phone:'+380671230004',plate:'KA4444EE'},
+        {name:'Захарченко Дмитро',role:'Водій',phone:'+380671230005',plate:'AA5555FF'},
+        {name:'Олена Бондаренко', role:'Диспетчер',phone:'+380671230006',plate:''},
+        {name:'Іван Ткаченко',    role:'Логіст',phone:'+380671230007',plate:''},
+    ];
+    const dRefs = DRIVERS.map(() => cr.collection('staff').doc());
+    DRIVERS.forEach((d,i) => { ops.push({type:'set',ref:dRefs[i],data:{name:d.name,role:d.role,phone:d.phone,isActive:true,isDemo:true,createdAt:now}}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const CLIENTS = [
+        {name:'ТОВ БудМайстер',phone:'+380441234561'},
+        {name:'ФОП Іванченко Логістик',phone:'+380441234562'},
+        {name:'ТОВ АгроТрейд',phone:'+380441234563'},
+        {name:'ПП Карго Сервіс',phone:'+380441234564'},
+        {name:'ТОВ Укрпромпостач',phone:'+380441234565'},
+    ];
+    const cRefs = CLIENTS.map(() => cr.collection('crm_clients').doc());
+    CLIENTS.forEach((c,i) => { ops.push({type:'set',ref:cRefs[i],data:{name:c.name,phone:c.phone,source:'direct',status:'active',isDemo:true,createdAt:now}}); });
+    await window.safeBatchCommit(ops); ops = [];
+
+    const year = new Date().getFullYear();
+    const ROUTES = [
+        {from:'Київ',  to:'Львів',  cargo:'Будматеріали',   wt:8, vol:24,tariff:9500, dI:0,cI:0,fuel:1400,road:540, drv:1500,status:'closed',dOff:-8},
+        {from:'Харків',to:'Одеса',  cargo:'Зернові',        wt:20,vol:60,tariff:14000,dI:1,cI:2,fuel:2200,road:820, drv:2000,status:'closed',dOff:-6},
+        {from:'Київ',  to:'Дніпро', cargo:'Обладнання',     wt:5, vol:15,tariff:7500, dI:2,cI:3,fuel:980, road:360, drv:1200,status:'closed',dOff:-4},
+        {from:'Львів', to:'Харків', cargo:'Текстиль',       wt:3, vol:12,tariff:11000,dI:3,cI:1,fuel:1800,road:680, drv:1600,status:'paid',  dOff:-2},
+        {from:'Київ',  to:'Полтава',cargo:'Продукти харч.', wt:12,vol:35,tariff:6500, dI:4,cI:4,fuel:780, road:280, drv:1000,status:'sent',  dOff:-1},
+        {from:'Одеса', to:'Київ',   cargo:'Товари нар.спож.',wt:7,vol:21,tariff:8500, dI:0,cI:2,fuel:1100,road:420, drv:1300,status:'draft', dOff:0},
+    ];
+    ROUTES.forEach((r,i) => {
+        const ref = cr.collection('sales_orders').doc();
+        const expenses = [{type:'fuel',amount:r.fuel,note:'Паливо'},{type:'road',amount:r.road,note:'Дорога/платні'},{type:'driver',amount:r.drv,note:'Оплата водія'}];
+        const profit = r.tariff - r.fuel - r.road - r.drv;
+        const d = DRIVERS[r.dI]; const c = CLIENTS[r.cI];
+        const isPaid = r.status==='closed'||r.status==='paid';
+        ops.push({type:'set',ref,data:{
+            type:'route',number:`RTE-${year}-${String(i+1).padStart(4,'0')}`,status:r.status,
+            clientId:cRefs[r.cI].id,clientName:c.name,clientPhone:c.phone,
+            date:dDate(r.dOff),routeFrom:r.from,routeTo:r.to,
+            cargoWeight:r.wt,cargoVolume:r.vol,
+            items:[{id:'1',name:`Перевезення ${r.from}–${r.to}`,qty:1,unit:'рейс',price:r.tariff,discount:0,total:r.tariff}],
+            subtotal:r.tariff,discountTotal:0,total:r.tariff,
+            paymentMethod:'transfer',paymentStatus:isPaid?'paid':'unpaid',paidAmount:isPaid?r.tariff:0,
+            driverId:dRefs[r.dI].id,driverName:d.name,vehiclePlate:d.plate,
+            routeExpenses:expenses,routeProfit:profit,
+            notes:`Вантаж: ${r.cargo} · ${r.wt}т · ${r.vol}м³`,
+            isDemo:true,createdAt:dTs(r.dOff),updatedAt:now,
+        }});
+    });
+    await window.safeBatchCommit(ops);
+
+    await cr.update({
+        name:'Логіст Про',niche:'logistics',nicheLabel:'Логістика — вантажні перевезення',city:'Київ',employees:7,currency:'UAH',
+        avgCheck:9583,monthlyRevenue:228000,
+        modules:{scheduling:false,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:true,estimates:false,warehouse:false,booking:false,sales:true},
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+    });
+};
+if (window._NICHE_LABELS) window._NICHE_LABELS['logistics'] = 'Логіст Про — Вантажні перевезення';

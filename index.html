@@ -801,6 +801,9 @@ document.addEventListener('mousedown', function(e) {
                         <button class="tab-btn _ntab" id="bookingNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('booking',function(){switchTab('booking');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="calendar-check" class="icon icon-sm"></i><span id="navSpanBooking" data-i18n="tabBooking">Запис</span>
                         </button>
+                        <button class="tab-btn _ntab" id="salesNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('sales',function(){switchTab('sales');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="receipt" class="icon icon-sm"></i><span id="navSpanSales">Реалізація</span>
+                        </button>
                         <button class="tab-btn _ntab" id="sitesNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';switchTab('sites');" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="globe" class="icon icon-sm"></i><span data-i18n="tabSites" id="navSpanSites">Сайти</span>
                         </button>
@@ -1163,6 +1166,11 @@ document.addEventListener('mousedown', function(e) {
             <!-- Booking Tab -->
             <div id="bookingTab" class="tab-content">
                 <div id="bookingContainer"></div>
+
+            <!-- Sales Tab -->
+            <div id="salesTab" class="tab-content">
+                <div id="salesContainer"></div>
+            </div>
             </div>
 
             <div id="controlTab" class="tab-content">
@@ -1696,6 +1704,9 @@ document.addEventListener('mousedown', function(e) {
                                         <button onclick="window._applyModulePreset('production')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#eff6ff;color:#1e40af;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a8 8 0 0 1 16 0v3"/></svg>Виробництво/Будівництво</button>
                                         <button onclick="window._applyModulePreset('consulting')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#faf5ff;color:#7c3aed;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Консалтинг</button>
                                     </div>
+                                        <button onclick="window._applyModulePreset('horeca')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fefce8;color:#a16207;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>HoReCa</button>
+                                        <button onclick="window._applyModulePreset('autoservice')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fff7ed;color:#c2410c;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Автосервіс</button>
+                                        <button onclick="window._applyModulePreset('logistics')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0f9ff;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Логістика</button>
 
                                     <!-- Галочки модулів -->
                                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;" id="modulesChecklist">
@@ -1748,6 +1759,11 @@ document.addEventListener('mousedown', function(e) {
                                             <input type="checkbox" id="mod-booking" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                                             <span>Онлайн-запис (Booking)</span>
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;cursor:pointer;">
+                                            <input type="checkbox" id="mod-sales" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 0M4 4v16M4 20l16 0M20 4v16M9 4v16M4 9l16 0M4 14l11 0"/></svg>
+                                            <span style="font-size:0.8rem;">Реалізація / Каса</span>
                                         </label>
                                     </div>
                                     <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.4rem;">
@@ -4307,7 +4323,7 @@ document.addEventListener('mousedown', function(e) {
             if (el('settingWeeklyReport'))  el('settingWeeklyReport').checked = !!d.weeklyReport;
             // Load modules checkboxes
             const mods = d.modules || {};
-            ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','estimates','warehouse','booking'].forEach(k => {
+            ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','estimates','warehouse','booking','sales'].forEach(k => {
                 const cb = el('mod-' + k);
                 if (cb) cb.checked = mods[k] === true;
             });
@@ -4319,7 +4335,7 @@ document.addEventListener('mousedown', function(e) {
     // Modules: save
     window._saveModules = async function() {
         if (!window.currentCompany || !window.db) return;
-        const modKeys = ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','estimates','warehouse','booking'];
+        const modKeys = ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','estimates','warehouse','booking','sales'];
         const modules = {};
         modKeys.forEach(k => { const cb = document.getElementById('mod-' + k); if (cb) modules[k] = cb.checked; });
         try {
@@ -4333,10 +4349,13 @@ document.addEventListener('mousedown', function(e) {
     // Modules: presets
     window._applyModulePreset = function(preset) {
         const PRESETS = {
-            service:    {scheduling:true,clientProfile:true,loyalty:true,subscriptions:true,reviews:true,winback:true,notifications:true,estimates:false,warehouse:false,booking:true},
-            cleaning:   {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true},
-            production: {scheduling:false,clientProfile:false,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:false,estimates:true,warehouse:true,booking:false},
-            consulting: {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true},
+            service:    {scheduling:true,clientProfile:true,loyalty:true,subscriptions:true,reviews:true,winback:true,notifications:true,estimates:false,warehouse:false,booking:true,sales:true},
+            cleaning:   {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true,sales:true},
+            production: {scheduling:false,clientProfile:false,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:false,estimates:true,warehouse:true,booking:false,sales:true},
+            consulting: {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true,sales:true},
+            horeca:     {scheduling:true,clientProfile:true,loyalty:true,subscriptions:false,reviews:true,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
+            autoservice:{scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:true,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
+            logistics:  {scheduling:false,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:true,estimates:false,warehouse:false,booking:false,sales:true},
         };
         const mods = PRESETS[preset];
         if (!mods) return;
@@ -4358,7 +4377,7 @@ document.addEventListener('mousedown', function(e) {
             construction:  ['estimates','warehouse'],
             furniture:     ['estimates','warehouse'],
             manufacturing: ['estimates','warehouse'],
-            consulting:    ['scheduling','clientProfile','winback','notifications','booking'],
+            consulting:    ['scheduling','clientProfile','winback','notifications','booking','sales'],
         };
         return (NICHE_DEFAULTS[niche] || []).includes(key);
     };
@@ -4502,6 +4521,7 @@ document.addEventListener('mousedown', function(e) {
         integrations: ["js/modules/96-integrations.js?v=20260317v1"],
         booking:      ["js/modules/26-staff-schedule.js?v=20260322b1", "js/modules/100-booking.js?v=20260322b1", "js/modules/101-loyalty.js?v=20260322b1", "js/modules/102-subscriptions.js?v=20260322b1", "js/modules/103-notifications.js?v=20260322b1"],
         estimate:     ["js/modules/85-estimate.js?v=20260321v4"],
+        sales:        ["js/modules/104-sales.js?v=20260322s1", "js/modules/104b-sales-pdf.js?v=20260322s1", "js/modules/104c-sales-shifts.js?v=20260322s1"],
     };
 
     function lazyLoad(group, cb) {
