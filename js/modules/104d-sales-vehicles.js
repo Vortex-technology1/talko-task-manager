@@ -2,8 +2,12 @@
   'use strict';
 
   // ─── helpers ──────────────────────────────────────────────────────────────
+  function getDb() { return window.db || (window.firebase && firebase.firestore()); }
+  function getCompanyId() { return window.currentCompanyId || window.currentCompany || null; }
   function col(name) {
-    return window.db.collection('companies').doc(window.currentCompanyId).collection(name);
+    const db = getDb(); const cid = getCompanyId();
+    if (!db || !cid) throw new Error('DB or companyId not ready');
+    return db.collection('companies').doc(cid).collection(name);
   }
   function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function fmt(n) { return Number(n||0).toLocaleString('uk-UA',{minimumFractionDigits:0,maximumFractionDigits:2}); }
@@ -18,7 +22,7 @@
   let _clients = [];
 
   async function loadVehicleDeps() {
-    if (!window.currentCompanyId) return;
+    if (!getCompanyId()) return;
     try {
       const [vSnap, sSnap, pSnap, wSnap, cSnap] = await Promise.all([
         col('sales_vehicles').orderBy('createdAt','desc').limit(200).get(),

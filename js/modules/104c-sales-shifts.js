@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
+  function getDb() { return window.db || (window.firebase && firebase.firestore()); }
+  function getCompanyId() { return window.currentCompanyId || window.currentCompany || null; }
   function col(name) {
-    return window.db.collection('companies').doc(window.currentCompanyId).collection(name);
+    const db = getDb(); const cid = getCompanyId();
+    if (!db || !cid) throw new Error('DB or companyId not ready');
+    return db.collection('companies').doc(cid).collection(name);
   }
   function fmt(n) { return Number(n || 0).toLocaleString('uk-UA', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
   function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -14,7 +18,7 @@
 
   // ─── load shifts ──────────────────────────────────────────────────────────
   async function loadShifts() {
-    if (!window.currentCompanyId) return;
+    if (!getCompanyId()) return;
     try {
       const snap = await col('sales_shifts').orderBy('createdAt', 'desc').limit(30).get();
       _shifts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -220,6 +224,6 @@
   window._salesGetCurrentShift = function () { return _currentShift; };
 
   // Load on init
-  if (window.currentCompanyId) loadShifts();
+  if (getCompanyId()) loadShifts();
 
 })();

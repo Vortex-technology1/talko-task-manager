@@ -2,8 +2,17 @@
   'use strict';
 
   // ─── helpers ──────────────────────────────────────────────────────────────
+  function getDb() {
+    return window.db || (window.firebase && firebase.firestore());
+  }
+  function getCompanyId() {
+    return window.currentCompanyId || window.currentCompany || null;
+  }
   function compRef() {
-    return window.db.collection('companies').doc(window.currentCompanyId);
+    const db = getDb();
+    const cid = getCompanyId();
+    if (!db || !cid) throw new Error('DB or companyId not ready');
+    return db.collection('companies').doc(cid);
   }
   function col(name) { return compRef().collection(name); }
   function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -77,7 +86,7 @@
 
   // ─── load data ────────────────────────────────────────────────────────────
   async function loadOrders() {
-    if (!window.currentCompanyId) return;
+    if (!getCompanyId()) return;
     try {
       let q = col('sales_orders').orderBy('createdAt','desc').limit(200);
       const snap = await q.get();
@@ -88,7 +97,7 @@
   }
 
   async function loadProducts() {
-    if (!window.currentCompanyId) return;
+    if (!getCompanyId()) return;
     try {
       const snap = await col('sales_products').where('isActive','==',true).orderBy('name').get();
       S.products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -96,7 +105,7 @@
   }
 
   async function loadClients() {
-    if (!window.currentCompanyId) return;
+    if (!getCompanyId()) return;
     try {
       const snap = await col('crm_clients').limit(300).get();
       S.clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -104,7 +113,7 @@
   }
 
   async function loadStaff() {
-    if (!window.currentCompanyId) return;
+    if (!getCompanyId()) return;
     try {
       const snap = await col('staff').limit(100).get();
       S.staff = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -1084,8 +1093,8 @@
   window._salesLoadOrdersExternal = async function() { await loadOrders(); };
 
   window.initSalesModule = async function () {
-    if (!window.currentCompanyId) {
-      console.warn('initSalesModule: no currentCompanyId');
+    if (!getCompanyId()) {
+      console.warn('initSalesModule: no companyId (currentCompanyId or currentCompany)');
       return;
     }
     buildSalesUI();

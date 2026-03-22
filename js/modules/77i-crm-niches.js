@@ -6,8 +6,12 @@
 // ============================================================
 'use strict';
 
+function _getDb() { return window.db || (window.firebase && firebase.firestore()); }
+function _getCompId() { return window.currentCompanyId || window.currentCompany || null; }
 function _col(name) {
-    return window.db.collection('companies').doc(window.currentCompanyId).collection(name);
+    const db = _getDb(); const cid = _getCompId();
+    if (!db || !cid) throw new Error('DB or companyId not ready');
+    return db.collection('companies').doc(cid).collection(name);
 }
 function _esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function _fmt(n) { return Number(n||0).toLocaleString('uk-UA',{minimumFractionDigits:0,maximumFractionDigits:2}); }
