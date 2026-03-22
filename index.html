@@ -1670,27 +1670,32 @@ document.addEventListener('mousedown', function(e) {
                                     <div style="display:flex;gap:0.5rem;">
                                         <select id="settingNiche"
                                             style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;background:#fff;">
-                                            <option value="" data-i18n="nicheSelect">Оберіть нішу...</option>
-                                            <option value="construction" data-i18n="nicheConstruction">Будівництво / Підряд</option>
-                                            <option value="medical" data-i18n="nicheMedical">Медичний бізнес</option>
-                                            <option value="dental" data-i18n="nicheDental">Стоматологія</option>
-                                            <option value="beauty" data-i18n="nicheBeauty">Бьюті бізнес (салон, косметологія)</option>
-                                            <option value="furniture" data-i18n="nicheFurniture">Меблевий бізнес</option>
-                                            <option value="retail" data-i18n="nicheRetail">Роздрібна торгівля</option>
-                                            <option value="it" data-i18n="nicheIT">IT / Діджитал послуги</option>
-                                            <option value="manufacturing" data-i18n="nicheManufacturing">Виробництво</option>
-                                            <option value="consulting" data-i18n="nicheConsulting">Консалтинг / Навчання</option>
-                                            <option value="logistics" data-i18n="nicheLogistics">Логістика / Транспорт</option>
-                                            <option value="food" data-i18n="nicheFood">Ресторан / Кафе / Їжа</option>
-                                            <option value="horeca">HoReCa (кафе, ресторан, бар)</option>
-                                            <option value="autoservice">Автосервіс / СТО</option>
-                                            <option value="logistics">Логістика / Перевезення</option>
-                                            <option value="food_production">Харчове виробництво</option>
-                                            <option value="horeca">HoReCa (кафе, ресторан, бар)</option>
-                                            <option value="autoservice">Автосервіс / СТО</option>
-                                            <option value="logistics">Логістика / Перевезення</option>
-                                            <option value="food_production">Харчове виробництво</option>
-                                            <option value="other" data-i18n="nicheOther">Інше</option>
+                                            <option value="">Оберіть нішу...</option>
+                                            <optgroup label="── Сервіс ──────────────">
+                                            <option value="beauty_salon">💅 Б'юті / Салон краси / Косметологія</option>
+                                            <option value="medical">🏥 Медичний бізнес / Клініка</option>
+                                            <option value="dental">🦷 Стоматологія</option>
+                                            <option value="cleaning">🧹 Клінінг / Прибирання</option>
+                                            <option value="consulting">💼 Консалтинг / Навчання / Коучинг</option>
+                                            </optgroup>
+                                            <optgroup label="── Виробництво / Будівництво ──">
+                                            <option value="construction">🏗️ Будівництво / Підряд / Ремонт</option>
+                                            <option value="furniture">🪑 Меблевий бізнес</option>
+                                            <option value="manufacturing">🏭 Виробництво (загальне)</option>
+                                            <option value="food_production">🍞 Харчове виробництво / Цех</option>
+                                            </optgroup>
+                                            <optgroup label="── Торгівля / Заклади ──">
+                                            <option value="retail">🛒 Роздрібна торгівля / Магазин</option>
+                                            <option value="horeca">☕ HoReCa — кафе, ресторан, бар</option>
+                                            </optgroup>
+                                            <optgroup label="── Транспорт / Техніка ──">
+                                            <option value="autoservice">🔧 Автосервіс / СТО / Шиномонтаж</option>
+                                            <option value="logistics">🚛 Логістика / Вантажні перевезення</option>
+                                            </optgroup>
+                                            <optgroup label="── Інше ──">
+                                            <option value="it">💻 IT / Діджитал / Агенція</option>
+                                            <option value="other">⚙️ Інше</option>
+                                            </optgroup>
                                         </select>
                                         <button onclick="saveCompanyProfile()" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> <span data-i18n="saveAll">Зберегти все</span>
@@ -1707,14 +1712,17 @@ document.addEventListener('mousedown', function(e) {
 
                                     <!-- Пресети -->
                                     <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem;">
-                                        <button onclick="window._applyModulePreset('service')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fdf2f8;color:#be185d;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#be185d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>Сервіс (beauty/медицина)</button>
-                                        <button onclick="window._applyModulePreset('cleaning')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0fdf4;color:#166534;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M3 12h1m16 0h1M4.92 19.07l.7-.7M18.36 5.64l.7-.7"/><circle cx="12" cy="12" r="4"/></svg>Клінінг</button>
-                                        <button onclick="window._applyModulePreset('production')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#eff6ff;color:#1e40af;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a8 8 0 0 1 16 0v3"/></svg>Виробництво/Будівництво</button>
-                                        <button onclick="window._applyModulePreset('consulting')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#faf5ff;color:#7c3aed;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Консалтинг</button>
+                                        <button onclick="window._applyModulePreset('service')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fdf2f8;color:#be185d;font-size:0.72rem;font-weight:600;cursor:pointer;">💅 Сервіс (beauty/медицина)</button>
+                                        <button onclick="window._applyModulePreset('cleaning')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0fdf4;color:#166534;font-size:0.72rem;font-weight:600;cursor:pointer;">🧹 Клінінг</button>
+                                        <button onclick="window._applyModulePreset('production')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#eff6ff;color:#1e40af;font-size:0.72rem;font-weight:600;cursor:pointer;">🏗️ Виробництво/Будівництво</button>
+                                        <button onclick="window._applyModulePreset('consulting')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#faf5ff;color:#7c3aed;font-size:0.72rem;font-weight:600;cursor:pointer;">💼 Консалтинг</button>
+                                        <button onclick="window._applyModulePreset('horeca')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fefce8;color:#a16207;font-size:0.72rem;font-weight:600;cursor:pointer;">☕ HoReCa</button>
+                                        <button onclick="window._applyModulePreset('autoservice')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fff7ed;color:#c2410c;font-size:0.72rem;font-weight:600;cursor:pointer;">🔧 Автосервіс</button>
+                                        <button onclick="window._applyModulePreset('logistics')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0f9ff;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;">🚛 Логістика</button>
+                                        <button onclick="window._applyModulePreset('retail')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fef9ee;color:#b45309;font-size:0.72rem;font-weight:600;cursor:pointer;">🛒 Роздріб</button>
+                                        <button onclick="window._applyModulePreset('it')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0fdf4;color:#065f46;font-size:0.72rem;font-weight:600;cursor:pointer;">💻 IT / Агенція</button>
+                                        <button onclick="window._applyModulePreset('food_production')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fff1f2;color:#be123c;font-size:0.72rem;font-weight:600;cursor:pointer;">🍞 Харч. виробництво</button>
                                     </div>
-                                        <button onclick="window._applyModulePreset('horeca')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fefce8;color:#a16207;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>HoReCa</button>
-                                        <button onclick="window._applyModulePreset('autoservice')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fff7ed;color:#c2410c;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Автосервіс</button>
-                                        <button onclick="window._applyModulePreset('logistics')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0f9ff;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Логістика</button>
 
                                     <!-- Галочки модулів -->
                                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;" id="modulesChecklist">
@@ -4357,13 +4365,16 @@ document.addEventListener('mousedown', function(e) {
     // Modules: presets
     window._applyModulePreset = function(preset) {
         const PRESETS = {
-            service:    {scheduling:true,clientProfile:true,loyalty:true,subscriptions:true,reviews:true,winback:true,notifications:true,estimates:false,warehouse:false,booking:true,sales:true},
-            cleaning:   {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true,sales:true},
-            production: {scheduling:false,clientProfile:false,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:false,estimates:true,warehouse:true,booking:false,sales:true},
-            consulting: {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true,sales:true},
-            horeca:     {scheduling:true,clientProfile:true,loyalty:true,subscriptions:false,reviews:true,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
-            autoservice:{scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:true,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
-            logistics:  {scheduling:false,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:true,estimates:false,warehouse:false,booking:false,sales:true},
+            service:         {scheduling:true,clientProfile:true,loyalty:true,subscriptions:true,reviews:true,winback:true,notifications:true,estimates:false,warehouse:false,booking:true,sales:true},
+            cleaning:        {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true,sales:true},
+            production:      {scheduling:false,clientProfile:false,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:false,estimates:true,warehouse:true,booking:false,sales:true},
+            consulting:      {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:false,warehouse:false,booking:true,sales:true},
+            horeca:          {scheduling:true,clientProfile:true,loyalty:true,subscriptions:false,reviews:true,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
+            autoservice:     {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:true,winback:false,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
+            logistics:       {scheduling:false,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:true,estimates:false,warehouse:false,booking:false,sales:true},
+            retail:          {scheduling:false,clientProfile:true,loyalty:true,subscriptions:false,reviews:true,winback:true,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},
+            food_production: {scheduling:false,clientProfile:false,loyalty:false,subscriptions:false,reviews:false,winback:false,notifications:false,estimates:true,warehouse:true,booking:false,sales:true},
+            it:              {scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:false,winback:true,notifications:true,estimates:true,warehouse:false,booking:true,sales:false},
         };
         const mods = PRESETS[preset];
         if (!mods) return;
@@ -4378,14 +4389,27 @@ document.addEventListener('mousedown', function(e) {
         // Fallback: niche-based
         const niche = window.currentCompanyData?.niche || '';
         const NICHE_DEFAULTS = {
-            beauty_salon:  ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','booking'],
-            medical:       ['scheduling','clientProfile','reviews','notifications','booking'],
-            dental:        ['scheduling','clientProfile','reviews','notifications','booking'],
-            cleaning:      ['scheduling','clientProfile','winback','notifications','booking'],
-            construction:  ['estimates','warehouse'],
-            furniture:     ['estimates','warehouse'],
-            manufacturing: ['estimates','warehouse'],
-            consulting:    ['scheduling','clientProfile','winback','notifications','booking','sales'],
+            // Сервіс
+            beauty_salon:    ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','booking'],
+            beauty:          ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','booking'],
+            medical:         ['scheduling','clientProfile','reviews','notifications','booking'],
+            dental:          ['scheduling','clientProfile','reviews','notifications','booking'],
+            cleaning:        ['scheduling','clientProfile','winback','notifications','booking'],
+            consulting:      ['scheduling','clientProfile','winback','notifications','booking','sales'],
+            // Виробництво / Будівництво
+            construction:    ['estimates','warehouse','sales'],
+            furniture:       ['estimates','warehouse','sales'],
+            manufacturing:   ['estimates','warehouse','sales'],
+            food_production: ['warehouse','sales'],
+            // Торгівля / Заклади
+            retail:          ['sales','warehouse','clientProfile'],
+            horeca:          ['sales','warehouse','loyalty'],
+            food:            ['sales','warehouse','loyalty'],
+            // Транспорт / Техніка
+            autoservice:     ['sales','warehouse','clientProfile','reviews'],
+            logistics:       ['sales','clientProfile'],
+            // IT
+            it:              ['scheduling','clientProfile','estimates','winback','notifications'],
         };
         return (NICHE_DEFAULTS[niche] || []).includes(key);
     };
