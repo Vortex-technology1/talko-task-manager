@@ -536,6 +536,179 @@ construction_eu: [
     },
 ],
 
+autoservice: [
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg> Мій день — механік знає план',
+        selector: '#mydayTab, [onclick*="switchTab(\'myday\')"]',
+        tab: 'myday',
+        pitch: 'Олексій (майстер-механік) відкрив систему о 8:30 і бачить: Mazda CX-5 — заміна масла о 9:00, BMW X5 — діагностика о 11:00, Toyota Camry — гальма о 14:00. Черга спланована без вашої участі.',
+        question: 'Як зараз ваші майстри дізнаються черговість авто на ремонт?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg> Картки авто — вся історія клієнта',
+        selector: '#salesTab, [onclick*=\"sales\"]',
+        tab: 'sales',
+        pitch: 'Клієнт: Mazda CX-5, AA1234BC, пробіг 85 000 км. Три наряди за рік: масло × 2, гальма. Майстер одразу бачить що робилось і коли. Довіра росте — клієнт повертається.',
+        question: 'Де зараз зберігається інформація про авто і ремонти ваших клієнтів?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 0M4 4v16M4 20l16 0M20 4v16M9 4v16M4 9l16 0M4 14l11 0"/></svg> Замовлення-наряд — роботи і запчастини разом',
+        selector: '#salesTab, [onclick*=\"sales\"]',
+        tab: 'sales',
+        pitch: 'Один документ: роботи (заміна масла 500 грн) + запчастини зі складу (масло 5W-30 840 грн, фільтр 180 грн). При закритті — автосписання з warehouse. Клієнт отримує повний рахунок.',
+        question: 'Як зараз ведете облік по кожному авто: що зроблено, що поставлено?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg> Склад запчастин — без пересортиці',
+        selector: '#warehouseTab, [onclick*=\"warehouse\"]',
+        tab: 'warehouse',
+        pitch: 'Масло 5W-30: є 18 літрів, мінімум 5. Фільтри: 28 шт, мінімум 10. Система сповіщає коли запас падає. Замовлення вчасно — жодного простою через відсутність запчастини.',
+        question: 'Скільки разів цього місяця затримався ремонт бо не було потрібної запчастини?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> CRM — клієнти і їх авто',
+        selector: '#crmTab, [onclick*=\"crm\"]',
+        tab: 'crm',
+        pitch: 'Картка клієнта: Іванченко Михайло, +38067... і вкладка "Авто/Наряди" — одразу бачите всі його машини, всі наряди, загальну суму за рік. Win-back: не приходив 3 місяці → нагадування.',
+        question: 'Як зараз відстежуєте клієнтів які давно не з'являлись на СТО?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Фінанси — прибуток з кожного поста',
+        selector: '#financeTab, [onclick*=\"finance\"]',
+        tab: 'finance',
+        pitch: 'При оплаті наряду — автоматичний запис в фінанси. Виручка за день: 8 460 грн. Витрати (запчастини): 4 200 грн. Прибуток: 4 260 грн. Без ручного введення — все з нарядів.',
+        question: 'Скільки часу займає підрахунок виручки і витрат за день/тиждень?',
+    },
+],
+
+horeca: [
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg> Мій день — офіціант і кухня в синхроні',
+        selector: '#mydayTab, [onclick*="switchTab(\'myday\')"]',
+        tab: 'myday',
+        pitch: 'Тетяна (офіціант) відкрила систему перед зміною: знає розклад, завдання підготовки залу. Іван (кухар) бачить що треба заготовити до 12:00. Без планерки — кожен знає свій план.',
+        question: 'Як зараз ваша команда дізнається завдання на зміну?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/></svg> Каса — чеки і зміни',
+        selector: '#salesTab, [onclick*=\"sales\"]',
+        tab: 'sales',
+        pitch: 'Аліна відкрила зміну о 9:00, каса на початок 500 грн. За день: 22 чеки, виручка 5 300 грн. Готівка 3 200, термінал 2 100. Закрила зміну — все в підсумку. Жодного ручного підрахунку.',
+        question: 'Скільки часу займає підрахунок каси в кінці зміни?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 0M4 4v16M4 20l16 0M20 4v16M9 4v16M4 9l16 0M4 14l11 0"/></svg> Меню як каталог — швидке проведення чека',
+        selector: '#salesTab, [onclick*=\"sales\"]',
+        tab: 'sales',
+        pitch: 'Касир обирає "Борщ 85 грн + Котлета 145 грн + Кава 45 грн". Разом 275 грн. Натисла "Провести" — чек записано, виручка в фінансах. Готівка чи термінал — одна кнопка.',
+        question: 'Як зараз приймаєте оплату і ведете облік продажів?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg> Склад продуктів — завжди знаєте залишки',
+        selector: '#warehouseTab, [onclick*=\"warehouse\"]',
+        tab: 'warehouse',
+        pitch: 'Борошно: 48 кг (мінімум 20). М'ясо: 28 кг. Молоко: 95 л. Коли залишок падає нижче мінімуму — сповіщення. Замовляєте вчасно, а не коли вже нема чого готувати.',
+        question: 'Як зараз відстежуєте залишки продуктів і коли замовляти?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Постійні гості — лояльність і повернення',
+        selector: '#crmTab, [onclick*=\"crm\"]',
+        tab: 'crm',
+        pitch: 'Стіл 3 — Марина, 8 відвідувань за місяць, середній чек 320 грн. Програма лояльності: кожне 5-е кафе безкоштовно. Win-back: не приходила 2 тижні → sms "Скучали за вами".',
+        question: 'Як відрізняєте постійних гостей від випадкових і як їх утримуєте?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Фінанси — P&L за зміну і за місяць',
+        selector: '#financeTab, [onclick*=\"finance\"]',
+        tab: 'finance',
+        pitch: 'Вчора: виручка 5 300 грн, продукти 1 800 грн, зарплата 1 200 грн, оренда 600 грн. Прибуток: 1 700 грн. Власник бачить це вранці в телефоні — без дзвінків адміністратору.',
+        question: 'Як зараз розраховуєте реальний прибуток кафе за день/тиждень?',
+    },
+],
+
+logistics: [
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg> Мій день — диспетчер і водії в синхроні',
+        selector: '#mydayTab, [onclick*="switchTab(\'myday\')"]',
+        tab: 'myday',
+        pitch: 'Олена (диспетчер) бачить: 3 рейси на сьогодні, 2 водії в дорозі, 1 чекає завантаження. Кожен водій знає свій маршрут, вантаж і клієнта. Без 10 дзвінків зранку.',
+        question: 'Скільки дзвінків між диспетчером і водіями відбувається щоранку?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Рейси — маршрут, вантаж, прибуток',
+        selector: '#salesTab, [onclick*=\"sales\"]',
+        tab: 'sales',
+        pitch: 'Рейс Київ→Львів: тариф 9 500 грн. Витрати: паливо 1 400 + дорога 540 + водій 1 500 = 3 440. Прибуток рейсу: 6 060 грн (64%). Всі рейси, всі водії, всі клієнти — в одному місці.',
+        question: 'Як зараз рахуєте прибуток з кожного рейсу?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Клієнти-вантажовідправники — вся історія',
+        selector: '#crmTab, [onclick*=\"crm\"]',
+        tab: 'crm',
+        pitch: 'ТОВ БудМайстер: 3 рейси за місяць, загальна виручка 28 500 грн. Вкладка "Рейси" — всі маршрути, статуси оплати, прибуток по кожному. Знаєте найвигідніших клієнтів.',
+        question: 'Хто ваш найприбутковіший клієнт за останні 3 місяці?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Фінанси — виручка і рентабельність',
+        selector: '#financeTab, [onclick*=\"finance\"]',
+        tab: 'finance',
+        pitch: 'Травень: 6 рейсів, виручка 57 000 грн, витрати (паливо+дорога+водії) 21 400 грн, прибуток 35 600 грн, маржа 62%. Власник бачить звіт без Excel і без бухгалтера.',
+        question: 'Яка рентабельність вашого бізнесу за останній місяць?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Команда — водії і диспетчери',
+        selector: '[onclick*=\"users\"], [onclick*=\"functions\"]',
+        tab: 'users',
+        pitch: '5 водіїв, 2 диспетчери. Кожен знає свою зону відповідальності. Водій бачить тільки свої рейси. Диспетчер — всі. Власник — аналітику. Права доступу без IT.',
+        question: 'Як зараз розмежовуєте що бачить водій і що бачить диспетчер?',
+    },
+],
+
+food_production: [
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Рецептури — собівартість точна',
+        selector: '#foodProductionTab, [onclick*=\"foodProduction\"]',
+        tab: 'foodProduction',
+        pitch: 'Борщ класичний: 10 порцій, собівартість 4.80 грн/порція, ціна продажу 95 грн, маржа 95%. Шоколадний брауні: 12 порцій, собівартість 31 грн, ціна 85 грн, маржа 64%. Знаєте точно на чому заробляєте.',
+        question: 'Знаєте точну собівартість кожної страви яку виробляєте?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Планування виробництва на день',
+        selector: '#foodProductionTab, [onclick*=\"foodProduction\"]',
+        tab: 'foodProduction',
+        pitch: 'Сьогодні: Борщ 30 порцій — заплановано. Хліб 20 буханок — в роботі. Брауні 5 форм — готово. Натиснули "Готово" — інгредієнти автоматично списались зі складу. Нічого вручну.',
+        question: 'Як зараз плануєте що і скільки виробляти щодня?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg> Стоп-лист — знаєте заздалегідь',
+        selector: '#warehouseTab, [onclick*=\"warehouse\"]',
+        tab: 'warehouse',
+        pitch: 'Хочете виробити 50 порцій борщу — система перевіряє склад. Буряку є 60 кг, потрібно 15 кг — ОК. М'ясо: є 8 кг, потрібно 7.5 кг — майже ліміт. Попередження до початку виробництва.',
+        question: 'Скільки разів виробництво зупинялось бо не вистачило інгредієнта?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg> Склад і автосписання',
+        selector: '#warehouseTab, [onclick*=\"warehouse\"]',
+        tab: 'warehouse',
+        pitch: 'Виробили 30 порцій борщу → система сама списала: буряк -4.5 кг, картопля -3.75 кг, м'ясо -2.25 кг. Залишки актуальні завжди. Без ручного обліку і без розбіжностей.',
+        question: 'Скільки часу витрачається на ручний облік витрат сировини?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 0M4 4v16M4 20l16 0M20 4v16M9 4v16M4 9l16 0M4 14l11 0"/></svg> Реалізація — продаємо те що зробили',
+        selector: '#salesTab, [onclick*=\"sales\"]',
+        tab: 'sales',
+        pitch: 'Відвантажили ТОВ Кейтеринг: борщ 30 порцій × 95 грн = 2 850 грн. Виставили рахунок — клієнт оплатив — виручка в фінансах. Цикл закрито: сировина → виробництво → продаж → гроші.',
+        question: 'Як зараз відстежуєте повний цикл від закупки сировини до отримання грошей?',
+    },
+    {
+        title: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Фінанси — рентабельність виробництва',
+        selector: '#financeTab, [onclick*=\"finance\"]',
+        tab: 'finance',
+        pitch: 'Травень: сировина 42 000 грн, виручка 185 000 грн, зарплата 28 000 грн. Прибуток 115 000 грн, маржа 62%. Власник бачить де є і де губиться маржа — по кожній страві.',
+        question: 'Знаєте рентабельність вашого виробництва по кожному продукту окремо?',
+    },
+],
+
 }; // кінець TOURS
 
 // ── Переклади туру (title/pitch/question по мовах) ──────────
@@ -748,7 +921,7 @@ window.startTour = function(niche) {
     _injectStyles();
     // Автовизначення ніші: аргумент → збережена → ніша компанії → дефолт
     const companyNiche = window.currentCompanyData?.niche || window.currentCompany?.niche;
-    _tourNiche  = niche || _tourNiche || (TOURS[companyNiche] ? companyNiche : 'furniture_factory');
+    _tourNiche  = niche || _tourNiche || (TOURS[companyNiche] ? companyNiche : (TOURS[Object.keys(TOURS)[0]] ? Object.keys(TOURS)[0] : 'furniture_factory'));
     _tourSteps  = TOURS[_tourNiche] || [];
     if (!_tourSteps.length) return;
 

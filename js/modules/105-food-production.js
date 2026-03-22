@@ -118,7 +118,7 @@
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
             <b style="font-size:.85rem">Інгредієнти (технологічна карта)</b>
             <div style="display:flex;gap:.5rem">
-              <button onclick="window._fpAddIngredientFromWarehouse()" class="fp-btn-sm" style="background:#eef2ff;color:#6366f1">📦 Зі складу</button>
+              <button onclick="window._fpAddIngredientFromWarehouse()" class="fp-btn-sm" style="background:#eef2ff;color:#6366f1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Зі складу</button>
               <button onclick="window._fpAddIngredient()" class="fp-btn-sm" style="background:#f0fdf4;color:#16a34a">+ Вручну</button>
             </div>
           </div>
@@ -167,8 +167,8 @@
 
         <div style="display:flex;gap:.75rem;justify-content:flex-end;flex-wrap:wrap">
           <button onclick="document.getElementById('fpRecipeOverlay').remove()" class="fp-btn" style="background:#f3f4f6;color:#374151">Скасувати</button>
-          ${recipe ? `<button onclick="window._fpPrintOP1('${recipe.id}')" class="fp-btn" style="background:#f59e0b;color:#fff">📄 ОП-1</button>` : ''}
-          <button onclick="window._fpSaveRecipe('${recipeId||''}')" class="fp-btn" style="background:#6366f1;color:#fff">💾 Зберегти</button>
+          ${recipe ? `<button onclick="window._fpPrintOP1('${recipe.id}')" class="fp-btn" style="background:#f59e0b;color:#fff"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>ОП-1</button>` : ''}
+          <button onclick="window._fpSaveRecipe('${recipeId||''}')" class="fp-btn" style="background:#6366f1;color:#fff"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Зберегти</button>
         </div>
       </div>
     `;
@@ -497,7 +497,7 @@
 
       ${stopList.length ? `
         <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem">
-          <b style="color:#dc2626;font-size:.85rem">🚫 Стоп-лист — нестача інгредієнтів:</b>
+          <b style="color:#dc2626;font-size:.85rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg><b style="color:#dc2626;font-size:.85rem">Стоп-лист — нестача інгредієнтів:</b> — нестача інгредієнтів:</b>
           <div style="margin-top:.35rem">${stopList.map(s=>`
             <div style="font-size:.8rem;color:#374151;margin-top:.2rem">
               <b>${esc(s.recipe)}</b> — не вистачає: ${s.missing.map(m=>`${esc(m.name)} (є ${fmtQty(m.inStock)} ${esc(m.unit)}, треба ${fmtQty(m.needed)} ${esc(m.unit)})`).join(', ')}
@@ -507,7 +507,7 @@
 
       ${!FP.productionPlan.length ? `
         <div style="text-align:center;padding:2rem;color:#9ca3af">
-          <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
+          <div style="margin-bottom:.5rem"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
           <div>План на сьогодні порожній</div>
           <div style="font-size:.78rem;margin-top:.25rem">Натисніть "+ Додати в план" щоб запланувати виробництво</div>
         </div>` :
@@ -526,7 +526,7 @@
             <div style="display:flex;gap:.5rem;align-items:center">
               <span style="color:${statusColors[status]};font-size:.78rem;font-weight:600;background:${statusColors[status]}20;padding:2px 8px;border-radius:12px">${statusLabels[status]}</span>
               ${status === 'planned' ? `
-                <button onclick="window._fpStartProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">▶ Почати</button>
+                <button onclick="window._fpStartProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><polygon points="5 3 19 12 5 21 5 3"/></svg>Почати</button>
                 <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">✓ Готово + списати</button>` : ''}
               ${status === 'in_progress' ? `
                 <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#10b981;border:none;color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">✓ Готово + списати</button>` : ''}
@@ -709,7 +709,7 @@
 
       ${!FP.recipes.length ?
         `<div style="text-align:center;padding:3rem;color:#9ca3af">
-          <div style="font-size:3rem;margin-bottom:.75rem">📖</div>
+          <div style="margin-bottom:.75rem"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
           <div style="font-weight:600;margin-bottom:.35rem">Рецептур ще немає</div>
           <div style="font-size:.82rem">Створіть першу рецептуру з інгредієнтами та калькуляцією собівартості</div>
         </div>` :
@@ -740,9 +740,9 @@
                     <span style="font-weight:600">${fmt(r.salePrice)} ₴</span>
                   </div>` : ''}
                   <div style="display:flex;gap:.35rem;margin-top:.65rem;flex-wrap:wrap">
-                    <button onclick="event.stopPropagation();window._fpPrintOP1('${r.id}')" style="background:#fef3c7;border:none;color:#b45309;padding:3px 8px;border-radius:5px;cursor:pointer;font-size:.7rem;font-weight:600">📄 ОП-1</button>
-                    <button onclick="event.stopPropagation();window._fpPlanFromRecipe('${r.id}')" style="background:#f0fdf4;border:none;color:#16a34a;padding:3px 8px;border-radius:5px;cursor:pointer;font-size:.7rem;font-weight:600">▶ В план</button>
-                    <button onclick="event.stopPropagation();window._fpDeleteRecipe('${r.id}')" style="background:#fef2f2;border:none;color:#ef4444;padding:3px 8px;border-radius:5px;cursor:pointer;font-size:.7rem;font-weight:600">🗑</button>
+                    <button onclick="event.stopPropagation();window._fpPrintOP1('${r.id}')" style="background:#fef3c7;border:none;color:#b45309;padding:3px 8px;border-radius:5px;cursor:pointer;font-size:.7rem;font-weight:600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>ОП-1</button>
+                    <button onclick="event.stopPropagation();window._fpPlanFromRecipe('${r.id}')" style="background:#f0fdf4;border:none;color:#16a34a;padding:3px 8px;border-radius:5px;cursor:pointer;font-size:.7rem;font-weight:600"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><polygon points="5 3 19 12 5 21 5 3"/></svg>В план</button>
+                    <button onclick="event.stopPropagation();window._fpDeleteRecipe('${r.id}')" style="background:#fef2f2;border:none;color:#ef4444;padding:3px 8px;border-radius:5px;cursor:pointer;font-size:.7rem;font-weight:600"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
                   </div>
                 </div>`;
               }).join('')}
@@ -803,13 +803,13 @@
 
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem;padding:1rem 1rem 0">
-        <h2 style="margin:0;font-size:1.1rem;font-weight:700">🍞 Виробництво / Кухня</h2>
+        <h2 style="margin:0;font-size:1.1rem;font-weight:700"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M6 2v6a6 6 0 0 0 12 0V2"/><line x1="12" y1="14" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>Виробництво / Кухня</h2>
       </div>
 
       <!-- Subtabs -->
       <div style="display:flex;gap:.35rem;flex-wrap:wrap;padding:0 1rem;margin-bottom:1rem">
-        <button class="fp-subtab active" onclick="window._fpSubTab('recipes',this)">📖 Рецептури</button>
-        <button class="fp-subtab" onclick="window._fpSubTab('plan',this)">📋 Планування</button>
+        <button class="fp-subtab active" onclick="window._fpSubTab('recipes',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Рецептури</button>
+        <button class="fp-subtab" onclick="window._fpSubTab('plan',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/></svg>Планування</button>
       </div>
 
       <!-- Content -->
