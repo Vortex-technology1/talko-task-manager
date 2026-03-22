@@ -84,7 +84,9 @@ async function loadSuperadminData() {
                     usersSnap, tasksSnap, eventsSnap,
                     aiRecSnap, snapshotSnap, weeklyLogSnap,
                     aiUsageTodaySnap, aiUsageMonthSnap,
-                    notesSnap
+                    notesSnap,
+                    allTasksSnap, crmDealsSnap, crmClientsSnap,
+                    bookingSnap, financeSnap, metricsSnap, metricEntriesSnap
                 ] = await Promise.all([
                     db.collection('companies').doc(cid).collection('users').get().catch(()=>({docs:[]})),
                     db.collection('companies').doc(cid).collection('tasks')
@@ -100,6 +102,14 @@ async function loadSuperadminData() {
                     db.collection('companies').doc(cid).collection('aiUsageLog')
                         .where('month','==',monthKey).get().catch(()=>({docs:[]})),
                     db.collection('companies').doc(cid).collection('sa_notes').orderBy('createdAt','desc').limit(5).get().catch(()=>({docs:[]})),
+                    // Doc counts (lightweight — count only, limit 1000)
+                    db.collection('companies').doc(cid).collection('tasks').limit(1000).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('crm_deals').limit(1000).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('crm_clients').limit(1000).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('booking_appointments').limit(500).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('finance_transactions').limit(1000).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('metrics').limit(200).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('metricEntries').limit(2000).get().catch(()=>({docs:[]})),
                 ]);
 
                 const eventCounts = {};
@@ -143,6 +153,26 @@ async function loadSuperadminData() {
                     ? Math.floor((Date.now() - lastEvent) / 86400000)
                     : 999;
 
+                // ── Doc counts → Firestore usage estimate ───────────────
+                const docCounts = {
+                    tasks:       allTasksSnap.docs.length,
+                    deals:       crmDealsSnap.docs.length,
+                    clients:     crmClientsSnap.docs.length,
+                    bookings:    bookingSnap.docs.length,
+                    finance:     financeSnap.docs.length,
+                    metrics:     metricsSnap.docs.length,
+                    metricEntries: metricEntriesSnap.docs.length,
+                    users:       usersSnap.docs.length,
+                    events:      eventsSnap.docs.length,
+                };
+                const totalDocs = Object.values(docCounts).reduce((s,v)=>s+v, 0);
+                // Firestore pricing: $0.06 per 100k docs read/written/deleted
+                // Avg doc size estimate ~1KB → storage $0.18/GB/month
+                // Conservative: each doc ~1.5KB avg, reads ~3x per session
+                const estStorageKB   = totalDocs * 1.5;
+                const estMonthlyReads = totalDocs * 90; // ~3 reads/day × 30 days
+                const estCostUSD     = (estMonthlyReads / 100000) * 0.06 + (estStorageKB / 1024 / 1024) * 0.18;
+
                 return {
                     id: cid, data: c,
                     users,
@@ -158,6 +188,7 @@ async function loadSuperadminData() {
                     health, usedModules, daysSinceActivity,
                     notes: notesSnap.docs.map(d=>({id:d.id,...d.data()})),
                     createdAt: c.createdAt?.toMillis?.() || 0,
+                    docCounts, totalDocs, estStorageKB, estCostUSD,
                 };
             } catch(e) {
                 return {
@@ -165,6 +196,7 @@ async function loadSuperadminData() {
                     activeTasks:0, overdueTasks:0, eventCounts:{}, totalEvents7d:0,
                     aiRecs:[], snapshot:null, weeklyLog:null, todayTokens:0, monthTokens:0,
                     health:0, usedModules:new Set(), daysSinceActivity:999, notes:[], createdAt:0,
+                    docCounts:{}, totalDocs:0, estStorageKB:0, estCostUSD:0,
                 };
             }
         }));
@@ -203,6 +235,7 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
         {id:'health',     label:'Health',     icon:'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'},
         {id:'alerts',     label:`Алерти${alertCount>0?` <span style="background:#ef4444;color:white;border-radius:9px;padding:0 5px;font-size:0.65rem;">${alertCount}</span>`:''}`, icon:'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'},
         {id:'system',     label:'Система',    icon:'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'},
+        {id:'firestore',  label:'Firestore',  icon:'M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM4 4h16M4 20h16'},
     ];
 
     const svgIcon = (path, size=13) =>
@@ -246,11 +279,12 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
 <div id="saTabContent_health"    style="display:none;">${_saRenderHealth(pc)}</div>
 <div id="saTabContent_alerts"    style="display:none;">${_saRenderAlerts(pc)}</div>
 <div id="saTabContent_system"    style="display:none;">${_saRenderSystem()}</div>
+<div id="saTabContent_firestore" style="display:none;">${_saRenderFirestore(pc)}</div>
 `;
 }
 
 window.saSwitchTab = function(tab) {
-    const tabs = ['overview','companies','users','activity','ai','health','alerts','system'];
+    const tabs = ['overview','companies','users','activity','ai','health','alerts','system','firestore'];
     tabs.forEach(t => {
         const btn   = document.getElementById(`saTab_${t}`);
         const panel = document.getElementById(`saTabContent_${t}`);
@@ -753,6 +787,154 @@ function _saRenderAlerts(pc) {
 }
 
 // ── TAB 8: SYSTEM ───────────────────────────────────────────
+function _saRenderFirestore(pc) {
+    const esc = _saEsc;
+
+    // Firestore free tier limits
+    const FREE_READS   = 50000;   // reads/day
+    const FREE_WRITES  = 20000;   // writes/day
+    const FREE_STORAGE = 1024;    // MB
+    const PRICE_READ   = 0.06;    // per 100k
+    const PRICE_WRITE  = 0.18;    // per 100k
+    const PRICE_STORAGE = 0.18;   // per GB/month
+
+    // Totals
+    const totalDocs   = pc.reduce((s,c) => s + (c.totalDocs||0), 0);
+    const totalStorKB = pc.reduce((s,c) => s + (c.estStorageKB||0), 0);
+    const totalStorMB = totalStorKB / 1024;
+    const totalStorGB = totalStorMB / 1024;
+
+    // Daily reads estimate: totalDocs × active companies factor
+    const activeCompanies = pc.filter(c => c.daysSinceActivity < 7).length;
+    const estDailyReads   = totalDocs * 3 * (activeCompanies / Math.max(pc.length,1));
+    const estDailyWrites  = totalDocs * 0.1;
+
+    // Monthly cost
+    const readCostMonth  = Math.max(0, (estDailyReads  * 30 - FREE_READS  * 30) / 100000) * PRICE_READ;
+    const writeCostMonth = Math.max(0, (estDailyWrites * 30 - FREE_WRITES * 30) / 100000) * PRICE_WRITE;
+    const storCostMonth  = Math.max(0, totalStorGB - FREE_STORAGE/1024) * PRICE_STORAGE;
+    const totalCostMonth = readCostMonth + writeCostMonth + storCostMonth;
+
+    // Free tier usage %
+    const readPct    = Math.min(100, Math.round(estDailyReads  / FREE_READS  * 100));
+    const writePct   = Math.min(100, Math.round(estDailyWrites / FREE_WRITES * 100));
+    const storPct    = Math.min(100, Math.round(totalStorMB    / FREE_STORAGE * 100));
+
+    const pctBar = (pct, color) => `
+        <div style="background:#f3f4f6;border-radius:4px;height:6px;overflow:hidden;margin-top:3px;">
+            <div style="background:${color};height:100%;width:${pct}%;transition:width .4s;border-radius:4px;"></div>
+        </div>`;
+
+    const statusColor = pct => pct >= 80 ? '#ef4444' : pct >= 50 ? '#f59e0b' : '#22c55e';
+
+    // Per-company table sorted by totalDocs desc
+    const sorted = [...pc].sort((a,b) => (b.totalDocs||0) - (a.totalDocs||0));
+
+    const rows = sorted.map(c => {
+        const docs = c.totalDocs || 0;
+        const storMB = (c.estStorageKB||0) / 1024;
+        const costUSD = c.estCostUSD || 0;
+        const dc = c.docCounts || {};
+        return `<tr style="border-bottom:1px solid #f3f4f6;">
+            <td style="padding:0.4rem 0.5rem;font-size:0.78rem;font-weight:600;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.data.name||c.id)}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.78rem;text-align:right;font-weight:700;">${docs.toLocaleString()}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;color:#6b7280;text-align:right;">${storMB.toFixed(1)} MB</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;text-align:right;">
+                <span style="font-size:0.68rem;color:#525252;">
+                    T:${dc.tasks||0} D:${dc.deals||0} C:${dc.clients||0} F:${dc.finance||0}
+                </span>
+            </td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.78rem;text-align:right;color:${costUSD>1?'#ef4444':costUSD>0.5?'#f59e0b':'#16a34a'};font-weight:600;">
+                ~$${costUSD.toFixed(2)}/міс
+            </td>
+        </tr>`;
+    }).join('');
+
+    return `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-bottom:1rem;">
+        <div style="border:1px solid #e5e7eb;border-radius:10px;padding:0.85rem;border-top:3px solid ${statusColor(readPct)};">
+            <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.25rem;">Reads / день</div>
+            <div style="font-size:1.3rem;font-weight:800;color:${statusColor(readPct)};">${Math.round(estDailyReads).toLocaleString()}</div>
+            <div style="font-size:0.7rem;color:#9ca3af;">ліміт: ${FREE_READS.toLocaleString()}/день</div>
+            ${pctBar(readPct, statusColor(readPct))}
+            <div style="font-size:0.68rem;color:#9ca3af;margin-top:2px;">${readPct}% free tier</div>
+        </div>
+        <div style="border:1px solid #e5e7eb;border-radius:10px;padding:0.85rem;border-top:3px solid ${statusColor(writePct)};">
+            <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.25rem;">Writes / день</div>
+            <div style="font-size:1.3rem;font-weight:800;color:${statusColor(writePct)};">${Math.round(estDailyWrites).toLocaleString()}</div>
+            <div style="font-size:0.7rem;color:#9ca3af;">ліміт: ${FREE_WRITES.toLocaleString()}/день</div>
+            ${pctBar(writePct, statusColor(writePct))}
+            <div style="font-size:0.68rem;color:#9ca3af;margin-top:2px;">${writePct}% free tier</div>
+        </div>
+        <div style="border:1px solid #e5e7eb;border-radius:10px;padding:0.85rem;border-top:3px solid ${statusColor(storPct)};">
+            <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.25rem;">Storage</div>
+            <div style="font-size:1.3rem;font-weight:800;color:${statusColor(storPct)};">${totalStorMB.toFixed(0)} MB</div>
+            <div style="font-size:0.7rem;color:#9ca3af;">ліміт: ${FREE_STORAGE} MB</div>
+            ${pctBar(storPct, statusColor(storPct))}
+            <div style="font-size:0.68rem;color:#9ca3af;margin-top:2px;">${storPct}% free tier</div>
+        </div>
+    </div>
+
+    <!-- Cost summary -->
+    <div style="background:${totalCostMonth>5?'#fef2f2':totalCostMonth>1?'#fffbeb':'#f0fdf4'};border:1px solid ${totalCostMonth>5?'#fecaca':totalCostMonth>1?'#fde68a':'#bbf7d0'};border-radius:12px;padding:0.85rem 1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+        <div>
+            <div style="font-weight:700;font-size:0.9rem;color:#1a1a1a;">Орієнтовна вартість Firebase/місяць</div>
+            <div style="font-size:0.75rem;color:#525252;margin-top:2px;">
+                ${totalDocs.toLocaleString()} документів · ${totalStorMB.toFixed(0)} MB · ${pc.length} компаній
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <div style="font-size:1.8rem;font-weight:800;color:${totalCostMonth>5?'#dc2626':totalCostMonth>1?'#d97706':'#16a34a'};">~$${totalCostMonth.toFixed(2)}</div>
+            <div style="font-size:0.68rem;color:#9ca3af;">Spark (free): $0 / Blaze: за споживання</div>
+        </div>
+    </div>
+
+    <!-- Pricing breakdown -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1rem;">
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.6rem 0.75rem;">
+            <div style="font-size:0.68rem;color:#9ca3af;">Reads (місяць)</div>
+            <div style="font-weight:700;font-size:0.85rem;">~$${readCostMonth.toFixed(2)}</div>
+            <div style="font-size:0.65rem;color:#9ca3af;">$0.06 / 100k</div>
+        </div>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.6rem 0.75rem;">
+            <div style="font-size:0.68rem;color:#9ca3af;">Writes (місяць)</div>
+            <div style="font-weight:700;font-size:0.85rem;">~$${writeCostMonth.toFixed(2)}</div>
+            <div style="font-size:0.65rem;color:#9ca3af;">$0.18 / 100k</div>
+        </div>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.6rem 0.75rem;">
+            <div style="font-size:0.68rem;color:#9ca3af;">Storage (місяць)</div>
+            <div style="font-weight:700;font-size:0.85rem;">~$${storCostMonth.toFixed(2)}</div>
+            <div style="font-size:0.65rem;color:#9ca3af;">$0.18 / GB</div>
+        </div>
+    </div>
+
+    <!-- Per company table -->
+    <div style="border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+        <div style="padding:0.6rem 0.75rem;background:#f8fafc;border-bottom:1px solid #e5e7eb;font-weight:700;font-size:0.8rem;display:flex;align-items:center;justify-content:space-between;">
+            <span>По компаніях (топ за документами)</span>
+            <span style="font-size:0.7rem;color:#9ca3af;font-weight:400;">T=Tasks D=Deals C=Clients F=Finance</span>
+        </div>
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#f8fafc;">
+                        <th style="padding:0.4rem 0.5rem;text-align:left;font-size:0.72rem;font-weight:600;color:#6b7280;">Компанія</th>
+                        <th style="padding:0.4rem 0.5rem;text-align:right;font-size:0.72rem;font-weight:600;color:#6b7280;">Документів</th>
+                        <th style="padding:0.4rem 0.5rem;text-align:right;font-size:0.72rem;font-weight:600;color:#6b7280;">Storage</th>
+                        <th style="padding:0.4rem 0.5rem;text-align:right;font-size:0.72rem;font-weight:600;color:#6b7280;">Розбивка</th>
+                        <th style="padding:0.4rem 0.5rem;text-align:right;font-size:0.72rem;font-weight:600;color:#6b7280;">Вартість</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    </div>
+
+    <div style="margin-top:0.75rem;padding:0.6rem 0.85rem;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;font-size:0.72rem;color:#0369a1;line-height:1.5;">
+        <strong>Примітка:</strong> Оцінка наближена. Реальні reads залежать від активності юзерів. Ціни Firebase Blaze: Reads $0.06/100k · Writes $0.18/100k · Deletes $0.02/100k · Storage $0.18/GB. Spark plan безкоштовний до 50k reads/day.
+    </div>`;
+}
+
 function _saRenderSystem() {
     return `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
