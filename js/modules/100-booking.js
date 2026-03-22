@@ -976,3 +976,145 @@ function injectBookingStyles() {
 }
 
 })();
+
+// ════════════════════════════════════════════════════════════
+// BEAUTY EXTENSIONS — master choice + slot blocking
+// ════════════════════════════════════════════════════════════
+
+// ── Helpers ───────────────────────────────────────────────
+function _parseMinutes(timeStr) {
+    if (!timeStr) return 0;
+    const [h,m] = timeStr.split(':').map(Number);
+    return (h||0)*60 + (m||0);
+}
+function _formatTime(minutes) {
+    const h = Math.floor(minutes/60), m = minutes%60;
+    return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
+
+// ── Slot availability check (duration + breaks) ───────────
+window._bkIsSlotAvailable = async function(date, timeStr, masterId, durationMinutes) {
+    if (!masterId || !window.companyCol) return true;
+    try {
+        const snap = await window.companyCol('booking_appointments')
+            .where('masterId','==', masterId)
+            .where('date','==', date)
+            .get();
+        const appts = snap.docs.map(d => d.data()).filter(a => a.status !== 'cancelled');
+        const slotStart = _parseMinutes(timeStr);
+        const slotEnd   = slotStart + (durationMinutes||60);
+        for (const a of appts) {
+            const aStart = _parseMinutes(a.timeSlot || a.time);
+            const aEnd   = aStart + (a.duration||60);
+            if (slotStart < aEnd && slotEnd > aStart) return false;
+        }
+        return true;
+    } catch(e) { return true; }
+};
+
+// ── Get available slots for master on a date ──────────────
+window._bkGetMasterSlots = async function(date, masterId, durationMinutes) {
+    const duration = durationMinutes || 60;
+    const schedule = await window.getStaffSchedule?.(masterId);
+    if (!schedule) return null; // no schedule = all slots pass through
+
+    const dayMap = ['sun','mon','tue','wed','thu','fri','sat'];
+    const dk = dayMap[new Date(date).getDay()];
+    const daySchedule = schedule.weeklyHours?.[dk];
+    if (!daySchedule?.active) return []; // day off
+
+    const dayStart = _parseMinutes(daySchedule.start || '09:00');
+    const dayEnd   = _parseMinutes(daySchedule.end   || '18:00');
+    const brkStart = schedule.breakTime ? _parseMinutes(schedule.breakTime.start) : null;
+    const brkEnd   = schedule.breakTime ? _parseMinutes(schedule.breakTime.end)   : null;
+
+    // Get existing appointments for conflict check
+    let busySlots = [];
+    try {
+        const snap = await window.companyCol('booking_appointments')
+            .where('masterId','==',masterId).where('date','==',date).get();
+        busySlots = snap.docs.map(d => d.data())
+            .filter(a => a.status !== 'cancelled')
+            .map(a => ({ s: _parseMinutes(a.timeSlot||a.time), e: _parseMinutes(a.timeSlot||a.time)+(a.duration||60) }));
+    } catch(e) {}
+
+    const slots = [];
+    const step = 30; // 30-min grid
+    for (let t = dayStart; t + duration <= dayEnd; t += step) {
+        const tEnd = t + duration;
+        // Skip break
+        if (brkStart !== null && t < brkEnd && tEnd > brkStart) continue;
+        // Check conflicts
+        const conflict = busySlots.some(b => t < b.e && tEnd > b.s);
+        if (!conflict) slots.push(_formatTime(t));
+    }
+    return slots;
+};
+
+// ── Complete appointment with master info ─────────────────
+window._bkCompleteAppointment = async function(apptId, amount) {
+    if (!apptId || !window.companyDoc) return;
+    try {
+        const doc = await window.companyDoc('booking_appointments', apptId).get();
+        if (!doc.exists) return;
+        const appt = doc.data();
+
+        // Update appointment status
+        await window.companyDoc('booking_appointments', apptId).update({
+            status: 'completed',
+            amount: amount || 0,
+            completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+
+        // Update client card if phone exists
+        if (appt.clientPhone && window.companyCol) {
+            const clientSnap = await window.companyCol('crm_clients')
+                .where('phone','==', appt.clientPhone).limit(1).get();
+            if (!clientSnap.empty) {
+                const clientRef = clientSnap.docs[0].ref;
+                await clientRef.update({
+                    lastVisitDate: appt.date,
+                    totalVisits: firebase.firestore.FieldValue.increment(1),
+                    totalSpent:  firebase.firestore.FieldValue.increment(amount||0),
+                    loyaltyPoints: firebase.firestore.FieldValue.increment(Math.floor((amount||0)/100)),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+            }
+        }
+        window.showToast?.('Запис завершено ✓', 'success');
+    } catch(e) { console.error('_bkCompleteAppointment:', e); }
+};
+
+// Patch appt table to show master name + complete button
+const _origLoadAppts = loadAppointments;
+// Override row rendering to include masterId/masterName columns
+window._bkRenderApptRow = function(a, isGroup, calName) {
+    const masterBadge = a.masterName
+        ? `<div style="font-size:.72rem;color:#8b5cf6;margin-top:.1rem">
+             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="vertical-align:-1px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+             ${esc(a.masterName)}</div>`
+        : '';
+    const durationBadge = a.duration
+        ? `<div style="font-size:.72rem;color:#64748b;">${a.duration} хв</div>` : '';
+    return `<tr class="bk-appt-row">
+  <td>
+    <div class="bk-appt-name">${I.user} ${esc(a.clientName)}</div>
+    <div class="bk-appt-contact">${esc(a.clientEmail)}${a.clientPhone?` &#183; ${esc(a.clientPhone)}`:''}</div>
+  </td>
+  <td>
+    <div style="font-weight:600">${a.date||''}</div>
+    <div style="color:#64748b;font-size:.82rem">${a.timeSlot||''}</div>
+    ${durationBadge}${masterBadge}
+    ${calName?`<div style="font-size:.72rem;color:#6366f1;margin-top:.1rem">&#128197; ${calName}</div>`:''}
+  </td>
+  <td></td>
+  <td>
+    ${a.status==='pending'?`<button class="bk-btn-sm bk-btn-confirm" onclick="window._bkConfirmAppt('${a.id}','',false)">${I.check}</button>`:''}
+    ${(window.currentCompanyData?.niche==='beauty_salon') && ['pending','confirmed'].includes(a.status)?`<button class="bk-btn-sm" onclick="window._bkCompleteAppointment('${a.id}',0)" style="background:#dcfce7;color:#16a34a;border:1px solid #bbf7d0;">✓ Завершити</button>`:''}
+    ${['pending','confirmed'].includes(a.status)?`<button class="bk-btn-sm bk-btn-cancel-appt" onclick="window._bkCancelAppt('${a.id}','',false)">${I.close}</button>`:''}
+  </td>
+</tr>`;
+};
+
+console.log('[100-booking] beauty extensions loaded ✓');

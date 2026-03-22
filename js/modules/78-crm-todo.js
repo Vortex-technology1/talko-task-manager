@@ -967,3 +967,107 @@ window._crmTodoAddTestDeals = async function() {
     }
     if (window.showToast) showToast(`${window.t('testLeadsAdded').replace('{V}', count)}`, 'success');
 };
+
+// ════════════════════════════════════════════════════════════
+// BEAUTY WIN-BACK — автоматична перевірка inactive клієнтів
+// Запускається при ініціалізації CRM todo для beauty ніш
+// ════════════════════════════════════════════════════════════
+
+window._beautyCheckWinBack = async function() {
+    if (window.currentCompanyData?.niche !== 'beauty_salon') return;
+    if (!window.companyCol) return;
+    try {
+        const snap = await window.companyCol('crm_clients')
+            .where('lastVisitDate', '!=', null).get();
+        if (snap.empty) return;
+
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const batch30 = [];
+        const batch45 = [];
+
+        snap.docs.forEach(doc => {
+            const cl = { id: doc.id, ...doc.data() };
+            if (!cl.lastVisitDate) return;
+            const last = new Date(cl.lastVisitDate);
+            const days = Math.floor((today - last) / 86400000);
+            if (days >= 45) batch45.push({ ...cl, daysSince: days });
+            else if (days >= 30) batch30.push({ ...cl, daysSince: days });
+        });
+
+        // Schedule win-back notifications
+        for (const cl of [...batch30, ...batch45]) {
+            if (cl.phone && window.scheduleWinBackNotification) {
+                await window.scheduleWinBackNotification(
+                    cl.id, cl.phone, cl.name, cl.daysSince
+                );
+            }
+        }
+
+        // Inject win-back section into CRM todo if visible
+        const todoEl = document.getElementById('crmViewTodo');
+        if (!todoEl || (!batch30.length && !batch45.length)) return;
+
+        const winBackClients = [...batch45, ...batch30].slice(0, 10);
+        const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+        const rows = winBackClients.map(cl => {
+            const urgent = cl.daysSince >= 45;
+            return `<div style="display:flex;align-items:center;gap:.65rem;padding:.55rem .75rem;
+                border-bottom:1px solid #f8fafc;background:${urgent?'#fef2f2':'white'};">
+                <div style="width:8px;height:8px;border-radius:50%;flex-shrink:0;
+                    background:${urgent?'#ef4444':'#f59e0b'};"></div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:.82rem;font-weight:600;color:#1a1a1a;
+                        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                        ${esc(cl.name||cl.phone||'Клієнт')}
+                    </div>
+                    <div style="font-size:.72rem;color:#9ca3af;">
+                        не була ${cl.daysSince} днів
+                        ${cl.preferredMasterName?' · '+esc(cl.preferredMasterName):''}
+                    </div>
+                </div>
+                ${cl.phone ? `<a href="tel:${esc(cl.phone)}"
+                    style="padding:3px 10px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
+                    border-radius:6px;font-size:.72rem;font-weight:600;text-decoration:none;white-space:nowrap;">
+                    📞 Подзвонити
+                </a>` : ''}
+            </div>`;
+        }).join('');
+
+        // Inject before the main list
+        const existing = document.getElementById('beautyWinBackBlock');
+        if (existing) { existing.remove(); }
+
+        const block = document.createElement('div');
+        block.id = 'beautyWinBackBlock';
+        block.style.cssText = 'margin-bottom:.75rem;';
+        block.innerHTML = `
+            <div style="background:white;border:1px solid #fecaca;border-radius:10px;overflow:hidden;">
+                <div style="padding:.6rem .75rem;background:#fef2f2;border-bottom:1px solid #fecaca;
+                    display:flex;align-items:center;justify-content:space-between;">
+                    <div style="font-weight:700;font-size:.82rem;color:#dc2626;">
+                        🔴 Win-back — клієнти не приходять (${winBackClients.length})
+                    </div>
+                    <button onclick="document.getElementById('beautyWinBackBlock')?.remove()"
+                        style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:.85rem;">✕</button>
+                </div>
+                ${rows}
+            </div>`;
+
+        // Insert at top of todo content
+        const firstChild = todoEl.querySelector('div > div:nth-child(2)');
+        if (firstChild) firstChild.before(block);
+        else todoEl.querySelector('div')?.prepend(block);
+
+    } catch(e) { console.warn('beautyCheckWinBack:', e.message); }
+};
+
+// Запускаємо перевірку після рендеру CRM todo
+const _origRenderCrmTodo = window.renderCrmTodo;
+if (_origRenderCrmTodo) {
+    window.renderCrmTodo = function() {
+        _origRenderCrmTodo.apply(this, arguments);
+        setTimeout(window._beautyCheckWinBack, 800);
+    };
+}

@@ -5867,3 +5867,487 @@ window._DEMO_NICHE_MAP['cleaning'] = async function() {
 if (window._NICHE_LABELS) {
     window._NICHE_LABELS['cleaning'] = 'SparkClean Pro — Cleaning Company (Austin, TX)';
 }
+
+// ════════════════════════════════════════════════════════════
+// BEAUTY SALON — beauty_salon
+// "GlowStudio" — студія краси, Київ
+// 8 майстрів, 5 функцій, повний цикл + loyalty + абонементи
+// ════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
+    const cr  = db.collection('companies').doc(currentCompany);
+    const uid = currentUser.uid;
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    let ops   = [];
+
+    // ── 1. ФУНКЦІЇ ────────────────────────────────────────────
+    const FUNCS = [
+        { name:'0. Маркетинг та залучення клієнтів', color:'#ec4899', desc:'Instagram, TikTok, Google, реферальна програма, акції та спецпропозиції' },
+        { name:'1. Запис та адміністрування',        color:'#22c55e', desc:'Онлайн-запис, підтвердження, нагадування, розклад майстрів' },
+        { name:'2. Надання послуг / майстри',        color:'#8b5cf6', desc:'Манікюр, педикюр, нарощування, шелак, дизайн нігтів, брови, вії' },
+        { name:'3. Сервіс та утримання клієнтів',   color:'#f59e0b', desc:'Win-back, loyalty програма, абонементи, сертифікати, відгуки' },
+        { name:'4. Фінанси та аналітика',            color:'#3b82f6', desc:'Виручка по майстрах, середній чек, завантаженість, KPI' },
+    ];
+    const fRefs = FUNCS.map(() => cr.collection('functions').doc());
+    FUNCS.forEach((f,i) => ops.push({type:'set', ref:fRefs[i], data:{
+        name:f.name, description:f.desc, color:f.color, order:i,
+        ownerId:uid, ownerName:'Ірина Кравченко',
+        status:'active', createdBy:uid, createdAt:now, updatedAt:now,
+    }}));
+
+    // ── 2. КОМАНДА ────────────────────────────────────────────
+    try {
+        const oldUsers = await cr.collection('users').get();
+        if (!oldUsers.empty) {
+            const delOps = oldUsers.docs.filter(d => d.id !== uid).map(d => ({type:'delete', ref:d.ref}));
+            if (delOps.length) await window.safeBatchCommit(delOps);
+        }
+    } catch(e) {}
+
+    const STAFF = [
+        { name:'Ірина Кравченко',  role:'owner',    fi:null, pos:'Власниця / Адмін' },
+        { name:'Олена Мороз',      role:'employee', fi:2,    pos:'Майстер манікюру', rating:4.9, reviews:156 },
+        { name:'Вікторія Лисенко', role:'employee', fi:2,    pos:'Майстер манікюру', rating:4.7, reviews:89  },
+        { name:'Аліна Шевченко',   role:'employee', fi:2,    pos:'Майстер нарощування', rating:4.8, reviews:112 },
+        { name:'Дарина Петрова',   role:'employee', fi:2,    pos:'Майстер брів та вій', rating:5.0, reviews:67  },
+        { name:'Катерина Бондар',  role:'employee', fi:2,    pos:'Майстер педикюру', rating:4.6, reviews:94  },
+        { name:'Марія Ткаченко',   role:'manager',  fi:1,    pos:'Адміністратор' },
+        { name:'Юлія Гончар',      role:'employee', fi:3,    pos:'Менеджер лояльності' },
+    ];
+    const sRefs = STAFF.map(() => cr.collection('users').doc());
+    STAFF.forEach((s,i) => {
+        const fIdx = s.fi !== null ? s.fi : null;
+        ops.push({type:'set', ref:sRefs[i], data:{
+            name:s.name, email:`${s.name.toLowerCase().replace(/\s/g,'.')}@glowstudio.ua`,
+            role:s.role, position:s.pos,
+            primaryFunctionId: fIdx !== null ? fRefs[fIdx].id : null,
+            functionRoles: fIdx !== null ? {[fRefs[fIdx].id]:'executor'} : {},
+            averageRating: s.rating || null,
+            totalReviews:  s.reviews || 0,
+            weeklyHours: 40, autonomyIndex:75,
+            createdAt:now, updatedAt:now,
+        }});
+    });
+
+    // ── 3. РОЗКЛАДИ МАЙСТРІВ ──────────────────────────────────
+    const MASTER_SCHEDULES = [
+        // Олена — пн-сб 10:00-20:00
+        { idx:1, schedule:{ mon:{start:'10:00',end:'20:00',active:true}, tue:{start:'10:00',end:'20:00',active:true}, wed:{start:'10:00',end:'20:00',active:true}, thu:{start:'10:00',end:'20:00',active:true}, fri:{start:'10:00',end:'20:00',active:true}, sat:{start:'10:00',end:'18:00',active:true}, sun:{start:'00:00',end:'00:00',active:false} }, brk:{start:'14:00',end:'15:00'} },
+        // Вікторія — вт-сб 09:00-19:00
+        { idx:2, schedule:{ mon:{start:'00:00',end:'00:00',active:false}, tue:{start:'09:00',end:'19:00',active:true}, wed:{start:'09:00',end:'19:00',active:true}, thu:{start:'09:00',end:'19:00',active:true}, fri:{start:'09:00',end:'19:00',active:true}, sat:{start:'09:00',end:'17:00',active:true}, sun:{start:'00:00',end:'00:00',active:false} }, brk:{start:'13:00',end:'14:00'} },
+        // Аліна — пн-пт 11:00-21:00
+        { idx:3, schedule:{ mon:{start:'11:00',end:'21:00',active:true}, tue:{start:'11:00',end:'21:00',active:true}, wed:{start:'11:00',end:'21:00',active:true}, thu:{start:'11:00',end:'21:00',active:true}, fri:{start:'11:00',end:'21:00',active:true}, sat:{start:'00:00',end:'00:00',active:false}, sun:{start:'00:00',end:'00:00',active:false} }, brk:{start:'15:00',end:'16:00'} },
+        // Дарина — ср-нд 10:00-19:00
+        { idx:4, schedule:{ mon:{start:'00:00',end:'00:00',active:false}, tue:{start:'00:00',end:'00:00',active:false}, wed:{start:'10:00',end:'19:00',active:true}, thu:{start:'10:00',end:'19:00',active:true}, fri:{start:'10:00',end:'19:00',active:true}, sat:{start:'10:00',end:'18:00',active:true}, sun:{start:'10:00',end:'17:00',active:true} }, brk:{start:'13:30',end:'14:30'} },
+        // Катерина — пн,вт,чт,пт,сб
+        { idx:5, schedule:{ mon:{start:'09:00',end:'18:00',active:true}, tue:{start:'09:00',end:'18:00',active:true}, wed:{start:'00:00',end:'00:00',active:false}, thu:{start:'09:00',end:'18:00',active:true}, fri:{start:'09:00',end:'18:00',active:true}, sat:{start:'10:00',end:'16:00',active:true}, sun:{start:'00:00',end:'00:00',active:false} }, brk:{start:'13:00',end:'14:00'} },
+    ];
+    MASTER_SCHEDULES.forEach(ms => {
+        const ref = cr.collection('staff_schedules').doc(sRefs[ms.idx].id);
+        ops.push({type:'set', ref, data:{
+            userId: sRefs[ms.idx].id,
+            weeklyHours: ms.schedule,
+            breakTime: ms.brk,
+            updatedAt: now,
+        }});
+    });
+
+    await window.safeBatchCommit(ops);
+    ops = [];
+
+    // ── 4. BOOKING CALENDARS (послуги) ────────────────────────
+    const SERVICES = [
+        { name:'Манікюр гель-лак',       slug:'manicure-gel',      color:'#ec4899', duration:60,  price:680,  masters:[1,2] },
+        { name:'Педикюр класичний',      slug:'pedicure-classic',  color:'#8b5cf6', duration:75,  price:420,  masters:[5] },
+        { name:'Нарощування нігтів',     slug:'nail-extension',    color:'#f59e0b', duration:120, price:1200, masters:[3] },
+        { name:'Корекція нарощування',   slug:'nail-correction',   color:'#f59e0b', duration:90,  price:800,  masters:[3] },
+        { name:'Оформлення брів',        slug:'eyebrow-design',    color:'#22c55e', duration:45,  price:350,  masters:[4] },
+        { name:'Нарощування вій',        slug:'lash-extension',    color:'#0ea5e9', duration:90,  price:900,  masters:[4] },
+        { name:'Манікюр + педикюр',      slug:'mani-pedi',         color:'#ec4899', duration:120, price:980,  masters:[1,2,5] },
+        { name:'Дизайн нігтів',          slug:'nail-art',          color:'#ef4444', duration:30,  price:200,  masters:[1,2,3] },
+    ];
+    const calRefs = SERVICES.map(() => cr.collection('booking_calendars').doc());
+    const schedRefs = SERVICES.map((_,i) => cr.collection('booking_schedules').doc(calRefs[i].id));
+
+    SERVICES.forEach((s,i) => {
+        ops.push({type:'set', ref:calRefs[i], data:{
+            name: s.name, slug: s.slug, color: s.color,
+            duration: s.duration, price: s.price, priceCurrency:'UAH',
+            assignedMasters: s.masters.map(mi => sRefs[mi].id),
+            allowMasterChoice: true,
+            ownerId: uid, ownerName:'Ірина Кравченко',
+            isActive: true, confirmationType:'auto',
+            timezone:'Europe/Kiev', bufferBefore:0, bufferAfter:5,
+            phoneRequired:true, requirePayment:false,
+            questions:[],
+            createdAt:now, updatedAt:now,
+        }});
+        ops.push({type:'set', ref:schedRefs[i], data:{
+            weeklyHours:{
+                mon:[{start:'10:00',end:'20:00'}], tue:[{start:'10:00',end:'20:00'}],
+                wed:[{start:'10:00',end:'20:00'}], thu:[{start:'10:00',end:'20:00'}],
+                fri:[{start:'10:00',end:'20:00'}], sat:[{start:'10:00',end:'18:00'}],
+                sun:[],
+            },
+            dateOverrides:{}, updatedAt:now,
+        }});
+    });
+
+    await window.safeBatchCommit(ops);
+    ops = [];
+
+    // ── 5. CRM КЛІЄНТИ з beauty профілем ─────────────────────
+    const CLIENTS = [
+        { name:'Іваненко Світлана', phone:'+380671112233', email:'svitlana@gmail.com', lastVisit:-5,  visits:47, spent:31800, pts:318, tier:'silver', master:1, allergies:'нікель',       services:['Манікюр гель-лак','Педикюр класичний'], notes:'Любить рожевий нюд, не любить квіткові принти' },
+        { name:'Коваль Надія',      phone:'+380672223344', email:'nadia@ukr.net',      lastVisit:-12, visits:23, spent:14200, pts:142, tier:'bronze', master:2, allergies:'',              services:['Манікюр гель-лак'], notes:'Короткі нігті, ніжні кольори' },
+        { name:'Петренко Оля',      phone:'+380673334455', email:'olya.p@gmail.com',   lastVisit:-3,  visits:89, spent:58400, pts:584, tier:'gold',   master:3, allergies:'акрил',         services:['Нарощування нігтів','Корекція нарощування'], notes:'Довгі нігті, яскравий дизайн' },
+        { name:'Бойко Марина',      phone:'+380674445566', email:'marina@gmail.com',   lastVisit:-38, visits:15, spent:8900,  pts:89,  tier:'bronze', master:1, allergies:'',              services:['Манікюр гель-лак'], notes:'' },
+        { name:'Яценко Діана',      phone:'+380675556677', email:'diana@ukr.net',       lastVisit:-52, visits:8,  spent:4200,  pts:42,  tier:'bronze', master:4, allergies:'',              services:['Оформлення брів','Нарощування вій'], notes:'Природний вигляд' },
+        { name:'Ткаченко Олена',    phone:'+380676667788', email:'olena.t@gmail.com',  lastVisit:-35, visits:31, spent:21000, pts:210, tier:'silver', master:2, allergies:'перманент',    services:['Манікюр гель-лак','Дизайн нігтів'], notes:'Сезонні теми' },
+        { name:'Савченко Тетяна',   phone:'+380677778899', email:'tetyana@gmail.com',  lastVisit:-7,  visits:12, spent:7800,  pts:78,  tier:'bronze', master:5, allergies:'',              services:['Педикюр класичний'], notes:'Медичний педикюр' },
+        { name:'Романенко Ліна',    phone:'+380678889900', email:'lina@ukr.net',         lastVisit:-1,  visits:56, spent:42000, pts:420, tier:'gold',   master:3, allergies:'',              services:['Нарощування нігтів','Нарощування вій'], notes:'VIP клієнт, завжди першою' },
+    ];
+
+    const crmPipeRef = cr.collection('crm_pipeline').doc();
+    ops.push({type:'set', ref:crmPipeRef, data:{
+        name:'Beauty Pipeline', isDefault:true,
+        stages:[
+            {id:'new',         label:'Новий запит',     color:'#3b82f6', order:0},
+            {id:'scheduled',   label:'Записано',        color:'#22c55e', order:1},
+            {id:'completed',   label:'Послугу надано',  color:'#8b5cf6', order:2},
+            {id:'retention',   label:'Утримання',       color:'#f59e0b', order:3},
+            {id:'inactive',    label:'Неактивний',      color:'#ef4444', order:4},
+            {id:'won',         label:'Постійний',       color:'#16a34a', order:5},
+            {id:'lost',        label:'Відмовився',      color:'#9ca3af', order:6},
+        ],
+        createdAt:now, updatedAt:now,
+    }});
+
+    const clientRefs = CLIENTS.map(() => cr.collection('crm_clients').doc());
+    const dealRefs   = CLIENTS.map(() => cr.collection('crm_deals').doc());
+
+    CLIENTS.forEach((c,i) => {
+        const lastDate = _demoDate(c.lastVisit);
+        const daysSince = Math.abs(c.lastVisit);
+        const stage = daysSince >= 45 ? 'inactive' : daysSince >= 30 ? 'retention' : 'won';
+
+        ops.push({type:'set', ref:clientRefs[i], data:{
+            name: c.name, phone: c.phone, email: c.email,
+            source:'instagram', niche:'beauty_salon',
+            // Beauty fields
+            lastVisitDate:      lastDate,
+            totalVisits:        c.visits,
+            totalSpent:         c.spent,
+            loyaltyPoints:      c.pts,
+            loyaltyTier:        c.tier,
+            preferredMasterId:  sRefs[c.master].id,
+            preferredMasterName: STAFF[c.master].name,
+            allergies:          c.allergies,
+            notes:              c.notes,
+            preferredServices:  c.services,
+            nextVisitReminder:  21,
+            birthDate:          '',
+            createdAt:now, updatedAt:now,
+        }});
+
+        ops.push({type:'set', ref:dealRefs[i], data:{
+            clientName:    c.name,
+            clientId:      clientRefs[i].id,
+            phone:         c.phone,
+            email:         c.email,
+            title:         c.name,
+            stage,
+            pipelineId:    crmPipeRef.id,
+            amount:        c.spent,
+            source:        'instagram',
+            nextContactDate: daysSince >= 30 ? _demoDate(0) : _demoDate(7),
+            assigneeId:    uid,
+            createdAt:now, updatedAt:now, stageEnteredAt:now,
+            tags: c.tier === 'gold' ? ['VIP','Gold'] : [],
+        }});
+    });
+
+    await window.safeBatchCommit(ops);
+    ops = [];
+
+    // ── 6. BOOKING APPOINTMENTS ───────────────────────────────
+    const APPTS = [
+        { ci:0, si:0, mi:1, date:-1, time:'11:00', status:'completed', amount:680  },
+        { ci:2, si:2, mi:3, date:-2, time:'14:00', status:'completed', amount:1200 },
+        { ci:7, si:2, mi:3, date: 0, time:'10:00', status:'confirmed', amount:1200 },
+        { ci:1, si:0, mi:2, date: 0, time:'13:00', status:'confirmed', amount:680  },
+        { ci:6, si:1, mi:5, date: 1, time:'11:00', status:'pending',   amount:420  },
+        { ci:3, si:0, mi:1, date: 2, time:'15:00', status:'pending',   amount:680  },
+        { ci:0, si:6, mi:1, date: 3, time:'10:00', status:'pending',   amount:980  },
+        { ci:5, si:7, mi:2, date: 3, time:'12:00', status:'pending',   amount:200  },
+        { ci:4, si:4, mi:4, date: 5, time:'14:00', status:'pending',   amount:350  },
+        { ci:2, si:3, mi:3, date: 7, time:'11:00', status:'pending',   amount:800  },
+    ];
+
+    APPTS.forEach(a => {
+        const ref = cr.collection('booking_appointments').doc();
+        const d = CLIENTS[a.ci];
+        const svc = SERVICES[a.si];
+        const master = STAFF[a.mi];
+        ops.push({type:'set', ref, data:{
+            clientName:  d.name,
+            clientPhone: d.phone,
+            clientEmail: d.email,
+            clientId:    clientRefs[a.ci].id,
+            calendarId:  calRefs[a.si].id,
+            calendarName: svc.name,
+            masterId:    sRefs[a.mi].id,
+            masterName:  master.name,
+            date:        _demoDate(a.date),
+            timeSlot:    a.time,
+            duration:    svc.duration,
+            endTime:     (() => { const [h,m]=a.time.split(':').map(Number); const e=h*60+m+svc.duration; return String(Math.floor(e/60)).padStart(2,'0')+':'+String(e%60).padStart(2,'0'); })(),
+            status:      a.status,
+            amount:      a.amount,
+            startTime:   firebase.firestore.Timestamp.fromDate(new Date(_demoDate(a.date)+'T'+a.time+':00')),
+            createdAt:now, updatedAt:now,
+        }});
+    });
+
+    await window.safeBatchCommit(ops);
+    ops = [];
+
+    // ── 7. ВІДГУКИ МАЙСТРІВ ───────────────────────────────────
+    const REVIEWS = [
+        { mi:1, ci:0, rating:5, comment:'Олена — просто чаро! Завжди ідеально, рівно, акуратно. Ходжу тільки до неї', svc:'Манікюр гель-лак',     date:-5  },
+        { mi:1, ci:5, rating:5, comment:'Дуже задоволена! Нігтики тримаються вже 3 тижні без сколів',                svc:'Манікюр гель-лак',     date:-12 },
+        { mi:1, ci:3, rating:4, comment:'Гарно зробила, але трохи довго чекала',                                      svc:'Манікюр гель-лак',     date:-20 },
+        { mi:2, ci:1, rating:5, comment:'Вікторія — золоті руки! Приходжу вже рік, жодного разу не розчарувалась',   svc:'Манікюр гель-лак',     date:-8  },
+        { mi:2, ci:5, rating:4, comment:'Все добре, але хотілось би більше варіантів дизайну',                        svc:'Дизайн нігтів',         date:-15 },
+        { mi:3, ci:2, rating:5, comment:'Аліна — найкраща майстриня з нарощування! Нігті як справжні',               svc:'Нарощування нігтів',   date:-3  },
+        { mi:3, ci:7, rating:5, comment:'Прийшла вперше — тепер тільки сюди. Аліна знає своє діло!',                 svc:'Нарощування нігтів',   date:-6  },
+        { mi:4, ci:4, rating:5, comment:'Дарина зробила брови — я себе не впізнала! Натуральний вигляд, як просила', svc:'Оформлення брів',       date:-10 },
+        { mi:5, ci:6, rating:5, comment:'Катерина — відмінний педикюр, дуже акуратно і безболісно',                  svc:'Педикюр класичний',     date:-7  },
+        { mi:1, ci:7, rating:5, comment:'Зробила манікюр + педикюр за 2 години. Олена — суперпрофесіонал!',          svc:'Манікюр + педикюр',     date:-1  },
+    ];
+
+    REVIEWS.forEach(r => {
+        const ref = cr.collection('master_reviews').doc();
+        ops.push({type:'set', ref, data:{
+            masterId:   sRefs[r.mi].id,
+            masterName: STAFF[r.mi].name,
+            clientId:   clientRefs[r.ci].id,
+            clientName: CLIENTS[r.ci].name,
+            rating:     r.rating,
+            comment:    r.comment,
+            serviceName: r.svc,
+            createdAt: _demoTs(r.date),
+        }});
+        // Update master avg rating in users
+        ops.push({type:'update', ref:sRefs[r.mi], data:{
+            averageRating: STAFF[r.mi].rating || 4.8,
+            totalReviews:  STAFF[r.mi].reviews || 10,
+            updatedAt: now,
+        }});
+    });
+
+    await window.safeBatchCommit(ops);
+    ops = [];
+
+    // ── 8. АБОНЕМЕНТИ ─────────────────────────────────────────
+    const SUBS = [
+        { ci:0, svc:'Манікюр гель-лак',     total:10, used:3, price:578, exp:180 },
+        { ci:2, svc:'Нарощування нігтів',   total:6,  used:2, price:1020, exp:120 },
+        { ci:7, svc:'Нарощування нігтів',   total:12, used:5, price:1020, exp:180 },
+        { ci:5, svc:'Манікюр гель-лак',     total:5,  used:1, price:612, exp:90  },
+    ];
+    SUBS.forEach(s => {
+        const ref = cr.collection('subscriptions').doc();
+        const cl = CLIENTS[s.ci];
+        ops.push({type:'set', ref, data:{
+            clientId:           clientRefs[s.ci].id,
+            clientName:         cl.name,
+            clientPhone:        cl.phone,
+            serviceName:        s.svc,
+            totalSessions:      s.total,
+            usedSessions:       s.used,
+            remainingSessions:  s.total - s.used,
+            pricePerSession:    s.price,
+            totalPaid:          s.total * s.price,
+            status:             'active',
+            expiresAt: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + s.exp*86400000)),
+            createdAt:now, updatedAt:now,
+        }});
+    });
+
+    // ── 9. СЕРТИФІКАТИ ────────────────────────────────────────
+    const CERTS = [
+        { by:'Коваль Тетяна',   forPerson:'Іваненко Оля', amount:1500, balance:800  },
+        { by:'Бойко Андрій',    forPerson:'',             amount:2000, balance:2000 },
+        { by:'Петренко Сергій', forPerson:'Петренко Оля', amount:1000, balance:300  },
+    ];
+    CERTS.forEach((c,i) => {
+        const ref = cr.collection('gift_certificates').doc();
+        const codes = ['GLOW-2026-A7X9','GLOW-2026-B3K2','GLOW-2026-C5M1'];
+        ops.push({type:'set', ref, data:{
+            code:         codes[i],
+            amount:       c.amount,
+            balance:      c.balance,
+            purchasedBy:  c.by,
+            purchasedFor: c.forPerson,
+            status:       c.balance > 0 ? 'active' : 'used',
+            transactions: c.balance < c.amount ? [{date:_demoDate(-10), amount:c.amount-c.balance, service:'Манікюр'}] : [],
+            expiresAt: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 365*86400000)),
+            createdAt:now, updatedAt:now,
+        }});
+    });
+
+    await window.safeBatchCommit(ops);
+    ops = [];
+
+    // ── 10. МЕТРИКИ ───────────────────────────────────────────
+    const METRICS = [
+        { name:'Записів на день',        unit:'шт', color:'#22c55e', period:'daily'   },
+        { name:'Виручка за день (грн)',   unit:'грн',color:'#3b82f6', period:'daily'   },
+        { name:'Середній чек (грн)',      unit:'грн',color:'#8b5cf6', period:'weekly'  },
+        { name:'Завантаженість майстрів', unit:'%',  color:'#f59e0b', period:'weekly'  },
+        { name:'Нові клієнти за місяць',  unit:'шт', color:'#ec4899', period:'monthly' },
+        { name:'Win-back клієнти',        unit:'шт', color:'#ef4444', period:'monthly' },
+        { name:'Виручка за місяць (грн)', unit:'грн',color:'#0ea5e9', period:'monthly' },
+    ];
+    const mRefs = METRICS.map(() => cr.collection('metrics').doc());
+    METRICS.forEach((m,i) => ops.push({type:'set', ref:mRefs[i], data:{
+        name:m.name, unit:m.unit, color:m.color,
+        period:m.period, type:'number', direction:'up',
+        ownerId:uid, isActive:true,
+        createdAt:now, updatedAt:now,
+    }}));
+
+    await window.safeBatchCommit(ops);
+    ops = [];
+
+    // Metric entries (2 місяці)
+    const mMap2 = {};
+    METRICS.forEach((m,i) => { mMap2[m.name] = mRefs[i].id; });
+    const ENTRIES = [
+        { name:'Записів на день',        vals:[8,11,9,12,7,10,13,8,9,11,10,12,8,11] },
+        { name:'Виручка за день (грн)',   vals:[5400,8200,6100,9800,4800,7200,10100,6300,7100,8400,7600,9200,5800,8600] },
+        { name:'Середній чек (грн)',      vals:[675,745,678,817,686,720,777,788,789,764,760,767,725,782] },
+        { name:'Завантаженість майстрів', vals:[72,84,76,91,68,80,94,79,82,87,85,90,75,88] },
+        { name:'Нові клієнти за місяць',  vals:[12,15,11,18,9,14,19,13] },
+        { name:'Win-back клієнти',        vals:[3,5,4,7,2,4,6,5] },
+        { name:'Виручка за місяць (грн)', vals:[98000,124000,108000,142000,89000,118500,153000,127000] },
+    ];
+    ENTRIES.forEach(e => {
+        const mid = mMap2[e.name];
+        if (!mid) return;
+        e.vals.forEach((val, idx) => {
+            const ref = cr.collection('metricEntries').doc();
+            ops.push({type:'set', ref, data:{
+                metricId:mid, value:val,
+                date:_demoDate(-(e.vals.length - idx - 1)*3),
+                recordedBy:uid, note:'', createdAt:now,
+            }});
+        });
+    });
+
+    await window.safeBatchCommit(ops);
+    ops = [];
+
+    // ── 11. ФІНАНСИ ───────────────────────────────────────────
+    const FIN_CATS = [
+        { name:'Виручка (послуги)',   type:'income',  color:'#22c55e' },
+        { name:'Виручка (абонементи)',type:'income',  color:'#16a34a' },
+        { name:'Матеріали та косметика',type:'expense',color:'#ef4444'},
+        { name:'Оренда',              type:'expense', color:'#f59e0b' },
+        { name:'ЗП майстрів',         type:'expense', color:'#8b5cf6' },
+        { name:'Реклама Instagram',   type:'expense', color:'#3b82f6' },
+    ];
+    const fcRefs = FIN_CATS.map(() => cr.collection('finance_categories').doc());
+    FIN_CATS.forEach((c,i) => ops.push({type:'set', ref:fcRefs[i], data:{
+        name:c.name, type:c.type, color:c.color, icon:'💅',
+        createdAt:now, updatedAt:now,
+    }}));
+
+    const FIN_ACC = cr.collection('finance_accounts').doc();
+    ops.push({type:'set', ref:FIN_ACC, data:{
+        name:'Каса GlowStudio', type:'cash', currency:'UAH',
+        balance:87400, isDefault:true, createdAt:now, updatedAt:now,
+    }});
+
+    const FIN_TXS = [
+        { cat:0, type:'income',  amount:5400,  note:'Виручка 17.03',  days:-5  },
+        { cat:0, type:'income',  amount:8200,  note:'Виручка 18.03',  days:-4  },
+        { cat:0, type:'income',  amount:9800,  note:'Виручка 19.03',  days:-3  },
+        { cat:1, type:'income',  amount:5780,  note:'Абонемент Іваненко', days:-10 },
+        { cat:1, type:'income',  amount:6120,  note:'Абонемент Коваль',   days:-8  },
+        { cat:2, type:'expense', amount:4200,  note:'Гель-лак Kodi, база', days:-7 },
+        { cat:3, type:'expense', amount:18000, note:'Оренда березень',    days:-20 },
+        { cat:4, type:'expense', amount:38000, note:'ЗП команди березень', days:-1 },
+        { cat:5, type:'expense', amount:3500,  note:'Meta Ads березень',   days:-3  },
+        { cat:0, type:'income',  amount:7200,  note:'Виручка 20.03',  days:-2  },
+        { cat:0, type:'income',  amount:6100,  note:'Виручка 21.03',  days:-1  },
+    ];
+    FIN_TXS.forEach(tx => {
+        const ref = cr.collection('finance_transactions').doc();
+        ops.push({type:'set', ref, data:{
+            categoryId:   fcRefs[tx.cat].id,
+            categoryName: FIN_CATS[tx.cat].name,
+            accountId:    FIN_ACC.id,
+            type:         tx.type,
+            amount:       tx.amount,
+            note:         tx.note,
+            date:         _demoDate(tx.days),
+            createdAt:    _demoTsFinance(tx.days),
+            updatedAt:    now,
+        }});
+    });
+
+    await window.safeBatchCommit(ops);
+    ops = [];
+
+    // ── 12. ЗАВДАННЯ ──────────────────────────────────────────
+    const TASKS = [
+        { title:'Закупити гель-лак Kodi (15 кольорів)',  fn:4, assignee:0, status:'in_progress', deadline:2 },
+        { title:'Пост в Instagram — акція "Весна"',      fn:0, assignee:6, status:'new',         deadline:1 },
+        { title:'Зателефонувати Бойко Марині (38 днів)', fn:3, assignee:0, status:'new',         deadline:0 },
+        { title:'Зателефонувати Яценко Діані (52 дні)',  fn:3, assignee:6, status:'new',         deadline:0 },
+        { title:'Поповнити loyalty балів — акція 2x',   fn:3, assignee:6, status:'new',         deadline:3 },
+        { title:'Сертифікат GLOW-2026-A7X9 — нагадати', fn:3, assignee:0, status:'new',         deadline:5 },
+        { title:'Навчання Дарини — техніка брів 2026',   fn:2, assignee:3, status:'new',         deadline:14 },
+        { title:'Оновити прайс на сайті',                fn:0, assignee:6, status:'done',        deadline:-2 },
+    ];
+    TASKS.forEach(tk => {
+        const ref = cr.collection('tasks').doc();
+        ops.push({type:'set', ref, data:{
+            title:       tk.title,
+            function:    FUNCS[tk.fn].name,
+            functionId:  fRefs[tk.fn].id,
+            assigneeId:  sRefs[tk.assignee].id,
+            assigneeName: STAFF[tk.assignee].name,
+            status:      tk.status,
+            priority:    'medium',
+            deadlineDate: _demoDate(tk.deadline),
+            createdAt:now, updatedAt:now,
+        }});
+    });
+
+    await window.safeBatchCommit(ops);
+
+    // ── 13. COMPANY PROFILE ───────────────────────────────────
+    await cr.update({
+        name:           'GlowStudio',
+        niche:          'beauty_salon',
+        nicheLabel:     'Студія краси — манікюр, педикюр, нарощування',
+        description:    'Студія краси GlowStudio — манікюр, педикюр, нарощування нігтів, брови та вії. Київ, вул. Хрещатик 12.',
+        city:           'Київ',
+        employees:      8,
+        currency:       'UAH',
+        companyGoal:    'Стати №1 студією краси в районі за відгуками Google та утримати 80% клієнтів на абонементах',
+        companyConcept: 'Краса без стресу — клієнт записується онлайн, майстер знає його уподобання, після візиту отримує нагадування. Жодних черг, жодних сюрпризів.',
+        companyCKP:     'Кожен клієнт повертається мінімум раз на 3 тижні та рекомендує студію 2 подругам',
+        companyIdeal:   '8 майстрів з завантаженістю 85%+. Власниця перевіряє лише дашборд вранці — не відповідає на дзвінки і не записує вручну. Виручка 180 000 грн/міс. Google рейтинг 4.9+.',
+        targetAudience: 'Жінки 22-45 років з доходом середній+, цінують якість і зручність. Готові платити за стабільний результат і персональний підхід.',
+        avgCheck:       750,
+        monthlyRevenue: 118500,
+        updatedAt:      firebase.firestore.FieldValue.serverTimestamp(),
+    });
+};
+
+if (window._NICHE_LABELS) {
+    window._NICHE_LABELS['beauty_salon'] = 'GlowStudio — Студія краси (Київ)';
+}
