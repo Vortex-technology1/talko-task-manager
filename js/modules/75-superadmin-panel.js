@@ -1252,7 +1252,7 @@ window.openGlobalAISettings = async function() {
         };
 
         overlay.innerHTML = `
-            <div style="background:white;border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);display:flex;flex-direction:column;">
+            <div style="background:white;border-radius:16px;width:100%;max-width:820px;max-height:95vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);display:flex;flex-direction:column;">
             <div style="padding:1.5rem 1.5rem 0;overflow-y:auto;flex:1;">
                 <h3 style="margin:0 0 1rem;font-size:1rem;font-weight:700;"><span style="display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 1 21 12a10 10 0 0 1-1.93 7.07M4.93 4.93A10 10 0 0 0 3 12a10 10 0 0 0 1.93 7.07M12 2v2M12 20v2M2 12h2M20 12h2"/></svg> Глобальні AI налаштування</span></h3>
 
@@ -1450,7 +1450,9 @@ const DEFAULT_AGENTS = {
 ПРОГНОЗ
 Що зміниться через 30 днів якщо впровадити — у конкретних цифрах.
 
-Відповідай українською. Максимум 4 речення на блок. Без вступів і кінцевих фраз.`,
+Відповідай українською. Максимум 4 речення на блок. Без вступів і кінцевих фраз.
+
+МОВА: Відповідай ЗАВЖДИ мовою користувача. Якщо пише українською — українською. Англійською — англійською. Російською — російською. Будь-якою іншою — тією ж мовою. Не перемикайся на іншу мову навіть якщо промпт написаний інакше.`,
     },
     incidents: {
         label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Журнал збоїв</span>',
@@ -1480,7 +1482,9 @@ const DEFAULT_AGENTS = {
 Потім JSON для збереження:
 {"title":"...","category":"process|people|client|finance|technical","severity":"critical|high|medium|low","responsible":"...","description":"...","failedProcess":"...","cause":"...","consequences":"...","toChange":"..."}
 
-Українська мова. Коротко і по-діловому.`,
+Українська мова. Коротко і по-діловому.
+
+МОВА: Відповідай ЗАВЖДИ мовою користувача. Якщо пише українською — українською. Англійською — англійською. Російською — російською. Будь-якою іншою — тією ж мовою. Не перемикайся на іншу мову навіть якщо промпт написаний інакше.`,
     },
     finance: {
         label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Фінансовий аналіз</span>',
@@ -1520,7 +1524,9 @@ const DEFAULT_AGENTS = {
 ПРОГНОЗ 90 ДНІВ
 Якщо впровадити — виручка/прибуток зміниться на X грн/%.
 
-Відповідай українською. Без вступів. Якщо питають — відповідай прямо.`,
+Відповідай українською. Без вступів. Якщо питають — відповідай прямо.
+
+МОВА: Відповідай ЗАВЖДИ мовою користувача. Якщо пише українською — українською. Англійською — англійською. Російською — російською. Будь-якою іншою — тією ж мовою. Не перемикайся на іншу мову навіть якщо промпт написаний інакше.`,
     },
     coordination: {
         label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Координація</span>',
@@ -1554,43 +1560,68 @@ const DEFAULT_AGENTS = {
 ПРІОРИТЕТ №1
 Одна найважливіша зміна яку зробити цього тижня.
 
-Українська мова. Коротко. Власник хоче рішення — не опис проблеми.`,
+Українська мова. Коротко. Власник хоче рішення — не опис проблеми.
+
+МОВА: Відповідай ЗАВЖДИ мовою користувача. Якщо пише українською — українською. Англійською — англійською. Російською — російською. Будь-якою іншою — тією ж мовою. Не перемикайся на іншу мову навіть якщо промпт написаний інакше.`,
     },
 };
 
 // ── Рендер вкладки Агенти ───────────────────────────────
 window._renderAgentsTab = function(savedAgents) {
-    return Object.entries(DEFAULT_AGENTS).map(([key, agent]) => {
-        const saved = savedAgents[key] || {};
+    const cards = Object.entries(DEFAULT_AGENTS).map(([key, agent]) => {
+        const saved  = savedAgents[key] || {};
         const prompt = saved.systemPrompt || '';
         const model  = saved.model || 'gpt-4o-mini';
+        const hasPrompt = !!prompt;
         return `
-        <div style="border:1px solid #e5e7eb;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-            <div style="font-weight:700;font-size:0.85rem;margin-bottom:2px;">${agent.label}</div>
-            <div style="font-size:0.7rem;color:#6b7280;margin-bottom:8px;">
-                Використовується: <span style="background:#f3f4f6;padding:1px 6px;border-radius:4px;">${agent.where}</span>
+        <div style="border:1px solid #e5e7eb;border-radius:12px;padding:1rem;display:flex;flex-direction:column;gap:0.5rem;background:${hasPrompt?'white':'#fafafa'};">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
+                <div>
+                    <div style="font-weight:700;font-size:0.88rem;margin-bottom:2px;">${agent.label}</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" style="vertical-align:-1px;margin-right:2px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        ${agent.where}
+                    </div>
+                </div>
+                <span style="font-size:0.68rem;padding:2px 8px;border-radius:20px;white-space:nowrap;
+                    background:${hasPrompt?'#f0fdf4':'#f3f4f6'};
+                    color:${hasPrompt?'#16a34a':'#9ca3af'};
+                    border:1px solid ${hasPrompt?'#bbf7d0':'#e5e7eb'};">
+                    ${hasPrompt?'✓ Налаштовано':'Дефолт з коду'}
+                </span>
             </div>
-            <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">
+            <div style="display:flex;gap:6px;align-items:center;">
                 <label style="font-size:0.72rem;font-weight:600;color:#374151;white-space:nowrap;">Модель:</label>
-                <input id="agent_model_${key}" value="${model}"
-                    placeholder="gpt-4o-mini"
-                    style="flex:1;padding:4px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.78rem;font-family:monospace;">
+                <input id="agent_model_${key}" value="${model}" placeholder="gpt-4o-mini"
+                    style="flex:1;padding:4px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.78rem;font-family:monospace;max-width:200px;">
             </div>
             <div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
                     <label style="font-size:0.72rem;font-weight:600;color:#374151;">Системний промпт:</label>
-                    <button onclick="window._resetAgentPrompt('${key}')"
-                        style="font-size:0.68rem;color:#6b7280;background:none;border:none;cursor:pointer;text-decoration:underline;">
-                        <span style="display:inline-flex;align-items:center;gap:3px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Дефолт</span>
-                    </button>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        ${hasPrompt ? `<button onclick="document.getElementById('agent_prompt_${key}').value='';window._saveModuleInline && window._saveModuleInline()" style="font-size:0.68rem;color:#ef4444;background:none;border:none;cursor:pointer;">✕ Очистити</button>` : ''}
+                        <button onclick="window._resetAgentPrompt('${key}')"
+                            style="font-size:0.68rem;color:#6366f1;background:#f0f0ff;border:1px solid #e0e0ff;border-radius:5px;padding:2px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Дефолт
+                        </button>
+                    </div>
                 </div>
-                <textarea id="agent_prompt_${key}" rows="4"
-                    placeholder="${agent.defaultPrompt.slice(0, 80)}..."
-                    style="width:100%;padding:6px 8px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.75rem;line-height:1.4;resize:vertical;box-sizing:border-box;font-family:inherit;">${prompt}</textarea>
-                ${!prompt ? `<div style="font-size:0.68rem;color:#9ca3af;">Порожньо = використовується вбудований дефолт</div>` : ''}
+                <textarea id="agent_prompt_${key}" rows="12"
+                    placeholder="Порожньо = використовується вбудований дефолт з коду..."
+                    style="width:100%;padding:8px 10px;border:1px solid ${hasPrompt?'#6366f1':'#e5e7eb'};border-radius:8px;font-size:0.78rem;line-height:1.55;resize:vertical;box-sizing:border-box;font-family:inherit;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='#6366f1'"
+                    onblur="this.style.borderColor=this.value?'#6366f1':'#e5e7eb'"
+                    >${prompt}</textarea>
+                <div style="font-size:0.68rem;color:#9ca3af;margin-top:3px;">
+                    Рядків: <span id="agent_lines_${key}">${prompt ? prompt.split('\n').length : 0}</span> · 
+                    Символів: <span id="agent_chars_${key}">${prompt.length}</span>
+                    <script>document.getElementById('agent_prompt_${key}').addEventListener('input',function(){document.getElementById('agent_lines_${key}').textContent=this.value.split('\\n').length;document.getElementById('agent_chars_${key}').textContent=this.value.length;});<\/script>
+                </div>
             </div>
         </div>`;
     }).join('');
+
+    return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">${cards}</div>`;
 };
 
 window._resetAgentPrompt = function(key) {
