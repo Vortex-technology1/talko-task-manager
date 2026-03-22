@@ -783,7 +783,7 @@ function _saRenderAlerts(pc) {
         ${_saKpi('Увага',    warnCount, '#f59e0b')}
         ${_saKpi('Всього',   alerts.length, '#374151')}
     </div>
-    <div style="max-height:500px;overflow-y:auto;">${rows}</div>`;
+    <div style="max-height:600px;overflow-y:auto;">${rows}</div>`;
 }
 
 // ── TAB 8: SYSTEM ───────────────────────────────────────────
@@ -1039,7 +1039,7 @@ window.saOpenCompanyDetail = function(companyId) {
     const safeId = companyId.replace(/['"]/g,'');
 
     ov.innerHTML = `
-    <div style="background:white;border-radius:14px;width:100%;max-width:780px;max-height:90vh;
+    <div style="background:white;border-radius:14px;width:100%;max-width:1100px;max-height:96vh;
         display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.25);">
 
         <!-- Header -->
@@ -1098,13 +1098,13 @@ window.saOpenCompanyDetail = function(companyId) {
                     <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.4rem;color:#374151;">
                         Користувачі (${c.users.length})
                     </div>
-                    <div style="max-height:180px;overflow-y:auto;">${userRows}</div>
+                    <div style="max-height:280px;overflow-y:auto;">${userRows}</div>
                 </div>
                 <div>
                     <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.4rem;color:#374151;">
                         Events 7д (${c.totalEvents7d})
                     </div>
-                    <div style="max-height:180px;overflow-y:auto;">${evRows}</div>
+                    <div style="max-height:280px;overflow-y:auto;">${evRows}</div>
                 </div>
                 <div>
                     <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.4rem;color:#374151;">
@@ -1119,13 +1119,13 @@ window.saOpenCompanyDetail = function(companyId) {
                     <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.4rem;color:#374151;">
                         AI рекомендації (${(c.aiRecs||[]).length})
                     </div>
-                    <div style="max-height:130px;overflow-y:auto;">${recRows}</div>
+                    <div style="max-height:200px;overflow-y:auto;">${recRows}</div>
                 </div>
                 <div style="grid-column:1/-1;">
                     <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.4rem;color:#374151;">
                         Нотатки суперадміна
                     </div>
-                    <div style="max-height:120px;overflow-y:auto;" id="saNotesFor_${safeId}">${noteRows}</div>
+                    <div style="max-height:180px;overflow-y:auto;" id="saNotesFor_${safeId}">${noteRows}</div>
                 </div>
             </div>
         </div>
@@ -1285,7 +1285,7 @@ window.openFeatureFlags = async function(companyId, companyName) {
         overlay.id = 'featureFlagsOverlay';
         overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10030;display:flex;align-items:center;justify-content:center;padding:1rem;';
         overlay.innerHTML = `
-            <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:440px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+            <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
                     <h3 style="margin:0;font-size:1rem;font-weight:700;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span> Модулі: ${companyName}</h3>
                     <button onclick="document.getElementById('featureFlagsOverlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#9ca3af;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
@@ -1391,7 +1391,7 @@ window.openGlobalAISettings = async function() {
                             ${p==='openai'?'OpenAI':p==='anthropic'?'Anthropic':'Google'}
                         </button>`).join('')}
                 </div>
-                <div id="modelsList" style="max-height:220px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:8px;padding:6px;">
+                <div id="modelsList" style="max-height:320px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:8px;padding:6px;">
                     ${list.map((m,i) => `
                         <div style="display:flex;gap:6px;align-items:center;margin-bottom:5px;">
                             <input value="${m[0]}" placeholder="model-id"
@@ -1434,7 +1434,7 @@ window.openGlobalAISettings = async function() {
         };
 
         overlay.innerHTML = `
-            <div style="background:white;border-radius:16px;width:100%;max-width:820px;max-height:95vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);display:flex;flex-direction:column;">
+            <div style="background:white;border-radius:16px;width:100%;max-width:1000px;max-height:96vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);display:flex;flex-direction:column;">
             <div style="padding:1.5rem 1.5rem 0;overflow-y:auto;flex:1;">
                 <h3 style="margin:0 0 1rem;font-size:1rem;font-weight:700;"><span style="display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 1 21 12a10 10 0 0 1-1.93 7.07M4.93 4.93A10 10 0 0 0 3 12a10 10 0 0 0 1.93 7.07M12 2v2M12 20v2M2 12h2M20 12h2"/></svg> Глобальні AI налаштування</span></h3>
 
