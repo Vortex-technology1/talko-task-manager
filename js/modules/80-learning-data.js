@@ -8444,26 +8444,145 @@ Bist du dabei?</div>
 
                 lessonContent: `
 <style>
-.l14-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
-.l14-card p{font-size:.9rem;color:#374151;line-height:1.65}
-.l14-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
-.l14-th{display:flex;align-items:flex-start;gap:.85rem}
-.l14-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.l14-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
-.l14-td{font-size:.82rem;color:#525252;line-height:1.5}
-.l14-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.l15-divider{height:1px;background:#e2e8f0;margin:1.25rem 0}
+.l15-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l15-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
+.l15-card p+p{margin-top:.6rem}
+.l15-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.45rem}
+.l15-snum{width:26px;height:26px;background:#6366f1;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.l15-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.l15-stext{font-size:.82rem;color:#525252;line-height:1.45}
+.l15-niche{display:flex;gap:.6rem;padding:.7rem .85rem;border-radius:9px;border:1px solid #e2e8f0;background:white;margin-bottom:.35rem;align-items:flex-start}
+.l15-niche-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l15-niche-title{font-weight:700;font-size:.82rem;color:#1a1a1a;margin-bottom:.15rem}
+.l15-niche-mods{font-size:.72rem;color:#525252;line-height:1.4}
+.l15-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:.75rem}
+.l15-th{display:flex;align-items:flex-start;gap:.85rem}
+.l15-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l15-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l15-td{font-size:.82rem;color:#525252;line-height:1.5}
+.l15-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none;border:none;cursor:pointer}
+.l15-btn-purple{background:#6366f1}
+.l15-btn-blue{background:#3b82f6}
+.l15-label{font-size:.7rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.6rem}
 </style>
 
-<div class="l14-card">
-    <p>Це практичний урок — впровадження на платформі, на якій ви зараз знаходитесь.</p>
+<div class="l15-card">
+    <p>Це практичний урок — впровадження на платформі, на якій ви зараз знаходитесь. Тут три ключові речі: як налаштувати платформу під свою нішу, як запустити демо-тур, і як пройти онбординг крок за кроком.</p>
 </div>
+
+<!-- БЛОК 1: МОДУЛІ ПІД НІШУ -->
+<div class="l15-label">Крок 1 — Налаштування під вашу нішу</div>
+
+<div class="l15-card">
+    <p><strong>Платформа гнучка.</strong> Ви вмикаєте тільки ті модулі, які потрібні саме вашому бізнесу — зайвого не відображається. Меблева компанія не бачить "Лояльність і абонементи". Салон краси не бачить "Кошторис і склад".</p>
+    <p style="margin-top:.6rem">Це не обмеження — це фокус. Ваші співробітники бачать тільки те, з чим реально працюють.</p>
+</div>
+
+<div class="l15-label" style="margin-top:.85rem">4 пресети — один клік і система готова</div>
+
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#fdf2f8;border:1px solid #fbcfe8;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#be185d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+    </div>
+    <div>
+        <div class="l15-niche-title">Сервіс — beauty, медицина, косметологія, стоматологія, спа</div>
+        <div class="l15-niche-mods">Вмикається: розклад майстрів/лікарів, розширений профіль клієнта, програма лояльності та бали, абонементи і сертифікати, рейтинги та відгуки, win-back автоматика, нагадування клієнтам, онлайн-запис</div>
+    </div>
+</div>
+
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#f0fdf4;border:1px solid #bbf7d0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M3 12h1m16 0h1M4.92 19.07l.7-.7M18.36 5.64l.7-.7"/><circle cx="12" cy="12" r="4"/></svg>
+    </div>
+    <div>
+        <div class="l15-niche-title">Клінінг — прибирання, хімчистка, дезинфекція</div>
+        <div class="l15-niche-mods">Вмикається: розклад бригад, профіль клієнта з адресою, win-back автоматика, нагадування, онлайн-запис. Склад і кошторис — за потреби</div>
+    </div>
+</div>
+
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#eff6ff;border:1px solid #bfdbfe;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a8 8 0 0 1 16 0v3"/></svg>
+    </div>
+    <div>
+        <div class="l15-niche-title">Виробництво — меблі, будівництво, ремонти, виробництво</div>
+        <div class="l15-niche-mods">Вмикається: кошторис і норми витрат, склад і warehouse, управління проєктами. Онлайн-запис і лояльність — вимкнені за замовчуванням</div>
+    </div>
+</div>
+
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#faf5ff;border:1px solid #e9d5ff;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+    </div>
+    <div>
+        <div class="l15-niche-title">Консалтинг — навчання, коучинг, юристи, бухгалтери</div>
+        <div class="l15-niche-mods">Вмикається: розклад спеціалістів, профіль клієнта, win-back, нагадування, онлайн-запис на консультації</div>
+    </div>
+</div>
+
+<div style="margin-top:.75rem;padding:.75rem .95rem;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:.82rem;color:#92400e;line-height:1.5;">
+    <strong>Де налаштувати:</strong> Система → Співробітники → вкладка «Компанія» → розділ «Модулі системи». Оберіть пресет або вручну встановіть потрібні галочки. Зберігається автоматично.
+</div>
+
+<div style="margin-top:.6rem;padding:.75rem .95rem;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;font-size:.82rem;color:#0369a1;line-height:1.5;">
+    <strong>Платформа постійно поповнюється.</strong> Нові модулі, інтеграції та функції з'являються регулярно — вони будуть доступні у вашому обліковому записі автоматично. Вам не потрібно нічого оновлювати або переналаштовувати.
+</div>
+
+<div class="l15-divider"></div>
+
+<!-- БЛОК 2: ДЕМО ТУР -->
+<div class="l15-label">Крок 2 — Демо-тур по платформі</div>
+
+<div class="l15-card">
+    <p>Перед тим як починати заповнювати реальні дані — пройдіть демо-тур. Він показує як виглядає <strong>повністю налаштована компанія</strong> у вашій ніші: живі завдання, CRM, фінанси, аналітика, команда. Ви побачите кінцевий результат ще до того, як почнете.</p>
+</div>
+
+<div class="l15-step">
+    <div class="l15-snum" style="background:#6366f1;">1</div>
+    <div>
+        <div class="l15-stitle">Натисніть кнопку «Демо» у хедері</div>
+        <div class="l15-stext">Права частина шапки — помаранчева кнопка «Демо». Оберіть нішу зі списку: меблевий бізнес, будівництво, медицина, клінінг або beauty-студія.</div>
+    </div>
+</div>
+
+<div class="l15-step">
+    <div class="l15-snum" style="background:#6366f1;">2</div>
+    <div>
+        <div class="l15-stitle">Система завантажить повноцінний демо-приклад</div>
+        <div class="l15-stext">8–12 співробітників, функції, завдання, CRM з лідами, фінансові транзакції, метрики, склад або кошторис — залежно від ніші. Повна картина як має виглядати ваш бізнес у системі.</div>
+    </div>
+</div>
+
+<div class="l15-step">
+    <div class="l15-snum" style="background:#6366f1;">3</div>
+    <div>
+        <div class="l15-stitle">Натисніть «Тур» — інтерактивна екскурсія</div>
+        <div class="l15-stext">Кнопка «Тур» у хедері запустить покрокову екскурсію по всіх розділах: що де знаходиться, навіщо кожен модуль, як ними користуватись. 20–25 кроків з поясненнями на живих даних.</div>
+    </div>
+</div>
+
+<div class="l15-step">
+    <div class="l15-snum" style="background:#6366f1;">4</div>
+    <div>
+        <div class="l15-stitle">Очистіть демо-дані і починайте з реальними</div>
+        <div class="l15-stext">Система → Демо-дані → «Очистити демо». Всі тестові записи видаляться, ваші реальні дані залишаться. Можна завантажувати демо скільки завгодно разів.</div>
+    </div>
+</div>
+
+<div class="l15-divider"></div>
+
+<!-- БЛОК 3: ОНБОРДИНГ + AI -->
+<div class="l15-label">Крок 3 — Онбординг і AI-підтримка</div>
 
 <div style="margin-bottom:.75rem;padding:1rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
     <div style="display:flex;align-items:center;gap:.75rem">
-        <div style="width:28px;height:28px;background:#166534;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0">1</div>
+        <div style="width:28px;height:28px;background:#166534;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="14" height="14"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
         <div>
-            <div style="font-weight:700;color:#166534;font-size:.9rem;margin-bottom:.15rem">Перейдіть до Онбордингу</div>
-            <div style="font-size:.82rem;color:#15803d;line-height:1.4">Покрокове введення в платформу</div>
+            <div style="font-weight:700;color:#166534;font-size:.9rem;margin-bottom:.15rem">Відкрити Онбординг</div>
+            <div style="font-size:.82rem;color:#15803d;line-height:1.4">Покрокове введення в платформу — від налаштування до першого результату</div>
         </div>
     </div>
     <button onclick="if(window.switchTab){window.switchTab('onboarding')}else{document.querySelector('[onclick*=onboarding]')?.click()}" style="display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;background:#166534;color:white;border-radius:9px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0">
@@ -8472,19 +8591,19 @@ Bist du dabei?</div>
     </button>
 </div>
 
-<div class="l14-tool">
+<div class="l15-tool">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem">
-        <div style="width:28px;height:28px;background:#6b7280;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0">2</div>
-        <div style="font-size:.82rem;color:#525252;line-height:1.4">Якщо щось незрозуміло — запитайте AI-асистента</div>
+        <div style="width:28px;height:28px;background:#6b7280;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0">?</div>
+        <div style="font-size:.82rem;color:#525252;line-height:1.4">Якщо щось незрозуміло або хочете дізнатись більше — запитайте AI-асистента</div>
     </div>
-    <div class="l14-th">
-        <div class="l14-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+    <div class="l15-th">
+        <div class="l15-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
         <div>
-            <div class="l14-tt">TALKO Task Manager Support</div>
-            <div class="l14-td">AI-асистент підкаже як користуватись платформою і що робити далі.</div>
+            <div class="l15-tt">TALKO Task Manager Support</div>
+            <div class="l15-td">AI-асистент підкаже як користуватись платформою, що робити в першу чергу, як налаштувати конкретний модуль під вашу нішу.</div>
         </div>
     </div>
-    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="l14-btn">
+    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="l15-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Запитати AI-асистента
     </a>
@@ -8492,50 +8611,87 @@ Bist du dabei?</div>
 
                 lessonContent_ru: `
 <style>
-.l14-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
-.l14-card p{font-size:.9rem;color:#374151;line-height:1.65}
-.l14-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
-.l14-th{display:flex;align-items:flex-start;gap:.85rem}
-.l14-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.l14-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
-.l14-td{font-size:.82rem;color:#525252;line-height:1.5}
-.l14-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.l15-divider{height:1px;background:#e2e8f0;margin:1.25rem 0}
+.l15-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l15-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
+.l15-card p+p{margin-top:.6rem}
+.l15-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.45rem}
+.l15-snum{width:26px;height:26px;background:#6366f1;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.l15-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.l15-stext{font-size:.82rem;color:#525252;line-height:1.45}
+.l15-niche{display:flex;gap:.6rem;padding:.7rem .85rem;border-radius:9px;border:1px solid #e2e8f0;background:white;margin-bottom:.35rem;align-items:flex-start}
+.l15-niche-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l15-niche-title{font-weight:700;font-size:.82rem;color:#1a1a1a;margin-bottom:.15rem}
+.l15-niche-mods{font-size:.72rem;color:#525252;line-height:1.4}
+.l15-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.l15-th{display:flex;align-items:flex-start;gap:.85rem}
+.l15-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l15-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l15-td{font-size:.82rem;color:#525252;line-height:1.5}
+.l15-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none;border:none;cursor:pointer}
+.l15-label{font-size:.7rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.6rem}
 </style>
 
-<div class="l14-card">
-    <p>Это практический урок — внедрение на платформе, на которой вы сейчас находитесь.</p>
+<div class="l15-card">
+    <p>Это практический урок — внедрение на платформе, на которой вы сейчас находитесь. Три ключевых шага: настройка под вашу нишу, демо-тур, и онбординг с пошаговым введением.</p>
 </div>
+
+<div class="l15-label">Шаг 1 — Настройка под вашу нишу</div>
+
+<div class="l15-card">
+    <p><strong>Платформа гибкая.</strong> Вы включаете только те модули, которые нужны именно вашему бизнесу. Мебельная компания не видит «Лояльность и абонементы». Салон красоты не видит «Смету и склад».</p>
+    <p>Это не ограничение — это фокус. Ваши сотрудники видят только то, с чем реально работают.</p>
+</div>
+
+<div class="l15-label" style="margin-top:.85rem">4 пресета — один клик и система готова</div>
+
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#fdf2f8;border:1px solid #fbcfe8;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#be185d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
+    <div><div class="l15-niche-title">Сервис — beauty, медицина, косметология, стоматология, спа</div><div class="l15-niche-mods">Включается: расписание мастеров/врачей, расширенный профиль клиента, программа лояльности и баллы, абонементы и сертификаты, рейтинги и отзывы, win-back автоматика, напоминания клиентам, онлайн-запись</div></div>
+</div>
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#f0fdf4;border:1px solid #bbf7d0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M3 12h1m16 0h1M4.92 19.07l.7-.7M18.36 5.64l.7-.7"/><circle cx="12" cy="12" r="4"/></svg></div>
+    <div><div class="l15-niche-title">Клининг — уборка, химчистка, дезинфекция</div><div class="l15-niche-mods">Включается: расписание бригад, профиль клиента, win-back, напоминания, онлайн-запись</div></div>
+</div>
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#eff6ff;border:1px solid #bfdbfe;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a8 8 0 0 1 16 0v3"/></svg></div>
+    <div><div class="l15-niche-title">Производство — мебель, строительство, ремонты, производство</div><div class="l15-niche-mods">Включается: смета и нормы затрат, склад и warehouse, управление проектами</div></div>
+</div>
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#faf5ff;border:1px solid #e9d5ff;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+    <div><div class="l15-niche-title">Консалтинг — обучение, коучинг, юристы, бухгалтеры</div><div class="l15-niche-mods">Включается: расписание специалистов, профиль клиента, win-back, напоминания, онлайн-запись</div></div>
+</div>
+
+<div style="margin-top:.75rem;padding:.75rem .95rem;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:.82rem;color:#92400e;line-height:1.5;"><strong>Где настроить:</strong> Система → Сотрудники → вкладка «Компания» → раздел «Модули системы». Выберите пресет или вручную установите нужные галочки.</div>
+<div style="margin-top:.6rem;padding:.75rem .95rem;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;font-size:.82rem;color:#0369a1;line-height:1.5;"><strong>Платформа постоянно пополняется.</strong> Новые модули и функции появляются регулярно — они будут доступны в вашем аккаунте автоматически.</div>
+
+<div class="l15-divider"></div>
+<div class="l15-label">Шаг 2 — Демо-тур по платформе</div>
+
+<div class="l15-card"><p>Пройдите демо-тур — он показывает как выглядит <strong>полностью настроенная компания</strong> в вашей нише: живые задачи, CRM, финансы, аналитика, команда. Вы увидите конечный результат ещё до того, как начнёте.</p></div>
+
+<div class="l15-step"><div class="l15-snum">1</div><div><div class="l15-stitle">Нажмите кнопку «Демо» в хедере</div><div class="l15-stext">Правая часть шапки — оранжевая кнопка «Демо». Выберите нишу из списка.</div></div></div>
+<div class="l15-step"><div class="l15-snum">2</div><div><div class="l15-stitle">Система загрузит полноценный демо-пример</div><div class="l15-stext">8–12 сотрудников, функции, задачи, CRM с лидами, финансовые транзакции, метрики — полная картина.</div></div></div>
+<div class="l15-step"><div class="l15-snum">3</div><div><div class="l15-stitle">Нажмите «Тур» — интерактивная экскурсия</div><div class="l15-stext">Кнопка «Тур» в хедере запустит пошаговую экскурсию по всем разделам: 20–25 шагов с объяснениями на живых данных.</div></div></div>
+<div class="l15-step"><div class="l15-snum">4</div><div><div class="l15-stitle">Очистите демо-данные и начинайте с реальными</div><div class="l15-stext">Система → Демо-данные → «Очистить демо». Тестовые записи удалятся, ваши реальные данные останутся.</div></div></div>
+
+<div class="l15-divider"></div>
+<div class="l15-label">Шаг 3 — Онбординг и AI-поддержка</div>
 
 <div style="margin-bottom:.75rem;padding:1rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
     <div style="display:flex;align-items:center;gap:.75rem">
-        <div style="width:28px;height:28px;background:#166534;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0">1</div>
-        <div>
-            <div style="font-weight:700;color:#166534;font-size:.9rem;margin-bottom:.15rem">Перейдите к Онбордингу</div>
-            <div style="font-size:.82rem;color:#15803d;line-height:1.4">Пошаговое введение в платформу</div>
-        </div>
+        <div style="width:28px;height:28px;background:#166534;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="14" height="14"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <div><div style="font-weight:700;color:#166534;font-size:.9rem;margin-bottom:.15rem">Открыть Онбординг</div><div style="font-size:.82rem;color:#15803d;line-height:1.4">Пошаговое введение в платформу</div></div>
     </div>
-    <button onclick="if(window.switchTab){window.switchTab('onboarding')}else{document.querySelector('[onclick*=onboarding]')?.click()}" style="display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;background:#166534;color:white;border-radius:9px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Открыть Онбординг
-    </button>
+    <button onclick="if(window.switchTab){window.switchTab('onboarding')}else{document.querySelector('[onclick*=onboarding]')?.click()}" style="display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;background:#166534;color:white;border-radius:9px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Открыть Онбординг</button>
 </div>
 
-<div class="l14-tool">
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem">
-        <div style="width:28px;height:28px;background:#6b7280;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0">2</div>
-        <div style="font-size:.82rem;color:#525252;line-height:1.4">Если что-то непонятно — спросите AI-ассистента</div>
+<div class="l15-tool">
+    <div class="l15-th">
+        <div class="l15-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div><div class="l15-tt">TALKO Task Manager Support</div><div class="l15-td">AI-ассистент подскажет как пользоваться платформой и что делать дальше.</div></div>
     </div>
-    <div class="l14-th">
-        <div class="l14-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-        <div>
-            <div class="l14-tt">TALKO Task Manager Support</div>
-            <div class="l14-td">AI-ассистент подскажет как пользоваться платформой и что делать дальше.</div>
-        </div>
-    </div>
-    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="l14-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Спросить AI-ассистента
-    </a>
+    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="l15-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Спросить AI-ассистента</a>
 </div>`,
 
                 lessonContent_en: `<div style="padding:1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:.75rem"><p style="font-size:.9rem;color:#374151;line-height:1.65;margin:0">This is a practical lesson — implementation on the platform you are currently using.</p></div><div style="margin-bottom:.75rem;padding:1rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.75rem"><div style="width:28px;height:28px;background:#166534;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0">1</div><div><div style="font-weight:700;color:#166534;font-size:.9rem;margin-bottom:.15rem">Go to Onboarding</div><div style="font-size:.82rem;color:#15803d;line-height:1.4">Step-by-step introduction to the platform</div></div></div><button onclick="if(window.switchTab){window.switchTab('onboarding')}else{document.querySelector('[onclick*=onboarding]')?.click()}" style="display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;background:#166534;color:white;border-radius:9px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Open Onboarding</button></div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem"><div style="width:28px;height:28px;background:#6b7280;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0">2</div><div style="font-size:.82rem;color:#525252;line-height:1.4">If something is unclear — ask the AI assistant</div></div><div style="display:flex;align-items:flex-start;gap:.85rem"><div style="width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div style="font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem">TALKO Task Manager Support</div><div style="font-size:.82rem;color:#525252;line-height:1.5">The AI assistant will tell you how to use the platform and what to do next.</div></div></div><a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none">Ask the AI assistant</a></div>`,
