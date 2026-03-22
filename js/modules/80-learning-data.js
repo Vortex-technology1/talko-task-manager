@@ -8479,7 +8479,7 @@ Bist du dabei?</div>
     <p style="margin-top:.6rem">Це не обмеження — це фокус. Ваші співробітники бачать тільки те, з чим реально працюють.</p>
 </div>
 
-<div class="l15-label" style="margin-top:.85rem">4 пресети — один клік і система готова</div>
+<div class="l15-label" style="margin-top:.85rem">7 пресетів — один клік і система готова</div>
 
 <div class="l15-niche">
     <div class="l15-niche-icon" style="background:#fdf2f8;border:1px solid #fbcfe8;">
@@ -8521,6 +8521,35 @@ Bist du dabei?</div>
     </div>
 </div>
 
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#fefce8;border:1px solid #fde68a;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+    </div>
+    <div>
+        <div class="l15-niche-title">HoReCa — кафе, ресторан, бар, кейтеринг</div>
+        <div class="l15-niche-mods">Особливість: касові зміни (відкрити/закрити зміну, підсумок виручки), касові чеки по столах, меню як каталог товарів/послуг, склад продуктів з автосписанням, лояльність гостей. Модуль Реалізація/Каса є ключовим</div>
+    </div>
+</div>
+
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#fff7ed;border:1px solid #fed7aa;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    </div>
+    <div>
+        <div class="l15-niche-title">Автосервіс — СТО, шиномонтаж, детейлінг, кузовний ремонт</div>
+        <div class="l15-niche-mods">Особливість: замовлення-наряди на авто (роботи + запчастини в одному документі), картки автомобілів клієнтів (VIN, номер, пробіг, історія ремонтів), склад запчастин з автосписанням при закритті наряду, прив'язка авто до клієнта в CRM</div>
+    </div>
+</div>
+
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#f0f9ff;border:1px solid #bae6fd;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    </div>
+    <div>
+        <div class="l15-niche-title">Логістика — вантажні перевезення, кур'єрська служба, транспортна компанія</div>
+        <div class="l15-niche-mods">Особливість: облік рейсів (маршрут, вантаж, тариф), витрати по рейсу (паливо, дорога, оплата водія), автоматичний розрахунок прибутку кожного рейсу, прив'язка водіїв і авто, документи ТТН/CMR</div>
+    </div>
+</div>
 <div style="margin-top:.75rem;padding:.75rem .95rem;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:.82rem;color:#92400e;line-height:1.5;">
     <strong>Де налаштувати:</strong> Система → Співробітники → вкладка «Компанія» → розділ «Модулі системи». Оберіть пресет або вручну встановіть потрібні галочки. Зберігається автоматично.
 </div>
@@ -8542,7 +8571,7 @@ Bist du dabei?</div>
     <div class="l15-snum" style="background:#6366f1;">1</div>
     <div>
         <div class="l15-stitle">Натисніть кнопку «Демо» у хедері</div>
-        <div class="l15-stext">Права частина шапки — помаранчева кнопка «Демо». Оберіть нішу зі списку: меблевий бізнес, будівництво, медицина, клінінг або beauty-студія.</div>
+        <div class="l15-stext">Права частина шапки — помаранчева кнопка «Демо». Оберіть нішу зі списку: меблевий бізнес, будівництво, медицина, клінінг, beauty-студія, автосервіс, HoReCa або логістика.</div>
     </div>
 </div>
 
@@ -8643,7 +8672,7 @@ Bist du dabei?</div>
     <p>Это не ограничение — это фокус. Ваши сотрудники видят только то, с чем реально работают.</p>
 </div>
 
-<div class="l15-label" style="margin-top:.85rem">4 пресета — один клик и система готова</div>
+<div class="l15-label" style="margin-top:.85rem">7 пресетов — один клик и система готова</div>
 
 <div class="l15-niche">
     <div class="l15-niche-icon" style="background:#fdf2f8;border:1px solid #fbcfe8;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#be185d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
@@ -8662,6 +8691,18 @@ Bist du dabei?</div>
     <div><div class="l15-niche-title">Консалтинг — обучение, коучинг, юристы, бухгалтеры</div><div class="l15-niche-mods">Включается: расписание специалистов, профиль клиента, win-back, напоминания, онлайн-запись</div></div>
 </div>
 
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#fefce8;border:1px solid #fde68a;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
+    <div><div class="l15-niche-title">HoReCa — кафе, ресторан, бар, кейтеринг</div><div class="l15-niche-mods">Особенность: кассовые смены (открыть/закрыть смену, итог выручки), кассовые чеки по столам, меню как каталог, склад продуктов с автосписанием. Модуль Реализация/Касса — ключевой</div></div>
+</div>
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#fff7ed;border:1px solid #fed7aa;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+    <div><div class="l15-niche-title">Автосервис — СТО, шиномонтаж, детейлинг, кузовный ремонт</div><div class="l15-niche-mods">Особенность: заказы-наряды (работы + запчасти в одном документе), карточки автомобилей клиентов (VIN, номер, пробег, история ремонтов), склад запчастей с автосписанием при закрытии наряда</div></div>
+</div>
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#f0f9ff;border:1px solid #bae6fd;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+    <div><div class="l15-niche-title">Логистика — грузоперевозки, курьерская служба, транспортная компания</div><div class="l15-niche-mods">Особенность: учёт рейсов (маршрут, груз, тариф), расходы по рейсу (топливо, дорога, оплата водителя), автоматический расчёт прибыли каждого рейса, привязка водителей и авто</div></div>
+</div>
 <div style="margin-top:.75rem;padding:.75rem .95rem;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:.82rem;color:#92400e;line-height:1.5;"><strong>Где настроить:</strong> Система → Сотрудники → вкладка «Компания» → раздел «Модули системы». Выберите пресет или вручную установите нужные галочки.</div>
 <div style="margin-top:.6rem;padding:.75rem .95rem;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;font-size:.82rem;color:#0369a1;line-height:1.5;"><strong>Платформа постоянно пополняется.</strong> Новые модули и функции появляются регулярно — они будут доступны в вашем аккаунте автоматически.</div>
 
@@ -8670,7 +8711,7 @@ Bist du dabei?</div>
 
 <div class="l15-card"><p>Пройдите демо-тур — он показывает как выглядит <strong>полностью настроенная компания</strong> в вашей нише: живые задачи, CRM, финансы, аналитика, команда. Вы увидите конечный результат ещё до того, как начнёте.</p></div>
 
-<div class="l15-step"><div class="l15-snum">1</div><div><div class="l15-stitle">Нажмите кнопку «Демо» в хедере</div><div class="l15-stext">Правая часть шапки — оранжевая кнопка «Демо». Выберите нишу из списка.</div></div></div>
+<div class="l15-step"><div class="l15-snum">1</div><div><div class="l15-stitle">Нажмите кнопку «Демо» в хедере</div><div class="l15-stext">Правая часть шапки — оранжевая кнопка «Демо». Выберите нишу из списка: мебельный, строительство, медицина, клининг, beauty-студия, автосервис, HoReCa или логистика.</div></div></div>
 <div class="l15-step"><div class="l15-snum">2</div><div><div class="l15-stitle">Система загрузит полноценный демо-пример</div><div class="l15-stext">8–12 сотрудников, функции, задачи, CRM с лидами, финансовые транзакции, метрики — полная картина.</div></div></div>
 <div class="l15-step"><div class="l15-snum">3</div><div><div class="l15-stitle">Нажмите «Тур» — интерактивная экскурсия</div><div class="l15-stext">Кнопка «Тур» в хедере запустит пошаговую экскурсию по всем разделам: 20–25 шагов с объяснениями на живых данных.</div></div></div>
 <div class="l15-step"><div class="l15-snum">4</div><div><div class="l15-stitle">Очистите демо-данные и начинайте с реальными</div><div class="l15-stext">Система → Демо-данные → «Очистить демо». Тестовые записи удалятся, ваши реальные данные останутся.</div></div></div>

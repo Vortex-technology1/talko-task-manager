@@ -888,7 +888,17 @@
     } catch(e) { toast('Помилка: '+e.message,'error'); }
   };
 
-  // ─── MAIN UI ──────────────────────────────────────────────────────────────
+  // ─── module visibility helpers ────────────────────────────────────────────
+  function showWorkOrders() {
+    return window.hasModule?.('sales_workorder') ||
+           (window.currentCompanyData?.niche === 'autoservice');
+  }
+  function showRoutes() {
+    return window.hasModule?.('sales_routes') ||
+           (window.currentCompanyData?.niche === 'logistics');
+  }
+
+    // ─── MAIN UI ──────────────────────────────────────────────────────────────
   function buildSalesUI() {
     const container = el('salesTab');
     if (!container) { console.warn('salesTab not found'); return; }
