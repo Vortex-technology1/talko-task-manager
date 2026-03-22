@@ -543,8 +543,12 @@
       await openInvoiceForm(id);
     } else if (o.type === 'receipt') {
       await openReceiptForm(id);
-    } else {
-      toast('Редагування цього типу документа буде доступне скоро', 'info');
+    } else if (o.type === 'work_order') {
+      if (typeof window._salesOpenWorkOrder === 'function') await window._salesOpenWorkOrder(id, null);
+      else toast('Модуль Нарядів завантажується...', 'info');
+    } else if (o.type === 'route') {
+      if (typeof window._salesOpenRouteForm === 'function') await window._salesOpenRouteForm(id);
+      else toast('Модуль Рейсів завантажується...', 'info');
     }
   };
 
@@ -919,8 +923,8 @@
           <div id="slNewDocMenu" style="display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;min-width:180px;padding:6px">
             <button onclick="window._salesNewDoc('invoice')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">📋 Рахунок</button>
             <button onclick="window._salesNewDoc('receipt')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">🧾 Чек</button>
-            ${window.hasModule?.('sales_workorder') ? `<button onclick="window._salesNewDoc('work_order')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">🔧 Наряд</button>` : ''}
-            ${window.hasModule?.('sales_routes') ? `<button onclick="window._salesNewDoc('route')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">🚛 Рейс</button>` : ''}
+            ${showWorkOrders() ? `<button onclick="window._salesNewDoc('work_order')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">🔧 Наряд</button>` : ''}
+            ${showRoutes() ? `<button onclick="window._salesNewDoc('route')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">🚛 Рейс</button>` : ''}
           </div>
         </div>
       </div>
@@ -933,10 +937,12 @@
         <button class="sl-subtab active" id="slSubAll" onclick="window._salesSubTab('all',this)">Всі</button>
         <button class="sl-subtab" id="slSubInvoice" onclick="window._salesSubTab('invoice',this)">📋 Рахунки</button>
         <button class="sl-subtab" id="slSubReceipt" onclick="window._salesSubTab('receipt',this)">🧾 Каса</button>
-        ${window.hasModule?.('sales_workorder') ? `<button class="sl-subtab" id="slSubWO" onclick="window._salesSubTab('work_order',this)">🔧 Наряди</button>` : ''}
-        ${window.hasModule?.('sales_routes') ? `<button class="sl-subtab" id="slSubRoute" onclick="window._salesSubTab('route',this)">🚛 Рейси</button>` : ''}
+        ${showWorkOrders() ? `<button class="sl-subtab" id="slSubWO" onclick="window._salesSubTab('work_order',this)">🔧 Наряди</button>` : ''}
+        ${showRoutes() ? `<button class="sl-subtab" id="slSubRoute" onclick="window._salesSubTab('route',this)">🚛 Рейси</button>` : ''}
         <button class="sl-subtab" id="slSubCatalog" onclick="window._salesSubTab('catalog',this)">📦 Каталог</button>
         <button class="sl-subtab" id="slSubShifts" onclick="window._salesSubTab('shifts',this)">🔄 Зміни</button>
+        <button class="sl-subtab" id="slSubVehicles" onclick="window._salesSubTab('vehicles',this)" style="display:${showWorkOrders()?'':'none'}">🚗 Авто</button>
+        <button class="sl-subtab" id="slSubRoutesPanel" onclick="window._salesSubTab('routes_panel',this)" style="display:${showRoutes()?'':'none'}">🗺 Маршрути</button>
       </div>
 
       <!-- Filters -->
@@ -979,6 +985,10 @@
         <div id="salesCatalogContent" style="display:none"></div>
         <!-- Shifts content (hidden by default) -->
         <div id="salesShiftsContent" style="display:none"></div>
+        <!-- Vehicles content (hidden by default) -->
+        <div id="salesVehiclesContent" style="display:none"></div>
+        <!-- Routes panel (hidden by default) -->
+        <div id="salesRoutesContent" style="display:none"></div>
       </div>
     `;
 
@@ -1001,10 +1011,10 @@
     if (type === 'invoice') openInvoiceForm(null);
     else if (type === 'receipt') openReceiptForm(null);
     else if (type === 'work_order') {
-      if (typeof window.initSalesWorkOrderModule === 'function') window.initSalesWorkOrderModule();
+      if (typeof window._salesOpenWorkOrder === 'function') window._salesOpenWorkOrder(null, null);
       else toast('Модуль Нарядів завантажується...', 'info');
     } else if (type === 'route') {
-      if (typeof window.initSalesRoutesModule === 'function') window.initSalesRoutesModule();
+      if (typeof window._salesOpenRouteForm === 'function') window._salesOpenRouteForm(null);
       else toast('Модуль Рейсів завантажується...', 'info');
     }
   };
@@ -1016,24 +1026,39 @@
     const tableWrap = el('slOrdersTableWrap');
     const catalogCont = el('salesCatalogContent');
     const filtersRow = el('slFiltersRow');
-    const shiftsCont = el('salesShiftsContent');
-    if (tab === 'catalog') {
+    const shiftsCont   = el('salesShiftsContent');
+    const vehiclesCont = el('salesVehiclesContent');
+    const routesCont   = el('salesRoutesContent');
+    const allSecondary = [catalogCont, shiftsCont, vehiclesCont, routesCont];
+
+    function hideAll() {
       if (tableWrap) tableWrap.style.display = 'none';
-      if (catalogCont) catalogCont.style.display = 'block';
-      if (shiftsCont) shiftsCont.style.display = 'none';
+      allSecondary.forEach(c => { if(c) c.style.display='none'; });
       if (filtersRow) filtersRow.style.display = 'none';
+    }
+
+    if (tab === 'catalog') {
+      hideAll();
+      if (catalogCont) catalogCont.style.display = 'block';
       renderCatalogTab();
     } else if (tab === 'shifts') {
-      if (tableWrap) tableWrap.style.display = 'none';
-      if (catalogCont) catalogCont.style.display = 'none';
+      hideAll();
       if (shiftsCont) shiftsCont.style.display = 'block';
-      if (filtersRow) filtersRow.style.display = 'none';
       if (typeof window.renderShiftsPanel === 'function') window.renderShiftsPanel();
-      else { if (shiftsCont) shiftsCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">Модуль змін завантажується...</div>'; }
+      else if (shiftsCont) shiftsCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">Завантаження...</div>';
+    } else if (tab === 'vehicles') {
+      hideAll();
+      if (vehiclesCont) vehiclesCont.style.display = 'block';
+      if (typeof window.renderVehiclesPanel === 'function') window.renderVehiclesPanel();
+      else if (vehiclesCont) vehiclesCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">Завантаження...</div>';
+    } else if (tab === 'routes_panel') {
+      hideAll();
+      if (routesCont) routesCont.style.display = 'block';
+      if (typeof window.renderRoutesPanel === 'function') window.renderRoutesPanel();
+      else if (routesCont) routesCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">Завантаження...</div>';
     } else {
       if (tableWrap) tableWrap.style.display = 'block';
-      if (catalogCont) catalogCont.style.display = 'none';
-      if (shiftsCont) shiftsCont.style.display = 'none';
+      allSecondary.forEach(c => { if(c) c.style.display='none'; });
       if (filtersRow) filtersRow.style.display = 'flex';
       renderOrdersTable();
     }
@@ -1045,6 +1070,9 @@
   };
 
   // ─── INIT ─────────────────────────────────────────────────────────────────
+  // External reload hook used by 104d/104e
+  window._salesLoadOrdersExternal = async function() { await loadOrders(); };
+
   window.initSalesModule = async function () {
     if (!window.currentCompanyId) {
       console.warn('initSalesModule: no currentCompanyId');
