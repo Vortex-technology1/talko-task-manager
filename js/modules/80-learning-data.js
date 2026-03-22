@@ -8479,6 +8479,25 @@ Bist du dabei?</div>
     <p style="margin-top:.6rem">Це не обмеження — це фокус. Ваші співробітники бачать тільки те, з чим реально працюють.</p>
 </div>
 
+<div style="margin-bottom:.85rem;padding:.85rem 1rem;background:linear-gradient(135deg,#faf5ff,#f5f3ff);border:1px solid #ddd6fe;border-radius:12px;">
+    <div style="font-size:.7rem;font-weight:700;color:#7c3aed;letter-spacing:.08em;margin-bottom:.5rem">ЯК ЗМІНИТИ НІШУ — 3 КРОКИ</div>
+    <div class="l15-step" style="margin-bottom:.35rem">
+        <div class="l15-snum" style="background:#7c3aed">1</div>
+        <div><div class="l15-stitle">Система → Співробітники → вкладка «Компанія»</div>
+        <div class="l15-stext">У верхньому меню натисніть «Система» (шестерня), потім відкрийте вкладку «Компанія» у правій панелі.</div></div>
+    </div>
+    <div class="l15-step" style="margin-bottom:.35rem">
+        <div class="l15-snum" style="background:#7c3aed">2</div>
+        <div><div class="l15-stitle">Оберіть нішу у полі «Ніша / Галузь бізнесу»</div>
+        <div class="l15-stext">Ніша використовується AI-аналітиком для порівняння з бенчмарками ринку і персоналізації підказок. Оберіть найточнішу.</div></div>
+    </div>
+    <div class="l15-step" style="margin-bottom:0">
+        <div class="l15-snum" style="background:#7c3aed">3</div>
+        <div><div class="l15-stitle">Натисніть пресет → одразу вмикаються потрібні модулі</div>
+        <div class="l15-stext">Під полем ніші — кнопки пресетів. Один клік — і система автоматично вмикає/вимикає галочки модулів під вашу галузь. Після цього можна доналаштувати вручну.</div></div>
+    </div>
+</div>
+
 <div class="l15-label" style="margin-top:.85rem">7 пресетів — один клік і система готова</div>
 
 <div class="l15-niche">
@@ -8541,6 +8560,15 @@ Bist du dabei?</div>
     </div>
 </div>
 
+<div class="l15-niche">
+    <div class="l15-niche-icon" style="background:#fff1f2;border:1px solid #fecdd3;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#be123c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v6a6 6 0 0 0 12 0V2"/><line x1="12" y1="14" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+    </div>
+    <div>
+        <div class="l15-niche-title">Харчове виробництво — цех, фабрика-кухня, кондитерська</div>
+        <div class="l15-niche-mods">🚧 В розробці (v2): рецептури та технологічні карти, калькуляція собівартості, автосписання інгредієнтів зі складу по рецептурі, форма ОП-1 (калькуляційна карта), стоп-лист при нестачі інгредієнтів, планування виробництва</div>
+    </div>
+</div>
 <div class="l15-niche">
     <div class="l15-niche-icon" style="background:#f0f9ff;border:1px solid #bae6fd;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>

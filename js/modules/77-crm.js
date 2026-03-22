@@ -1871,7 +1871,11 @@ window.crmOpenDeal = function(dealId) {
 
             <!-- Sub-tabs -->
             <div style="display:flex;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
-                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['tasks','Задачі'],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','💅 Beauty']]:[])]).map(([id,label]) => `
+                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['tasks','Задачі'],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','💅 Beauty']]:
+                        (window.currentCompanyData?.niche==='autoservice'?[['vehicles','🔧 Авто/Наряди']]:
+                        (window.currentCompanyData?.niche==='horeca'?[['pos_history','🧾 Чеки']]:
+                        (window.currentCompanyData?.niche==='logistics'?[['routes_history','🚛 Рейси']]:
+                        []))))]).map(([id,label]) => `
                 <button onclick="crmDealTab('${deal.id}','${id}')" id="cdt_${id}"
                     style="flex:1;padding:0.6rem;background:none;border:none;border-bottom:2px solid transparent;
                     cursor:pointer;font-size:0.8rem;font-weight:500;color:#6b7280;transition:all 0.15s;">
@@ -1931,7 +1935,7 @@ window.crmOpenDeal = function(dealId) {
 window.crmDealTab = function(dealId, tab) {
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;
-    const allTabs = ['details','activity','tasks','ai','beauty'];
+    const allTabs = ['details','activity','tasks','ai','beauty','vehicles','pos_history','routes_history'];
     allTabs.forEach(t => {
         const btn = document.getElementById('cdt_' + t);
         if (btn) {
@@ -1944,7 +1948,10 @@ window.crmDealTab = function(dealId, tab) {
     if (tab === 'activity') _loadActivityTab(deal);
     if (tab === 'tasks')    _loadTasksTab(deal);
     if (tab === 'ai')       _loadAITab(deal);
-    if (tab === 'beauty')   window._renderBeautyTab && window._renderBeautyTab(deal);
+    if (tab === 'beauty')    window._renderBeautyTab && window._renderBeautyTab(deal);
+    if (tab === 'vehicles')  window._renderVehiclesTab && window._renderVehiclesTab(deal);
+    if (tab === 'pos_history') window._renderPosHistoryTab && window._renderPosHistoryTab(deal);
+    if (tab === 'routes_history') window._renderRoutesHistoryTab && window._renderRoutesHistoryTab(deal);
 };
 
 function _renderDealDetails(deal) {
