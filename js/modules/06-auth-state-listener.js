@@ -90,7 +90,23 @@
                 document.getElementById('companyBadge').textContent = companyData?.name || '';
                 document.getElementById('companyBadge').style.display = 'inline';
                 
-                if (currentUserData.role === 'employee') {
+                // Перевіряємо чи є юзер власником компанії через companyData
+                const _isCompanyOwner = companyData?.ownerId === user.uid;
+                const _effectiveRole = _isCompanyOwner ? 'owner' : (currentUserData.role || 'employee');
+
+                // Якщо реальний власник але в users записаний як employee — виправляємо
+                if (_isCompanyOwner && currentUserData.role !== 'owner') {
+                    try {
+                        await db.collection('companies').doc(companyId).collection('users').doc(user.uid).set(
+                            { role: 'owner', updatedAt: firebase.firestore.FieldValue.serverTimestamp() },
+                            { merge: true }
+                        );
+                        currentUserData.role = 'owner';
+                        document.getElementById('currentUserRole').textContent = '(Власник)';
+                    } catch(e) { console.warn('[auth] role fix:', e.message); }
+                }
+
+                if (_effectiveRole === 'employee') {
                     document.getElementById('inviteBtn').style.display = 'none';
                     document.getElementById('demoDataBtn').style.display = 'none';
                     // Ховаємо адмін-вкладки для співробітників
