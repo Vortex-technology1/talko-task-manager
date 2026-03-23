@@ -94,25 +94,29 @@
                 }
                 
                 document.getElementById('currentUserName').textContent = currentUserData.name || user.displayName || user.email;
-                document.getElementById('currentUserRole').textContent = currentUserData ? `(${getRoleText(currentUserData.role)})` : '';
                 document.getElementById('companyBadge').textContent = companyData?.name || '';
                 document.getElementById('companyBadge').style.display = 'inline';
                 
-                // Перевіряємо чи є юзер власником компанії через companyData
+                // ── ВИПРАВЛЕННЯ РОЛІ ────────────────────────────────
+                // 1. SuperAdmin завжди owner
+                if (isSuperAdmin) {
+                    currentUserData.role = 'owner';
+                }
+                // 2. Власник компанії по ownerId — виправляємо якщо employee
                 const _isCompanyOwner = companyData?.ownerId === user.uid;
-                const _effectiveRole = _isCompanyOwner ? 'owner' : (currentUserData.role || 'employee');
-
-                // Якщо реальний власник але в users записаний як employee — виправляємо
                 if (_isCompanyOwner && currentUserData.role !== 'owner') {
+                    currentUserData.role = 'owner';
                     try {
                         await db.collection('companies').doc(companyId).collection('users').doc(user.uid).set(
                             { role: 'owner', updatedAt: firebase.firestore.FieldValue.serverTimestamp() },
                             { merge: true }
                         );
-                        currentUserData.role = 'owner';
-                        document.getElementById('currentUserRole').textContent = '(Власник)';
                     } catch(e) { console.warn('[auth] role fix:', e.message); }
                 }
+                const _effectiveRole = currentUserData.role || 'employee';
+                
+                // Показуємо роль ПІСЛЯ всіх виправлень
+                document.getElementById('currentUserRole').textContent = currentUserData ? '(' + getRoleText(currentUserData.role) + ')' : '';
 
                 if (_effectiveRole === 'employee') {
                     document.getElementById('inviteBtn').style.display = 'none';
