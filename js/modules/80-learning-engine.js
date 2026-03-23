@@ -5372,22 +5372,12 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 })() : ''}
 
                 <!-- Presentation launch button (lessons 10 and 11) -->
-                ${module.presOverlay ? `
-                <div style="margin:0 1.25rem 1.25rem">
-                    <div style="background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 20px rgba(15,28,63,.2)">
-                        <div style="color:white">
-                            <div style="font-size:.9rem;font-weight:800;margin-bottom:.25rem;display:flex;align-items:center;gap:.5rem">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-                                ${moduleId === 10 ? 'Заняття 1 — Цілі, задуми і майбутнє компанії' : 'Заняття 2 — Цінний кінцевий продукт компанії'}
-                            </div>
-                            <div style="font-size:.76rem;color:#94a3b8">${moduleId === 10 ? '46 слайдів' : '43 слайди'} · ~1.5 год · Проведіть із командою після вивчення уроку</div>
-                        </div>
-                        <button onclick="window.${moduleId === 10 ? '_l10Launch' : '_l11Launch'}()" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(34,197,94,.35)">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="15" height="15"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                            Запустити презентацію
-                        </button>
-                    </div>
-                </div>` : ''}
+                ${module.presOverlay ? (function(){
+                    var pLabel = moduleId === 10 ? 'Заняття 1 \u2014 \u0426\u0456\u043b\u0456, \u0437\u0430\u0434\u0443\u043c\u0438 \u0456 \u043c\u0430\u0439\u0431\u0443\u0442\u043d\u0454 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457' : 'Заняття 2 \u2014 \u0426\u0456\u043d\u043d\u0438\u0439 \u043a\u0456\u043d\u0446\u0435\u0432\u0438\u0439 \u043f\u0440\u043e\u0434\u0443\u043a\u0442 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457';
+                    var pSlides = moduleId === 10 ? '46 \u0441\u043b\u0430\u0439\u0434\u0456\u0432' : '43 \u0441\u043b\u0430\u0439\u0434\u0438';
+                    var pFn = moduleId === 10 ? '_l10Launch' : '_l11Launch';
+                    return '<div style="margin:0 1.25rem 1.25rem"><div style="background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 20px rgba(15,28,63,.2)"><div style="color:white"><div style="font-size:.9rem;font-weight:800;margin-bottom:.25rem">' + pLabel + '</div><div style="font-size:.76rem;color:#94a3b8">' + pSlides + ' \xb7 ~1.5 \u0433\u043e\u0434 \xb7 \u041f\u0440\u043e\u0432\u0435\u0434\u0456\u0442\u044c \u0456\u0437 \u043a\u043e\u043c\u0430\u043d\u0434\u043e\u044e \u043f\u0456\u0441\u043b\u044f \u0432\u0438\u0432\u0447\u0435\u043d\u043d\u044f \u0443\u0440\u043e\u043a\u0443</div></div><button onclick="window.' + pFn + '()" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(34,197,94,.35)">\u25b6 \u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0438 \u043f\u0440\u0435\u0437\u0435\u043d\u0442\u0430\u0446\u0456\u044e</button></div></div>';
+                })() : ''}
 
                 <!-- Complete button -->
                 <div class="l-complete-row">
