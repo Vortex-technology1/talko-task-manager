@@ -5420,7 +5420,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
             ['l10Ov','l11Ov','l12Ov'].forEach(function(id) {
                 var el = document.getElementById(id);
                 if (el) {
-                    el.style.cssText = 'display:none !important;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000;';
+                    el.style.cssText = 'display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000;';
                 }
             });
         }
@@ -5496,7 +5496,8 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     } catch(e) {}
                 };
                 window._l10Close = function() {
-                    document.getElementById('l10Ov').classList.remove('on');
+                    var ov = document.getElementById('l10Ov');
+                    if (ov) { ov.style.cssText = 'display:none;position:fixed;inset:0;z-index:99999;'; ov.classList.remove('on'); }
                     document.body.style.overflow = '';
                     window._l10SaveAll();
                 };
@@ -5532,7 +5533,8 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     go12(1);
                 };
                 window._l12Close = function() {
-                    document.getElementById('l12Ov').classList.remove('on');
+                    var ov = document.getElementById('l12Ov');
+                    if (ov) { ov.style.cssText = 'display:none;position:fixed;inset:0;z-index:99999;'; ov.classList.remove('on'); }
                     document.body.style.overflow = '';
                 };
             })();
@@ -5589,7 +5591,8 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     } catch(e) {}
                 };
                 window._l11Close = function() {
-                    document.getElementById('l11Ov').classList.remove('on');
+                    var ov = document.getElementById('l11Ov');
+                    if (ov) { ov.style.cssText = 'display:none;position:fixed;inset:0;z-index:99999;'; ov.classList.remove('on'); }
                     document.body.style.overflow = '';
                     window._l11SaveAll();
                 };
