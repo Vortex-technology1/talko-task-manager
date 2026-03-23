@@ -49,6 +49,7 @@
             medical:          'Медична клініка',
             furniture_factory:'Меблеве виробництво',
             beauty:           'Бьюті студія',
+            beauty_salon:     'GlowStudio — Студія краси (Київ)',
             food_production:  'Харчове виробництво',
             cleaning_us:      'Клінінг (США)',
             trucking_us:      'Трак / Owner-operator (США)',
