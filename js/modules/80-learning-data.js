@@ -8796,8 +8796,471 @@ Bist du dabei?</div>
 'use strict';
 
     const marketingCourseData = [
-        // Уроки маркетингу будуть додаватись сюди
-        // Формат кожного уроку — id: 101, 102, 103...
+        {
+            id: 101,
+            category: 'marketing',
+            title: 'ЩО ТАКЕ МАРКЕТИНГ НАСПРАВДІ',
+            title_ru: 'ЧТО ТАКОЕ МАРКЕТИНГ НА САМОМ ДЕЛЕ',
+            title_en: 'WHAT MARKETING REALLY IS',
+            subtitle: 'Чому більшість підприємців витрачають гроші на маркетинг — і не отримують результату',
+            subtitle_ru: 'Почему большинство предпринимателей тратят деньги на маркетинг — и не получают результата',
+            subtitle_en: 'Why most entrepreneurs spend money on marketing — and get no result',
+            duration: 15,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `
+<style>
+.m101-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.m101-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.m101-block p+p{margin-top:.65rem}
+.m101-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem;margin-top:1.25rem}
+.m101-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.m101-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.m101-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.m101-step{display:flex;gap:.75rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.m101-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.m101-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}
+.m101-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.m101-compare{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.75rem 0}
+.m101-bad{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.75rem}
+.m101-good{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.75rem}
+.m101-compare-title{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.5rem}
+.m101-compare-item{font-size:.82rem;line-height:1.5;padding:.25rem 0;border-bottom:1px solid rgba(0,0,0,.05)}
+.m101-compare-item:last-child{border-bottom:none}
+.m101-touchpoint{background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:.75rem;margin-bottom:.4rem}
+.m101-tp-title{font-size:.78rem;font-weight:700;color:#374151;margin-bottom:.3rem}
+.m101-tp-items{font-size:.78rem;color:#6b7280;line-height:1.7}
+.m101-result-item{display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-bottom:.3rem}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Чому більшість витрачає гроші на маркетинг без результату</div></div>
+    <div class="lesson-block-content">
+        <p>Більшість власників бізнесу, коли чують "маркетинг", думають про одне з двох: <strong>реклама</strong> (таргет, Google, банери) або <strong>просування</strong> (пости, контент, SEO).</p>
+        <p>Обидві відповіді правильні. Але вони описують <em>інструменти</em>, а не суть. Саме тому підприємець запускає рекламу, витрачає час і гроші — а клієнтів більше не стає.</p>
+        <div class="m101-quote">Причина не в поганій рекламі. Причина в тому, що <strong>маркетинг розуміється неправильно з самого початку</strong>.</div>
+    </div>
+</div>
+
+<div class="m101-divider"></div>
+
+<div class="m101-label">Що таке маркетинг насправді</div>
+<div class="m101-title">Три кроки від незнайомця до клієнта</div>
+<div class="m101-block"><p><strong>Маркетинг — це процес, завдяки якому потрібна людина дізнається про твій бізнес, розуміє чому він для неї, і приймає рішення звернутися.</strong></p></div>
+
+<div class="m101-step">
+    <div class="m101-snum">1</div>
+    <div><div class="m101-stitle">Потрібна людина дізнається про тебе</div><div class="m101-stext">Не всі підряд. Саме та людина, яка вже шукає вирішення своєї проблеми. Якщо реклама показується всім — ти витрачаєш гроші на тих, хто ніколи не купить.</div></div>
+</div>
+<div class="m101-step">
+    <div class="m101-snum">2</div>
+    <div><div class="m101-stitle">Розуміє чому це для неї</div><div class="m101-stext">Людина за секунди вирішує: "це моє" чи "не моє". Якщо повідомлення розмите — вона піде. Якщо влучає точно в її ситуацію — залишається.</div></div>
+</div>
+<div class="m101-step">
+    <div class="m101-snum">3</div>
+    <div><div class="m101-stitle">Приймає рішення звернутися</div><div class="m101-stext">Тут більшість бізнесів ламаються. Людина вже зацікавлена — але щось зупиняє. Немає довіри. Незрозуміло що робити далі. Маркетинг відповідає за всі три кроки, не тільки за перший.</div></div>
+</div>
+
+<div class="m101-divider"></div>
+
+<div class="m101-label">Два підходи — різні результати</div>
+<div class="m101-title">Кричати голосніше або говорити потрібне?</div>
+
+<div class="m101-compare">
+    <div class="m101-bad">
+        <div class="m101-compare-title" style="color:#dc2626;">❌ Підхід 1: Кричати</div>
+        <div class="m101-compare-item" style="color:#7f1d1d;">Більше реклами</div>
+        <div class="m101-compare-item" style="color:#7f1d1d;">Нижча ціна</div>
+        <div class="m101-compare-item" style="color:#7f1d1d;">"Акція тільки сьогодні!"</div>
+        <div class="m101-compare-item" style="color:#7f1d1d;">Б'ється за увагу</div>
+        <div class="m101-compare-item" style="color:#7f1d1d;">Нескінченна цінова гонка</div>
+    </div>
+    <div class="m101-good">
+        <div class="m101-compare-title" style="color:#16a34a;">✓ Підхід 2: Розмовляти</div>
+        <div class="m101-compare-item" style="color:#166534;">Точний опис ситуації</div>
+        <div class="m101-compare-item" style="color:#166534;">Конкретна проблема клієнта</div>
+        <div class="m101-compare-item" style="color:#166534;">"Це ніби про мене"</div>
+        <div class="m101-compare-item" style="color:#166534;">Заробляє довіру</div>
+        <div class="m101-compare-item" style="color:#166534;">Клієнти приходять самі</div>
+    </div>
+</div>
+
+<div class="m101-divider"></div>
+
+<div class="m101-label">Де маркетинг живе у твоєму бізнесі</div>
+<div class="m101-title">Маркетинг є у кожній точці контакту</div>
+<div class="m101-block"><p>Помилка — думати що маркетинг це тільки "зовні": реклама, сайт, соцмережі. Насправді маркетинг є скрізь де клієнт контактує з твоїм бізнесом.</p></div>
+
+<div class="m101-touchpoint">
+    <div class="m101-tp-title">📢 До того як прийшов</div>
+    <div class="m101-tp-items">Реклама (побачив) · Сайт (зайшов, подивився) · Відгуки (перевірив) · Рекомендація (почув)</div>
+</div>
+<div class="m101-touchpoint">
+    <div class="m101-tp-title">💬 Коли звернувся</div>
+    <div class="m101-tp-items">Як відповіли на дзвінок чи повідомлення · Як пояснили що і як · Чи зрозуміло виглядає ціна</div>
+</div>
+<div class="m101-touchpoint">
+    <div class="m101-tp-title">🔄 Після того як скористався</div>
+    <div class="m101-tp-items">Чи запитали про враження · Чи нагадали про себе · Чи є причина повернутися або порекомендувати</div>
+</div>
+
+<div class="m101-quote">Якщо хоча б одна точка контакту слабка — ти втрачаєш клієнтів, яких вже майже отримав.</div>
+
+<div class="m101-divider"></div>
+
+<div class="m101-label">Підсумок</div>
+<div class="m101-title">5 ключових думок уроку</div>
+
+<div class="m101-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Маркетинг — це не реклама. Реклама — лише один з інструментів.</div>
+<div class="m101-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Маркетинг = людина дізнається → розуміє що це для неї → вирішує звернутися.</div>
+<div class="m101-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Кричати голосніше — тупикова стратегія. Завжди знайдеться дешевший.</div>
+<div class="m101-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Маркетинг є у кожній точці контакту — від реклами до відповіді на повідомлення.</div>
+<div class="m101-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Мета — щоб потрібна людина сказала собі: "це саме те, що мені треба".</div>
+
+<div class="result-block" style="margin-top:1rem;">
+    <strong>Результат уроку.</strong> Ти розумієш що таке маркетинг насправді — не як набір інструментів, а як системний процес залучення потрібних людей через всі точки контакту.
+</div>`,
+
+            lessonContent_ru: `
+<style>
+.m101-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.m101-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.m101-block p+p{margin-top:.65rem}
+.m101-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem;margin-top:1.25rem}
+.m101-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.m101-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.m101-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.m101-step{display:flex;gap:.75rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.m101-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.m101-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}
+.m101-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.m101-compare{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.75rem 0}
+.m101-bad{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.75rem}
+.m101-good{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.75rem}
+.m101-compare-title{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.5rem}
+.m101-compare-item{font-size:.82rem;line-height:1.5;padding:.25rem 0;border-bottom:1px solid rgba(0,0,0,.05)}
+.m101-compare-item:last-child{border-bottom:none}
+.m101-touchpoint{background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:.75rem;margin-bottom:.4rem}
+.m101-tp-title{font-size:.78rem;font-weight:700;color:#374151;margin-bottom:.3rem}
+.m101-tp-items{font-size:.78rem;color:#6b7280;line-height:1.7}
+.m101-result-item{display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-bottom:.3rem}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Почему большинство тратит деньги на маркетинг без результата</div></div>
+    <div class="lesson-block-content">
+        <p>Большинство владельцев бизнеса думают о маркетинге как о рекламе или продвижении. Оба ответа правильны. Но они описывают <em>инструменты</em>, а не суть.</p>
+        <div class="m101-quote">Причина не в плохой рекламе. Причина в том, что <strong>маркетинг понимается неправильно с самого начала</strong>.</div>
+    </div>
+</div>
+
+<div class="m101-divider"></div>
+<div class="m101-label">Что такое маркетинг на самом деле</div>
+<div class="m101-title">Три шага от незнакомца до клиента</div>
+<div class="m101-block"><p><strong>Маркетинг — это процесс, благодаря которому нужный человек узнаёт о твоём бизнесе, понимает почему он для него, и принимает решение обратиться.</strong></p></div>
+
+<div class="m101-step"><div class="m101-snum">1</div><div><div class="m101-stitle">Нужный человек узнаёт о тебе</div><div class="m101-stext">Не все подряд. Именно тот человек, который уже ищет решение своей проблемы. Если реклама показывается всем — ты тратишь деньги на тех, кто никогда не купит.</div></div></div>
+<div class="m101-step"><div class="m101-snum">2</div><div><div class="m101-stitle">Понимает почему это для него</div><div class="m101-stext">Человек за секунды решает: "моё" или "не моё". Если сообщение размытое — уйдёт. Если попадает точно в его ситуацию — остаётся.</div></div></div>
+<div class="m101-step"><div class="m101-snum">3</div><div><div class="m101-stitle">Принимает решение обратиться</div><div class="m101-stext">Здесь большинство бизнесов ломается. Человек уже заинтересован — но что-то останавливает. Маркетинг отвечает за все три шага, не только за первый.</div></div></div>
+
+<div class="m101-divider"></div>
+<div class="m101-compare">
+    <div class="m101-bad"><div class="m101-compare-title" style="color:#dc2626;">❌ Кричать громче</div><div class="m101-compare-item" style="color:#7f1d1d;">Больше рекламы</div><div class="m101-compare-item" style="color:#7f1d1d;">Ниже цена</div><div class="m101-compare-item" style="color:#7f1d1d;">Борется за внимание</div><div class="m101-compare-item" style="color:#7f1d1d;">Бесконечная ценовая гонка</div></div>
+    <div class="m101-good"><div class="m101-compare-title" style="color:#16a34a;">✓ Говорить нужное</div><div class="m101-compare-item" style="color:#166534;">Точное описание ситуации</div><div class="m101-compare-item" style="color:#166534;">Конкретная проблема</div><div class="m101-compare-item" style="color:#166534;">Зарабатывает доверие</div><div class="m101-compare-item" style="color:#166534;">Клиенты приходят сами</div></div>
+</div>
+
+<div class="result-block" style="margin-top:1rem;">
+    <strong>Результат урока.</strong> Ты понимаешь что такое маркетинг на самом деле — не как набор инструментов, а как системный процесс привлечения нужных людей через все точки контакта.
+</div>`,
+
+            homework: `<ol>
+<li>Виписати всі точки контакту клієнта з твоїм бізнесом — від першого знайомства до повторного звернення</li>
+<li>Відмітити які з них зараз слабкі або відсутні</li>
+<li>Сформулювати одним реченням: що саме отримує клієнт після роботи з тобою? Не "послугу", а зміну в його житті.</li>
+</ol>`,
+            homework_ru: `<ol>
+<li>Выписать все точки контакта клиента с твоим бизнесом — от первого знакомства до повторного обращения</li>
+<li>Отметить какие из них сейчас слабые или отсутствуют</li>
+<li>Сформулировать одним предложением: что именно получает клиент после работы с тобой? Не "услугу", а изменение в его жизни.</li>
+</ol>`,
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
+
+        {
+            id: 102,
+            category: 'marketing',
+            title: 'ЯК ПРАЦЮЮТЬ СОЦМЕРЕЖІ ТА GOOGLE ДЛЯ БІЗНЕСУ',
+            title_ru: 'КАК РАБОТАЮТ СОЦСЕТИ И GOOGLE ДЛЯ БИЗНЕСА',
+            title_en: 'HOW SOCIAL MEDIA AND GOOGLE WORK FOR BUSINESS',
+            subtitle: 'Чому одні бізнеси отримують клієнтів стабільно, а інші зливають бюджет без результату',
+            subtitle_ru: 'Почему одни бизнесы получают клиентов стабильно, а другие сливают бюджет без результата',
+            subtitle_en: 'Why some businesses get clients consistently, while others burn budgets with no result',
+            duration: 25,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `
+<style>
+.m102-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.m102-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.m102-block p+p{margin-top:.65rem}
+.m102-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem;margin-top:1.25rem}
+.m102-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.m102-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.m102-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.m102-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5;margin-bottom:.4rem}
+.m102-signal{display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:.4rem}
+.m102-signal-left{background:#fef2f2;padding:9px 12px;flex:1.3;display:flex;align-items:center;font-size:.8rem;color:#7f1d1d;font-weight:500}
+.m102-signal-arrow{background:#f3f4f6;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;font-size:.85rem;color:#9ca3af}
+.m102-signal-right{background:#f0fdf4;padding:9px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75}
+.m102-signal-right-inner{font-size:.75rem;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px}
+.m102-signal-right p{font-size:.82rem;font-weight:700;color:#04342C;margin:0}
+.m102-hot-cold{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.75rem 0}
+.m102-hot{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:.75rem}
+.m102-cold{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:.75rem}
+.m102-person-title{font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.4rem}
+.m102-person-desc{font-size:.8rem;line-height:1.5}
+.m102-funnel{display:flex;flex-direction:column;gap:0;margin:.75rem 0}
+.m102-funnel-step{padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;position:relative}
+.m102-funnel-step:not(:last-child)::after{content:"↓";position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:1rem;color:#9ca3af;z-index:1}
+.m102-fnum{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;color:white}
+.m102-ftitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.2rem}
+.m102-ftext{font-size:.78rem;color:#525252;line-height:1.4}
+.m102-offer-table{margin:.75rem 0}
+.m102-offer-row{display:flex;align-items:stretch;border-radius:9px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:.4rem}
+.m102-offer-bad{background:#fef2f2;padding:.65rem .85rem;flex:1;font-size:.8rem;color:#7f1d1d;border-right:1px solid #fecaca;display:flex;align-items:center}
+.m102-offer-good{background:#f0fdf4;padding:.65rem .85rem;flex:1.2;font-size:.8rem;color:#166534;display:flex;align-items:center}
+.m102-offer-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem}
+.m102-result-item{display:flex;align-items:flex-start;gap:.5rem;padding:.5rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.84rem;color:#166534;margin-bottom:.3rem}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Реклама працює. Але тільки коли ви розумієте як саме</div></div>
+    <div class="lesson-block-content">
+        <p>Більшість підприємців запускають рекламу інтуїтивно — "ну треба ж щось робити". Витрачають гроші, отримують непередбачуваний результат і роблять висновок: <em>"реклама не працює"</em>.</p>
+        <p>У цьому уроці — пояснення того, що відбувається "під капотом" платформ, і як виглядає система від першого контакту з рекламою до оплати.</p>
+    </div>
+</div>
+
+<div class="m102-divider"></div>
+
+<div class="m102-label">Частина 1. Як влаштовані платформи</div>
+<div class="m102-title">Для чого існують соцмережі та Google</div>
+<div class="m102-block">
+    <p>Instagram, TikTok, Facebook, YouTube, Google — це <strong>бізнеси, які заробляють гроші на увазі людей</strong>.</p>
+    <p>Їхня бізнес-модель: чим довше людина сидить у додатку → тим більше реклами можна показати → тим більше грошей заробляє платформа.</p>
+</div>
+
+<div class="m102-label">Що знає платформа про кожного користувача</div>
+<div class="m102-block">
+    <p>Алгоритм аналізує кожну дію: які відео дивляться до кінця, на яких дописах затримуються, що лайкають, коментують, пересилають, навіть <strong>як швидко гортають стрічку</strong>.</p>
+    <p>На основі цього будується "контентна ДНК" — детальна карта того, що людину цікавить і що викликає емоції.</p>
+</div>
+
+<div class="m102-quote">Ви платите платформі, щоб вона <strong>знайшла вашого потенційного клієнта серед мільйонів людей</strong> і показала йому вашу пропозицію.</div>
+
+<div class="m102-divider"></div>
+
+<div class="m102-label">Частина 2. Як платформа знаходить вашого клієнта</div>
+<div class="m102-title">Платформа робить висновки раніше ніж людина щось написала</div>
+
+<div class="m102-signal">
+    <div class="m102-signal-left">Гуглить "біль у грудях зліва небезпечно?"</div>
+    <div class="m102-signal-arrow">→</div>
+    <div class="m102-signal-right"><div><div class="m102-signal-right-inner">Показує рекламу</div><p>Кардіолога поруч</p></div></div>
+</div>
+<div class="m102-signal">
+    <div class="m102-signal-left">Дивиться відео "чи це депресія у мене?"</div>
+    <div class="m102-signal-arrow">→</div>
+    <div class="m102-signal-right"><div><div class="m102-signal-right-inner">Показує рекламу</div><p>Психотерапевта онлайн</p></div></div>
+</div>
+<div class="m102-signal">
+    <div class="m102-signal-left">Шукає "як вивести запах із дивану"</div>
+    <div class="m102-signal-arrow">→</div>
+    <div class="m102-signal-right"><div><div class="m102-signal-right-inner">Показує рекламу</div><p>Клінінгової компанії</p></div></div>
+</div>
+<div class="m102-signal">
+    <div class="m102-signal-left">Лайкає пости про дітей і схуднення</div>
+    <div class="m102-signal-arrow">→</div>
+    <div class="m102-signal-right"><div><div class="m102-signal-right-inner">Показує рекламу</div><p>Гінеколога, дієтолога</p></div></div>
+</div>
+
+<div class="m102-divider"></div>
+
+<div class="m102-label">Не всі однаково готові купити</div>
+<div class="m102-title">Шукайте "гарячих" — тих у кого проблема нагальна</div>
+
+<div class="m102-hot-cold">
+    <div class="m102-cold">
+        <div class="m102-person-title" style="color:#0369a1;">🥶 Людина A</div>
+        <div class="m102-person-desc" style="color:#0c4a6e;">Відчуває легкий дискомфорт. Думає "треба б записатись колись". Проблема є, але не пече.</div>
+    </div>
+    <div class="m102-hot">
+        <div class="m102-person-title" style="color:#c2410c;">🔥 Людина B</div>
+        <div class="m102-person-desc" style="color:#7c2d12;">Не спить від болю третю ніч. Вже шукає де записатись сьогодні. Прийме рішення в десятки разів швидше.</div>
+    </div>
+</div>
+
+<div class="m102-quote">Завдання маркетингу — знайти саме таких людей. Тих, у кого проблема нагальна, і вони вже шукають рішення.</div>
+
+<div class="m102-divider"></div>
+
+<div class="m102-label">Частина 3. Реклама — це тільки початок</div>
+<div class="m102-title">Система залучення клієнтів — 6 кроків</div>
+
+<div class="m102-block"><p>Між "людина побачила рекламу" і "людина заплатила" — є кілька кроків. Якщо хоча б один зламаний — гроші витрачені, а клієнта немає.</p></div>
+
+<div class="m102-funnel">
+    <div class="m102-funnel-step" style="background:#eff6ff;border-radius:10px 10px 0 0;border:1px solid #bfdbfe;">
+        <div class="m102-fnum" style="background:#3b82f6;">1</div>
+        <div><div class="m102-ftitle">Реклама</div><div class="m102-ftext">Не "ми існуємо" — а конкретна пропозиція яка влучає в поточну ситуацію людини. Вона зупиняється, бо це про неї.</div></div>
+    </div>
+    <div class="m102-funnel-step" style="background:#f0f9ff;border:1px solid #bae6fd;border-top:none;">
+        <div class="m102-fnum" style="background:#0ea5e9;">2</div>
+        <div><div class="m102-ftitle">Сайт або лендінг з оффером</div><div class="m102-ftext">Не перелік послуг, а чітка відповідь: "що я отримаю і чому варто обрати саме вас". Є відповідь — залишається. Ні — іде.</div></div>
+    </div>
+    <div class="m102-funnel-step" style="background:#f0fdf4;border:1px solid #bbf7d0;border-top:none;">
+        <div class="m102-fnum" style="background:#22c55e;">3</div>
+        <div><div class="m102-ftitle">Перший контакт — швидко</div><div class="m102-ftext">Гарячий клієнт — це клієнт, який хоче зараз. Через годину він вже може бути холодним і записатись до конкурента.</div></div>
+    </div>
+    <div class="m102-funnel-step" style="background:#fefce8;border:1px solid #fde68a;border-top:none;">
+        <div class="m102-fnum" style="background:#f59e0b;">4</div>
+        <div><div class="m102-ftitle">Прогрів і сегментація</div><div class="m102-ftext">Через кілька питань розумієте ситуацію людини. Це дозволяє запропонувати саме те, що їй потрібно, а не "все що у нас є".</div></div>
+    </div>
+    <div class="m102-funnel-step" style="background:#fdf4ff;border:1px solid #e9d5ff;border-top:none;">
+        <div class="m102-fnum" style="background:#a855f7;">5</div>
+        <div><div class="m102-ftitle">Продаж</div><div class="m102-ftext">Людина розуміє що отримає, їй зручно записатись або купити — і вона це робить. Без тиску і знижок.</div></div>
+    </div>
+    <div class="m102-funnel-step" style="background:#f0fdf4;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;">
+        <div class="m102-fnum" style="background:#16a34a;">6</div>
+        <div><div class="m102-ftitle">Стабільний результат</div><div class="m102-ftext">Система налаштована один раз і працює постійно. Не разово після кожного запуску реклами.</div></div>
+    </div>
+</div>
+
+<div class="m102-divider"></div>
+
+<div class="m102-label">Частина 4. Оффер важливіший за бюджет</div>
+<div class="m102-title">Слабкий оффер vs сильний оффер</div>
+<div class="m102-block"><p>Якщо оффер слабкий — більший бюджет просто збільшує кількість людей, яким <strong>не цікаво</strong>. Сильний оффер описує результат клієнта, а не вас.</p></div>
+
+<div class="m102-offer-table">
+    <div class="m102-offer-row">
+        <div class="m102-offer-bad"><div><div class="m102-offer-label" style="color:#dc2626;">Слабкий</div>«У нас найсучасніше обладнання»</div></div>
+        <div class="m102-offer-good"><div><div class="m102-offer-label" style="color:#16a34a;">Сильний</div>«За 20 хв проведемо УЗД і знайдемо причину болю»</div></div>
+    </div>
+    <div class="m102-offer-row">
+        <div class="m102-offer-bad"><div><div class="m102-offer-label" style="color:#dc2626;">Слабкий</div>«Ми робимо якісні пломби»</div></div>
+        <div class="m102-offer-good"><div><div class="m102-offer-label" style="color:#16a34a;">Сильний</div>«За 1 візит позбудетесь болю і зможете спати спокійно вже сьогодні»</div></div>
+    </div>
+    <div class="m102-offer-row">
+        <div class="m102-offer-bad"><div><div class="m102-offer-label" style="color:#dc2626;">Слабкий</div>«Є лазерна епіляція»</div></div>
+        <div class="m102-offer-good"><div><div class="m102-offer-label" style="color:#16a34a;">Сильний</div>«Після 5 процедур ви забудете про гоління назавжди»</div></div>
+    </div>
+    <div class="m102-offer-row">
+        <div class="m102-offer-bad"><div><div class="m102-offer-label" style="color:#dc2626;">Слабкий</div>«Досвідчені майстри»</div></div>
+        <div class="m102-offer-good"><div><div class="m102-offer-label" style="color:#16a34a;">Сильний</div>«Через 14 днів заселитесь у квартиру без пилу і клопоту»</div></div>
+    </div>
+</div>
+
+<div class="m102-quote">Коли оффер влучає точно в ситуацію людини — вона перестає порівнювати ціни. Питання вартості відходить на другий план.</div>
+
+<div class="m102-divider"></div>
+
+<div class="m102-label">Підсумок</div>
+<div class="m102-title">5 ключових думок уроку</div>
+
+<div class="m102-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><span>Соцмережі та Google знають про людей більше ніж ті про себе кажуть — і можуть знайти вашого клієнта в потрібний момент.</span></div>
+<div class="m102-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><span>Шукайте "гарячих" — тих у кого проблема нагальна. Не вмовляйте тих хто не готовий.</span></div>
+<div class="m102-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><span>Реклама без системи — це гроші на вітер. Між "побачив рекламу" і "заплатив" — 6 кроків.</span></div>
+<div class="m102-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><span>Оффер важливіший за бюджет. Сильна пропозиція = результат клієнта, не характеристики послуги.</span></div>
+<div class="m102-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><span>Система працює коли всі елементи з'єднані: реклама → оффер → контакт → сегментація → продаж.</span></div>
+
+<div class="result-block" style="margin-top:1rem;">
+    <strong>Результат уроку.</strong> Ти розумієш як платформи знаходять клієнтів, чому реклама без системи не працює, і яка різниця між слабким і сильним оффером.
+</div>`,
+
+            lessonContent_ru: `
+<style>
+.m102-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.m102-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.m102-block p+p{margin-top:.65rem}
+.m102-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem;margin-top:1.25rem}
+.m102-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.m102-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.m102-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.m102-signal{display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:.4rem}
+.m102-signal-left{background:#fef2f2;padding:9px 12px;flex:1.3;display:flex;align-items:center;font-size:.8rem;color:#7f1d1d;font-weight:500}
+.m102-signal-arrow{background:#f3f4f6;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;font-size:.85rem;color:#9ca3af}
+.m102-signal-right{background:#f0fdf4;padding:9px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75}
+.m102-signal-right-inner{font-size:.75rem;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px}
+.m102-signal-right p{font-size:.82rem;font-weight:700;color:#04342C;margin:0}
+.m102-hot-cold{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.75rem 0}
+.m102-hot{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:.75rem}
+.m102-cold{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:.75rem}
+.m102-person-title{font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.4rem}
+.m102-person-desc{font-size:.8rem;line-height:1.5}
+.m102-funnel-step{display:flex;gap:.75rem;padding:.75rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.4rem}
+.m102-fnum{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;color:white;margin-top:1px}
+.m102-ftitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.2rem}
+.m102-ftext{font-size:.78rem;color:#525252;line-height:1.4}
+.m102-offer-table{margin:.75rem 0}
+.m102-offer-row{display:flex;align-items:stretch;border-radius:9px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:.4rem}
+.m102-offer-bad{background:#fef2f2;padding:.65rem .85rem;flex:1;font-size:.8rem;color:#7f1d1d;border-right:1px solid #fecaca;display:flex;align-items:center}
+.m102-offer-good{background:#f0fdf4;padding:.65rem .85rem;flex:1.2;font-size:.8rem;color:#166534;display:flex;align-items:center}
+.m102-offer-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem}
+.m102-result-item{display:flex;align-items:flex-start;gap:.5rem;padding:.5rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.84rem;color:#166534;margin-bottom:.3rem}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Реклама работает. Но только когда вы понимаете как именно</div></div>
+    <div class="lesson-block-content">
+        <p>Большинство предпринимателей запускают рекламу интуитивно. Тратят деньги, получают непредсказуемый результат и делают вывод: "реклама не работает". Реклама работает. Но нужно понимать как.</p>
+    </div>
+</div>
+
+<div class="m102-divider"></div>
+<div class="m102-label">Как платформы находят вашего клиента</div>
+
+<div class="m102-signal"><div class="m102-signal-left">Гуглит "боль в груди слева опасно?"</div><div class="m102-signal-arrow">→</div><div class="m102-signal-right"><div><div class="m102-signal-right-inner">Показывает рекламу</div><p>Кардиолога рядом</p></div></div></div>
+<div class="m102-signal"><div class="m102-signal-left">Смотрит видео "у меня депрессия?"</div><div class="m102-signal-arrow">→</div><div class="m102-signal-right"><div><div class="m102-signal-right-inner">Показывает рекламу</div><p>Психотерапевта онлайн</p></div></div></div>
+<div class="m102-signal"><div class="m102-signal-left">Ищет "как убрать запах с дивана"</div><div class="m102-signal-arrow">→</div><div class="m102-signal-right"><div><div class="m102-signal-right-inner">Показывает рекламу</div><p>Клининговой компании</p></div></div></div>
+
+<div class="m102-divider"></div>
+<div class="m102-title">Горячий vs холодный клиент</div>
+<div class="m102-hot-cold">
+    <div class="m102-cold"><div class="m102-person-title" style="color:#0369a1;">🥶 Человек A</div><div class="m102-person-desc" style="color:#0c4a6e;">Лёгкий дискомфорт. Думает "надо бы записаться когда-нибудь". Проблема есть, но не жжёт.</div></div>
+    <div class="m102-hot"><div class="m102-person-title" style="color:#c2410c;">🔥 Человек B</div><div class="m102-person-desc" style="color:#7c2d12;">Не спит от боли третью ночь. Уже ищет куда записаться сегодня. Примет решение в десятки раз быстрее.</div></div>
+</div>
+
+<div class="m102-divider"></div>
+<div class="m102-title">Слабый оффер vs сильный оффер</div>
+<div class="m102-offer-table">
+    <div class="m102-offer-row"><div class="m102-offer-bad"><div><div class="m102-offer-label" style="color:#dc2626;">Слабый</div>«У нас новейшее оборудование»</div></div><div class="m102-offer-good"><div><div class="m102-offer-label" style="color:#16a34a;">Сильный</div>«За 20 мин сделаем УЗИ и найдём причину боли»</div></div></div>
+    <div class="m102-offer-row"><div class="m102-offer-bad"><div><div class="m102-offer-label" style="color:#dc2626;">Слабый</div>«Мы делаем качественные пломбы»</div></div><div class="m102-offer-good"><div><div class="m102-offer-label" style="color:#16a34a;">Сильный</div>«За 1 визит избавитесь от боли и сможете спать спокойно»</div></div></div>
+    <div class="m102-offer-row"><div class="m102-offer-bad"><div><div class="m102-offer-label" style="color:#dc2626;">Слабый</div>«Есть лазерная эпиляция»</div></div><div class="m102-offer-good"><div><div class="m102-offer-label" style="color:#16a34a;">Сильный</div>«После 5 процедур забудете о бритье навсегда»</div></div></div>
+</div>
+
+<div class="result-block" style="margin-top:1rem;">
+    <strong>Результат урока.</strong> Ты понимаешь как платформы находят клиентов, почему реклама без системы не работает, и в чём разница между слабым и сильным оффером.
+</div>`,
+
+            homework: `<ol>
+<li><strong>Оффер:</strong> Переписати своє поточне рекламне повідомлення за формулою сильного офферу — не "що ми робимо", а "який результат отримає клієнт і в який термін"</li>
+<li><strong>Аудит воронки:</strong> Пройти своїм шляхом клієнта — від реклами до першого контакту. Знайти де є "дірки" де люди йдуть</li>
+<li><strong>Швидкість реакції:</strong> Перевірити скільки часу займає відповідь на перше звернення. Якщо більше 15 хвилин — це проблема яку треба вирішити зараз</li>
+</ol>`,
+            homework_ru: `<ol>
+<li><strong>Оффер:</strong> Переписать текущее рекламное сообщение по формуле сильного оффера — не "что мы делаем", а "какой результат получит клиент и в какие сроки"</li>
+<li><strong>Аудит воронки:</strong> Пройти путём клиента — от рекламы до первого контакта. Найти где есть "дыры"</li>
+<li><strong>Скорость реакции:</strong> Проверить сколько времени занимает ответ на первое обращение. Если больше 15 минут — это проблема</li>
+</ol>`,
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
     ];
 
     // Merge into main course data
