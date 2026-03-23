@@ -5875,6 +5875,16 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     const now = firebase.firestore.FieldValue.serverTimestamp();
     let ops   = [];
 
+    // ── 0. ENSURE OWNER IN USERS (before all writes) ─────────
+    try {
+        await cr.collection('users').doc(uid).set({
+            name:'Ірина Кравченко', role:'owner', position:'Власниця / Директор',
+            email:'irina.kravchenko@glowstudio.ua',
+            functionIds:[], primaryFunctionId:null,
+            status:'active', createdAt:now, updatedAt:now,
+        }, {merge:true});
+    } catch(e) { console.warn('[demo] owner upsert:', e.message); }
+
     // ── 1. ФУНКЦІЇ (8 блоків) ────────────────────────────────
     const FUNCS = [
         { name:'0. Маркетинг та залучення клієнтів', color:'#ec4899', desc:'Instagram, TikTok, Google Ads, реферальна програма, акції, SMM, таргет' },
