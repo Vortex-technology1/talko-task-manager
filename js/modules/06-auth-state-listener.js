@@ -64,6 +64,18 @@
                     } catch(e) {
                         console.error('[Auth] Failed to patch user doc:', e.message);
                     }
+                } else if (isSuperAdmin && userDoc.data().role !== 'owner' && userDoc.data().role !== 'manager') {
+                    // SuperAdmin має неправильну роль (наприклад employee від старого патчу) — виправляємо в Firestore
+                    try {
+                        await db.collection('companies').doc(companyId).collection('users').doc(user.uid).update({
+                            role: 'owner',
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        userDoc = await db.collection('companies').doc(companyId).collection('users').doc(user.uid).get();
+                        console.log('[Auth] SuperAdmin role fixed to owner in Firestore');
+                    } catch(e) {
+                        console.warn('[Auth] Failed to fix superadmin role:', e.message);
+                    }
                 }
                 currentUserData = userDoc.exists ? { id: user.uid, ...userDoc.data() } : { id: user.uid, email: user.email, role: 'employee' };
                 // SuperAdmin завжди має повний доступ незалежно від запису в users колекції
