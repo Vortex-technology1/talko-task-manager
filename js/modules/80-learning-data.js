@@ -8502,6 +8502,707 @@ Bist du dabei?</div>
 
                 videoLink: null,
                 materialsLink: null,
+                presOverlay: `<style>
+/* === L12 PRES === */
+#l12Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l12Ov.on{display:flex}
+.l12s{display:none;width:100%;height:100%;overflow:hidden}
+.l12s.on{display:flex}
+/* Dark full */
+.l12-dark{background:linear-gradient(165deg,#09132b 0%,#142040 55%,#1a3068 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
+.l12-dark h1{color:#fff;font-size:clamp(2rem,6vw,4rem);font-weight:900;text-transform:uppercase;line-height:1.1;margin:0 0 .75rem;letter-spacing:.04em}
+.l12-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:600px;line-height:1.6}
+/* Split: dark left + white right */
+.l12-sl{width:34%;min-width:220px;background:linear-gradient(165deg,#09132b 0%,#142040 55%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 1.75rem 5rem;position:relative;flex-shrink:0}
+.l12-sl h2{color:#fff;font-size:clamp(1.4rem,3vw,2.4rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase}
+.l12-sl .l12-sub{color:#94a3b8;font-size:.8rem;margin-top:.4rem;text-transform:uppercase;font-weight:600;letter-spacing:.06em}
+.l12-tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:90px solid transparent;border-bottom:90px solid rgba(255,255,255,.06)}
+.l12-snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px}
+/* White right */
+.l12-sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3rem) clamp(1.5rem,5vw,3.5rem);display:flex;flex-direction:column;overflow-y:auto;position:relative}
+/* Full white (no left panel) */
+.l12-fw{width:100%;background:#fff;padding:clamp(2rem,5vw,4rem) clamp(2rem,6vw,5rem);display:flex;flex-direction:column;overflow-y:auto;position:relative}
+/* Corner decoration for white slides */
+.l12-corner{position:absolute;top:0;right:0;width:0;height:0;border-top:160px solid #1a3068;border-left:160px solid transparent;opacity:.12;pointer-events:none}
+.l12-corner2{position:absolute;top:0;right:0;width:0;height:0;border-top:90px solid #3b82f6;border-left:90px solid transparent;opacity:.12;pointer-events:none}
+/* Typography */
+.l12-sr h3,.l12-fw h3{font-size:clamp(1.1rem,2.5vw,1.8rem);font-weight:900;color:#09132b;margin:0 0 1rem;line-height:1.15}
+.l12-sr p,.l12-fw p{font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.75;margin:.5rem 0}
+.l12-sr p.sm,.l12-fw p.sm{font-size:clamp(.75rem,1.3vw,.88rem);color:#6b7280}
+.l12-q{font-size:clamp(.9rem,1.9vw,1.15rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.85rem 1rem;border-radius:0 10px 10px 0;margin:.85rem 0;line-height:1.6}
+/* Icon star */
+.l12-star{display:block;margin-bottom:.75rem}
+/* Def box */
+.l12-def{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.l12-def .dl{font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem}
+.l12-def .dt{font-size:clamp(.88rem,1.8vw,1.1rem);color:#1e3a8a;line-height:1.65;font-weight:600}
+/* Green resume */
+.l12-res{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#166534;line-height:1.75}
+/* Bullet list */
+.l12-ul{list-style:none;padding:0;margin:.5rem 0}
+.l12-ul li{display:flex;align-items:flex-start;gap:.65rem;padding:.3rem 0;font-size:clamp(.83rem,1.6vw,1rem);color:#333;line-height:1.65}
+.l12-ul li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+/* Task badge */
+.l12-task{display:inline-flex;align-items:center;gap:.5rem;background:#1a3068;color:white;font-size:.78rem;font-weight:800;padding:.35rem .85rem;border-radius:8px;letter-spacing:.06em;margin-bottom:.75rem}
+/* Orgchart area */
+.l12-org{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;margin:.75rem 0;overflow:auto}
+/* Two-col for command/comm lines */
+.l12-2col{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:.75rem 0}
+.l12-card{border-radius:12px;padding:1rem 1.1rem}
+/* Ico left panel */
+.l12-ico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.85}
+/* Nav */
+.l12-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
+.l12-nb{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700}
+.l12-nb:hover:not(:disabled){background:rgba(255,255,255,.25)}
+.l12-nb:disabled{opacity:.25;cursor:default}
+.l12-nc{color:#94a3b8;font-size:.8rem;font-weight:700}
+.l12-close{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
+.l12-save{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+</style>
+
+<div id="l12Ov">
+<div id="l12SW" style="flex:1;position:relative;overflow:hidden">
+
+<!-- S1: TITLE -->
+<div class="l12s on" id="l12_1">
+  <div class="l12-dark">
+    <div style="margin-bottom:1.5rem;opacity:.5">
+      <svg viewBox="0 0 80 80" width="70" height="70"><rect x="10" y="10" width="60" height="22" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="32" x2="40" y2="44" stroke="white" stroke-width="2"/><rect x="5" y="44" width="26" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="49" y="44" width="26" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg>
+    </div>
+    <h1>ОРГСХЕМА</h1>
+    <p>нарада</p>
+    <div class="l12-snum" style="position:fixed;bottom:5.5rem;left:1.5rem">1</div>
+  </div>
+</div>
+
+<!-- S2: МЕТА НАРАДИ -->
+<div class="l12s" id="l12_2">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><circle cx="40" cy="40" r="20" fill="none" stroke="white" stroke-width="2" opacity=".5"/><circle cx="40" cy="40" r="8" fill="white" opacity=".8"/><line x1="65" y1="15" x2="48" y2="32" stroke="#ef4444" stroke-width="3"/></svg></div>
+    <h2>МЕТА<br>НАРАДИ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">2</div>
+  </div>
+  <div class="l12-sr">
+    <div style="display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid #f0f4f8">
+      <div style="width:34px;height:34px;background:#1a3068;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.85rem">1</div>
+      <div style="font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.7">Розібратися у функціях оргсхеми, прояснити всі питання та сумніви, все, що незрозуміло хоч одному з вас.</div>
+    </div>
+    <div style="display:flex;gap:1rem;padding:.75rem 0">
+      <div style="width:34px;height:34px;background:#1a3068;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.85rem">2</div>
+      <div style="font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.7">Доопрацювати та затвердити повний набір функцій, який необхідний нашій компанії для розвитку.</div>
+    </div>
+    <div class="l12-res" style="margin-top:1rem">Результатом наради стане <strong>чернетка організуючої схеми</strong>.</div>
+  </div>
+</div>
+
+<!-- S3: ПРАВИЛА -->
+<div class="l12s" id="l12_3">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 70 90" width="60" height="80"><rect x="10" y="10" width="50" height="70" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="20" y1="28" x2="50" y2="28" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="20" y1="40" x2="50" y2="40" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="20" y1="52" x2="50" y2="52" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="20" y1="64" x2="40" y2="64" stroke="white" stroke-width="1.5" opacity=".6"/></svg></div>
+    <h2>ПРАВИЛА</h2>
+    <div class="l12-tri"></div><div class="l12-snum">3</div>
+  </div>
+  <div class="l12-sr">
+    <ul class="l12-ul">
+      <li>Нарада триватиме <strong>4–5 годин</strong>. Буде одна чи дві перерви.</li>
+      <li>Поставте мобільні телефони на <strong>беззвучний режим</strong>.</li>
+      <li>Якщо отримаєте терміновий дзвінок — вийдіть з аудиторії і поверніться.</li>
+      <li>Я вестиму протокол, записуватиму питання, на які не знайшли відповіді.</li>
+      <li>Я буду вносити ваші <strong>коригування в оргсхему</strong> під час наради.</li>
+      <li>У розмові беремо участь всі, висловлюємо всі ідеї, <strong>ідеї не критикуємо</strong>.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S4: ВАЖЛИВЕ ПРАВИЛО -->
+<div class="l12s" id="l12_4">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="45" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="56" r="4" fill="white"/></svg></div>
+    <h2>ВАЖЛИВЕ<br>ПРАВИЛО</h2>
+    <div class="l12-tri"></div><div class="l12-snum">4</div>
+  </div>
+  <div class="l12-sr">
+    <p>Коли ви почуєте або побачите <strong>незрозуміле слово</strong> — підніміть руку і запитайте мене про це.</p>
+    <div class="l12-res" style="margin-top:1.5rem">Ніколи не робіть розумний вигляд — це не принесе нам результатів.</div>
+  </div>
+</div>
+
+<!-- S5: ОРГАНІЗАЦІЯ - питання -->
+<div class="l12s" id="l12_5">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M20 68 Q20 48 40 48 Q60 48 60 68" fill="none" stroke="white" stroke-width="2.5"/></svg></div>
+    <h2>ОРГАНІ-<br>ЗАЦІЯ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">5</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-q">Навіщо потрібна організація?</div>
+    <div class="l12-q" style="margin-top:.75rem">Як ви думаєте, а що взагалі являє собою <strong>організація</strong>?</div>
+  </div>
+</div>
+
+<!-- S6: ОРГАНІЗАЦІЯ - визначення -->
+<div class="l12s" id="l12_6">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="18" fill="none" stroke="#c9a84c" stroke-width="3"/><circle cx="20" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/><circle cx="60" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/><line x1="28" y1="40" x2="32" y2="40" stroke="#c9a84c" stroke-width="2"/><line x1="48" y1="40" x2="52" y2="40" stroke="#c9a84c" stroke-width="2"/></svg></div>
+    <h2>ОРГАНІ-<br>ЗАЦІЯ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">6</div>
+  </div>
+  <div class="l12-sr">
+    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l12-def">
+      <div class="dl">Визначення</div>
+      <div class="dt">Організація — це певний набір <strong>спеціалізованих функцій</strong>, які виконують окремі співробітники або цілі підрозділи, здійснюючи <strong>узгоджену взаємодію</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S7: ОРГАНІЗАЦІЯ - знання функцій -->
+<div class="l12s" id="l12_7">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="18" fill="none" stroke="#c9a84c" stroke-width="3"/><circle cx="20" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/><circle cx="60" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/></svg></div>
+    <h2>ОРГАНІ-<br>ЗАЦІЯ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">7</div>
+  </div>
+  <div class="l12-sr">
+    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <p>Організація починається з того, що кожен співробітник має <strong>точно встановлені і добре зрозумілі</strong> йому функції, а також знає функції та продукти інших співробітників та підрозділів.</p>
+  </div>
+</div>
+
+<!-- S8: Переваги поділу функцій -->
+<div class="l12s" id="l12_8">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="18" fill="none" stroke="#c9a84c" stroke-width="3"/><circle cx="20" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/><circle cx="60" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/></svg></div>
+    <div class="l12-tri"></div><div class="l12-snum">8</div>
+  </div>
+  <div class="l12-sr">
+    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <p>Спеціалізований поділ та розподіл функцій між співробітниками дозволяє:</p>
+    <ul class="l12-ul" style="margin-top:.75rem">
+      <li>збільшити ефективність роботи у багато разів за рахунок <strong>високої компетентності</strong> навичок кожного</li>
+      <li>надавати компанією <strong>100% ЦКП</strong></li>
+      <li>успішно здійснювати <strong>обмін із клієнтами</strong></li>
+    </ul>
+  </div>
+</div>
+
+<!-- S9: ПРИКЛАД -->
+<div class="l12s" id="l12_9">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="20" width="50" height="40" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="15" y1="34" x2="65" y2="34" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="35" y1="20" x2="35" y2="60" stroke="white" stroke-width="1.5" opacity=".5"/></svg></div>
+    <h2>ПРИКЛАД</h2>
+    <div class="l12-tri"></div><div class="l12-snum">9</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-q">Наведіть приклади, як <strong>поділ функцій</strong> може значно збільшити ефективність роботи — вкажіть за рахунок чого.</div>
+    <div class="l12-q" style="margin-top:.75rem">Наведіть приклади, як <strong>переключення</strong> працівника з однієї функції на іншу може призвести до <strong>втрат ефективності</strong>.</div>
+  </div>
+</div>
+
+<!-- S10: РЕЗЮМЕ -->
+<div class="l12s" id="l12_10">
+  <div class="l12-sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">10</div>
+  </div>
+  <div class="l12-sr" style="justify-content:center">
+    <div class="l12-res">Якщо співробітник <strong>перемикається</strong> з однієї функції на іншу — він втрачає час і ефективність падає.<br><br>Якщо людина виконує <strong>конкретну функцію</strong> — підвищується узгодженість у діях та ефективність зростає.</div>
+  </div>
+</div>
+
+<!-- S11: ПИТАННЯ про слабку ланку -->
+<div class="l12s" id="l12_11">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg></div>
+    <h2>ПИТАННЯ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">11</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-q">При поділі функцій, обсяг виробництва компанії залежатиме від <strong>найсильнішої функції</strong> чи <strong>найслабшої</strong>?</div>
+    <div class="l12-q" style="margin-top:.75rem">Чому? <strong>Аргументуйте</strong> свою відповідь.</div>
+  </div>
+</div>
+
+<!-- S12: Слабка функція -->
+<div class="l12s" id="l12_12">
+  <div class="l12-sl">
+    <div class="l12-tri"></div><div class="l12-snum">12</div>
+  </div>
+  <div class="l12-sr">
+    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l12-def">
+      <div class="dl">Висновок</div>
+      <div class="dt">Загальна продуктивність залежить від <strong>слабкої функції</strong>.</div>
+    </div>
+    <p style="margin-top:1rem">Приклад як найслабша функція у компанії впливає на інші підрозділи і організацію загалом.</p>
+    <div style="margin-top:1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+      <div style="padding:.5rem 1rem;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;font-size:.88rem;color:#166534;font-weight:700">Сильна функція</div>
+      <svg viewBox="0 0 24 10" width="24" height="10"><line x1="2" y1="5" x2="22" y2="5" stroke="#6b7280" stroke-width="1.5"/><polygon points="18,2 22,5 18,8" fill="#6b7280"/></svg>
+      <div style="padding:.5rem 1rem;background:#fef2f2;border:1.5px solid #fecaca;border-radius:8px;font-size:.88rem;color:#dc2626;font-weight:700">Вузьке місце</div>
+      <svg viewBox="0 0 24 10" width="24" height="10"><line x1="2" y1="5" x2="22" y2="5" stroke="#6b7280" stroke-width="1.5"/><polygon points="18,2 22,5 18,8" fill="#6b7280"/></svg>
+      <div style="padding:.5rem 1rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.88rem;color:#6b7280">Стримує всіх</div>
+    </div>
+  </div>
+</div>
+
+<!-- S13: Функція без оргсхеми -->
+<div class="l12s" id="l12_13">
+  <div class="l12-sl">
+    <div class="l12-tri"></div><div class="l12-snum">13</div>
+  </div>
+  <div class="l12-sr">
+    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <p>Якщо функція <strong>потрібна у компанії</strong>, але ми про це не знаємо і її немає в нашій оргсхемі — вона рано чи пізно стане <strong>"вузьким місцем"</strong>.</p>
+    <div class="l12-q" style="margin-top:1rem">Наведіть приклад таких функцій для вашої компанії та їх вплив на інші функції і загальну продуктивність.</div>
+  </div>
+</div>
+
+<!-- S14: РЕЗЮМЕ -->
+<div class="l12s" id="l12_14">
+  <div class="l12-sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">14</div>
+  </div>
+  <div class="l12-sr" style="justify-content:center">
+    <div class="l12-res">Щоб компанія <strong>продуктивно працювала</strong>, необхідно дуже добре розуміти, які функції у ній мають бути та їх виконувати.</div>
+  </div>
+</div>
+
+<!-- S15: ОРГСХЕМА - навіщо -->
+<div class="l12s" id="l12_15">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><line x1="15" y1="35" x2="65" y2="35" stroke="white" stroke-width="1.5" opacity=".5"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><line x1="17" y1="53" x2="17" y2="63" stroke="white" stroke-width="1.5"/><line x1="30" y1="53" x2="30" y2="63" stroke="white" stroke-width="1.5"/></svg></div>
+    <h2>ОРГСХЕМА</h2>
+    <div class="l12-tri"></div><div class="l12-snum">15</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-q">Навіщо потрібна оргсхема?</div>
+    <p style="margin-top:1rem">Оргсхема вирішує кілька важливих завдань, щоб компанія могла <strong>процвітати та розширюватися</strong>.</p>
+    <p>Давайте розберемося.</p>
+  </div>
+</div>
+
+<!-- S16: ЗАВДАННЯ 1 -->
+<div class="l12s" id="l12_16">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><line x1="15" y1="35" x2="65" y2="35" stroke="white" stroke-width="1.5" opacity=".5"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
+    <h2>ОРГСХЕМА</h2>
+    <div class="l12-tri"></div><div class="l12-snum">16</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-task"><svg viewBox="0 0 20 20" width="14" height="14"><circle cx="10" cy="10" r="9" fill="none" stroke="white" stroke-width="1.5"/><text x="10" y="14" text-anchor="middle" font-size="10" fill="white" font-weight="700">1</text></svg>ЗАВДАННЯ №1</div>
+    <h3>Оргсхема показує, які функції необхідні розвитку нашої компанії.</h3>
+    <ul class="l12-ul" style="margin-top:.75rem">
+      <li>Як в оргсхемі можна побачити функції</li>
+      <li>Як на оргсхемі позначаються 7 основних функцій, 21 основна функція та окремі функції</li>
+      <li>Де на оргсхемі знаходяться головні функції</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S17: НАША СТРУКТУРА (повний слайд) -->
+<div class="l12s" id="l12_17">
+  <div class="l12-fw">
+    <div class="l12-corner"></div><div class="l12-corner2"></div>
+    <h3 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:1rem">Наша структура</h3>
+    <div class="l12-org" style="flex:1;min-height:200px">
+      <!-- SVG org chart -->
+      <svg viewBox="0 0 800 420" width="100%" style="max-height:360px">
+        <!-- Top: Власник → Опер.директор -->
+        <rect x="20" y="10" width="90" height="36" rx="5" fill="#ef4444" opacity=".9"/>
+        <text x="65" y="32" text-anchor="middle" font-size="11" fill="white" font-weight="700">Власник</text>
+        <line x1="110" y1="28" x2="660" y2="28" stroke="#333" stroke-width="1.5"/>
+        <polygon points="657,24 663,28 657,32" fill="#333"/>
+        <rect x="660" y="10" width="110" height="36" rx="5" fill="#6b7280"/>
+        <text x="715" y="28" text-anchor="middle" font-size="10" fill="white">Операційний</text>
+        <text x="715" y="40" text-anchor="middle" font-size="10" fill="white">директор</text>
+        <!-- Arrows down -->
+        <line x1="715" y1="46" x2="715" y2="68" stroke="#333" stroke-width="1.5"/>
+        <line x1="715" y1="68" x2="130" y2="68" stroke="#333" stroke-width="1.5"/>
+        <line x1="130" y1="68" x2="130" y2="80" stroke="#333" stroke-width="1.5"/>
+        <line x1="280" y1="68" x2="280" y2="80" stroke="#333" stroke-width="1.5"/>
+        <line x1="430" y1="68" x2="430" y2="80" stroke="#333" stroke-width="1.5"/>
+        <line x1="580" y1="68" x2="580" y2="80" stroke="#333" stroke-width="1.5"/>
+        <polygon points="127,77 130,83 133,77" fill="#333"/>
+        <polygon points="277,77 280,83 283,77" fill="#333"/>
+        <polygon points="427,77 430,83 433,77" fill="#333"/>
+        <polygon points="577,77 580,83 583,77" fill="#333"/>
+        <!-- Dept boxes row -->
+        <rect x="80" y="83" width="100" height="40" rx="5" fill="#f59e0b"/>
+        <text x="130" y="100" text-anchor="middle" font-size="10" fill="white" font-weight="700">1. Адмін</text>
+        <text x="130" y="114" text-anchor="middle" font-size="9" fill="white">відділення</text>
+        <rect x="230" y="83" width="100" height="40" rx="5" fill="#3b82f6"/>
+        <text x="280" y="100" text-anchor="middle" font-size="10" fill="white" font-weight="700">2. Досягнення</text>
+        <text x="280" y="114" text-anchor="middle" font-size="9" fill="white">цілей</text>
+        <rect x="380" y="83" width="100" height="40" rx="5" fill="#8b5cf6"/>
+        <text x="430" y="100" text-anchor="middle" font-size="10" fill="white" font-weight="700">3. Відділ</text>
+        <text x="430" y="114" text-anchor="middle" font-size="9" fill="white">кадрів</text>
+        <rect x="530" y="83" width="100" height="40" rx="5" fill="#ec4899"/>
+        <text x="580" y="100" text-anchor="middle" font-size="10" fill="white" font-weight="700">4. Маркетинг</text>
+        <text x="580" y="114" text-anchor="middle" font-size="9" fill="white">та продажі</text>
+        <!-- Sub boxes -->
+        <line x1="130" y1="123" x2="130" y2="140" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="90" y="140" width="80" height="30" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+        <text x="130" y="159" text-anchor="middle" font-size="9" fill="#92400e">Адмін. секції</text>
+        <line x1="280" y1="123" x2="280" y2="140" stroke="#3b82f6" stroke-width="1.5"/>
+        <rect x="240" y="140" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+        <text x="280" y="159" text-anchor="middle" font-size="9" fill="#1e3a8a">ЦКП клієнтів</text>
+        <line x1="430" y1="123" x2="430" y2="140" stroke="#8b5cf6" stroke-width="1.5"/>
+        <rect x="390" y="140" width="80" height="30" rx="4" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
+        <text x="430" y="159" text-anchor="middle" font-size="9" fill="#4c1d95">Навчання</text>
+        <line x1="580" y1="123" x2="580" y2="140" stroke="#ec4899" stroke-width="1.5"/>
+        <rect x="540" y="140" width="80" height="30" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+        <text x="580" y="159" text-anchor="middle" font-size="9" fill="#831843">Реклама</text>
+        <!-- More depts row 2 -->
+        <line x1="130" y1="170" x2="130" y2="185" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="90" y="185" width="80" height="30" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+        <text x="130" y="204" text-anchor="middle" font-size="9" fill="#92400e">Якість</text>
+        <line x1="280" y1="170" x2="280" y2="185" stroke="#3b82f6" stroke-width="1.5"/>
+        <rect x="240" y="185" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+        <text x="280" y="204" text-anchor="middle" font-size="9" fill="#1e3a8a">Фінанси</text>
+        <line x1="430" y1="170" x2="430" y2="185" stroke="#8b5cf6" stroke-width="1.5"/>
+        <rect x="390" y="185" width="80" height="30" rx="4" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
+        <text x="430" y="204" text-anchor="middle" font-size="9" fill="#4c1d95">Набір кадрів</text>
+        <line x1="580" y1="170" x2="580" y2="185" stroke="#ec4899" stroke-width="1.5"/>
+        <rect x="540" y="185" width="80" height="30" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+        <text x="580" y="204" text-anchor="middle" font-size="9" fill="#831843">Продажі</text>
+        <!-- Row 3 -->
+        <line x1="130" y1="215" x2="130" y2="230" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="90" y="230" width="80" height="30" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+        <text x="130" y="249" text-anchor="middle" font-size="9" fill="#92400e">Статистика</text>
+        <line x1="280" y1="215" x2="280" y2="230" stroke="#3b82f6" stroke-width="1.5"/>
+        <rect x="240" y="230" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+        <text x="280" y="249" text-anchor="middle" font-size="9" fill="#1e3a8a">Виробництво</text>
+        <line x1="580" y1="215" x2="580" y2="230" stroke="#ec4899" stroke-width="1.5"/>
+        <rect x="540" y="230" width="80" height="30" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+        <text x="580" y="249" text-anchor="middle" font-size="9" fill="#831843">Сервіс</text>
+        <!-- Row 4 -->
+        <line x1="280" y1="260" x2="280" y2="275" stroke="#3b82f6" stroke-width="1.5"/>
+        <rect x="240" y="275" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+        <text x="280" y="294" text-anchor="middle" font-size="9" fill="#1e3a8a">Логістика</text>
+        <line x1="280" y1="305" x2="280" y2="320" stroke="#3b82f6" stroke-width="1.5"/>
+        <rect x="240" y="320" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+        <text x="280" y="339" text-anchor="middle" font-size="9" fill="#1e3a8a">Контроль</text>
+      </svg>
+    </div>
+    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">17</div>
+  </div>
+</div>
+
+<!-- S18: ЗАВДАННЯ 2 -->
+<div class="l12s" id="l12_18">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
+    <h2>ОРГСХЕМА</h2>
+    <div class="l12-tri"></div><div class="l12-snum">18</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-task"><svg viewBox="0 0 20 20" width="14" height="14"><circle cx="10" cy="10" r="9" fill="none" stroke="white" stroke-width="1.5"/><text x="10" y="14" text-anchor="middle" font-size="10" fill="white" font-weight="700">2</text></svg>ЗАВДАННЯ №2</div>
+    <h3>Оргсхема дозволяє точно визначити, хто за що відповідає.</h3>
+    <div class="l12-def" style="margin-top:1rem">
+      <div class="dl">Чому ми звертаємось до функції, а не до імені</div>
+      <div class="dt" style="font-size:.88rem;font-weight:500">У системі ми будуємо <strong>структуру</strong>, а не "клуб добрих знайомств".<br>Не: <span style="color:#dc2626">"Сергій, подивись, будь ласка..."</span><br>А: <span style="color:#166534">"Адміністратор секції графіків, потрібно узгодити зміни на середу"</span></div>
+    </div>
+    <ul class="l12-ul" style="margin-top:.75rem">
+      <li><strong>Чіткість</strong> — одразу зрозуміло, хто за що відповідає</li>
+      <li><strong>Відповідальність</strong> — людина виступає як представник ролі</li>
+      <li><strong>Повага до функції</strong>, а не "особистих домовленостей"</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S19: Поділ за функціями -->
+<div class="l12s" id="l12_19">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
+    <div class="l12-tri"></div><div class="l12-snum">19</div>
+  </div>
+  <div class="l12-sr">
+    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <p>Такий поділ за функціями допомагає співробітнику:</p>
+    <ul class="l12-ul" style="margin-top:.75rem">
+      <li>розуміти, яка <strong>його роль</strong> в організації</li>
+      <li>розуміти, <strong>з ким взаємодіяти</strong> з різних питань</li>
+      <li>оцінювати власну <strong>продуктивність</strong> за кожною функцією та планувати роботу</li>
+    </ul>
+    <div class="l12-res" style="margin-top:1rem">Одна людина може виконувати <strong>кілька функцій</strong> — і це нормально на старті.</div>
+  </div>
+</div>
+
+<!-- S20: ЗАВДАННЯ 3 -->
+<div class="l12s" id="l12_20">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
+    <h2>ОРГСХЕМА</h2>
+    <div class="l12-tri"></div><div class="l12-snum">20</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-task"><svg viewBox="0 0 20 20" width="14" height="14"><circle cx="10" cy="10" r="9" fill="none" stroke="white" stroke-width="1.5"/><text x="10" y="14" text-anchor="middle" font-size="10" fill="white" font-weight="700">3</text></svg>ЗАВДАННЯ №3</div>
+    <h3>Оргсхема показує, який продукт очікується від кожного підрозділу.</h3>
+    <ul class="l12-ul" style="margin-top:.75rem">
+      <li>Де на оргсхемі можна побачити продукт відділення, відділу, секції, усієї компанії</li>
+      <li>Приклад продуктів відділу доходу (7) та відділу продажів (6)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S21: ЗАВДАННЯ 4 -->
+<div class="l12s" id="l12_21">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
+    <h2>ОРГСХЕМА</h2>
+    <div class="l12-tri"></div><div class="l12-snum">21</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-task"><svg viewBox="0 0 20 20" width="14" height="14"><circle cx="10" cy="10" r="9" fill="none" stroke="white" stroke-width="1.5"/><text x="10" y="14" text-anchor="middle" font-size="10" fill="white" font-weight="700">4</text></svg>ЗАВДАННЯ №4</div>
+    <h3>Оргсхема дає можливість вирішувати питання безпосередньо.</h3>
+    <ul class="l12-ul" style="margin-top:.75rem">
+      <li>Відомо хто за які питання відповідає</li>
+      <li>Дозволяє домагатися, щоб суміжні підрозділи робили свою роботу і давали вам те, що необхідно</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S22: ВИДИ ВЗАЄМОДІЯ -->
+<div class="l12s" id="l12_22">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 60" width="80" height="60"><circle cx="18" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><circle cx="62" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M32 18 Q45 10 50 18" fill="none" stroke="white" stroke-width="2"/><polygon points="47,15 52,19 47,23" fill="white"/><path d="M48 32 Q35 40 30 32" fill="none" stroke="white" stroke-width="2"/><polygon points="33,35 28,31 33,27" fill="white"/></svg></div>
+    <h2>ВИДИ<br>ВЗАЄМО-<br>ДІЯ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">22</div>
+  </div>
+  <div class="l12-sr">
+    <p>На оргсхемі ви бачите точний поділ функцій і наступне, що необхідно зробити — це забезпечити <strong>злагоджену взаємодію</strong> між ними.</p>
+    <p>Є два види взаємодії: <strong>командні лінії та комунікаційні лінії</strong>. Вони створюють "систему швидкого потоку".</p>
+    <div style="margin-top:1.25rem;text-align:center">
+      <div style="font-weight:800;font-size:.9rem;color:#1a3068;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.06em">СИСТЕМА ШВИДКОГО ПОТОКУ</div>
+      <svg viewBox="0 0 400 150" width="100%" style="max-height:130px">
+        <circle cx="200" cy="25" r="18" fill="none" stroke="#1a3068" stroke-width="2"/>
+        <line x1="200" y1="43" x2="200" y2="60" stroke="#1a3068" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <text x="120" y="58" font-size="9" fill="#6b7280">Розпорядження по командних лініях</text>
+        <line x1="80" y1="60" x2="320" y2="60" stroke="#1a3068" stroke-width="1.5"/>
+        <circle cx="80" cy="78" r="14" fill="none" stroke="#1a3068" stroke-width="1.5"/>
+        <circle cx="200" cy="78" r="14" fill="none" stroke="#1a3068" stroke-width="1.5"/>
+        <circle cx="320" cy="78" r="14" fill="none" stroke="#1a3068" stroke-width="1.5"/>
+        <line x1="80" y1="60" x2="80" y2="64" stroke="#1a3068" stroke-width="1.5"/>
+        <line x1="200" y1="60" x2="200" y2="64" stroke="#1a3068" stroke-width="1.5"/>
+        <line x1="320" y1="60" x2="320" y2="64" stroke="#1a3068" stroke-width="1.5"/>
+        <line x1="40" y1="110" x2="360" y2="110" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <circle cx="60" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
+        <circle cx="120" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
+        <circle cx="180" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
+        <circle cx="240" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
+        <circle cx="300" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
+        <circle cx="360" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
+        <text x="200" y="140" text-anchor="middle" font-size="9" fill="#3b82f6">Комунікаційні частинки йдуть напряму</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- S23: КОМАНДНІ ЛІНІЇ -->
+<div class="l12s" id="l12_23">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 60" width="80" height="60"><circle cx="18" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><circle cx="62" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M32 18 Q45 10 50 18" fill="none" stroke="white" stroke-width="2"/><polygon points="47,15 52,19 47,23" fill="white"/></svg></div>
+    <h2>ВИДИ<br>ВЗАЄМО-<br>ДІЯ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">23</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-task">КОМАНДНІ ЛІНІЇ</div>
+    <p>Командні лінії йдуть від <strong>вищого керівника</strong> через керівників підрозділів до пересічних співробітників.</p>
+    <div class="l12-2col" style="margin-top:1rem">
+      <div class="l12-card" style="background:#eff6ff;border:1.5px solid #93c5fd">
+        <div style="font-size:.72rem;font-weight:800;color:#1d4ed8;text-transform:uppercase;margin-bottom:.35rem">Зверху вниз</div>
+        <div style="font-size:.88rem;color:#1e3a8a">Інструкції, розпорядження</div>
+      </div>
+      <div class="l12-card" style="background:#f0fdf4;border:1.5px solid #86efac">
+        <div style="font-size:.72rem;font-weight:800;color:#166534;text-transform:uppercase;margin-bottom:.35rem">Знизу вгору</div>
+        <div style="font-size:.88rem;color:#166534">Пропозиції, плани, звіти про виконання</div>
+      </div>
+    </div>
+    <p class="sm" style="margin-top:.75rem">Приклади питань, що рухаються командними лініями.</p>
+  </div>
+</div>
+
+<!-- S24: КОМУНІКАЦІЙНІ ЛІНІЇ -->
+<div class="l12s" id="l12_24">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 60" width="80" height="60"><circle cx="18" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><circle cx="62" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M32 18 Q45 10 50 18" fill="none" stroke="white" stroke-width="2"/><polygon points="47,15 52,19 47,23" fill="white"/><path d="M48 32 Q35 40 30 32" fill="none" stroke="white" stroke-width="2"/><polygon points="33,35 28,31 33,27" fill="white"/></svg></div>
+    <h2>ВИДИ<br>ВЗАЄМО-<br>ДІЯ</h2>
+    <div class="l12-tri"></div><div class="l12-snum">24</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-task">КОМУНІКАЦІЙНІ ЛІНІЇ</div>
+    <p>Лінії, якими відбувається передача <strong>послань, повідомлень, відповідей, інформації, запитів</strong> тощо між рівноправними підрозділами.</p>
+    <div class="l12-q" style="margin-top:1rem">Приклади ситуацій, коли керівник не міг отримати потрібне від суміжного підрозділу і звертався до директора. Як він міг би вчинити, знаючи ПІБ відповідального?</div>
+  </div>
+</div>
+
+<!-- S25: Питання про затримки -->
+<div class="l12s" id="l12_25">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg></div>
+    <div class="l12-tri"></div><div class="l12-snum">25</div>
+  </div>
+  <div class="l12-sr" style="justify-content:center">
+    <div class="l12-q" style="font-size:clamp(1rem,2.5vw,1.3rem)">Як ви вважаєте, чому вирішення деяких питань часто <strong>затягується</strong>?</div>
+  </div>
+</div>
+
+<!-- S26: Бюрократія причина -->
+<div class="l12s" id="l12_26">
+  <div class="l12-sl">
+    <div class="l12-tri"></div><div class="l12-snum">26</div>
+  </div>
+  <div class="l12-sr">
+    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <p>Співробітники з різних відділів часом не знають, що відбувається у <strong>сусідньому відділі</strong>.</p>
+    <p>Їм простіше надсилати запити своєму керівнику, використовуючи <strong>командну лінію замість комунікаційної</strong> та завалювати його дурною роботою.</p>
+    <div class="l12-res" style="margin-top:1rem">Тому вирішення питань <strong>затягується</strong> — і ми отримуємо бюрократію.</div>
+  </div>
+</div>
+
+<!-- S27: Бюрократія визначення -->
+<div class="l12s" id="l12_27">
+  <div class="l12-sl">
+    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="10" width="50" height="60" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="28" x2="55" y2="28" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="40" x2="55" y2="40" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="52" x2="45" y2="52" stroke="white" stroke-width="1.5" opacity=".5"/></svg></div>
+    <div class="l12-tri"></div><div class="l12-snum">27</div>
+  </div>
+  <div class="l12-sr">
+    <div class="l12-def">
+      <div class="dl">Бюрократія</div>
+      <div class="dt">Це коли всі питання вирішуються по <strong>командних лініях</strong>, і чекають на вирішення найпростіших питань, які стопорять виробництво — хоча ці питання можна було б вирішити <strong>безпосередньо в сусідньому відділі</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S28: Розуміння оргсхеми -->
+<div class="l12s" id="l12_28">
+  <div class="l12-fw">
+    <div class="l12-corner"></div><div class="l12-corner2"></div>
+    <div style="position:relative;z-index:1;max-width:65%">
+      <div class="l12-q" style="font-size:clamp(.95rem,2vw,1.25rem);margin-bottom:1.5rem">Тепер ви розумієте необхідність оргсхеми в покращенні взаємодії в команді?</div>
+      <div style="background:#f0f6ff;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:1rem">
+        <div style="font-size:.78rem;font-weight:800;color:#1d4ed8;margin-bottom:.6rem">Без оргсхеми</div>
+        <ul class="l12-ul" style="margin:0">
+          <li style="font-size:.85rem;color:#374151">"Мене постійно смикають не по моїй темі"</li>
+          <li style="font-size:.85rem;color:#374151">"Я не знаю, до кого перекинути це питання"</li>
+          <li style="font-size:.85rem;color:#374151">"Не бачу всієї картини — звідси тривожність"</li>
+        </ul>
+      </div>
+      <div style="background:#f0fdf4;border-radius:12px;padding:1.1rem 1.3rem">
+        <div style="font-size:.78rem;font-weight:800;color:#166534;margin-bottom:.6rem">З оргсхемою</div>
+        <ul class="l12-ul" style="margin:0">
+          <li style="font-size:.85rem;color:#374151">✔ Тепер я знаю, хто за що</li>
+          <li style="font-size:.85rem;color:#374151">✔ Можу звернутись напряму, без трьох дозволів</li>
+          <li style="font-size:.85rem;color:#374151">✔ Є порядок — простіше дихати</li>
+        </ul>
+      </div>
+    </div>
+    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">28</div>
+  </div>
+</div>
+
+<!-- S29: РЕЗЮМЕ -->
+<div class="l12s" id="l12_29">
+  <div class="l12-fw">
+    <div class="l12-corner"></div><div class="l12-corner2"></div>
+    <h3 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:1rem">РЕЗЮМЕ</h3>
+    <div style="height:4px;width:80px;background:#09132b;margin-bottom:1.5rem"></div>
+    <p>У кожного з нас є конкретна функція. І коли ми чітко закриваємо свої задачі та відповідаємо за ЦКП:</p>
+    <ul class="l12-ul" style="margin-top:.5rem">
+      <li>система працює</li>
+      <li>команда не буксує</li>
+      <li>клієнт отримує якісний результат</li>
+    </ul>
+    <div style="margin-top:1rem;padding:.85rem 1.1rem;background:#fff3cd;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0">
+      <strong>Ми — медична клініка. І наша робота впливає на життя людей.</strong><br>
+      Ми не просто лікуємо — ми створюємо довіру до сучасної української стоматології.<br>
+      Ми будуємо бренд, якому хочеться довіряти — і всередині, і зовні.
+    </div>
+    <p style="margin-top:1rem"><strong>Тільки так ми зможемо масштабуватись, не втрачаючи якості, не вигораючи — і нести цінність далі.</strong></p>
+    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">29</div>
+  </div>
+</div>
+
+<!-- S30: РЕГЛАМЕНТ -->
+<div class="l12s" id="l12_30">
+  <div class="l12-fw">
+    <div class="l12-corner"></div><div class="l12-corner2"></div>
+    <h3>Регламент</h3>
+    <p>Регламент — це не "ще один документ для галочки". Це <strong>інструкція до всієї нашої організації</strong>, яка:</p>
+    <ul class="l12-ul" style="margin-top:.75rem">
+      <li>пояснює хто за що відповідає</li>
+      <li>що означають всі ці нові функції, ролі, ЦКП</li>
+      <li>які поняття ми використовуємо (щоб не було плутанини)</li>
+      <li>як працює наша оргструктура в реальності, а не "на папері"</li>
+    </ul>
+    <div class="l12-res" style="margin-top:1rem">Це як мати карту — ви знаєте, куди йти, до кого звернутись, і як не втратити час на зайве.</div>
+    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">30</div>
+  </div>
+</div>
+
+<!-- S31: ТЕСТИ -->
+<div class="l12s" id="l12_31">
+  <div class="l12-fw">
+    <div class="l12-corner"></div><div class="l12-corner2"></div>
+    <h3>Наступний крок: тести для закріплення</h3>
+    <p>Щоб впевнено рухатися далі, важливо переконатись, що кожен:</p>
+    <ul class="l12-ul" style="margin-top:.5rem">
+      <li>розуміє свою роль у структурі</li>
+      <li>знає, що саме входить до його функції</li>
+      <li>усвідомлює, як це впливає на загальний результат</li>
+    </ul>
+    <div class="l12-res" style="margin-top:1rem">Ми не перевіряємо — ми <strong>налаштовуємо команду на єдину хвилю</strong>. Тести — це як "дзеркало": щоб побачити, чи все зрозуміло.</div>
+    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">31</div>
+  </div>
+</div>
+
+<!-- S32: ЩО ВАЖЛИВО ДАЛІ -->
+<div class="l12s" id="l12_32">
+  <div class="l12-fw">
+    <div class="l12-corner"></div><div class="l12-corner2"></div>
+    <h3>Що важливо від кожного далі:</h3>
+    <ul class="l12-ul" style="margin-top:.75rem">
+      <li>Коли виникає питання — <strong>дивимось у оргсхему</strong>. Там уже є відповідь: хто, за що і куди звертатись.</li>
+      <li>Шукаємо порозуміння через <strong>структуру</strong>, а не через конфлікти. Оргсхема — наш "арбітр".</li>
+      <li>Якщо помітили функцію "в повітрі" — <strong>дайте знати</strong>. Це шанс зробити систему ще сильнішою.</li>
+      <li>Пояснюйте колегам, як <strong>користуватись оргсхемою</strong>. Коли розумієш структуру — зникає хаос.</li>
+    </ul>
+    <div class="l12-res" style="margin-top:1rem;text-align:center;font-size:clamp(.95rem,2vw,1.15rem);font-weight:700">
+      Дякую! Ми сьогодні справді зробили сильний крок до зрозумілої, злагодженої та <strong>професійної роботи</strong>.
+    </div>
+    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">32</div>
+  </div>
+</div>
+
+<!-- S33: КІНЕЦЬ -->
+<div class="l12s" id="l12_33">
+  <div class="l12-dark">
+    <svg viewBox="0 0 80 80" width="70" height="70" style="margin-bottom:1.5rem;opacity:.5">
+      <rect x="10" y="10" width="60" height="22" rx="4" fill="none" stroke="white" stroke-width="2.5"/>
+      <line x1="40" y1="32" x2="40" y2="44" stroke="white" stroke-width="2"/>
+      <rect x="5" y="44" width="26" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/>
+      <rect x="49" y="44" width="26" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/>
+    </svg>
+    <h1>КІНЕЦЬ</h1>
+    <p>Дякуємо за участь!</p>
+    <div class="l12-snum" style="position:fixed;bottom:5.5rem;left:1.5rem">33</div>
+  </div>
+</div>
+
+</div><!-- /l12SW -->
+
+<div class="l12-nav">
+  <button class="l12-nb" id="l12Prev" onclick="window._l12P()" disabled>← Назад</button>
+  <div style="display:flex;align-items:center;gap:.6rem">
+    <span class="l12-nc" id="l12Ctr">1 / 33</span>
+    <button class="l12-close" onclick="window._l12Close()">✕ Закрити</button>
+  </div>
+  <button class="l12-nb" id="l12Next" onclick="window._l12N()">Далі →</button>
+</div>
+</div><!-- /l12Ov -->
+`,
 
                 lessonContent: `
 <style>

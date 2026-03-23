@@ -99,8 +99,10 @@
     function _cleanPresOverlays() {
         var o10 = document.getElementById('l10Ov');
         var o11 = document.getElementById('l11Ov');
+        var o12 = document.getElementById('l12Ov');
         if (o10) o10.remove();
         if (o11) o11.remove();
+        if (o12) o12.remove();
         document.body.style.overflow = '';
     }
 
@@ -5383,10 +5385,13 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
                 <!-- Presentation launch button (lessons 10 and 11) -->
                 ${module.presOverlay ? (function(){
-                    var pLabel = moduleId === 10 ? 'Заняття 1 \u2014 \u0426\u0456\u043b\u0456, \u0437\u0430\u0434\u0443\u043c\u0438 \u0456 \u043c\u0430\u0439\u0431\u0443\u0442\u043d\u0454 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457' : 'Заняття 2 \u2014 \u0426\u0456\u043d\u043d\u0438\u0439 \u043a\u0456\u043d\u0446\u0435\u0432\u0438\u0439 \u043f\u0440\u043e\u0434\u0443\u043a\u0442 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457';
-                    var pSlides = moduleId === 10 ? '46 \u0441\u043b\u0430\u0439\u0434\u0456\u0432' : '43 \u0441\u043b\u0430\u0439\u0434\u0438';
-                    var pFn = moduleId === 10 ? '_l10Launch' : '_l11Launch';
-                    return '<div style="margin:0 1.25rem 1.25rem"><div style="background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 20px rgba(15,28,63,.2)"><div style="color:white"><div style="font-size:.9rem;font-weight:800;margin-bottom:.25rem">' + pLabel + '</div><div style="font-size:.76rem;color:#94a3b8">' + pSlides + ' \xb7 ~1.5 \u0433\u043e\u0434 \xb7 \u041f\u0440\u043e\u0432\u0435\u0434\u0456\u0442\u044c \u0456\u0437 \u043a\u043e\u043c\u0430\u043d\u0434\u043e\u044e \u043f\u0456\u0441\u043b\u044f \u0432\u0438\u0432\u0447\u0435\u043d\u043d\u044f \u0443\u0440\u043e\u043a\u0443</div></div><button onclick="window.' + pFn + '()" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(34,197,94,.35)">\u25b6 \u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0438 \u043f\u0440\u0435\u0437\u0435\u043d\u0442\u0430\u0446\u0456\u044e</button></div></div>';
+                    var pLabels = {10:'Заняття 1 \u2014 \u0426\u0456\u043b\u0456, \u0437\u0430\u0434\u0443\u043c\u0438 \u0456 \u043c\u0430\u0439\u0431\u0443\u0442\u043d\u0454 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457', 11:'\u0417\u0430\u043d\u044f\u0442\u0442\u044f 2 \u2014 \u0426\u0456\u043d\u043d\u0438\u0439 \u043a\u0456\u043d\u0446\u0435\u0432\u0438\u0439 \u043f\u0440\u043e\u0434\u0443\u043a\u0442 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457', 12:'\u041d\u0430\u0440\u0430\u0434\u0430 \u2014 \u041e\u0440\u0433\u0441\u0445\u0435\u043c\u0430 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457'};
+                    var pSlides = {10:'46 \u0441\u043b\u0430\u0439\u0434\u0456\u0432', 11:'43 \u0441\u043b\u0430\u0439\u0434\u0438', 12:'33 \u0441\u043b\u0430\u0439\u0434\u0438'};
+                    var pFns = {10:'_l10Launch', 11:'_l11Launch', 12:'_l12Launch'};
+                    var pLabel = pLabels[moduleId] || '\u041f\u0440\u0435\u0437\u0435\u043d\u0442\u0430\u0446\u0456\u044f';
+                    var pSlide = pSlides[moduleId] || '';
+                    var pFn = pFns[moduleId] || '_l10Launch';
+                    return '<div style="margin:0 1.25rem 1.25rem"><div style="background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 20px rgba(15,28,63,.2)"><div style="color:white"><div style="font-size:.9rem;font-weight:800;margin-bottom:.25rem">' + pLabel + '</div><div style="font-size:.76rem;color:#94a3b8">' + pSlide + ' \xb7 \u041f\u0440\u043e\u0432\u0435\u0434\u0456\u0442\u044c \u0456\u0437 \u043a\u043e\u043c\u0430\u043d\u0434\u043e\u044e \u043f\u0456\u0441\u043b\u044f \u0432\u0438\u0432\u0447\u0435\u043d\u043d\u044f \u0443\u0440\u043e\u043a\u0443</div></div><button onclick="window.' + pFn + '()" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(34,197,94,.35)">\u25b6 \u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0438 \u043f\u0440\u0435\u0437\u0435\u043d\u0442\u0430\u0446\u0456\u044e</button></div></div>';
                 })() : ''}
 
                 <!-- Complete button -->
@@ -5492,7 +5497,40 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 };
             })();
 
-            // ── Lesson 11: ЦКП компанії ─────────────────────────────
+            // ── Lesson 12: Оргсхема ─────────────────────────────────
+            (function initL12() {
+                if (!document.getElementById('l12Ov')) return;
+                var T = 33, c = 1;
+                window._l12SaveAll = function() {};
+                function go12(n) {
+                    var ov = document.getElementById('l12Ov');
+                    var cur = ov.querySelector('.l12s.on');
+                    if (cur) cur.classList.remove('on');
+                    c = n;
+                    var next = document.getElementById('l12_' + c);
+                    if (next) next.classList.add('on');
+                    var ctr = document.getElementById('l12Ctr');
+                    if (ctr) ctr.textContent = c + ' / ' + T;
+                    var prev = document.getElementById('l12Prev');
+                    var nxt = document.getElementById('l12Next');
+                    if (prev) prev.disabled = (c === 1);
+                    if (nxt) nxt.disabled = (c === T);
+                }
+                window._l12P = function() { if (c > 1) go12(c - 1); };
+                window._l12N = function() { if (c < T) go12(c + 1); };
+                window._l12Launch = function() {
+                    var ov = document.getElementById('l12Ov');
+                    ov.classList.add('on');
+                    document.body.style.overflow = 'hidden';
+                    go12(1);
+                };
+                window._l12Close = function() {
+                    document.getElementById('l12Ov').classList.remove('on');
+                    document.body.style.overflow = '';
+                };
+            })();
+
+
             (function initL11() {
                 if (!document.getElementById('l11Ov')) return;
                 var T = 43, c = 1, SK = 'l11d';
