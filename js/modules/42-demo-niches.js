@@ -6899,6 +6899,394 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     }
     await window.safeBatchCommit(entryOps, 'step-metric-entries');
 
+
+    // ── 17. CRM PIPELINE + АКТИВНОСТІ ───────────────────────
+    // Pipeline воронка
+    try {
+        const oldPips = await cr.collection('crm_pipeline').get();
+        if (!oldPips.empty) await window.safeBatchCommit(oldPips.docs.map(d => ({type:'delete', ref:d.ref})), 'clear-pipeline');
+    } catch(e) {}
+
+    const pipRef = cr.collection('crm_pipeline').doc();
+    await window.safeBatchCommit([{type:'set', ref:pipRef, data:{
+        isDemo:true,
+        name:'GlowStudio — Залучення клієнтів',
+        stages:[
+            {id:'new',        label:'Новий лід',          color:'#6b7280', order:1},
+            {id:'contacted',  label:'Контакт встановлено', color:'#3b82f6', order:2},
+            {id:'trial',      label:'Пробний візит',       color:'#8b5cf6', order:3},
+            {id:'regular',    label:'Постійний клієнт',    color:'#22c55e', order:4},
+            {id:'vip',        label:'VIP клієнт',          color:'#f59e0b', order:5},
+            {id:'paused',     label:'Пауза',               color:'#f97316', order:6},
+            {id:'lost',       label:'Відмова',             color:'#ef4444', order:7},
+        ],
+        defaultStageId:'new',
+        createdAt:now, updatedAt:now,
+    }}], 'step-pipeline');
+
+    // CRM активності (дзвінки, зустрічі, нотатки)
+    const crmCliSnap = await cr.collection('crm_clients').get();
+    const crmCliDocs = crmCliSnap.docs.slice(0, 12);
+    const actOps = [];
+    const ACT_TYPES = [
+        {type:'call',    icon:'phone',    label:'Дзвінок'},
+        {type:'visit',   icon:'calendar', label:'Візит'},
+        {type:'note',    icon:'file-text',label:'Нотатка'},
+        {type:'message', icon:'message',  label:'Повідомлення'},
+    ];
+    const ACT_TEXTS = [
+        'Підтвердила запис на манікюр на п\'ятницю 14:00',
+        'Клієнтка задоволена результатом, планує абонемент',
+        'Нагадала про акцію — знижка 15% на нарощування вій у квітні',
+        'Запитала про нові послуги косметолога, записала на консультацію',
+        'Нагадала про дату повторного запису через 3 тижні',
+        'Клієнтка перенесла запис на понеділок 11:00',
+        'Надіслала фото результату роботи для Instagram з дозволу',
+        'Win-back дзвінок — клієнтка не була 6 тижнів, записалась',
+        'Запропонувала абонемент педикюру — зацікавлена',
+        'Отримала відгук Google 5★ від клієнтки',
+        'Вирішили питання з кольором гель-лаку — замінили безкоштовно',
+        'Нагадала про бонуси, що спливають до кінця місяця',
+    ];
+    crmCliDocs.forEach((doc, i) => {
+        const act = ACT_TYPES[i % ACT_TYPES.length];
+        actOps.push({type:'set', ref:cr.collection('crm_activities').doc(), data:{
+            clientId: doc.id,
+            clientName: doc.data().name,
+            type: act.type,
+            icon: act.icon,
+            label: act.label,
+            text: ACT_TEXTS[i],
+            date: _demoDate(-(i + 1)),
+            managerId: sRefs[7].id,
+            managerName: STAFF[7].name,
+            functionId: fRefs[3].id,
+            createdBy: uid, createdAt: now, isDemo: true,
+        }});
+        // Додаємо другу активність для перших 5 клієнтів
+        if (i < 5) {
+            actOps.push({type:'set', ref:cr.collection('crm_activities').doc(), data:{
+                clientId: doc.id,
+                clientName: doc.data().name,
+                type: 'note',
+                icon: 'file-text',
+                label: 'Нотатка',
+                text: ['Уподобання: пастельні відтінки, довгі нігті', 'Алергія на латекс — використовуємо нітрил', 'Вважає за краще запис у вихідні 10-12', 'Подруга клієнтки — знижка за рефералом 5%', 'VIP: завжди зустрічати у дверей, чай з лимоном'][i],
+                date: _demoDate(-(i + 7)),
+                managerId: sRefs[1].id,
+                managerName: STAFF[1].name,
+                functionId: fRefs[1].id,
+                createdBy: uid, createdAt: now, isDemo: true,
+            }});
+        }
+    });
+    await window.safeBatchCommit(actOps, 'step-crm-activities');
+
+    // Оновлюємо deals зі стадіями pipeline
+    const dealSnap = await cr.collection('crm_deals').get();
+    const dealStages = ['won','regular','trial','contacted','new','paused','lost','vip'];
+    const dealUpOps = dealSnap.docs.map((doc, i) => ({
+        type:'update', ref:doc.ref,
+        data:{ pipelineId:pipRef.id, stageId:dealStages[i % dealStages.length], updatedAt:now }
+    }));
+    if (dealUpOps.length) await window.safeBatchCommit(dealUpOps, 'step-deals-pipeline');
+
+    // ── 18. БРОНЮВАННЯ — НАЛАШТУВАННЯ ────────────────────────
+    try {
+        const oldCals = await cr.collection('booking_calendars').get();
+        if (!oldCals.empty) await window.safeBatchCommit(oldCals.docs.map(d=>({type:'delete',ref:d.ref})), 'clear-booking-cals');
+        const oldSch = await cr.collection('booking_schedules').get();
+        if (!oldSch.empty) await window.safeBatchCommit(oldSch.docs.map(d=>({type:'delete',ref:d.ref})), 'clear-booking-sch');
+    } catch(e) {}
+
+    // 5 календарів — по одному на кожного майстра
+    const masterSchedules = [
+        {name:'Олена Мороз — манікюр',        slug:'glowstudio-olena',  color:'#ec4899', dur:90,  services:['Манікюр + гель-лак','Корекція','Зняття + нове покриття']},
+        {name:'Вікторія Лисенко — манікюр',   slug:'glowstudio-vika',   color:'#8b5cf6', dur:90,  services:['Манікюр + гель-лак','Манікюр без покриття']},
+        {name:'Аліна Шевченко — нарощування', slug:'glowstudio-alina',  color:'#3b82f6', dur:150, services:['Нарощування нігтів','Корекція нарощування','Зняття нарощування']},
+        {name:'Дарина Петрова — брови та вії', slug:'glowstudio-daryna', color:'#f59e0b', dur:90,  services:['Ламінування брів','Нарощування вій 2D','Корекція брів + фарбування']},
+        {name:'Катерина Бондар — педикюр',     slug:'glowstudio-katya',  color:'#22c55e', dur:120, services:['Педикюр апаратний + гель','Педикюр класичний']},
+    ];
+    const calRefs = masterSchedules.map(() => cr.collection('booking_calendars').doc());
+    const calOps = [];
+    masterSchedules.forEach((ms, i) => {
+        calOps.push({type:'set', ref:calRefs[i], data:{
+            name: ms.name,
+            slug: ms.slug,
+            ownerName: STAFF[2 + i].name,
+            ownerId: sRefs[2 + i].id,
+            duration: ms.dur,
+            bufferBefore: 5, bufferAfter: 10,
+            timezone: 'Europe/Kiev',
+            confirmationType: 'auto',
+            color: ms.color,
+            location: 'GlowStudio, вул. Хрещатик 12, Київ',
+            isActive: true, phoneRequired: true,
+            services: ms.services.map((s, j) => ({id:`s${i}${j}`, name:s, duration:ms.dur, price:[680,420,350,850,650,900,620][j]||500})),
+            questions:[
+                {id:'q1', text:'Побажання до форми/довжини нігтів', type:'text', required:false},
+                {id:'q2', text:'Є алергія на матеріали?',           type:'select', required:false, options:['Ні','Алергія на латекс','Алергія на акрил','Інше']},
+            ],
+            maxBookingsPerSlot: 1, requirePayment: false, price: 0,
+            createdAt: now, updatedAt: now, isDemo: true,
+        }});
+        // Розклад майстра
+        calOps.push({type:'set', ref:cr.collection('booking_schedules').doc(calRefs[i].id), data:{
+            calendarId: calRefs[i].id,
+            weeklyHours:{
+                mon:[{start:'09:00',end:'19:00'}],
+                tue:[{start:'09:00',end:'19:00'}],
+                wed:i % 2 === 0 ? [] : [{start:'09:00',end:'19:00'}],
+                thu:[{start:'10:00',end:'20:00'}],
+                fri:[{start:'09:00',end:'20:00'}],
+                sat:[{start:'09:00',end:'18:00'}],
+                sun: i < 2 ? [{start:'10:00',end:'16:00'}] : [],
+            },
+            isActive: true, createdAt: now, updatedAt: now, isDemo: true,
+        }});
+    });
+    await window.safeBatchCommit(calOps, 'step-booking-calendars');
+
+    // ── 19. РАХУНКИ-ФАКТУРИ ───────────────────────────────────
+    const INVOICES = [
+        {client:'Beauty Corp',       amount:28000, status:'paid',    daysAgo:-3,  items:[{name:'Корпоративний Beauty Day — 20 осіб', qty:20, price:1400}]},
+        {client:'Коваленко Олена',   amount:3500,  status:'paid',    daysAgo:-7,  items:[{name:'Абонемент манікюр 5 сесій', qty:1, price:3500}]},
+        {client:'Мороз Катерина',    amount:9800,  status:'paid',    daysAgo:-10, items:[{name:'Абонемент нарощування — квартал', qty:1, price:9800}]},
+        {client:'Гончар Анна',       amount:3500,  status:'pending', daysAgo:5,   items:[{name:'Абонемент манікюр 5 сесій', qty:1, price:3500}]},
+        {client:'ТОВ Stella Beauty', amount:15000, status:'pending', daysAgo:7,   items:[{name:'Корпоративна Beauty Day — 10 осіб', qty:10, price:1500}]},
+        {client:'Харченко Ніна',     amount:5200,  status:'pending', daysAgo:14,  items:[{name:'VIP пакет — місяць обслуговування', qty:1, price:5200}]},
+        {client:'Іваненко Тетяна',   amount:2600,  status:'overdue', daysAgo:-2,  items:[{name:'Ламінування брів + нарощування вій', qty:1, price:2600}]},
+    ];
+    const invOps = [];
+    for (const inv of INVOICES) {
+        const iRef = cr.collection('finance_invoices').doc();
+        invOps.push({type:'set', ref:iRef, data:{
+            clientName: inv.client,
+            amount: inv.amount, currency: 'UAH',
+            status: inv.status,
+            dueDate: _demoDate(inv.daysAgo),
+            items: inv.items,
+            note: inv.status === 'overdue' ? 'Нагадати клієнту про оплату' : '',
+            functionId: fRefs[6].id, functionName: FUNCS[6].name,
+            createdBy: uid, createdAt: now, updatedAt: now, isDemo: true,
+        }});
+    }
+    await window.safeBatchCommit(invOps, 'step-invoices');
+
+    // ── 20. ЦІЛІ МЕТРИК ──────────────────────────────────────
+    const mDefSnap = await cr.collection('metrics').get();
+    const mDefs = mDefSnap.docs.filter(d => d.data().isDemo);
+    const TARGET_VALUES = [170000, 65, 820, 9.5, 12]; // по метриках: виручка, клієнти, чек, NPS, нові
+    const targetOps = [];
+    mDefs.forEach((doc, i) => {
+        if (TARGET_VALUES[i] !== undefined) {
+            targetOps.push({type:'set', ref:cr.collection('metricTargets').doc(doc.id), data:{
+                metricId: doc.id,
+                metricName: doc.data().name,
+                target: TARGET_VALUES[i],
+                period: 'weekly',
+                createdBy: uid, createdAt: now, updatedAt: now, isDemo: true,
+            }});
+        }
+    });
+    if (targetOps.length) await window.safeBatchCommit(targetOps, 'step-metric-targets');
+
+    // ── 21. СКЛАД — ОПЕРАЦІЇ ТА ПОСТАЧАЛЬНИКИ ─────────────────
+    // Постачальники
+    const SUPPLIERS = [
+        {name:'KODI Professional Ukraine', contact:'Олег Марченко', phone:'+38044-111-2233', email:'orders@kodi.ua',    terms:'Доставка 2-3 дні, мінімальне замовлення 500 грн'},
+        {name:'OPI Україна — дистриб\'ютор', contact:'Світлана Іщенко', phone:'+38044-222-3344', email:'opi@beauty.ua', terms:'Доставка 3-5 днів, знижка від 5000 грн'},
+        {name:'Lovely Cosmetics',           contact:'Менеджер',     phone:'+38050-333-4455', email:'info@lovely.ua',    terms:'Самовивіз або Нова Пошта від 300 грн'},
+        {name:'Beauty Box Supply',          contact:'Тетяна',       phone:'+38067-444-5566', email:'supply@bbox.ua',    terms:'Доставка щотижня по вівторках'},
+    ];
+    const supRefs = SUPPLIERS.map(() => cr.collection('warehouse_suppliers').doc());
+    await window.safeBatchCommit(SUPPLIERS.map((s, i) => ({type:'set', ref:supRefs[i], data:{
+        name:s.name, contactPerson:s.contact, phone:s.phone,
+        email:s.email, terms:s.terms, isActive:true,
+        createdBy:uid, createdAt:now, updatedAt:now, isDemo:true,
+    }})), 'step-suppliers');
+
+    // Операції складу (прихід/видача/списання)
+    const whSnap = await cr.collection('warehouse_items').get();
+    const whDocs = whSnap.docs.filter(d => d.data().isDemo);
+    if (whDocs.length > 0) {
+        const whOps = [];
+        // Приходи — 3 тижні тому
+        whDocs.slice(0, 8).forEach((doc, i) => {
+            whOps.push({type:'set', ref:cr.collection('warehouse_operations').doc(), data:{
+                itemId: doc.id, itemName: doc.data().name,
+                type: 'IN',
+                qty: [50, 30, 10, 10, 5, 10, 5, 5][i],
+                price: doc.data().purchasePrice || 100,
+                totalPrice: ([50,30,10,10,5,10,5,5][i]) * (doc.data().purchasePrice || 100),
+                supplierId: supRefs[i % supRefs.length].id,
+                supplierName: SUPPLIERS[i % SUPPLIERS.length].name,
+                note: 'Щомісячне поповнення запасів',
+                date: _demoDate(-21),
+                createdBy: uid, createdAt: _demoTs(-21), isDemo: true,
+            }});
+        });
+        // Видача — за поточний тиждень (для 5 майстрів)
+        whDocs.slice(0, 5).forEach((doc, i) => {
+            whOps.push({type:'set', ref:cr.collection('warehouse_operations').doc(), data:{
+                itemId: doc.id, itemName: doc.data().name,
+                type: 'OUT',
+                qty: [10, 5, 3, 2, 4][i],
+                price: doc.data().purchasePrice || 100,
+                totalPrice: ([10,5,3,2,4][i]) * (doc.data().purchasePrice || 100),
+                note: `Видача майстру — ${STAFF[2 + i].name}`,
+                date: _demoDate(-3),
+                createdBy: uid, createdAt: _demoTs(-3), isDemo: true,
+            }});
+        });
+        // Списання (прострочені)
+        whDocs.slice(0, 2).forEach((doc, i) => {
+            whOps.push({type:'set', ref:cr.collection('warehouse_operations').doc(), data:{
+                itemId: doc.id, itemName: doc.data().name,
+                type: 'WRITEOFF',
+                qty: [3, 2][i],
+                price: 0, totalPrice: 0,
+                note: 'Списання — закінчився строк придатності',
+                date: _demoDate(-14),
+                createdBy: uid, createdAt: _demoTs(-14), isDemo: true,
+            }});
+        });
+        await window.safeBatchCommit(whOps, 'step-warehouse-ops');
+    }
+
+    // ── 22. НОРМИ КОШТОРИСУ (правильна колекція) ─────────────
+    // estimate_norms — для вкладки Кошторис
+    const NORM_DEFS_STD = [
+        {
+            name:'Манікюр класичний + гель-лак',
+            category:'beauty_service', inputUnit:'клієнт',
+            materials:[
+                {name:'Гель-лак Kodi (порція)',      qty:0.1,  unit:'мл',    price:180},
+                {name:'Топ без липкого (порція)',     qty:0.08, unit:'мл',    price:185},
+                {name:'База каучукова (порція)',      qty:0.08, unit:'мл',    price:165},
+                {name:'Рукавиці нітрил (2 шт)',      qty:2,    unit:'шт',    price:3},
+                {name:'Пилочка одноразова',          qty:1,    unit:'шт',    price:8},
+                {name:'Серветки безворсові (5 шт)',  qty:5,    unit:'шт',    price:0.8},
+                {name:'Рідина для зняття (порція)',  qty:5,    unit:'мл',    price:0.7},
+            ],
+        },
+        {
+            name:'Нарощування нігтів гелем',
+            category:'beauty_service', inputUnit:'клієнт',
+            materials:[
+                {name:'Гель для нарощування',        qty:2,    unit:'г',     price:4.5},
+                {name:'Форми для нарощування (10)',  qty:10,   unit:'шт',    price:0.8},
+                {name:'Праймер (порція)',             qty:0.2,  unit:'мл',    price:9.7},
+                {name:'Дегідратор (порція)',          qty:0.2,  unit:'мл',    price:6.5},
+                {name:'Гель-лак (порція)',            qty:0.15, unit:'мл',    price:180},
+                {name:'Рукавиці нітрил (2 шт)',      qty:2,    unit:'шт',    price:3},
+                {name:'Пилочки набір',               qty:1,    unit:'набір', price:35},
+            ],
+        },
+        {
+            name:'Нарощування вій 2D-3D',
+            category:'beauty_service', inputUnit:'клієнт',
+            materials:[
+                {name:'Вії пучкові 0.10 C (30 шт)', qty:30,   unit:'шт',    price:4.5},
+                {name:'Клей для вій Lovely (порц.)', qty:0.2,  unit:'мл',    price:64},
+                {name:'Ремувер (порція)',             qty:0.3,  unit:'мл',    price:25.5},
+                {name:'Патчі під очі (пара)',        qty:1,    unit:'пара',  price:12},
+                {name:'Ватні палички (5 шт)',        qty:5,    unit:'шт',    price:0.8},
+            ],
+        },
+        {
+            name:'Ламінування брів + фарбування',
+            category:'beauty_service', inputUnit:'клієнт',
+            materials:[
+                {name:'Склад для ламінування',       qty:0.5,  unit:'мл',    price:64},
+                {name:'Фарба для брів RefectoCil',   qty:0.3,  unit:'мл',    price:81.7},
+                {name:'Фіксатор (порція)',            qty:0.5,  unit:'мл',    price:40},
+                {name:'Щіточки одноразові (3 шт)',   qty:3,    unit:'шт',    price:2},
+                {name:'Силіконові накладки (пара)',  qty:1,    unit:'пара',  price:45},
+            ],
+        },
+        {
+            name:'Педикюр апаратний + гель-лак',
+            category:'beauty_service', inputUnit:'клієнт',
+            materials:[
+                {name:'Гель-лак для ніг (порція)',   qty:0.15, unit:'мл',    price:180},
+                {name:'Фреза (знос на процедуру)',   qty:0.02, unit:'шт',    price:285},
+                {name:'Дезінфекція ванночки',        qty:0.1,  unit:'порц',  price:22.5},
+                {name:'Рукавиці нітрил (2 шт)',      qty:2,    unit:'шт',    price:3},
+                {name:'Топ та база (порція)',         qty:0.1,  unit:'мл',    price:175},
+            ],
+        },
+    ];
+
+    for (const nd of NORM_DEFS_STD) {
+        const nRef = cr.collection('estimate_norms').doc();
+        await window.safeBatchCommit([{type:'set', ref:nRef, data:{
+            name:nd.name, category:nd.category, inputUnit:nd.inputUnit,
+            niche:'beauty_salon', isActive:true,
+            createdBy:uid, createdAt:now, updatedAt:now, isDemo:true,
+        }}], 'step-norm-def');
+        const matOps = nd.materials.map(m => ({type:'set', ref:nRef.collection('materials').doc(), data:{
+            name:m.name, qty:m.qty, unit:m.unit, pricePerUnit:m.price,
+            coefficient:1, isDemo:true,
+        }}));
+        await window.safeBatchCommit(matOps, 'step-norm-materials');
+    }
+
+    // Приклад кошторису прив\'язаний до проекту (правильна колекція)
+    const projSnapEst = await cr.collection('projects').get();
+    const projForEst = projSnapEst.docs.find(d => d.data().name?.includes('Гулівер'));
+    if (projForEst) {
+        const estRef = cr.collection('project_estimates').doc();
+        await window.safeBatchCommit([{type:'set', ref:estRef, data:{
+            name:'Відкриття ТРЦ Гулівер — зведений кошторис',
+            clientName:'GlowStudio (власний проект)',
+            projectId: projForEst.id, projectName: projForEst.data().name,
+            status:'approved', totalAmount:680000, currency:'UAH',
+            createdBy:uid, createdAt:now, updatedAt:now, isDemo:true,
+        }}], 'step-project-estimate');
+        const PE_ITEMS = [
+            {name:'Крісла майстра манікюру (5 шт)',  qty:5,   unit:'шт',   price:18000, cat:'Меблі'},
+            {name:'Стійка адміністратора',           qty:1,   unit:'шт',   price:24000, cat:'Меблі'},
+            {name:'Дзеркала з підсвіткою (5 шт)',   qty:5,   unit:'шт',   price:8500,  cat:'Меблі'},
+            {name:'Ремонт та оздоблення 80м²',      qty:80,  unit:'м²',   price:4500,  cat:'Ремонт'},
+            {name:'Вивіска та брендинг',             qty:1,   unit:'компл',price:32000, cat:'Маркетинг'},
+            {name:'UV/LED лампи (5 шт)',             qty:5,   unit:'шт',   price:2800,  cat:'Обладнання'},
+            {name:'Стартовий запас гель-лаків 500шт',qty:500,unit:'шт',   price:180,   cat:'Матеріали'},
+            {name:'Витратні матеріали (старт)',      qty:1,   unit:'компл',price:18000, cat:'Матеріали'},
+            {name:'CRM налаштування',                qty:1,   unit:'компл',price:8000,  cat:'IT'},
+        ];
+        await window.safeBatchCommit(PE_ITEMS.map(item => ({type:'set', ref:estRef.collection('items').doc(), data:{
+            name:item.name, quantity:item.qty, unit:item.unit,
+            pricePerUnit:item.price, totalPrice:item.qty * item.price,
+            category:item.cat, isDemo:true, createdAt:now,
+        }})), 'step-estimate-items');
+    }
+
+    // ── 23. КООРДИНАЦІЇ — СЕСІЇ ───────────────────────────────
+    const coordSnap = await cr.collection('coordinations').get();
+    const coordDocs = coordSnap.docs.filter(d => d.data().isDemo);
+    const sessOps = [];
+    coordDocs.slice(0, 3).forEach((doc, i) => {
+        const offsetDays = -(i * 7 + 1);
+        sessOps.push({type:'set', ref:cr.collection('coordination_sessions').doc(), data:{
+            coordId: doc.id,
+            coordName: doc.data().name,
+            coordType: doc.data().type || 'meeting',
+            startedAt: new Date(Date.now() + offsetDays * 86400000).toISOString(),
+            finishedAt: new Date(Date.now() + offsetDays * 86400000 + 55 * 60000).toISOString(),
+            durationMin: 55,
+            participantIds: doc.data().participantIds || [uid],
+            decisions: [
+                {text:['Підняти ціну на манікюр з гель-лаком з 650 до 680 грн з 1 квітня','Запустити акцію "Приведи подругу — знижка 10% обом" на квітень','Замовити нову колекцію OPI Spring 2025 на 15 тис. грн'][i], taskId:'', authorId:uid},
+                {text:['Ввести обов\'язкову фотографію результату з дозволу клієнта','Підготувати SMM-контент план на 2 тижні вперед','Перевірити залишки матеріалів і зробити замовлення'][i], taskId:'', authorId:uid},
+            ],
+            summary: ['Обговорили ціноутворення на квітень, запустили акцію', 'Узгодили контент-план і маркетингову стратегію', 'Зробили ревізію складу, сформували замовлення'][i],
+            createdBy: uid, createdAt: now, isDemo: true,
+        }});
+    });
+    if (sessOps.length) await window.safeBatchCommit(sessOps, 'step-coord-sessions');
+
+
     // ── 16. ПРОФІЛЬ КОМПАНІЇ ─────────────────────────────────
     await cr.update({
         name:           'GlowStudio',
