@@ -3683,7 +3683,7 @@ function _renderActivitiesUI(c, allActivities) {
             <div style="font-weight:600;font-size:0.85rem;color:#111827;margin-bottom:0.65rem;">Нова активність</div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
                 ${Object.entries(ACT_LABELS).map(([k,v]) => `
-                <button onclick="actSetType('${k}')" id="actType_${k}"
+                <button id="actType_${k}"
                     style="padding:0.4rem;border:1.5px solid #e8eaed;border-radius:7px;
                     background:white;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;
                     gap:4px;justify-content:center;color:#374151;">
