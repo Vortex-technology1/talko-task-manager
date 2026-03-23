@@ -5,6 +5,11 @@
 // ============================================================
 'use strict';
 
+// ── HTML escape (XSS protection) ───────────────────────────
+function _arEsc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 // ── Типи дій ───────────────────────────────────────────────
 const AR = {
     // Завдання
@@ -226,7 +231,7 @@ async function loadARData() {
         // Обрізаємо до ліміту після фільтрації
         renderAREntries(filtered.slice(0, _arFilters.limit || 100), content);
     } catch(e) {
-        content.innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;font-size:0.85rem;">Помилка: ${e.message}</div>`;
+        content.innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;font-size:0.85rem;">Помилка: ${_arEsc(e.message)}</div>`;
     }
 }
 

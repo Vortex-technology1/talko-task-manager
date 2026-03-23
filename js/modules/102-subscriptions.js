@@ -4,6 +4,11 @@
 // ============================================================
 'use strict';
 
+// ── HTML escape (XSS protection) ───────────────────────────
+function _subsEsc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 // ── Gift certificate code generator ───────────────────────
 function _genCertCode() {
     const prefix = 'GLOW';
@@ -224,7 +229,7 @@ window.initSubscriptionsPanel = async function(containerId) {
                 ${certsHtml}
             </div>`;
     } catch(e) {
-        container.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:.82rem;">Помилка: ${e.message}</div>`;
+        container.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:.82rem;">Помилка: ${_subsEsc(e.message)}</div>`;
     }
 };
 

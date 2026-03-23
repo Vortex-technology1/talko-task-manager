@@ -11,6 +11,11 @@
 //   { stageId, title, dueDays, assignTo: 'assignee'|'creator'|'me' }
 // ============================================================
 
+// ── HTML escape (XSS protection) ───────────────────────────
+function _crmTasksEsc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 // ── Авто-задачі при зміні стадії ───────────────────────────
 window.crmAutoTasksOnStageChange = async function (deal, newStage) {
     if (!deal?.id || !newStage) return;
@@ -85,7 +90,7 @@ window.crmRenderDealTasks = async function (dealId) {
         const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         _crmRenderTasksList(c, tasks, dealId);
     } catch (e) {
-        c.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;padding:0.5rem;">Помилка: ${e.message}</div>`;
+        c.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;padding:0.5rem;">Помилка: ${_crmTasksEsc(e.message)}</div>`;
     }
 };
 

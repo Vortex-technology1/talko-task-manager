@@ -4,6 +4,11 @@
 // ============================================================
 'use strict';
 
+// ── HTML escape (XSS protection) ───────────────────────────
+function _loyaltyEsc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 const LOYALTY_RULES = {
     earnRate: 10,       // 10 балів за 100 грн (10%)
     tiers: {
@@ -163,7 +168,7 @@ window.initLoyaltyPanel = async function(containerId) {
                 </table>
             </div>`;
     } catch(e) {
-        container.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:.82rem;">Помилка: ${e.message}</div>`;
+        container.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:.82rem;">Помилка: ${_loyaltyEsc(e.message)}</div>`;
     }
 };
 
