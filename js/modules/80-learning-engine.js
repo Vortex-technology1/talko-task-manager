@@ -5261,6 +5261,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         const title = getLangField(module, 'title', lang);
         const subtitle = getLangField(module, 'subtitle', lang);
         const content = getLangField(module, 'lessonContent', lang);
+        if (moduleId === 12) console.log('[L12 DEBUG] content length:', content ? content.length : 'EMPTY', 'module keys:', Object.keys(module).filter(k=>k.startsWith('lesson')));
         const isCompleted = module.completed;
         const hwText = (learningProgress[moduleId] || {}).homeworkText || '';
         const hwDone = (learningProgress[moduleId] || {}).homeworkDone || false;

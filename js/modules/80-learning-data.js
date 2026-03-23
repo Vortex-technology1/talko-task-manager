@@ -8973,12 +8973,12 @@ Bist du dabei?</div>
                 videoLink: null,
                 materialsLink: null,
                 presOverlay: `<style>
-@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Onest:wght@300;400;500;600;700&display=swap');
+/* fonts loaded externally */
 
 #l12Ov{
   position:fixed;inset:0;z-index:99999;display:none;flex-direction:column;
   background:#08090d;
-  font-family:'Onest',sans-serif;
+  font-family:'Onest','Helvetica Neue',sans-serif;
 }
 #l12Ov.on{display:flex}
 #l12Ov *{box-sizing:border-box}
@@ -9037,7 +9037,7 @@ Bist du dabei?</div>
   margin-bottom:2rem;
 }
 .l12-title-slide h1{
-  font-family:'Unbounded',sans-serif;
+  font-family:'Unbounded','Arial Black',sans-serif;
   font-size:clamp(2.5rem,8vw,6rem);font-weight:900;
   line-height:1;margin:0 0 .5rem;color:#fff;
   text-transform:uppercase;letter-spacing:-.02em;
@@ -9066,7 +9066,7 @@ Bist du dabei?</div>
 /* Slide number */
 .l12-num-tag{
   position:absolute;bottom:2rem;left:7vw;
-  font-family:'Unbounded',sans-serif;
+  font-family:'Unbounded','Arial Black',sans-serif;
   font-size:.65rem;font-weight:700;letter-spacing:.15em;
   color:var(--muted);text-transform:uppercase;
   display:flex;align-items:center;gap:.75rem;
@@ -9088,7 +9088,7 @@ Bist du dabei?</div>
 }
 .l12-label::before{content:'';display:inline-block;width:1.5rem;height:2px;background:var(--cyan);border-radius:2px}
 .l12-h{
-  font-family:'Unbounded',sans-serif;
+  font-family:'Unbounded','Arial Black',sans-serif;
   font-size:clamp(1.2rem,3.5vw,2.4rem);font-weight:700;
   color:#fff;line-height:1.15;margin:0 0 1.75rem;
   max-width:900px;
@@ -9158,7 +9158,7 @@ Bist du dabei?</div>
   content:'?';
   position:absolute;top:-12px;left:1.5rem;
   background:var(--bg);color:var(--cyan);
-  font-family:'Unbounded',sans-serif;font-weight:900;font-size:.75rem;
+  font-family:'Unbounded','Arial Black',sans-serif;font-weight:900;font-size:.75rem;
   padding:0 .5rem;
 }
 .l12-question p{font-size:clamp(.9rem,1.7vw,1.1rem);color:var(--text);line-height:1.7;margin:.5rem 0;font-weight:500}
@@ -9212,7 +9212,7 @@ Bist du dabei?</div>
   position:relative;
 }
 .l12-outro h2{
-  font-family:'Unbounded',sans-serif;
+  font-family:'Unbounded','Arial Black',sans-serif;
   font-size:clamp(1.8rem,5vw,3.5rem);font-weight:900;
   color:#fff;line-height:1.1;margin:0 0 1rem;
 }
@@ -9255,14 +9255,14 @@ Bist du dabei?</div>
   background:transparent;border:1px solid var(--border2);
   color:var(--muted2);border-radius:10px;padding:.5rem 1.25rem;
   cursor:pointer;font-size:.82rem;font-weight:600;
-  font-family:'Onest',sans-serif;
+  font-family:'Onest','Helvetica Neue',sans-serif;
   transition:all .15s;
 }
 .l12-nav-btn:hover:not(:disabled){border-color:var(--cyan);color:var(--cyan)}
 .l12-nav-btn:disabled{opacity:.25;cursor:default}
 .l12-nav-center{display:flex;align-items:center;gap:1rem}
 .l12-nav-counter{
-  font-family:'Unbounded',sans-serif;
+  font-family:'Unbounded','Arial Black',sans-serif;
   font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.08em;
 }
 .l12-nav-progress{
@@ -9275,7 +9275,7 @@ Bist du dabei?</div>
   background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.25);
   color:#ff4757;border-radius:10px;padding:.5rem 1.1rem;
   cursor:pointer;font-size:.82rem;font-weight:700;
-  font-family:'Onest',sans-serif;
+  font-family:'Onest','Helvetica Neue',sans-serif;
   transition:all .15s;
 }
 .l12-close-btn:hover{background:rgba(255,71,87,.2)}
@@ -9307,7 +9307,7 @@ Bist du dabei?</div>
   background-size:40px 40px;
 }
 .l12-fs-org h3{
-  font-family:'Unbounded',sans-serif;
+  font-family:'Unbounded','Arial Black',sans-serif;
   font-size:clamp(1rem,2.5vw,1.5rem);font-weight:700;
   color:#fff;margin:0 0 1.25rem;position:relative;z-index:1;
 }
