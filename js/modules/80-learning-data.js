@@ -5693,886 +5693,6 @@ Bist du dabei?</div>
 
                 lessonContent: `
 <style>
-.l10-pres-btn-wrap{background:linear-gradient(135deg,#0f1c3f,#1a2e5a);border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.l10-pres-btn-info{color:white}
-.l10-pres-btn-title{font-size:.95rem;font-weight:700;margin-bottom:.25rem}
-.l10-pres-btn-sub{font-size:.78rem;color:#94a3b8}
-.l10-pres-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.4rem;background:#22c55e;color:white;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s}
-.l10-pres-btn:hover{background:#16a34a}
-#l10PresOverlay{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
-#l10PresOverlay.active{display:flex}
-.l10-slide{display:none;width:100%;height:100%;position:relative;overflow:hidden}
-.l10-slide.active{display:flex}
-/* Left dark panel */
-.l10-slide-left{width:34%;background:linear-gradient(160deg,#0d1b3e 0%,#162447 60%,#1f3a6e 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2rem 1.75rem;position:relative;flex-shrink:0}
-.l10-slide-left h2{color:white;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:900;line-height:1.15;margin:0;text-transform:uppercase}
-.l10-slide-left h2 u{text-decoration-color:rgba(255,255,255,.4)}
-.l10-slide-left .l10-sl-sub{color:#94a3b8;font-size:.82rem;margin-top:.4rem}
-/* Triangle decoration */
-.l10-tri{position:absolute;bottom:-2px;right:-2px;width:0;height:0;border-left:80px solid transparent;border-bottom:80px solid #1a3060}
-/* Slide number badge */
-.l10-badge{position:absolute;bottom:1rem;left:1rem;background:white;color:#0d1b3e;font-weight:900;font-size:.85rem;width:2.2rem;height:2.2rem;display:flex;align-items:center;justify-content:center;border-radius:4px}
-/* Right content panel */
-.l10-slide-right{flex:1;background:white;padding:2.5rem 3rem;display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto}
-.l10-slide-right h3{font-size:clamp(1rem,2.5vw,1.6rem);font-weight:900;margin:0 0 1rem;color:#111}
-.l10-slide-right p{font-size:clamp(.8rem,1.5vw,1rem);color:#333;line-height:1.7;margin:.6rem 0}
-.l10-slide-right p.small{font-size:.82rem;color:#6b7280}
-.l10-slide-right ul{padding-left:1.4rem;margin:.5rem 0}
-.l10-slide-right ul li{font-size:clamp(.78rem,1.4vw,.95rem);color:#333;line-height:1.7;margin:.25rem 0}
-.l10-slide-right .l10-q{color:#111;font-size:clamp(.85rem,1.6vw,1.05rem);font-weight:600;margin:.8rem 0;line-height:1.6}
-.l10-slide-right .l10-gray{color:#9ca3af;font-size:clamp(.75rem,1.3vw,.88rem);line-height:1.6;margin-top:.4rem}
-/* Quote style */
-.l10-quote-box{background:#f0f9ff;border-left:4px solid #3b82f6;padding:.85rem 1rem;border-radius:0 8px 8px 0;font-size:clamp(.8rem,1.4vw,.95rem);color:#1e3a8a;line-height:1.6;margin:.75rem 0}
-/* Green highlight */
-.l10-green{color:#15803d;font-weight:700;text-decoration:underline;text-underline-offset:3px}
-/* Red field placeholder */
-.l10-field-note{color:#dc2626;font-style:italic;font-size:clamp(.8rem,1.4vw,.95rem)}
-/* IKEA / company box */
-.l10-company-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:1rem 1.25rem;margin:.75rem 0}
-.l10-company-box .l10-cb-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#22c55e;margin-bottom:.3rem}
-.l10-company-box .l10-cb-text{font-size:clamp(.8rem,1.4vw,.95rem);color:#374151;line-height:1.6;font-style:italic}
-/* Two-col items */
-.l10-num-item{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f1f5f9}
-.l10-num-item:last-child{border-bottom:none}
-.l10-num{width:28px;height:28px;background:#1a2e5a;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:2px}
-.l10-num-text{font-size:clamp(.8rem,1.4vw,.95rem);color:#374151;line-height:1.6}
-/* Exercise card */
-.l10-exercise{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:1rem 1.25rem;font-size:clamp(.8rem,1.4vw,.95rem);color:#92400e;line-height:1.7}
-.l10-exercise strong{color:#c2410c}
-/* Star icon */
-.l10-star{color:#1a2e5a;font-size:1.3rem;display:block;margin-bottom:.6rem}
-/* Resume slide */
-.l10-resume-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem 1.25rem;font-size:clamp(.8rem,1.4vw,.95rem);color:#166534;line-height:1.7;margin:.5rem 0}
-/* Road/star visual placeholder */
-.l10-visual{text-align:center;padding:1.5rem 0;font-size:3rem;opacity:.3}
-/* Fill form */
-.l10-fill-wrap{margin:.5rem 0}
-.l10-fill-label{font-size:.75rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
-.l10-fill-inp{width:100%;border:2px dashed #3b82f6;border-radius:8px;padding:.6rem .85rem;font-size:clamp(.8rem,1.4vw,.92rem);color:#111;background:#f8fbff;resize:vertical;min-height:60px;box-sizing:border-box;font-family:inherit}
-.l10-fill-inp:focus{outline:none;border-color:#1d4ed8;background:white}
-/* Navigation */
-.l10-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;background:rgba(0,0,0,.85);z-index:10}
-.l10-nav-btn{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:.45rem 1.2rem;cursor:pointer;font-size:.82rem;font-weight:600;transition:background .15s}
-.l10-nav-btn:hover{background:rgba(255,255,255,.3)}
-.l10-nav-btn:disabled{opacity:.3;cursor:default}
-.l10-nav-counter{color:#94a3b8;font-size:.78rem;font-weight:600}
-.l10-nav-close{background:#ef4444;color:white;border:none;border-radius:8px;padding:.45rem 1rem;cursor:pointer;font-size:.82rem;font-weight:700}
-.l10-nav-save{background:#22c55e;color:white;border:none;border-radius:8px;padding:.45rem 1rem;cursor:pointer;font-size:.82rem;font-weight:700;margin-right:.5rem}
-/* Dark slide (ending) */
-.l10-slide-dark{background:linear-gradient(160deg,#0d1b3e,#162447);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem}
-.l10-slide-dark h2{color:white;font-size:clamp(1.4rem,4vw,2.5rem);font-weight:900;text-transform:uppercase;margin:0 0 .75rem}
-.l10-slide-dark p{color:#94a3b8;font-size:clamp(.85rem,1.8vw,1.1rem);max-width:600px}
-/* Rule items */
-.l10-rule-item{display:flex;align-items:flex-start;gap:.65rem;padding:.55rem 0;font-size:clamp(.78rem,1.4vw,.92rem);color:#374151;line-height:1.6;border-bottom:1px solid #f1f5f9}
-.l10-rule-item:last-child{border-bottom:none}
-.l10-rule-dot{width:8px;height:8px;border-radius:50%;background:#1a2e5a;flex-shrink:0;margin-top:.45rem}
-/* Bullet list styled */
-.l10-bullet{margin:.4rem 0}
-.l10-bullet li{list-style:none;display:flex;gap:.6rem;align-items:flex-start;font-size:clamp(.78rem,1.4vw,.92rem);color:#374151;line-height:1.6;padding:.25rem 0}
-.l10-bullet li::before{content:"●";color:#1a2e5a;flex-shrink:0;margin-top:1px}
-/* Important notice */
-.l10-notice{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:.75rem 1rem;font-size:clamp(.75rem,1.3vw,.88rem);color:#7f1d1d;line-height:1.6;margin:.5rem 0}
-</style>
-
-<div class="l10-pres-btn-wrap">
-  <div class="l10-pres-btn-info">
-    <div class="l10-pres-btn-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16" style="vertical-align:-3px;margin-right:6px"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-      Заняття 1 — Цілі, задуми і майбутнє компанії
-    </div>
-    <div class="l10-pres-btn-sub">46 слайдів · 1.5 год · Показати команді</div>
-  </div>
-  <button class="l10-pres-btn" onclick="window._l10LaunchPres()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="15" height="15"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    Запустити презентацію
-  </button>
-</div>
-
-<div id="l10PresOverlay">
-  <!-- SLIDES CONTAINER -->
-  <div id="l10Slides" style="flex:1;position:relative;overflow:hidden">
-
-    <!-- SLIDE 1: Title -->
-    <div class="l10-slide active" id="l10s1">
-      <div class="l10-slide-left" style="align-items:center;justify-content:center;text-align:center">
-        <div style="position:absolute;top:1.5rem;right:1rem;width:3px;height:60px;background:rgba(255,255,255,.25)"></div>
-        <h2 style="text-align:center">ЦІЛІ, ЗАДУМИ<br>І МАЙБУТНЄ<br>КОМПАНІЇ</h2>
-        <div class="l10-sl-sub" style="margin-top:.75rem">ЗАНЯТТЯ 1<br>З циклу семінарів з управління</div>
-        <div class="l10-tri"></div>
-        <div class="l10-badge">1</div>
-      </div>
-      <div class="l10-slide-right" style="align-items:center;justify-content:center">
-        <div style="text-align:center;opacity:.15">
-          <svg viewBox="0 0 200 200" width="200" height="200">
-            <polygon points="100,10 190,190 10,190" fill="#1a2e5a"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 2: ЦІЛІ - питання 1 -->
-    <div class="l10-slide" id="l10s2">
-      <div class="l10-slide-left">
-        <h2>ЦІЛІ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">2</div>
-      </div>
-      <div class="l10-slide-right">
-        <p>Кожна компанія має якусь мету, на досягнення якої працює весь колектив.</p>
-        <div class="l10-q">Як ви вважаєте, яка ціль має наша компанія?</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 3: ЦІЛІ - питання 2 -->
-    <div class="l10-slide" id="l10s3">
-      <div class="l10-slide-left">
-        <h2>ЦІЛІ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">3</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-q">Якщо у різних співробітників різне уявлення про мету, як це впливає на діяльність компанії?</div>
-        <div class="l10-q" style="margin-top:1.5rem">Що станеться, якщо так продовжуватиметься?</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 4: МЕТА ЗАНЯТТЯ -->
-    <div class="l10-slide" id="l10s4">
-      <div class="l10-slide-left">
-        <h2>МЕТА<br>ЗАНЯТТЯ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">4</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-num-item">
-          <div class="l10-num">1</div>
-          <div class="l10-num-text"><u>Мета заняття</u> — познайомити вас з основною метою нашої компанії, з тим, як ми йдемо до неї і якою має стати наша компанія</div>
-        </div>
-        <div class="l10-num-item" style="margin-top:.5rem">
-          <div class="l10-num">2</div>
-          <div class="l10-num-text">Результатом нашої зустрічі має бути ваше розуміння мети компанії та того майбутнього, яке ми створюватимемо з вами для її досягнення</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 5: ПРАВИЛА -->
-    <div class="l10-slide" id="l10s5">
-      <div class="l10-slide-left">
-        <h2>ПРАВИЛА</h2>
-        <div class="l10-tri"></div><div class="l10-badge">5</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Заняття триватиме близько 1,5 год. без перерви.</span></div>
-        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Поставте мобільні телефони на беззвучний режим.</span></div>
-        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Якщо отримаєте терміновий дзвінок — вийдіть з аудиторії і поверніться.</span></div>
-        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Запитання можна ставити, піднімаючи руку.</span></div>
-        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Якщо питань буде багато — запишемо та розберемо після завершення.</span></div>
-        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>У кожного має бути папір та ручка для записів.</span></div>
-        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Наприкінці заняття я попрошу відповісти на кілька запитань і залишити відгуки.</span></div>
-      </div>
-    </div>
-
-    <!-- SLIDE 6: ВАЖЛИВЕ ПРАВИЛО -->
-    <div class="l10-slide" id="l10s6">
-      <div class="l10-slide-left">
-        <h2>ВАЖЛИВЕ<br>ПРАВИЛО</h2>
-        <div class="l10-tri"></div><div class="l10-badge">6</div>
-      </div>
-      <div class="l10-slide-right">
-        <p>Якщо щось здалося вам незрозумілим, дивним, заплутаним — піднімайте руку.</p>
-        <p>І відразу ж, як це здалося.</p>
-        <div class="l10-quote-box" style="margin-top:1.25rem">Нас привчають ще у школі до того, що соромно чогось не знати.<br><br>Але коли людина не розуміє, вона не може діяти, використовувати знання.</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 7: НАШІ СЛОВА (fill-in) -->
-    <div class="l10-slide" id="l10s7">
-      <div class="l10-slide-left">
-        <h2>НАШІ<br>СЛОВА</h2>
-        <div class="l10-tri"></div><div class="l10-badge">7</div>
-      </div>
-      <div class="l10-slide-right">
-        <p style="margin-bottom:.75rem">Спеціальні терміни, які розуміють у нашій компанії:</p>
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Наші терміни (заповніть перед заняттям)</div>
-          <textarea class="l10-fill-inp" id="l10f_terms" placeholder="Наприклад: КП — комерційна пропозиція, МВП — мінімально життєздатний продукт..." rows="6" oninput="window._l10SaveField('terms',this.value)"></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 8: ВПРАВА -->
-    <div class="l10-slide" id="l10s8">
-      <div class="l10-slide-left">
-        <h2>ВПРАВА</h2>
-        <div class="l10-tri"></div><div class="l10-badge">8</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-exercise">
-          <strong>Намалюйте:</strong>
-          <ul class="l10-bullet" style="margin-top:.5rem">
-            <li>будинок</li>
-            <li>дерево</li>
-            <li>сонце</li>
-            <li>траву під деревом</li>
-            <li>А тепер намалюйте...</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 9: ОСОБИСТІ ЦІЛІ -->
-    <div class="l10-slide" id="l10s9">
-      <div class="l10-slide-left">
-        <h2>ОСОБИСТІ<br>ЦІЛІ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">9</div>
-      </div>
-      <div class="l10-slide-right">
-        <p>Кожна людина має свої особисті цілі.</p>
-        <div class="l10-q">Які особисті цілі є у вас?</div>
-        <div class="l10-q" style="margin-top:1.25rem">У чому ви бачите відмінність особистих цілей від мети компанії, яку ви назвали раніше?</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 10: РЕЗЮМЕ -->
-    <div class="l10-slide" id="l10s10">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">10</div>
-      </div>
-      <div class="l10-slide-right" style="justify-content:center">
-        <div class="l10-resume-box" style="font-size:clamp(.9rem,2vw,1.2rem);font-weight:600;text-align:center;padding:1.5rem">
-          Цілі компанії та особисті цілі будь-якого члена колективу — зовсім різні поняття.
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 11: МЕТА КОМПАНІЇ -->
-    <div class="l10-slide" id="l10s11">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <h3 style="font-size:clamp(1.2rem,3vw,2rem)">МЕТА КОМПАНІЇ —</h3>
-        <p class="l10-green" style="font-size:clamp(1rem,2.5vw,1.5rem);margin-top:.5rem">приносити користь якомога більшій кількості людей</p>
-        <div style="text-align:right;margin-top:auto;padding-top:2rem;opacity:.2;font-size:3rem">👥</div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">11</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 12: GOOGLE -->
-    <div class="l10-slide" id="l10s12">
-      <div class="l10-slide-left">
-        <h2>GOOGLE</h2>
-        <div class="l10-tri"></div><div class="l10-badge">12</div>
-      </div>
-      <div class="l10-slide-right">
-        <p style="font-size:clamp(.9rem,2vw,1.25rem);font-weight:700;margin-bottom:1rem">«Зробити світову інформацію університально доступною та корисною»</p>
-        <div class="l10-company-box">
-          <div class="l10-cb-label">Як реалізується</div>
-          <div class="l10-cb-text">Компанія приносить користь людям, роблячи доступною потрібну інформацію</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 13: MICROSOFT -->
-    <div class="l10-slide" id="l10s13">
-      <div class="l10-slide-left">
-        <h2>MICROSOFT</h2>
-        <div class="l10-tri"></div><div class="l10-badge">13</div>
-      </div>
-      <div class="l10-slide-right">
-        <p style="font-size:clamp(.9rem,2vw,1.2rem);font-weight:700;margin-bottom:1rem">«…Ми працюємо, щоб допомогти людям та бізнесу по всьому світу реалізувати їх повний потенціал»</p>
-        <div class="l10-company-box">
-          <div class="l10-cb-label">Як реалізується</div>
-          <div class="l10-cb-text">Компанія приносить користь, допомагаючи людям реалізовуватись</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 14: РЕЗЮМЕ - Ціль -->
-    <div class="l10-slide" id="l10s14">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">14</div>
-      </div>
-      <div class="l10-slide-right" style="justify-content:center">
-        <div style="text-align:center;margin-bottom:1.5rem;font-size:1.5rem;font-weight:900;color:#1a2e5a">Ціль</div>
-        <div class="l10-resume-box">Саме основна мета наповнює діяльність будь-якої компанії змістом і є дороговказом протягом усього її життя.</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 15: Питання про місцеву компанію (fill-in) -->
-    <div class="l10-slide" id="l10s15">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <p>Основна мета є у будь-якої компанії: і маленької, і великої.</p>
-        <div class="l10-fill-wrap" style="margin-top:1rem">
-          <div class="l10-fill-label">Відома компанія у вашому місті/країні (приклад)</div>
-          <textarea class="l10-fill-inp" id="l10f_local_company" placeholder="Наприклад: АТБ, Нова Пошта, Rozetka..." rows="2" oninput="window._l10SaveField('local_company',this.value)"></textarea>
-        </div>
-        <div class="l10-q" style="margin-top:.75rem">Як ви вважаєте, яка основна мета у цієї компанії?</div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">15</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 16: РЕЗЮМЕ -->
-    <div class="l10-slide" id="l10s16">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">16</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-resume-box">Ми розібрали поняття "основна мета компанії" — це безстрокова мета, сенс життя компанії.</div>
-        <p style="margin-top:1rem">Трохи пізніше я розповім про те, якою є основна мета нашої компанії.</p>
-        <p>А зараз давайте розберемося ще з одним поняттям.</p>
-      </div>
-    </div>
-
-    <!-- SLIDE 17: Google питання -->
-    <div class="l10-slide" id="l10s17">
-      <div class="l10-slide-left">
-        <h2>GOOGLE</h2>
-        <div class="l10-tri"></div><div class="l10-badge">17</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-company-box">
-          <div class="l10-cb-label">Основна мета</div>
-          <div class="l10-cb-text">«Зробити світову інформацію університально доступною та корисною»</div>
-        </div>
-        <div class="l10-q" style="margin-top:1.25rem">Можуть бути ще якісь великі та малі компанії, які мають таку ж мету — зробити доступною та корисною світову інформацію?</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 18: РЕЗЮМЕ - задум -->
-    <div class="l10-slide" id="l10s18">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">18</div>
-      </div>
-      <div class="l10-slide-right" style="justify-content:center">
-        <div class="l10-resume-box">Основна мета зазвичай не є унікальною і до однієї мети можуть йти різні компанії.<br><br>Але при цьому вони діятимуть по-різному.</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 19: ЗАДУМ КОМПАНІЇ -->
-    <div class="l10-slide" id="l10s19">
-      <div class="l10-slide-left">
-        <h2>ЗАДУМ<br>КОМПАНІЇ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">19</div>
-      </div>
-      <div class="l10-slide-right">
-        <p class="small">Чи не основна мета, а задум компанії робить компанію особливою. І саме у задумі закладено відмінності та основний спосіб дії.</p>
-        <p style="margin-top:1rem">Особливий спосіб, через який компанія рухається для досягнення своєї основної мети, називається <strong>ЗАДУМ компанії.</strong></p>
-        <div class="l10-visual">★ ➜ ☆</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 20: РЕЗЮМЕ - Ціль і Задум -->
-    <div class="l10-slide" id="l10s20">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">20</div>
-      </div>
-      <div class="l10-slide-right" style="justify-content:center">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-          <div style="text-align:center;font-size:1.1rem;font-weight:900;color:#1a2e5a">Ціль</div>
-          <div style="text-align:center;font-size:1.1rem;font-weight:900;color:#1a2e5a">Задум</div>
-        </div>
-        <div class="l10-resume-box">Якщо мета — це дороговказ, то задум — це шлях, яким ми йдемо за нею.<br><br>Задум — це особливий унікальний для компанії образ дій.</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 21: IKEA питання -->
-    <div class="l10-slide" id="l10s21">
-      <div class="l10-slide-left">
-        <h2>IKEA</h2>
-        <div class="l10-tri"></div><div class="l10-badge">21</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-company-box">
-          <div class="l10-cb-label">Основна мета IKEA</div>
-          <div class="l10-cb-text">«Змінити на краще повсякденне життя багатьох людей»</div>
-        </div>
-        <div class="l10-q" style="margin-top:1.25rem">Який унікальний шлях обрала IKEA на відміну від інших компаній, щоб змінювати на краще повсякденне життя багатьох людей?</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 22: IKEA задум -->
-    <div class="l10-slide" id="l10s22">
-      <div class="l10-slide-left">
-        <h2>IKEA</h2>
-        <div class="l10-tri"></div><div class="l10-badge">22</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-company-box">
-          <div class="l10-cb-label">Основна мета</div>
-          <div class="l10-cb-text">«Змінити на краще повсякденне життя багатьох людей»</div>
-        </div>
-        <div class="l10-company-box" style="margin-top:.75rem;background:#f0fdf4;border-color:#bbf7d0">
-          <div class="l10-cb-label" style="color:#166534">Задум</div>
-          <div class="l10-cb-text">«Пропонувати широкий асортимент зручних та функціональних товарів для облаштування будинку за такими низькими цінами, щоб якнайбільше людей мали можливість їх купити»</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 23: місцева компанія (fill-in) -->
-    <div class="l10-slide" id="l10s23">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Відома компанія (заповніть)</div>
-          <textarea class="l10-fill-inp" id="l10f_local2" placeholder="Назва компанії..." rows="1" oninput="window._l10SaveField('local2',this.value)"></textarea>
-        </div>
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Основна мета цієї компанії</div>
-          <textarea class="l10-fill-inp" id="l10f_local_goal" placeholder="Яка мета цієї компанії..." rows="2" oninput="window._l10SaveField('local_goal',this.value)"></textarea>
-        </div>
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Задум цієї компанії</div>
-          <textarea class="l10-fill-inp" id="l10f_local_vision" placeholder="Як саме вони досягають своєї мети..." rows="2" oninput="window._l10SaveField('local_vision',this.value)"></textarea>
-        </div>
-        <div class="l10-q" style="margin-top:.5rem;font-size:.85rem">Чим задум відрізняє їхню відмінність від інших аналогічних компаній?</div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">23</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 24: РЕЗЮМЕ -->
-    <div class="l10-slide" id="l10s24">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">24</div>
-      </div>
-      <div class="l10-slide-right" style="justify-content:center">
-        <div style="text-align:center;font-size:1.1rem;font-weight:900;color:#1a2e5a;margin-bottom:1rem">Ціль</div>
-        <div class="l10-resume-box">Як ви бачите, задум визначає особливості діяльності та приводить компанію до основної мети.<br><br>І зараз я розповім про те, якою є основна мета і задум нашої компанії.</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 25: Ціль компанії - питання -->
-    <div class="l10-slide" id="l10s25">
-      <div class="l10-slide-left">
-        <h2>ЦІЛЬ<br>КОМПАНІЇ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">25</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-q">Як ви вважаєте, як можна сформулювати основну мету нашої компанії?</div>
-        <p style="margin-top:1.5rem">Один із моїх обов'язків як власника компанії полягає в тому, щоб основна мета та задум компанії були визначені чітко.</p>
-      </div>
-    </div>
-
-    <!-- SLIDE 26: МЕТА НАШОЇ КОМПАНІЇ (fill-in) -->
-    <div class="l10-slide" id="l10s26">
-      <div class="l10-slide-left">
-        <h2>МЕТА<br>НАШОЇ<br>КОМПАНІЇ</h2>
-        <div class="l10-fill-wrap" style="margin-top:1rem">
-          <div class="l10-fill-label" style="color:#94a3b8;font-size:.65rem">Логотип / назва</div>
-          <textarea class="l10-fill-inp" id="l10f_logo" placeholder="Назва компанії..." rows="2" style="font-size:.78rem" oninput="window._l10SaveField('logo',this.value)"></textarea>
-        </div>
-        <div class="l10-tri"></div><div class="l10-badge">26</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-star">★</div>
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Мета нашої компанії</div>
-          <textarea class="l10-fill-inp" id="l10f_company_goal" placeholder="Впишіть сформульовану мету вашої компанії..." rows="4" oninput="window._l10SaveField('company_goal',this.value)"></textarea>
-        </div>
-        <p class="l10-gray">Наведіть приклади, як ми реалізовуємо в житті основну мету нашої компанії.</p>
-      </div>
-    </div>
-
-    <!-- SLIDE 27: Що ми робимо (fill-in) -->
-    <div class="l10-slide" id="l10s27">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <p>Кожен із вас на своєму робочому місці докладає зусиль для досягнення мети компанії.</p>
-        <div class="l10-fill-wrap" style="margin-top:1rem">
-          <div class="l10-fill-label">Мета (для питання)</div>
-          <textarea class="l10-fill-inp" id="l10f_goal_q" placeholder="Впишіть мету компанії для формулювання питання..." rows="2" oninput="window._l10SaveField('goal_q',this.value)"></textarea>
-        </div>
-        <div class="l10-q" style="margin-top:.75rem">Що ви робите, щоб <span style="color:#22c55e" id="l10q27_goal">[ваша мета]</span>?</div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">27</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 28: Задум питання -->
-    <div class="l10-slide" id="l10s28">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right" style="justify-content:center">
-        <div class="l10-q" style="font-size:clamp(.9rem,2vw,1.2rem)">А як ви вважаєте, у чому наш особливий шлях, унікальність у досягненні основної мети?</div>
-        <div class="l10-visual" style="margin-top:1.5rem">★</div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">28</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 29: ЗАДУМ КОМПАНІЇ (fill-in) -->
-    <div class="l10-slide" id="l10s29">
-      <div class="l10-slide-left">
-        <h2>ЗАДУМ<br>КОМПАНІЇ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">29</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-star">★</div>
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Задум нашої компанії</div>
-          <textarea class="l10-fill-inp" id="l10f_company_vision" placeholder="Впишіть сформульований задум компанії..." rows="4" oninput="window._l10SaveField('company_vision',this.value)"></textarea>
-        </div>
-        <p class="l10-gray">Приклади того, як дії відповідали задуму, і це давало хороший результат.</p>
-      </div>
-    </div>
-
-    <!-- SLIDE 30: РЕЗЮМЕ -->
-    <div class="l10-slide" id="l10s30">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">30</div>
-      </div>
-      <div class="l10-slide-right" style="justify-content:center">
-        <div class="l10-resume-box">Тепер ви знаєте основну мету нашої компанії та той особливий шлях що веде компанію до неї.<br><br>Ясне розуміння нашої мети та задуму робить нас сильнішими як команду і кожен співробітник компанії повинен їх знати.<br><br>Це призведе до більшої узгодженості дій та вищих результатів.</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 31: ІДЕАЛЬНА КАРТИНА -->
-    <div class="l10-slide" id="l10s31">
-      <div class="l10-slide-left">
-        <h2>ІДЕАЛЬНА<br><u>Картина</u></h2>
-        <div class="l10-tri"></div><div class="l10-badge">31</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-star">★</div>
-        <p><strong><u>Ідеальна картина</u></strong> — це те, як в ідеалі у реальному світі має виглядати діяльність компанії.</p>
-        <p style="margin-top:.75rem">Це уявлення про компанію, її матеріальні об'єкти: приміщення, обладнання, продукцію, персонал і т.д.</p>
-      </div>
-    </div>
-
-    <!-- SLIDE 32: Ідеальна картина компанії (fill-in) -->
-    <div class="l10-slide" id="l10s32">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <h3>Ідеальна картина компанії</h3>
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Наша компанія через __ років (ключові цифри, результати)</div>
-          <textarea class="l10-fill-inp" id="l10f_ideal" placeholder="Наприклад: 3 філії, 50 співробітників, виручка 10 млн грн/міс, лідер ринку в регіоні..." rows="6" oninput="window._l10SaveField('ideal',this.value)"></textarea>
-        </div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">32</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 33: Питання про ідеальну картину (fill-in) -->
-    <div class="l10-slide" id="l10s33">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Через скільки років (вкажіть)</div>
-          <textarea class="l10-fill-inp" id="l10f_years" placeholder="Наприклад: 3 роки" rows="1" oninput="window._l10SaveField('years',this.value)"></textarea>
-        </div>
-        <div class="l10-q">Кому подобається ця ідеальна картина?</div>
-        <div class="l10-q">Хто готовий попрацювати над досягненням цієї картини?</div>
-        <div class="l10-q">Які у вас питання стосовно цієї ідеальної картини?</div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">33</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 34: РЕЗЮМЕ -->
-    <div class="l10-slide" id="l10s34">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">34</div>
-      </div>
-      <div class="l10-slide-right" style="justify-content:center">
-        <div class="l10-resume-box">Таку ідеальну картину ми можемо втілити в життя, тільки працюючи як команда, ніхто поодинці не зможе це зробити.</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 35: Сумніви -->
-    <div class="l10-slide" id="l10s35">
-      <div class="l10-slide-left">
-        <h2>ІДЕАЛЬНА<br><u>Картина</u></h2>
-        <div class="l10-tri"></div><div class="l10-badge">35</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-q">Чи може бути таке, що ми не зможемо реалізувати цю ідеальну картину?</div>
-        <p style="margin-top:1.25rem">Можливо, у когось виникнуть сумніви чи питання: "А чи справді можливо втілити цю ідеальну картину в життя?"</p>
-        <p>Тому я хочу розповісти вам про історію нашої компанії.</p>
-      </div>
-    </div>
-
-    <!-- SLIDE 36: ІСТОРІЯ КОМПАНІЇ (fill-in) -->
-    <div class="l10-slide" id="l10s36">
-      <div class="l10-slide-left">
-        <h2>ІСТОРІЯ<br>КОМПАНІЇ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">36</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-star">★</div>
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Рік заснування і перші кроки</div>
-          <textarea class="l10-fill-inp" id="l10f_history_year" placeholder="Наприклад: 2015 рік — відкрили першу точку в гаражі..." rows="2" oninput="window._l10SaveField('history_year',this.value)"></textarea>
-        </div>
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Ключові дати зростання/розвитку</div>
-          <textarea class="l10-fill-inp" id="l10f_history_dates" placeholder="2017 — перший офіс, 2019 — команда 10 людей, 2022 — вийшли на 1 млн грн/міс..." rows="4" oninput="window._l10SaveField('history_dates',this.value)"></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 37: Ветерани компанії -->
-    <div class="l10-slide" id="l10s37">
-      <div class="l10-slide-left">
-        <h2>ІСТОРІЯ<br>КОМПАНІЇ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">37</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-q">Підніміть руки ті, хто працює більше трьох років у компанії.</div>
-        <p style="margin-top:1.25rem">Розкажіть, будь ласка, що ви застали, коли прийшли на роботу, і що змінилося у компанії за роки вашої роботи.</p>
-      </div>
-    </div>
-
-    <!-- SLIDE 38: РЕЗЮМЕ -->
-    <div class="l10-slide" id="l10s38">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">38</div>
-      </div>
-      <div class="l10-slide-right" style="justify-content:center">
-        <div class="l10-resume-box">Ми пройшли досить великий шлях.<br><br>Ми досягли багато чого і продовжуватимемо рух до основної мети разом, втілюючи в життя ідеальну картину, яку я представив вам сьогодні.</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 39: ПРАВИЛА І ДИСЦИПЛІНА -->
-    <div class="l10-slide" id="l10s39">
-      <div class="l10-slide-left">
-        <h2>ПРАВИЛА<br>І<br>ДИСЦИПЛІНА</h2>
-        <div class="l10-tri"></div><div class="l10-badge">39</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-q">Як ви ставитеся до правил та дисципліни?</div>
-        <div class="l10-q" style="margin-top:1.5rem">Як ви вважаєте, навіщо вони потрібні?</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 40: Спортивна команда -->
-    <div class="l10-slide" id="l10s40">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <p>Роботу компанії можна порівняти із роботою спортивної команди.</p>
-        <div class="l10-q" style="margin-top:1.25rem">Що відбуватиметься, якщо у спортивній грі не буде правил?</div>
-        <div class="l10-resume-box" style="margin-top:1.25rem">Резюме: щоб спортивна гра відбулася, потрібні цілі та правила.</div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">40</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 41: Правила бізнесу -->
-    <div class="l10-slide" id="l10s41">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <p>Бізнес — це складніша діяльність у порівнянні зі спортом. Тому у бізнесі правил ще більше, ніж у спорті.</p>
-        <div class="l10-q" style="margin-top:1.25rem">Які у нашому бізнесі є правила, які нам допомагають?</div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">41</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 42: ОРГПОЛІТИКА -->
-    <div class="l10-slide" id="l10s42">
-      <div class="l10-slide-left">
-        <h2>Оргполітика</h2>
-        <div class="l10-tri"></div><div class="l10-badge">42</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-quote-box"><strong>Оргполітика</strong> (скор. від організаційна політика) — це правила, за допомогою яких група досягає згоди щодо дій та відповідно до яких вона веде свої справи.</div>
-        <p style="margin-top:.85rem">Перша наша оргполітика і найголовніша — це опис нашої основної мети та задуму компанії.</p>
-        <div class="l10-q">Які ми маємо ще оргполітики, про які ви знаєте?</div>
-        <p class="small">Поступово ми їх описуватимемо, формуючи папку на робочому місці.</p>
-      </div>
-    </div>
-
-    <!-- SLIDE 43: РЕЗЮМЕ (fill-in) -->
-    <div class="l10-slide" id="l10s43">
-      <div class="l10-slide-left">
-        <h2>РЕЗЮМЕ</h2>
-        <div class="l10-tri"></div><div class="l10-badge">43</div>
-      </div>
-      <div class="l10-slide-right">
-        <div class="l10-fill-wrap">
-          <div class="l10-fill-label">Путівна зірка — наша мета</div>
-          <textarea class="l10-fill-inp" id="l10f_star_goal" placeholder="Вставте формулювання мети компанії..." rows="2" oninput="window._l10SaveField('star_goal',this.value)"></textarea>
-        </div>
-        <div class="l10-resume-box" style="margin-top:.75rem">
-          <strong>Задум</strong> — дорога, якою ми йдемо до мети<br><br>
-          <strong>Бордюри по краях — це наші правила</strong>, щоб нас не знесло зі шляху!
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 44: ЗАВЕРШЕННЯ -->
-    <div class="l10-slide" id="l10s44">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <h3>ЗАВЕРШЕННЯ</h3>
-        <p><strong>На цьому занятті ми розглянули:</strong></p>
-        <ul class="l10-bullet">
-          <li>Основну мету компанії</li>
-          <li>Наш задум</li>
-          <li>Ідеальну картину стану справ</li>
-          <li>Історію нашої компанії</li>
-          <li>Головну оргполітику компанії</li>
-        </ul>
-        <div class="l10-q" style="margin-top:1rem">Чи залишились у вас питання?</div>
-        <div class="l10-star" style="margin-top:.5rem">★</div>
-        <p class="l10-gray">Зараз я прошу вас відповісти на кілька запитань та залишити відгуки про проведене заняття.</p>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">44</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 45: Очікування -->
-    <div class="l10-slide" id="l10s45">
-      <div class="l10-slide-left">
-        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
-      </div>
-      <div class="l10-slide-right">
-        <p>Тепер я від вас чекаю:</p>
-        <ul class="l10-bullet" style="margin-top:.75rem">
-          <li>що ми працюватимемо як одна команда над досягненням цілей, щоб наша компанія вийшла на новий рівень;</li>
-          <li>що кожен розвиватиметься, освоюватиме нові інструменти, підвищуватиме свою ефективність та компетентність, щоб стати ще більшим професіоналом у своїй справі.</li>
-        </ul>
-        <div class="l10-resume-box" style="margin-top:1.5rem;text-align:center;font-size:1.05rem;font-weight:700">Дякую!<br>Зростати ми можемо тільки всі разом!</div>
-        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">45</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 46: КІНЕЦЬ -->
-    <div class="l10-slide" id="l10s46">
-      <div class="l10-slide-dark" style="width:100%">
-        <div style="font-size:2rem;margin-bottom:1rem;opacity:.4">★</div>
-        <h2>КІНЕЦЬ<br>ЗАНЯТТЯ 1</h2>
-        <p>Дякуємо за участь!</p>
-        <div class="l10-badge" style="background:rgba(255,255,255,.15);color:white;bottom:1.5rem;left:1.5rem;position:absolute">46</div>
-      </div>
-    </div>
-
-  </div><!-- /l10Slides -->
-
-  <!-- Navigation bar -->
-  <div class="l10-nav">
-    <button class="l10-nav-btn" id="l10BtnPrev" onclick="window._l10Prev()" disabled>← Назад</button>
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <span class="l10-nav-counter" id="l10Counter">1 / 46</span>
-      <button class="l10-nav-save" onclick="window._l10SaveAll()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="13" height="13"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        Зберегти
-      </button>
-      <button class="l10-nav-close" onclick="window._l10ClosePres()">✕ Закрити</button>
-    </div>
-    <button class="l10-nav-btn" id="l10BtnNext" onclick="window._l10Next()">Далі →</button>
-  </div>
-</div><!-- /l10PresOverlay -->
-
-<script>
-(function(){
-  var TOTAL = 46;
-  var cur = 1;
-  var STORE_KEY = 'l10_pres_data';
-
-  // Load saved data
-  async function loadData() {
-    try {
-      var r = await window.storage.get(STORE_KEY);
-      if (r && r.value) {
-        var d = JSON.parse(r.value);
-        var fields = ['terms','local_company','local2','local_goal','local_vision',
-          'logo','company_goal','goal_q','company_vision','ideal','years',
-          'history_year','history_dates','star_goal'];
-        fields.forEach(function(k){
-          var el = document.getElementById('l10f_'+k);
-          if (el && d[k]) el.value = d[k];
-        });
-        if (d.goal_q) {
-          var qel = document.getElementById('l10q27_goal');
-          if (qel) qel.textContent = d.goal_q;
-        }
-      }
-    } catch(e){}
-  }
-
-  window._l10SaveField = async function(key, val) {
-    try {
-      var r = await window.storage.get(STORE_KEY);
-      var d = r ? JSON.parse(r.value) : {};
-      d[key] = val;
-      await window.storage.set(STORE_KEY, JSON.stringify(d));
-      if (key === 'goal_q') {
-        var qel = document.getElementById('l10q27_goal');
-        if (qel) qel.textContent = val || '[ваша мета]';
-      }
-    } catch(e){}
-  };
-
-  window._l10SaveAll = async function() {
-    try {
-      var fields = ['terms','local_company','local2','local_goal','local_vision',
-        'logo','company_goal','goal_q','company_vision','ideal','years',
-        'history_year','history_dates','star_goal'];
-      var d = {};
-      fields.forEach(function(k){
-        var el = document.getElementById('l10f_'+k);
-        if (el) d[k] = el.value;
-      });
-      await window.storage.set(STORE_KEY, JSON.stringify(d));
-      if (window.showToast) window.showToast('Збережено', 'success');
-    } catch(e){}
-  };
-
-  function goTo(n) {
-    document.getElementById('l10s'+cur).classList.remove('active');
-    cur = n;
-    document.getElementById('l10s'+cur).classList.add('active');
-    document.getElementById('l10Counter').textContent = cur + ' / ' + TOTAL;
-    document.getElementById('l10BtnPrev').disabled = (cur === 1);
-    document.getElementById('l10BtnNext').disabled = (cur === TOTAL);
-  }
-
-  window._l10Prev = function(){ if (cur > 1) goTo(cur - 1); };
-  window._l10Next = function(){ if (cur < TOTAL) goTo(cur + 1); };
-
-  window._l10LaunchPres = function() {
-    var ov = document.getElementById('l10PresOverlay');
-    ov.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    goTo(1);
-    loadData();
-  };
-
-  window._l10ClosePres = function() {
-    document.getElementById('l10PresOverlay').classList.remove('active');
-    document.body.style.overflow = '';
-    window._l10SaveAll();
-  };
-
-  // Keyboard nav
-  document.addEventListener('keydown', function(e){
-    var ov = document.getElementById('l10PresOverlay');
-    if (!ov || !ov.classList.contains('active')) return;
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') window._l10Next();
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') window._l10Prev();
-    if (e.key === 'Escape') window._l10ClosePres();
-  });
-})();
-</script>
-<style>
 .l10-section { margin-bottom:1.75rem; }
 .l10-section:last-child { margin-bottom:0; }
 .l10-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
@@ -7143,7 +6263,981 @@ Bist du dabei?</div>
 
                 lessonContent_pl: `<style>.l10p-section{margin-bottom:1.75rem}.l10p-section:last-child{margin-bottom:0}.l10p-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l10p-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l10p-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l10p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l10p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l10p-card p+p{margin-top:.7rem}.l10p-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l10p-situations{display:grid;gap:.45rem;margin-top:.75rem}.l10p-scale{display:grid;gap:.4rem;margin-top:.75rem}.l10p-scale-item{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}.l10p-snum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}.l10p-stitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}.l10p-stext{font-size:.78rem;color:#525252;line-height:1.4}.l10p-motiv{display:grid;gap:.55rem;margin-top:.75rem}.l10p-mitem{padding:.8rem .95rem;border-radius:10px;border:1px solid}.l10p-mbadge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:.5rem}.l10p-mtitle{font-weight:700;font-size:.875rem}.l10p-mtext{font-size:.82rem;line-height:1.5;margin-top:.35rem}.l10p-steps{display:grid;gap:.6rem;margin-top:.75rem}.l10p-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l10p-stepnum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l10p-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l10p-steptext{font-size:.82rem;color:#525252;line-height:1.5}.l10p-quote{margin-top:.75rem;padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6}.l10p-schema{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.75rem}.l10p-sitem{padding:.5rem .85rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-weight:600;color:#1a1a1a}.l10p-sarrow{color:#9ca3af;font-size:1.1rem}.l10p-example{display:flex;gap:.65rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;margin-top:.45rem}.l10p-eicon{width:24px;height:24px;background:#f0fdf4;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10p-elabel{font-weight:700;color:#1a1a1a;font-size:.82rem}.l10p-etext{font-size:.78rem;color:#525252;line-height:1.4;margin-top:.15rem}.l10p-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-top:.35rem}.l10p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l10p-toolhdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l10p-toolicon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10p-tooltitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l10p-tooldesc{font-size:.82rem;color:#525252;line-height:1.5}.l10p-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l10p-section"><div class="l10p-label">Sekcja 1</div><div class="l10p-title">Główna przeszkoda we wdrożeniu: dlaczego zespół sabotuje zmiany</div><div class="l10p-card"><p>Każdy właściciel który próbuje zaprowadzić porządek w biznesie napotyka to samo: najbliżsi, najbardziej lojalni pracownicy nagle zaczynają się opierać. Osoba której ufałeś przez lata nagle wyraża niezadowolenie. Ktoś składa rezygnację. Inni zaczynają kwestionować twoje decyzje.</p><p>Wydaje się że to zdrada. Ale w rzeczywistości — to prawidłowość.</p></div><div class="l10p-label" style="margin-top:1rem">Ile kosztuje utrata jednego pracownika</div><div class="l10p-card"><p>Według międzynarodowych badań utrata jednego pracownika kosztuje od 6 do 12 miesięcy jego wynagrodzenia. Jeśli twój kierownik działu zarabia 15 000 zł miesięcznie — jego odejście będzie kosztować minimum 90 000 zł. Ale to tylko bezpośrednia, widoczna strata.</p></div><div class="l10p-situations"><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Osoba która odchodzi aktywnie krytykuje cię przed resztą zespołu</div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Inni pracownicy zaczynają wątpić: "A może mają rację?"</div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Twój czas idzie na rozwiązywanie konfliktów zamiast na rozwój biznesu</div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Znalezienie i wdrożenie nowej osoby zajmuje 2–6 miesięcy — bez gwarantowanego wyniku</div></div><div class="l10p-label" style="margin-top:1rem">Dlaczego ludzie się opierają — prawdziwa przyczyna</div><div class="l10p-card"><p>Większość właścicieli myśli że opór to nielojalność lub lenistwo. W rzeczywistości przyczyna jest znacznie prostsza: <strong>wdrażasz zmiany bo widzisz problem. Ale czy widzą go twoi pracownicy?</strong></p><p>Żeby zmienić zachowanie człowieka — musisz dać mu większy, znaczący cel który przeważy chęć zachowania status quo. Cele muszą być naprawdę duże — takie które budzą entuzjazm i chęć bycia częścią czegoś większego.</p></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 2</div><div class="l10p-title">Cel i zamysł firmy — fundament wszystkiego</div><div class="l10p-card"><p>Wszystko w twoim biznesie — struktura, zasady, motywacja zespołu, nawet codzienne decyzje — musi opierać się na dwóch rzeczach: celu i zamyśle. Bez nich firma jest jak statek bez kompasu: porusza się, ale nie wie dokąd.</p></div><div class="l10p-label" style="margin-top:1rem">Czym jest cel</div><div class="l10p-card"><p>Cel to główna idea firmy. Odpowiada na pytanie: <strong>po co istniejemy? Co zmieni się w świecie jeśli odniesiemy sukces?</strong></p><p>Typowy błąd: "Moim celem jest zarabianie pieniędzy." To jak powiedzieć: "Celem mojego istnienia jest oddychanie." Pieniądze to energia do osiągnięcia celu. Ale nie sam cel.</p></div><div class="l10p-example"><div class="l10p-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10p-elabel">Firma konsultingowa</div><div class="l10p-etext">Uczynić małe firmy mądrzejszymi, efektywniejszymi i niezależnymi od właściciela</div></div></div><div class="l10p-example"><div class="l10p-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10p-elabel">Stomatologia</div><div class="l10p-etext">Czynić ludzi zdrowymi i pewnymi swojego uśmiechu</div></div></div><div class="l10p-quote">Zapytaj siebie: jak zmienia się życie ludzi dzięki mojemu biznesowi? Co zniknie ze świata jeśli moja firma zostanie zamknięta?</div><div class="l10p-label" style="margin-top:1rem">Czym jest zamysł</div><div class="l10p-card"><p>Jeśli cel odpowiada na pytanie "po co", to zamysł odpowiada na pytanie "jak". Zamysł to twój unikalny sposób osiągania celu. To co robisz — i czego świadomie <strong>NIE</strong> robisz.</p></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 3</div><div class="l10p-title">Skala administracyjna — kręgosłup biznesu</div><div class="l10p-card"><p>Duże firmy mają narzędzie do weryfikacji każdego pomysłu. Coca-Cola nie zaczyna sprzedawać kiełbasy. McDonald's nie otwiera salonów samochodowych. Znają swoją ścieżkę — i każdy nowy pomysł jest sprawdzany: czy jest na tej ścieżce? To narzędzie nazywa się <strong>skalą administracyjną</strong>.</p></div><div class="l10p-label" style="margin-top:1rem">10 poziomów skali (od najwyższego do najniższego)</div><div class="l10p-scale"><div class="l10p-scale-item"><div class="l10p-snum">1</div><div><div class="l10p-stitle">Cel</div><div class="l10p-stext">Po co istniejemy</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">2</div><div><div class="l10p-stitle">Zamysł</div><div class="l10p-stext">Dokładnie jak osiągamy cel</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">3</div><div><div class="l10p-stitle">Polityka</div><div class="l10p-stext">Pisemne zasady w ramach których działamy</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">4</div><div><div class="l10p-stitle">Plany</div><div class="l10p-stext">Co robimy w najbliższym horyzoncie</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">5</div><div><div class="l10p-stitle">Programy</div><div class="l10p-stext">Konkretne inicjatywy do osiągnięcia planów</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">6</div><div><div class="l10p-stitle">Projekty</div><div class="l10p-stext">Szczegółowy podział konkretnych zadań</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">7</div><div><div class="l10p-stitle">Rozkazy</div><div class="l10p-stext">Konkretne instrukcje dla konkretnych osób</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">8</div><div><div class="l10p-stitle">Idealny obraz</div><div class="l10p-stext">Jak wygląda udany wynik</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">9</div><div><div class="l10p-stitle">Statystyki</div><div class="l10p-stext">Mierniki pokazujące czy zmierzamy do celu</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">10</div><div><div class="l10p-stitle">Produkt końcowy</div><div class="l10p-stext">Co konkretnie produkuje firma lub dział</div></div></div></div><div class="l10p-quote">Główna zasada: każdy poziom musi odpowiadać innym. Jeśli twój rozkaz jest sprzeczny z celem — coś pójdzie nie tak.</div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 4</div><div class="l10p-title">Polityka firmy — zasady które ratują biznes</div><div class="l10p-card"><p>Bez jasnych pisemnych zasad każdy decyduje po swojemu. Polityka firmy to pisemne zasady które mówią pracownikom jak postępować w różnych sytuacjach.</p></div><div class="l10p-card" style="margin-top:.6rem"><p><strong>Klasyczny przykład Apple:</strong> Steve Jobs miał jasny zamysł — Apple kontroluje wszystko: sprzęt, system operacyjny i oprogramowanie. Ale nie zapisał tej zasady oficjalnie. Gdy go zwolniono nowe kierownictwo zaczęło sprzedawać licencje na macOS. Jakość Apple spadła, zamysł się zawalił, firma znalazła się na krawędzi bankructwa.</p></div><div class="l10p-quote">Jeśli nie ma pisemnych zasad — stajesz się zakładnikiem biznesu. Musisz osobiście rozwiązywać każdą sytuację i fizycznie nie możesz pojechać na urlop.</div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 5</div><div class="l10p-title">Technologia biznesu — jak wyjść z pułapki "niezastąpionych"</div><div class="l10p-card"><p>Ile razy tłumaczyłeś to samo? Nowemu pracownikowi. Potem następnemu. Za każdym razem — jak po raz pierwszy. Bo "jak to robić" jest w twojej głowie, nie na papierze.</p></div><div class="l10p-label" style="margin-top:1rem">Cztery konsekwencje pracy bez opisanych procesów</div><div class="l10p-situations"><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Niemożliwe skalowanie.</strong> Chcesz otworzyć drugą lokalizację? Jak przekażesz "jak to robić"? Nie możesz — to tylko w twojej głowie.</div></div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Niemożliwe szkolenie ludzi.</strong> Nowy pracownik przychodzi, spędzasz tygodnie na szkoleniu, rezygnuje — i od nowa.</div></div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Niemożliwa kontrola jakości.</strong> Jak sprawdzić czy zrobiono poprawnie? Jeśli nie ma standardu — nie ma kryterium.</div></div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Stajesz się zakładnikiem "niezastąpionych".</strong> Jest Piotr który "wie jak". Bez Piotra — wszystko staje. Piotr to wie. I używa tego.</div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 6</div><div class="l10p-title">Poziomy motywacji — dlaczego jedni płoną pracą a innym jest obojętnie</div><div class="l10p-card"><p>Motywacja to wewnętrzna chęć do działania. Nie dlatego że zmuszają lub płacą, ale dlatego że człowiek sam chce. Zmotywowany nowicjusz jest często cenniejszy niż doświadczony ale obojętny — bo zmotywowany się <em>uczy</em>.</p></div><div class="l10p-motiv"><div class="l10p-mitem" style="background:#f0fdf4;border-color:#bbf7d0"><span class="l10p-mbadge" style="background:#22c55e;color:white">POZIOM 1</span><span class="l10p-mtitle" style="color:#166534">Poczucie obowiązku</span><div class="l10p-mtext" style="color:#166534">Człowiek czuje głęboką odpowiedzialność za sprawę. Dba o firmę bardziej niż o siebie. Rozumie cele firmy i czuje: "To jest moja sprawa."</div></div><div class="l10p-mitem" style="background:#eff6ff;border-color:#bfdbfe"><span class="l10p-mbadge" style="background:#3b82f6;color:white">POZIOM 2</span><span class="l10p-mtitle" style="color:#1e40af">Osobiste przekonanie</span><div class="l10p-mtext" style="color:#1e3a8a">Człowiek wierzy w swoje zasady i wartość swojej pracy. Lekarz który naprawdę chce pomagać ludziom. Programista który jest dumny z jakości kodu.</div></div><div class="l10p-mitem" style="background:#fff7ed;border-color:#fed7aa"><span class="l10p-mbadge" style="background:#f97316;color:white">POZIOM 3</span><span class="l10p-mtitle" style="color:#c2410c">Osobista korzyść</span><div class="l10p-mtext" style="color:#9a3412">Człowiek szuka co dostanie osobiście: premia, awans, nowe umiejętności. Nie "zapłonie" dla firmy.</div></div><div class="l10p-mitem" style="background:#fef2f2;border-color:#fecaca"><span class="l10p-mbadge" style="background:#ef4444;color:white">POZIOM 4</span><span class="l10p-mtitle" style="color:#b91c1c">Pieniądze</span><div class="l10p-mtext" style="color:#991b1b">Najniższy poziom. Interesuje tylko wynagrodzenie. Płacisz — pracuje. Nie płacisz — nie pracuje. Zero inicjatywy.</div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 7</div><div class="l10p-title">Jak zwiększać motywację — jedyne narzędzie które zawsze działa</div><div class="l10p-schema"><span class="l10p-sitem">Pokazujesz cel</span><span class="l10p-sarrow">→</span><span class="l10p-sitem">Utrzymujesz uwagę</span><span class="l10p-sarrow">→</span><span class="l10p-sitem">Cel staje się realny</span><span class="l10p-sarrow">→</span><span class="l10p-sitem">Człowiek jest zmotywowany</span></div><div class="l10p-card" style="margin-top:.75rem"><p>Utrzymywanie uwagi na wielkich celach jest trudne. Rozwiązanie: <strong>ciągle przypominaj</strong>. Regularnie mów o celach. Pokazuj jak praca wpływa na konkretnych ludzi i klientów.</p></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 8</div><div class="l10p-title">Jak przekazać cele i zamysł zespołowi</div><div class="l10p-steps"><div class="l10p-step"><div class="l10p-stepnum">1</div><div><div class="l10p-steptitle">Stwórz oficjalny pisemny dokument</div><div class="l10p-steptext">Nie rozmowa, nie "wszyscy już wiedzą" — pisemny dokument z podpisem założyciela.</div></div></div><div class="l10p-step"><div class="l10p-stepnum">2</div><div><div class="l10p-steptitle">Oficjalnie zaprezentuj dokument zespołowi</div><div class="l10p-steptext">Zbierz wszystkich razem — na planowaniu lub osobnym spotkaniu.</div></div></div><div class="l10p-step"><div class="l10p-stepnum">3</div><div><div class="l10p-steptitle">Nagraj wystąpienie na wideo</div><div class="l10p-steptext">Jeśli ktoś nie był — wyślij wideo. Nowy pracownik — daj do oglądnięcia w pierwszym dniu.</div></div></div><div class="l10p-step"><div class="l10p-stepnum">4</div><div><div class="l10p-steptitle">Regularnie przypominaj</div><div class="l10p-steptext">Wracaj do celów i zamysłu na spotkaniach, przy podejmowaniu decyzji, przy wyjaśnianiu zmian.</div></div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Zadanie</div><div class="l10p-title">Opracuj Politykę Celów i Zamysłu przez asystenta AI</div><div class="l10p-steps"><div class="l10p-step"><div class="l10p-stepnum">1</div><div><div class="l10p-steptitle">Przeprowadź dialog z AI Coachem Celów</div><div class="l10p-steptext">Asystent przeprowadzi cię przez formułowanie celu, zamysłu, idealnego obrazu i historii biznesu</div></div></div><div class="l10p-step"><div class="l10p-stepnum">2</div><div><div class="l10p-steptitle">Zapisz wynik w Google Docs</div><div class="l10p-steptext">Na wyjściu — gotowa "Polityka Celów i Zamysłu Firmy" z podpisem założyciela</div></div></div><div class="l10p-step"><div class="l10p-stepnum">3</div><div><div class="l10p-steptitle">Przeprowadź prezentację dla zespołu</div><div class="l10p-steptext">Zbierz wszystkich, opowiedz o celu i zamyśle, nagraj na wideo</div></div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Narzędzie</div><div class="l10p-tool"><div class="l10p-toolhdr"><div class="l10p-toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l10p-tooltitle">AI Coach Celów i Zamysłu</div><div class="l10p-tooldesc">Asystent prowadzi dialog i pomaga sformułować cel, zamysł, idealny obraz i historię firmy. Na wyjściu — gotowy dokument "Polityka Celów i Zamysłu" do podpisu założyciela i prezentacji zespołowi.</div></div></div><a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10p-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Opracuj cel i zamysł firmy</a></div></div>`,
 
-                lessonContent_de: `<style>.l10d-section{margin-bottom:1.75rem}.l10d-section:last-child{margin-bottom:0}.l10d-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l10d-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l10d-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l10d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l10d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l10d-card p+p{margin-top:.7rem}.l10d-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l10d-situations{display:grid;gap:.45rem;margin-top:.75rem}.l10d-scale{display:grid;gap:.4rem;margin-top:.75rem}.l10d-scale-item{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}.l10d-snum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}.l10d-stitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}.l10d-stext{font-size:.78rem;color:#525252;line-height:1.4}.l10d-motiv{display:grid;gap:.55rem;margin-top:.75rem}.l10d-mitem{padding:.8rem .95rem;border-radius:10px;border:1px solid}.l10d-mbadge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:.5rem}.l10d-mtitle{font-weight:700;font-size:.875rem}.l10d-mtext{font-size:.82rem;line-height:1.5;margin-top:.35rem}.l10d-steps{display:grid;gap:.6rem;margin-top:.75rem}.l10d-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l10d-stepnum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l10d-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l10d-steptext{font-size:.82rem;color:#525252;line-height:1.5}.l10d-quote{margin-top:.75rem;padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6}.l10d-schema{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.75rem}.l10d-sitem{padding:.5rem .85rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-weight:600;color:#1a1a1a}.l10d-sarrow{color:#9ca3af;font-size:1.1rem}.l10d-example{display:flex;gap:.65rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;margin-top:.45rem}.l10d-eicon{width:24px;height:24px;background:#f0fdf4;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10d-elabel{font-weight:700;color:#1a1a1a;font-size:.82rem}.l10d-etext{font-size:.78rem;color:#525252;line-height:1.4;margin-top:.15rem}.l10d-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-top:.35rem}.l10d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l10d-toolhdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l10d-toolicon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10d-tooltitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l10d-tooldesc{font-size:.82rem;color:#525252;line-height:1.5}.l10d-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l10d-section"><div class="l10d-label">Abschnitt 1</div><div class="l10d-title">Das Haupthindernis bei der Umsetzung: warum das Team Veränderungen sabotiert</div><div class="l10d-card"><p>Jeder Inhaber der Ordnung in sein Unternehmen bringen möchte begegnet demselben: die nächsten, loyalsten Mitarbeiter beginnen plötzlich Widerstand zu leisten. Die Person der Sie jahrelang vertrauten zeigt plötzlich Unzufriedenheit. Jemand kündigt. Andere beginnen Ihre Entscheidungen in Frage zu stellen.</p><p>Es scheint wie Verrat. Aber in Wirklichkeit — ist es ein Muster.</p></div><div class="l10d-label" style="margin-top:1rem">Was der Verlust eines Mitarbeiters kostet</div><div class="l10d-card"><p>Laut internationalen Studien kostet der Verlust eines Mitarbeiters zwischen 6 und 12 Monatsgehältern. Wenn Ihr Abteilungsleiter 4.000€/Monat verdient — wird sein Abgang Sie mindestens 24.000€ kosten. Aber das ist nur der direkte, sichtbare Verlust.</p></div><div class="l10d-situations"><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Die Person die kündigt kritisiert Sie aktiv vor dem Rest des Teams</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Andere Mitarbeiter beginnen zu zweifeln: "Haben sie vielleicht Recht?"</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Ihre Zeit geht für Konfliktlösung statt Unternehmensentwicklung drauf</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Die Suche und Einarbeitung einer neuen Person dauert 2–6 Monate — ohne Ergebnisgarantie</div></div><div class="l10d-label" style="margin-top:1rem">Warum Menschen Widerstand leisten — der wahre Grund</div><div class="l10d-card"><p>Die meisten Inhaber denken dass Widerstand Illoyalität oder Faulheit bedeutet. In Wirklichkeit ist der Grund viel einfacher: <strong>Sie führen Veränderungen durch weil Sie das Problem sehen. Aber sehen Ihre Mitarbeiter es?</strong></p><p>Um das Verhalten eines Menschen zu ändern — müssen Sie ihm ein größeres, bedeutungsvolles Ziel geben das den Wunsch überwiegt den Status quo zu bewahren.</p></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 2</div><div class="l10d-title">Unternehmensziel und Vision — das Fundament von allem</div><div class="l10d-card"><p>Alles in Ihrem Unternehmen — Struktur, Regeln, Teammotivation, sogar tägliche Entscheidungen — muss auf zwei Dingen basieren: Ziel und Vision. Ohne sie ist das Unternehmen wie ein Schiff ohne Kompass: bewegt sich, weiß aber nicht wohin.</p></div><div class="l10d-label" style="margin-top:1rem">Was ein Ziel ist</div><div class="l10d-card"><p>Das Ziel ist die Kernidee des Unternehmens. Es beantwortet: <strong>warum existieren wir? Was wird sich in der Welt verändern wenn wir erfolgreich sind?</strong></p><p>Typischer Fehler: "Mein Ziel ist Geld verdienen." Das ist wie zu sagen: "Der Zweck meiner Existenz ist Atmen." Geld ist Energie für das Erreichen des Ziels. Aber nicht das Ziel selbst.</p></div><div class="l10d-example"><div class="l10d-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10d-elabel">Beratungsunternehmen</div><div class="l10d-etext">Kleine Unternehmen intelligenter, effizienter und unabhängiger vom Inhaber machen</div></div></div><div class="l10d-example"><div class="l10d-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10d-elabel">Zahnarztpraxis</div><div class="l10d-etext">Menschen gesund und selbstsicher in ihrem Lächeln machen</div></div></div><div class="l10d-quote">Fragen Sie sich: Wie verändert sich das Leben der Menschen dank meines Unternehmens? Was verschwindet aus der Welt wenn mein Unternehmen schließt?</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 3</div><div class="l10d-title">Die administrative Skala — das Rückgrat des Unternehmens</div><div class="l10d-card"><p>Große Unternehmen haben ein Werkzeug zum Testen jeder Idee. Coca-Cola beginnt nicht Wurst zu verkaufen. McDonald's eröffnet keine Autohäuser. Sie kennen ihren Weg — dieses Werkzeug heißt <strong>administrative Skala</strong>.</p></div><div class="l10d-label" style="margin-top:1rem">10 Skalenebenen (von höchster zu niedrigster)</div><div class="l10d-scale"><div class="l10d-scale-item"><div class="l10d-snum">1</div><div><div class="l10d-stitle">Ziel</div><div class="l10d-stext">Warum wir existieren</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">2</div><div><div class="l10d-stitle">Vision</div><div class="l10d-stext">Genau wie wir das Ziel erreichen</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">3</div><div><div class="l10d-stitle">Richtlinie</div><div class="l10d-stext">Schriftliche Regeln innerhalb derer wir handeln</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">4</div><div><div class="l10d-stitle">Pläne</div><div class="l10d-stext">Was wir im nächsten Horizont tun</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">5</div><div><div class="l10d-stitle">Programme</div><div class="l10d-stext">Konkrete Initiativen zur Erreichung der Pläne</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">6</div><div><div class="l10d-stitle">Projekte</div><div class="l10d-stext">Detaillierte Aufschlüsselung konkreter Aufgaben</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">7</div><div><div class="l10d-stitle">Anweisungen</div><div class="l10d-stext">Konkrete Anweisungen an konkrete Personen</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">8</div><div><div class="l10d-stitle">Ideales Bild</div><div class="l10d-stext">Wie ein erfolgreiches Ergebnis aussieht</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">9</div><div><div class="l10d-stitle">Statistiken</div><div class="l10d-stext">Kennzahlen die zeigen ob wir uns dem Ziel nähern</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">10</div><div><div class="l10d-stitle">Endprodukt</div><div class="l10d-stext">Was das Unternehmen oder die Abteilung konkret produziert</div></div></div></div><div class="l10d-quote">Hauptprinzip: jede Ebene muss den anderen entsprechen. Wenn Ihre Anweisung dem Ziel widerspricht — wird etwas schiefgehen.</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 4</div><div class="l10d-title">Unternehmensrichtlinie — Regeln die das Unternehmen retten</div><div class="l10d-card"><p>Ohne klare schriftliche Regeln entscheidet jeder nach eigenem Ermessen. Unternehmensrichtlinie sind schriftliche Regeln die Mitarbeitern sagen wie sie in verschiedenen Situationen handeln sollen.</p></div><div class="l10d-card" style="margin-top:.6rem"><p><strong>Klassisches Apple-Beispiel:</strong> Steve Jobs hatte eine klare Vision — Apple kontrolliert alles: Hardware, Betriebssystem und Software. Aber er hat diese Regel nicht offiziell aufgeschrieben. Als er entlassen wurde begann das neue Management macOS-Lizenzen zu verkaufen. Apple-Qualität sank, die Vision kollabierte, das Unternehmen stand am Rand des Bankrotts.</p></div><div class="l10d-quote">Wenn es keine schriftlichen Regeln gibt — werden Sie zum Geisel des Unternehmens. Sie müssen jede Situation persönlich lösen und können physisch nicht in Urlaub fahren.</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 5</div><div class="l10d-title">Unternehmenstechnologie — wie man der "Unentbehrlichen"-Falle entkommt</div><div class="l10d-card"><p>Wie oft haben Sie dasselbe erklärt? Einem neuen Mitarbeiter. Dann einem weiteren. Jedes Mal — als wäre es das erste Mal. Weil "wie es gemacht werden soll" in Ihrem Kopf ist, nicht auf Papier.</p></div><div class="l10d-label" style="margin-top:1rem">Vier Konsequenzen ohne dokumentierte Prozesse</div><div class="l10d-situations"><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Skalierung unmöglich.</strong> Wollen Sie einen zweiten Standort eröffnen? Wie übertragen Sie "wie es gemacht werden soll"? Nicht möglich — es steckt nur in Ihrem Kopf.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schulung unmöglich.</strong> Neuer Mitarbeiter kommt, Sie verbringen Wochen mit Schulung, er kündigt — und von vorne.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Qualitätskontrolle unmöglich.</strong> Wie prüft man ob es korrekt gemacht wurde? Kein Standard — kein Kriterium.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Sie werden Geisel der "Unentbehrlichen".</strong> Es gibt Peter der "weiß wie". Ohne Peter — alles stoppt. Peter weiß das. Und nutzt es.</div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 6</div><div class="l10d-title">Motivationsebenen — warum manche für die Arbeit brennen und andere gleichgültig sind</div><div class="l10d-motiv"><div class="l10d-mitem" style="background:#f0fdf4;border-color:#bbf7d0"><span class="l10d-mbadge" style="background:#22c55e;color:white">EBENE 1</span><span class="l10d-mtitle" style="color:#166534">Pflichtgefühl</span><div class="l10d-mtext" style="color:#166534">Die Person fühlt tiefe Verantwortung für die Sache. Kümmert sich mehr um das Unternehmen als um sich selbst.</div></div><div class="l10d-mitem" style="background:#eff6ff;border-color:#bfdbfe"><span class="l10d-mbadge" style="background:#3b82f6;color:white">EBENE 2</span><span class="l10d-mtitle" style="color:#1e40af">Persönliche Überzeugung</span><div class="l10d-mtext" style="color:#1e3a8a">Die Person glaubt an ihre Prinzipien und den Wert ihrer Arbeit. Ein Arzt der wirklich helfen will. Ein Programmierer der stolz auf Codequalität ist.</div></div><div class="l10d-mitem" style="background:#fff7ed;border-color:#fed7aa"><span class="l10d-mbadge" style="background:#f97316;color:white">EBENE 3</span><span class="l10d-mtitle" style="color:#c2410c">Persönlicher Vorteil</span><div class="l10d-mtext" style="color:#9a3412">Die Person sucht was sie persönlich bekommt: Bonus, Karriereaufstieg, neue Fähigkeiten. Wird nicht "brennen" für das Unternehmen.</div></div><div class="l10d-mitem" style="background:#fef2f2;border-color:#fecaca"><span class="l10d-mbadge" style="background:#ef4444;color:white">EBENE 4</span><span class="l10d-mtitle" style="color:#b91c1c">Geld</span><div class="l10d-mtext" style="color:#991b1b">Niedrigste Ebene. Nur am Gehalt interessiert. Zahlen — arbeitet. Nicht zahlen — arbeitet nicht. Null Initiative.</div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 7</div><div class="l10d-title">Wie man Motivation steigert — das einzige Werkzeug das immer funktioniert</div><div class="l10d-schema"><span class="l10d-sitem">Zeigen Sie das Ziel</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Halten Sie Aufmerksamkeit</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Ziel wird real</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Person ist motiviert</span></div><div class="l10d-card" style="margin-top:.75rem"><p>Aufmerksamkeit auf große Ziele zu halten ist schwer. Lösung: <strong>ständig erinnern</strong>. Regelmäßig über Ziele sprechen. Zeigen wie die Arbeit konkrete Menschen und Kunden beeinflusst.</p></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 8</div><div class="l10d-title">Wie man Ziele und Vision dem Team kommuniziert</div><div class="l10d-steps"><div class="l10d-step"><div class="l10d-stepnum">1</div><div><div class="l10d-steptitle">Erstellen Sie ein offizielles schriftliches Dokument</div><div class="l10d-steptext">Kein Gespräch, kein "alle wissen es schon" — ein schriftliches Dokument mit der Unterschrift des Gründers.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">2</div><div><div class="l10d-steptitle">Präsentieren Sie das Dokument offiziell dem Team</div><div class="l10d-steptext">Bringen Sie alle zusammen — beim Planungsmeeting oder einem separaten Treffen.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">3</div><div><div class="l10d-steptitle">Nehmen Sie Ihren Vortrag auf Video auf</div><div class="l10d-steptext">Falls jemand gefehlt hat — schicken Sie das Video. Neuer Mitarbeiter — lassen Sie es am ersten Tag ansehen.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">4</div><div><div class="l10d-steptitle">Regelmäßig erinnern</div><div class="l10d-steptext">Ziel und Vision sind nicht "einmal gesagt und vergessen." Kehren Sie bei Meetings, Entscheidungen und Erklärungen von Änderungen dazu zurück.</div></div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Aufgabe</div><div class="l10d-title">Entwickeln Sie die Ziel- und Visionsrichtlinie durch den KI-Assistenten</div><div class="l10d-steps"><div class="l10d-step"><div class="l10d-stepnum">1</div><div><div class="l10d-steptitle">Führen Sie den Dialog mit dem KI-Ziel-Coach</div><div class="l10d-steptext">Der Assistent führt Sie durch die Formulierung von Ziel, Vision, idealem Bild und Unternehmensgeschichte</div></div></div><div class="l10d-step"><div class="l10d-stepnum">2</div><div><div class="l10d-steptitle">Speichern Sie das Ergebnis in Google Docs</div><div class="l10d-steptext">Ausgabe — eine fertige "Unternehmens-Ziel- & Visions-Richtlinie" mit der Unterschrift des Gründers</div></div></div><div class="l10d-step"><div class="l10d-stepnum">3</div><div><div class="l10d-steptitle">Präsentieren Sie dem Team</div><div class="l10d-steptext">Versammeln Sie alle, erzählen Sie von Ziel und Vision, nehmen Sie es auf Video auf</div></div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Werkzeug</div><div class="l10d-tool"><div class="l10d-toolhdr"><div class="l10d-toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l10d-tooltitle">KI Ziel- & Visions-Coach</div><div class="l10d-tooldesc">Der Assistent führt einen Dialog und hilft Ziel, Vision, ideales Bild und Unternehmensgeschichte zu formulieren. Ausgabe — ein fertiges "Ziel- & Visions-Richtlinie" Dokument für die Unterschrift des Gründers und die Teampräsentation.</div></div></div><a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Unternehmensziel & Vision entwickeln</a></div></div>`,
+                lessonContent_de: `<style>.l10d-section{margin-bottom:1.75rem}.l10d-section:last-child{margin-bottom:0}.l10d-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l10d-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l10d-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l10d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l10d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l10d-card p+p{margin-top:.7rem}.l10d-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l10d-situations{display:grid;gap:.45rem;margin-top:.75rem}.l10d-scale{display:grid;gap:.4rem;margin-top:.75rem}.l10d-scale-item{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}.l10d-snum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}.l10d-stitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}.l10d-stext{font-size:.78rem;color:#525252;line-height:1.4}.l10d-motiv{display:grid;gap:.55rem;margin-top:.75rem}.l10d-mitem{padding:.8rem .95rem;border-radius:10px;border:1px solid}.l10d-mbadge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:.5rem}.l10d-mtitle{font-weight:700;font-size:.875rem}.l10d-mtext{font-size:.82rem;line-height:1.5;margin-top:.35rem}.l10d-steps{display:grid;gap:.6rem;margin-top:.75rem}.l10d-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l10d-stepnum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l10d-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l10d-steptext{font-size:.82rem;color:#525252;line-height:1.5}.l10d-quote{margin-top:.75rem;padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6}.l10d-schema{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.75rem}.l10d-sitem{padding:.5rem .85rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-weight:600;color:#1a1a1a}.l10d-sarrow{color:#9ca3af;font-size:1.1rem}.l10d-example{display:flex;gap:.65rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;margin-top:.45rem}.l10d-eicon{width:24px;height:24px;background:#f0fdf4;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10d-elabel{font-weight:700;color:#1a1a1a;font-size:.82rem}.l10d-etext{font-size:.78rem;color:#525252;line-height:1.4;margin-top:.15rem}.l10d-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-top:.35rem}.l10d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l10d-toolhdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l10d-toolicon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10d-tooltitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l10d-tooldesc{font-size:.82rem;color:#525252;line-height:1.5}.l10d-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l10d-section"><div class="l10d-label">Abschnitt 1</div><div class="l10d-title">Das Haupthindernis bei der Umsetzung: warum das Team Veränderungen sabotiert</div><div class="l10d-card"><p>Jeder Inhaber der Ordnung in sein Unternehmen bringen möchte begegnet demselben: die nächsten, loyalsten Mitarbeiter beginnen plötzlich Widerstand zu leisten. Die Person der Sie jahrelang vertrauten zeigt plötzlich Unzufriedenheit. Jemand kündigt. Andere beginnen Ihre Entscheidungen in Frage zu stellen.</p><p>Es scheint wie Verrat. Aber in Wirklichkeit — ist es ein Muster.</p></div><div class="l10d-label" style="margin-top:1rem">Was der Verlust eines Mitarbeiters kostet</div><div class="l10d-card"><p>Laut internationalen Studien kostet der Verlust eines Mitarbeiters zwischen 6 und 12 Monatsgehältern. Wenn Ihr Abteilungsleiter 4.000€/Monat verdient — wird sein Abgang Sie mindestens 24.000€ kosten. Aber das ist nur der direkte, sichtbare Verlust.</p></div><div class="l10d-situations"><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Die Person die kündigt kritisiert Sie aktiv vor dem Rest des Teams</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Andere Mitarbeiter beginnen zu zweifeln: "Haben sie vielleicht Recht?"</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Ihre Zeit geht für Konfliktlösung statt Unternehmensentwicklung drauf</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Die Suche und Einarbeitung einer neuen Person dauert 2–6 Monate — ohne Ergebnisgarantie</div></div><div class="l10d-label" style="margin-top:1rem">Warum Menschen Widerstand leisten — der wahre Grund</div><div class="l10d-card"><p>Die meisten Inhaber denken dass Widerstand Illoyalität oder Faulheit bedeutet. In Wirklichkeit ist der Grund viel einfacher: <strong>Sie führen Veränderungen durch weil Sie das Problem sehen. Aber sehen Ihre Mitarbeiter es?</strong></p><p>Um das Verhalten eines Menschen zu ändern — müssen Sie ihm ein größeres, bedeutungsvolles Ziel geben das den Wunsch überwiegt den Status quo zu bewahren.</p></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 2</div><div class="l10d-title">Unternehmensziel und Vision — das Fundament von allem</div><div class="l10d-card"><p>Alles in Ihrem Unternehmen — Struktur, Regeln, Teammotivation, sogar tägliche Entscheidungen — muss auf zwei Dingen basieren: Ziel und Vision. Ohne sie ist das Unternehmen wie ein Schiff ohne Kompass: bewegt sich, weiß aber nicht wohin.</p></div><div class="l10d-label" style="margin-top:1rem">Was ein Ziel ist</div><div class="l10d-card"><p>Das Ziel ist die Kernidee des Unternehmens. Es beantwortet: <strong>warum existieren wir? Was wird sich in der Welt verändern wenn wir erfolgreich sind?</strong></p><p>Typischer Fehler: "Mein Ziel ist Geld verdienen." Das ist wie zu sagen: "Der Zweck meiner Existenz ist Atmen." Geld ist Energie für das Erreichen des Ziels. Aber nicht das Ziel selbst.</p></div><div class="l10d-example"><div class="l10d-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10d-elabel">Beratungsunternehmen</div><div class="l10d-etext">Kleine Unternehmen intelligenter, effizienter und unabhängiger vom Inhaber machen</div></div></div><div class="l10d-example"><div class="l10d-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10d-elabel">Zahnarztpraxis</div><div class="l10d-etext">Menschen gesund und selbstsicher in ihrem Lächeln machen</div></div></div><div class="l10d-quote">Fragen Sie sich: Wie verändert sich das Leben der Menschen dank meines Unternehmens? Was verschwindet aus der Welt wenn mein Unternehmen schließt?</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 3</div><div class="l10d-title">Die administrative Skala — das Rückgrat des Unternehmens</div><div class="l10d-card"><p>Große Unternehmen haben ein Werkzeug zum Testen jeder Idee. Coca-Cola beginnt nicht Wurst zu verkaufen. McDonald's eröffnet keine Autohäuser. Sie kennen ihren Weg — dieses Werkzeug heißt <strong>administrative Skala</strong>.</p></div><div class="l10d-label" style="margin-top:1rem">10 Skalenebenen (von höchster zu niedrigster)</div><div class="l10d-scale"><div class="l10d-scale-item"><div class="l10d-snum">1</div><div><div class="l10d-stitle">Ziel</div><div class="l10d-stext">Warum wir existieren</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">2</div><div><div class="l10d-stitle">Vision</div><div class="l10d-stext">Genau wie wir das Ziel erreichen</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">3</div><div><div class="l10d-stitle">Richtlinie</div><div class="l10d-stext">Schriftliche Regeln innerhalb derer wir handeln</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">4</div><div><div class="l10d-stitle">Pläne</div><div class="l10d-stext">Was wir im nächsten Horizont tun</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">5</div><div><div class="l10d-stitle">Programme</div><div class="l10d-stext">Konkrete Initiativen zur Erreichung der Pläne</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">6</div><div><div class="l10d-stitle">Projekte</div><div class="l10d-stext">Detaillierte Aufschlüsselung konkreter Aufgaben</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">7</div><div><div class="l10d-stitle">Anweisungen</div><div class="l10d-stext">Konkrete Anweisungen an konkrete Personen</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">8</div><div><div class="l10d-stitle">Ideales Bild</div><div class="l10d-stext">Wie ein erfolgreiches Ergebnis aussieht</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">9</div><div><div class="l10d-stitle">Statistiken</div><div class="l10d-stext">Kennzahlen die zeigen ob wir uns dem Ziel nähern</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">10</div><div><div class="l10d-stitle">Endprodukt</div><div class="l10d-stext">Was das Unternehmen oder die Abteilung konkret produziert</div></div></div></div><div class="l10d-quote">Hauptprinzip: jede Ebene muss den anderen entsprechen. Wenn Ihre Anweisung dem Ziel widerspricht — wird etwas schiefgehen.</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 4</div><div class="l10d-title">Unternehmensrichtlinie — Regeln die das Unternehmen retten</div><div class="l10d-card"><p>Ohne klare schriftliche Regeln entscheidet jeder nach eigenem Ermessen. Unternehmensrichtlinie sind schriftliche Regeln die Mitarbeitern sagen wie sie in verschiedenen Situationen handeln sollen.</p></div><div class="l10d-card" style="margin-top:.6rem"><p><strong>Klassisches Apple-Beispiel:</strong> Steve Jobs hatte eine klare Vision — Apple kontrolliert alles: Hardware, Betriebssystem und Software. Aber er hat diese Regel nicht offiziell aufgeschrieben. Als er entlassen wurde begann das neue Management macOS-Lizenzen zu verkaufen. Apple-Qualität sank, die Vision kollabierte, das Unternehmen stand am Rand des Bankrotts.</p></div><div class="l10d-quote">Wenn es keine schriftlichen Regeln gibt — werden Sie zum Geisel des Unternehmens. Sie müssen jede Situation persönlich lösen und können physisch nicht in Urlaub fahren.</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 5</div><div class="l10d-title">Unternehmenstechnologie — wie man der "Unentbehrlichen"-Falle entkommt</div><div class="l10d-card"><p>Wie oft haben Sie dasselbe erklärt? Einem neuen Mitarbeiter. Dann einem weiteren. Jedes Mal — als wäre es das erste Mal. Weil "wie es gemacht werden soll" in Ihrem Kopf ist, nicht auf Papier.</p></div><div class="l10d-label" style="margin-top:1rem">Vier Konsequenzen ohne dokumentierte Prozesse</div><div class="l10d-situations"><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Skalierung unmöglich.</strong> Wollen Sie einen zweiten Standort eröffnen? Wie übertragen Sie "wie es gemacht werden soll"? Nicht möglich — es steckt nur in Ihrem Kopf.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schulung unmöglich.</strong> Neuer Mitarbeiter kommt, Sie verbringen Wochen mit Schulung, er kündigt — und von vorne.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Qualitätskontrolle unmöglich.</strong> Wie prüft man ob es korrekt gemacht wurde? Kein Standard — kein Kriterium.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Sie werden Geisel der "Unentbehrlichen".</strong> Es gibt Peter der "weiß wie". Ohne Peter — alles stoppt. Peter weiß das. Und nutzt es.</div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 6</div><div class="l10d-title">Motivationsebenen — warum manche für die Arbeit brennen und andere gleichgültig sind</div><div class="l10d-motiv"><div class="l10d-mitem" style="background:#f0fdf4;border-color:#bbf7d0"><span class="l10d-mbadge" style="background:#22c55e;color:white">EBENE 1</span><span class="l10d-mtitle" style="color:#166534">Pflichtgefühl</span><div class="l10d-mtext" style="color:#166534">Die Person fühlt tiefe Verantwortung für die Sache. Kümmert sich mehr um das Unternehmen als um sich selbst.</div></div><div class="l10d-mitem" style="background:#eff6ff;border-color:#bfdbfe"><span class="l10d-mbadge" style="background:#3b82f6;color:white">EBENE 2</span><span class="l10d-mtitle" style="color:#1e40af">Persönliche Überzeugung</span><div class="l10d-mtext" style="color:#1e3a8a">Die Person glaubt an ihre Prinzipien und den Wert ihrer Arbeit. Ein Arzt der wirklich helfen will. Ein Programmierer der stolz auf Codequalität ist.</div></div><div class="l10d-mitem" style="background:#fff7ed;border-color:#fed7aa"><span class="l10d-mbadge" style="background:#f97316;color:white">EBENE 3</span><span class="l10d-mtitle" style="color:#c2410c">Persönlicher Vorteil</span><div class="l10d-mtext" style="color:#9a3412">Die Person sucht was sie persönlich bekommt: Bonus, Karriereaufstieg, neue Fähigkeiten. Wird nicht "brennen" für das Unternehmen.</div></div><div class="l10d-mitem" style="background:#fef2f2;border-color:#fecaca"><span class="l10d-mbadge" style="background:#ef4444;color:white">EBENE 4</span><span class="l10d-mtitle" style="color:#b91c1c">Geld</span><div class="l10d-mtext" style="color:#991b1b">Niedrigste Ebene. Nur am Gehalt interessiert. Zahlen — arbeitet. Nicht zahlen — arbeitet nicht. Null Initiative.</div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 7</div><div class="l10d-title">Wie man Motivation steigert — das einzige Werkzeug das immer funktioniert</div><div class="l10d-schema"><span class="l10d-sitem">Zeigen Sie das Ziel</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Halten Sie Aufmerksamkeit</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Ziel wird real</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Person ist motiviert</span></div><div class="l10d-card" style="margin-top:.75rem"><p>Aufmerksamkeit auf große Ziele zu halten ist schwer. Lösung: <strong>ständig erinnern</strong>. Regelmäßig über Ziele sprechen. Zeigen wie die Arbeit konkrete Menschen und Kunden beeinflusst.</p></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 8</div><div class="l10d-title">Wie man Ziele und Vision dem Team kommuniziert</div><div class="l10d-steps"><div class="l10d-step"><div class="l10d-stepnum">1</div><div><div class="l10d-steptitle">Erstellen Sie ein offizielles schriftliches Dokument</div><div class="l10d-steptext">Kein Gespräch, kein "alle wissen es schon" — ein schriftliches Dokument mit der Unterschrift des Gründers.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">2</div><div><div class="l10d-steptitle">Präsentieren Sie das Dokument offiziell dem Team</div><div class="l10d-steptext">Bringen Sie alle zusammen — beim Planungsmeeting oder einem separaten Treffen.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">3</div><div><div class="l10d-steptitle">Nehmen Sie Ihren Vortrag auf Video auf</div><div class="l10d-steptext">Falls jemand gefehlt hat — schicken Sie das Video. Neuer Mitarbeiter — lassen Sie es am ersten Tag ansehen.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">4</div><div><div class="l10d-steptitle">Regelmäßig erinnern</div><div class="l10d-steptext">Ziel und Vision sind nicht "einmal gesagt und vergessen." Kehren Sie bei Meetings, Entscheidungen und Erklärungen von Änderungen dazu zurück.</div></div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Aufgabe</div><div class="l10d-title">Entwickeln Sie die Ziel- und Visionsrichtlinie durch den KI-Assistenten</div><div class="l10d-steps"><div class="l10d-step"><div class="l10d-stepnum">1</div><div><div class="l10d-steptitle">Führen Sie den Dialog mit dem KI-Ziel-Coach</div><div class="l10d-steptext">Der Assistent führt Sie durch die Formulierung von Ziel, Vision, idealem Bild und Unternehmensgeschichte</div></div></div><div class="l10d-step"><div class="l10d-stepnum">2</div><div><div class="l10d-steptitle">Speichern Sie das Ergebnis in Google Docs</div><div class="l10d-steptext">Ausgabe — eine fertige "Unternehmens-Ziel- & Visions-Richtlinie" mit der Unterschrift des Gründers</div></div></div><div class="l10d-step"><div class="l10d-stepnum">3</div><div><div class="l10d-steptitle">Präsentieren Sie dem Team</div><div class="l10d-steptext">Versammeln Sie alle, erzählen Sie von Ziel und Vision, nehmen Sie es auf Video auf</div></div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Werkzeug</div><div class="l10d-tool"><div class="l10d-toolhdr"><div class="l10d-toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l10d-tooltitle">KI Ziel- & Visions-Coach</div><div class="l10d-tooldesc">Der Assistent führt einen Dialog und hilft Ziel, Vision, ideales Bild und Unternehmensgeschichte zu formulieren. Ausgabe — ein fertiges "Ziel- & Visions-Richtlinie" Dokument für die Unterschrift des Gründers und die Teampräsentation.</div></div></div><a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Unternehmensziel & Vision entwickeln</a></div></div>
+<style>
+/* ===== PRESENTATION STYLES ===== */
+.l10-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
+.l10-pres-trigger-info{color:white}
+.l10-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.l10-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
+.l10-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
+.l10-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
+/* ===== FULLSCREEN OVERLAY ===== */
+#l10Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l10Ov.on{display:flex}
+/* ===== SLIDE LAYOUT ===== */
+.l10s{display:none;width:100%;height:100%;overflow:hidden}
+.l10s.on{display:flex}
+/* Split layout: dark left + white right */
+.sl{width:36%;min-width:260px;background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 2rem 5rem;position:relative;flex-shrink:0}
+.sl h2{color:#fff;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
+.sl h2 u{text-decoration-color:rgba(255,255,255,.35)}
+.sl .sub{color:#94a3b8;font-size:.88rem;margin-top:.5rem;line-height:1.5}
+/* Triangle corner decoration */
+.tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:100px solid transparent;border-bottom:100px solid rgba(255,255,255,.06)}
+/* Slide number badge */
+.snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+/* Right white content panel */
+.sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
+/* Full dark slide (title/end) */
+.s-dark{background:linear-gradient(165deg,#09132b,#142040);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
+.s-dark h1{color:#fff;font-size:clamp(2rem,6vw,4rem);font-weight:900;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin:0 0 1rem}
+.s-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:560px;line-height:1.6}
+/* ===== TYPOGRAPHY ===== */
+.sr h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
+.sr p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
+.sr p.sm{font-size:clamp(.75rem,1.4vw,.92rem);color:#6b7280}
+.sr .q{font-size:clamp(.95rem,2vw,1.25rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
+.sr .ql{font-size:clamp(.88rem,1.8vw,1.1rem);font-weight:700;color:#09132b;margin:.9rem 0;line-height:1.6}
+/* ===== VISUAL ELEMENTS ===== */
+.rule-row{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
+.rule-row:last-child{border-bottom:none}
+.rule-dot{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
+.num-row{display:flex;align-items:flex-start;gap:1rem;padding:.75rem 0;border-bottom:1px solid #f0f4f8}
+.num-row:last-child{border-bottom:none}
+.nbox{width:36px;height:36px;background:#1a3068;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;flex-shrink:0}
+.ntext{font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.7}
+.green-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.green-card .gl{font-size:.7rem;font-weight:800;color:#16a34a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.green-card .gt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#166534;line-height:1.65;font-style:italic}
+.blue-card{background:#eff6ff;border:1.5px solid #93c5fd;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.blue-card .bl{font-size:.7rem;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.blue-card .bt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#1e3a8a;line-height:1.65;font-style:italic}
+.resume-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75}
+.exercise-box{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.exercise-box strong{color:#b45309}
+.ex-list{list-style:none;padding:0;margin:.5rem 0}
+.ex-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.3rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.ex-list li::before{content:"▶";color:#1a3068;font-size:.7rem;margin-top:.35rem;flex-shrink:0}
+.ul-list{list-style:none;padding:0;margin:.5rem 0}
+.ul-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.ul-list li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+/* ===== FILL INPUTS ===== */
+.fill-grp{margin:.65rem 0}
+.fill-lbl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.fill-in{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
+.fill-in:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
+/* ===== VISUAL DECORATIONS (SVG areas) ===== */
+.vis{position:absolute;right:2rem;bottom:5rem;opacity:.12;pointer-events:none}
+.vis-right{position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);opacity:.08;pointer-events:none}
+/* ===== CORNER DECORATIONS ON WHITE SLIDES ===== */
+.corner-tl{position:absolute;top:0;right:0;width:140px;height:140px;overflow:hidden;pointer-events:none}
+.corner-tl svg{position:absolute;top:0;right:0}
+.corner-br{position:absolute;bottom:5rem;right:0;width:120px;height:120px;overflow:hidden;pointer-events:none}
+/* ===== NAV BAR ===== */
+.l10-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
+.nbtn{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
+.nbtn:hover:not(:disabled){background:rgba(255,255,255,.25)}
+.nbtn:disabled{opacity:.25;cursor:default}
+.nctr{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
+.nclose{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
+.nsave{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+/* ===== LEFT PANEL SVG ICONS ===== */
+.lico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.85}
+</style>
+
+<!-- BOTTOM OF LESSON LAUNCH BUTTON -->
+<div class="l10-pres-trigger">
+  <div class="l10-pres-trigger-info">
+    <div class="l10-pres-trigger-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Заняття 1 — Цілі, задуми і майбутнє компанії
+    </div>
+    <div class="l10-pres-trigger-sub">46 слайдів · ~1.5 год · Покажіть команді після прочитання уроку</div>
+  </div>
+  <button class="l10-run-btn" onclick="window._l10Launch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Запустити презентацію
+  </button>
+</div>
+
+<!-- FULLSCREEN OVERLAY -->
+<div id="l10Ov">
+<div id="l10SW" style="flex:1;position:relative;overflow:hidden">
+
+<!-- S1: TITLE -->
+<div class="l10s on" id="l10_1">
+  <div class="s-dark">
+    <div style="margin-bottom:1.5rem">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="opacity:.6"><polygon points="40,4 75,70 5,70" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="4" x2="40" y2="40" stroke="white" stroke-width="2" opacity=".4"/></svg>
+    </div>
+    <h1>ЦІЛІ, ЗАДУМИ<br>І МАЙБУТНЄ<br>КОМПАНІЇ</h1>
+    <p>ЗАНЯТТЯ 1 · З циклу семінарів з управління</p>
+    <div class="snum" style="position:fixed;bottom:5.5rem;left:1.5rem">1</div>
+  </div>
+</div>
+
+<!-- S2: ЦІЛІ q1 -->
+<div class="l10s" id="l10_2">
+  <div class="sl">
+    <h2>ЦІЛІ</h2>
+    <!-- Blue triangles decoration -->
+    <svg width="60" height="60" viewBox="0 0 60 60" style="position:absolute;top:2rem;left:2rem;opacity:.3"><polygon points="0,60 60,0 60,60" fill="#3b82f6"/></svg>
+    <svg width="40" height="40" viewBox="0 0 40 40" style="position:absolute;top:6rem;right:1.5rem;opacity:.2"><polygon points="0,40 40,0 40,40" fill="#1a3068"/></svg>
+    <div class="tri"></div><div class="snum">2</div>
+  </div>
+  <div class="sr">
+    <div class="corner-tl"><svg width="140" height="140"><line x1="0" y1="0" x2="140" y2="140" stroke="#1a3068" stroke-width="1.5" opacity=".15"/><line x1="50" y1="0" x2="140" y2="90" stroke="#1a3068" stroke-width="1" opacity=".1"/></svg></div>
+    <p>Кожна компанія має якусь мету, на досягнення якої <strong>працює весь колектив</strong>.</p>
+    <div style="display:flex;align-items:flex-start;gap:1rem;margin:.75rem 0">
+      <svg width="30" height="30" viewBox="0 0 30 30" style="flex-shrink:0;margin-top:.25rem"><polygon points="0,30 30,0 30,30" fill="#3b82f6" opacity=".7"/></svg>
+      <div class="ql">Як ви вважаєте, яка ціль має наша компанія?</div>
+    </div>
+  </div>
+</div>
+
+<!-- S3: ЦІЛІ q2 -->
+<div class="l10s" id="l10_3">
+  <div class="sl">
+    <h2>ЦІЛІ</h2>
+    <svg width="60" height="60" viewBox="0 0 60 60" style="position:absolute;top:2rem;left:2rem;opacity:.3"><polygon points="0,60 60,0 60,60" fill="#3b82f6"/></svg>
+    <div class="tri"></div><div class="snum">3</div>
+  </div>
+  <div class="sr">
+    <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem">
+      <svg width="30" height="30" viewBox="0 0 30 30" style="flex-shrink:0;margin-top:.25rem"><polygon points="0,30 30,0 30,30" fill="#3b82f6" opacity=".7"/></svg>
+      <div class="ql">Якщо у різних співробітників різне уявлення про мету, як це впливає на діяльність компанії?</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:1rem;margin-left:3rem">
+      <svg width="30" height="30" viewBox="0 0 30 30" style="flex-shrink:0;margin-top:.25rem"><polygon points="0,30 30,0 30,30" fill="#1a3068" opacity=".8"/></svg>
+      <div class="ql">Що станеться, якщо так продовжуватиметься?</div>
+    </div>
+  </div>
+</div>
+
+<!-- S4: МЕТА ЗАНЯТТЯ -->
+<div class="l10s" id="l10_4">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="3"/><circle cx="50" cy="50" r="25" fill="none" stroke="white" stroke-width="2" opacity=".6"/><circle cx="50" cy="50" r="10" fill="white" opacity=".8"/><line x1="80" y1="20" x2="60" y2="38" stroke="#ef4444" stroke-width="3"/></svg>
+    </div>
+    <h2>МЕТА<br>ЗАНЯТТЯ</h2>
+    <div class="tri"></div><div class="snum">4</div>
+  </div>
+  <div class="sr">
+    <div class="num-row">
+      <div class="nbox">1</div>
+      <div class="ntext"><u>Мета заняття</u> — познайомити вас з основною метою нашої компанії, з тим, як ми йдемо до неї і якою має стати наша компанія</div>
+    </div>
+    <div class="num-row">
+      <div class="nbox">2</div>
+      <div class="ntext">Результатом нашої зустрічі має бути ваше розуміння мети компанії та того майбутнього, яке ми створюватимемо з вами для її досягнення</div>
+    </div>
+  </div>
+</div>
+
+<!-- S5: ПРАВИЛА -->
+<div class="l10s" id="l10_5">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 90 110" width="70" height="85"><rect x="10" y="5" width="70" height="90" rx="6" fill="none" stroke="white" stroke-width="3"/><line x1="25" y1="30" x2="65" y2="30" stroke="white" stroke-width="2" opacity=".7"/><line x1="25" y1="45" x2="65" y2="45" stroke="white" stroke-width="2" opacity=".7"/><line x1="25" y1="60" x2="65" y2="60" stroke="white" stroke-width="2" opacity=".7"/><line x1="25" y1="75" x2="55" y2="75" stroke="white" stroke-width="2" opacity=".7"/></svg>
+    </div>
+    <h2>ПРАВИЛА</h2>
+    <div class="tri"></div><div class="snum">5</div>
+  </div>
+  <div class="sr">
+    <div class="rule-row"><div class="rule-dot"></div><span>Заняття триватиме близько <strong>1,5 год.</strong> без перерви.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>Поставте мобільні телефони на <strong>беззвучний режим</strong>.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>Якщо отримаєте терміновий дзвінок — вийдіть з аудиторії і поверніться.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>Запитання можна ставити, <strong>піднімаючи руку</strong>.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>Якщо питань буде багато — запишемо та розберемо після завершення.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>У кожного має бути <strong>папір та ручка</strong> для записів.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>Наприкінці — відповісти на кілька запитань і залишити відгуки.</span></div>
+  </div>
+</div>
+
+<!-- S6: ВАЖЛИВЕ ПРАВИЛО -->
+<div class="l10s" id="l10_6">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="35" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="45" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="56" r="4" fill="white"/></svg>
+    </div>
+    <h2>ВАЖЛИВЕ<br>ПРАВИЛО</h2>
+    <div class="tri"></div><div class="snum">6</div>
+  </div>
+  <div class="sr">
+    <h3>Піднімайте руку одразу!</h3>
+    <p>Якщо щось здалося вам <strong>незрозумілим, дивним, заплутаним</strong> — піднімайте руку. І відразу ж, як це здалося.</p>
+    <div class="blue-card" style="margin-top:1.5rem">
+      <div class="bl">Чому це важливо</div>
+      <div class="bt">Нас привчають ще у школі до того, що соромно чогось не знати.<br><br>Але коли людина не розуміє, вона <strong>не може діяти</strong>, використовувати знання.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S7: НАШІ СЛОВА fill-in -->
+<div class="l10s" id="l10_7">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 70" width="80" height="70"><rect x="5" y="10" width="70" height="50" rx="8" fill="none" stroke="white" stroke-width="3"/><path d="M5 30 Q40 50 75 30" fill="none" stroke="white" stroke-width="2" opacity=".5"/><circle cx="25" cy="25" r="4" fill="white" opacity=".7"/><circle cx="40" cy="22" r="4" fill="white" opacity=".7"/><circle cx="55" cy="25" r="4" fill="white" opacity=".7"/></svg>
+    </div>
+    <h2>НАШІ<br>СЛОВА</h2>
+    <div class="tri"></div><div class="snum">7</div>
+  </div>
+  <div class="sr">
+    <h3>Терміни нашої компанії</h3>
+    <p>Спеціальні слова та поняття, які ми використовуємо у роботі і які не завжди зрозумілі новим співробітникам:</p>
+    <div class="fill-grp" style="margin-top:1rem">
+      <div class="fill-lbl">Вкажіть ваші терміни (заповніть перед заняттям)</div>
+      <textarea class="fill-in" id="l10f_terms" rows="5" placeholder="Наприклад: КП — комерційна пропозиція; МВП — мінімально життєздатний продукт; ОКР — цілі та ключові результати..." oninput="window._l10SF('terms',this.value)"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S8: ВПРАВА -->
+<div class="l10s" id="l10_8">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="10" y="10" width="60" height="60" rx="4" fill="none" stroke="white" stroke-width="3"/><line x1="20" y1="55" x2="35" y2="35" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="35" cy="35" r="5" fill="none" stroke="white" stroke-width="2"/><path d="M40 55 Q50 40 60 55" fill="none" stroke="white" stroke-width="2"/><line x1="48" y1="25" x2="48" y2="35" stroke="white" stroke-width="2"/><line x1="43" y1="30" x2="53" y2="30" stroke="white" stroke-width="2"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="tri"></div><div class="snum">8</div>
+  </div>
+  <div class="sr">
+    <h3>Намалюйте на аркуші паперу:</h3>
+    <div class="exercise-box">
+      <ul class="ex-list">
+        <li>будинок</li>
+        <li>дерево</li>
+        <li>сонце</li>
+        <li>траву під деревом</li>
+        <li style="color:#b45309;font-weight:700">А тепер намалюйте... (ведучий дає завдання)</li>
+      </ul>
+    </div>
+    <p class="sm" style="margin-top:1rem">Ця вправа демонструє як спільна мета (картина в голові) впливає на дії всієї команди.</p>
+  </div>
+</div>
+
+<!-- S9: ОСОБИСТІ ЦІЛІ -->
+<div class="l10s" id="l10_9">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="16" fill="none" stroke="white" stroke-width="3"/><path d="M15 70 Q15 50 40 50 Q65 50 65 70" fill="none" stroke="white" stroke-width="3"/></svg>
+    </div>
+    <h2>ОСОБИСТІ<br>ЦІЛІ</h2>
+    <div class="tri"></div><div class="snum">9</div>
+  </div>
+  <div class="sr">
+    <p>Кожна людина має свої особисті цілі.</p>
+    <div class="q">Які особисті цілі є у вас?</div>
+    <div class="q" style="margin-top:1rem">У чому ви бачите відмінність особистих цілей від мети компанії, яку ви назвали раніше?</div>
+  </div>
+</div>
+
+<!-- S10: РЕЗЮМЕ -->
+<div class="l10s" id="l10_10">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">10</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box" style="font-size:clamp(1rem,2.5vw,1.4rem);font-weight:700;text-align:center;padding:2rem">
+      Цілі компанії та особисті цілі будь-якого члена колективу — <strong>зовсім різні поняття</strong>.
+    </div>
+  </div>
+</div>
+
+<!-- S11: МЕТА КОМПАНІЇ -->
+<div class="l10s" id="l10_11">
+  <div class="sl" style="background:linear-gradient(165deg,#09132b,#142040)">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="90" height="90"><g fill="none" stroke="white"><ellipse cx="40" cy="55" rx="25" ry="8" opacity=".3"/><circle cx="30" cy="35" r="7" fill="white" opacity=".7"/><circle cx="50" cy="32" r="7" fill="white" opacity=".7"/><circle cx="40" cy="25" r="7" fill="white" opacity=".8"/><circle cx="22" cy="45" r="7" fill="white" opacity=".6"/><circle cx="58" cy="45" r="7" fill="white" opacity=".6"/></g></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <h3 style="font-size:clamp(1.3rem,3vw,2.2rem)">МЕТА КОМПАНІЇ —</h3>
+    <p style="font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:700;color:#166534;text-decoration:underline;text-underline-offset:4px;margin-top:.5rem">приносити користь якомога більшій кількості людей</p>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">11</div>
+  </div>
+</div>
+
+<!-- S12: GOOGLE -->
+<div class="l10s" id="l10_12">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 90 90" width="90" height="90"><circle cx="45" cy="45" r="35" fill="none" stroke="white" stroke-width="3" opacity=".4"/><text x="45" y="55" text-anchor="middle" font-size="28" font-weight="900" fill="white" font-family="Arial">G</text></svg>
+    </div>
+    <h2>GOOGLE</h2>
+    <div class="tri"></div><div class="snum">12</div>
+  </div>
+  <div class="sr">
+    <p style="font-size:clamp(.95rem,2vw,1.3rem);font-weight:700;margin-bottom:1.25rem">«Зробити світову інформацію університально доступною та корисною»</p>
+    <div class="green-card">
+      <div class="gl">Як реалізується</div>
+      <div class="gt">Компанія приносить користь людям, роблячи доступною потрібну інформацію</div>
+    </div>
+  </div>
+</div>
+
+<!-- S13: MICROSOFT -->
+<div class="l10s" id="l10_13">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="5" y="5" width="33" height="33" fill="white" opacity=".8"/><rect x="42" y="5" width="33" height="33" fill="white" opacity=".5"/><rect x="5" y="42" width="33" height="33" fill="white" opacity=".5"/><rect x="42" y="42" width="33" height="33" fill="white" opacity=".8"/></svg>
+    </div>
+    <h2>MICROSOFT</h2>
+    <div class="tri"></div><div class="snum">13</div>
+  </div>
+  <div class="sr">
+    <p style="font-size:clamp(.95rem,2vw,1.3rem);font-weight:700;margin-bottom:1.25rem">«…Ми працюємо, щоб допомогти людям та бізнесу по всьому світу реалізувати їх повний потенціал»</p>
+    <div class="green-card">
+      <div class="gl">Як реалізується</div>
+      <div class="gt">Компанія приносить користь, допомагаючи людям реалізовуватись</div>
+    </div>
+  </div>
+</div>
+
+<!-- S14: РЕЗЮМЕ - Ціль -->
+<div class="l10s" id="l10_14">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 60 80" width="50" height="70"><polygon points="30,5 55,65 5,65" fill="none" stroke="white" stroke-width="3"/><text x="30" y="52" text-anchor="middle" font-size="13" fill="white" font-weight="700">Ціль</text></svg>
+    </div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">14</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div style="text-align:center;font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:900;color:#1a3068;margin-bottom:1.25rem">Ціль</div>
+    <div class="resume-box">Саме основна мета наповнює діяльність будь-якої компанії <strong>змістом</strong> і є дороговказом протягом усього її життя.</div>
+  </div>
+</div>
+
+<!-- S15: fill-in місцева компанія -->
+<div class="l10s" id="l10_15">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="30" width="50" height="40" rx="3" fill="none" stroke="white" stroke-width="2.5"/><polygon points="10,30 40,8 70,30" fill="none" stroke="white" stroke-width="2.5"/><rect x="30" y="50" width="20" height="20" fill="none" stroke="white" stroke-width="2"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <p>Основна мета є у будь-якої компанії: і маленької, і великої.</p>
+    <div class="fill-grp" style="margin-top:1rem">
+      <div class="fill-lbl">Відома компанія у вашому місті / країні (приклад для обговорення)</div>
+      <textarea class="fill-in" id="l10f_local_company" rows="2" placeholder="Наприклад: АТБ, Нова Пошта, Rozetka..." oninput="window._l10SF('local_company',this.value)"></textarea>
+    </div>
+    <div class="q" style="margin-top:.75rem">Як ви вважаєте, яка основна мета у цієї компанії?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">15</div>
+  </div>
+</div>
+
+<!-- S16: РЕЗЮМЕ -->
+<div class="l10s" id="l10_16">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">16</div>
+  </div>
+  <div class="sr">
+    <div class="resume-box">Ми розібрали поняття <strong>"основна мета компанії"</strong> — це безстрокова мета, сенс життя компанії.</div>
+    <p style="margin-top:1rem">Трохи пізніше я розповім про те, якою є основна мета нашої компанії.</p>
+    <p>А зараз давайте розберемося ще з одним поняттям.</p>
+  </div>
+</div>
+
+<!-- S17: Google питання -->
+<div class="l10s" id="l10_17">
+  <div class="sl">
+    <div class="lico"><svg viewBox="0 0 90 90" width="90" height="90"><circle cx="45" cy="45" r="35" fill="none" stroke="white" stroke-width="3" opacity=".4"/><text x="45" y="55" text-anchor="middle" font-size="28" font-weight="900" fill="white" font-family="Arial">G</text></svg></div>
+    <h2>GOOGLE</h2>
+    <div class="tri"></div><div class="snum">17</div>
+  </div>
+  <div class="sr">
+    <div class="blue-card" style="margin-bottom:1.25rem">
+      <div class="bl">Основна мета Google</div>
+      <div class="bt">«Зробити світову інформацію університально доступною та корисною»</div>
+    </div>
+    <div class="q">Можуть бути ще якісь компанії, які мають таку ж мету — зробити доступною та корисною світову інформацію?</div>
+  </div>
+</div>
+
+<!-- S18: РЕЗЮМЕ -->
+<div class="l10s" id="l10_18">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">18</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box">Основна мета зазвичай <strong>не є унікальною</strong> і до однієї мети можуть йти різні компанії.<br><br>Але при цьому вони діятимуть <strong>по-різному</strong>.</div>
+  </div>
+</div>
+
+<!-- S19: ЗАДУМ КОМПАНІЇ -->
+<div class="l10s" id="l10_19">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="white" stroke-width="2.5" opacity=".5"/><path d="M40 70 Q15 55 15 35 Q15 15 40 15 Q65 15 65 35 Q65 55 40 70Z" fill="none" stroke="white" stroke-width="2" opacity=".3"/><circle cx="40" cy="18" r="6" fill="white" opacity=".9"/><path d="M30 55 Q40 45 50 55" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/></svg>
+    </div>
+    <h2>ЗАДУМ<br>КОМПАНІЇ</h2>
+    <div class="tri"></div><div class="snum">19</div>
+  </div>
+  <div class="sr">
+    <p class="sm">Чи не основна мета, а задум компанії робить компанію особливою. І саме у задумі закладено відмінності та основний спосіб дії.</p>
+    <p style="margin-top:1rem;font-size:clamp(.95rem,2vw,1.2rem)">Особливий спосіб, через який компанія рухається для досягнення своєї основної мети, називається <strong>ЗАДУМ компанії</strong>.</p>
+    <div style="text-align:center;margin-top:1.5rem;opacity:.2">
+      <svg viewBox="0 0 200 60" width="200" height="60"><path d="M20 50 Q60 20 100 40 Q140 60 180 10" fill="none" stroke="#1a3068" stroke-width="4"/><polygon points="175,5 185,15 170,18" fill="#1a3068"/><polygon points="180,5 195,8 183,18" fill="#ef4444" opacity=".8"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- S20: РЕЗЮМЕ Ціль+Задум -->
+<div class="l10s" id="l10_20">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 70 90" width="60" height="80"><polygon points="35,8 58,75 12,75" fill="none" stroke="#f59e0b" stroke-width="3"/><text x="35" y="60" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="700">Ціль</text><path d="M35 75 Q10 65 15 50 Q20 30 35 30" fill="none" stroke="white" stroke-width="2.5"/><path d="M35 75 Q60 65 55 50 Q50 30 35 30" fill="none" stroke="white" stroke-width="2.5" opacity=".5"/></svg>
+    </div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">20</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div style="text-align:center;font-size:clamp(1rem,2vw,1.3rem);font-weight:900;color:#1a3068">Ціль</div>
+      <div style="text-align:center;font-size:clamp(1rem,2vw,1.3rem);font-weight:900;color:#166534">Задум</div>
+    </div>
+    <div class="resume-box">Якщо <strong>мета</strong> — це дороговказ, то <strong>задум</strong> — це шлях, яким ми йдемо за нею.<br><br>Задум — це особливий унікальний для компанії образ дій.</div>
+  </div>
+</div>
+
+<!-- S21: IKEA питання -->
+<div class="l10s" id="l10_21">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 60" width="80" height="60"><rect x="5" y="10" width="70" height="40" rx="20" fill="#f59e0b" opacity=".8"/><text x="40" y="36" text-anchor="middle" font-size="18" font-weight="900" fill="#1a3068" font-family="Arial">IKEA</text></svg>
+    </div>
+    <h2>IKEA</h2>
+    <div class="tri"></div><div class="snum">21</div>
+  </div>
+  <div class="sr">
+    <div class="blue-card" style="margin-bottom:1.25rem">
+      <div class="bl">Основна мета IKEA</div>
+      <div class="bt">«Змінити на краще повсякденне життя багатьох людей»</div>
+    </div>
+    <div class="q">Який унікальний шлях обрала IKEA на відміну від інших компаній, щоб змінювати на краще повсякденне життя багатьох людей?</div>
+  </div>
+</div>
+
+<!-- S22: IKEA задум -->
+<div class="l10s" id="l10_22">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 60" width="80" height="60"><rect x="5" y="10" width="70" height="40" rx="20" fill="#f59e0b" opacity=".8"/><text x="40" y="36" text-anchor="middle" font-size="18" font-weight="900" fill="#1a3068" font-family="Arial">IKEA</text></svg>
+    </div>
+    <h2>IKEA</h2>
+    <div class="tri"></div><div class="snum">22</div>
+  </div>
+  <div class="sr">
+    <div class="blue-card">
+      <div class="bl">Основна мета</div>
+      <div class="bt">«Змінити на краще повсякденне життя багатьох людей»</div>
+    </div>
+    <div class="green-card" style="margin-top:.75rem">
+      <div class="gl">ЗАДУМ</div>
+      <div class="gt">«Пропонувати широкий асортимент зручних та функціональних товарів для облаштування будинку за такими низькими цінами, щоб якнайбільше людей мали можливість їх купити»</div>
+    </div>
+  </div>
+</div>
+
+<!-- S23: fill-in місцева компанія задум -->
+<div class="l10s" id="l10_23">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 60" width="80" height="60"><rect x="5" y="10" width="70" height="40" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="10" x2="40" y2="50" stroke="white" stroke-width="1.5" opacity=".4"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <div class="fill-grp">
+      <div class="fill-lbl">Компанія (з попереднього слайду)</div>
+      <textarea class="fill-in" id="l10f_local2" rows="1" placeholder="Назва компанії..." oninput="window._l10SF('local2',this.value)"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.5rem">
+      <div class="fill-grp">
+        <div class="fill-lbl">Основна мета</div>
+        <textarea class="fill-in" id="l10f_local_goal" rows="3" placeholder="Яка мета..." oninput="window._l10SF('local_goal',this.value)"></textarea>
+      </div>
+      <div class="fill-grp">
+        <div class="fill-lbl">Задум</div>
+        <textarea class="fill-in" id="l10f_local_vision" rows="3" placeholder="Як досягають..." oninput="window._l10SF('local_vision',this.value)"></textarea>
+      </div>
+    </div>
+    <div class="ql" style="margin-top:.75rem;font-size:.9rem">Чим задум відрізняє цю компанію від інших аналогічних?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">23</div>
+  </div>
+</div>
+
+<!-- S24: РЕЗЮМЕ -->
+<div class="l10s" id="l10_24">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">24</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div style="text-align:center;font-size:clamp(1rem,2.5vw,1.5rem);font-weight:900;color:#1a3068;margin-bottom:1rem">Ціль</div>
+    <div class="resume-box">Як ви бачите, задум визначає особливості діяльності та приводить компанію до основної мети.<br><br>І зараз я розповім про те, якою є основна мета і задум <strong>нашої компанії</strong>.</div>
+  </div>
+</div>
+
+<!-- S25: Ціль нашої компанії - питання -->
+<div class="l10s" id="l10_25">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 60 80" width="50" height="70"><polygon points="30,5 55,65 5,65" fill="none" stroke="#f59e0b" stroke-width="3"/><text x="30" y="52" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="700">Ціль</text></svg>
+    </div>
+    <h2>ЦІЛЬ<br>КОМПАНІЇ</h2>
+    <div class="tri"></div><div class="snum">25</div>
+  </div>
+  <div class="sr">
+    <div class="q">Як ви вважаєте, як можна сформулювати основну мету нашої компанії?</div>
+    <p style="margin-top:1.5rem">Один із моїх обов'язків як власника компанії полягає в тому, щоб основна мета та задум компанії були визначені <strong>чітко</strong>.</p>
+  </div>
+</div>
+
+<!-- S26: МЕТА НАШОЇ КОМПАНІЇ fill-in -->
+<div class="l10s" id="l10_26">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 60 80" width="50" height="70"><polygon points="30,5 55,65 5,65" fill="none" stroke="#f59e0b" stroke-width="3"/><text x="30" y="52" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="700">Ціль</text></svg>
+    </div>
+    <h2>МЕТА<br>НАШОЇ<br>КОМПАНІЇ</h2>
+    <div class="fill-grp" style="position:absolute;bottom:4.5rem;left:1rem;right:1rem">
+      <div class="fill-lbl" style="color:#94a3b8;font-size:.65rem">Назва / логотип компанії</div>
+      <textarea class="fill-in" id="l10f_logo" rows="1" style="font-size:.78rem;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:white" placeholder="Назва..." oninput="window._l10SF('logo',this.value)"></textarea>
+    </div>
+    <div class="tri"></div><div class="snum">26</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="40" height="40" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <div class="fill-grp">
+      <div class="fill-lbl">Мета нашої компанії</div>
+      <textarea class="fill-in" id="l10f_company_goal" rows="4" placeholder="Впишіть сформульовану мету вашої компанії..." oninput="window._l10SF('company_goal',this.value)"></textarea>
+    </div>
+    <p class="sm" style="margin-top:.5rem">Наведіть приклади, як ми реалізовуємо в житті основну мету нашої компанії.</p>
+  </div>
+</div>
+
+<!-- S27: Що ми робимо fill-in -->
+<div class="l10s" id="l10_27">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M20 68 Q20 50 40 50 Q60 50 60 68" fill="none" stroke="white" stroke-width="2.5"/><circle cx="40" cy="28" r="5" fill="white" opacity=".8"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <p>Кожен із вас на своєму робочому місці докладає зусиль для досягнення мети компанії.</p>
+    <div class="fill-grp" style="margin-top:1rem">
+      <div class="fill-lbl">Мета для питання</div>
+      <textarea class="fill-in" id="l10f_goal_q" rows="2" placeholder="Вкажіть мету компанії..." oninput="window._l10SF('goal_q',this.value)"></textarea>
+    </div>
+    <div class="q" style="margin-top:.75rem">Що ви робите, щоб <span style="color:#22c55e;font-style:italic" id="l10q27">[ваша мета]</span>?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">27</div>
+  </div>
+</div>
+
+<!-- S28: Задум питання -->
+<div class="l10s" id="l10_28">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="white" stroke-width="2.5" opacity=".5"/><circle cx="40" cy="18" r="6" fill="white" opacity=".9"/></svg>
+    </div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="q" style="font-size:clamp(1rem,2.5vw,1.4rem)">А як ви вважаєте, у чому наш особливий шлях, <strong>унікальність</strong> у досягненні основної мети?</div>
+    <div style="text-align:center;margin-top:2rem;opacity:.15">
+      <svg viewBox="0 0 200 80" width="200" height="80"><path d="M20 70 Q60 30 100 50 Q140 70 180 20" fill="none" stroke="#1a3068" stroke-width="5"/><polygon points="175,15 185,25 170,28" fill="#1a3068"/></svg>
+    </div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">28</div>
+  </div>
+</div>
+
+<!-- S29: ЗАДУМ КОМПАНІЇ fill-in -->
+<div class="l10s" id="l10_29">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="white" stroke-width="2.5" opacity=".5"/><circle cx="40" cy="18" r="6" fill="white" opacity=".9"/><path d="M20 55 Q40 45 60 55" fill="none" stroke="white" stroke-width="3" opacity=".6"/></svg>
+    </div>
+    <h2>ЗАДУМ<br>КОМПАНІЇ</h2>
+    <div class="tri"></div><div class="snum">29</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="36" height="36" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <div class="fill-grp">
+      <div class="fill-lbl">Задум нашої компанії</div>
+      <textarea class="fill-in" id="l10f_company_vision" rows="4" placeholder="Впишіть сформульований задум компанії..." oninput="window._l10SF('company_vision',this.value)"></textarea>
+    </div>
+    <p class="sm" style="margin-top:.5rem">Приклади того, як дії відповідали задуму, і це давало хороший результат.</p>
+  </div>
+</div>
+
+<!-- S30: РЕЗЮМЕ -->
+<div class="l10s" id="l10_30">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">30</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box">Тепер ви знаєте основну мету нашої компанії та той особливий шлях що веде компанію до неї.<br><br>Ясне розуміння нашої мети та задуму робить нас <strong>сильнішими як команду</strong>.<br><br>Це призведе до більшої узгодженості дій та вищих результатів.</div>
+  </div>
+</div>
+
+<!-- S31: ІДЕАЛЬНА КАРТИНА -->
+<div class="l10s" id="l10_31">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="#f59e0b" stroke-width="3"/><path d="M30 75 Q15 55 15 35 Q20 75 35 80" fill="none" stroke="white" stroke-width="2" opacity=".4"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/><path d="M25 55 L40 65 L55 50" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/></svg>
+    </div>
+    <h2>ІДЕАЛЬНА<br><u>Картина</u></h2>
+    <div class="tri"></div><div class="snum">31</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="36" height="36" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <h3><u>Ідеальна картина</u></h3>
+    <p>— це те, як в ідеалі у реальному світі має виглядати діяльність компанії.</p>
+    <p style="margin-top:.75rem">Це уявлення про компанію, її матеріальні об'єкти: <strong>приміщення, обладнання, продукцію, персонал</strong> і т.д.</p>
+  </div>
+</div>
+
+<!-- S32: ІДЕАЛЬНА КАРТИНА fill-in -->
+<div class="l10s" id="l10_32">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="#f59e0b" stroke-width="3"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <h3>Ідеальна картина компанії</h3>
+    <div class="fill-grp">
+      <div class="fill-lbl">Наша компанія через ____ років (ключові цифри та результати)</div>
+      <textarea class="fill-in" id="l10f_ideal" rows="6" placeholder="Наприклад: 3 філії, 50 співробітників, виручка 10 млн грн/міс, лідер ринку в регіоні, нагороди, клієнти..." oninput="window._l10SF('ideal',this.value)"></textarea>
+    </div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">32</div>
+  </div>
+</div>
+
+<!-- S33: Питання про картину fill-in -->
+<div class="l10s" id="l10_33">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="#f59e0b" stroke-width="3"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <div class="fill-grp" style="margin-bottom:.5rem">
+      <div class="fill-lbl">Через скільки років (вкажіть)</div>
+      <textarea class="fill-in" id="l10f_years" rows="1" placeholder="Наприклад: 3 роки" oninput="window._l10SF('years',this.value)"></textarea>
+    </div>
+    <div class="q">Кому подобається ця ідеальна картина?</div>
+    <div class="q">Хто готовий попрацювати над досягненням цієї картини?</div>
+    <div class="q">Які у вас питання стосовно цієї ідеальної картини?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">33</div>
+  </div>
+</div>
+
+<!-- S34: РЕЗЮМЕ -->
+<div class="l10s" id="l10_34">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">34</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box">Таку ідеальну картину ми можемо втілити в життя, <strong>тільки працюючи як команда</strong>, ніхто поодинці не зможе це зробити.</div>
+  </div>
+</div>
+
+<!-- S35: Сумніви -->
+<div class="l10s" id="l10_35">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="#f59e0b" stroke-width="3"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/></svg>
+    </div>
+    <h2>ІДЕАЛЬНА<br><u>Картина</u></h2>
+    <div class="tri"></div><div class="snum">35</div>
+  </div>
+  <div class="sr">
+    <div class="q">Чи може бути таке, що ми <strong>не зможемо</strong> реалізувати цю ідеальну картину?</div>
+    <p style="margin-top:1.25rem">Можливо, у когось виникнуть сумніви: <em>"А чи справді можливо втілити це в життя?"</em></p>
+    <p style="margin-top:.75rem">Тому я хочу розповісти вам про <strong>історію нашої компанії</strong>.</p>
+  </div>
+</div>
+
+<!-- S36: ІСТОРІЯ fill-in -->
+<div class="l10s" id="l10_36">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><rect x="15" y="15" width="50" height="65" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="30" x2="55" y2="30" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="42" x2="55" y2="42" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="54" x2="45" y2="54" stroke="white" stroke-width="1.5" opacity=".6"/><path d="M35 8 Q40 2 45 8" fill="none" stroke="#f59e0b" stroke-width="2" opacity=".8"/><circle cx="40" cy="5" r="3" fill="#f59e0b" opacity=".9"/></svg>
+    </div>
+    <h2>ІСТОРІЯ<br>КОМПАНІЇ</h2>
+    <div class="tri"></div><div class="snum">36</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="36" height="36" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <div class="fill-grp">
+      <div class="fill-lbl">Рік заснування і початок</div>
+      <textarea class="fill-in" id="l10f_history_year" rows="2" placeholder="Наприклад: 2015 рік — відкрили перший офіс у гаражі, 2 людини..." oninput="window._l10SF('history_year',this.value)"></textarea>
+    </div>
+    <div class="fill-grp">
+      <div class="fill-lbl">Ключові дати зростання і розвитку</div>
+      <textarea class="fill-in" id="l10f_history_dates" rows="4" placeholder="2017 — перший офіс&#10;2019 — команда 10 людей&#10;2022 — вийшли на 1 млн грн/міс&#10;2024 — відкрили другу філію..." oninput="window._l10SF('history_dates',this.value)"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S37: Ветерани -->
+<div class="l10s" id="l10_37">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><rect x="15" y="15" width="50" height="65" rx="4" fill="none" stroke="white" stroke-width="2.5"/><path d="M35 8 Q40 2 45 8" fill="none" stroke="#f59e0b" stroke-width="2"/><circle cx="40" cy="5" r="3" fill="#f59e0b" opacity=".9"/></svg>
+    </div>
+    <h2>ІСТОРІЯ<br>КОМПАНІЇ</h2>
+    <div class="tri"></div><div class="snum">37</div>
+  </div>
+  <div class="sr">
+    <div class="q">Підніміть руки ті, хто <strong>працює більше трьох років</strong> у компанії.</div>
+    <p style="margin-top:1.25rem">Розкажіть, будь ласка, що ви застали, коли прийшли на роботу, і що змінилося у компанії за роки вашої роботи.</p>
+  </div>
+</div>
+
+<!-- S38: РЕЗЮМЕ -->
+<div class="l10s" id="l10_38">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">38</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box">Ми пройшли досить великий шлях.<br><br>Ми досягли багато чого і продовжуватимемо рух до основної мети разом, <strong>втілюючи в життя ідеальну картину</strong>, яку я представив вам сьогодні.</div>
+  </div>
+</div>
+
+<!-- S39: ПРАВИЛА І ДИСЦИПЛІНА -->
+<div class="l10s" id="l10_39">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><path d="M28 40 L37 50 L55 30" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2>ПРАВИЛА<br>І<br>ДИСЦИПЛІНА</h2>
+    <div class="tri"></div><div class="snum">39</div>
+  </div>
+  <div class="sr">
+    <div class="q">Як ви ставитеся до правил та дисципліни?</div>
+    <div class="q" style="margin-top:1rem">Як ви вважаєте, навіщо вони потрібні?</div>
+  </div>
+</div>
+
+<!-- S40: Спортивна команда -->
+<div class="l10s" id="l10_40">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="30" fill="none" stroke="white" stroke-width="2.5"/><path d="M25 25 Q40 35 55 25" fill="none" stroke="white" stroke-width="2"/><path d="M20 40 Q40 30 60 40" fill="none" stroke="white" stroke-width="2"/><path d="M25 55 Q40 45 55 55" fill="none" stroke="white" stroke-width="2"/><line x1="40" y1="10" x2="40" y2="70" stroke="white" stroke-width="1.5" opacity=".4"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <p>Роботу компанії можна порівняти із роботою <strong>спортивної команди</strong>.</p>
+    <div class="q" style="margin-top:1.25rem">Що відбуватиметься, якщо у спортивній грі <strong>не буде правил</strong>?</div>
+    <div class="resume-box" style="margin-top:1.25rem">Резюме: щоб спортивна гра відбулася, <strong>потрібні цілі та правила</strong>.</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">40</div>
+  </div>
+</div>
+
+<!-- S41: Правила бізнесу -->
+<div class="l10s" id="l10_41">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="10" y="20" width="60" height="45" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="10" y1="35" x2="70" y2="35" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="20" x2="25" y2="65" stroke="white" stroke-width="1.5" opacity=".5"/><circle cx="17" cy="27" r="3" fill="white" opacity=".6"/><circle cx="17" cy="42" r="3" fill="white" opacity=".6"/><circle cx="17" cy="54" r="3" fill="white" opacity=".6"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <p>Бізнес — це <strong>складніша діяльність</strong> у порівнянні зі спортом. Тому у бізнесі правил ще більше.</p>
+    <div class="q" style="margin-top:1.25rem">Які у нашому бізнесі є правила, які нам <strong>допомагають</strong>?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">41</div>
+  </div>
+</div>
+
+<!-- S42: ОРГПОЛІТИКА -->
+<div class="l10s" id="l10_42">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><rect x="15" y="15" width="50" height="65" rx="4" fill="none" stroke="white" stroke-width="2.5"/><path d="M35 8 Q40 2 45 8" fill="none" stroke="#f59e0b" stroke-width="2"/><circle cx="40" cy="5" r="3" fill="#f59e0b" opacity=".9"/><line x1="25" y1="32" x2="55" y2="32" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="44" x2="55" y2="44" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="56" x2="45" y2="56" stroke="white" stroke-width="1.5" opacity=".5"/></svg>
+    </div>
+    <h2>Оргполітика</h2>
+    <div class="tri"></div><div class="snum">42</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="36" height="36" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <div class="blue-card" style="margin-bottom:1rem">
+      <div class="bl">Визначення</div>
+      <div class="bt"><strong>Оргполітика</strong> (організаційна політика) — правила, за допомогою яких група досягає згоди щодо дій та відповідно до яких вона веде свої справи.</div>
+    </div>
+    <p>Перша наша оргполітика і найголовніша — це <strong>опис нашої основної мети та задуму компанії</strong>.</p>
+    <div class="q" style="margin-top:.75rem;font-size:.9rem">Які ми маємо ще оргполітики, про які ви знаєте?</div>
+  </div>
+</div>
+
+<!-- S43: РЕЗЮМЕ fill-in -->
+<div class="l10s" id="l10_43">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="white" stroke-width="2" opacity=".4"/><path d="M25 60 Q20 45 20 35 Q25 75 40 78" fill="none" stroke="white" stroke-width="1.5" opacity=".3"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/></svg>
+    </div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">43</div>
+  </div>
+  <div class="sr">
+    <div class="fill-grp">
+      <div class="fill-lbl">Путівна зірка — наша мета</div>
+      <textarea class="fill-in" id="l10f_star_goal" rows="2" placeholder="Вставте формулювання мети компанії..." oninput="window._l10SF('star_goal',this.value)"></textarea>
+    </div>
+    <div class="resume-box" style="margin-top:.75rem">
+      <strong>Задум</strong> — дорога, якою ми йдемо до мети<br><br>
+      <strong>Бордюри по краях — це наші правила</strong>, щоб нас не знесло зі шляху!
+    </div>
+  </div>
+</div>
+
+<!-- S44: ЗАВЕРШЕННЯ -->
+<div class="l10s" id="l10_44">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><path d="M28 40 L37 50 L55 30" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <h3>ЗАВЕРШЕННЯ</h3>
+    <p><strong>На цьому занятті ми розглянули:</strong></p>
+    <ul class="ul-list" style="margin-top:.5rem">
+      <li>Основну мету компанії</li>
+      <li>Наш задум</li>
+      <li>Ідеальну картину стану справ</li>
+      <li>Історію нашої компанії</li>
+      <li>Головну оргполітику компанії</li>
+    </ul>
+    <div class="q" style="margin-top:1.25rem">Чи залишились у вас питання?</div>
+    <svg viewBox="0 0 40 40" width="32" height="32" style="margin-top:.75rem;opacity:.4"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <p class="sm">Зараз я прошу вас відповісти на кілька запитань та залишити відгуки про проведене заняття.</p>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">44</div>
+  </div>
+</div>
+
+<!-- S45: Очікування -->
+<div class="l10s" id="l10_45">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M20 68 Q20 50 40 50 Q60 50 60 68" fill="none" stroke="white" stroke-width="2.5"/><circle cx="40" cy="28" r="5" fill="white" opacity=".8"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <h3 style="margin-bottom:1rem">Тепер я від вас чекаю:</h3>
+    <ul class="ul-list">
+      <li>що ми працюватимемо як <strong>одна команда</strong> над досягненням цілей, щоб наша компанія вийшла на новий рівень;</li>
+      <li>що кожен <strong>розвиватиметься</strong>, освоюватиме нові інструменти, підвищуватиме свою ефективність та компетентність.</li>
+    </ul>
+    <div class="resume-box" style="margin-top:1.5rem;text-align:center;font-size:clamp(1rem,2.5vw,1.3rem);font-weight:800">
+      Дякую!<br>Зростати ми можемо тільки <strong>всі разом</strong>!
+    </div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">45</div>
+  </div>
+</div>
+
+<!-- S46: КІНЕЦЬ -->
+<div class="l10s" id="l10_46">
+  <div class="s-dark">
+    <svg viewBox="0 0 80 80" width="70" height="70" style="margin-bottom:1.5rem;opacity:.5">
+      <polygon points="40,5 50,30 77,30 55,48 63,75 40,58 17,75 25,48 3,30 30,30" fill="none" stroke="white" stroke-width="2.5"/>
+    </svg>
+    <h1>КІНЕЦЬ<br>ЗАНЯТТЯ 1</h1>
+    <p>Дякуємо за участь!</p>
+    <div class="snum" style="position:fixed;bottom:5.5rem;left:1.5rem">46</div>
+  </div>
+</div>
+
+</div><!-- /l10SW -->
+
+<!-- Navigation -->
+<div class="l10-nav">
+  <button class="nbtn" id="l10Prev" onclick="window._l10P()" disabled>← Назад</button>
+  <div style="display:flex;align-items:center;gap:.6rem">
+    <span class="nctr" id="l10Ctr">1 / 46</span>
+    <button class="nsave" onclick="window._l10SaveAll()">💾 Зберегти</button>
+    <button class="nclose" onclick="window._l10Close()">✕ Закрити</button>
+  </div>
+  <button class="nbtn" id="l10Next" onclick="window._l10N()">Далі →</button>
+</div>
+</div><!-- /l10Ov -->
+
+<script>
+(function(){
+  var T=46, c=1, SK='l10d';
+  var FI=['terms','local_company','local2','local_goal','local_vision','logo','company_goal','goal_q','company_vision','ideal','years','history_year','history_dates','star_goal'];
+
+  async function load(){
+    try{
+      var r=await window.storage.get(SK);
+      if(r&&r.value){
+        var d=JSON.parse(r.value);
+        FI.forEach(function(k){var e=document.getElementById('l10f_'+k);if(e&&d[k])e.value=d[k];});
+        if(d.goal_q){var q=document.getElementById('l10q27');if(q)q.textContent=d.goal_q;}
+      }
+    }catch(e){}
+  }
+
+  window._l10SF=async function(k,v){
+    try{
+      var r=await window.storage.get(SK);
+      var d=r?JSON.parse(r.value):{};
+      d[k]=v;
+      await window.storage.set(SK,JSON.stringify(d));
+      if(k==='goal_q'){var q=document.getElementById('l10q27');if(q)q.textContent=v||'[ваша мета]';}
+    }catch(e){}
+  };
+
+  window._l10SaveAll=async function(){
+    try{
+      var d={};
+      FI.forEach(function(k){var e=document.getElementById('l10f_'+k);if(e)d[k]=e.value;});
+      await window.storage.set(SK,JSON.stringify(d));
+      if(window.showToast)window.showToast('Збережено','success');
+    }catch(e){}
+  };
+
+  function go(n){
+    document.getElementById('l10_'+c).classList.remove('on');
+    c=n;
+    document.getElementById('l10_'+c).classList.add('on');
+    document.getElementById('l10Ctr').textContent=c+' / '+T;
+    document.getElementById('l10Prev').disabled=(c===1);
+    document.getElementById('l10Next').disabled=(c===T);
+  }
+
+  window._l10P=function(){if(c>1)go(c-1);};
+  window._l10N=function(){if(c<T)go(c+1);};
+
+  window._l10Launch=function(){
+    document.getElementById('l10Ov').classList.add('on');
+    document.body.style.overflow='hidden';
+    go(1);
+    load();
+  };
+
+  window._l10Close=function(){
+    document.getElementById('l10Ov').classList.remove('on');
+    document.body.style.overflow='';
+    window._l10SaveAll();
+  };
+
+  document.addEventListener('keydown',function(e){
+    if(!document.getElementById('l10Ov').classList.contains('on'))return;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown')window._l10N();
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp')window._l10P();
+    if(e.key==='Escape')window._l10Close();
+  });
+})();
+</script>
+`,
 
                 homework: `<ol><li>Пройдіть діалог з AI-коучем цілей</li><li>Створіть документ «Політика цілей і задуму компанії» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — розкажіть мету і задум, запишіть на відео</li><li>Напишіть у полі відповіді: яку мету ви сформулювали і яка була найскладніша частина діалогу з AI</li></ol>`,
                 homework_en: `<ol><li>Complete the dialogue with the AI Goal Coach</li><li>Create a "Company Goal & Vision Policy" document in Google Docs and attach the link</li><li>Present to the team — share the goal and vision, record on video</li><li>Write in the answer field: what goal you formulated and what was the hardest part of the AI dialogue</li></ol>`,
