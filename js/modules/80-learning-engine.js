@@ -96,7 +96,16 @@
     }
 
     // ── Main Render ───────────────────────────────────────────
+    function _cleanPresOverlays() {
+        var o10 = document.getElementById('l10Ov');
+        var o11 = document.getElementById('l11Ov');
+        if (o10) o10.remove();
+        if (o11) o11.remove();
+        document.body.style.overflow = '';
+    }
+
     function renderLearning() {
+        _cleanPresOverlays();
         const root = document.getElementById('learningTab');
         if (!root) return;
 
@@ -203,6 +212,7 @@
     // ── Open Module Detail ────────────────────────────────────
     // ── Algoritm Route (Module 0 special view) ────────────────
     window._openAlgoritm = function() {
+        _cleanPresOverlays();
         const root = document.getElementById('learningTab');
         if (!root) return;
         root.innerHTML = `
@@ -5398,10 +5408,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
         // Inject presOverlay (fullscreen presentation) directly into document.body
         // so it's not affected by overflow:hidden on .l-module-detail
-        var _existOv10 = document.getElementById('l10Ov');
-        var _existOv11 = document.getElementById('l11Ov');
-        if (_existOv10) _existOv10.remove();
-        if (_existOv11) _existOv11.remove();
+        _cleanPresOverlays();
         if (module.presOverlay) {
             var _ovDiv = document.createElement('div');
             _ovDiv.innerHTML = module.presOverlay;
@@ -5564,12 +5571,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
     // ── Back ──────────────────────────────────────────────────
     window._closeLearningModule = function() {
-        // Remove presentation overlays injected into body
-        var ov10 = document.getElementById('l10Ov');
-        var ov11 = document.getElementById('l11Ov');
-        if (ov10) ov10.remove();
-        if (ov11) ov11.remove();
-        document.body.style.overflow = '';
+        _cleanPresOverlays();
         currentLearningModule = null;
         renderLearning();
     };
