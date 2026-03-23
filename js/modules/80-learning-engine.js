@@ -186,7 +186,7 @@
                     ? '<i data-lucide="check-circle" class="icon" style="width:20px;height:20px;"></i>'
                     : !isAvailable
                         ? '<i data-lucide="lock" class="icon" style="width:20px;height:20px;"></i>'
-                        : `<span style="font-weight:700;font-size:0.9rem;">${module.id}</span>`
+                        : `<span style="font-weight:700;font-size:0.9rem;">${moduleIndex + 1}</span>`
                 }
             </div>
             <div class="l-module-info">
