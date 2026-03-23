@@ -5371,6 +5371,24 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 </div>`;
                 })() : ''}
 
+                <!-- Presentation launch button (lessons 10 and 11) -->
+                ${module.presOverlay ? `
+                <div style="margin:0 1.25rem 1.25rem">
+                    <div style="background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 20px rgba(15,28,63,.2)">
+                        <div style="color:white">
+                            <div style="font-size:.9rem;font-weight:800;margin-bottom:.25rem;display:flex;align-items:center;gap:.5rem">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                                ${moduleId === 10 ? 'Заняття 1 — Цілі, задуми і майбутнє компанії' : 'Заняття 2 — Цінний кінцевий продукт компанії'}
+                            </div>
+                            <div style="font-size:.76rem;color:#94a3b8">${moduleId === 10 ? '46 слайдів' : '43 слайди'} · ~1.5 год · Проведіть із командою після вивчення уроку</div>
+                        </div>
+                        <button onclick="window.${moduleId === 10 ? '_l10Launch' : '_l11Launch'}()" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(34,197,94,.35)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="15" height="15"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            Запустити презентацію
+                        </button>
+                    </div>
+                </div>` : ''}
+
                 <!-- Complete button -->
                 <div class="l-complete-row">
                     ${isCompleted
