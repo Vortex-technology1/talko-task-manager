@@ -5416,6 +5416,13 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
             var _ovDiv = document.createElement('div');
             _ovDiv.innerHTML = module.presOverlay;
             while (_ovDiv.firstChild) document.body.appendChild(_ovDiv.firstChild);
+            // Force hide immediately regardless of CSS state
+            ['l10Ov','l11Ov','l12Ov'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    el.style.cssText = 'display:none !important;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000;';
+                }
+            });
         }
 
         // Execute <script> tags from lessonContent (innerHTML does not run them)
@@ -5476,7 +5483,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 window._l10N = function() { if (c < T) go10(c + 1); };
                 window._l10Launch = async function() {
                     var ov = document.getElementById('l10Ov');
-                    ov.style.display = 'flex'; ov.classList.add('on');
+                    ov.style.cssText = 'display:flex;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000;'; ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
                     go10(1);
                     try {
@@ -5520,7 +5527,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 window._l12N = function() { if (c < T) go12(c + 1); };
                 window._l12Launch = function() {
                     var ov = document.getElementById('l12Ov');
-                    ov.style.display = 'flex'; ov.classList.add('on');
+                    ov.style.cssText = 'display:flex;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000;'; ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
                     go12(1);
                 };
@@ -5570,7 +5577,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 window._l11N = function() { if (c < T) go11(c + 1); };
                 window._l11Launch = async function() {
                     var ov = document.getElementById('l11Ov');
-                    ov.style.display = 'flex'; ov.classList.add('on');
+                    ov.style.cssText = 'display:flex;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000;'; ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
                     go11(1);
                     try {
