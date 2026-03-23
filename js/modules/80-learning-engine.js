@@ -5389,15 +5389,66 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         if (window.refreshIcons) window.refreshIcons();
 
         // Execute <script> tags from lessonContent (innerHTML does not run them)
-        const _lc = document.querySelector(".l-lesson-content");
-        if (_lc) {
-            _lc.querySelectorAll("script").forEach(function(s) {
-                const ns = document.createElement("script");
-                ns.textContent = s.textContent;
-                document.head.appendChild(ns);
-                document.head.removeChild(ns);
-            });
-        }
+        setTimeout(function() {
+            const _lc = document.querySelector(".l-lesson-content");
+            if (_lc) {
+                _lc.querySelectorAll("script").forEach(function(s) {
+                    const ns = document.createElement("script");
+                    ns.textContent = s.textContent;
+                    document.head.appendChild(ns);
+                    document.head.removeChild(ns);
+                });
+            }
+            // Fallback: if lesson 10 pres overlay exists but launch fn not defined, init it
+            if (document.getElementById('l10Ov') && typeof window._l10Launch !== 'function') {
+                window._l10Launch = function() {
+                    var ov = document.getElementById('l10Ov');
+                    if (!ov) return;
+                    ov.classList.add('on');
+                    document.body.style.overflow = 'hidden';
+                    var slides = ov.querySelectorAll('.l10s');
+                    slides.forEach(function(s) { s.classList.remove('on'); });
+                    if (slides[0]) slides[0].classList.add('on');
+                    var ctr = document.getElementById('l10Ctr');
+                    if (ctr) ctr.textContent = '1 / ' + slides.length;
+                    var prev = document.getElementById('l10Prev');
+                    var next = document.getElementById('l10Next');
+                    if (prev) prev.disabled = true;
+                    if (next) next.disabled = (slides.length <= 1);
+                    window._l10cur = 1;
+                    window._l10total = slides.length;
+                };
+                window._l10Close = function() {
+                    var ov = document.getElementById('l10Ov');
+                    if (ov) ov.classList.remove('on');
+                    document.body.style.overflow = '';
+                };
+                window._l10N = function() {
+                    if (!window._l10cur || window._l10cur >= window._l10total) return;
+                    var ov = document.getElementById('l10Ov');
+                    ov.querySelector('.l10s.on').classList.remove('on');
+                    window._l10cur++;
+                    ov.querySelector('#l10_' + window._l10cur).classList.add('on');
+                    var ctr = document.getElementById('l10Ctr');
+                    if (ctr) ctr.textContent = window._l10cur + ' / ' + window._l10total;
+                    document.getElementById('l10Prev').disabled = (window._l10cur === 1);
+                    document.getElementById('l10Next').disabled = (window._l10cur === window._l10total);
+                };
+                window._l10P = function() {
+                    if (!window._l10cur || window._l10cur <= 1) return;
+                    var ov = document.getElementById('l10Ov');
+                    ov.querySelector('.l10s.on').classList.remove('on');
+                    window._l10cur--;
+                    ov.querySelector('#l10_' + window._l10cur).classList.add('on');
+                    var ctr = document.getElementById('l10Ctr');
+                    if (ctr) ctr.textContent = window._l10cur + ' / ' + window._l10total;
+                    document.getElementById('l10Prev').disabled = (window._l10cur === 1);
+                    document.getElementById('l10Next').disabled = (window._l10cur === window._l10total);
+                };
+                window._l10SF = window._l10SF || function() {};
+                window._l10SaveAll = window._l10SaveAll || function() {};
+            }
+        }, 100);
     };
 
     // ── Back ──────────────────────────────────────────────────
