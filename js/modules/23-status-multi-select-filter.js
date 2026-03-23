@@ -245,12 +245,13 @@
             let html = `
                 <table class="tasks-table" style="table-layout:auto;width:100%;">
                     <colgroup>
-                        <col class="col-title"    style="width:35%;"><!-- Назва завдання — завжди видима -->
-                        <col class="col-assignee" style="width:14%;"><!-- Виконавець -->
-                        <col class="col-creator"  style="width:13%;"><!-- Автор — ховається при звуженні -->
-                        <col class="col-deadline" style="width:12%;"><!-- Дедлайн -->
-                        <col class="col-status"   style="width:10%;"><!-- Статус -->
-                        <col class="col-function" style="width:11%;"><!-- Функція — ховається при звуженні -->
+                        <col class="col-title"    style="width:33%;"><!-- Назва завдання — завжди видима -->
+                        <col class="col-assignee" style="width:13%;"><!-- Виконавець -->
+                        <col class="col-creator"  style="width:12%;"><!-- Автор — ховається при звуженні -->
+                        <col class="col-deadline" style="width:11%;"><!-- Дедлайн -->
+                        <col class="col-status"   style="width:9%;"><!-- Статус -->
+                        <col class="col-function" style="width:10%;"><!-- Функція — ховається при звуженні -->
+                        <col class="col-time"     style="width:7%;"><!-- Час -->
                         <col class="col-actions"  style="width:5%;" ><!-- Дії -->
                     </colgroup>
                     <thead>
@@ -261,6 +262,7 @@
                             <th class="${sortClass('deadline')}" onclick="sortTasksBy('deadline')">${window.t('deadline')}${sortIcon('deadline')}<div class="col-resize-handle"></div></th>
                             <th class="${sortClass('status')}"   onclick="sortTasksBy('status')"  >${window.t('status')}${sortIcon('status')}<div class="col-resize-handle"></div></th>
                             <th class="${sortClass('function')}  col-hide-sm" onclick="sortTasksBy('function')">${window.t('type')}${sortIcon('function')}<div class="col-resize-handle"></div></th>
+                            <th class="col-hide-sm" title="Витрачено часу">⏱</th>
                             <th>${window.t('actions')}</th>
                         </tr>
                     </thead>
@@ -287,6 +289,14 @@
                         <td class="deadline-text ${deadlineClass}" onclick="inlineEditDeadline(event, '${escId(task.id)}', '${task.deadlineDate || ''}')" style="cursor:pointer;" title="${window.t('clickToChangeDate')}">${taskDeadline ? formatDateShort(taskDeadline) : '-'}${task.timeEnd ? ' ' + task.timeEnd : ''}</td>
                         <td><span class="status-badge status-${task.status}" style="cursor:pointer;" onclick="cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status || '—'}</span></td>
                         <td class="col-hide-sm">${esc(task.function) || '-'}</td>
+                        <td class="col-hide-sm" style="white-space:nowrap;font-size:0.78rem;font-weight:600;">${(() => {
+                            const mins = (task.timeLog || []).reduce((s, e) => s + (e.minutes || 0), 0);
+                            if (!mins) return '<span style="color:#d1d5db;">—</span>';
+                            const plan = task.estimatedTime ? parseInt(task.estimatedTime) : 0;
+                            const color = plan > 0 && mins > plan * 1.1 ? '#ef4444' : '#22c55e';
+                            const fmt = mins >= 60 ? Math.floor(mins/60)+'г'+(mins%60?(mins%60)+'хв':'') : mins+'хв';
+                            return `<span style="color:${color};">⏱ ${fmt}</span>`;
+                        })()}</td>
                         <td>
                             <div class="action-btns">
                                 ${task.status === 'review' && task.creatorId === currentUser?.uid && task.assigneeId !== currentUser?.uid ? `
