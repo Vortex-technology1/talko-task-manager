@@ -77,26 +77,6 @@
             try {
                 const fn = window._DEMO_NICHE_MAP?.[nicheKey];
                 if (!fn) { showToast('Нішу не знайдено: ' + nicheKey, 'error'); return; }
-
-                // ── Гарантуємо що поточний юзер є owner ПЕРЕД завантаженням ніші ──
-                // Це виправляє ситуацію коли superadmin auto-patch отримав role:'employee'
-                try {
-                    const _cr = firebase.firestore().collection('companies').doc(currentCompany);
-                    await _cr.collection('users').doc(currentUser.uid).set({
-                        name: currentUserData?.name || currentUser.displayName || currentUser.email.split('@')[0],
-                        email: currentUser.email,
-                        role: 'owner',
-                        status: 'active',
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    }, { merge: true });
-                    // Оновлюємо локальний стан щоб UI одразу відреагував
-                    if (window.currentUserData) window.currentUserData.role = 'owner';
-                    if (window.users) {
-                        const idx = window.users.findIndex(u => u.id === currentUser.uid);
-                        if (idx >= 0) window.users[idx].role = 'owner';
-                    }
-                } catch(e) { console.warn('[demo] owner role patch:', e.message); }
-
                 await fn();
                 await loadAllData();
                 showAlertModal('Демо готове! Перейдіть у Завдання, Контроль, Бізнес → Фінанси.');

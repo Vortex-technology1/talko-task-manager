@@ -55,7 +55,7 @@
                         await db.collection('companies').doc(companyId).collection('users').doc(user.uid).set({
                             name: user.displayName || user.email.split('@')[0],
                             email: user.email.toLowerCase(),
-                            role: isSuperAdmin ? 'owner' : 'employee',
+                            role: 'employee',
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                             autoCreated: true
                         }, { merge: true });
@@ -64,24 +64,8 @@
                     } catch(e) {
                         console.error('[Auth] Failed to patch user doc:', e.message);
                     }
-                } else if (isSuperAdmin && userDoc.data().role !== 'owner' && userDoc.data().role !== 'manager') {
-                    // SuperAdmin має неправильну роль (наприклад employee від старого патчу) — виправляємо в Firestore
-                    try {
-                        await db.collection('companies').doc(companyId).collection('users').doc(user.uid).update({
-                            role: 'owner',
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        userDoc = await db.collection('companies').doc(companyId).collection('users').doc(user.uid).get();
-                        console.log('[Auth] SuperAdmin role fixed to owner in Firestore');
-                    } catch(e) {
-                        console.warn('[Auth] Failed to fix superadmin role:', e.message);
-                    }
                 }
                 currentUserData = userDoc.exists ? { id: user.uid, ...userDoc.data() } : { id: user.uid, email: user.email, role: 'employee' };
-                // SuperAdmin завжди має повний доступ незалежно від запису в users колекції
-                if (isSuperAdmin && currentUserData.role !== 'owner' && currentUserData.role !== 'manager') {
-                    currentUserData = { ...currentUserData, role: 'owner' };
-                }
                 window.currentUserData = currentUserData; // expose для CRM та інших модулів
                 
                 const companyDoc = await db.collection('companies').doc(companyId).get();
@@ -118,8 +102,7 @@
 
                 // ── ALLOWED TABS: обмежений доступ до модулів ──
                 // Якщо у юзера є поле allowedTabs: ['warehouse', ...] — показуємо ТІЛЬКИ ці таби
-                // SuperAdmin завжди має повний доступ — ігноруємо allowedTabs
-                const _allowedTabs = isSuperAdmin ? null : currentUserData.allowedTabs;
+                const _allowedTabs = currentUserData.allowedTabs;
                 if (Array.isArray(_allowedTabs) && _allowedTabs.length > 0) {
                     window._userAllowedTabs = _allowedTabs;
 
