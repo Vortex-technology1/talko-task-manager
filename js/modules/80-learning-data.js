@@ -5693,6 +5693,886 @@ Bist du dabei?</div>
 
                 lessonContent: `
 <style>
+.l10-pres-btn-wrap{background:linear-gradient(135deg,#0f1c3f,#1a2e5a);border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.l10-pres-btn-info{color:white}
+.l10-pres-btn-title{font-size:.95rem;font-weight:700;margin-bottom:.25rem}
+.l10-pres-btn-sub{font-size:.78rem;color:#94a3b8}
+.l10-pres-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.4rem;background:#22c55e;color:white;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s}
+.l10-pres-btn:hover{background:#16a34a}
+#l10PresOverlay{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l10PresOverlay.active{display:flex}
+.l10-slide{display:none;width:100%;height:100%;position:relative;overflow:hidden}
+.l10-slide.active{display:flex}
+/* Left dark panel */
+.l10-slide-left{width:34%;background:linear-gradient(160deg,#0d1b3e 0%,#162447 60%,#1f3a6e 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2rem 1.75rem;position:relative;flex-shrink:0}
+.l10-slide-left h2{color:white;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:900;line-height:1.15;margin:0;text-transform:uppercase}
+.l10-slide-left h2 u{text-decoration-color:rgba(255,255,255,.4)}
+.l10-slide-left .l10-sl-sub{color:#94a3b8;font-size:.82rem;margin-top:.4rem}
+/* Triangle decoration */
+.l10-tri{position:absolute;bottom:-2px;right:-2px;width:0;height:0;border-left:80px solid transparent;border-bottom:80px solid #1a3060}
+/* Slide number badge */
+.l10-badge{position:absolute;bottom:1rem;left:1rem;background:white;color:#0d1b3e;font-weight:900;font-size:.85rem;width:2.2rem;height:2.2rem;display:flex;align-items:center;justify-content:center;border-radius:4px}
+/* Right content panel */
+.l10-slide-right{flex:1;background:white;padding:2.5rem 3rem;display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto}
+.l10-slide-right h3{font-size:clamp(1rem,2.5vw,1.6rem);font-weight:900;margin:0 0 1rem;color:#111}
+.l10-slide-right p{font-size:clamp(.8rem,1.5vw,1rem);color:#333;line-height:1.7;margin:.6rem 0}
+.l10-slide-right p.small{font-size:.82rem;color:#6b7280}
+.l10-slide-right ul{padding-left:1.4rem;margin:.5rem 0}
+.l10-slide-right ul li{font-size:clamp(.78rem,1.4vw,.95rem);color:#333;line-height:1.7;margin:.25rem 0}
+.l10-slide-right .l10-q{color:#111;font-size:clamp(.85rem,1.6vw,1.05rem);font-weight:600;margin:.8rem 0;line-height:1.6}
+.l10-slide-right .l10-gray{color:#9ca3af;font-size:clamp(.75rem,1.3vw,.88rem);line-height:1.6;margin-top:.4rem}
+/* Quote style */
+.l10-quote-box{background:#f0f9ff;border-left:4px solid #3b82f6;padding:.85rem 1rem;border-radius:0 8px 8px 0;font-size:clamp(.8rem,1.4vw,.95rem);color:#1e3a8a;line-height:1.6;margin:.75rem 0}
+/* Green highlight */
+.l10-green{color:#15803d;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+/* Red field placeholder */
+.l10-field-note{color:#dc2626;font-style:italic;font-size:clamp(.8rem,1.4vw,.95rem)}
+/* IKEA / company box */
+.l10-company-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:1rem 1.25rem;margin:.75rem 0}
+.l10-company-box .l10-cb-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#22c55e;margin-bottom:.3rem}
+.l10-company-box .l10-cb-text{font-size:clamp(.8rem,1.4vw,.95rem);color:#374151;line-height:1.6;font-style:italic}
+/* Two-col items */
+.l10-num-item{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f1f5f9}
+.l10-num-item:last-child{border-bottom:none}
+.l10-num{width:28px;height:28px;background:#1a2e5a;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:2px}
+.l10-num-text{font-size:clamp(.8rem,1.4vw,.95rem);color:#374151;line-height:1.6}
+/* Exercise card */
+.l10-exercise{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:1rem 1.25rem;font-size:clamp(.8rem,1.4vw,.95rem);color:#92400e;line-height:1.7}
+.l10-exercise strong{color:#c2410c}
+/* Star icon */
+.l10-star{color:#1a2e5a;font-size:1.3rem;display:block;margin-bottom:.6rem}
+/* Resume slide */
+.l10-resume-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem 1.25rem;font-size:clamp(.8rem,1.4vw,.95rem);color:#166534;line-height:1.7;margin:.5rem 0}
+/* Road/star visual placeholder */
+.l10-visual{text-align:center;padding:1.5rem 0;font-size:3rem;opacity:.3}
+/* Fill form */
+.l10-fill-wrap{margin:.5rem 0}
+.l10-fill-label{font-size:.75rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.l10-fill-inp{width:100%;border:2px dashed #3b82f6;border-radius:8px;padding:.6rem .85rem;font-size:clamp(.8rem,1.4vw,.92rem);color:#111;background:#f8fbff;resize:vertical;min-height:60px;box-sizing:border-box;font-family:inherit}
+.l10-fill-inp:focus{outline:none;border-color:#1d4ed8;background:white}
+/* Navigation */
+.l10-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;background:rgba(0,0,0,.85);z-index:10}
+.l10-nav-btn{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:.45rem 1.2rem;cursor:pointer;font-size:.82rem;font-weight:600;transition:background .15s}
+.l10-nav-btn:hover{background:rgba(255,255,255,.3)}
+.l10-nav-btn:disabled{opacity:.3;cursor:default}
+.l10-nav-counter{color:#94a3b8;font-size:.78rem;font-weight:600}
+.l10-nav-close{background:#ef4444;color:white;border:none;border-radius:8px;padding:.45rem 1rem;cursor:pointer;font-size:.82rem;font-weight:700}
+.l10-nav-save{background:#22c55e;color:white;border:none;border-radius:8px;padding:.45rem 1rem;cursor:pointer;font-size:.82rem;font-weight:700;margin-right:.5rem}
+/* Dark slide (ending) */
+.l10-slide-dark{background:linear-gradient(160deg,#0d1b3e,#162447);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem}
+.l10-slide-dark h2{color:white;font-size:clamp(1.4rem,4vw,2.5rem);font-weight:900;text-transform:uppercase;margin:0 0 .75rem}
+.l10-slide-dark p{color:#94a3b8;font-size:clamp(.85rem,1.8vw,1.1rem);max-width:600px}
+/* Rule items */
+.l10-rule-item{display:flex;align-items:flex-start;gap:.65rem;padding:.55rem 0;font-size:clamp(.78rem,1.4vw,.92rem);color:#374151;line-height:1.6;border-bottom:1px solid #f1f5f9}
+.l10-rule-item:last-child{border-bottom:none}
+.l10-rule-dot{width:8px;height:8px;border-radius:50%;background:#1a2e5a;flex-shrink:0;margin-top:.45rem}
+/* Bullet list styled */
+.l10-bullet{margin:.4rem 0}
+.l10-bullet li{list-style:none;display:flex;gap:.6rem;align-items:flex-start;font-size:clamp(.78rem,1.4vw,.92rem);color:#374151;line-height:1.6;padding:.25rem 0}
+.l10-bullet li::before{content:"●";color:#1a2e5a;flex-shrink:0;margin-top:1px}
+/* Important notice */
+.l10-notice{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:.75rem 1rem;font-size:clamp(.75rem,1.3vw,.88rem);color:#7f1d1d;line-height:1.6;margin:.5rem 0}
+</style>
+
+<div class="l10-pres-btn-wrap">
+  <div class="l10-pres-btn-info">
+    <div class="l10-pres-btn-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16" style="vertical-align:-3px;margin-right:6px"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Заняття 1 — Цілі, задуми і майбутнє компанії
+    </div>
+    <div class="l10-pres-btn-sub">46 слайдів · 1.5 год · Показати команді</div>
+  </div>
+  <button class="l10-pres-btn" onclick="window._l10LaunchPres()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="15" height="15"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Запустити презентацію
+  </button>
+</div>
+
+<div id="l10PresOverlay">
+  <!-- SLIDES CONTAINER -->
+  <div id="l10Slides" style="flex:1;position:relative;overflow:hidden">
+
+    <!-- SLIDE 1: Title -->
+    <div class="l10-slide active" id="l10s1">
+      <div class="l10-slide-left" style="align-items:center;justify-content:center;text-align:center">
+        <div style="position:absolute;top:1.5rem;right:1rem;width:3px;height:60px;background:rgba(255,255,255,.25)"></div>
+        <h2 style="text-align:center">ЦІЛІ, ЗАДУМИ<br>І МАЙБУТНЄ<br>КОМПАНІЇ</h2>
+        <div class="l10-sl-sub" style="margin-top:.75rem">ЗАНЯТТЯ 1<br>З циклу семінарів з управління</div>
+        <div class="l10-tri"></div>
+        <div class="l10-badge">1</div>
+      </div>
+      <div class="l10-slide-right" style="align-items:center;justify-content:center">
+        <div style="text-align:center;opacity:.15">
+          <svg viewBox="0 0 200 200" width="200" height="200">
+            <polygon points="100,10 190,190 10,190" fill="#1a2e5a"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: ЦІЛІ - питання 1 -->
+    <div class="l10-slide" id="l10s2">
+      <div class="l10-slide-left">
+        <h2>ЦІЛІ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">2</div>
+      </div>
+      <div class="l10-slide-right">
+        <p>Кожна компанія має якусь мету, на досягнення якої працює весь колектив.</p>
+        <div class="l10-q">Як ви вважаєте, яка ціль має наша компанія?</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: ЦІЛІ - питання 2 -->
+    <div class="l10-slide" id="l10s3">
+      <div class="l10-slide-left">
+        <h2>ЦІЛІ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">3</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-q">Якщо у різних співробітників різне уявлення про мету, як це впливає на діяльність компанії?</div>
+        <div class="l10-q" style="margin-top:1.5rem">Що станеться, якщо так продовжуватиметься?</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: МЕТА ЗАНЯТТЯ -->
+    <div class="l10-slide" id="l10s4">
+      <div class="l10-slide-left">
+        <h2>МЕТА<br>ЗАНЯТТЯ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">4</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-num-item">
+          <div class="l10-num">1</div>
+          <div class="l10-num-text"><u>Мета заняття</u> — познайомити вас з основною метою нашої компанії, з тим, як ми йдемо до неї і якою має стати наша компанія</div>
+        </div>
+        <div class="l10-num-item" style="margin-top:.5rem">
+          <div class="l10-num">2</div>
+          <div class="l10-num-text">Результатом нашої зустрічі має бути ваше розуміння мети компанії та того майбутнього, яке ми створюватимемо з вами для її досягнення</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: ПРАВИЛА -->
+    <div class="l10-slide" id="l10s5">
+      <div class="l10-slide-left">
+        <h2>ПРАВИЛА</h2>
+        <div class="l10-tri"></div><div class="l10-badge">5</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Заняття триватиме близько 1,5 год. без перерви.</span></div>
+        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Поставте мобільні телефони на беззвучний режим.</span></div>
+        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Якщо отримаєте терміновий дзвінок — вийдіть з аудиторії і поверніться.</span></div>
+        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Запитання можна ставити, піднімаючи руку.</span></div>
+        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Якщо питань буде багато — запишемо та розберемо після завершення.</span></div>
+        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>У кожного має бути папір та ручка для записів.</span></div>
+        <div class="l10-rule-item"><div class="l10-rule-dot"></div><span>Наприкінці заняття я попрошу відповісти на кілька запитань і залишити відгуки.</span></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: ВАЖЛИВЕ ПРАВИЛО -->
+    <div class="l10-slide" id="l10s6">
+      <div class="l10-slide-left">
+        <h2>ВАЖЛИВЕ<br>ПРАВИЛО</h2>
+        <div class="l10-tri"></div><div class="l10-badge">6</div>
+      </div>
+      <div class="l10-slide-right">
+        <p>Якщо щось здалося вам незрозумілим, дивним, заплутаним — піднімайте руку.</p>
+        <p>І відразу ж, як це здалося.</p>
+        <div class="l10-quote-box" style="margin-top:1.25rem">Нас привчають ще у школі до того, що соромно чогось не знати.<br><br>Але коли людина не розуміє, вона не може діяти, використовувати знання.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: НАШІ СЛОВА (fill-in) -->
+    <div class="l10-slide" id="l10s7">
+      <div class="l10-slide-left">
+        <h2>НАШІ<br>СЛОВА</h2>
+        <div class="l10-tri"></div><div class="l10-badge">7</div>
+      </div>
+      <div class="l10-slide-right">
+        <p style="margin-bottom:.75rem">Спеціальні терміни, які розуміють у нашій компанії:</p>
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Наші терміни (заповніть перед заняттям)</div>
+          <textarea class="l10-fill-inp" id="l10f_terms" placeholder="Наприклад: КП — комерційна пропозиція, МВП — мінімально життєздатний продукт..." rows="6" oninput="window._l10SaveField('terms',this.value)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: ВПРАВА -->
+    <div class="l10-slide" id="l10s8">
+      <div class="l10-slide-left">
+        <h2>ВПРАВА</h2>
+        <div class="l10-tri"></div><div class="l10-badge">8</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-exercise">
+          <strong>Намалюйте:</strong>
+          <ul class="l10-bullet" style="margin-top:.5rem">
+            <li>будинок</li>
+            <li>дерево</li>
+            <li>сонце</li>
+            <li>траву під деревом</li>
+            <li>А тепер намалюйте...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: ОСОБИСТІ ЦІЛІ -->
+    <div class="l10-slide" id="l10s9">
+      <div class="l10-slide-left">
+        <h2>ОСОБИСТІ<br>ЦІЛІ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">9</div>
+      </div>
+      <div class="l10-slide-right">
+        <p>Кожна людина має свої особисті цілі.</p>
+        <div class="l10-q">Які особисті цілі є у вас?</div>
+        <div class="l10-q" style="margin-top:1.25rem">У чому ви бачите відмінність особистих цілей від мети компанії, яку ви назвали раніше?</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: РЕЗЮМЕ -->
+    <div class="l10-slide" id="l10s10">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">10</div>
+      </div>
+      <div class="l10-slide-right" style="justify-content:center">
+        <div class="l10-resume-box" style="font-size:clamp(.9rem,2vw,1.2rem);font-weight:600;text-align:center;padding:1.5rem">
+          Цілі компанії та особисті цілі будь-якого члена колективу — зовсім різні поняття.
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: МЕТА КОМПАНІЇ -->
+    <div class="l10-slide" id="l10s11">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <h3 style="font-size:clamp(1.2rem,3vw,2rem)">МЕТА КОМПАНІЇ —</h3>
+        <p class="l10-green" style="font-size:clamp(1rem,2.5vw,1.5rem);margin-top:.5rem">приносити користь якомога більшій кількості людей</p>
+        <div style="text-align:right;margin-top:auto;padding-top:2rem;opacity:.2;font-size:3rem">👥</div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">11</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: GOOGLE -->
+    <div class="l10-slide" id="l10s12">
+      <div class="l10-slide-left">
+        <h2>GOOGLE</h2>
+        <div class="l10-tri"></div><div class="l10-badge">12</div>
+      </div>
+      <div class="l10-slide-right">
+        <p style="font-size:clamp(.9rem,2vw,1.25rem);font-weight:700;margin-bottom:1rem">«Зробити світову інформацію університально доступною та корисною»</p>
+        <div class="l10-company-box">
+          <div class="l10-cb-label">Як реалізується</div>
+          <div class="l10-cb-text">Компанія приносить користь людям, роблячи доступною потрібну інформацію</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: MICROSOFT -->
+    <div class="l10-slide" id="l10s13">
+      <div class="l10-slide-left">
+        <h2>MICROSOFT</h2>
+        <div class="l10-tri"></div><div class="l10-badge">13</div>
+      </div>
+      <div class="l10-slide-right">
+        <p style="font-size:clamp(.9rem,2vw,1.2rem);font-weight:700;margin-bottom:1rem">«…Ми працюємо, щоб допомогти людям та бізнесу по всьому світу реалізувати їх повний потенціал»</p>
+        <div class="l10-company-box">
+          <div class="l10-cb-label">Як реалізується</div>
+          <div class="l10-cb-text">Компанія приносить користь, допомагаючи людям реалізовуватись</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 14: РЕЗЮМЕ - Ціль -->
+    <div class="l10-slide" id="l10s14">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">14</div>
+      </div>
+      <div class="l10-slide-right" style="justify-content:center">
+        <div style="text-align:center;margin-bottom:1.5rem;font-size:1.5rem;font-weight:900;color:#1a2e5a">Ціль</div>
+        <div class="l10-resume-box">Саме основна мета наповнює діяльність будь-якої компанії змістом і є дороговказом протягом усього її життя.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 15: Питання про місцеву компанію (fill-in) -->
+    <div class="l10-slide" id="l10s15">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <p>Основна мета є у будь-якої компанії: і маленької, і великої.</p>
+        <div class="l10-fill-wrap" style="margin-top:1rem">
+          <div class="l10-fill-label">Відома компанія у вашому місті/країні (приклад)</div>
+          <textarea class="l10-fill-inp" id="l10f_local_company" placeholder="Наприклад: АТБ, Нова Пошта, Rozetka..." rows="2" oninput="window._l10SaveField('local_company',this.value)"></textarea>
+        </div>
+        <div class="l10-q" style="margin-top:.75rem">Як ви вважаєте, яка основна мета у цієї компанії?</div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">15</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 16: РЕЗЮМЕ -->
+    <div class="l10-slide" id="l10s16">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">16</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-resume-box">Ми розібрали поняття "основна мета компанії" — це безстрокова мета, сенс життя компанії.</div>
+        <p style="margin-top:1rem">Трохи пізніше я розповім про те, якою є основна мета нашої компанії.</p>
+        <p>А зараз давайте розберемося ще з одним поняттям.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 17: Google питання -->
+    <div class="l10-slide" id="l10s17">
+      <div class="l10-slide-left">
+        <h2>GOOGLE</h2>
+        <div class="l10-tri"></div><div class="l10-badge">17</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-company-box">
+          <div class="l10-cb-label">Основна мета</div>
+          <div class="l10-cb-text">«Зробити світову інформацію університально доступною та корисною»</div>
+        </div>
+        <div class="l10-q" style="margin-top:1.25rem">Можуть бути ще якісь великі та малі компанії, які мають таку ж мету — зробити доступною та корисною світову інформацію?</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 18: РЕЗЮМЕ - задум -->
+    <div class="l10-slide" id="l10s18">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">18</div>
+      </div>
+      <div class="l10-slide-right" style="justify-content:center">
+        <div class="l10-resume-box">Основна мета зазвичай не є унікальною і до однієї мети можуть йти різні компанії.<br><br>Але при цьому вони діятимуть по-різному.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 19: ЗАДУМ КОМПАНІЇ -->
+    <div class="l10-slide" id="l10s19">
+      <div class="l10-slide-left">
+        <h2>ЗАДУМ<br>КОМПАНІЇ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">19</div>
+      </div>
+      <div class="l10-slide-right">
+        <p class="small">Чи не основна мета, а задум компанії робить компанію особливою. І саме у задумі закладено відмінності та основний спосіб дії.</p>
+        <p style="margin-top:1rem">Особливий спосіб, через який компанія рухається для досягнення своєї основної мети, називається <strong>ЗАДУМ компанії.</strong></p>
+        <div class="l10-visual">★ ➜ ☆</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 20: РЕЗЮМЕ - Ціль і Задум -->
+    <div class="l10-slide" id="l10s20">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">20</div>
+      </div>
+      <div class="l10-slide-right" style="justify-content:center">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+          <div style="text-align:center;font-size:1.1rem;font-weight:900;color:#1a2e5a">Ціль</div>
+          <div style="text-align:center;font-size:1.1rem;font-weight:900;color:#1a2e5a">Задум</div>
+        </div>
+        <div class="l10-resume-box">Якщо мета — це дороговказ, то задум — це шлях, яким ми йдемо за нею.<br><br>Задум — це особливий унікальний для компанії образ дій.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 21: IKEA питання -->
+    <div class="l10-slide" id="l10s21">
+      <div class="l10-slide-left">
+        <h2>IKEA</h2>
+        <div class="l10-tri"></div><div class="l10-badge">21</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-company-box">
+          <div class="l10-cb-label">Основна мета IKEA</div>
+          <div class="l10-cb-text">«Змінити на краще повсякденне життя багатьох людей»</div>
+        </div>
+        <div class="l10-q" style="margin-top:1.25rem">Який унікальний шлях обрала IKEA на відміну від інших компаній, щоб змінювати на краще повсякденне життя багатьох людей?</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 22: IKEA задум -->
+    <div class="l10-slide" id="l10s22">
+      <div class="l10-slide-left">
+        <h2>IKEA</h2>
+        <div class="l10-tri"></div><div class="l10-badge">22</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-company-box">
+          <div class="l10-cb-label">Основна мета</div>
+          <div class="l10-cb-text">«Змінити на краще повсякденне життя багатьох людей»</div>
+        </div>
+        <div class="l10-company-box" style="margin-top:.75rem;background:#f0fdf4;border-color:#bbf7d0">
+          <div class="l10-cb-label" style="color:#166534">Задум</div>
+          <div class="l10-cb-text">«Пропонувати широкий асортимент зручних та функціональних товарів для облаштування будинку за такими низькими цінами, щоб якнайбільше людей мали можливість їх купити»</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 23: місцева компанія (fill-in) -->
+    <div class="l10-slide" id="l10s23">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Відома компанія (заповніть)</div>
+          <textarea class="l10-fill-inp" id="l10f_local2" placeholder="Назва компанії..." rows="1" oninput="window._l10SaveField('local2',this.value)"></textarea>
+        </div>
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Основна мета цієї компанії</div>
+          <textarea class="l10-fill-inp" id="l10f_local_goal" placeholder="Яка мета цієї компанії..." rows="2" oninput="window._l10SaveField('local_goal',this.value)"></textarea>
+        </div>
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Задум цієї компанії</div>
+          <textarea class="l10-fill-inp" id="l10f_local_vision" placeholder="Як саме вони досягають своєї мети..." rows="2" oninput="window._l10SaveField('local_vision',this.value)"></textarea>
+        </div>
+        <div class="l10-q" style="margin-top:.5rem;font-size:.85rem">Чим задум відрізняє їхню відмінність від інших аналогічних компаній?</div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">23</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 24: РЕЗЮМЕ -->
+    <div class="l10-slide" id="l10s24">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">24</div>
+      </div>
+      <div class="l10-slide-right" style="justify-content:center">
+        <div style="text-align:center;font-size:1.1rem;font-weight:900;color:#1a2e5a;margin-bottom:1rem">Ціль</div>
+        <div class="l10-resume-box">Як ви бачите, задум визначає особливості діяльності та приводить компанію до основної мети.<br><br>І зараз я розповім про те, якою є основна мета і задум нашої компанії.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 25: Ціль компанії - питання -->
+    <div class="l10-slide" id="l10s25">
+      <div class="l10-slide-left">
+        <h2>ЦІЛЬ<br>КОМПАНІЇ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">25</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-q">Як ви вважаєте, як можна сформулювати основну мету нашої компанії?</div>
+        <p style="margin-top:1.5rem">Один із моїх обов'язків як власника компанії полягає в тому, щоб основна мета та задум компанії були визначені чітко.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 26: МЕТА НАШОЇ КОМПАНІЇ (fill-in) -->
+    <div class="l10-slide" id="l10s26">
+      <div class="l10-slide-left">
+        <h2>МЕТА<br>НАШОЇ<br>КОМПАНІЇ</h2>
+        <div class="l10-fill-wrap" style="margin-top:1rem">
+          <div class="l10-fill-label" style="color:#94a3b8;font-size:.65rem">Логотип / назва</div>
+          <textarea class="l10-fill-inp" id="l10f_logo" placeholder="Назва компанії..." rows="2" style="font-size:.78rem" oninput="window._l10SaveField('logo',this.value)"></textarea>
+        </div>
+        <div class="l10-tri"></div><div class="l10-badge">26</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-star">★</div>
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Мета нашої компанії</div>
+          <textarea class="l10-fill-inp" id="l10f_company_goal" placeholder="Впишіть сформульовану мету вашої компанії..." rows="4" oninput="window._l10SaveField('company_goal',this.value)"></textarea>
+        </div>
+        <p class="l10-gray">Наведіть приклади, як ми реалізовуємо в житті основну мету нашої компанії.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 27: Що ми робимо (fill-in) -->
+    <div class="l10-slide" id="l10s27">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <p>Кожен із вас на своєму робочому місці докладає зусиль для досягнення мети компанії.</p>
+        <div class="l10-fill-wrap" style="margin-top:1rem">
+          <div class="l10-fill-label">Мета (для питання)</div>
+          <textarea class="l10-fill-inp" id="l10f_goal_q" placeholder="Впишіть мету компанії для формулювання питання..." rows="2" oninput="window._l10SaveField('goal_q',this.value)"></textarea>
+        </div>
+        <div class="l10-q" style="margin-top:.75rem">Що ви робите, щоб <span style="color:#22c55e" id="l10q27_goal">[ваша мета]</span>?</div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">27</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 28: Задум питання -->
+    <div class="l10-slide" id="l10s28">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right" style="justify-content:center">
+        <div class="l10-q" style="font-size:clamp(.9rem,2vw,1.2rem)">А як ви вважаєте, у чому наш особливий шлях, унікальність у досягненні основної мети?</div>
+        <div class="l10-visual" style="margin-top:1.5rem">★</div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">28</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 29: ЗАДУМ КОМПАНІЇ (fill-in) -->
+    <div class="l10-slide" id="l10s29">
+      <div class="l10-slide-left">
+        <h2>ЗАДУМ<br>КОМПАНІЇ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">29</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-star">★</div>
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Задум нашої компанії</div>
+          <textarea class="l10-fill-inp" id="l10f_company_vision" placeholder="Впишіть сформульований задум компанії..." rows="4" oninput="window._l10SaveField('company_vision',this.value)"></textarea>
+        </div>
+        <p class="l10-gray">Приклади того, як дії відповідали задуму, і це давало хороший результат.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 30: РЕЗЮМЕ -->
+    <div class="l10-slide" id="l10s30">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">30</div>
+      </div>
+      <div class="l10-slide-right" style="justify-content:center">
+        <div class="l10-resume-box">Тепер ви знаєте основну мету нашої компанії та той особливий шлях що веде компанію до неї.<br><br>Ясне розуміння нашої мети та задуму робить нас сильнішими як команду і кожен співробітник компанії повинен їх знати.<br><br>Це призведе до більшої узгодженості дій та вищих результатів.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 31: ІДЕАЛЬНА КАРТИНА -->
+    <div class="l10-slide" id="l10s31">
+      <div class="l10-slide-left">
+        <h2>ІДЕАЛЬНА<br><u>Картина</u></h2>
+        <div class="l10-tri"></div><div class="l10-badge">31</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-star">★</div>
+        <p><strong><u>Ідеальна картина</u></strong> — це те, як в ідеалі у реальному світі має виглядати діяльність компанії.</p>
+        <p style="margin-top:.75rem">Це уявлення про компанію, її матеріальні об'єкти: приміщення, обладнання, продукцію, персонал і т.д.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 32: Ідеальна картина компанії (fill-in) -->
+    <div class="l10-slide" id="l10s32">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <h3>Ідеальна картина компанії</h3>
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Наша компанія через __ років (ключові цифри, результати)</div>
+          <textarea class="l10-fill-inp" id="l10f_ideal" placeholder="Наприклад: 3 філії, 50 співробітників, виручка 10 млн грн/міс, лідер ринку в регіоні..." rows="6" oninput="window._l10SaveField('ideal',this.value)"></textarea>
+        </div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">32</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 33: Питання про ідеальну картину (fill-in) -->
+    <div class="l10-slide" id="l10s33">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Через скільки років (вкажіть)</div>
+          <textarea class="l10-fill-inp" id="l10f_years" placeholder="Наприклад: 3 роки" rows="1" oninput="window._l10SaveField('years',this.value)"></textarea>
+        </div>
+        <div class="l10-q">Кому подобається ця ідеальна картина?</div>
+        <div class="l10-q">Хто готовий попрацювати над досягненням цієї картини?</div>
+        <div class="l10-q">Які у вас питання стосовно цієї ідеальної картини?</div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">33</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 34: РЕЗЮМЕ -->
+    <div class="l10-slide" id="l10s34">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">34</div>
+      </div>
+      <div class="l10-slide-right" style="justify-content:center">
+        <div class="l10-resume-box">Таку ідеальну картину ми можемо втілити в життя, тільки працюючи як команда, ніхто поодинці не зможе це зробити.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 35: Сумніви -->
+    <div class="l10-slide" id="l10s35">
+      <div class="l10-slide-left">
+        <h2>ІДЕАЛЬНА<br><u>Картина</u></h2>
+        <div class="l10-tri"></div><div class="l10-badge">35</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-q">Чи може бути таке, що ми не зможемо реалізувати цю ідеальну картину?</div>
+        <p style="margin-top:1.25rem">Можливо, у когось виникнуть сумніви чи питання: "А чи справді можливо втілити цю ідеальну картину в життя?"</p>
+        <p>Тому я хочу розповісти вам про історію нашої компанії.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 36: ІСТОРІЯ КОМПАНІЇ (fill-in) -->
+    <div class="l10-slide" id="l10s36">
+      <div class="l10-slide-left">
+        <h2>ІСТОРІЯ<br>КОМПАНІЇ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">36</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-star">★</div>
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Рік заснування і перші кроки</div>
+          <textarea class="l10-fill-inp" id="l10f_history_year" placeholder="Наприклад: 2015 рік — відкрили першу точку в гаражі..." rows="2" oninput="window._l10SaveField('history_year',this.value)"></textarea>
+        </div>
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Ключові дати зростання/розвитку</div>
+          <textarea class="l10-fill-inp" id="l10f_history_dates" placeholder="2017 — перший офіс, 2019 — команда 10 людей, 2022 — вийшли на 1 млн грн/міс..." rows="4" oninput="window._l10SaveField('history_dates',this.value)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 37: Ветерани компанії -->
+    <div class="l10-slide" id="l10s37">
+      <div class="l10-slide-left">
+        <h2>ІСТОРІЯ<br>КОМПАНІЇ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">37</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-q">Підніміть руки ті, хто працює більше трьох років у компанії.</div>
+        <p style="margin-top:1.25rem">Розкажіть, будь ласка, що ви застали, коли прийшли на роботу, і що змінилося у компанії за роки вашої роботи.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 38: РЕЗЮМЕ -->
+    <div class="l10-slide" id="l10s38">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">38</div>
+      </div>
+      <div class="l10-slide-right" style="justify-content:center">
+        <div class="l10-resume-box">Ми пройшли досить великий шлях.<br><br>Ми досягли багато чого і продовжуватимемо рух до основної мети разом, втілюючи в життя ідеальну картину, яку я представив вам сьогодні.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 39: ПРАВИЛА І ДИСЦИПЛІНА -->
+    <div class="l10-slide" id="l10s39">
+      <div class="l10-slide-left">
+        <h2>ПРАВИЛА<br>І<br>ДИСЦИПЛІНА</h2>
+        <div class="l10-tri"></div><div class="l10-badge">39</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-q">Як ви ставитеся до правил та дисципліни?</div>
+        <div class="l10-q" style="margin-top:1.5rem">Як ви вважаєте, навіщо вони потрібні?</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 40: Спортивна команда -->
+    <div class="l10-slide" id="l10s40">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <p>Роботу компанії можна порівняти із роботою спортивної команди.</p>
+        <div class="l10-q" style="margin-top:1.25rem">Що відбуватиметься, якщо у спортивній грі не буде правил?</div>
+        <div class="l10-resume-box" style="margin-top:1.25rem">Резюме: щоб спортивна гра відбулася, потрібні цілі та правила.</div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">40</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 41: Правила бізнесу -->
+    <div class="l10-slide" id="l10s41">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <p>Бізнес — це складніша діяльність у порівнянні зі спортом. Тому у бізнесі правил ще більше, ніж у спорті.</p>
+        <div class="l10-q" style="margin-top:1.25rem">Які у нашому бізнесі є правила, які нам допомагають?</div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">41</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 42: ОРГПОЛІТИКА -->
+    <div class="l10-slide" id="l10s42">
+      <div class="l10-slide-left">
+        <h2>Оргполітика</h2>
+        <div class="l10-tri"></div><div class="l10-badge">42</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-quote-box"><strong>Оргполітика</strong> (скор. від організаційна політика) — це правила, за допомогою яких група досягає згоди щодо дій та відповідно до яких вона веде свої справи.</div>
+        <p style="margin-top:.85rem">Перша наша оргполітика і найголовніша — це опис нашої основної мети та задуму компанії.</p>
+        <div class="l10-q">Які ми маємо ще оргполітики, про які ви знаєте?</div>
+        <p class="small">Поступово ми їх описуватимемо, формуючи папку на робочому місці.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 43: РЕЗЮМЕ (fill-in) -->
+    <div class="l10-slide" id="l10s43">
+      <div class="l10-slide-left">
+        <h2>РЕЗЮМЕ</h2>
+        <div class="l10-tri"></div><div class="l10-badge">43</div>
+      </div>
+      <div class="l10-slide-right">
+        <div class="l10-fill-wrap">
+          <div class="l10-fill-label">Путівна зірка — наша мета</div>
+          <textarea class="l10-fill-inp" id="l10f_star_goal" placeholder="Вставте формулювання мети компанії..." rows="2" oninput="window._l10SaveField('star_goal',this.value)"></textarea>
+        </div>
+        <div class="l10-resume-box" style="margin-top:.75rem">
+          <strong>Задум</strong> — дорога, якою ми йдемо до мети<br><br>
+          <strong>Бордюри по краях — це наші правила</strong>, щоб нас не знесло зі шляху!
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 44: ЗАВЕРШЕННЯ -->
+    <div class="l10-slide" id="l10s44">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <h3>ЗАВЕРШЕННЯ</h3>
+        <p><strong>На цьому занятті ми розглянули:</strong></p>
+        <ul class="l10-bullet">
+          <li>Основну мету компанії</li>
+          <li>Наш задум</li>
+          <li>Ідеальну картину стану справ</li>
+          <li>Історію нашої компанії</li>
+          <li>Головну оргполітику компанії</li>
+        </ul>
+        <div class="l10-q" style="margin-top:1rem">Чи залишились у вас питання?</div>
+        <div class="l10-star" style="margin-top:.5rem">★</div>
+        <p class="l10-gray">Зараз я прошу вас відповісти на кілька запитань та залишити відгуки про проведене заняття.</p>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">44</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 45: Очікування -->
+    <div class="l10-slide" id="l10s45">
+      <div class="l10-slide-left">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:8px;background:linear-gradient(180deg,#1a3060,#0d1b3e)"></div>
+      </div>
+      <div class="l10-slide-right">
+        <p>Тепер я від вас чекаю:</p>
+        <ul class="l10-bullet" style="margin-top:.75rem">
+          <li>що ми працюватимемо як одна команда над досягненням цілей, щоб наша компанія вийшла на новий рівень;</li>
+          <li>що кожен розвиватиметься, освоюватиме нові інструменти, підвищуватиме свою ефективність та компетентність, щоб стати ще більшим професіоналом у своїй справі.</li>
+        </ul>
+        <div class="l10-resume-box" style="margin-top:1.5rem;text-align:center;font-size:1.05rem;font-weight:700">Дякую!<br>Зростати ми можемо тільки всі разом!</div>
+        <div class="l10-badge" style="background:#0d1b3e;color:white;bottom:.75rem;left:.75rem">45</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 46: КІНЕЦЬ -->
+    <div class="l10-slide" id="l10s46">
+      <div class="l10-slide-dark" style="width:100%">
+        <div style="font-size:2rem;margin-bottom:1rem;opacity:.4">★</div>
+        <h2>КІНЕЦЬ<br>ЗАНЯТТЯ 1</h2>
+        <p>Дякуємо за участь!</p>
+        <div class="l10-badge" style="background:rgba(255,255,255,.15);color:white;bottom:1.5rem;left:1.5rem;position:absolute">46</div>
+      </div>
+    </div>
+
+  </div><!-- /l10Slides -->
+
+  <!-- Navigation bar -->
+  <div class="l10-nav">
+    <button class="l10-nav-btn" id="l10BtnPrev" onclick="window._l10Prev()" disabled>← Назад</button>
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <span class="l10-nav-counter" id="l10Counter">1 / 46</span>
+      <button class="l10-nav-save" onclick="window._l10SaveAll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="13" height="13"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Зберегти
+      </button>
+      <button class="l10-nav-close" onclick="window._l10ClosePres()">✕ Закрити</button>
+    </div>
+    <button class="l10-nav-btn" id="l10BtnNext" onclick="window._l10Next()">Далі →</button>
+  </div>
+</div><!-- /l10PresOverlay -->
+
+<script>
+(function(){
+  var TOTAL = 46;
+  var cur = 1;
+  var STORE_KEY = 'l10_pres_data';
+
+  // Load saved data
+  async function loadData() {
+    try {
+      var r = await window.storage.get(STORE_KEY);
+      if (r && r.value) {
+        var d = JSON.parse(r.value);
+        var fields = ['terms','local_company','local2','local_goal','local_vision',
+          'logo','company_goal','goal_q','company_vision','ideal','years',
+          'history_year','history_dates','star_goal'];
+        fields.forEach(function(k){
+          var el = document.getElementById('l10f_'+k);
+          if (el && d[k]) el.value = d[k];
+        });
+        if (d.goal_q) {
+          var qel = document.getElementById('l10q27_goal');
+          if (qel) qel.textContent = d.goal_q;
+        }
+      }
+    } catch(e){}
+  }
+
+  window._l10SaveField = async function(key, val) {
+    try {
+      var r = await window.storage.get(STORE_KEY);
+      var d = r ? JSON.parse(r.value) : {};
+      d[key] = val;
+      await window.storage.set(STORE_KEY, JSON.stringify(d));
+      if (key === 'goal_q') {
+        var qel = document.getElementById('l10q27_goal');
+        if (qel) qel.textContent = val || '[ваша мета]';
+      }
+    } catch(e){}
+  };
+
+  window._l10SaveAll = async function() {
+    try {
+      var fields = ['terms','local_company','local2','local_goal','local_vision',
+        'logo','company_goal','goal_q','company_vision','ideal','years',
+        'history_year','history_dates','star_goal'];
+      var d = {};
+      fields.forEach(function(k){
+        var el = document.getElementById('l10f_'+k);
+        if (el) d[k] = el.value;
+      });
+      await window.storage.set(STORE_KEY, JSON.stringify(d));
+      if (window.showToast) window.showToast('Збережено', 'success');
+    } catch(e){}
+  };
+
+  function goTo(n) {
+    document.getElementById('l10s'+cur).classList.remove('active');
+    cur = n;
+    document.getElementById('l10s'+cur).classList.add('active');
+    document.getElementById('l10Counter').textContent = cur + ' / ' + TOTAL;
+    document.getElementById('l10BtnPrev').disabled = (cur === 1);
+    document.getElementById('l10BtnNext').disabled = (cur === TOTAL);
+  }
+
+  window._l10Prev = function(){ if (cur > 1) goTo(cur - 1); };
+  window._l10Next = function(){ if (cur < TOTAL) goTo(cur + 1); };
+
+  window._l10LaunchPres = function() {
+    var ov = document.getElementById('l10PresOverlay');
+    ov.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    goTo(1);
+    loadData();
+  };
+
+  window._l10ClosePres = function() {
+    document.getElementById('l10PresOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+    window._l10SaveAll();
+  };
+
+  // Keyboard nav
+  document.addEventListener('keydown', function(e){
+    var ov = document.getElementById('l10PresOverlay');
+    if (!ov || !ov.classList.contains('active')) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') window._l10Next();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') window._l10Prev();
+    if (e.key === 'Escape') window._l10ClosePres();
+  });
+})();
+</script>
+<style>
 .l10-section { margin-bottom:1.75rem; }
 .l10-section:last-child { margin-bottom:0; }
 .l10-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
