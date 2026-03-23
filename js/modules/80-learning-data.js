@@ -7169,74 +7169,7 @@ Bist du dabei?</div>
 </div>
 </div><!-- /l10Ov -->
 
-<script>
-(function(){
-  var T=46, c=1, SK='l10d';
-  var FI=['terms','local_company','local2','local_goal','local_vision','logo','company_goal','goal_q','company_vision','ideal','years','history_year','history_dates','star_goal'];
 
-  async function load(){
-    try{
-      var r=await window.storage.get(SK);
-      if(r&&r.value){
-        var d=JSON.parse(r.value);
-        FI.forEach(function(k){var e=document.getElementById('l10f_'+k);if(e&&d[k])e.value=d[k];});
-        if(d.goal_q){var q=document.getElementById('l10q27');if(q)q.textContent=d.goal_q;}
-      }
-    }catch(e){}
-  }
-
-  window._l10SF=async function(k,v){
-    try{
-      var r=await window.storage.get(SK);
-      var d=r?JSON.parse(r.value):{};
-      d[k]=v;
-      await window.storage.set(SK,JSON.stringify(d));
-      if(k==='goal_q'){var q=document.getElementById('l10q27');if(q)q.textContent=v||'[ваша мета]';}
-    }catch(e){}
-  };
-
-  window._l10SaveAll=async function(){
-    try{
-      var d={};
-      FI.forEach(function(k){var e=document.getElementById('l10f_'+k);if(e)d[k]=e.value;});
-      await window.storage.set(SK,JSON.stringify(d));
-      if(window.showToast)window.showToast('Збережено','success');
-    }catch(e){}
-  };
-
-  function go(n){
-    document.getElementById('l10_'+c).classList.remove('on');
-    c=n;
-    document.getElementById('l10_'+c).classList.add('on');
-    document.getElementById('l10Ctr').textContent=c+' / '+T;
-    document.getElementById('l10Prev').disabled=(c===1);
-    document.getElementById('l10Next').disabled=(c===T);
-  }
-
-  window._l10P=function(){if(c>1)go(c-1);};
-  window._l10N=function(){if(c<T)go(c+1);};
-
-  window._l10Launch=function(){
-    document.getElementById('l10Ov').classList.add('on');
-    document.body.style.overflow='hidden';
-    go(1);
-    load();
-  };
-
-  window._l10Close=function(){
-    document.getElementById('l10Ov').classList.remove('on');
-    document.body.style.overflow='';
-    window._l10SaveAll();
-  };
-
-  document.addEventListener('keydown',function(e){
-    if(!document.getElementById('l10Ov').classList.contains('on'))return;
-    if(e.key==='ArrowRight'||e.key==='ArrowDown')window._l10N();
-    if(e.key==='ArrowLeft'||e.key==='ArrowUp')window._l10P();
-    if(e.key==='Escape')window._l10Close();
-  });
-})();
-</script>
 `,
 
                 homework: `<ol><li>Пройдіть діалог з AI-коучем цілей</li><li>Створіть документ «Політика цілей і задуму компанії» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — розкажіть мету і задум, запишіть на відео</li><li>Напишіть у полі відповіді: яку мету ви сформулювали і яка була найскладніша частина діалогу з AI</li></ol>`,
@@ -8566,50 +8499,7 @@ Bist du dabei?</div>
 </div>
 </div><!-- /l11Ov -->
 
-<script>
-(function(){
-  var T=43,c=1,SK='l11d';
-  var FI=['values_why','values_left','ckp','v123','goal','ckp_final'];
-  async function load(){
-    try{
-      var r=await window.storage.get(SK);
-      if(r&&r.value){var d=JSON.parse(r.value);FI.forEach(function(k){var e=document.getElementById('l11f_'+k);if(e&&d[k])e.value=d[k];});}
-    }catch(e){}
-  }
-  window._l11SF=async function(k,v){
-    try{var r=await window.storage.get(SK);var d=r?JSON.parse(r.value):{};d[k]=v;await window.storage.set(SK,JSON.stringify(d));}catch(e){}
-  };
-  window._l11SaveAll=async function(){
-    try{var d={};FI.forEach(function(k){var e=document.getElementById('l11f_'+k);if(e)d[k]=e.value;});await window.storage.set(SK,JSON.stringify(d));if(window.showToast)window.showToast('Збережено','success');}catch(e){}
-  };
-  function go(n){
-    document.getElementById('l11_'+c).classList.remove('on');
-    c=n;
-    document.getElementById('l11_'+c).classList.add('on');
-    document.getElementById('l11Ctr').textContent=c+' / '+T;
-    document.getElementById('l11Prev').disabled=(c===1);
-    document.getElementById('l11Next').disabled=(c===T);
-  }
-  window._l11P=function(){if(c>1)go(c-1);};
-  window._l11N=function(){if(c<T)go(c+1);};
-  window._l11Launch=function(){
-    document.getElementById('l11Ov').classList.add('on');
-    document.body.style.overflow='hidden';
-    go(1);load();
-  };
-  window._l11Close=function(){
-    document.getElementById('l11Ov').classList.remove('on');
-    document.body.style.overflow='';
-    window._l11SaveAll();
-  };
-  document.addEventListener('keydown',function(e){
-    if(!document.getElementById('l11Ov').classList.contains('on'))return;
-    if(e.key==='ArrowRight'||e.key==='ArrowDown')window._l11N();
-    if(e.key==='ArrowLeft'||e.key==='ArrowUp')window._l11P();
-    if(e.key==='Escape')window._l11Close();
-  });
-})();
-</script>
+
 `,
 
                 homework: `<ol><li>Пройдіть діалог з AI-коучем продукту</li><li>Створіть документ «Політика продукту організації» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — поясніть продукт ролі кожному</li><li>Напишіть у полі відповіді: який головний продукт вашої компанії і продукт якої ролі виявився найскладнішим для формулювання</li></ol>`,

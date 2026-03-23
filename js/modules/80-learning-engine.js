@@ -5390,100 +5390,155 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
         // Execute <script> tags from lessonContent (innerHTML does not run them)
         setTimeout(function() {
-            const _lc = document.querySelector(".l-lesson-content");
+            var _lc = document.querySelector(".l-lesson-content");
             if (_lc) {
                 _lc.querySelectorAll("script").forEach(function(s) {
-                    const ns = document.createElement("script");
+                    var ns = document.createElement("script");
                     ns.textContent = s.textContent;
                     document.head.appendChild(ns);
                     document.head.removeChild(ns);
                 });
             }
-            // Fallback: lesson 11 presentation
-            if (document.getElementById('l11Ov') && typeof window._l11Launch !== 'function') {
-                (function(){
-                    var T=43, c=1;
-                    function go(n){
-                        var ov=document.getElementById('l11Ov');
-                        ov.querySelector('.l11s.on').classList.remove('on');
-                        c=n;
-                        ov.querySelector('#l11_'+c).classList.add('on');
-                        document.getElementById('l11Ctr').textContent=c+' / '+T;
-                        document.getElementById('l11Prev').disabled=(c===1);
-                        document.getElementById('l11Next').disabled=(c===T);
-                    }
-                    window._l11P=function(){if(c>1)go(c-1);};
-                    window._l11N=function(){if(c<T)go(c+1);};
-                    window._l11Launch=function(){
-                        var ov=document.getElementById('l11Ov');
-                        ov.classList.add('on');
-                        document.body.style.overflow='hidden';
-                        c=1;
-                        ov.querySelectorAll('.l11s').forEach(function(s){s.classList.remove('on');});
-                        ov.querySelector('#l11_1').classList.add('on');
-                        document.getElementById('l11Ctr').textContent='1 / '+T;
-                        document.getElementById('l11Prev').disabled=true;
-                        document.getElementById('l11Next').disabled=false;
-                        try{window.storage.get('l11d').then(function(r){if(r&&r.value){var d=JSON.parse(r.value);['values_why','values_left','ckp','v123','goal','ckp_final'].forEach(function(k){var e=document.getElementById('l11f_'+k);if(e&&d[k])e.value=d[k];});}});}catch(e){}
-                    };
-                    window._l11Close=function(){
-                        document.getElementById('l11Ov').classList.remove('on');
-                        document.body.style.overflow='';
-                        window._l11SaveAll&&window._l11SaveAll();
-                    };
-                    window._l11SF=window._l11SF||function(){};
-                    window._l11SaveAll=window._l11SaveAll||function(){};
-                })();
-            }
-            // Fallback: if lesson 10 pres overlay exists but launch fn not defined, init it
-            if (document.getElementById('l10Ov') && typeof window._l10Launch !== 'function') {
-                window._l10Launch = function() {
+
+            // ── Lesson 10: Ціль і задум ─────────────────────────────
+            (function initL10() {
+                if (!document.getElementById('l10Ov')) return;
+                var T = 46, c = 1, SK = 'l10d';
+                var FI = ['terms','local_company','local2','local_goal','local_vision',
+                    'logo','company_goal','goal_q','company_vision','ideal','years',
+                    'history_year','history_dates','star_goal'];
+
+                window._l10SF = async function(k, v) {
+                    try {
+                        var r = await window.storage.get(SK);
+                        var d = r ? JSON.parse(r.value) : {};
+                        d[k] = v;
+                        await window.storage.set(SK, JSON.stringify(d));
+                        if (k === 'goal_q') {
+                            var q = document.getElementById('l10q27');
+                            if (q) q.textContent = v || '[ваша мета]';
+                        }
+                    } catch(e) {}
+                };
+                window._l10SaveAll = async function() {
+                    try {
+                        var d = {};
+                        FI.forEach(function(k) { var e = document.getElementById('l10f_' + k); if (e) d[k] = e.value; });
+                        await window.storage.set(SK, JSON.stringify(d));
+                        if (window.showToast) window.showToast('Збережено', 'success');
+                    } catch(e) {}
+                };
+                function go10(n) {
                     var ov = document.getElementById('l10Ov');
-                    if (!ov) return;
+                    var cur = ov.querySelector('.l10s.on');
+                    if (cur) cur.classList.remove('on');
+                    c = n;
+                    var next = document.getElementById('l10_' + c);
+                    if (next) next.classList.add('on');
+                    var ctr = document.getElementById('l10Ctr');
+                    if (ctr) ctr.textContent = c + ' / ' + T;
+                    var prev = document.getElementById('l10Prev');
+                    var nxt = document.getElementById('l10Next');
+                    if (prev) prev.disabled = (c === 1);
+                    if (nxt) nxt.disabled = (c === T);
+                }
+                window._l10P = function() { if (c > 1) go10(c - 1); };
+                window._l10N = function() { if (c < T) go10(c + 1); };
+                window._l10Launch = async function() {
+                    var ov = document.getElementById('l10Ov');
                     ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
-                    var slides = ov.querySelectorAll('.l10s');
-                    slides.forEach(function(s) { s.classList.remove('on'); });
-                    if (slides[0]) slides[0].classList.add('on');
-                    var ctr = document.getElementById('l10Ctr');
-                    if (ctr) ctr.textContent = '1 / ' + slides.length;
-                    var prev = document.getElementById('l10Prev');
-                    var next = document.getElementById('l10Next');
-                    if (prev) prev.disabled = true;
-                    if (next) next.disabled = (slides.length <= 1);
-                    window._l10cur = 1;
-                    window._l10total = slides.length;
+                    go10(1);
+                    try {
+                        var r = await window.storage.get(SK);
+                        if (r && r.value) {
+                            var d = JSON.parse(r.value);
+                            FI.forEach(function(k) { var e = document.getElementById('l10f_' + k); if (e && d[k]) e.value = d[k]; });
+                            if (d.goal_q) { var q = document.getElementById('l10q27'); if (q) q.textContent = d.goal_q; }
+                        }
+                    } catch(e) {}
                 };
                 window._l10Close = function() {
-                    var ov = document.getElementById('l10Ov');
-                    if (ov) ov.classList.remove('on');
+                    document.getElementById('l10Ov').classList.remove('on');
                     document.body.style.overflow = '';
+                    window._l10SaveAll();
                 };
-                window._l10N = function() {
-                    if (!window._l10cur || window._l10cur >= window._l10total) return;
-                    var ov = document.getElementById('l10Ov');
-                    ov.querySelector('.l10s.on').classList.remove('on');
-                    window._l10cur++;
-                    ov.querySelector('#l10_' + window._l10cur).classList.add('on');
-                    var ctr = document.getElementById('l10Ctr');
-                    if (ctr) ctr.textContent = window._l10cur + ' / ' + window._l10total;
-                    document.getElementById('l10Prev').disabled = (window._l10cur === 1);
-                    document.getElementById('l10Next').disabled = (window._l10cur === window._l10total);
+            })();
+
+            // ── Lesson 11: ЦКП компанії ─────────────────────────────
+            (function initL11() {
+                if (!document.getElementById('l11Ov')) return;
+                var T = 43, c = 1, SK = 'l11d';
+                var FI = ['values_why','values_left','ckp','v123','goal','ckp_final'];
+
+                window._l11SF = async function(k, v) {
+                    try {
+                        var r = await window.storage.get(SK);
+                        var d = r ? JSON.parse(r.value) : {};
+                        d[k] = v;
+                        await window.storage.set(SK, JSON.stringify(d));
+                    } catch(e) {}
                 };
-                window._l10P = function() {
-                    if (!window._l10cur || window._l10cur <= 1) return;
-                    var ov = document.getElementById('l10Ov');
-                    ov.querySelector('.l10s.on').classList.remove('on');
-                    window._l10cur--;
-                    ov.querySelector('#l10_' + window._l10cur).classList.add('on');
-                    var ctr = document.getElementById('l10Ctr');
-                    if (ctr) ctr.textContent = window._l10cur + ' / ' + window._l10total;
-                    document.getElementById('l10Prev').disabled = (window._l10cur === 1);
-                    document.getElementById('l10Next').disabled = (window._l10cur === window._l10total);
+                window._l11SaveAll = async function() {
+                    try {
+                        var d = {};
+                        FI.forEach(function(k) { var e = document.getElementById('l11f_' + k); if (e) d[k] = e.value; });
+                        await window.storage.set(SK, JSON.stringify(d));
+                        if (window.showToast) window.showToast('Збережено', 'success');
+                    } catch(e) {}
                 };
-                window._l10SF = window._l10SF || function() {};
-                window._l10SaveAll = window._l10SaveAll || function() {};
-            }
+                function go11(n) {
+                    var ov = document.getElementById('l11Ov');
+                    var cur = ov.querySelector('.l11s.on');
+                    if (cur) cur.classList.remove('on');
+                    c = n;
+                    var next = document.getElementById('l11_' + c);
+                    if (next) next.classList.add('on');
+                    var ctr = document.getElementById('l11Ctr');
+                    if (ctr) ctr.textContent = c + ' / ' + T;
+                    var prev = document.getElementById('l11Prev');
+                    var nxt = document.getElementById('l11Next');
+                    if (prev) prev.disabled = (c === 1);
+                    if (nxt) nxt.disabled = (c === T);
+                }
+                window._l11P = function() { if (c > 1) go11(c - 1); };
+                window._l11N = function() { if (c < T) go11(c + 1); };
+                window._l11Launch = async function() {
+                    var ov = document.getElementById('l11Ov');
+                    ov.classList.add('on');
+                    document.body.style.overflow = 'hidden';
+                    go11(1);
+                    try {
+                        var r = await window.storage.get(SK);
+                        if (r && r.value) {
+                            var d = JSON.parse(r.value);
+                            FI.forEach(function(k) { var e = document.getElementById('l11f_' + k); if (e && d[k]) e.value = d[k]; });
+                        }
+                    } catch(e) {}
+                };
+                window._l11Close = function() {
+                    document.getElementById('l11Ov').classList.remove('on');
+                    document.body.style.overflow = '';
+                    window._l11SaveAll();
+                };
+
+                // Keyboard nav — shared listener (checks which overlay is open)
+                document.addEventListener('keydown', function(e) {
+                    var ov10 = document.getElementById('l10Ov');
+                    var ov11 = document.getElementById('l11Ov');
+                    if (ov10 && ov10.classList.contains('on')) {
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') window._l10N();
+                        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') window._l10P();
+                        if (e.key === 'Escape') window._l10Close();
+                    }
+                    if (ov11 && ov11.classList.contains('on')) {
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') window._l11N();
+                        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') window._l11P();
+                        if (e.key === 'Escape') window._l11Close();
+                    }
+                });
+            })();
+
         }, 100);
     };
 
