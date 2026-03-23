@@ -109,16 +109,25 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         { name:'Андрій Петренко',  role:'employee', fi:4,    pos:'Водій-монтажник' },
         { name:'Оксана Ткаченко',  role:'employee', fi:5,    pos:'Бухгалтер' },
     ];
-    const sRefs = STAFF.map(() => cr.collection('users').doc());
+    const sRefs = STAFF.map((s, i) => i === 0 ? cr.collection('users').doc(uid) : cr.collection('users').doc());
     STAFF.forEach((s,i) => {
         const fid = s.fi !== null ? fRefs[s.fi].id : null;
-        ops.push({type:'set', ref:sRefs[i], data:{
+        if (i === 0) {
+            // Власник — зберігаємо реальне ім'я і email, тільки оновлюємо роль
+            ops.push({type:'set', ref:sRefs[i], data:{
+                role:'owner', position:s.pos,
+                functionIds:[], primaryFunctionId:null,
+                status:'active', updatedAt:now,
+            }, merge:true});
+        } else {
+            ops.push({type:'set', ref:sRefs[i], data:{
             name:s.name, role:s.role, position:s.pos,
             email: s.name.toLowerCase().replace(/\s+/g,'.') + '@meble.demo',
             functionIds: fid ? [fid] : [],
             primaryFunctionId: fid,
             status:'active', createdAt:now, updatedAt:now,
         }});
+        }
     });
 
     await window.safeBatchCommit(ops); ops = [];
@@ -2063,16 +2072,25 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
         { name:'Оксана Білоус',   role:'employee', fi:5,    pos:'Бухгалтер / Адмін' },
         { name:'Максим Поліщук',  role:'employee', fi:4,    pos:'Менеджер закупівель' },
     ];
-    const sRefs = STAFF.map(() => cr.collection('users').doc());
+    const sRefs = STAFF.map((s, i) => i === 0 ? cr.collection('users').doc(uid) : cr.collection('users').doc());
     STAFF.forEach((s, i) => {
         const fid = s.fi !== null ? fRefs[s.fi].id : null;
-        ops.push({type:'set', ref:sRefs[i], data:{
+        if (i === 0) {
+            // Власник — зберігаємо реальне ім'я і email, тільки оновлюємо роль
+            ops.push({type:'set', ref:sRefs[i], data:{
+                role:'owner', position:s.pos,
+                functionIds:[], primaryFunctionId:null,
+                status:'active', updatedAt:now,
+            }, merge:true});
+        } else {
+            ops.push({type:'set', ref:sRefs[i], data:{
             name:s.name, role:s.role, position:s.pos,
             email:s.name.toLowerCase().replace(/['\s]+/g,'.') + '@budmaster.demo',
             functionIds: fid ? [fid] : [],
             primaryFunctionId: fid,
             status:'active', createdAt:now, updatedAt:now,
         }});
+        }
     });
     await window.safeBatchCommit(ops); ops = [];
 
@@ -3575,15 +3593,24 @@ window._DEMO_NICHE_MAP['medical'] = async function() {
         { name:'Олена Яценко',       role:'employee', fi:5,    pos:'Бухгалтер' },
         { name:'Максим Поліщук',     role:'employee', fi:7,    pos:'IT / Адміністратор системи' },
     ];
-    const sRefs = STAFF.map(() => cr.collection('users').doc());
+    const sRefs = STAFF.map((s, i) => i === 0 ? cr.collection('users').doc(uid) : cr.collection('users').doc());
     STAFF.forEach((s, i) => {
         const fid = s.fi !== null ? fRefs[s.fi].id : null;
-        ops.push({type:'set', ref:sRefs[i], data:{
+        if (i === 0) {
+            // Власник — зберігаємо реальне ім'я і email, тільки оновлюємо роль
+            ops.push({type:'set', ref:sRefs[i], data:{
+                role:'owner', position:s.pos,
+                functionIds:[], primaryFunctionId:null,
+                status:'active', updatedAt:now,
+            }, merge:true});
+        } else {
+            ops.push({type:'set', ref:sRefs[i], data:{
             name:s.name, role:s.role, position:s.pos,
             email:s.name.toLowerCase().replace(/['\s]+/g,'.') + '@klinika.demo',
             functionIds:fid ? [fid] : [], primaryFunctionId:fid,
             status:'active', createdAt:now, updatedAt:now,
         }});
+        }
     });
     await window.safeBatchCommit(ops); ops = [];
 
@@ -4749,15 +4776,24 @@ window._DEMO_NICHE_MAP['cleaning'] = async function() {
         { name:'Lisa Thompson',    role:'employee', fi:6,    pos:'HR Coordinator' },
         { name:'Kevin Brown',      role:'employee', fi:0,    pos:'Marketing Specialist' },
     ];
-    const sRefs = STAFF.map(() => cr.collection('users').doc());
+    const sRefs = STAFF.map((s, i) => i === 0 ? cr.collection('users').doc(uid) : cr.collection('users').doc());
     STAFF.forEach((s, i) => {
         const fid = s.fi !== null ? fRefs[s.fi].id : null;
-        ops.push({type:'set', ref:sRefs[i], data:{
+        if (i === 0) {
+            // Власник — зберігаємо реальне ім'я і email, тільки оновлюємо роль
+            ops.push({type:'set', ref:sRefs[i], data:{
+                role:'owner', position:s.pos,
+                functionIds:[], primaryFunctionId:null,
+                status:'active', updatedAt:now,
+            }, merge:true});
+        } else {
+            ops.push({type:'set', ref:sRefs[i], data:{
             name:s.name, role:s.role, position:s.pos,
             email:s.name.toLowerCase().replace(/['\s]+/g,'.') + '@sparkclean.demo',
             functionIds:fid ? [fid] : [], primaryFunctionId:fid,
             status:'active', createdAt:now, updatedAt:now,
         }});
+        }
     });
     await window.safeBatchCommit(ops); ops = [];
 
@@ -5952,12 +5988,21 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     const sRefs = STAFF.map((s, i) => i === 0 ? cr.collection('users').doc(uid) : cr.collection('users').doc());
     STAFF.forEach((s, i) => {
         const fid = s.fi !== null ? fRefs[s.fi].id : null;
-        ops.push({type:'set', ref:sRefs[i], data:{
+        if (i === 0) {
+            // Власник — зберігаємо реальне ім'я, тільки оновлюємо роль
+            ops.push({type:'set', ref:sRefs[i], data:{
+                role:'owner', position:s.pos,
+                functionIds:[], primaryFunctionId:null,
+                status:'active', updatedAt:now,
+            }, merge:true});
+        } else {
+            ops.push({type:'set', ref:sRefs[i], data:{
             name:s.name, role:s.role, position:s.pos,
             email:s.name.toLowerCase().replace(/['\s]+/g, '.') + '@glowstudio.ua',
             functionIds:fid ? [fid] : [], primaryFunctionId:fid,
             status:'active', createdAt:now, updatedAt:now,
         }});
+        }
     });
     await window.safeBatchCommit(ops, "step-2-ops"); ops = [];
 
@@ -6132,7 +6177,9 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             functionId:fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
             assigneeId:sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
             creatorId:uid, creatorName:STAFF[0].name,
-            period:t.freq, dayOfWeek:t.dow,
+            period:t.freq,
+            dayOfWeek: t.dow !== null ? String(t.dow) : null,
+            dayOfMonth: t.freq === 'monthly' ? 1 : null,
             estimatedTime:String(t.est), expectedResult:t.r,
             status:'active', priority:'medium',
             createdAt:now, updatedAt:now,
