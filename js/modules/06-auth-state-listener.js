@@ -106,7 +106,8 @@
 
                 // ── ALLOWED TABS: обмежений доступ до модулів ──
                 // Якщо у юзера є поле allowedTabs: ['warehouse', ...] — показуємо ТІЛЬКИ ці таби
-                const _allowedTabs = currentUserData.allowedTabs;
+                // SuperAdmin завжди має повний доступ — ігноруємо allowedTabs
+                const _allowedTabs = isSuperAdmin ? null : currentUserData.allowedTabs;
                 if (Array.isArray(_allowedTabs) && _allowedTabs.length > 0) {
                     window._userAllowedTabs = _allowedTabs;
 
