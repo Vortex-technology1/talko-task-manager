@@ -8889,7 +8889,284 @@ Bist du dabei?</div>
 (function() {
 'use strict';
     const strategyCourseData = [
-        // id: 301, 302, 303...
+        {
+            id: 301,
+            category: 'strategy',
+            title: 'ТИ ПРОДАЄШ ПРОДУКТ АБО РЕЗУЛЬТАТ?',
+            title_ru: 'ТЫ ПРОДАЁШЬ ПРОДУКТ ИЛИ РЕЗУЛЬТАТ?',
+            title_en: 'DO YOU SELL A PRODUCT OR A RESULT?',
+            subtitle: '7 технік які змінюють логіку бізнесу і збільшують середній чек у 10 разів',
+            subtitle_ru: '7 техник которые меняют логику бизнеса и увеличивают средний чек в 10 раз',
+            subtitle_en: '7 techniques that change business logic and increase the average deal by 10x',
+            duration: 40,
+
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `
+<style>
+.s301-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s301-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.s301-block p+p{margin-top:.65rem}
+.s301-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s301-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s301-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s301-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5;margin-bottom:.45rem}
+.s301-ok{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;line-height:1.5;margin-bottom:.45rem}
+.s301-num{width:28px;height:28px;background:#f59e0b;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.s301-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s301-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}
+.s301-steptext{font-size:.82rem;color:#525252;line-height:1.5}
+.s301-case{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:1rem;margin-bottom:.6rem}
+.s301-case-title{font-weight:700;color:#c2410c;font-size:.85rem;margin-bottom:.4rem}
+.s301-case p{font-size:.83rem;color:#374151;line-height:1.6}
+.s301-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.s301-criteria{display:grid;gap:.5rem;margin-top:.6rem}
+.s301-crit{display:flex;gap:.75rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}
+.s301-cnum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.s301-ctitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}
+.s301-ctext{font-size:.78rem;color:#525252;line-height:1.4}
+.s301-msg{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.85rem 1rem;margin-bottom:.5rem}
+.s301-msg-label{font-size:.68rem;font-weight:700;color:#9ca3af;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.3rem}
+.s301-msg p{font-size:.83rem;color:#374151;line-height:1.6}
+.s301-msg-why{font-size:.75rem;color:#22c55e;font-style:italic;margin-top:.4rem}
+.s301-checklist{list-style:none;padding:0;margin:0}
+.s301-checklist li{display:flex;align-items:flex-start;gap:.6rem;padding:.4rem 0;font-size:.85rem;color:#374151;line-height:1.5;border-bottom:1px solid #f1f5f9}
+.s301-checklist li:last-child{border-bottom:none}
+.s301-check-icon{width:18px;height:18px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Головна помилка 9 з 10 підприємців</div></div>
+    <div class="lesson-block-content">
+        <p>Стоматологічна клініка продає <em>"лікування зубів"</em>. Будівельна компанія — <em>"ремонт під ключ"</em>. Фітнес-тренер — <em>"тренування"</em>. І всі сидять у ціновій конкуренції і ніяк не можуть вирватись на новий рівень доходу.</p>
+        <p>Проблема не в продукті. Проблема в тому, що підприємець не розуміє <strong>який бізнес він насправді веде</strong>.</p>
+        <div class="s301-quote">Клієнт купує не те що ти робиш — він купує те що <strong>змінюється в його житті або бізнесі</strong> після того як ти зробив свою роботу.</div>
+    </div>
+</div>
+
+<div class="s301-divider"></div>
+
+<div class="s301-label">Типові помилки перед тим як читати далі</div>
+
+<div class="s301-warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    <div><strong>Продають характеристики, а не зміну.</strong> "У нас сучасне обладнання", "ми працюємо 10 років" — клієнту байдуже. Він хоче знати: що зміниться в його житті?</div>
+</div>
+<div class="s301-warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    <div><strong>Намагаються продати всім.</strong> "Наш клієнт — всі хто потребує послуги" — це відсутність аудиторії. Коли продаєш всім — не продаєш нікому.</div>
+</div>
+<div class="s301-warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    <div><strong>Маленький чек при великих зусиллях.</strong> Зусилля на продаж угоди за 50 000 грн і за 500 000 грн — майже однакові. Різниця тільки в тому, яку цінність ти пакуєш.</div>
+</div>
+<div class="s301-warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    <div><strong>Бояться зустрічей і переговорів.</strong> Надсилають листи, чекають відповіді. У продажах B2B гроші живуть на особистих зустрічах. Лист — це початок розмови, не продаж.</div>
+</div>
+
+<div class="s301-divider"></div>
+
+<div class="s301-label">Реальні кейси з України</div>
+
+<div class="s301-case">
+    <div class="s301-case-title">📍 Стоматологічна клініка, Київ</div>
+    <p>Продавали разові послуги: консультація 300 грн, чищення 800 грн, лікування від 1 500 грн. Середній заробіток з клієнта на рік — 3 500 грн.</p>
+    <p>Після переходу на річну програму обслуговування (12 000 грн на рік — чотири планових візити, пріоритетний запис, знижка на процедури) — середній заробіток виріс до 12 000 грн. <strong>Ті самі клієнти. Та сама клініка. Інша упаковка.</strong></p>
+</div>
+<div class="s301-case">
+    <div class="s301-case-title">📍 Компанія з ремонту квартир, Львів</div>
+    <p>Середній чек 180 000 грн. Після зміни позиціонування на <em>"збільшуємо ринкову вартість вашої квартири на 30–40% через грамотний ремонт"</em> і фокусу на інвесторів нерухомості — середній чек виріс до 320 000 грн. <strong>Той самий ремонт — інший клієнт — інша ціна.</strong></p>
+</div>
+<div class="s301-case">
+    <div class="s301-case-title">📍 Підбір персоналу, Харків</div>
+    <p>Закривали вакансії по 8 000–15 000 грн за позицію. Після впровадження моделі "партнерство на рік" за 96 000 грн — перші 8 клієнтів дали виручку 768 000 грн. <strong>При тих самих витратах на команду.</strong></p>
+</div>
+
+<div class="s301-divider"></div>
+
+<div class="s301-label">Техніка 1</div>
+<div class="s301-title">Переосмислення бізнесу</div>
+<div class="s301-block">
+    <p>Запитай себе: <strong>яким бізнесом я насправді займаюсь?</strong></p>
+    <p>Компанія будує паддл-корти. Але клієнти — готелі, бази відпочинку — купують не корт. Вони купують <strong>заповнюваність і додатковий прибуток</strong>.</p>
+</div>
+
+<div class="s301-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Стоматологічна клініка</strong> — не ставить імпланти. Повертає людині <em>впевненість і якість життя</em>.</div></div>
+<div class="s301-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Юрист</strong> — не складає договори. <em>Захищає гроші і бізнес</em> клієнта від ризиків.</div></div>
+<div class="s301-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Будівельна компанія</strong> — не робить ремонт. <em>Збільшує вартість майна</em> клієнта.</div></div>
+
+<div class="s301-quote">Напиши одним реченням — не "що ти робиш", а "яка зміна відбувається в бізнесі або житті клієнта після роботи з тобою".</div>
+
+<div class="s301-divider"></div>
+
+<div class="s301-label">Техніка 2</div>
+<div class="s301-title">Стратегія великого чека</div>
+<div class="s301-block">
+    <p>Провести переговори і закрити угоду за 50 000 грн і за 500 000 грн — <strong>однаково складно</strong>. Та сама зустріч, та сама презентація. Але виручка відрізняється в 10 разів.</p>
+    <p>Питання не "як продати більше одиниць", а <strong>"як збільшити цінність одного контракту"</strong>.</p>
+</div>
+<div class="s301-quote">Напиши: що ще ти міг би включити в свій продукт щоб збільшити чек у 3–5 разів? Яку повну версію свого рішення ти міг би запропонувати?</div>
+
+<div class="s301-divider"></div>
+
+<div class="s301-label">Техніка 3</div>
+<div class="s301-title">5 критеріїв вибору ніші</div>
+<div class="s301-block"><p>Постав оцінку від 1 до 5 по кожному. Якщо сума менше 18 — є серйозне питання: чи правильну нішу ти обрав?</p></div>
+
+<div class="s301-criteria">
+    <div class="s301-crit"><div class="s301-cnum">1</div><div><div class="s301-ctitle">Кількість ринку</div><div class="s301-ctext">Тисячі клієнтів — це ринок. Десятки — це знайомі.</div></div></div>
+    <div class="s301-crit"><div class="s301-cnum">2</div><div><div class="s301-ctitle">Гострота болю</div><div class="s301-ctext">Біль має бути відчутним прямо зараз. Чим гостріший — тим легше продати рішення.</div></div></div>
+    <div class="s301-crit"><div class="s301-cnum">3</div><div><div class="s301-ctitle">Напрямок ринку</div><div class="s301-ctext">Ринок має рости. Не заходь в ринок що скорочується.</div></div></div>
+    <div class="s301-crit"><div class="s301-cnum">4</div><div><div class="s301-ctitle">Якість рішення</div><div class="s301-ctext">Твій продукт має кардинально змінювати ситуацію — в конкретних цифрах.</div></div></div>
+    <div class="s301-crit"><div class="s301-cnum">5</div><div><div class="s301-ctitle">Розмір різниці</div><div class="s301-ctext">Більша різниця між "до" і "після" = більша цінність = більший чек.</div></div></div>
+</div>
+
+<div class="s301-divider"></div>
+
+<div class="s301-label">Техніка 4</div>
+<div class="s301-title">Модель монетизації — тільки два шляхи до капіталу</div>
+
+<div class="s301-step"><div class="s301-num">1</div><div><div class="s301-steptitle">Постійні клієнти з високим заробітком на кожному</div><div class="s301-steptext">Клієнт платить регулярно — щомісяця або щороку. Маржа висока. Найстабільніший шлях.</div></div></div>
+<div class="s301-step"><div class="s301-num">2</div><div><div class="s301-steptitle">Великий чек за одну угоду</div><div class="s301-steptext">Якщо повторних покупок немає — компенсуй розміром. Одна угода на 500 000 грн краще ніж 20 по 25 000 грн при тих самих зусиллях.</div></div></div>
+
+<div class="s301-warn" style="margin-top:.5rem">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div><strong>Управління чужим об'єктом за відсоток</strong> — це стабільний невеликий дохід, а не капітал. Корисне як аргумент у переговорах, але не основний спосіб заробітку.</div>
+</div>
+
+<div class="s301-divider"></div>
+
+<div class="s301-label">Техніка 5</div>
+<div class="s301-title">Структура "5 одиничок" у продажах між бізнесами</div>
+<div class="s301-block"><p>Розмитість у будь-якому елементі — і продаж не відбувається.</p></div>
+
+<div class="s301-step"><div class="s301-num">1</div><div><div class="s301-steptitle">Один тип клієнта</div><div class="s301-steptext">Не "всі підряд" — а один конкретний тип. Наприклад: готелі з номерним фондом від 30 кімнат.</div></div></div>
+<div class="s301-step"><div class="s301-num">2</div><div><div class="s301-steptitle">Один біль</div><div class="s301-steptext">Один гострий і вимірюваний. Наприклад: низька кількість гостей в несезон.</div></div></div>
+<div class="s301-step"><div class="s301-num">3</div><div><div class="s301-steptitle">Один продукт</div><div class="s301-steptext">Одна чітка пропозиція під конкретний біль — не весь перелік послуг.</div></div></div>
+<div class="s301-step"><div class="s301-num">4</div><div><div class="s301-steptitle">Один канал пошуку клієнтів</div><div class="s301-steptext">Один канал який доводиш до результату. Наприклад: особисті рекомендації через партнерів.</div></div></div>
+<div class="s301-step"><div class="s301-num">5</div><div><div class="s301-steptitle">Один спосіб закрити угоду</div><div class="s301-steptext">Особиста зустріч власників або перших осіб — завжди.</div></div></div>
+
+<div class="s301-divider"></div>
+
+<div class="s301-label">Техніка 6</div>
+<div class="s301-title">Скрипт першого контакту — 3 повідомлення</div>
+
+<div class="s301-msg">
+    <div class="s301-msg-label">Повідомлення 1 — Захоплення уваги</div>
+    <p><em>"[Ім'я], привіт. Мене звати [твоє ім'я]. Твій контакт мені передав [хто]. Є конкретна ідея під твій бізнес — слухай наступне повідомлення."</em></p>
+    <div class="s301-msg-why">✓ Не продаєш і не пояснюєш. Створюєш інтригу. Посилання на спільний контакт знімає недовіру.</div>
+</div>
+<div class="s301-msg">
+    <div class="s301-msg-label">Повідомлення 2 — Біль і рішення</div>
+    <p><em>"Я розумію що зараз є питання з [конкретний біль]. Ми вже вирішили цю задачу для [X схожих бізнесів] і там результат був [конкретна цифра]. Підготував пропозицію конкретно під твою ситуацію."</em></p>
+    <div class="s301-msg-why">✓ Коли клієнт чує що ти розумієш його біль краще ніж він сам — він починає довіряти.</div>
+</div>
+<div class="s301-msg">
+    <div class="s301-msg-label">Повідомлення 3 — Конкретний крок</div>
+    <p><em>"Я беру білет і приїжджаю до тебе особисто. 45 хвилин — і ти побачиш конкретний план. Коли тобі зручно наступного тижня — вівторок чи четвер?"</em></p>
+    <div class="s301-msg-why">✓ Ти не просиш зустрічі — ти повідомляєш що приїдеш. Купити білет і показати це — сигнал серйозності якого немає у жодного конкурента.</div>
+</div>
+
+<div class="s301-divider"></div>
+
+<div class="s301-label">Техніка 7</div>
+<div class="s301-title">Психологія продажів — принцип нульового програшу</div>
+<div class="s301-block">
+    <p>Ціна помилки при холодному дзвінку або повідомленні — <strong>нуль</strong>. Клієнт сказав ні? Нічого не змінилось. У тебе і так не було цього клієнта.</p>
+    <p>Але якщо він сказав так — це угода яка може змінити твій рік. <strong>Гра завжди на твою користь.</strong></p>
+</div>
+<div class="s301-quote">Уяви — якщо клієнт не купить тобі відрізають ногу. Як би ти тоді продавав? Саме так треба продавати завжди — не тому що відчайдушний, а тому що впевнений у своєму продукті.</div>
+
+<div class="result-block">
+    <strong>Результат уроку.</strong> Ти розумієш різницю між "продавати продукт" і "продавати результат", знаєш 7 технік збільшення чека, маєш готовий скрипт першого контакту і структуру 5 одиничок для фокусу в продажах.
+</div>`,
+
+            lessonContent_ru: `
+<style>
+.s301-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s301-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.s301-block p+p{margin-top:.65rem}
+.s301-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s301-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s301-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s301-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5;margin-bottom:.45rem}
+.s301-ok{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;line-height:1.5;margin-bottom:.45rem}
+.s301-num{width:28px;height:28px;background:#f59e0b;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.s301-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s301-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}
+.s301-steptext{font-size:.82rem;color:#525252;line-height:1.5}
+.s301-case{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:1rem;margin-bottom:.6rem}
+.s301-case-title{font-weight:700;color:#c2410c;font-size:.85rem;margin-bottom:.4rem}
+.s301-case p{font-size:.83rem;color:#374151;line-height:1.6}
+.s301-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.s301-criteria{display:grid;gap:.5rem;margin-top:.6rem}
+.s301-crit{display:flex;gap:.75rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}
+.s301-cnum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.s301-ctitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}
+.s301-ctext{font-size:.78rem;color:#525252;line-height:1.4}
+.s301-msg{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.85rem 1rem;margin-bottom:.5rem}
+.s301-msg-label{font-size:.68rem;font-weight:700;color:#9ca3af;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.3rem}
+.s301-msg p{font-size:.83rem;color:#374151;line-height:1.6}
+.s301-msg-why{font-size:.75rem;color:#22c55e;font-style:italic;margin-top:.4rem}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Главная ошибка 9 из 10 предпринимателей</div></div>
+    <div class="lesson-block-content">
+        <p>Стоматологическая клиника продаёт <em>"лечение зубов"</em>. Строительная компания — <em>"ремонт под ключ"</em>. Все сидят в ценовой конкуренции и никак не могут вырваться на новый уровень дохода.</p>
+        <p>Проблема не в продукте. Проблема в том, что предприниматель не понимает <strong>каким бизнесом он на самом деле занимается</strong>.</p>
+        <div class="s301-quote">Клиент покупает не то что ты делаешь — он покупает то что <strong>меняется в его жизни или бизнесе</strong> после того как ты сделал свою работу.</div>
+    </div>
+</div>
+
+<div class="s301-divider"></div>
+<div class="s301-label">Реальные кейсы из Украины</div>
+
+<div class="s301-case">
+    <div class="s301-case-title">📍 Стоматологическая клиника, Киев</div>
+    <p>Продавали разовые услуги. Средний заработок с клиента в год — 3 500 грн. После перехода на годовую программу обслуживания за 12 000 грн — заработок вырос до 12 000 грн. <strong>Те же клиенты. Та же клиника. Другая упаковка.</strong></p>
+</div>
+<div class="s301-case">
+    <div class="s301-case-title">📍 Компания по ремонту квартир, Львов</div>
+    <p>Средний чек 180 000 грн. После смены позиционирования на <em>"увеличиваем рыночную стоимость вашей квартиры на 30–40%"</em> и фокуса на инвесторов — средний чек вырос до 320 000 грн. <strong>Тот же ремонт — другой клиент — другая цена.</strong></p>
+</div>
+
+<div class="s301-divider"></div>
+<div class="s301-label">7 техник кратко</div>
+
+<div class="s301-step"><div class="s301-num">1</div><div><div class="s301-steptitle">Переосмысление бизнеса</div><div class="s301-steptext">Какое изменение получает клиент после работы с тобой? Одно предложение.</div></div></div>
+<div class="s301-step"><div class="s301-num">2</div><div><div class="s301-steptitle">Стратегия большого чека</div><div class="s301-steptext">Усилие на сделку 50 000 и 500 000 грн — одинаковое. Увеличивай ценность контракта, не количество сделок.</div></div></div>
+<div class="s301-step"><div class="s301-num">3</div><div><div class="s301-steptitle">5 критериев выбора ниши</div><div class="s301-steptext">Количество рынка, острота боли, направление рынка, качество решения, размер разницы. Сумма меньше 18 — вопрос к нише.</div></div></div>
+<div class="s301-step"><div class="s301-num">4</div><div><div class="s301-steptitle">Модель монетизации</div><div class="s301-steptext">Постоянные клиенты с высокой маржой или большой чек за одну сделку. Управление за % — не капитал.</div></div></div>
+<div class="s301-step"><div class="s301-num">5</div><div><div class="s301-steptitle">5 единичек</div><div class="s301-steptext">Один тип клиента → одна боль → один продукт → один канал → один способ закрытия.</div></div></div>
+<div class="s301-step"><div class="s301-num">6</div><div><div class="s301-steptitle">Скрипт первого контакта</div><div class="s301-steptext">3 сообщения: внимание → боль и решение → конкретный шаг. Не проси встречи — сообщай что приедешь.</div></div></div>
+<div class="s301-step"><div class="s301-num">7</div><div><div class="s301-steptitle">Принцип нулевого проигрыша</div><div class="s301-steptext">Цена отказа — ноль. У тебя и так не было этого клиента. Есть только потенциальный выигрыш.</div></div></div>
+
+<div class="result-block">
+    <strong>Результат урока.</strong> Ты понимаешь разницу между "продавать продукт" и "продавать результат", знаешь 7 техник увеличения чека и имеешь готовый скрипт первого контакта.
+</div>`,
+
+            homework: `<ol>
+<li><strong>Аудит (30 хв):</strong> Напиши чесні відповіді — що ти продаєш зараз? Яку реальну зміну отримує клієнт? Скільки коштує середній чек?</li>
+<li><strong>Нове позиціонування:</strong> Сформулюй за формулою — <em>"Ми допомагаємо [тип клієнта] отримати [конкретний результат в цифрах] через [твій підхід]"</em></li>
+<li><strong>5 одиничок:</strong> Заповни — один тип клієнта, один біль, одна пропозиція, один канал, один спосіб закрити угоду</li>
+<li><strong>Скрипт:</strong> Напиши 3 повідомлення під конкретну людину з твого ринку. Надішли — сьогодні, до кінця дня.</li>
+</ol>
+<p style="margin-top:.75rem;font-size:.82rem;color:#6b7280;"><strong>Дедлайн: 48 годин.</strong> Різниця між підприємцем який заробляє і тим який планує — швидкість між думкою і дією.</p>`,
+
+            homework_ru: `<ol>
+<li><strong>Аудит (30 мин):</strong> Напиши честные ответы — что ты продаёшь сейчас? Какое реальное изменение получает клиент? Сколько стоит средний чек?</li>
+<li><strong>Новое позиционирование:</strong> Сформулируй по формуле — <em>"Мы помогаем [тип клиента] получить [конкретный результат в цифрах] через [твой подход]"</em></li>
+<li><strong>5 единичек:</strong> Заполни — один тип клиента, одна боль, одно предложение, один канал, один способ закрытия</li>
+<li><strong>Скрипт:</strong> Напиши 3 сообщения под конкретного человека. Отправь — сегодня, до конца дня.</li>
+</ol>`,
+
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
     ];
     if (window.learningCourseData) {
         window.learningCourseData = window.learningCourseData.concat(strategyCourseData);
