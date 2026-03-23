@@ -5388,6 +5388,18 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
         if (window.refreshIcons) window.refreshIcons();
 
+        // Inject presOverlay (fullscreen presentation) directly into document.body
+        // so it's not affected by overflow:hidden on .l-module-detail
+        var _existOv10 = document.getElementById('l10Ov');
+        var _existOv11 = document.getElementById('l11Ov');
+        if (_existOv10) _existOv10.remove();
+        if (_existOv11) _existOv11.remove();
+        if (module.presOverlay) {
+            var _ovDiv = document.createElement('div');
+            _ovDiv.innerHTML = module.presOverlay;
+            while (_ovDiv.firstChild) document.body.appendChild(_ovDiv.firstChild);
+        }
+
         // Execute <script> tags from lessonContent (innerHTML does not run them)
         setTimeout(function() {
             var _lc = document.querySelector(".l-lesson-content");

@@ -5690,679 +5690,7 @@ Bist du dabei?</div>
 
                 videoLink: null,
                 materialsLink: null,
-
-                lessonContent: `
-<style>
-.l10-section { margin-bottom:1.75rem; }
-.l10-section:last-child { margin-bottom:0; }
-.l10-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
-.l10-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
-.l10-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
-.l10-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
-.l10-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
-.l10-card p+p { margin-top:0.7rem; }
-.l10-situations { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l10-situation { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
-.l10-scale { display:grid; gap:0.4rem; margin-top:0.75rem; counter-reset:scalenum; }
-.l10-scale-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.7rem 0.9rem; background:#f8fafc; border-radius:9px; border:1px solid #e2e8f0; counter-increment:scalenum; }
-.l10-scale-num { width:26px; height:26px; background:#1a1a1a; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; }
-.l10-scale-title { font-weight:700; color:#1a1a1a; font-size:0.84rem; margin-bottom:0.15rem; }
-.l10-scale-text { font-size:0.78rem; color:#525252; line-height:1.4; }
-.l10-motivation { display:grid; gap:0.55rem; margin-top:0.75rem; }
-.l10-motiv-item { padding:0.8rem 0.95rem; border-radius:10px; border:1px solid; }
-.l10-motiv-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem; }
-.l10-motiv-badge { font-size:0.68rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:4px; letter-spacing:0.04em; }
-.l10-motiv-title { font-weight:700; font-size:0.875rem; }
-.l10-motiv-text { font-size:0.82rem; line-height:1.5; }
-.l10-examples { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l10-example { display:flex; align-items:flex-start; gap:0.7rem; padding:0.7rem 0.9rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; }
-.l10-example-icon { width:30px; height:30px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l10-example-label { font-weight:700; color:#1a1a1a; font-size:0.8rem; margin-bottom:0.15rem; }
-.l10-example-text { font-size:0.82rem; color:#525252; line-height:1.45; }
-.l10-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l10-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
-.l10-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
-.l10-step-body { flex:1; }
-.l10-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l10-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l10-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l10-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
-.l10-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
-.l10-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
-.l10-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l10-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
-.l10-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l10-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
-.l10-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.9rem; color:#166534; font-style:italic; line-height:1.6; }
-.l10-schema { display:flex; align-items:center; gap:0.4rem; padding:0.85rem 1rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; margin-top:0.75rem; flex-wrap:wrap; }
-.l10-schema-item { font-weight:700; color:#166534; font-size:0.85rem; }
-.l10-schema-arrow { color:#22c55e; font-weight:700; }
-.l10-bad-good { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
-.l10-bad-col { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
-.l10-good-col { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
-.l10-col-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
-.l10-col-items { display:grid; gap:0.35rem; }
-.l10-col-item { font-size:0.82rem; line-height:1.45; }
-</style>
-
-<div class="l10-section">
-    <div class="l10-section-label">Розділ 1</div>
-    <div class="l10-section-title">Головна перешкода впровадження: чому команда саботує зміни</div>
-    <div class="l10-card">
-        <p>Кожен власник, який намагається навести лад у бізнесі, стикається з одним і тим же: найближчі, найлояльніші співробітники раптом починають чинити опір. Людина, якій ви довіряли роками, раптом виявляє незадоволення. Хтось подає у відставку. Інші починають ставити під сумнів ваші рішення.</p>
-        <p>Здається, що це зрада. Але насправді — це закономірність.</p>
-    </div>
-
-    <div class="l10-section-label" style="margin-top:1rem;">Скільки коштує втрата одного співробітника</div>
-    <div class="l10-card">
-        <p>За міжнародними дослідженнями, втрата одного співробітника коштує від 6 до 12 місяців його зарплати. Якщо ваш керівник відділу отримує 40 000 грн на місяць — його звільнення обійдеться вам мінімум у 240 000 грн. Але це лише пряма, видима втрата.</p>
-    </div>
-    <div class="l10-situations">
-        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Людина, яка звільняється, активно критикує вас перед рештою команди</div>
-        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Інші співробітники починають сумніватися: «А може, він правий?»</div>
-        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Ваш час іде на вирішення конфліктів замість розвитку бізнесу</div>
-        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Пошук і адаптація нової людини займає від 2 до 6 місяців — і не гарантує результату</div>
-    </div>
-
-    <div class="l10-section-label" style="margin-top:1rem;">Чому люди опираються — справжня причина</div>
-    <div class="l10-card">
-        <p>Більшість власників думають, що опір — це нелояльність або лінь. Насправді причина набагато простіша: <strong>ви впроваджуєте зміни, бо бачите проблему. Але чи бачать її ваші співробітники?</strong></p>
-        <p>Щоб змінити поведінку людини — потрібно дати їй більшу, значущу мету, яка переважить бажання зберегти статус-кво. Цілі повинні бути справді великими — такими, що викликають ентузіазм і бажання бути частиною чогось більшого.</p>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Розділ 2</div>
-    <div class="l10-section-title">Мета і задум компанії — фундамент всього</div>
-    <div class="l10-card">
-        <p>Все у вашому бізнесі — структура, правила, мотивація команди, навіть конкретні рішення щодня — має спиратися на дві речі: мету і задум. Без них компанія схожа на корабель без компасу: рухається, але не знає куди.</p>
-    </div>
-
-    <div class="l10-section-label" style="margin-top:1rem;">Що таке мета</div>
-    <div class="l10-card">
-        <p>Мета — це основна ідея компанії. Вона відповідає на питання: <strong>для чого ми існуємо? Що зміниться у світі, якщо ми будемо успішні?</strong></p>
-        <p>Типова помилка: «Моя мета — заробити гроші». Це все одно що сказати: «Мета мого існування — дихати». Технічно правда, але це не пояснює, навіщо ви обрали саме цей бізнес. Гроші — це енергія для досягнення мети. Але не сама мета.</p>
-    </div>
-    <div class="l10-examples">
-        <div class="l10-example">
-            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div><div class="l10-example-label">Консалтингова компанія</div><div class="l10-example-text">Зробити малий бізнес розумнішим, ефективнішим і незалежним від власника</div></div>
-        </div>
-        <div class="l10-example">
-            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div><div class="l10-example-label">Стоматологія</div><div class="l10-example-text">Зробити людей здоровими і впевненими у своїй посмішці</div></div>
-        </div>
-        <div class="l10-example">
-            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div><div class="l10-example-label">Будівельна компанія</div><div class="l10-example-text">Створювати комфортне та безпечне житло для сімей</div></div>
-        </div>
-    </div>
-    <div class="l10-quote">Запитайте себе: як змінюється життя людей завдяки моєму бізнесу? Що зникне зі світу, якщо моя компанія закриється?</div>
-
-    <div class="l10-section-label" style="margin-top:1rem;">Що таке задум</div>
-    <div class="l10-card">
-        <p>Якщо мета відповідає на питання «навіщо», то задум відповідає на питання «як». Задум — це ваш унікальний спосіб досягати мети. Те, що ви робите — і чого свідомо <strong>НЕ</strong> робите.</p>
-        <p>Важливо: задум не вигадують з нуля. Він відображає ваш реальний досвід і розуміння ринку. Він базується на тому, як ви вже досягаєте успіху — просто це ще не сформульовано.</p>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Розділ 3</div>
-    <div class="l10-section-title">Адміністративна шкала — хребет бізнесу</div>
-    <div class="l10-card">
-        <p>Уявіть: у вас є нова ідея. Нова послуга, новий напрямок, нова акція. Як зрозуміти — це хороша ідея чи погана? Більшість власників вирішують «на відчуттях». Результат: витрачені гроші, час і розфокус.</p>
-        <p>Великі компанії мають інструмент для перевірки будь-якої ідеї. Coca-Cola не починає продавати ковбасу. McDonald's не відкриває автосалони. Вони знають свій шлях — і кожна нова ідея перевіряється: чи вона на цьому шляху? Цей інструмент називається <strong>адміністративна шкала</strong>.</p>
-    </div>
-    <div class="l10-section-label" style="margin-top:1rem;">10 рівнів шкали (від найвищого до найнижчого)</div>
-    <div class="l10-scale">
-        <div class="l10-scale-item"><div class="l10-scale-num">1</div><div><div class="l10-scale-title">Мета</div><div class="l10-scale-text">Навіщо ми існуємо</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">2</div><div><div class="l10-scale-title">Задум</div><div class="l10-scale-text">Як саме ми досягаємо мети</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">3</div><div><div class="l10-scale-title">Політика</div><div class="l10-scale-text">Письмові правила, в яких рамках діємо</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">4</div><div><div class="l10-scale-title">Плани</div><div class="l10-scale-text">Що ми робимо в найближчий горизонт</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">5</div><div><div class="l10-scale-title">Програми</div><div class="l10-scale-text">Конкретні ініціативи для досягнення планів</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">6</div><div><div class="l10-scale-title">Проекти</div><div class="l10-scale-text">Деталізація конкретних завдань</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">7</div><div><div class="l10-scale-title">Накази</div><div class="l10-scale-text">Конкретні вказівки конкретним людям</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">8</div><div><div class="l10-scale-title">Ідеальна картина</div><div class="l10-scale-text">Як виглядає успішний результат</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">9</div><div><div class="l10-scale-title">Статистика</div><div class="l10-scale-text">Метрики, які показують чи рухаємося до мети</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">10</div><div><div class="l10-scale-title">Кінцевий продукт</div><div class="l10-scale-text">Що конкретно виробляє компанія або відділ</div></div></div>
-    </div>
-    <div class="l10-quote">Головний принцип: кожен рівень має відповідати іншим. Якщо ваш наказ суперечить меті — щось піде не так. Якщо план суперечить задуму — зусилля витрачаються даремно.</div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Розділ 4</div>
-    <div class="l10-section-title">Політика компанії — правила, які рятують бізнес</div>
-    <div class="l10-card">
-        <p>Без чітких письмових правил кожен вирішує по-своєму. «Пацієнт просить знижку — давати?» «Клієнт залишив поганий відгук — як реагувати?» «Лікар запізнився — що говорити пацієнту?» І кожного разу — питання до вас.</p>
-        <p>Політика компанії — це письмові правила, які говорять співробітникам, як діяти в різних ситуаціях. Не «як хочеш», а «як правильно для нашої компанії».</p>
-    </div>
-    <div class="l10-card" style="margin-top:0.6rem;">
-        <p><strong>Класичний приклад з Apple:</strong> Стів Джобс мав чіткий задум — Apple контролює все: залізо, операційну систему і програмне забезпечення. Але він не записав це правило офіційно. Коли його звільнили, нове керівництво почало продавати ліцензії на macOS. Якість Apple впала, задум зруйнувався, компанія опинилася на межі банкрутства.</p>
-    </div>
-    <div class="l10-quote">Якщо немає письмових правил — ви самі стаєте заручником бізнесу. Вам доводиться особисто вирішувати кожну ситуацію і ви фізично не можете поїхати у відпустку.</div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Розділ 5</div>
-    <div class="l10-section-title">Технологія бізнесу — як вийти з пастки «незамінних»</div>
-    <div class="l10-card">
-        <p>Скільки разів ви пояснювали одне й те саме? Новому співробітнику. Потім ще одному. Кожен раз — як вперше. Тому що «як треба робити» — у вашій голові, а не на папері.</p>
-        <p>Технологія — це послідовність дій, яка дає передбачуваний результат. Не філософія. Не теорія. Чіткі кроки: роби так — отримаєш це.</p>
-    </div>
-    <div class="l10-section-label" style="margin-top:1rem;">Чотири наслідки роботи без описаних процесів</div>
-    <div class="l10-situations">
-        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо масштабувати.</strong> Хочете відкрити другу точку? Як ви передасте «як треба робити»? Ніяк — це тільки у вашій голові.</div></div>
-        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо навчати людей.</strong> Новий співробітник приходить, ви витрачаєте тижні на навчання, він звільняється — і все спочатку.</div></div>
-        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо контролювати якість.</strong> Як перевірити чи правильно зробили? Якщо немає стандарту — немає критерію.</div></div>
-        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Ви стаєте заручником «незамінних».</strong> Є Петро, який «знає як». Без Петра — все зупиняється. Петро це знає. І користується цим.</div></div>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Розділ 6</div>
-    <div class="l10-section-title">Рівні мотивації — чому одні горять роботою, а іншим байдуже</div>
-    <div class="l10-card">
-        <p>Мотивація — це внутрішнє бажання щось робити. Не тому що змушують або платять, а тому що людина сама хоче. І важливий нюанс: мотивований новачок часто цінніший, ніж досвідчений байдужий — бо мотивований <em>вчиться</em>.</p>
-    </div>
-    <div class="l10-motivation">
-        <div class="l10-motiv-item" style="background:#f0fdf4;border-color:#bbf7d0;">
-            <div class="l10-motiv-header">
-                <span class="l10-motiv-badge" style="background:#22c55e;color:white;">РІВЕНЬ 1</span>
-                <span class="l10-motiv-title" style="color:#166534;">Почуття обов'язку</span>
-            </div>
-            <div class="l10-motiv-text" style="color:#166534;">Людина відчуває глибоку відповідальність за справу. Вона дбає про компанію більше, ніж про себе. Розуміє цілі компанії і відчуває: «Це — моя справа». Власники бізнесу і «старожили» часто перебувають на цьому рівні.</div>
-        </div>
-        <div class="l10-motiv-item" style="background:#eff6ff;border-color:#bfdbfe;">
-            <div class="l10-motiv-header">
-                <span class="l10-motiv-badge" style="background:#3b82f6;color:white;">РІВЕНЬ 2</span>
-                <span class="l10-motiv-title" style="color:#1e40af;">Особиста переконаність</span>
-            </div>
-            <div class="l10-motiv-text" style="color:#1e3a8a;">Людина вірить у свої принципи і в цінність своєї роботи. Лікар, який справді хоче допомагати людям. Програміст, який пишається якістю коду. Вони роблять добре, бо для них це питання особистої честі.</div>
-        </div>
-        <div class="l10-motiv-item" style="background:#fff7ed;border-color:#fed7aa;">
-            <div class="l10-motiv-header">
-                <span class="l10-motiv-badge" style="background:#f97316;color:white;">РІВЕНЬ 3</span>
-                <span class="l10-motiv-title" style="color:#c2410c;">Особиста вигода</span>
-            </div>
-            <div class="l10-motiv-text" style="color:#9a3412;">Людина шукає, що вона отримає особисто: бонус, кар'єрне зростання, нові навички. Це не погано — з цим можна і треба працювати. Але вона не буде «горіти» заради компанії.</div>
-        </div>
-        <div class="l10-motiv-item" style="background:#fef2f2;border-color:#fecaca;">
-            <div class="l10-motiv-header">
-                <span class="l10-motiv-badge" style="background:#ef4444;color:white;">РІВЕНЬ 4</span>
-                <span class="l10-motiv-title" style="color:#b91c1c;">Гроші</span>
-            </div>
-            <div class="l10-motiv-text" style="color:#991b1b;">Найнижчий рівень. Людину цікавить тільки зарплата. Плати — працює. Не платиш — не працює. Жодної ініціативи, жодного «понаднорми заради результату».</div>
-        </div>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Розділ 7</div>
-    <div class="l10-section-title">Як підвищувати мотивацію — єдиний інструмент, який працює завжди</div>
-    <div class="l10-card">
-        <p>Мотивація залежить від того, що людина вважає реальним. Гроші — реальні для всіх. А велика місія компанії, вплив на суспільство? Для одних — реально. Для інших — пусті красиві слова.</p>
-        <p>Але ключовий момент: людина, яка чує тільки ритм, може навчитися чути більше — якщо буде слухати, аналізувати, тренуватися.</p>
-    </div>
-    <div class="l10-section-label" style="margin-top:1rem;">Формула підвищення мотивації</div>
-    <div class="l10-schema">
-        <span class="l10-schema-item">Показуєте ціль</span>
-        <span class="l10-schema-arrow">→</span>
-        <span class="l10-schema-item">Утримуєте увагу</span>
-        <span class="l10-schema-arrow">→</span>
-        <span class="l10-schema-item">Ціль стає реальною</span>
-        <span class="l10-schema-arrow">→</span>
-        <span class="l10-schema-item">Людина мотивована</span>
-    </div>
-    <div class="l10-card" style="margin-top:0.75rem;">
-        <p>Утримувати увагу на великих цілях — важко. Коли є тиск і стрес — увага йде на виживання. Людина забуває про великі цілі, фокус — на рахунках і конфліктах. Рішення: <strong>постійно нагадувати</strong>. Регулярно розповідати про цілі. Показувати, як робота впливає на конкретних людей і клієнтів.</p>
-    </div>
-    <div class="l10-examples">
-        <div class="l10-example">
-            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
-            <div><div class="l10-example-label">Шиномонтаж</div><div class="l10-example-text">«Твоя робота рятує життя на дорозі. Кожна правильно встановлена шина — це безпека сім'ї»</div></div>
-        </div>
-        <div class="l10-example">
-            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
-            <div><div class="l10-example-label">Стоматологія</div><div class="l10-example-text">«Ти повертаєш людям впевненість у собі. Це більше, ніж просто лікування зубів»</div></div>
-        </div>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Розділ 8</div>
-    <div class="l10-section-title">Як донести цілі та задум до команди</div>
-    <div class="l10-card">
-        <p>Ви сформулювали мету і задум. Але якщо про це знаєте тільки ви — це нічого не змінить. Завдання: зробити так, щоб кожен у команді знав, куди рухається компанія — і чому.</p>
-    </div>
-    <div class="l10-section-label" style="margin-top:1rem;">Простий план з 4 кроків</div>
-    <div class="l10-steps">
-        <div class="l10-step">
-            <div class="l10-step-num">1</div>
-            <div class="l10-step-body">
-                <div class="l10-step-title">Створіть офіційний письмовий документ</div>
-                <div class="l10-step-text">Не розмова, не «всі і так знають» — письмовий документ із підписом засновника. Три частини: мета компанії, задум і коротка історія. Підпис сигналізує команді: «Це серйозно. Це від першої особи».</div>
-            </div>
-        </div>
-        <div class="l10-step">
-            <div class="l10-step-num">2</div>
-            <div class="l10-step-body">
-                <div class="l10-step-title">Офіційно презентуйте документ команді</div>
-                <div class="l10-step-text">Зберіть всіх разом — на планерці, окремій зустрічі або щомісячних зборах. Головне — щоб були всі ключові люди.</div>
-            </div>
-        </div>
-        <div class="l10-step">
-            <div class="l10-step-num">3</div>
-            <div class="l10-step-body">
-                <div class="l10-step-title">Запишіть виступ на відео</div>
-                <div class="l10-step-text">Якщо хтось пропустив — надішліть відео. Новий співробітник — дайте подивитись у перший день. Через рік забули — можна переглянути і освіжити.</div>
-            </div>
-        </div>
-        <div class="l10-step">
-            <div class="l10-step-num">4</div>
-            <div class="l10-step-body">
-                <div class="l10-step-title">Регулярно нагадуйте</div>
-                <div class="l10-step-text">Мета і задум — це не «сказав один раз і забув». Повертайтеся до них на зборах, при прийнятті рішень, при поясненні змін. Це тримає всю команду на одній хвилі.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Розділ 9</div>
-    <div class="l10-section-title">Як провести перше заняття — практичний алгоритм</div>
-    <div class="l10-card">
-        <p>Перше заняття, де ви презентуєте цілі і задум команді, задає тон всьому подальшому. Якщо зробите добре — співробітники підтримають зміни і почнуть рухатися разом. Якщо погано — сприймуть це як «чергову нісенітницю від шефа».</p>
-        <p>Більшість співробітників сприймають нові інструменти як «зайве навантаження». Вирішення — <strong>спочатку мета, потім інструменти</strong>. Ніяк не навпаки.</p>
-    </div>
-    <div class="l10-section-label" style="margin-top:1rem;">4 результати першого заняття</div>
-    <div class="l10-result-list" style="margin-top:0.5rem;">
-        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>«Ми — команда» — всі рухаються до спільної мети</div>
-        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Спільна мета — конкретна, з цифрами та ідеальною картиною</div>
-        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Навіщо вчитися — кожен розуміє, що це дасть особисто йому</div>
-        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Реальна підтримка змін — не формальна, а щира</div>
-    </div>
-    <div class="l10-section-label" style="margin-top:1rem;">7 кроків підготовки</div>
-    <div class="l10-steps">
-        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">1</div><div class="l10-step-body"><div class="l10-step-title">Місце, час, список</div><div class="l10-step-text">Визначте де, коли і хто буде присутній. Повний список учасників.</div></div></div>
-        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">2</div><div class="l10-step-body"><div class="l10-step-title">Надішліть офіційне запрошення</div><div class="l10-step-text">Не «якщо зможете», а «обов'язково будьте». Це важливо для сприйняття серйозності.</div></div></div>
-        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">3</div><div class="l10-step-body"><div class="l10-step-title">Підготуйте тези</div><div class="l10-step-text">Запишіть тези для виступу, але не читайте з паперу. Має звучати природно, як ваші слова.</div></div></div>
-        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">4</div><div class="l10-step-body"><div class="l10-step-title">Створіть презентацію</div><div class="l10-step-text">Кілька слайдів з цілями та задумом, ідеальною картиною майбутнього і важливими фактами з історії компанії.</div></div></div>
-        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">5</div><div class="l10-step-body"><div class="l10-step-title">Відрепетируйте</div><div class="l10-step-text">Перед дзеркалом або перед довіреною людиною. Це допоможе почуватися впевнено.</div></div></div>
-        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">6</div><div class="l10-step-body"><div class="l10-step-title">Роздайте письмову політику</div><div class="l10-step-text">Всі учасники повинні отримати документ з цілями і задумом — на занятті або одразу після.</div></div></div>
-        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">7</div><div class="l10-step-body"><div class="l10-step-title">Зберіть відгуки</div><div class="l10-step-text">Дайте можливість відповісти на кілька запитань після заняття. Хто підтримує? Хто сумнівається?</div></div></div>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Завдання</div>
-    <div class="l10-section-title">Розробіть Політику цілей і задуму через AI-асистента</div>
-    <div class="l10-steps">
-        <div class="l10-step">
-            <div class="l10-step-num">1</div>
-            <div class="l10-step-body">
-                <div class="l10-step-title">Пройдіть діалог з AI-коучем цілей</div>
-                <div class="l10-step-text">Асистент проведе вас через формулювання мети, задуму, ідеальної картини та історії бізнесу</div>
-            </div>
-        </div>
-        <div class="l10-step">
-            <div class="l10-step-num">2</div>
-            <div class="l10-step-body">
-                <div class="l10-step-title">Збережіть результат у Google Docs</div>
-                <div class="l10-step-text">На виході — готова «Політика цілей і задуму компанії» з підписом засновника</div>
-            </div>
-        </div>
-        <div class="l10-step">
-            <div class="l10-step-num">3</div>
-            <div class="l10-step-body">
-                <div class="l10-step-title">Проведіть презентацію для команди</div>
-                <div class="l10-step-text">Зберіть усіх, розкажіть про мету і задум, запишіть виступ на відео</div>
-            </div>
-        </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
-        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Час на впровадження</div>
-        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 години: 1 год на діалог з AI і підготовку документа + 2 год на проведення презентації для команди</div>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Інструмент</div>
-    <div class="l10-tool">
-        <div class="l10-tool-header">
-            <div class="l10-tool-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            </div>
-            <div>
-                <div class="l10-tool-title">AI-коуч цілей і задуму</div>
-                <div class="l10-tool-desc">Асистент веде діалог і допомагає сформулювати мету, задум, ідеальну картину та історію компанії. На виході — готовий документ «Політика цілей і задуму» для підпису засновника і презентації команді.</div>
-            </div>
-        </div>
-        <a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Розробити ціль і задум компанії
-        </a>
-    </div>
-</div>`,
-
-                lessonContent_ru: `
-<style>
-.l10-section { margin-bottom:1.75rem; }
-.l10-section:last-child { margin-bottom:0; }
-.l10-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
-.l10-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
-.l10-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
-.l10-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
-.l10-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
-.l10-card p+p { margin-top:0.7rem; }
-.l10-situations { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l10-situation { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
-.l10-scale { display:grid; gap:0.4rem; margin-top:0.75rem; }
-.l10-scale-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.7rem 0.9rem; background:#f8fafc; border-radius:9px; border:1px solid #e2e8f0; }
-.l10-scale-num { width:26px; height:26px; background:#1a1a1a; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; }
-.l10-scale-title { font-weight:700; color:#1a1a1a; font-size:0.84rem; margin-bottom:0.15rem; }
-.l10-scale-text { font-size:0.78rem; color:#525252; line-height:1.4; }
-.l10-motivation { display:grid; gap:0.55rem; margin-top:0.75rem; }
-.l10-motiv-item { padding:0.8rem 0.95rem; border-radius:10px; border:1px solid; }
-.l10-motiv-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem; }
-.l10-motiv-badge { font-size:0.68rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:4px; letter-spacing:0.04em; }
-.l10-motiv-title { font-weight:700; font-size:0.875rem; }
-.l10-motiv-text { font-size:0.82rem; line-height:1.5; }
-.l10-examples { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l10-example { display:flex; align-items:flex-start; gap:0.7rem; padding:0.7rem 0.9rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; }
-.l10-example-icon { width:30px; height:30px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l10-example-label { font-weight:700; color:#1a1a1a; font-size:0.8rem; margin-bottom:0.15rem; }
-.l10-example-text { font-size:0.82rem; color:#525252; line-height:1.45; }
-.l10-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l10-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
-.l10-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
-.l10-step-body { flex:1; }
-.l10-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l10-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l10-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l10-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
-.l10-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
-.l10-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
-.l10-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l10-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
-.l10-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l10-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
-.l10-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.9rem; color:#166534; font-style:italic; line-height:1.6; }
-.l10-schema { display:flex; align-items:center; gap:0.4rem; padding:0.85rem 1rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; margin-top:0.75rem; flex-wrap:wrap; }
-.l10-schema-item { font-weight:700; color:#166534; font-size:0.85rem; }
-.l10-schema-arrow { color:#22c55e; font-weight:700; }
-</style>
-
-<div class="l10-section">
-    <div class="l10-section-label">Раздел 1</div>
-    <div class="l10-section-title">Главное препятствие внедрения: почему команда саботирует изменения</div>
-    <div class="l10-card">
-        <p>Каждый владелец, который пытается навести порядок в бизнесе, сталкивается с одним и тем же: самые близкие, самые лояльные сотрудники вдруг начинают сопротивляться. Кажется, что это предательство. Но на самом деле — это закономерность.</p>
-        <p>По международным исследованиям, потеря одного сотрудника обходится от 6 до 12 месяцев его зарплаты. Причина сопротивления проста: <strong>вы внедряете изменения, потому что видите проблему. Но видят ли её ваши сотрудники?</strong></p>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Раздел 2</div>
-    <div class="l10-section-title">Цель и замысел компании — фундамент всего</div>
-    <div class="l10-card">
-        <p>Цель — это основная идея компании. Она отвечает на вопрос: <strong>для чего мы существуем? Что изменится в мире, если мы будем успешны?</strong></p>
-        <p>Типичная ошибка: «Моя цель — заработать деньги». Деньги — это энергия для достижения цели. Но не сама цель.</p>
-    </div>
-    <div class="l10-examples">
-        <div class="l10-example">
-            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div><div class="l10-example-label">Консалтинговая компания</div><div class="l10-example-text">Сделать малый бизнес умнее, эффективнее и независимым от владельца</div></div>
-        </div>
-        <div class="l10-example">
-            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div><div class="l10-example-label">Стоматология</div><div class="l10-example-text">Сделать людей здоровыми и уверенными в своей улыбке</div></div>
-        </div>
-        <div class="l10-example">
-            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div><div class="l10-example-label">Строительная компания</div><div class="l10-example-text">Создавать комфортное и безопасное жильё для семей</div></div>
-        </div>
-    </div>
-    <div class="l10-card" style="margin-top:0.75rem;">
-        <p>Замысел — это ваш уникальный способ достигать цели. То, что вы делаете — и чего сознательно <strong>НЕ</strong> делаете. Замысел не придумывают с нуля — он отражает ваш реальный опыт и понимание рынка.</p>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Раздел 3</div>
-    <div class="l10-section-title">Административная шкала — хребет бизнеса</div>
-    <div class="l10-card">
-        <p>Coca-Cola не начинает продавать колбасу. McDonald's не открывает автосалоны. Они знают свой путь — и каждая новая идея проверяется: она на этом пути? Этот инструмент называется <strong>административная шкала</strong>.</p>
-    </div>
-    <div class="l10-scale">
-        <div class="l10-scale-item"><div class="l10-scale-num">1</div><div><div class="l10-scale-title">Цель</div><div class="l10-scale-text">Зачем мы существуем</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">2</div><div><div class="l10-scale-title">Замысел</div><div class="l10-scale-text">Как именно мы достигаем цели</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">3</div><div><div class="l10-scale-title">Политика</div><div class="l10-scale-text">Письменные правила, в рамках которых действуем</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">4</div><div><div class="l10-scale-title">Планы</div><div class="l10-scale-text">Что делаем в ближайший горизонт</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">5</div><div><div class="l10-scale-title">Программы</div><div class="l10-scale-text">Конкретные инициативы для достижения планов</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">6</div><div><div class="l10-scale-title">Проекты</div><div class="l10-scale-text">Детализация конкретных задач</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">7</div><div><div class="l10-scale-title">Приказы</div><div class="l10-scale-text">Конкретные указания конкретным людям</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">8</div><div><div class="l10-scale-title">Идеальная картина</div><div class="l10-scale-text">Как выглядит успешный результат</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">9</div><div><div class="l10-scale-title">Статистика</div><div class="l10-scale-text">Метрики, которые показывают движемся ли к цели</div></div></div>
-        <div class="l10-scale-item"><div class="l10-scale-num">10</div><div><div class="l10-scale-title">Конечный продукт</div><div class="l10-scale-text">Что конкретно производит компания или отдел</div></div></div>
-    </div>
-    <div class="l10-quote">Главный принцип: каждый уровень должен соответствовать другим. Если ваш приказ противоречит цели — что-то пойдёт не так.</div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Разделы 4–5</div>
-    <div class="l10-section-title">Политика и технология бизнеса</div>
-    <div class="l10-card">
-        <p>Политика компании — это письменные правила, которые говорят сотрудникам, как действовать в разных ситуациях. Без них каждый решает по-своему — и вы становитесь заложником бизнеса.</p>
-        <p>Технология — это последовательность действий, которая даёт предсказуемый результат. Пока «как надо делать» живёт в вашей голове — бизнес невозможно масштабировать, обучать или контролировать по качеству.</p>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Разделы 6–7</div>
-    <div class="l10-section-title">Уровни мотивации и как её повышать</div>
-    <div class="l10-motivation">
-        <div class="l10-motiv-item" style="background:#f0fdf4;border-color:#bbf7d0;">
-            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#22c55e;color:white;">УРОВЕНЬ 1</span><span class="l10-motiv-title" style="color:#166534;">Чувство долга</span></div>
-            <div class="l10-motiv-text" style="color:#166534;">Человек чувствует глубокую ответственность за дело, заботится о компании больше, чем о себе.</div>
-        </div>
-        <div class="l10-motiv-item" style="background:#eff6ff;border-color:#bfdbfe;">
-            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#3b82f6;color:white;">УРОВЕНЬ 2</span><span class="l10-motiv-title" style="color:#1e40af;">Личная убеждённость</span></div>
-            <div class="l10-motiv-text" style="color:#1e3a8a;">Верит в ценность своей работы. Делает хорошо, потому что это вопрос личной чести.</div>
-        </div>
-        <div class="l10-motiv-item" style="background:#fff7ed;border-color:#fed7aa;">
-            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#f97316;color:white;">УРОВЕНЬ 3</span><span class="l10-motiv-title" style="color:#c2410c;">Личная выгода</span></div>
-            <div class="l10-motiv-text" style="color:#9a3412;">Ищет бонус, карьерный рост, новые навыки. С этим можно и нужно работать.</div>
-        </div>
-        <div class="l10-motiv-item" style="background:#fef2f2;border-color:#fecaca;">
-            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#ef4444;color:white;">УРОВЕНЬ 4</span><span class="l10-motiv-title" style="color:#b91c1c;">Деньги</span></div>
-            <div class="l10-motiv-text" style="color:#991b1b;">Только зарплата. Никакой инициативы, никакой сверхурочной работы ради результата.</div>
-        </div>
-    </div>
-    <div class="l10-schema">
-        <span class="l10-schema-item">Показываете цель</span>
-        <span class="l10-schema-arrow">→</span>
-        <span class="l10-schema-item">Удерживаете внимание</span>
-        <span class="l10-schema-arrow">→</span>
-        <span class="l10-schema-item">Цель становится реальной</span>
-        <span class="l10-schema-arrow">→</span>
-        <span class="l10-schema-item">Человек мотивирован</span>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Задание</div>
-    <div class="l10-section-title">Разработайте Политику целей и замысла через AI-ассистента</div>
-    <div class="l10-steps">
-        <div class="l10-step">
-            <div class="l10-step-num">1</div>
-            <div class="l10-step-body"><div class="l10-step-title">Пройдите диалог с AI-коучем целей</div><div class="l10-step-text">Ассистент проведёт вас через формулировку цели, замысла, идеальной картины и истории бизнеса</div></div>
-        </div>
-        <div class="l10-step">
-            <div class="l10-step-num">2</div>
-            <div class="l10-step-body"><div class="l10-step-title">Сохраните результат в Google Docs</div><div class="l10-step-text">На выходе — готовый документ «Политика целей и замысла компании» с подписью основателя</div></div>
-        </div>
-        <div class="l10-step">
-            <div class="l10-step-num">3</div>
-            <div class="l10-step-body"><div class="l10-step-title">Проведите презентацию для команды</div><div class="l10-step-text">Соберите всех, расскажите о цели и замысле, запишите выступление на видео</div></div>
-        </div>
-    </div>
-</div>
-
-<div class="l10-divider"></div>
-
-<div class="l10-section">
-    <div class="l10-section-label">Инструмент</div>
-    <div class="l10-tool">
-        <div class="l10-tool-header">
-            <div class="l10-tool-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            </div>
-            <div>
-                <div class="l10-tool-title">AI-коуч целей и замысла</div>
-                <div class="l10-tool-desc">Ассистент ведёт диалог и помогает сформулировать цель, замысел, идеальную картину и историю компании. На выходе — готовый документ «Политика целей и замысла» для подписи основателя и презентации команде.</div>
-            </div>
-        </div>
-        <a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Разработать цель и замысел компании
-        </a>
-    </div>
-</div>`,
-
-                lessonContent_en: `<style>.l10e-section{margin-bottom:1.75rem}.l10e-section:last-child{margin-bottom:0}.l10e-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l10e-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l10e-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l10e-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l10e-card p{font-size:.9rem;color:#374151;line-height:1.65}.l10e-card p+p{margin-top:.7rem}.l10e-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l10e-situations{display:grid;gap:.45rem;margin-top:.75rem}.l10e-scale{display:grid;gap:.4rem;margin-top:.75rem}.l10e-scale-item{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}.l10e-snum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}.l10e-stitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}.l10e-stext{font-size:.78rem;color:#525252;line-height:1.4}.l10e-motiv{display:grid;gap:.55rem;margin-top:.75rem}.l10e-mitem{padding:.8rem .95rem;border-radius:10px;border:1px solid}.l10e-mbadge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:.5rem}.l10e-mtitle{font-weight:700;font-size:.875rem}.l10e-mtext{font-size:.82rem;line-height:1.5;margin-top:.35rem}.l10e-steps{display:grid;gap:.6rem;margin-top:.75rem}.l10e-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l10e-stepnum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l10e-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l10e-steptext{font-size:.82rem;color:#525252;line-height:1.5}.l10e-quote{margin-top:.75rem;padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6}.l10e-schema{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.75rem}.l10e-sitem{padding:.5rem .85rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-weight:600;color:#1a1a1a}.l10e-sarrow{color:#9ca3af;font-size:1.1rem}.l10e-example{display:flex;gap:.65rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;margin-top:.45rem}.l10e-eicon{width:24px;height:24px;background:#f0fdf4;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10e-elabel{font-weight:700;color:#1a1a1a;font-size:.82rem}.l10e-etext{font-size:.78rem;color:#525252;line-height:1.4;margin-top:.15rem}.l10e-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-top:.35rem}.l10e-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l10e-toolhdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l10e-toolicon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10e-tooltitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l10e-tooldesc{font-size:.82rem;color:#525252;line-height:1.5}.l10e-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l10e-section"><div class="l10e-label">Section 1</div><div class="l10e-title">The main obstacle to implementation: why the team sabotages change</div><div class="l10e-card"><p>Every owner who tries to bring order to their business faces the same thing: the closest, most loyal employees suddenly start resisting. The person you trusted for years suddenly shows dissatisfaction. Someone quits. Others start questioning your decisions.</p><p>It seems like betrayal. But in reality — it's a pattern.</p></div><div class="l10e-label" style="margin-top:1rem">What losing one employee costs</div><div class="l10e-card"><p>According to international research, losing one employee costs between 6 and 12 months of their salary. If your department head earns $4,000/month — their departure will cost you at least $24,000. But this is only the direct, visible loss.</p></div><div class="l10e-situations"><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>The person who quits actively criticizes you in front of the rest of the team</div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Other employees start doubting: "Maybe they're right?"</div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Your time goes to conflict resolution instead of business development</div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Finding and onboarding a new person takes 2–6 months — with no guaranteed result</div></div><div class="l10e-label" style="margin-top:1rem">Why people resist — the real reason</div><div class="l10e-card"><p>Most owners think resistance means disloyalty or laziness. In reality the reason is much simpler: <strong>you implement changes because you see the problem. But do your employees see it?</strong></p><p>To change a person's behavior — you need to give them a bigger, meaningful goal that outweighs the desire to preserve the status quo. Goals must be truly big — ones that create enthusiasm and a desire to be part of something larger.</p></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 2</div><div class="l10e-title">Company goal and vision — the foundation of everything</div><div class="l10e-card"><p>Everything in your business — structure, rules, team motivation, even daily decisions — must be based on two things: goal and vision. Without them the company is like a ship without a compass: moving, but not knowing where.</p></div><div class="l10e-label" style="margin-top:1rem">What a goal is</div><div class="l10e-card"><p>The goal is the core idea of the company. It answers: <strong>why do we exist? What will change in the world if we succeed?</strong></p><p>Typical mistake: "My goal is to make money." That's like saying "The purpose of my existence is to breathe." Money is energy for achieving the goal. But not the goal itself.</p></div><div class="l10e-example"><div class="l10e-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10e-elabel">Consulting company</div><div class="l10e-etext">Make small businesses smarter, more efficient and independent from the owner</div></div></div><div class="l10e-example"><div class="l10e-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10e-elabel">Dental clinic</div><div class="l10e-etext">Make people healthy and confident in their smile</div></div></div><div class="l10e-quote">Ask yourself: how does people's lives change thanks to my business? What will disappear from the world if my company closes?</div><div class="l10e-label" style="margin-top:1rem">What a vision is</div><div class="l10e-card"><p>If the goal answers "why", the vision answers "how". Vision is your unique way of achieving the goal. What you do — and what you consciously do <strong>NOT</strong> do.</p><p>Important: vision is not invented from scratch. It reflects your real experience and market understanding. It is based on how you already succeed — it's just not yet articulated.</p></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 3</div><div class="l10e-title">The administrative scale — the backbone of business</div><div class="l10e-card"><p>Imagine you have a new idea. A new service, a new direction, a new promotion. How do you know — is it a good idea or bad? Most owners decide "by feel." Result: wasted money, time and focus.</p><p>Large companies have a tool for testing any idea. Coca-Cola doesn't start selling sausage. McDonald's doesn't open car dealerships. They know their path — and every new idea is checked: is it on that path? This tool is called the <strong>administrative scale</strong>.</p></div><div class="l10e-label" style="margin-top:1rem">10 scale levels (from highest to lowest)</div><div class="l10e-scale"><div class="l10e-scale-item"><div class="l10e-snum">1</div><div><div class="l10e-stitle">Goal</div><div class="l10e-stext">Why we exist</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">2</div><div><div class="l10e-stitle">Vision</div><div class="l10e-stext">Exactly how we achieve the goal</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">3</div><div><div class="l10e-stitle">Policy</div><div class="l10e-stext">Written rules within which we operate</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">4</div><div><div class="l10e-stitle">Plans</div><div class="l10e-stext">What we do in the nearest horizon</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">5</div><div><div class="l10e-stitle">Programs</div><div class="l10e-stext">Specific initiatives to achieve plans</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">6</div><div><div class="l10e-stitle">Projects</div><div class="l10e-stext">Detailed breakdown of specific tasks</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">7</div><div><div class="l10e-stitle">Orders</div><div class="l10e-stext">Specific instructions to specific people</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">8</div><div><div class="l10e-stitle">Ideal scene</div><div class="l10e-stext">What a successful result looks like</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">9</div><div><div class="l10e-stitle">Statistics</div><div class="l10e-stext">Metrics showing whether we're moving toward the goal</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">10</div><div><div class="l10e-stitle">Final product</div><div class="l10e-stext">What specifically the company or department produces</div></div></div></div><div class="l10e-quote">The main principle: each level must match the others. If your order contradicts the goal — something will go wrong. If a plan contradicts the vision — effort is wasted.</div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 4</div><div class="l10e-title">Company policy — rules that save the business</div><div class="l10e-card"><p>Without clear written rules everyone decides on their own. "The patient asks for a discount — give it?" "The client left a bad review — how to respond?" "The doctor was late — what to tell the patient?" And every time — a question to you.</p><p>Company policy is written rules that tell employees how to act in different situations. Not "however you want" but "the way that is right for our company".</p></div><div class="l10e-card" style="margin-top:.6rem"><p><strong>Classic Apple example:</strong> Steve Jobs had a clear vision — Apple controls everything: hardware, the operating system and software. But he didn't write this rule officially. When he was fired, new management started selling macOS licenses. Apple quality dropped, the vision collapsed, the company nearly went bankrupt.</p></div><div class="l10e-quote">If there are no written rules — you become a hostage of the business. You have to personally resolve every situation and you physically cannot go on vacation.</div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 5</div><div class="l10e-title">Business technology — how to escape the "indispensable" trap</div><div class="l10e-card"><p>How many times have you explained the same thing? To a new employee. Then another one. Every time — as if for the first time. Because "how it should be done" is in your head, not on paper.</p><p>Technology is a sequence of actions that produces a predictable result. Not philosophy. Not theory. Clear steps: do this — get that.</p></div><div class="l10e-label" style="margin-top:1rem">Four consequences of working without documented processes</div><div class="l10e-situations"><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Impossible to scale.</strong> Want to open a second location? How do you transfer "how it should be done"? You can't — it's only in your head.</div></div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Impossible to train people.</strong> A new employee comes, you spend weeks training, they quit — and start over.</div></div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Impossible to control quality.</strong> How do you check if it was done correctly? If there's no standard — there's no criterion.</div></div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>You become hostage to the "indispensable".</strong> There's Peter who "knows how." Without Peter — everything stops. Peter knows this. And uses it.</div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 6</div><div class="l10e-title">Motivation levels — why some burn with work and others don't care</div><div class="l10e-card"><p>Motivation is an internal desire to do something. Not because forced or paid, but because the person genuinely wants to. A motivated beginner is often more valuable than an experienced but indifferent person — because the motivated one <em>learns</em>.</p></div><div class="l10e-motiv"><div class="l10e-mitem" style="background:#f0fdf4;border-color:#bbf7d0"><span class="l10e-mbadge" style="background:#22c55e;color:white">LEVEL 1</span><span class="l10e-mtitle" style="color:#166534">Sense of duty</span><div class="l10e-mtext" style="color:#166534">The person feels deep responsibility for the cause. They care about the company more than themselves. Understands the company's goals and feels: "This is my business." Owners and "veterans" are often at this level.</div></div><div class="l10e-mitem" style="background:#eff6ff;border-color:#bfdbfe"><span class="l10e-mbadge" style="background:#3b82f6;color:white">LEVEL 2</span><span class="l10e-mtitle" style="color:#1e40af">Personal conviction</span><div class="l10e-mtext" style="color:#1e3a8a">The person believes in their principles and in the value of their work. A doctor who genuinely wants to help people. A programmer who takes pride in code quality. They do well because it's a matter of personal honor.</div></div><div class="l10e-mitem" style="background:#fff7ed;border-color:#fed7aa"><span class="l10e-mbadge" style="background:#f97316;color:white">LEVEL 3</span><span class="l10e-mtitle" style="color:#c2410c">Personal benefit</span><div class="l10e-mtext" style="color:#9a3412">The person looks for what they'll get personally: bonus, career growth, new skills. Not bad — you can work with it. But they won't "burn" for the company.</div></div><div class="l10e-mitem" style="background:#fef2f2;border-color:#fecaca"><span class="l10e-mbadge" style="background:#ef4444;color:white">LEVEL 4</span><span class="l10e-mtitle" style="color:#b91c1c">Money</span><div class="l10e-mtext" style="color:#991b1b">The lowest level. Only interested in salary. Pay — works. Don't pay — doesn't work. Zero initiative, zero "going beyond for results".</div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 7</div><div class="l10e-title">How to increase motivation — the only tool that always works</div><div class="l10e-card"><p>Motivation depends on what a person considers real. Money — real for everyone. But a big company mission, impact on society? For some — real. For others — empty pretty words.</p><p>Key point: a person who hears only the rhythm can learn to hear more — if they listen, analyze, practice.</p></div><div class="l10e-label" style="margin-top:1rem">Motivation formula</div><div class="l10e-schema"><span class="l10e-sitem">Show the goal</span><span class="l10e-sarrow">→</span><span class="l10e-sitem">Hold attention</span><span class="l10e-sarrow">→</span><span class="l10e-sitem">Goal becomes real</span><span class="l10e-sarrow">→</span><span class="l10e-sitem">Person is motivated</span></div><div class="l10e-card" style="margin-top:.75rem"><p>Keeping attention on big goals is hard. When there's pressure and stress — attention goes to survival. People forget about big goals, focus is on bills and conflicts. Solution: <strong>constantly remind</strong>. Regularly talk about goals. Show how the work affects specific people and clients.</p></div><div class="l10e-example"><div class="l10e-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div><div class="l10e-elabel">Tire shop</div><div class="l10e-etext">"Your work saves lives on the road. Every correctly installed tire is family safety"</div></div></div><div class="l10e-example"><div class="l10e-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div><div class="l10e-elabel">Dental clinic</div><div class="l10e-etext">"You restore people's confidence. This is more than just treating teeth"</div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 8</div><div class="l10e-title">How to communicate goals and vision to the team</div><div class="l10e-card"><p>You've formulated the goal and vision. But if only you know about it — nothing will change. The task: make every team member know where the company is moving — and why.</p></div><div class="l10e-label" style="margin-top:1rem">Simple 4-step plan</div><div class="l10e-steps"><div class="l10e-step"><div class="l10e-stepnum">1</div><div><div class="l10e-steptitle">Create an official written document</div><div class="l10e-steptext">Not a conversation, not "everyone already knows" — a written document with the founder's signature. Three parts: company goal, vision and a brief history. The signature signals to the team: "This is serious. This is from the top."</div></div></div><div class="l10e-step"><div class="l10e-stepnum">2</div><div><div class="l10e-steptitle">Officially present the document to the team</div><div class="l10e-steptext">Bring everyone together — at a planning meeting, a separate meeting or monthly assembly. The main thing — all key people must be there.</div></div></div><div class="l10e-step"><div class="l10e-stepnum">3</div><div><div class="l10e-steptitle">Record your speech on video</div><div class="l10e-steptext">If someone missed it — send the video. A new employee — let them watch it on day one. Forgotten a year later — can rewatch and refresh.</div></div></div><div class="l10e-step"><div class="l10e-stepnum">4</div><div><div class="l10e-steptitle">Remind regularly</div><div class="l10e-steptext">Goal and vision are not "said once and forgotten." Return to them at meetings, when making decisions, when explaining changes. This keeps the whole team on the same wavelength.</div></div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 9</div><div class="l10e-title">How to run the first session — practical algorithm</div><div class="l10e-card"><p>The first session where you present goals and vision to the team sets the tone for everything that follows. If done well — employees will support changes and start moving together. If done poorly — they'll perceive it as "another nonsense from the boss."</p><p>Most employees perceive new tools as "extra burden." Solution — <strong>goal first, tools second.</strong> Never the other way around.</p></div><div class="l10e-label" style="margin-top:1rem">4 outcomes of the first session</div><div class="l10e-result">"We are a team" — everyone moves toward a common goal</div><div class="l10e-result">Common goal — specific, with numbers and an ideal picture</div><div class="l10e-result">Why learn — each person understands what it gives them personally</div><div class="l10e-result">Real support for changes — not formal, but genuine</div><div class="l10e-label" style="margin-top:1rem">7 preparation steps</div><div class="l10e-steps"><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">1</div><div><div class="l10e-steptitle">Place, time, list</div><div class="l10e-steptext">Determine where, when and who will be present. Full list of participants.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">2</div><div><div class="l10e-steptitle">Send an official invitation</div><div class="l10e-steptext">Not "if you can" but "you must be there." This is important for how seriously it's perceived.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">3</div><div><div class="l10e-steptitle">Prepare talking points</div><div class="l10e-steptext">Write out talking points but don't read from paper. It should sound natural, like your own words.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">4</div><div><div class="l10e-steptitle">Create a presentation</div><div class="l10e-steptext">A few slides with goals and vision, the ideal future picture and important facts from company history.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">5</div><div><div class="l10e-steptitle">Rehearse</div><div class="l10e-steptext">In front of a mirror or a trusted person. This helps you feel confident.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">6</div><div><div class="l10e-steptitle">Distribute the written policy</div><div class="l10e-steptext">All participants must receive the document with goals and vision — at the session or right after.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">7</div><div><div class="l10e-steptitle">Collect feedback</div><div class="l10e-steptext">Give the opportunity to answer a few questions after the session. Who supports? Who has doubts?</div></div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Assignment</div><div class="l10e-title">Develop the Goal & Vision Policy through the AI assistant</div><div class="l10e-steps"><div class="l10e-step"><div class="l10e-stepnum">1</div><div><div class="l10e-steptitle">Complete the dialogue with the AI Goal Coach</div><div class="l10e-steptext">The assistant will guide you through formulating the goal, vision, ideal picture and company history</div></div></div><div class="l10e-step"><div class="l10e-stepnum">2</div><div><div class="l10e-steptitle">Save the result in Google Docs</div><div class="l10e-steptext">Output — a ready "Company Goal & Vision Policy" with the founder's signature</div></div></div><div class="l10e-step"><div class="l10e-stepnum">3</div><div><div class="l10e-steptitle">Present to the team</div><div class="l10e-steptext">Gather everyone, tell them about the goal and vision, record the speech on video</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Implementation time</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 hours: 1h AI dialogue & document preparation + 2h team presentation</div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Tool</div><div class="l10e-tool"><div class="l10e-toolhdr"><div class="l10e-toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l10e-tooltitle">AI Goal & Vision Coach</div><div class="l10e-tooldesc">The assistant leads a dialogue and helps formulate the goal, vision, ideal picture and company history. Output — a ready "Goal & Vision Policy" document for the founder's signature and team presentation.</div></div></div><a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10e-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Develop company goal & vision</a></div></div>`,
-
-                lessonContent_pl: `<style>.l10p-section{margin-bottom:1.75rem}.l10p-section:last-child{margin-bottom:0}.l10p-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l10p-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l10p-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l10p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l10p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l10p-card p+p{margin-top:.7rem}.l10p-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l10p-situations{display:grid;gap:.45rem;margin-top:.75rem}.l10p-scale{display:grid;gap:.4rem;margin-top:.75rem}.l10p-scale-item{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}.l10p-snum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}.l10p-stitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}.l10p-stext{font-size:.78rem;color:#525252;line-height:1.4}.l10p-motiv{display:grid;gap:.55rem;margin-top:.75rem}.l10p-mitem{padding:.8rem .95rem;border-radius:10px;border:1px solid}.l10p-mbadge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:.5rem}.l10p-mtitle{font-weight:700;font-size:.875rem}.l10p-mtext{font-size:.82rem;line-height:1.5;margin-top:.35rem}.l10p-steps{display:grid;gap:.6rem;margin-top:.75rem}.l10p-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l10p-stepnum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l10p-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l10p-steptext{font-size:.82rem;color:#525252;line-height:1.5}.l10p-quote{margin-top:.75rem;padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6}.l10p-schema{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.75rem}.l10p-sitem{padding:.5rem .85rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-weight:600;color:#1a1a1a}.l10p-sarrow{color:#9ca3af;font-size:1.1rem}.l10p-example{display:flex;gap:.65rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;margin-top:.45rem}.l10p-eicon{width:24px;height:24px;background:#f0fdf4;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10p-elabel{font-weight:700;color:#1a1a1a;font-size:.82rem}.l10p-etext{font-size:.78rem;color:#525252;line-height:1.4;margin-top:.15rem}.l10p-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-top:.35rem}.l10p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l10p-toolhdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l10p-toolicon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10p-tooltitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l10p-tooldesc{font-size:.82rem;color:#525252;line-height:1.5}.l10p-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l10p-section"><div class="l10p-label">Sekcja 1</div><div class="l10p-title">Główna przeszkoda we wdrożeniu: dlaczego zespół sabotuje zmiany</div><div class="l10p-card"><p>Każdy właściciel który próbuje zaprowadzić porządek w biznesie napotyka to samo: najbliżsi, najbardziej lojalni pracownicy nagle zaczynają się opierać. Osoba której ufałeś przez lata nagle wyraża niezadowolenie. Ktoś składa rezygnację. Inni zaczynają kwestionować twoje decyzje.</p><p>Wydaje się że to zdrada. Ale w rzeczywistości — to prawidłowość.</p></div><div class="l10p-label" style="margin-top:1rem">Ile kosztuje utrata jednego pracownika</div><div class="l10p-card"><p>Według międzynarodowych badań utrata jednego pracownika kosztuje od 6 do 12 miesięcy jego wynagrodzenia. Jeśli twój kierownik działu zarabia 15 000 zł miesięcznie — jego odejście będzie kosztować minimum 90 000 zł. Ale to tylko bezpośrednia, widoczna strata.</p></div><div class="l10p-situations"><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Osoba która odchodzi aktywnie krytykuje cię przed resztą zespołu</div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Inni pracownicy zaczynają wątpić: "A może mają rację?"</div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Twój czas idzie na rozwiązywanie konfliktów zamiast na rozwój biznesu</div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Znalezienie i wdrożenie nowej osoby zajmuje 2–6 miesięcy — bez gwarantowanego wyniku</div></div><div class="l10p-label" style="margin-top:1rem">Dlaczego ludzie się opierają — prawdziwa przyczyna</div><div class="l10p-card"><p>Większość właścicieli myśli że opór to nielojalność lub lenistwo. W rzeczywistości przyczyna jest znacznie prostsza: <strong>wdrażasz zmiany bo widzisz problem. Ale czy widzą go twoi pracownicy?</strong></p><p>Żeby zmienić zachowanie człowieka — musisz dać mu większy, znaczący cel który przeważy chęć zachowania status quo. Cele muszą być naprawdę duże — takie które budzą entuzjazm i chęć bycia częścią czegoś większego.</p></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 2</div><div class="l10p-title">Cel i zamysł firmy — fundament wszystkiego</div><div class="l10p-card"><p>Wszystko w twoim biznesie — struktura, zasady, motywacja zespołu, nawet codzienne decyzje — musi opierać się na dwóch rzeczach: celu i zamyśle. Bez nich firma jest jak statek bez kompasu: porusza się, ale nie wie dokąd.</p></div><div class="l10p-label" style="margin-top:1rem">Czym jest cel</div><div class="l10p-card"><p>Cel to główna idea firmy. Odpowiada na pytanie: <strong>po co istniejemy? Co zmieni się w świecie jeśli odniesiemy sukces?</strong></p><p>Typowy błąd: "Moim celem jest zarabianie pieniędzy." To jak powiedzieć: "Celem mojego istnienia jest oddychanie." Pieniądze to energia do osiągnięcia celu. Ale nie sam cel.</p></div><div class="l10p-example"><div class="l10p-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10p-elabel">Firma konsultingowa</div><div class="l10p-etext">Uczynić małe firmy mądrzejszymi, efektywniejszymi i niezależnymi od właściciela</div></div></div><div class="l10p-example"><div class="l10p-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10p-elabel">Stomatologia</div><div class="l10p-etext">Czynić ludzi zdrowymi i pewnymi swojego uśmiechu</div></div></div><div class="l10p-quote">Zapytaj siebie: jak zmienia się życie ludzi dzięki mojemu biznesowi? Co zniknie ze świata jeśli moja firma zostanie zamknięta?</div><div class="l10p-label" style="margin-top:1rem">Czym jest zamysł</div><div class="l10p-card"><p>Jeśli cel odpowiada na pytanie "po co", to zamysł odpowiada na pytanie "jak". Zamysł to twój unikalny sposób osiągania celu. To co robisz — i czego świadomie <strong>NIE</strong> robisz.</p></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 3</div><div class="l10p-title">Skala administracyjna — kręgosłup biznesu</div><div class="l10p-card"><p>Duże firmy mają narzędzie do weryfikacji każdego pomysłu. Coca-Cola nie zaczyna sprzedawać kiełbasy. McDonald's nie otwiera salonów samochodowych. Znają swoją ścieżkę — i każdy nowy pomysł jest sprawdzany: czy jest na tej ścieżce? To narzędzie nazywa się <strong>skalą administracyjną</strong>.</p></div><div class="l10p-label" style="margin-top:1rem">10 poziomów skali (od najwyższego do najniższego)</div><div class="l10p-scale"><div class="l10p-scale-item"><div class="l10p-snum">1</div><div><div class="l10p-stitle">Cel</div><div class="l10p-stext">Po co istniejemy</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">2</div><div><div class="l10p-stitle">Zamysł</div><div class="l10p-stext">Dokładnie jak osiągamy cel</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">3</div><div><div class="l10p-stitle">Polityka</div><div class="l10p-stext">Pisemne zasady w ramach których działamy</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">4</div><div><div class="l10p-stitle">Plany</div><div class="l10p-stext">Co robimy w najbliższym horyzoncie</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">5</div><div><div class="l10p-stitle">Programy</div><div class="l10p-stext">Konkretne inicjatywy do osiągnięcia planów</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">6</div><div><div class="l10p-stitle">Projekty</div><div class="l10p-stext">Szczegółowy podział konkretnych zadań</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">7</div><div><div class="l10p-stitle">Rozkazy</div><div class="l10p-stext">Konkretne instrukcje dla konkretnych osób</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">8</div><div><div class="l10p-stitle">Idealny obraz</div><div class="l10p-stext">Jak wygląda udany wynik</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">9</div><div><div class="l10p-stitle">Statystyki</div><div class="l10p-stext">Mierniki pokazujące czy zmierzamy do celu</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">10</div><div><div class="l10p-stitle">Produkt końcowy</div><div class="l10p-stext">Co konkretnie produkuje firma lub dział</div></div></div></div><div class="l10p-quote">Główna zasada: każdy poziom musi odpowiadać innym. Jeśli twój rozkaz jest sprzeczny z celem — coś pójdzie nie tak.</div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 4</div><div class="l10p-title">Polityka firmy — zasady które ratują biznes</div><div class="l10p-card"><p>Bez jasnych pisemnych zasad każdy decyduje po swojemu. Polityka firmy to pisemne zasady które mówią pracownikom jak postępować w różnych sytuacjach.</p></div><div class="l10p-card" style="margin-top:.6rem"><p><strong>Klasyczny przykład Apple:</strong> Steve Jobs miał jasny zamysł — Apple kontroluje wszystko: sprzęt, system operacyjny i oprogramowanie. Ale nie zapisał tej zasady oficjalnie. Gdy go zwolniono nowe kierownictwo zaczęło sprzedawać licencje na macOS. Jakość Apple spadła, zamysł się zawalił, firma znalazła się na krawędzi bankructwa.</p></div><div class="l10p-quote">Jeśli nie ma pisemnych zasad — stajesz się zakładnikiem biznesu. Musisz osobiście rozwiązywać każdą sytuację i fizycznie nie możesz pojechać na urlop.</div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 5</div><div class="l10p-title">Technologia biznesu — jak wyjść z pułapki "niezastąpionych"</div><div class="l10p-card"><p>Ile razy tłumaczyłeś to samo? Nowemu pracownikowi. Potem następnemu. Za każdym razem — jak po raz pierwszy. Bo "jak to robić" jest w twojej głowie, nie na papierze.</p></div><div class="l10p-label" style="margin-top:1rem">Cztery konsekwencje pracy bez opisanych procesów</div><div class="l10p-situations"><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Niemożliwe skalowanie.</strong> Chcesz otworzyć drugą lokalizację? Jak przekażesz "jak to robić"? Nie możesz — to tylko w twojej głowie.</div></div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Niemożliwe szkolenie ludzi.</strong> Nowy pracownik przychodzi, spędzasz tygodnie na szkoleniu, rezygnuje — i od nowa.</div></div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Niemożliwa kontrola jakości.</strong> Jak sprawdzić czy zrobiono poprawnie? Jeśli nie ma standardu — nie ma kryterium.</div></div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Stajesz się zakładnikiem "niezastąpionych".</strong> Jest Piotr który "wie jak". Bez Piotra — wszystko staje. Piotr to wie. I używa tego.</div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 6</div><div class="l10p-title">Poziomy motywacji — dlaczego jedni płoną pracą a innym jest obojętnie</div><div class="l10p-card"><p>Motywacja to wewnętrzna chęć do działania. Nie dlatego że zmuszają lub płacą, ale dlatego że człowiek sam chce. Zmotywowany nowicjusz jest często cenniejszy niż doświadczony ale obojętny — bo zmotywowany się <em>uczy</em>.</p></div><div class="l10p-motiv"><div class="l10p-mitem" style="background:#f0fdf4;border-color:#bbf7d0"><span class="l10p-mbadge" style="background:#22c55e;color:white">POZIOM 1</span><span class="l10p-mtitle" style="color:#166534">Poczucie obowiązku</span><div class="l10p-mtext" style="color:#166534">Człowiek czuje głęboką odpowiedzialność za sprawę. Dba o firmę bardziej niż o siebie. Rozumie cele firmy i czuje: "To jest moja sprawa."</div></div><div class="l10p-mitem" style="background:#eff6ff;border-color:#bfdbfe"><span class="l10p-mbadge" style="background:#3b82f6;color:white">POZIOM 2</span><span class="l10p-mtitle" style="color:#1e40af">Osobiste przekonanie</span><div class="l10p-mtext" style="color:#1e3a8a">Człowiek wierzy w swoje zasady i wartość swojej pracy. Lekarz który naprawdę chce pomagać ludziom. Programista który jest dumny z jakości kodu.</div></div><div class="l10p-mitem" style="background:#fff7ed;border-color:#fed7aa"><span class="l10p-mbadge" style="background:#f97316;color:white">POZIOM 3</span><span class="l10p-mtitle" style="color:#c2410c">Osobista korzyść</span><div class="l10p-mtext" style="color:#9a3412">Człowiek szuka co dostanie osobiście: premia, awans, nowe umiejętności. Nie "zapłonie" dla firmy.</div></div><div class="l10p-mitem" style="background:#fef2f2;border-color:#fecaca"><span class="l10p-mbadge" style="background:#ef4444;color:white">POZIOM 4</span><span class="l10p-mtitle" style="color:#b91c1c">Pieniądze</span><div class="l10p-mtext" style="color:#991b1b">Najniższy poziom. Interesuje tylko wynagrodzenie. Płacisz — pracuje. Nie płacisz — nie pracuje. Zero inicjatywy.</div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 7</div><div class="l10p-title">Jak zwiększać motywację — jedyne narzędzie które zawsze działa</div><div class="l10p-schema"><span class="l10p-sitem">Pokazujesz cel</span><span class="l10p-sarrow">→</span><span class="l10p-sitem">Utrzymujesz uwagę</span><span class="l10p-sarrow">→</span><span class="l10p-sitem">Cel staje się realny</span><span class="l10p-sarrow">→</span><span class="l10p-sitem">Człowiek jest zmotywowany</span></div><div class="l10p-card" style="margin-top:.75rem"><p>Utrzymywanie uwagi na wielkich celach jest trudne. Rozwiązanie: <strong>ciągle przypominaj</strong>. Regularnie mów o celach. Pokazuj jak praca wpływa na konkretnych ludzi i klientów.</p></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 8</div><div class="l10p-title">Jak przekazać cele i zamysł zespołowi</div><div class="l10p-steps"><div class="l10p-step"><div class="l10p-stepnum">1</div><div><div class="l10p-steptitle">Stwórz oficjalny pisemny dokument</div><div class="l10p-steptext">Nie rozmowa, nie "wszyscy już wiedzą" — pisemny dokument z podpisem założyciela.</div></div></div><div class="l10p-step"><div class="l10p-stepnum">2</div><div><div class="l10p-steptitle">Oficjalnie zaprezentuj dokument zespołowi</div><div class="l10p-steptext">Zbierz wszystkich razem — na planowaniu lub osobnym spotkaniu.</div></div></div><div class="l10p-step"><div class="l10p-stepnum">3</div><div><div class="l10p-steptitle">Nagraj wystąpienie na wideo</div><div class="l10p-steptext">Jeśli ktoś nie był — wyślij wideo. Nowy pracownik — daj do oglądnięcia w pierwszym dniu.</div></div></div><div class="l10p-step"><div class="l10p-stepnum">4</div><div><div class="l10p-steptitle">Regularnie przypominaj</div><div class="l10p-steptext">Wracaj do celów i zamysłu na spotkaniach, przy podejmowaniu decyzji, przy wyjaśnianiu zmian.</div></div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Zadanie</div><div class="l10p-title">Opracuj Politykę Celów i Zamysłu przez asystenta AI</div><div class="l10p-steps"><div class="l10p-step"><div class="l10p-stepnum">1</div><div><div class="l10p-steptitle">Przeprowadź dialog z AI Coachem Celów</div><div class="l10p-steptext">Asystent przeprowadzi cię przez formułowanie celu, zamysłu, idealnego obrazu i historii biznesu</div></div></div><div class="l10p-step"><div class="l10p-stepnum">2</div><div><div class="l10p-steptitle">Zapisz wynik w Google Docs</div><div class="l10p-steptext">Na wyjściu — gotowa "Polityka Celów i Zamysłu Firmy" z podpisem założyciela</div></div></div><div class="l10p-step"><div class="l10p-stepnum">3</div><div><div class="l10p-steptitle">Przeprowadź prezentację dla zespołu</div><div class="l10p-steptext">Zbierz wszystkich, opowiedz o celu i zamyśle, nagraj na wideo</div></div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Narzędzie</div><div class="l10p-tool"><div class="l10p-toolhdr"><div class="l10p-toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l10p-tooltitle">AI Coach Celów i Zamysłu</div><div class="l10p-tooldesc">Asystent prowadzi dialog i pomaga sformułować cel, zamysł, idealny obraz i historię firmy. Na wyjściu — gotowy dokument "Polityka Celów i Zamysłu" do podpisu założyciela i prezentacji zespołowi.</div></div></div><a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10p-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Opracuj cel i zamysł firmy</a></div></div>`,
-
-                lessonContent_de: `<style>.l10d-section{margin-bottom:1.75rem}.l10d-section:last-child{margin-bottom:0}.l10d-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l10d-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l10d-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l10d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l10d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l10d-card p+p{margin-top:.7rem}.l10d-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l10d-situations{display:grid;gap:.45rem;margin-top:.75rem}.l10d-scale{display:grid;gap:.4rem;margin-top:.75rem}.l10d-scale-item{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}.l10d-snum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}.l10d-stitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}.l10d-stext{font-size:.78rem;color:#525252;line-height:1.4}.l10d-motiv{display:grid;gap:.55rem;margin-top:.75rem}.l10d-mitem{padding:.8rem .95rem;border-radius:10px;border:1px solid}.l10d-mbadge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:.5rem}.l10d-mtitle{font-weight:700;font-size:.875rem}.l10d-mtext{font-size:.82rem;line-height:1.5;margin-top:.35rem}.l10d-steps{display:grid;gap:.6rem;margin-top:.75rem}.l10d-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l10d-stepnum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l10d-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l10d-steptext{font-size:.82rem;color:#525252;line-height:1.5}.l10d-quote{margin-top:.75rem;padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6}.l10d-schema{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.75rem}.l10d-sitem{padding:.5rem .85rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-weight:600;color:#1a1a1a}.l10d-sarrow{color:#9ca3af;font-size:1.1rem}.l10d-example{display:flex;gap:.65rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;margin-top:.45rem}.l10d-eicon{width:24px;height:24px;background:#f0fdf4;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10d-elabel{font-weight:700;color:#1a1a1a;font-size:.82rem}.l10d-etext{font-size:.78rem;color:#525252;line-height:1.4;margin-top:.15rem}.l10d-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-top:.35rem}.l10d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l10d-toolhdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l10d-toolicon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10d-tooltitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l10d-tooldesc{font-size:.82rem;color:#525252;line-height:1.5}.l10d-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l10d-section"><div class="l10d-label">Abschnitt 1</div><div class="l10d-title">Das Haupthindernis bei der Umsetzung: warum das Team Veränderungen sabotiert</div><div class="l10d-card"><p>Jeder Inhaber der Ordnung in sein Unternehmen bringen möchte begegnet demselben: die nächsten, loyalsten Mitarbeiter beginnen plötzlich Widerstand zu leisten. Die Person der Sie jahrelang vertrauten zeigt plötzlich Unzufriedenheit. Jemand kündigt. Andere beginnen Ihre Entscheidungen in Frage zu stellen.</p><p>Es scheint wie Verrat. Aber in Wirklichkeit — ist es ein Muster.</p></div><div class="l10d-label" style="margin-top:1rem">Was der Verlust eines Mitarbeiters kostet</div><div class="l10d-card"><p>Laut internationalen Studien kostet der Verlust eines Mitarbeiters zwischen 6 und 12 Monatsgehältern. Wenn Ihr Abteilungsleiter 4.000€/Monat verdient — wird sein Abgang Sie mindestens 24.000€ kosten. Aber das ist nur der direkte, sichtbare Verlust.</p></div><div class="l10d-situations"><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Die Person die kündigt kritisiert Sie aktiv vor dem Rest des Teams</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Andere Mitarbeiter beginnen zu zweifeln: "Haben sie vielleicht Recht?"</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Ihre Zeit geht für Konfliktlösung statt Unternehmensentwicklung drauf</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Die Suche und Einarbeitung einer neuen Person dauert 2–6 Monate — ohne Ergebnisgarantie</div></div><div class="l10d-label" style="margin-top:1rem">Warum Menschen Widerstand leisten — der wahre Grund</div><div class="l10d-card"><p>Die meisten Inhaber denken dass Widerstand Illoyalität oder Faulheit bedeutet. In Wirklichkeit ist der Grund viel einfacher: <strong>Sie führen Veränderungen durch weil Sie das Problem sehen. Aber sehen Ihre Mitarbeiter es?</strong></p><p>Um das Verhalten eines Menschen zu ändern — müssen Sie ihm ein größeres, bedeutungsvolles Ziel geben das den Wunsch überwiegt den Status quo zu bewahren.</p></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 2</div><div class="l10d-title">Unternehmensziel und Vision — das Fundament von allem</div><div class="l10d-card"><p>Alles in Ihrem Unternehmen — Struktur, Regeln, Teammotivation, sogar tägliche Entscheidungen — muss auf zwei Dingen basieren: Ziel und Vision. Ohne sie ist das Unternehmen wie ein Schiff ohne Kompass: bewegt sich, weiß aber nicht wohin.</p></div><div class="l10d-label" style="margin-top:1rem">Was ein Ziel ist</div><div class="l10d-card"><p>Das Ziel ist die Kernidee des Unternehmens. Es beantwortet: <strong>warum existieren wir? Was wird sich in der Welt verändern wenn wir erfolgreich sind?</strong></p><p>Typischer Fehler: "Mein Ziel ist Geld verdienen." Das ist wie zu sagen: "Der Zweck meiner Existenz ist Atmen." Geld ist Energie für das Erreichen des Ziels. Aber nicht das Ziel selbst.</p></div><div class="l10d-example"><div class="l10d-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10d-elabel">Beratungsunternehmen</div><div class="l10d-etext">Kleine Unternehmen intelligenter, effizienter und unabhängiger vom Inhaber machen</div></div></div><div class="l10d-example"><div class="l10d-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10d-elabel">Zahnarztpraxis</div><div class="l10d-etext">Menschen gesund und selbstsicher in ihrem Lächeln machen</div></div></div><div class="l10d-quote">Fragen Sie sich: Wie verändert sich das Leben der Menschen dank meines Unternehmens? Was verschwindet aus der Welt wenn mein Unternehmen schließt?</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 3</div><div class="l10d-title">Die administrative Skala — das Rückgrat des Unternehmens</div><div class="l10d-card"><p>Große Unternehmen haben ein Werkzeug zum Testen jeder Idee. Coca-Cola beginnt nicht Wurst zu verkaufen. McDonald's eröffnet keine Autohäuser. Sie kennen ihren Weg — dieses Werkzeug heißt <strong>administrative Skala</strong>.</p></div><div class="l10d-label" style="margin-top:1rem">10 Skalenebenen (von höchster zu niedrigster)</div><div class="l10d-scale"><div class="l10d-scale-item"><div class="l10d-snum">1</div><div><div class="l10d-stitle">Ziel</div><div class="l10d-stext">Warum wir existieren</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">2</div><div><div class="l10d-stitle">Vision</div><div class="l10d-stext">Genau wie wir das Ziel erreichen</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">3</div><div><div class="l10d-stitle">Richtlinie</div><div class="l10d-stext">Schriftliche Regeln innerhalb derer wir handeln</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">4</div><div><div class="l10d-stitle">Pläne</div><div class="l10d-stext">Was wir im nächsten Horizont tun</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">5</div><div><div class="l10d-stitle">Programme</div><div class="l10d-stext">Konkrete Initiativen zur Erreichung der Pläne</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">6</div><div><div class="l10d-stitle">Projekte</div><div class="l10d-stext">Detaillierte Aufschlüsselung konkreter Aufgaben</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">7</div><div><div class="l10d-stitle">Anweisungen</div><div class="l10d-stext">Konkrete Anweisungen an konkrete Personen</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">8</div><div><div class="l10d-stitle">Ideales Bild</div><div class="l10d-stext">Wie ein erfolgreiches Ergebnis aussieht</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">9</div><div><div class="l10d-stitle">Statistiken</div><div class="l10d-stext">Kennzahlen die zeigen ob wir uns dem Ziel nähern</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">10</div><div><div class="l10d-stitle">Endprodukt</div><div class="l10d-stext">Was das Unternehmen oder die Abteilung konkret produziert</div></div></div></div><div class="l10d-quote">Hauptprinzip: jede Ebene muss den anderen entsprechen. Wenn Ihre Anweisung dem Ziel widerspricht — wird etwas schiefgehen.</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 4</div><div class="l10d-title">Unternehmensrichtlinie — Regeln die das Unternehmen retten</div><div class="l10d-card"><p>Ohne klare schriftliche Regeln entscheidet jeder nach eigenem Ermessen. Unternehmensrichtlinie sind schriftliche Regeln die Mitarbeitern sagen wie sie in verschiedenen Situationen handeln sollen.</p></div><div class="l10d-card" style="margin-top:.6rem"><p><strong>Klassisches Apple-Beispiel:</strong> Steve Jobs hatte eine klare Vision — Apple kontrolliert alles: Hardware, Betriebssystem und Software. Aber er hat diese Regel nicht offiziell aufgeschrieben. Als er entlassen wurde begann das neue Management macOS-Lizenzen zu verkaufen. Apple-Qualität sank, die Vision kollabierte, das Unternehmen stand am Rand des Bankrotts.</p></div><div class="l10d-quote">Wenn es keine schriftlichen Regeln gibt — werden Sie zum Geisel des Unternehmens. Sie müssen jede Situation persönlich lösen und können physisch nicht in Urlaub fahren.</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 5</div><div class="l10d-title">Unternehmenstechnologie — wie man der "Unentbehrlichen"-Falle entkommt</div><div class="l10d-card"><p>Wie oft haben Sie dasselbe erklärt? Einem neuen Mitarbeiter. Dann einem weiteren. Jedes Mal — als wäre es das erste Mal. Weil "wie es gemacht werden soll" in Ihrem Kopf ist, nicht auf Papier.</p></div><div class="l10d-label" style="margin-top:1rem">Vier Konsequenzen ohne dokumentierte Prozesse</div><div class="l10d-situations"><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Skalierung unmöglich.</strong> Wollen Sie einen zweiten Standort eröffnen? Wie übertragen Sie "wie es gemacht werden soll"? Nicht möglich — es steckt nur in Ihrem Kopf.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schulung unmöglich.</strong> Neuer Mitarbeiter kommt, Sie verbringen Wochen mit Schulung, er kündigt — und von vorne.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Qualitätskontrolle unmöglich.</strong> Wie prüft man ob es korrekt gemacht wurde? Kein Standard — kein Kriterium.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Sie werden Geisel der "Unentbehrlichen".</strong> Es gibt Peter der "weiß wie". Ohne Peter — alles stoppt. Peter weiß das. Und nutzt es.</div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 6</div><div class="l10d-title">Motivationsebenen — warum manche für die Arbeit brennen und andere gleichgültig sind</div><div class="l10d-motiv"><div class="l10d-mitem" style="background:#f0fdf4;border-color:#bbf7d0"><span class="l10d-mbadge" style="background:#22c55e;color:white">EBENE 1</span><span class="l10d-mtitle" style="color:#166534">Pflichtgefühl</span><div class="l10d-mtext" style="color:#166534">Die Person fühlt tiefe Verantwortung für die Sache. Kümmert sich mehr um das Unternehmen als um sich selbst.</div></div><div class="l10d-mitem" style="background:#eff6ff;border-color:#bfdbfe"><span class="l10d-mbadge" style="background:#3b82f6;color:white">EBENE 2</span><span class="l10d-mtitle" style="color:#1e40af">Persönliche Überzeugung</span><div class="l10d-mtext" style="color:#1e3a8a">Die Person glaubt an ihre Prinzipien und den Wert ihrer Arbeit. Ein Arzt der wirklich helfen will. Ein Programmierer der stolz auf Codequalität ist.</div></div><div class="l10d-mitem" style="background:#fff7ed;border-color:#fed7aa"><span class="l10d-mbadge" style="background:#f97316;color:white">EBENE 3</span><span class="l10d-mtitle" style="color:#c2410c">Persönlicher Vorteil</span><div class="l10d-mtext" style="color:#9a3412">Die Person sucht was sie persönlich bekommt: Bonus, Karriereaufstieg, neue Fähigkeiten. Wird nicht "brennen" für das Unternehmen.</div></div><div class="l10d-mitem" style="background:#fef2f2;border-color:#fecaca"><span class="l10d-mbadge" style="background:#ef4444;color:white">EBENE 4</span><span class="l10d-mtitle" style="color:#b91c1c">Geld</span><div class="l10d-mtext" style="color:#991b1b">Niedrigste Ebene. Nur am Gehalt interessiert. Zahlen — arbeitet. Nicht zahlen — arbeitet nicht. Null Initiative.</div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 7</div><div class="l10d-title">Wie man Motivation steigert — das einzige Werkzeug das immer funktioniert</div><div class="l10d-schema"><span class="l10d-sitem">Zeigen Sie das Ziel</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Halten Sie Aufmerksamkeit</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Ziel wird real</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Person ist motiviert</span></div><div class="l10d-card" style="margin-top:.75rem"><p>Aufmerksamkeit auf große Ziele zu halten ist schwer. Lösung: <strong>ständig erinnern</strong>. Regelmäßig über Ziele sprechen. Zeigen wie die Arbeit konkrete Menschen und Kunden beeinflusst.</p></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 8</div><div class="l10d-title">Wie man Ziele und Vision dem Team kommuniziert</div><div class="l10d-steps"><div class="l10d-step"><div class="l10d-stepnum">1</div><div><div class="l10d-steptitle">Erstellen Sie ein offizielles schriftliches Dokument</div><div class="l10d-steptext">Kein Gespräch, kein "alle wissen es schon" — ein schriftliches Dokument mit der Unterschrift des Gründers.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">2</div><div><div class="l10d-steptitle">Präsentieren Sie das Dokument offiziell dem Team</div><div class="l10d-steptext">Bringen Sie alle zusammen — beim Planungsmeeting oder einem separaten Treffen.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">3</div><div><div class="l10d-steptitle">Nehmen Sie Ihren Vortrag auf Video auf</div><div class="l10d-steptext">Falls jemand gefehlt hat — schicken Sie das Video. Neuer Mitarbeiter — lassen Sie es am ersten Tag ansehen.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">4</div><div><div class="l10d-steptitle">Regelmäßig erinnern</div><div class="l10d-steptext">Ziel und Vision sind nicht "einmal gesagt und vergessen." Kehren Sie bei Meetings, Entscheidungen und Erklärungen von Änderungen dazu zurück.</div></div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Aufgabe</div><div class="l10d-title">Entwickeln Sie die Ziel- und Visionsrichtlinie durch den KI-Assistenten</div><div class="l10d-steps"><div class="l10d-step"><div class="l10d-stepnum">1</div><div><div class="l10d-steptitle">Führen Sie den Dialog mit dem KI-Ziel-Coach</div><div class="l10d-steptext">Der Assistent führt Sie durch die Formulierung von Ziel, Vision, idealem Bild und Unternehmensgeschichte</div></div></div><div class="l10d-step"><div class="l10d-stepnum">2</div><div><div class="l10d-steptitle">Speichern Sie das Ergebnis in Google Docs</div><div class="l10d-steptext">Ausgabe — eine fertige "Unternehmens-Ziel- & Visions-Richtlinie" mit der Unterschrift des Gründers</div></div></div><div class="l10d-step"><div class="l10d-stepnum">3</div><div><div class="l10d-steptitle">Präsentieren Sie dem Team</div><div class="l10d-steptext">Versammeln Sie alle, erzählen Sie von Ziel und Vision, nehmen Sie es auf Video auf</div></div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Werkzeug</div><div class="l10d-tool"><div class="l10d-toolhdr"><div class="l10d-toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l10d-tooltitle">KI Ziel- & Visions-Coach</div><div class="l10d-tooldesc">Der Assistent führt einen Dialog und hilft Ziel, Vision, ideales Bild und Unternehmensgeschichte zu formulieren. Ausgabe — ein fertiges "Ziel- & Visions-Richtlinie" Dokument für die Unterschrift des Gründers und die Teampräsentation.</div></div></div><a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Unternehmensziel & Vision entwickeln</a></div></div>
-<style>
-/* ===== PRESENTATION STYLES ===== */
-.l10-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
-.l10-pres-trigger-info{color:white}
-.l10-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
-.l10-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
-.l10-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
-.l10-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
-/* ===== FULLSCREEN OVERLAY ===== */
-#l10Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
-#l10Ov.on{display:flex}
-/* ===== SLIDE LAYOUT ===== */
-.l10s{display:none;width:100%;height:100%;overflow:hidden}
-.l10s.on{display:flex}
-/* Split layout: dark left + white right */
-.sl{width:36%;min-width:260px;background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 2rem 5rem;position:relative;flex-shrink:0}
-.sl h2{color:#fff;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
-.sl h2 u{text-decoration-color:rgba(255,255,255,.35)}
-.sl .sub{color:#94a3b8;font-size:.88rem;margin-top:.5rem;line-height:1.5}
-/* Triangle corner decoration */
-.tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:100px solid transparent;border-bottom:100px solid rgba(255,255,255,.06)}
-/* Slide number badge */
-.snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
-/* Right white content panel */
-.sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
-/* Full dark slide (title/end) */
-.s-dark{background:linear-gradient(165deg,#09132b,#142040);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
-.s-dark h1{color:#fff;font-size:clamp(2rem,6vw,4rem);font-weight:900;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin:0 0 1rem}
-.s-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:560px;line-height:1.6}
-/* ===== TYPOGRAPHY ===== */
-.sr h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
-.sr p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
-.sr p.sm{font-size:clamp(.75rem,1.4vw,.92rem);color:#6b7280}
-.sr .q{font-size:clamp(.95rem,2vw,1.25rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
-.sr .ql{font-size:clamp(.88rem,1.8vw,1.1rem);font-weight:700;color:#09132b;margin:.9rem 0;line-height:1.6}
-/* ===== VISUAL ELEMENTS ===== */
-.rule-row{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
-.rule-row:last-child{border-bottom:none}
-.rule-dot{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
-.num-row{display:flex;align-items:flex-start;gap:1rem;padding:.75rem 0;border-bottom:1px solid #f0f4f8}
-.num-row:last-child{border-bottom:none}
-.nbox{width:36px;height:36px;background:#1a3068;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;flex-shrink:0}
-.ntext{font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.7}
-.green-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
-.green-card .gl{font-size:.7rem;font-weight:800;color:#16a34a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
-.green-card .gt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#166534;line-height:1.65;font-style:italic}
-.blue-card{background:#eff6ff;border:1.5px solid #93c5fd;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
-.blue-card .bl{font-size:.7rem;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
-.blue-card .bt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#1e3a8a;line-height:1.65;font-style:italic}
-.resume-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75}
-.exercise-box{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
-.exercise-box strong{color:#b45309}
-.ex-list{list-style:none;padding:0;margin:.5rem 0}
-.ex-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.3rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
-.ex-list li::before{content:"▶";color:#1a3068;font-size:.7rem;margin-top:.35rem;flex-shrink:0}
-.ul-list{list-style:none;padding:0;margin:.5rem 0}
-.ul-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
-.ul-list li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
-/* ===== FILL INPUTS ===== */
-.fill-grp{margin:.65rem 0}
-.fill-lbl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
-.fill-in{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
-.fill-in:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
-/* ===== VISUAL DECORATIONS (SVG areas) ===== */
-.vis{position:absolute;right:2rem;bottom:5rem;opacity:.12;pointer-events:none}
-.vis-right{position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);opacity:.08;pointer-events:none}
-/* ===== CORNER DECORATIONS ON WHITE SLIDES ===== */
-.corner-tl{position:absolute;top:0;right:0;width:140px;height:140px;overflow:hidden;pointer-events:none}
-.corner-tl svg{position:absolute;top:0;right:0}
-.corner-br{position:absolute;bottom:5rem;right:0;width:120px;height:120px;overflow:hidden;pointer-events:none}
-/* ===== NAV BAR ===== */
-.l10-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
-.nbtn{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
-.nbtn:hover:not(:disabled){background:rgba(255,255,255,.25)}
-.nbtn:disabled{opacity:.25;cursor:default}
-.nctr{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
-.nclose{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
-.nsave{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
-/* ===== LEFT PANEL SVG ICONS ===== */
-.lico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.85}
-</style>
-
-<!-- BOTTOM OF LESSON LAUNCH BUTTON -->
-<div class="l10-pres-trigger">
-  <div class="l10-pres-trigger-info">
-    <div class="l10-pres-trigger-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-      Заняття 1 — Цілі, задуми і майбутнє компанії
-    </div>
-    <div class="l10-pres-trigger-sub">46 слайдів · ~1.5 год · Покажіть команді після прочитання уроку</div>
-  </div>
-  <button class="l10-run-btn" onclick="window._l10Launch()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    Запустити презентацію
-  </button>
-</div>
-
-<!-- FULLSCREEN OVERLAY -->
-<div id="l10Ov">
+                presOverlay: `<div id="l10Ov">
 <div id="l10SW" style="flex:1;position:relative;overflow:hidden">
 
 <!-- S1: TITLE -->
@@ -7167,7 +6495,680 @@ Bist du dabei?</div>
   </div>
   <button class="nbtn" id="l10Next" onclick="window._l10N()">Далі →</button>
 </div>
-</div><!-- /l10Ov -->
+</div><!-- /l10Ov -->`,
+
+                lessonContent: `
+
+<style>
+/* ===== PRESENTATION STYLES ===== */
+.l10-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
+.l10-pres-trigger-info{color:white}
+.l10-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.l10-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
+.l10-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
+.l10-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
+/* ===== FULLSCREEN OVERLAY ===== */
+#l10Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l10Ov.on{display:flex}
+/* ===== SLIDE LAYOUT ===== */
+.l10s{display:none;width:100%;height:100%;overflow:hidden}
+.l10s.on{display:flex}
+/* Split layout: dark left + white right */
+.sl{width:36%;min-width:260px;background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 2rem 5rem;position:relative;flex-shrink:0}
+.sl h2{color:#fff;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
+.sl h2 u{text-decoration-color:rgba(255,255,255,.35)}
+.sl .sub{color:#94a3b8;font-size:.88rem;margin-top:.5rem;line-height:1.5}
+/* Triangle corner decoration */
+.tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:100px solid transparent;border-bottom:100px solid rgba(255,255,255,.06)}
+/* Slide number badge */
+.snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+/* Right white content panel */
+.sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
+/* Full dark slide (title/end) */
+.s-dark{background:linear-gradient(165deg,#09132b,#142040);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
+.s-dark h1{color:#fff;font-size:clamp(2rem,6vw,4rem);font-weight:900;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin:0 0 1rem}
+.s-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:560px;line-height:1.6}
+/* ===== TYPOGRAPHY ===== */
+.sr h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
+.sr p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
+.sr p.sm{font-size:clamp(.75rem,1.4vw,.92rem);color:#6b7280}
+.sr .q{font-size:clamp(.95rem,2vw,1.25rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
+.sr .ql{font-size:clamp(.88rem,1.8vw,1.1rem);font-weight:700;color:#09132b;margin:.9rem 0;line-height:1.6}
+/* ===== VISUAL ELEMENTS ===== */
+.rule-row{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
+.rule-row:last-child{border-bottom:none}
+.rule-dot{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
+.num-row{display:flex;align-items:flex-start;gap:1rem;padding:.75rem 0;border-bottom:1px solid #f0f4f8}
+.num-row:last-child{border-bottom:none}
+.nbox{width:36px;height:36px;background:#1a3068;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;flex-shrink:0}
+.ntext{font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.7}
+.green-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.green-card .gl{font-size:.7rem;font-weight:800;color:#16a34a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.green-card .gt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#166534;line-height:1.65;font-style:italic}
+.blue-card{background:#eff6ff;border:1.5px solid #93c5fd;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.blue-card .bl{font-size:.7rem;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.blue-card .bt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#1e3a8a;line-height:1.65;font-style:italic}
+.resume-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75}
+.exercise-box{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.exercise-box strong{color:#b45309}
+.ex-list{list-style:none;padding:0;margin:.5rem 0}
+.ex-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.3rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.ex-list li::before{content:"▶";color:#1a3068;font-size:.7rem;margin-top:.35rem;flex-shrink:0}
+.ul-list{list-style:none;padding:0;margin:.5rem 0}
+.ul-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.ul-list li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+/* ===== FILL INPUTS ===== */
+.fill-grp{margin:.65rem 0}
+.fill-lbl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.fill-in{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
+.fill-in:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
+/* ===== VISUAL DECORATIONS (SVG areas) ===== */
+.vis{position:absolute;right:2rem;bottom:5rem;opacity:.12;pointer-events:none}
+.vis-right{position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);opacity:.08;pointer-events:none}
+/* ===== CORNER DECORATIONS ON WHITE SLIDES ===== */
+.corner-tl{position:absolute;top:0;right:0;width:140px;height:140px;overflow:hidden;pointer-events:none}
+.corner-tl svg{position:absolute;top:0;right:0}
+.corner-br{position:absolute;bottom:5rem;right:0;width:120px;height:120px;overflow:hidden;pointer-events:none}
+/* ===== NAV BAR ===== */
+.l10-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
+.nbtn{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
+.nbtn:hover:not(:disabled){background:rgba(255,255,255,.25)}
+.nbtn:disabled{opacity:.25;cursor:default}
+.nctr{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
+.nclose{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
+.nsave{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+/* ===== LEFT PANEL SVG ICONS ===== */
+.lico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.85}
+</style>
+
+<div class="l10-pres-trigger">
+  <div class="l10-pres-trigger-info">
+    <div class="l10-pres-trigger-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Заняття 1 — Цілі, задуми і майбутнє компанії
+    </div>
+    <div class="l10-pres-trigger-sub">46 слайдів · ~1.5 год · Покажіть команді після прочитання уроку</div>
+  </div>
+  <button class="l10-run-btn" onclick="window._l10Launch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Запустити презентацію
+  </button>
+</div>
+
+<!-- FULLSCREEN OVERLAY -->
+
+<style>
+.l10-section { margin-bottom:1.75rem; }
+.l10-section:last-child { margin-bottom:0; }
+.l10-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l10-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l10-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l10-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l10-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l10-card p+p { margin-top:0.7rem; }
+.l10-situations { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-situation { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
+.l10-scale { display:grid; gap:0.4rem; margin-top:0.75rem; counter-reset:scalenum; }
+.l10-scale-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.7rem 0.9rem; background:#f8fafc; border-radius:9px; border:1px solid #e2e8f0; counter-increment:scalenum; }
+.l10-scale-num { width:26px; height:26px; background:#1a1a1a; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; }
+.l10-scale-title { font-weight:700; color:#1a1a1a; font-size:0.84rem; margin-bottom:0.15rem; }
+.l10-scale-text { font-size:0.78rem; color:#525252; line-height:1.4; }
+.l10-motivation { display:grid; gap:0.55rem; margin-top:0.75rem; }
+.l10-motiv-item { padding:0.8rem 0.95rem; border-radius:10px; border:1px solid; }
+.l10-motiv-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem; }
+.l10-motiv-badge { font-size:0.68rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:4px; letter-spacing:0.04em; }
+.l10-motiv-title { font-weight:700; font-size:0.875rem; }
+.l10-motiv-text { font-size:0.82rem; line-height:1.5; }
+.l10-examples { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-example { display:flex; align-items:flex-start; gap:0.7rem; padding:0.7rem 0.9rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; }
+.l10-example-icon { width:30px; height:30px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l10-example-label { font-weight:700; color:#1a1a1a; font-size:0.8rem; margin-bottom:0.15rem; }
+.l10-example-text { font-size:0.82rem; color:#525252; line-height:1.45; }
+.l10-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l10-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l10-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l10-step-body { flex:1; }
+.l10-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l10-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l10-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l10-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l10-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l10-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l10-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l10-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l10-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l10-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.9rem; color:#166534; font-style:italic; line-height:1.6; }
+.l10-schema { display:flex; align-items:center; gap:0.4rem; padding:0.85rem 1rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; margin-top:0.75rem; flex-wrap:wrap; }
+.l10-schema-item { font-weight:700; color:#166534; font-size:0.85rem; }
+.l10-schema-arrow { color:#22c55e; font-weight:700; }
+.l10-bad-good { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
+.l10-bad-col { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
+.l10-good-col { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
+.l10-col-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
+.l10-col-items { display:grid; gap:0.35rem; }
+.l10-col-item { font-size:0.82rem; line-height:1.45; }
+</style>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 1</div>
+    <div class="l10-section-title">Головна перешкода впровадження: чому команда саботує зміни</div>
+    <div class="l10-card">
+        <p>Кожен власник, який намагається навести лад у бізнесі, стикається з одним і тим же: найближчі, найлояльніші співробітники раптом починають чинити опір. Людина, якій ви довіряли роками, раптом виявляє незадоволення. Хтось подає у відставку. Інші починають ставити під сумнів ваші рішення.</p>
+        <p>Здається, що це зрада. Але насправді — це закономірність.</p>
+    </div>
+
+    <div class="l10-section-label" style="margin-top:1rem;">Скільки коштує втрата одного співробітника</div>
+    <div class="l10-card">
+        <p>За міжнародними дослідженнями, втрата одного співробітника коштує від 6 до 12 місяців його зарплати. Якщо ваш керівник відділу отримує 40 000 грн на місяць — його звільнення обійдеться вам мінімум у 240 000 грн. Але це лише пряма, видима втрата.</p>
+    </div>
+    <div class="l10-situations">
+        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Людина, яка звільняється, активно критикує вас перед рештою команди</div>
+        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Інші співробітники починають сумніватися: «А може, він правий?»</div>
+        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Ваш час іде на вирішення конфліктів замість розвитку бізнесу</div>
+        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Пошук і адаптація нової людини займає від 2 до 6 місяців — і не гарантує результату</div>
+    </div>
+
+    <div class="l10-section-label" style="margin-top:1rem;">Чому люди опираються — справжня причина</div>
+    <div class="l10-card">
+        <p>Більшість власників думають, що опір — це нелояльність або лінь. Насправді причина набагато простіша: <strong>ви впроваджуєте зміни, бо бачите проблему. Але чи бачать її ваші співробітники?</strong></p>
+        <p>Щоб змінити поведінку людини — потрібно дати їй більшу, значущу мету, яка переважить бажання зберегти статус-кво. Цілі повинні бути справді великими — такими, що викликають ентузіазм і бажання бути частиною чогось більшого.</p>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 2</div>
+    <div class="l10-section-title">Мета і задум компанії — фундамент всього</div>
+    <div class="l10-card">
+        <p>Все у вашому бізнесі — структура, правила, мотивація команди, навіть конкретні рішення щодня — має спиратися на дві речі: мету і задум. Без них компанія схожа на корабель без компасу: рухається, але не знає куди.</p>
+    </div>
+
+    <div class="l10-section-label" style="margin-top:1rem;">Що таке мета</div>
+    <div class="l10-card">
+        <p>Мета — це основна ідея компанії. Вона відповідає на питання: <strong>для чого ми існуємо? Що зміниться у світі, якщо ми будемо успішні?</strong></p>
+        <p>Типова помилка: «Моя мета — заробити гроші». Це все одно що сказати: «Мета мого існування — дихати». Технічно правда, але це не пояснює, навіщо ви обрали саме цей бізнес. Гроші — це енергія для досягнення мети. Але не сама мета.</p>
+    </div>
+    <div class="l10-examples">
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Консалтингова компанія</div><div class="l10-example-text">Зробити малий бізнес розумнішим, ефективнішим і незалежним від власника</div></div>
+        </div>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Стоматологія</div><div class="l10-example-text">Зробити людей здоровими і впевненими у своїй посмішці</div></div>
+        </div>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Будівельна компанія</div><div class="l10-example-text">Створювати комфортне та безпечне житло для сімей</div></div>
+        </div>
+    </div>
+    <div class="l10-quote">Запитайте себе: як змінюється життя людей завдяки моєму бізнесу? Що зникне зі світу, якщо моя компанія закриється?</div>
+
+    <div class="l10-section-label" style="margin-top:1rem;">Що таке задум</div>
+    <div class="l10-card">
+        <p>Якщо мета відповідає на питання «навіщо», то задум відповідає на питання «як». Задум — це ваш унікальний спосіб досягати мети. Те, що ви робите — і чого свідомо <strong>НЕ</strong> робите.</p>
+        <p>Важливо: задум не вигадують з нуля. Він відображає ваш реальний досвід і розуміння ринку. Він базується на тому, як ви вже досягаєте успіху — просто це ще не сформульовано.</p>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 3</div>
+    <div class="l10-section-title">Адміністративна шкала — хребет бізнесу</div>
+    <div class="l10-card">
+        <p>Уявіть: у вас є нова ідея. Нова послуга, новий напрямок, нова акція. Як зрозуміти — це хороша ідея чи погана? Більшість власників вирішують «на відчуттях». Результат: витрачені гроші, час і розфокус.</p>
+        <p>Великі компанії мають інструмент для перевірки будь-якої ідеї. Coca-Cola не починає продавати ковбасу. McDonald's не відкриває автосалони. Вони знають свій шлях — і кожна нова ідея перевіряється: чи вона на цьому шляху? Цей інструмент називається <strong>адміністративна шкала</strong>.</p>
+    </div>
+    <div class="l10-section-label" style="margin-top:1rem;">10 рівнів шкали (від найвищого до найнижчого)</div>
+    <div class="l10-scale">
+        <div class="l10-scale-item"><div class="l10-scale-num">1</div><div><div class="l10-scale-title">Мета</div><div class="l10-scale-text">Навіщо ми існуємо</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">2</div><div><div class="l10-scale-title">Задум</div><div class="l10-scale-text">Як саме ми досягаємо мети</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">3</div><div><div class="l10-scale-title">Політика</div><div class="l10-scale-text">Письмові правила, в яких рамках діємо</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">4</div><div><div class="l10-scale-title">Плани</div><div class="l10-scale-text">Що ми робимо в найближчий горизонт</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">5</div><div><div class="l10-scale-title">Програми</div><div class="l10-scale-text">Конкретні ініціативи для досягнення планів</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">6</div><div><div class="l10-scale-title">Проекти</div><div class="l10-scale-text">Деталізація конкретних завдань</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">7</div><div><div class="l10-scale-title">Накази</div><div class="l10-scale-text">Конкретні вказівки конкретним людям</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">8</div><div><div class="l10-scale-title">Ідеальна картина</div><div class="l10-scale-text">Як виглядає успішний результат</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">9</div><div><div class="l10-scale-title">Статистика</div><div class="l10-scale-text">Метрики, які показують чи рухаємося до мети</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">10</div><div><div class="l10-scale-title">Кінцевий продукт</div><div class="l10-scale-text">Що конкретно виробляє компанія або відділ</div></div></div>
+    </div>
+    <div class="l10-quote">Головний принцип: кожен рівень має відповідати іншим. Якщо ваш наказ суперечить меті — щось піде не так. Якщо план суперечить задуму — зусилля витрачаються даремно.</div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 4</div>
+    <div class="l10-section-title">Політика компанії — правила, які рятують бізнес</div>
+    <div class="l10-card">
+        <p>Без чітких письмових правил кожен вирішує по-своєму. «Пацієнт просить знижку — давати?» «Клієнт залишив поганий відгук — як реагувати?» «Лікар запізнився — що говорити пацієнту?» І кожного разу — питання до вас.</p>
+        <p>Політика компанії — це письмові правила, які говорять співробітникам, як діяти в різних ситуаціях. Не «як хочеш», а «як правильно для нашої компанії».</p>
+    </div>
+    <div class="l10-card" style="margin-top:0.6rem;">
+        <p><strong>Класичний приклад з Apple:</strong> Стів Джобс мав чіткий задум — Apple контролює все: залізо, операційну систему і програмне забезпечення. Але він не записав це правило офіційно. Коли його звільнили, нове керівництво почало продавати ліцензії на macOS. Якість Apple впала, задум зруйнувався, компанія опинилася на межі банкрутства.</p>
+    </div>
+    <div class="l10-quote">Якщо немає письмових правил — ви самі стаєте заручником бізнесу. Вам доводиться особисто вирішувати кожну ситуацію і ви фізично не можете поїхати у відпустку.</div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 5</div>
+    <div class="l10-section-title">Технологія бізнесу — як вийти з пастки «незамінних»</div>
+    <div class="l10-card">
+        <p>Скільки разів ви пояснювали одне й те саме? Новому співробітнику. Потім ще одному. Кожен раз — як вперше. Тому що «як треба робити» — у вашій голові, а не на папері.</p>
+        <p>Технологія — це послідовність дій, яка дає передбачуваний результат. Не філософія. Не теорія. Чіткі кроки: роби так — отримаєш це.</p>
+    </div>
+    <div class="l10-section-label" style="margin-top:1rem;">Чотири наслідки роботи без описаних процесів</div>
+    <div class="l10-situations">
+        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо масштабувати.</strong> Хочете відкрити другу точку? Як ви передасте «як треба робити»? Ніяк — це тільки у вашій голові.</div></div>
+        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо навчати людей.</strong> Новий співробітник приходить, ви витрачаєте тижні на навчання, він звільняється — і все спочатку.</div></div>
+        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо контролювати якість.</strong> Як перевірити чи правильно зробили? Якщо немає стандарту — немає критерію.</div></div>
+        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Ви стаєте заручником «незамінних».</strong> Є Петро, який «знає як». Без Петра — все зупиняється. Петро це знає. І користується цим.</div></div>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 6</div>
+    <div class="l10-section-title">Рівні мотивації — чому одні горять роботою, а іншим байдуже</div>
+    <div class="l10-card">
+        <p>Мотивація — це внутрішнє бажання щось робити. Не тому що змушують або платять, а тому що людина сама хоче. І важливий нюанс: мотивований новачок часто цінніший, ніж досвідчений байдужий — бо мотивований <em>вчиться</em>.</p>
+    </div>
+    <div class="l10-motivation">
+        <div class="l10-motiv-item" style="background:#f0fdf4;border-color:#bbf7d0;">
+            <div class="l10-motiv-header">
+                <span class="l10-motiv-badge" style="background:#22c55e;color:white;">РІВЕНЬ 1</span>
+                <span class="l10-motiv-title" style="color:#166534;">Почуття обов'язку</span>
+            </div>
+            <div class="l10-motiv-text" style="color:#166534;">Людина відчуває глибоку відповідальність за справу. Вона дбає про компанію більше, ніж про себе. Розуміє цілі компанії і відчуває: «Це — моя справа». Власники бізнесу і «старожили» часто перебувають на цьому рівні.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#eff6ff;border-color:#bfdbfe;">
+            <div class="l10-motiv-header">
+                <span class="l10-motiv-badge" style="background:#3b82f6;color:white;">РІВЕНЬ 2</span>
+                <span class="l10-motiv-title" style="color:#1e40af;">Особиста переконаність</span>
+            </div>
+            <div class="l10-motiv-text" style="color:#1e3a8a;">Людина вірить у свої принципи і в цінність своєї роботи. Лікар, який справді хоче допомагати людям. Програміст, який пишається якістю коду. Вони роблять добре, бо для них це питання особистої честі.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#fff7ed;border-color:#fed7aa;">
+            <div class="l10-motiv-header">
+                <span class="l10-motiv-badge" style="background:#f97316;color:white;">РІВЕНЬ 3</span>
+                <span class="l10-motiv-title" style="color:#c2410c;">Особиста вигода</span>
+            </div>
+            <div class="l10-motiv-text" style="color:#9a3412;">Людина шукає, що вона отримає особисто: бонус, кар'єрне зростання, нові навички. Це не погано — з цим можна і треба працювати. Але вона не буде «горіти» заради компанії.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#fef2f2;border-color:#fecaca;">
+            <div class="l10-motiv-header">
+                <span class="l10-motiv-badge" style="background:#ef4444;color:white;">РІВЕНЬ 4</span>
+                <span class="l10-motiv-title" style="color:#b91c1c;">Гроші</span>
+            </div>
+            <div class="l10-motiv-text" style="color:#991b1b;">Найнижчий рівень. Людину цікавить тільки зарплата. Плати — працює. Не платиш — не працює. Жодної ініціативи, жодного «понаднорми заради результату».</div>
+        </div>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 7</div>
+    <div class="l10-section-title">Як підвищувати мотивацію — єдиний інструмент, який працює завжди</div>
+    <div class="l10-card">
+        <p>Мотивація залежить від того, що людина вважає реальним. Гроші — реальні для всіх. А велика місія компанії, вплив на суспільство? Для одних — реально. Для інших — пусті красиві слова.</p>
+        <p>Але ключовий момент: людина, яка чує тільки ритм, може навчитися чути більше — якщо буде слухати, аналізувати, тренуватися.</p>
+    </div>
+    <div class="l10-section-label" style="margin-top:1rem;">Формула підвищення мотивації</div>
+    <div class="l10-schema">
+        <span class="l10-schema-item">Показуєте ціль</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Утримуєте увагу</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Ціль стає реальною</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Людина мотивована</span>
+    </div>
+    <div class="l10-card" style="margin-top:0.75rem;">
+        <p>Утримувати увагу на великих цілях — важко. Коли є тиск і стрес — увага йде на виживання. Людина забуває про великі цілі, фокус — на рахунках і конфліктах. Рішення: <strong>постійно нагадувати</strong>. Регулярно розповідати про цілі. Показувати, як робота впливає на конкретних людей і клієнтів.</p>
+    </div>
+    <div class="l10-examples">
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+            <div><div class="l10-example-label">Шиномонтаж</div><div class="l10-example-text">«Твоя робота рятує життя на дорозі. Кожна правильно встановлена шина — це безпека сім'ї»</div></div>
+        </div>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+            <div><div class="l10-example-label">Стоматологія</div><div class="l10-example-text">«Ти повертаєш людям впевненість у собі. Це більше, ніж просто лікування зубів»</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 8</div>
+    <div class="l10-section-title">Як донести цілі та задум до команди</div>
+    <div class="l10-card">
+        <p>Ви сформулювали мету і задум. Але якщо про це знаєте тільки ви — це нічого не змінить. Завдання: зробити так, щоб кожен у команді знав, куди рухається компанія — і чому.</p>
+    </div>
+    <div class="l10-section-label" style="margin-top:1rem;">Простий план з 4 кроків</div>
+    <div class="l10-steps">
+        <div class="l10-step">
+            <div class="l10-step-num">1</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Створіть офіційний письмовий документ</div>
+                <div class="l10-step-text">Не розмова, не «всі і так знають» — письмовий документ із підписом засновника. Три частини: мета компанії, задум і коротка історія. Підпис сигналізує команді: «Це серйозно. Це від першої особи».</div>
+            </div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">2</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Офіційно презентуйте документ команді</div>
+                <div class="l10-step-text">Зберіть всіх разом — на планерці, окремій зустрічі або щомісячних зборах. Головне — щоб були всі ключові люди.</div>
+            </div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">3</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Запишіть виступ на відео</div>
+                <div class="l10-step-text">Якщо хтось пропустив — надішліть відео. Новий співробітник — дайте подивитись у перший день. Через рік забули — можна переглянути і освіжити.</div>
+            </div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">4</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Регулярно нагадуйте</div>
+                <div class="l10-step-text">Мета і задум — це не «сказав один раз і забув». Повертайтеся до них на зборах, при прийнятті рішень, при поясненні змін. Це тримає всю команду на одній хвилі.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 9</div>
+    <div class="l10-section-title">Як провести перше заняття — практичний алгоритм</div>
+    <div class="l10-card">
+        <p>Перше заняття, де ви презентуєте цілі і задум команді, задає тон всьому подальшому. Якщо зробите добре — співробітники підтримають зміни і почнуть рухатися разом. Якщо погано — сприймуть це як «чергову нісенітницю від шефа».</p>
+        <p>Більшість співробітників сприймають нові інструменти як «зайве навантаження». Вирішення — <strong>спочатку мета, потім інструменти</strong>. Ніяк не навпаки.</p>
+    </div>
+    <div class="l10-section-label" style="margin-top:1rem;">4 результати першого заняття</div>
+    <div class="l10-result-list" style="margin-top:0.5rem;">
+        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>«Ми — команда» — всі рухаються до спільної мети</div>
+        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Спільна мета — конкретна, з цифрами та ідеальною картиною</div>
+        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Навіщо вчитися — кожен розуміє, що це дасть особисто йому</div>
+        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Реальна підтримка змін — не формальна, а щира</div>
+    </div>
+    <div class="l10-section-label" style="margin-top:1rem;">7 кроків підготовки</div>
+    <div class="l10-steps">
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">1</div><div class="l10-step-body"><div class="l10-step-title">Місце, час, список</div><div class="l10-step-text">Визначте де, коли і хто буде присутній. Повний список учасників.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">2</div><div class="l10-step-body"><div class="l10-step-title">Надішліть офіційне запрошення</div><div class="l10-step-text">Не «якщо зможете», а «обов'язково будьте». Це важливо для сприйняття серйозності.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">3</div><div class="l10-step-body"><div class="l10-step-title">Підготуйте тези</div><div class="l10-step-text">Запишіть тези для виступу, але не читайте з паперу. Має звучати природно, як ваші слова.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">4</div><div class="l10-step-body"><div class="l10-step-title">Створіть презентацію</div><div class="l10-step-text">Кілька слайдів з цілями та задумом, ідеальною картиною майбутнього і важливими фактами з історії компанії.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">5</div><div class="l10-step-body"><div class="l10-step-title">Відрепетируйте</div><div class="l10-step-text">Перед дзеркалом або перед довіреною людиною. Це допоможе почуватися впевнено.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">6</div><div class="l10-step-body"><div class="l10-step-title">Роздайте письмову політику</div><div class="l10-step-text">Всі учасники повинні отримати документ з цілями і задумом — на занятті або одразу після.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">7</div><div class="l10-step-body"><div class="l10-step-title">Зберіть відгуки</div><div class="l10-step-text">Дайте можливість відповісти на кілька запитань після заняття. Хто підтримує? Хто сумнівається?</div></div></div>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Завдання</div>
+    <div class="l10-section-title">Розробіть Політику цілей і задуму через AI-асистента</div>
+    <div class="l10-steps">
+        <div class="l10-step">
+            <div class="l10-step-num">1</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Пройдіть діалог з AI-коучем цілей</div>
+                <div class="l10-step-text">Асистент проведе вас через формулювання мети, задуму, ідеальної картини та історії бізнесу</div>
+            </div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">2</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Збережіть результат у Google Docs</div>
+                <div class="l10-step-text">На виході — готова «Політика цілей і задуму компанії» з підписом засновника</div>
+            </div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">3</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Проведіть презентацію для команди</div>
+                <div class="l10-step-text">Зберіть усіх, розкажіть про мету і задум, запишіть виступ на відео</div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
+        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Час на впровадження</div>
+        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 години: 1 год на діалог з AI і підготовку документа + 2 год на проведення презентації для команди</div>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Інструмент</div>
+    <div class="l10-tool">
+        <div class="l10-tool-header">
+            <div class="l10-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+                <div class="l10-tool-title">AI-коуч цілей і задуму</div>
+                <div class="l10-tool-desc">Асистент веде діалог і допомагає сформулювати мету, задум, ідеальну картину та історію компанії. На виході — готовий документ «Політика цілей і задуму» для підпису засновника і презентації команді.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Розробити ціль і задум компанії
+        </a>
+    </div>
+</div>`,
+
+                lessonContent_ru: `
+<style>
+.l10-section { margin-bottom:1.75rem; }
+.l10-section:last-child { margin-bottom:0; }
+.l10-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l10-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l10-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l10-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l10-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l10-card p+p { margin-top:0.7rem; }
+.l10-situations { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-situation { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
+.l10-scale { display:grid; gap:0.4rem; margin-top:0.75rem; }
+.l10-scale-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.7rem 0.9rem; background:#f8fafc; border-radius:9px; border:1px solid #e2e8f0; }
+.l10-scale-num { width:26px; height:26px; background:#1a1a1a; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; }
+.l10-scale-title { font-weight:700; color:#1a1a1a; font-size:0.84rem; margin-bottom:0.15rem; }
+.l10-scale-text { font-size:0.78rem; color:#525252; line-height:1.4; }
+.l10-motivation { display:grid; gap:0.55rem; margin-top:0.75rem; }
+.l10-motiv-item { padding:0.8rem 0.95rem; border-radius:10px; border:1px solid; }
+.l10-motiv-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem; }
+.l10-motiv-badge { font-size:0.68rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:4px; letter-spacing:0.04em; }
+.l10-motiv-title { font-weight:700; font-size:0.875rem; }
+.l10-motiv-text { font-size:0.82rem; line-height:1.5; }
+.l10-examples { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-example { display:flex; align-items:flex-start; gap:0.7rem; padding:0.7rem 0.9rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; }
+.l10-example-icon { width:30px; height:30px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l10-example-label { font-weight:700; color:#1a1a1a; font-size:0.8rem; margin-bottom:0.15rem; }
+.l10-example-text { font-size:0.82rem; color:#525252; line-height:1.45; }
+.l10-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l10-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l10-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l10-step-body { flex:1; }
+.l10-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l10-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l10-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l10-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l10-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l10-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l10-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l10-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l10-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l10-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.9rem; color:#166534; font-style:italic; line-height:1.6; }
+.l10-schema { display:flex; align-items:center; gap:0.4rem; padding:0.85rem 1rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; margin-top:0.75rem; flex-wrap:wrap; }
+.l10-schema-item { font-weight:700; color:#166534; font-size:0.85rem; }
+.l10-schema-arrow { color:#22c55e; font-weight:700; }
+</style>
+
+<div class="l10-section">
+    <div class="l10-section-label">Раздел 1</div>
+    <div class="l10-section-title">Главное препятствие внедрения: почему команда саботирует изменения</div>
+    <div class="l10-card">
+        <p>Каждый владелец, который пытается навести порядок в бизнесе, сталкивается с одним и тем же: самые близкие, самые лояльные сотрудники вдруг начинают сопротивляться. Кажется, что это предательство. Но на самом деле — это закономерность.</p>
+        <p>По международным исследованиям, потеря одного сотрудника обходится от 6 до 12 месяцев его зарплаты. Причина сопротивления проста: <strong>вы внедряете изменения, потому что видите проблему. Но видят ли её ваши сотрудники?</strong></p>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Раздел 2</div>
+    <div class="l10-section-title">Цель и замысел компании — фундамент всего</div>
+    <div class="l10-card">
+        <p>Цель — это основная идея компании. Она отвечает на вопрос: <strong>для чего мы существуем? Что изменится в мире, если мы будем успешны?</strong></p>
+        <p>Типичная ошибка: «Моя цель — заработать деньги». Деньги — это энергия для достижения цели. Но не сама цель.</p>
+    </div>
+    <div class="l10-examples">
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Консалтинговая компания</div><div class="l10-example-text">Сделать малый бизнес умнее, эффективнее и независимым от владельца</div></div>
+        </div>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Стоматология</div><div class="l10-example-text">Сделать людей здоровыми и уверенными в своей улыбке</div></div>
+        </div>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Строительная компания</div><div class="l10-example-text">Создавать комфортное и безопасное жильё для семей</div></div>
+        </div>
+    </div>
+    <div class="l10-card" style="margin-top:0.75rem;">
+        <p>Замысел — это ваш уникальный способ достигать цели. То, что вы делаете — и чего сознательно <strong>НЕ</strong> делаете. Замысел не придумывают с нуля — он отражает ваш реальный опыт и понимание рынка.</p>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Раздел 3</div>
+    <div class="l10-section-title">Административная шкала — хребет бизнеса</div>
+    <div class="l10-card">
+        <p>Coca-Cola не начинает продавать колбасу. McDonald's не открывает автосалоны. Они знают свой путь — и каждая новая идея проверяется: она на этом пути? Этот инструмент называется <strong>административная шкала</strong>.</p>
+    </div>
+    <div class="l10-scale">
+        <div class="l10-scale-item"><div class="l10-scale-num">1</div><div><div class="l10-scale-title">Цель</div><div class="l10-scale-text">Зачем мы существуем</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">2</div><div><div class="l10-scale-title">Замысел</div><div class="l10-scale-text">Как именно мы достигаем цели</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">3</div><div><div class="l10-scale-title">Политика</div><div class="l10-scale-text">Письменные правила, в рамках которых действуем</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">4</div><div><div class="l10-scale-title">Планы</div><div class="l10-scale-text">Что делаем в ближайший горизонт</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">5</div><div><div class="l10-scale-title">Программы</div><div class="l10-scale-text">Конкретные инициативы для достижения планов</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">6</div><div><div class="l10-scale-title">Проекты</div><div class="l10-scale-text">Детализация конкретных задач</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">7</div><div><div class="l10-scale-title">Приказы</div><div class="l10-scale-text">Конкретные указания конкретным людям</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">8</div><div><div class="l10-scale-title">Идеальная картина</div><div class="l10-scale-text">Как выглядит успешный результат</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">9</div><div><div class="l10-scale-title">Статистика</div><div class="l10-scale-text">Метрики, которые показывают движемся ли к цели</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">10</div><div><div class="l10-scale-title">Конечный продукт</div><div class="l10-scale-text">Что конкретно производит компания или отдел</div></div></div>
+    </div>
+    <div class="l10-quote">Главный принцип: каждый уровень должен соответствовать другим. Если ваш приказ противоречит цели — что-то пойдёт не так.</div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Разделы 4–5</div>
+    <div class="l10-section-title">Политика и технология бизнеса</div>
+    <div class="l10-card">
+        <p>Политика компании — это письменные правила, которые говорят сотрудникам, как действовать в разных ситуациях. Без них каждый решает по-своему — и вы становитесь заложником бизнеса.</p>
+        <p>Технология — это последовательность действий, которая даёт предсказуемый результат. Пока «как надо делать» живёт в вашей голове — бизнес невозможно масштабировать, обучать или контролировать по качеству.</p>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Разделы 6–7</div>
+    <div class="l10-section-title">Уровни мотивации и как её повышать</div>
+    <div class="l10-motivation">
+        <div class="l10-motiv-item" style="background:#f0fdf4;border-color:#bbf7d0;">
+            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#22c55e;color:white;">УРОВЕНЬ 1</span><span class="l10-motiv-title" style="color:#166534;">Чувство долга</span></div>
+            <div class="l10-motiv-text" style="color:#166534;">Человек чувствует глубокую ответственность за дело, заботится о компании больше, чем о себе.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#eff6ff;border-color:#bfdbfe;">
+            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#3b82f6;color:white;">УРОВЕНЬ 2</span><span class="l10-motiv-title" style="color:#1e40af;">Личная убеждённость</span></div>
+            <div class="l10-motiv-text" style="color:#1e3a8a;">Верит в ценность своей работы. Делает хорошо, потому что это вопрос личной чести.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#fff7ed;border-color:#fed7aa;">
+            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#f97316;color:white;">УРОВЕНЬ 3</span><span class="l10-motiv-title" style="color:#c2410c;">Личная выгода</span></div>
+            <div class="l10-motiv-text" style="color:#9a3412;">Ищет бонус, карьерный рост, новые навыки. С этим можно и нужно работать.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#fef2f2;border-color:#fecaca;">
+            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#ef4444;color:white;">УРОВЕНЬ 4</span><span class="l10-motiv-title" style="color:#b91c1c;">Деньги</span></div>
+            <div class="l10-motiv-text" style="color:#991b1b;">Только зарплата. Никакой инициативы, никакой сверхурочной работы ради результата.</div>
+        </div>
+    </div>
+    <div class="l10-schema">
+        <span class="l10-schema-item">Показываете цель</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Удерживаете внимание</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Цель становится реальной</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Человек мотивирован</span>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Задание</div>
+    <div class="l10-section-title">Разработайте Политику целей и замысла через AI-ассистента</div>
+    <div class="l10-steps">
+        <div class="l10-step">
+            <div class="l10-step-num">1</div>
+            <div class="l10-step-body"><div class="l10-step-title">Пройдите диалог с AI-коучем целей</div><div class="l10-step-text">Ассистент проведёт вас через формулировку цели, замысла, идеальной картины и истории бизнеса</div></div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">2</div>
+            <div class="l10-step-body"><div class="l10-step-title">Сохраните результат в Google Docs</div><div class="l10-step-text">На выходе — готовый документ «Политика целей и замысла компании» с подписью основателя</div></div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">3</div>
+            <div class="l10-step-body"><div class="l10-step-title">Проведите презентацию для команды</div><div class="l10-step-text">Соберите всех, расскажите о цели и замысле, запишите выступление на видео</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Инструмент</div>
+    <div class="l10-tool">
+        <div class="l10-tool-header">
+            <div class="l10-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+                <div class="l10-tool-title">AI-коуч целей и замысла</div>
+                <div class="l10-tool-desc">Ассистент ведёт диалог и помогает сформулировать цель, замысел, идеальную картину и историю компании. На выходе — готовый документ «Политика целей и замысла» для подписи основателя и презентации команде.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Разработать цель и замысел компании
+        </a>
+    </div>
+</div>`,
+
+                lessonContent_en: `<style>.l10e-section{margin-bottom:1.75rem}.l10e-section:last-child{margin-bottom:0}.l10e-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l10e-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l10e-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l10e-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l10e-card p{font-size:.9rem;color:#374151;line-height:1.65}.l10e-card p+p{margin-top:.7rem}.l10e-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l10e-situations{display:grid;gap:.45rem;margin-top:.75rem}.l10e-scale{display:grid;gap:.4rem;margin-top:.75rem}.l10e-scale-item{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}.l10e-snum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}.l10e-stitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}.l10e-stext{font-size:.78rem;color:#525252;line-height:1.4}.l10e-motiv{display:grid;gap:.55rem;margin-top:.75rem}.l10e-mitem{padding:.8rem .95rem;border-radius:10px;border:1px solid}.l10e-mbadge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:.5rem}.l10e-mtitle{font-weight:700;font-size:.875rem}.l10e-mtext{font-size:.82rem;line-height:1.5;margin-top:.35rem}.l10e-steps{display:grid;gap:.6rem;margin-top:.75rem}.l10e-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l10e-stepnum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l10e-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l10e-steptext{font-size:.82rem;color:#525252;line-height:1.5}.l10e-quote{margin-top:.75rem;padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6}.l10e-schema{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.75rem}.l10e-sitem{padding:.5rem .85rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-weight:600;color:#1a1a1a}.l10e-sarrow{color:#9ca3af;font-size:1.1rem}.l10e-example{display:flex;gap:.65rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;margin-top:.45rem}.l10e-eicon{width:24px;height:24px;background:#f0fdf4;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10e-elabel{font-weight:700;color:#1a1a1a;font-size:.82rem}.l10e-etext{font-size:.78rem;color:#525252;line-height:1.4;margin-top:.15rem}.l10e-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-top:.35rem}.l10e-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l10e-toolhdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l10e-toolicon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10e-tooltitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l10e-tooldesc{font-size:.82rem;color:#525252;line-height:1.5}.l10e-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l10e-section"><div class="l10e-label">Section 1</div><div class="l10e-title">The main obstacle to implementation: why the team sabotages change</div><div class="l10e-card"><p>Every owner who tries to bring order to their business faces the same thing: the closest, most loyal employees suddenly start resisting. The person you trusted for years suddenly shows dissatisfaction. Someone quits. Others start questioning your decisions.</p><p>It seems like betrayal. But in reality — it's a pattern.</p></div><div class="l10e-label" style="margin-top:1rem">What losing one employee costs</div><div class="l10e-card"><p>According to international research, losing one employee costs between 6 and 12 months of their salary. If your department head earns $4,000/month — their departure will cost you at least $24,000. But this is only the direct, visible loss.</p></div><div class="l10e-situations"><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>The person who quits actively criticizes you in front of the rest of the team</div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Other employees start doubting: "Maybe they're right?"</div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Your time goes to conflict resolution instead of business development</div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Finding and onboarding a new person takes 2–6 months — with no guaranteed result</div></div><div class="l10e-label" style="margin-top:1rem">Why people resist — the real reason</div><div class="l10e-card"><p>Most owners think resistance means disloyalty or laziness. In reality the reason is much simpler: <strong>you implement changes because you see the problem. But do your employees see it?</strong></p><p>To change a person's behavior — you need to give them a bigger, meaningful goal that outweighs the desire to preserve the status quo. Goals must be truly big — ones that create enthusiasm and a desire to be part of something larger.</p></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 2</div><div class="l10e-title">Company goal and vision — the foundation of everything</div><div class="l10e-card"><p>Everything in your business — structure, rules, team motivation, even daily decisions — must be based on two things: goal and vision. Without them the company is like a ship without a compass: moving, but not knowing where.</p></div><div class="l10e-label" style="margin-top:1rem">What a goal is</div><div class="l10e-card"><p>The goal is the core idea of the company. It answers: <strong>why do we exist? What will change in the world if we succeed?</strong></p><p>Typical mistake: "My goal is to make money." That's like saying "The purpose of my existence is to breathe." Money is energy for achieving the goal. But not the goal itself.</p></div><div class="l10e-example"><div class="l10e-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10e-elabel">Consulting company</div><div class="l10e-etext">Make small businesses smarter, more efficient and independent from the owner</div></div></div><div class="l10e-example"><div class="l10e-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10e-elabel">Dental clinic</div><div class="l10e-etext">Make people healthy and confident in their smile</div></div></div><div class="l10e-quote">Ask yourself: how does people's lives change thanks to my business? What will disappear from the world if my company closes?</div><div class="l10e-label" style="margin-top:1rem">What a vision is</div><div class="l10e-card"><p>If the goal answers "why", the vision answers "how". Vision is your unique way of achieving the goal. What you do — and what you consciously do <strong>NOT</strong> do.</p><p>Important: vision is not invented from scratch. It reflects your real experience and market understanding. It is based on how you already succeed — it's just not yet articulated.</p></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 3</div><div class="l10e-title">The administrative scale — the backbone of business</div><div class="l10e-card"><p>Imagine you have a new idea. A new service, a new direction, a new promotion. How do you know — is it a good idea or bad? Most owners decide "by feel." Result: wasted money, time and focus.</p><p>Large companies have a tool for testing any idea. Coca-Cola doesn't start selling sausage. McDonald's doesn't open car dealerships. They know their path — and every new idea is checked: is it on that path? This tool is called the <strong>administrative scale</strong>.</p></div><div class="l10e-label" style="margin-top:1rem">10 scale levels (from highest to lowest)</div><div class="l10e-scale"><div class="l10e-scale-item"><div class="l10e-snum">1</div><div><div class="l10e-stitle">Goal</div><div class="l10e-stext">Why we exist</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">2</div><div><div class="l10e-stitle">Vision</div><div class="l10e-stext">Exactly how we achieve the goal</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">3</div><div><div class="l10e-stitle">Policy</div><div class="l10e-stext">Written rules within which we operate</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">4</div><div><div class="l10e-stitle">Plans</div><div class="l10e-stext">What we do in the nearest horizon</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">5</div><div><div class="l10e-stitle">Programs</div><div class="l10e-stext">Specific initiatives to achieve plans</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">6</div><div><div class="l10e-stitle">Projects</div><div class="l10e-stext">Detailed breakdown of specific tasks</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">7</div><div><div class="l10e-stitle">Orders</div><div class="l10e-stext">Specific instructions to specific people</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">8</div><div><div class="l10e-stitle">Ideal scene</div><div class="l10e-stext">What a successful result looks like</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">9</div><div><div class="l10e-stitle">Statistics</div><div class="l10e-stext">Metrics showing whether we're moving toward the goal</div></div></div><div class="l10e-scale-item"><div class="l10e-snum">10</div><div><div class="l10e-stitle">Final product</div><div class="l10e-stext">What specifically the company or department produces</div></div></div></div><div class="l10e-quote">The main principle: each level must match the others. If your order contradicts the goal — something will go wrong. If a plan contradicts the vision — effort is wasted.</div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 4</div><div class="l10e-title">Company policy — rules that save the business</div><div class="l10e-card"><p>Without clear written rules everyone decides on their own. "The patient asks for a discount — give it?" "The client left a bad review — how to respond?" "The doctor was late — what to tell the patient?" And every time — a question to you.</p><p>Company policy is written rules that tell employees how to act in different situations. Not "however you want" but "the way that is right for our company".</p></div><div class="l10e-card" style="margin-top:.6rem"><p><strong>Classic Apple example:</strong> Steve Jobs had a clear vision — Apple controls everything: hardware, the operating system and software. But he didn't write this rule officially. When he was fired, new management started selling macOS licenses. Apple quality dropped, the vision collapsed, the company nearly went bankrupt.</p></div><div class="l10e-quote">If there are no written rules — you become a hostage of the business. You have to personally resolve every situation and you physically cannot go on vacation.</div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 5</div><div class="l10e-title">Business technology — how to escape the "indispensable" trap</div><div class="l10e-card"><p>How many times have you explained the same thing? To a new employee. Then another one. Every time — as if for the first time. Because "how it should be done" is in your head, not on paper.</p><p>Technology is a sequence of actions that produces a predictable result. Not philosophy. Not theory. Clear steps: do this — get that.</p></div><div class="l10e-label" style="margin-top:1rem">Four consequences of working without documented processes</div><div class="l10e-situations"><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Impossible to scale.</strong> Want to open a second location? How do you transfer "how it should be done"? You can't — it's only in your head.</div></div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Impossible to train people.</strong> A new employee comes, you spend weeks training, they quit — and start over.</div></div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Impossible to control quality.</strong> How do you check if it was done correctly? If there's no standard — there's no criterion.</div></div><div class="l10e-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>You become hostage to the "indispensable".</strong> There's Peter who "knows how." Without Peter — everything stops. Peter knows this. And uses it.</div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 6</div><div class="l10e-title">Motivation levels — why some burn with work and others don't care</div><div class="l10e-card"><p>Motivation is an internal desire to do something. Not because forced or paid, but because the person genuinely wants to. A motivated beginner is often more valuable than an experienced but indifferent person — because the motivated one <em>learns</em>.</p></div><div class="l10e-motiv"><div class="l10e-mitem" style="background:#f0fdf4;border-color:#bbf7d0"><span class="l10e-mbadge" style="background:#22c55e;color:white">LEVEL 1</span><span class="l10e-mtitle" style="color:#166534">Sense of duty</span><div class="l10e-mtext" style="color:#166534">The person feels deep responsibility for the cause. They care about the company more than themselves. Understands the company's goals and feels: "This is my business." Owners and "veterans" are often at this level.</div></div><div class="l10e-mitem" style="background:#eff6ff;border-color:#bfdbfe"><span class="l10e-mbadge" style="background:#3b82f6;color:white">LEVEL 2</span><span class="l10e-mtitle" style="color:#1e40af">Personal conviction</span><div class="l10e-mtext" style="color:#1e3a8a">The person believes in their principles and in the value of their work. A doctor who genuinely wants to help people. A programmer who takes pride in code quality. They do well because it's a matter of personal honor.</div></div><div class="l10e-mitem" style="background:#fff7ed;border-color:#fed7aa"><span class="l10e-mbadge" style="background:#f97316;color:white">LEVEL 3</span><span class="l10e-mtitle" style="color:#c2410c">Personal benefit</span><div class="l10e-mtext" style="color:#9a3412">The person looks for what they'll get personally: bonus, career growth, new skills. Not bad — you can work with it. But they won't "burn" for the company.</div></div><div class="l10e-mitem" style="background:#fef2f2;border-color:#fecaca"><span class="l10e-mbadge" style="background:#ef4444;color:white">LEVEL 4</span><span class="l10e-mtitle" style="color:#b91c1c">Money</span><div class="l10e-mtext" style="color:#991b1b">The lowest level. Only interested in salary. Pay — works. Don't pay — doesn't work. Zero initiative, zero "going beyond for results".</div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 7</div><div class="l10e-title">How to increase motivation — the only tool that always works</div><div class="l10e-card"><p>Motivation depends on what a person considers real. Money — real for everyone. But a big company mission, impact on society? For some — real. For others — empty pretty words.</p><p>Key point: a person who hears only the rhythm can learn to hear more — if they listen, analyze, practice.</p></div><div class="l10e-label" style="margin-top:1rem">Motivation formula</div><div class="l10e-schema"><span class="l10e-sitem">Show the goal</span><span class="l10e-sarrow">→</span><span class="l10e-sitem">Hold attention</span><span class="l10e-sarrow">→</span><span class="l10e-sitem">Goal becomes real</span><span class="l10e-sarrow">→</span><span class="l10e-sitem">Person is motivated</span></div><div class="l10e-card" style="margin-top:.75rem"><p>Keeping attention on big goals is hard. When there's pressure and stress — attention goes to survival. People forget about big goals, focus is on bills and conflicts. Solution: <strong>constantly remind</strong>. Regularly talk about goals. Show how the work affects specific people and clients.</p></div><div class="l10e-example"><div class="l10e-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div><div class="l10e-elabel">Tire shop</div><div class="l10e-etext">"Your work saves lives on the road. Every correctly installed tire is family safety"</div></div></div><div class="l10e-example"><div class="l10e-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div><div class="l10e-elabel">Dental clinic</div><div class="l10e-etext">"You restore people's confidence. This is more than just treating teeth"</div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 8</div><div class="l10e-title">How to communicate goals and vision to the team</div><div class="l10e-card"><p>You've formulated the goal and vision. But if only you know about it — nothing will change. The task: make every team member know where the company is moving — and why.</p></div><div class="l10e-label" style="margin-top:1rem">Simple 4-step plan</div><div class="l10e-steps"><div class="l10e-step"><div class="l10e-stepnum">1</div><div><div class="l10e-steptitle">Create an official written document</div><div class="l10e-steptext">Not a conversation, not "everyone already knows" — a written document with the founder's signature. Three parts: company goal, vision and a brief history. The signature signals to the team: "This is serious. This is from the top."</div></div></div><div class="l10e-step"><div class="l10e-stepnum">2</div><div><div class="l10e-steptitle">Officially present the document to the team</div><div class="l10e-steptext">Bring everyone together — at a planning meeting, a separate meeting or monthly assembly. The main thing — all key people must be there.</div></div></div><div class="l10e-step"><div class="l10e-stepnum">3</div><div><div class="l10e-steptitle">Record your speech on video</div><div class="l10e-steptext">If someone missed it — send the video. A new employee — let them watch it on day one. Forgotten a year later — can rewatch and refresh.</div></div></div><div class="l10e-step"><div class="l10e-stepnum">4</div><div><div class="l10e-steptitle">Remind regularly</div><div class="l10e-steptext">Goal and vision are not "said once and forgotten." Return to them at meetings, when making decisions, when explaining changes. This keeps the whole team on the same wavelength.</div></div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Section 9</div><div class="l10e-title">How to run the first session — practical algorithm</div><div class="l10e-card"><p>The first session where you present goals and vision to the team sets the tone for everything that follows. If done well — employees will support changes and start moving together. If done poorly — they'll perceive it as "another nonsense from the boss."</p><p>Most employees perceive new tools as "extra burden." Solution — <strong>goal first, tools second.</strong> Never the other way around.</p></div><div class="l10e-label" style="margin-top:1rem">4 outcomes of the first session</div><div class="l10e-result">"We are a team" — everyone moves toward a common goal</div><div class="l10e-result">Common goal — specific, with numbers and an ideal picture</div><div class="l10e-result">Why learn — each person understands what it gives them personally</div><div class="l10e-result">Real support for changes — not formal, but genuine</div><div class="l10e-label" style="margin-top:1rem">7 preparation steps</div><div class="l10e-steps"><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">1</div><div><div class="l10e-steptitle">Place, time, list</div><div class="l10e-steptext">Determine where, when and who will be present. Full list of participants.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">2</div><div><div class="l10e-steptitle">Send an official invitation</div><div class="l10e-steptext">Not "if you can" but "you must be there." This is important for how seriously it's perceived.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">3</div><div><div class="l10e-steptitle">Prepare talking points</div><div class="l10e-steptext">Write out talking points but don't read from paper. It should sound natural, like your own words.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">4</div><div><div class="l10e-steptitle">Create a presentation</div><div class="l10e-steptext">A few slides with goals and vision, the ideal future picture and important facts from company history.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">5</div><div><div class="l10e-steptitle">Rehearse</div><div class="l10e-steptext">In front of a mirror or a trusted person. This helps you feel confident.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">6</div><div><div class="l10e-steptitle">Distribute the written policy</div><div class="l10e-steptext">All participants must receive the document with goals and vision — at the session or right after.</div></div></div><div class="l10e-step"><div class="l10e-stepnum" style="background:#6b7280">7</div><div><div class="l10e-steptitle">Collect feedback</div><div class="l10e-steptext">Give the opportunity to answer a few questions after the session. Who supports? Who has doubts?</div></div></div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Assignment</div><div class="l10e-title">Develop the Goal & Vision Policy through the AI assistant</div><div class="l10e-steps"><div class="l10e-step"><div class="l10e-stepnum">1</div><div><div class="l10e-steptitle">Complete the dialogue with the AI Goal Coach</div><div class="l10e-steptext">The assistant will guide you through formulating the goal, vision, ideal picture and company history</div></div></div><div class="l10e-step"><div class="l10e-stepnum">2</div><div><div class="l10e-steptitle">Save the result in Google Docs</div><div class="l10e-steptext">Output — a ready "Company Goal & Vision Policy" with the founder's signature</div></div></div><div class="l10e-step"><div class="l10e-stepnum">3</div><div><div class="l10e-steptitle">Present to the team</div><div class="l10e-steptext">Gather everyone, tell them about the goal and vision, record the speech on video</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Implementation time</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 hours: 1h AI dialogue & document preparation + 2h team presentation</div></div></div><div class="l10e-divider"></div><div class="l10e-section"><div class="l10e-label">Tool</div><div class="l10e-tool"><div class="l10e-toolhdr"><div class="l10e-toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l10e-tooltitle">AI Goal & Vision Coach</div><div class="l10e-tooldesc">The assistant leads a dialogue and helps formulate the goal, vision, ideal picture and company history. Output — a ready "Goal & Vision Policy" document for the founder's signature and team presentation.</div></div></div><a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10e-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Develop company goal & vision</a></div></div>`,
+
+                lessonContent_pl: `<style>.l10p-section{margin-bottom:1.75rem}.l10p-section:last-child{margin-bottom:0}.l10p-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l10p-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l10p-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l10p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l10p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l10p-card p+p{margin-top:.7rem}.l10p-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l10p-situations{display:grid;gap:.45rem;margin-top:.75rem}.l10p-scale{display:grid;gap:.4rem;margin-top:.75rem}.l10p-scale-item{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}.l10p-snum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}.l10p-stitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}.l10p-stext{font-size:.78rem;color:#525252;line-height:1.4}.l10p-motiv{display:grid;gap:.55rem;margin-top:.75rem}.l10p-mitem{padding:.8rem .95rem;border-radius:10px;border:1px solid}.l10p-mbadge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:.5rem}.l10p-mtitle{font-weight:700;font-size:.875rem}.l10p-mtext{font-size:.82rem;line-height:1.5;margin-top:.35rem}.l10p-steps{display:grid;gap:.6rem;margin-top:.75rem}.l10p-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l10p-stepnum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l10p-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l10p-steptext{font-size:.82rem;color:#525252;line-height:1.5}.l10p-quote{margin-top:.75rem;padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6}.l10p-schema{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.75rem}.l10p-sitem{padding:.5rem .85rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-weight:600;color:#1a1a1a}.l10p-sarrow{color:#9ca3af;font-size:1.1rem}.l10p-example{display:flex;gap:.65rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;margin-top:.45rem}.l10p-eicon{width:24px;height:24px;background:#f0fdf4;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10p-elabel{font-weight:700;color:#1a1a1a;font-size:.82rem}.l10p-etext{font-size:.78rem;color:#525252;line-height:1.4;margin-top:.15rem}.l10p-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-top:.35rem}.l10p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l10p-toolhdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l10p-toolicon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10p-tooltitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l10p-tooldesc{font-size:.82rem;color:#525252;line-height:1.5}.l10p-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l10p-section"><div class="l10p-label">Sekcja 1</div><div class="l10p-title">Główna przeszkoda we wdrożeniu: dlaczego zespół sabotuje zmiany</div><div class="l10p-card"><p>Każdy właściciel który próbuje zaprowadzić porządek w biznesie napotyka to samo: najbliżsi, najbardziej lojalni pracownicy nagle zaczynają się opierać. Osoba której ufałeś przez lata nagle wyraża niezadowolenie. Ktoś składa rezygnację. Inni zaczynają kwestionować twoje decyzje.</p><p>Wydaje się że to zdrada. Ale w rzeczywistości — to prawidłowość.</p></div><div class="l10p-label" style="margin-top:1rem">Ile kosztuje utrata jednego pracownika</div><div class="l10p-card"><p>Według międzynarodowych badań utrata jednego pracownika kosztuje od 6 do 12 miesięcy jego wynagrodzenia. Jeśli twój kierownik działu zarabia 15 000 zł miesięcznie — jego odejście będzie kosztować minimum 90 000 zł. Ale to tylko bezpośrednia, widoczna strata.</p></div><div class="l10p-situations"><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Osoba która odchodzi aktywnie krytykuje cię przed resztą zespołu</div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Inni pracownicy zaczynają wątpić: "A może mają rację?"</div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Twój czas idzie na rozwiązywanie konfliktów zamiast na rozwój biznesu</div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Znalezienie i wdrożenie nowej osoby zajmuje 2–6 miesięcy — bez gwarantowanego wyniku</div></div><div class="l10p-label" style="margin-top:1rem">Dlaczego ludzie się opierają — prawdziwa przyczyna</div><div class="l10p-card"><p>Większość właścicieli myśli że opór to nielojalność lub lenistwo. W rzeczywistości przyczyna jest znacznie prostsza: <strong>wdrażasz zmiany bo widzisz problem. Ale czy widzą go twoi pracownicy?</strong></p><p>Żeby zmienić zachowanie człowieka — musisz dać mu większy, znaczący cel który przeważy chęć zachowania status quo. Cele muszą być naprawdę duże — takie które budzą entuzjazm i chęć bycia częścią czegoś większego.</p></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 2</div><div class="l10p-title">Cel i zamysł firmy — fundament wszystkiego</div><div class="l10p-card"><p>Wszystko w twoim biznesie — struktura, zasady, motywacja zespołu, nawet codzienne decyzje — musi opierać się na dwóch rzeczach: celu i zamyśle. Bez nich firma jest jak statek bez kompasu: porusza się, ale nie wie dokąd.</p></div><div class="l10p-label" style="margin-top:1rem">Czym jest cel</div><div class="l10p-card"><p>Cel to główna idea firmy. Odpowiada na pytanie: <strong>po co istniejemy? Co zmieni się w świecie jeśli odniesiemy sukces?</strong></p><p>Typowy błąd: "Moim celem jest zarabianie pieniędzy." To jak powiedzieć: "Celem mojego istnienia jest oddychanie." Pieniądze to energia do osiągnięcia celu. Ale nie sam cel.</p></div><div class="l10p-example"><div class="l10p-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10p-elabel">Firma konsultingowa</div><div class="l10p-etext">Uczynić małe firmy mądrzejszymi, efektywniejszymi i niezależnymi od właściciela</div></div></div><div class="l10p-example"><div class="l10p-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10p-elabel">Stomatologia</div><div class="l10p-etext">Czynić ludzi zdrowymi i pewnymi swojego uśmiechu</div></div></div><div class="l10p-quote">Zapytaj siebie: jak zmienia się życie ludzi dzięki mojemu biznesowi? Co zniknie ze świata jeśli moja firma zostanie zamknięta?</div><div class="l10p-label" style="margin-top:1rem">Czym jest zamysł</div><div class="l10p-card"><p>Jeśli cel odpowiada na pytanie "po co", to zamysł odpowiada na pytanie "jak". Zamysł to twój unikalny sposób osiągania celu. To co robisz — i czego świadomie <strong>NIE</strong> robisz.</p></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 3</div><div class="l10p-title">Skala administracyjna — kręgosłup biznesu</div><div class="l10p-card"><p>Duże firmy mają narzędzie do weryfikacji każdego pomysłu. Coca-Cola nie zaczyna sprzedawać kiełbasy. McDonald's nie otwiera salonów samochodowych. Znają swoją ścieżkę — i każdy nowy pomysł jest sprawdzany: czy jest na tej ścieżce? To narzędzie nazywa się <strong>skalą administracyjną</strong>.</p></div><div class="l10p-label" style="margin-top:1rem">10 poziomów skali (od najwyższego do najniższego)</div><div class="l10p-scale"><div class="l10p-scale-item"><div class="l10p-snum">1</div><div><div class="l10p-stitle">Cel</div><div class="l10p-stext">Po co istniejemy</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">2</div><div><div class="l10p-stitle">Zamysł</div><div class="l10p-stext">Dokładnie jak osiągamy cel</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">3</div><div><div class="l10p-stitle">Polityka</div><div class="l10p-stext">Pisemne zasady w ramach których działamy</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">4</div><div><div class="l10p-stitle">Plany</div><div class="l10p-stext">Co robimy w najbliższym horyzoncie</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">5</div><div><div class="l10p-stitle">Programy</div><div class="l10p-stext">Konkretne inicjatywy do osiągnięcia planów</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">6</div><div><div class="l10p-stitle">Projekty</div><div class="l10p-stext">Szczegółowy podział konkretnych zadań</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">7</div><div><div class="l10p-stitle">Rozkazy</div><div class="l10p-stext">Konkretne instrukcje dla konkretnych osób</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">8</div><div><div class="l10p-stitle">Idealny obraz</div><div class="l10p-stext">Jak wygląda udany wynik</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">9</div><div><div class="l10p-stitle">Statystyki</div><div class="l10p-stext">Mierniki pokazujące czy zmierzamy do celu</div></div></div><div class="l10p-scale-item"><div class="l10p-snum">10</div><div><div class="l10p-stitle">Produkt końcowy</div><div class="l10p-stext">Co konkretnie produkuje firma lub dział</div></div></div></div><div class="l10p-quote">Główna zasada: każdy poziom musi odpowiadać innym. Jeśli twój rozkaz jest sprzeczny z celem — coś pójdzie nie tak.</div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 4</div><div class="l10p-title">Polityka firmy — zasady które ratują biznes</div><div class="l10p-card"><p>Bez jasnych pisemnych zasad każdy decyduje po swojemu. Polityka firmy to pisemne zasady które mówią pracownikom jak postępować w różnych sytuacjach.</p></div><div class="l10p-card" style="margin-top:.6rem"><p><strong>Klasyczny przykład Apple:</strong> Steve Jobs miał jasny zamysł — Apple kontroluje wszystko: sprzęt, system operacyjny i oprogramowanie. Ale nie zapisał tej zasady oficjalnie. Gdy go zwolniono nowe kierownictwo zaczęło sprzedawać licencje na macOS. Jakość Apple spadła, zamysł się zawalił, firma znalazła się na krawędzi bankructwa.</p></div><div class="l10p-quote">Jeśli nie ma pisemnych zasad — stajesz się zakładnikiem biznesu. Musisz osobiście rozwiązywać każdą sytuację i fizycznie nie możesz pojechać na urlop.</div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 5</div><div class="l10p-title">Technologia biznesu — jak wyjść z pułapki "niezastąpionych"</div><div class="l10p-card"><p>Ile razy tłumaczyłeś to samo? Nowemu pracownikowi. Potem następnemu. Za każdym razem — jak po raz pierwszy. Bo "jak to robić" jest w twojej głowie, nie na papierze.</p></div><div class="l10p-label" style="margin-top:1rem">Cztery konsekwencje pracy bez opisanych procesów</div><div class="l10p-situations"><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Niemożliwe skalowanie.</strong> Chcesz otworzyć drugą lokalizację? Jak przekażesz "jak to robić"? Nie możesz — to tylko w twojej głowie.</div></div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Niemożliwe szkolenie ludzi.</strong> Nowy pracownik przychodzi, spędzasz tygodnie na szkoleniu, rezygnuje — i od nowa.</div></div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Niemożliwa kontrola jakości.</strong> Jak sprawdzić czy zrobiono poprawnie? Jeśli nie ma standardu — nie ma kryterium.</div></div><div class="l10p-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Stajesz się zakładnikiem "niezastąpionych".</strong> Jest Piotr który "wie jak". Bez Piotra — wszystko staje. Piotr to wie. I używa tego.</div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 6</div><div class="l10p-title">Poziomy motywacji — dlaczego jedni płoną pracą a innym jest obojętnie</div><div class="l10p-card"><p>Motywacja to wewnętrzna chęć do działania. Nie dlatego że zmuszają lub płacą, ale dlatego że człowiek sam chce. Zmotywowany nowicjusz jest często cenniejszy niż doświadczony ale obojętny — bo zmotywowany się <em>uczy</em>.</p></div><div class="l10p-motiv"><div class="l10p-mitem" style="background:#f0fdf4;border-color:#bbf7d0"><span class="l10p-mbadge" style="background:#22c55e;color:white">POZIOM 1</span><span class="l10p-mtitle" style="color:#166534">Poczucie obowiązku</span><div class="l10p-mtext" style="color:#166534">Człowiek czuje głęboką odpowiedzialność za sprawę. Dba o firmę bardziej niż o siebie. Rozumie cele firmy i czuje: "To jest moja sprawa."</div></div><div class="l10p-mitem" style="background:#eff6ff;border-color:#bfdbfe"><span class="l10p-mbadge" style="background:#3b82f6;color:white">POZIOM 2</span><span class="l10p-mtitle" style="color:#1e40af">Osobiste przekonanie</span><div class="l10p-mtext" style="color:#1e3a8a">Człowiek wierzy w swoje zasady i wartość swojej pracy. Lekarz który naprawdę chce pomagać ludziom. Programista który jest dumny z jakości kodu.</div></div><div class="l10p-mitem" style="background:#fff7ed;border-color:#fed7aa"><span class="l10p-mbadge" style="background:#f97316;color:white">POZIOM 3</span><span class="l10p-mtitle" style="color:#c2410c">Osobista korzyść</span><div class="l10p-mtext" style="color:#9a3412">Człowiek szuka co dostanie osobiście: premia, awans, nowe umiejętności. Nie "zapłonie" dla firmy.</div></div><div class="l10p-mitem" style="background:#fef2f2;border-color:#fecaca"><span class="l10p-mbadge" style="background:#ef4444;color:white">POZIOM 4</span><span class="l10p-mtitle" style="color:#b91c1c">Pieniądze</span><div class="l10p-mtext" style="color:#991b1b">Najniższy poziom. Interesuje tylko wynagrodzenie. Płacisz — pracuje. Nie płacisz — nie pracuje. Zero inicjatywy.</div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 7</div><div class="l10p-title">Jak zwiększać motywację — jedyne narzędzie które zawsze działa</div><div class="l10p-schema"><span class="l10p-sitem">Pokazujesz cel</span><span class="l10p-sarrow">→</span><span class="l10p-sitem">Utrzymujesz uwagę</span><span class="l10p-sarrow">→</span><span class="l10p-sitem">Cel staje się realny</span><span class="l10p-sarrow">→</span><span class="l10p-sitem">Człowiek jest zmotywowany</span></div><div class="l10p-card" style="margin-top:.75rem"><p>Utrzymywanie uwagi na wielkich celach jest trudne. Rozwiązanie: <strong>ciągle przypominaj</strong>. Regularnie mów o celach. Pokazuj jak praca wpływa na konkretnych ludzi i klientów.</p></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Sekcja 8</div><div class="l10p-title">Jak przekazać cele i zamysł zespołowi</div><div class="l10p-steps"><div class="l10p-step"><div class="l10p-stepnum">1</div><div><div class="l10p-steptitle">Stwórz oficjalny pisemny dokument</div><div class="l10p-steptext">Nie rozmowa, nie "wszyscy już wiedzą" — pisemny dokument z podpisem założyciela.</div></div></div><div class="l10p-step"><div class="l10p-stepnum">2</div><div><div class="l10p-steptitle">Oficjalnie zaprezentuj dokument zespołowi</div><div class="l10p-steptext">Zbierz wszystkich razem — na planowaniu lub osobnym spotkaniu.</div></div></div><div class="l10p-step"><div class="l10p-stepnum">3</div><div><div class="l10p-steptitle">Nagraj wystąpienie na wideo</div><div class="l10p-steptext">Jeśli ktoś nie był — wyślij wideo. Nowy pracownik — daj do oglądnięcia w pierwszym dniu.</div></div></div><div class="l10p-step"><div class="l10p-stepnum">4</div><div><div class="l10p-steptitle">Regularnie przypominaj</div><div class="l10p-steptext">Wracaj do celów i zamysłu na spotkaniach, przy podejmowaniu decyzji, przy wyjaśnianiu zmian.</div></div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Zadanie</div><div class="l10p-title">Opracuj Politykę Celów i Zamysłu przez asystenta AI</div><div class="l10p-steps"><div class="l10p-step"><div class="l10p-stepnum">1</div><div><div class="l10p-steptitle">Przeprowadź dialog z AI Coachem Celów</div><div class="l10p-steptext">Asystent przeprowadzi cię przez formułowanie celu, zamysłu, idealnego obrazu i historii biznesu</div></div></div><div class="l10p-step"><div class="l10p-stepnum">2</div><div><div class="l10p-steptitle">Zapisz wynik w Google Docs</div><div class="l10p-steptext">Na wyjściu — gotowa "Polityka Celów i Zamysłu Firmy" z podpisem założyciela</div></div></div><div class="l10p-step"><div class="l10p-stepnum">3</div><div><div class="l10p-steptitle">Przeprowadź prezentację dla zespołu</div><div class="l10p-steptext">Zbierz wszystkich, opowiedz o celu i zamyśle, nagraj na wideo</div></div></div></div></div><div class="l10p-divider"></div><div class="l10p-section"><div class="l10p-label">Narzędzie</div><div class="l10p-tool"><div class="l10p-toolhdr"><div class="l10p-toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l10p-tooltitle">AI Coach Celów i Zamysłu</div><div class="l10p-tooldesc">Asystent prowadzi dialog i pomaga sformułować cel, zamysł, idealny obraz i historię firmy. Na wyjściu — gotowy dokument "Polityka Celów i Zamysłu" do podpisu założyciela i prezentacji zespołowi.</div></div></div><a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10p-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Opracuj cel i zamysł firmy</a></div></div>`,
+
+                lessonContent_de: `<style>.l10d-section{margin-bottom:1.75rem}.l10d-section:last-child{margin-bottom:0}.l10d-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l10d-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l10d-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l10d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l10d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l10d-card p+p{margin-top:.7rem}.l10d-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l10d-situations{display:grid;gap:.45rem;margin-top:.75rem}.l10d-scale{display:grid;gap:.4rem;margin-top:.75rem}.l10d-scale-item{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0}.l10d-snum{width:26px;height:26px;background:#1a1a1a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}.l10d-stitle{font-weight:700;color:#1a1a1a;font-size:.84rem;margin-bottom:.15rem}.l10d-stext{font-size:.78rem;color:#525252;line-height:1.4}.l10d-motiv{display:grid;gap:.55rem;margin-top:.75rem}.l10d-mitem{padding:.8rem .95rem;border-radius:10px;border:1px solid}.l10d-mbadge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:.5rem}.l10d-mtitle{font-weight:700;font-size:.875rem}.l10d-mtext{font-size:.82rem;line-height:1.5;margin-top:.35rem}.l10d-steps{display:grid;gap:.6rem;margin-top:.75rem}.l10d-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l10d-stepnum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l10d-steptitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l10d-steptext{font-size:.82rem;color:#525252;line-height:1.5}.l10d-quote{margin-top:.75rem;padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6}.l10d-schema{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.75rem}.l10d-sitem{padding:.5rem .85rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;font-weight:600;color:#1a1a1a}.l10d-sarrow{color:#9ca3af;font-size:1.1rem}.l10d-example{display:flex;gap:.65rem;padding:.75rem .9rem;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;margin-top:.45rem}.l10d-eicon{width:24px;height:24px;background:#f0fdf4;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10d-elabel{font-weight:700;color:#1a1a1a;font-size:.82rem}.l10d-etext{font-size:.78rem;color:#525252;line-height:1.4;margin-top:.15rem}.l10d-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-top:.35rem}.l10d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l10d-toolhdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l10d-toolicon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l10d-tooltitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l10d-tooldesc{font-size:.82rem;color:#525252;line-height:1.5}.l10d-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l10d-section"><div class="l10d-label">Abschnitt 1</div><div class="l10d-title">Das Haupthindernis bei der Umsetzung: warum das Team Veränderungen sabotiert</div><div class="l10d-card"><p>Jeder Inhaber der Ordnung in sein Unternehmen bringen möchte begegnet demselben: die nächsten, loyalsten Mitarbeiter beginnen plötzlich Widerstand zu leisten. Die Person der Sie jahrelang vertrauten zeigt plötzlich Unzufriedenheit. Jemand kündigt. Andere beginnen Ihre Entscheidungen in Frage zu stellen.</p><p>Es scheint wie Verrat. Aber in Wirklichkeit — ist es ein Muster.</p></div><div class="l10d-label" style="margin-top:1rem">Was der Verlust eines Mitarbeiters kostet</div><div class="l10d-card"><p>Laut internationalen Studien kostet der Verlust eines Mitarbeiters zwischen 6 und 12 Monatsgehältern. Wenn Ihr Abteilungsleiter 4.000€/Monat verdient — wird sein Abgang Sie mindestens 24.000€ kosten. Aber das ist nur der direkte, sichtbare Verlust.</p></div><div class="l10d-situations"><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Die Person die kündigt kritisiert Sie aktiv vor dem Rest des Teams</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Andere Mitarbeiter beginnen zu zweifeln: "Haben sie vielleicht Recht?"</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Ihre Zeit geht für Konfliktlösung statt Unternehmensentwicklung drauf</div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Die Suche und Einarbeitung einer neuen Person dauert 2–6 Monate — ohne Ergebnisgarantie</div></div><div class="l10d-label" style="margin-top:1rem">Warum Menschen Widerstand leisten — der wahre Grund</div><div class="l10d-card"><p>Die meisten Inhaber denken dass Widerstand Illoyalität oder Faulheit bedeutet. In Wirklichkeit ist der Grund viel einfacher: <strong>Sie führen Veränderungen durch weil Sie das Problem sehen. Aber sehen Ihre Mitarbeiter es?</strong></p><p>Um das Verhalten eines Menschen zu ändern — müssen Sie ihm ein größeres, bedeutungsvolles Ziel geben das den Wunsch überwiegt den Status quo zu bewahren.</p></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 2</div><div class="l10d-title">Unternehmensziel und Vision — das Fundament von allem</div><div class="l10d-card"><p>Alles in Ihrem Unternehmen — Struktur, Regeln, Teammotivation, sogar tägliche Entscheidungen — muss auf zwei Dingen basieren: Ziel und Vision. Ohne sie ist das Unternehmen wie ein Schiff ohne Kompass: bewegt sich, weiß aber nicht wohin.</p></div><div class="l10d-label" style="margin-top:1rem">Was ein Ziel ist</div><div class="l10d-card"><p>Das Ziel ist die Kernidee des Unternehmens. Es beantwortet: <strong>warum existieren wir? Was wird sich in der Welt verändern wenn wir erfolgreich sind?</strong></p><p>Typischer Fehler: "Mein Ziel ist Geld verdienen." Das ist wie zu sagen: "Der Zweck meiner Existenz ist Atmen." Geld ist Energie für das Erreichen des Ziels. Aber nicht das Ziel selbst.</p></div><div class="l10d-example"><div class="l10d-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10d-elabel">Beratungsunternehmen</div><div class="l10d-etext">Kleine Unternehmen intelligenter, effizienter und unabhängiger vom Inhaber machen</div></div></div><div class="l10d-example"><div class="l10d-eicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="l10d-elabel">Zahnarztpraxis</div><div class="l10d-etext">Menschen gesund und selbstsicher in ihrem Lächeln machen</div></div></div><div class="l10d-quote">Fragen Sie sich: Wie verändert sich das Leben der Menschen dank meines Unternehmens? Was verschwindet aus der Welt wenn mein Unternehmen schließt?</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 3</div><div class="l10d-title">Die administrative Skala — das Rückgrat des Unternehmens</div><div class="l10d-card"><p>Große Unternehmen haben ein Werkzeug zum Testen jeder Idee. Coca-Cola beginnt nicht Wurst zu verkaufen. McDonald's eröffnet keine Autohäuser. Sie kennen ihren Weg — dieses Werkzeug heißt <strong>administrative Skala</strong>.</p></div><div class="l10d-label" style="margin-top:1rem">10 Skalenebenen (von höchster zu niedrigster)</div><div class="l10d-scale"><div class="l10d-scale-item"><div class="l10d-snum">1</div><div><div class="l10d-stitle">Ziel</div><div class="l10d-stext">Warum wir existieren</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">2</div><div><div class="l10d-stitle">Vision</div><div class="l10d-stext">Genau wie wir das Ziel erreichen</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">3</div><div><div class="l10d-stitle">Richtlinie</div><div class="l10d-stext">Schriftliche Regeln innerhalb derer wir handeln</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">4</div><div><div class="l10d-stitle">Pläne</div><div class="l10d-stext">Was wir im nächsten Horizont tun</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">5</div><div><div class="l10d-stitle">Programme</div><div class="l10d-stext">Konkrete Initiativen zur Erreichung der Pläne</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">6</div><div><div class="l10d-stitle">Projekte</div><div class="l10d-stext">Detaillierte Aufschlüsselung konkreter Aufgaben</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">7</div><div><div class="l10d-stitle">Anweisungen</div><div class="l10d-stext">Konkrete Anweisungen an konkrete Personen</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">8</div><div><div class="l10d-stitle">Ideales Bild</div><div class="l10d-stext">Wie ein erfolgreiches Ergebnis aussieht</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">9</div><div><div class="l10d-stitle">Statistiken</div><div class="l10d-stext">Kennzahlen die zeigen ob wir uns dem Ziel nähern</div></div></div><div class="l10d-scale-item"><div class="l10d-snum">10</div><div><div class="l10d-stitle">Endprodukt</div><div class="l10d-stext">Was das Unternehmen oder die Abteilung konkret produziert</div></div></div></div><div class="l10d-quote">Hauptprinzip: jede Ebene muss den anderen entsprechen. Wenn Ihre Anweisung dem Ziel widerspricht — wird etwas schiefgehen.</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 4</div><div class="l10d-title">Unternehmensrichtlinie — Regeln die das Unternehmen retten</div><div class="l10d-card"><p>Ohne klare schriftliche Regeln entscheidet jeder nach eigenem Ermessen. Unternehmensrichtlinie sind schriftliche Regeln die Mitarbeitern sagen wie sie in verschiedenen Situationen handeln sollen.</p></div><div class="l10d-card" style="margin-top:.6rem"><p><strong>Klassisches Apple-Beispiel:</strong> Steve Jobs hatte eine klare Vision — Apple kontrolliert alles: Hardware, Betriebssystem und Software. Aber er hat diese Regel nicht offiziell aufgeschrieben. Als er entlassen wurde begann das neue Management macOS-Lizenzen zu verkaufen. Apple-Qualität sank, die Vision kollabierte, das Unternehmen stand am Rand des Bankrotts.</p></div><div class="l10d-quote">Wenn es keine schriftlichen Regeln gibt — werden Sie zum Geisel des Unternehmens. Sie müssen jede Situation persönlich lösen und können physisch nicht in Urlaub fahren.</div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 5</div><div class="l10d-title">Unternehmenstechnologie — wie man der "Unentbehrlichen"-Falle entkommt</div><div class="l10d-card"><p>Wie oft haben Sie dasselbe erklärt? Einem neuen Mitarbeiter. Dann einem weiteren. Jedes Mal — als wäre es das erste Mal. Weil "wie es gemacht werden soll" in Ihrem Kopf ist, nicht auf Papier.</p></div><div class="l10d-label" style="margin-top:1rem">Vier Konsequenzen ohne dokumentierte Prozesse</div><div class="l10d-situations"><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Skalierung unmöglich.</strong> Wollen Sie einen zweiten Standort eröffnen? Wie übertragen Sie "wie es gemacht werden soll"? Nicht möglich — es steckt nur in Ihrem Kopf.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schulung unmöglich.</strong> Neuer Mitarbeiter kommt, Sie verbringen Wochen mit Schulung, er kündigt — und von vorne.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Qualitätskontrolle unmöglich.</strong> Wie prüft man ob es korrekt gemacht wurde? Kein Standard — kein Kriterium.</div></div><div class="l10d-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Sie werden Geisel der "Unentbehrlichen".</strong> Es gibt Peter der "weiß wie". Ohne Peter — alles stoppt. Peter weiß das. Und nutzt es.</div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 6</div><div class="l10d-title">Motivationsebenen — warum manche für die Arbeit brennen und andere gleichgültig sind</div><div class="l10d-motiv"><div class="l10d-mitem" style="background:#f0fdf4;border-color:#bbf7d0"><span class="l10d-mbadge" style="background:#22c55e;color:white">EBENE 1</span><span class="l10d-mtitle" style="color:#166534">Pflichtgefühl</span><div class="l10d-mtext" style="color:#166534">Die Person fühlt tiefe Verantwortung für die Sache. Kümmert sich mehr um das Unternehmen als um sich selbst.</div></div><div class="l10d-mitem" style="background:#eff6ff;border-color:#bfdbfe"><span class="l10d-mbadge" style="background:#3b82f6;color:white">EBENE 2</span><span class="l10d-mtitle" style="color:#1e40af">Persönliche Überzeugung</span><div class="l10d-mtext" style="color:#1e3a8a">Die Person glaubt an ihre Prinzipien und den Wert ihrer Arbeit. Ein Arzt der wirklich helfen will. Ein Programmierer der stolz auf Codequalität ist.</div></div><div class="l10d-mitem" style="background:#fff7ed;border-color:#fed7aa"><span class="l10d-mbadge" style="background:#f97316;color:white">EBENE 3</span><span class="l10d-mtitle" style="color:#c2410c">Persönlicher Vorteil</span><div class="l10d-mtext" style="color:#9a3412">Die Person sucht was sie persönlich bekommt: Bonus, Karriereaufstieg, neue Fähigkeiten. Wird nicht "brennen" für das Unternehmen.</div></div><div class="l10d-mitem" style="background:#fef2f2;border-color:#fecaca"><span class="l10d-mbadge" style="background:#ef4444;color:white">EBENE 4</span><span class="l10d-mtitle" style="color:#b91c1c">Geld</span><div class="l10d-mtext" style="color:#991b1b">Niedrigste Ebene. Nur am Gehalt interessiert. Zahlen — arbeitet. Nicht zahlen — arbeitet nicht. Null Initiative.</div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 7</div><div class="l10d-title">Wie man Motivation steigert — das einzige Werkzeug das immer funktioniert</div><div class="l10d-schema"><span class="l10d-sitem">Zeigen Sie das Ziel</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Halten Sie Aufmerksamkeit</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Ziel wird real</span><span class="l10d-sarrow">→</span><span class="l10d-sitem">Person ist motiviert</span></div><div class="l10d-card" style="margin-top:.75rem"><p>Aufmerksamkeit auf große Ziele zu halten ist schwer. Lösung: <strong>ständig erinnern</strong>. Regelmäßig über Ziele sprechen. Zeigen wie die Arbeit konkrete Menschen und Kunden beeinflusst.</p></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Abschnitt 8</div><div class="l10d-title">Wie man Ziele und Vision dem Team kommuniziert</div><div class="l10d-steps"><div class="l10d-step"><div class="l10d-stepnum">1</div><div><div class="l10d-steptitle">Erstellen Sie ein offizielles schriftliches Dokument</div><div class="l10d-steptext">Kein Gespräch, kein "alle wissen es schon" — ein schriftliches Dokument mit der Unterschrift des Gründers.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">2</div><div><div class="l10d-steptitle">Präsentieren Sie das Dokument offiziell dem Team</div><div class="l10d-steptext">Bringen Sie alle zusammen — beim Planungsmeeting oder einem separaten Treffen.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">3</div><div><div class="l10d-steptitle">Nehmen Sie Ihren Vortrag auf Video auf</div><div class="l10d-steptext">Falls jemand gefehlt hat — schicken Sie das Video. Neuer Mitarbeiter — lassen Sie es am ersten Tag ansehen.</div></div></div><div class="l10d-step"><div class="l10d-stepnum">4</div><div><div class="l10d-steptitle">Regelmäßig erinnern</div><div class="l10d-steptext">Ziel und Vision sind nicht "einmal gesagt und vergessen." Kehren Sie bei Meetings, Entscheidungen und Erklärungen von Änderungen dazu zurück.</div></div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Aufgabe</div><div class="l10d-title">Entwickeln Sie die Ziel- und Visionsrichtlinie durch den KI-Assistenten</div><div class="l10d-steps"><div class="l10d-step"><div class="l10d-stepnum">1</div><div><div class="l10d-steptitle">Führen Sie den Dialog mit dem KI-Ziel-Coach</div><div class="l10d-steptext">Der Assistent führt Sie durch die Formulierung von Ziel, Vision, idealem Bild und Unternehmensgeschichte</div></div></div><div class="l10d-step"><div class="l10d-stepnum">2</div><div><div class="l10d-steptitle">Speichern Sie das Ergebnis in Google Docs</div><div class="l10d-steptext">Ausgabe — eine fertige "Unternehmens-Ziel- & Visions-Richtlinie" mit der Unterschrift des Gründers</div></div></div><div class="l10d-step"><div class="l10d-stepnum">3</div><div><div class="l10d-steptitle">Präsentieren Sie dem Team</div><div class="l10d-steptext">Versammeln Sie alle, erzählen Sie von Ziel und Vision, nehmen Sie es auf Video auf</div></div></div></div></div><div class="l10d-divider"></div><div class="l10d-section"><div class="l10d-label">Werkzeug</div><div class="l10d-tool"><div class="l10d-toolhdr"><div class="l10d-toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l10d-tooltitle">KI Ziel- & Visions-Coach</div><div class="l10d-tooldesc">Der Assistent führt einen Dialog und hilft Ziel, Vision, ideales Bild und Unternehmensgeschichte zu formulieren. Ausgabe — ein fertiges "Ziel- & Visions-Richtlinie" Dokument für die Unterschrift des Gründers und die Teampräsentation.</div></div></div><a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Unternehmensziel & Vision entwickeln</a></div></div>
 
 
 `,
@@ -7205,534 +7206,7 @@ Bist du dabei?</div>
 
                 videoLink: null,
                 materialsLink: null,
-
-                lessonContent: `
-<style>
-.l11-section { margin-bottom:1.75rem; }
-.l11-section:last-child { margin-bottom:0; }
-.l11-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
-.l11-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
-.l11-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
-.l11-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
-.l11-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
-.l11-card p+p { margin-top:0.7rem; }
-.l11-compare { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
-.l11-bad { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
-.l11-good { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
-.l11-compare-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
-.l11-compare-text { font-size:0.82rem; line-height:1.5; }
-.l11-rule { display:flex; align-items:flex-start; gap:0.85rem; padding:0.85rem 1rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; margin-bottom:0.5rem; }
-.l11-rule:last-child { margin-bottom:0; }
-.l11-rule-icon { width:34px; height:34px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l11-rule-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l11-rule-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l11-roles { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l11-role { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
-.l11-role-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.5rem; }
-.l11-role-product { font-size:0.82rem; color:#16a34a; font-style:italic; }
-.l11-role-desc { font-size:0.78rem; color:#6b7280; margin-top:0.2rem; line-height:1.4; }
-.l11-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l11-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
-.l11-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
-.l11-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
-.l11-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l11-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
-.l11-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l11-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
-.l11-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l11-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
-.l11-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
-.l11-step-text { font-size:0.875rem; color:#374151; line-height:1.5; }
-</style>
-
-<div class="l11-section">
-    <div class="l11-section-label">Проблема</div>
-    <div class="l11-section-title">Чому команда не розуміє, що від неї очікують</div>
-    <div class="l11-card">
-        <p>Більшість компаній можуть описати, що вони <em>роблять</em>. Але не можуть чітко відповісти, який <em>результат</em> вони створюють для клієнта.</p>
-        <p>Ця різниця критична. Коли команда розуміє процес, але не розуміє продукт — вона оцінює свою роботу через зусилля, а не через результат. «Я зателефонував 20 разів» замість «клієнт підписав контракт».</p>
-        <p>Відсутність чіткого продукту породжує головну управлінську проблему: <strong>неможливо оцінити, чи добре людина справляється зі своєю роллю</strong>.</p>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Концепція</div>
-    <div class="l11-section-title">Що таке Продукт організації</div>
-    <div class="l11-card">
-        <p>Продукт організації — це цінний кінцевий результат, який отримує клієнт. Не дія, не процес, не послуга як абстракція — а конкретна зміна, яка відбувається в житті або бізнесі клієнта після взаємодії з вами.</p>
-    </div>
-    <div class="l11-compare">
-        <div class="l11-bad">
-            <div class="l11-compare-label" style="color:#dc2626;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                Процес
-            </div>
-            <div class="l11-compare-text" style="color:#7f1d1d;">«Ми проводимо консультації», «Ми надаємо юридичні послуги», «Ми займаємося рекламою»</div>
-        </div>
-        <div class="l11-good">
-            <div class="l11-compare-label" style="color:#16a34a;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
-                Продукт
-            </div>
-            <div class="l11-compare-text" style="color:#14532d;">«Власник бізнесу виходить з операційки за 65 днів», «Справа виграна в суді», «+40% заявок за місяць»</div>
-        </div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">3 критерії</div>
-    <div class="l11-section-title">Яким має бути правильний продукт</div>
-    <div class="l11-rule">
-        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <div>
-            <div class="l11-rule-title">Конкретний і вимірюваний</div>
-            <div class="l11-rule-text">Продукт можна побачити, перевірити, передати. «Звіт готовий» — не продукт. «Звіт з аналізом 5 конкурентів і рекомендаціями, затверджений керівником» — продукт.</div>
-        </div>
-    </div>
-    <div class="l11-rule">
-        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-        <div>
-            <div class="l11-rule-title">Цінний для наступного в ланцюжку</div>
-            <div class="l11-rule-text">Кожна роль передає результат наступній ролі або клієнту. Продукт менеджера з продажів — підписаний договір. Продукт бухгалтера — здана вчасно звітність.</div>
-        </div>
-    </div>
-    <div class="l11-rule">
-        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-        <div>
-            <div class="l11-rule-title">Закінчений — а не «у процесі»</div>
-            <div class="l11-rule-text">Продукт — це те, що можна здати і прийняти. Половина роботи — не продукт. «Заявка оброблена і передана у виробництво» — продукт.</div>
-        </div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Структура</div>
-    <div class="l11-section-title">Продукти ролей — як це виглядає на практиці</div>
-    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Кожна роль у компанії має свій продукт. Разом вони створюють головний продукт організації.</p>
-    <div class="l11-roles">
-        <div class="l11-role">
-            <div class="l11-role-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-                Менеджер з продажів
-            </div>
-            <div class="l11-role-product">Продукт: підписаний договір з новим клієнтом</div>
-            <div class="l11-role-desc">Не «провів зустрічі» і не «обробив заявки» — а конкретний підписаний договір</div>
-        </div>
-        <div class="l11-role">
-            <div class="l11-role-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-                Адміністратор клініки
-            </div>
-            <div class="l11-role-product">Продукт: пацієнт записаний, прийшов і задоволений сервісом</div>
-            <div class="l11-role-desc">Не «відповів на дзвінки» — а заповнений запис і позитивний досвід пацієнта</div>
-        </div>
-        <div class="l11-role">
-            <div class="l11-role-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-                Керівник відділу
-            </div>
-            <div class="l11-role-product">Продукт: відділ виконав план у встановлений термін</div>
-            <div class="l11-role-desc">Не «провів наради і поставив задачі» — а план виконано командою</div>
-        </div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Навіщо це потрібно</div>
-    <div class="l11-section-title">Що змінюється, коли продукт визначений</div>
-    <div class="l11-result-list">
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Можна оцінювати роботу через результат, а не через присутність
-        </div>
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Кожен співробітник розуміє, що саме від нього очікується
-        </div>
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Легше делегувати — є чітке визначення «зроблено»
-        </div>
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Зникають суперечки «я ж старався» — важливий результат, а не зусилля
-        </div>
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            З'являється основа для системи мотивації через продукт
-        </div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Завдання</div>
-    <div class="l11-section-title">Розробіть Політику продукту організації через AI-асистента</div>
-    <div class="l11-steps">
-        <div class="l11-step">
-            <div class="l11-step-num">1</div>
-            <div class="l11-step-text">Відкрийте AI-асистента і пройдіть діалог — він проведе вас через визначення головного продукту компанії і продуктів ключових ролей</div>
-        </div>
-        <div class="l11-step">
-            <div class="l11-step-num">2</div>
-            <div class="l11-step-text">На виході ви отримаєте готовий документ «Політика продукту організації» — збережіть його в Google Docs</div>
-        </div>
-        <div class="l11-step">
-            <div class="l11-step-num">3</div>
-            <div class="l11-step-text">Проведіть коротку презентацію для команди — поясніть, що таке продукт ролі і чому це важливо для кожного</div>
-        </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
-        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Час на впровадження</div>
-        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 години: 1 год на діалог з AI і підготовку документа + 2 год на проведення презентації для команди</div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Інструмент</div>
-    <div class="l11-tool">
-        <div class="l11-tool-header">
-            <div class="l11-tool-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <div>
-                <div class="l11-tool-title">AI-коуч продукту організації</div>
-                <div class="l11-tool-desc">Асистент веде діалог і допомагає сформулювати головний продукт компанії та продукти ключових ролей. На виході — готова Політика продукту організації.</div>
-            </div>
-        </div>
-        <a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Розробити продукт організації
-        </a>
-    </div>
-</div>`,
-
-                lessonContent_ru: `
-<style>
-.l11-section { margin-bottom:1.75rem; }
-.l11-section:last-child { margin-bottom:0; }
-.l11-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
-.l11-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
-.l11-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
-.l11-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
-.l11-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
-.l11-card p+p { margin-top:0.7rem; }
-.l11-compare { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
-.l11-bad { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
-.l11-good { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
-.l11-compare-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
-.l11-compare-text { font-size:0.82rem; line-height:1.5; }
-.l11-rule { display:flex; align-items:flex-start; gap:0.85rem; padding:0.85rem 1rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; margin-bottom:0.5rem; }
-.l11-rule:last-child { margin-bottom:0; }
-.l11-rule-icon { width:34px; height:34px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l11-rule-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l11-rule-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l11-roles { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l11-role { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
-.l11-role-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.5rem; }
-.l11-role-product { font-size:0.82rem; color:#16a34a; font-style:italic; }
-.l11-role-desc { font-size:0.78rem; color:#6b7280; margin-top:0.2rem; line-height:1.4; }
-.l11-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l11-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
-.l11-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
-.l11-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
-.l11-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l11-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
-.l11-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l11-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
-.l11-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l11-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
-.l11-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
-.l11-step-text { font-size:0.875rem; color:#374151; line-height:1.5; }
-</style>
-
-<div class="l11-section">
-    <div class="l11-section-label">Проблема</div>
-    <div class="l11-section-title">Почему команда не понимает, что от неё ожидают</div>
-    <div class="l11-card">
-        <p>Большинство компаний могут описать, что они <em>делают</em>. Но не могут чётко ответить, какой <em>результат</em> они создают для клиента.</p>
-        <p>Это различие критично. Когда команда понимает процесс, но не понимает продукт — она оценивает свою работу через усилия, а не через результат. «Я позвонил 20 раз» вместо «клиент подписал контракт».</p>
-        <p>Отсутствие чёткого продукта порождает главную управленческую проблему: <strong>невозможно оценить, хорошо ли человек справляется со своей ролью</strong>.</p>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Концепция</div>
-    <div class="l11-section-title">Что такое Продукт организации</div>
-    <div class="l11-card">
-        <p>Продукт организации — это ценный конечный результат, который получает клиент. Не действие, не процесс, не услуга как абстракция — а конкретное изменение, которое происходит в жизни или бизнесе клиента после взаимодействия с вами.</p>
-    </div>
-    <div class="l11-compare">
-        <div class="l11-bad">
-            <div class="l11-compare-label" style="color:#dc2626;">Процесс</div>
-            <div class="l11-compare-text" style="color:#7f1d1d;">«Мы проводим консультации», «Мы оказываем юридические услуги», «Мы занимаемся рекламой»</div>
-        </div>
-        <div class="l11-good">
-            <div class="l11-compare-label" style="color:#16a34a;">Продукт</div>
-            <div class="l11-compare-text" style="color:#14532d;">«Владелец выходит из операционки за 65 дней», «Дело выиграно в суде», «+40% заявок за месяц»</div>
-        </div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">3 критерия</div>
-    <div class="l11-section-title">Каким должен быть правильный продукт</div>
-    <div class="l11-rule">
-        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <div>
-            <div class="l11-rule-title">Конкретный и измеримый</div>
-            <div class="l11-rule-text">Продукт можно увидеть, проверить, передать. «Отчёт готов» — не продукт. «Отчёт с анализом 5 конкурентов и рекомендациями, утверждённый руководителем» — продукт.</div>
-        </div>
-    </div>
-    <div class="l11-rule">
-        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-        <div>
-            <div class="l11-rule-title">Ценный для следующего в цепочке</div>
-            <div class="l11-rule-text">Каждая роль передаёт результат следующей роли или клиенту. Продукт менеджера по продажам — подписанный договор. Продукт бухгалтера — сданная вовремя отчётность.</div>
-        </div>
-    </div>
-    <div class="l11-rule">
-        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-        <div>
-            <div class="l11-rule-title">Завершённый — а не «в процессе»</div>
-            <div class="l11-rule-text">Продукт — это то, что можно сдать и принять. Половина работы — не продукт. «Заявка обработана и передана в производство» — продукт.</div>
-        </div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Структура</div>
-    <div class="l11-section-title">Продукты ролей — как это выглядит на практике</div>
-    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Каждая роль в компании имеет свой продукт. Вместе они создают главный продукт организации.</p>
-    <div class="l11-roles">
-        <div class="l11-role">
-            <div class="l11-role-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-                Менеджер по продажам
-            </div>
-            <div class="l11-role-product">Продукт: подписанный договор с новым клиентом</div>
-            <div class="l11-role-desc">Не «провёл встречи» и не «обработал заявки» — а конкретный подписанный договор</div>
-        </div>
-        <div class="l11-role">
-            <div class="l11-role-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-                Администратор клиники
-            </div>
-            <div class="l11-role-product">Продукт: пациент записан, пришёл и доволен сервисом</div>
-            <div class="l11-role-desc">Не «ответил на звонки» — а заполненная запись и положительный опыт пациента</div>
-        </div>
-        <div class="l11-role">
-            <div class="l11-role-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-                Руководитель отдела
-            </div>
-            <div class="l11-role-product">Продукт: отдел выполнил план в установленный срок</div>
-            <div class="l11-role-desc">Не «провёл совещания и поставил задачи» — а план выполнен командой</div>
-        </div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Зачем это нужно</div>
-    <div class="l11-section-title">Что меняется, когда продукт определён</div>
-    <div class="l11-result-list">
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Можно оценивать работу через результат, а не через присутствие
-        </div>
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Каждый сотрудник понимает, что именно от него ожидается
-        </div>
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Легче делегировать — есть чёткое определение «сделано»
-        </div>
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Исчезают споры «я же старался» — важен результат, а не усилия
-        </div>
-        <div class="l11-result-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Появляется основа для системы мотивации через продукт
-        </div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Задание</div>
-    <div class="l11-section-title">Разработайте Политику продукта организации через AI-ассистента</div>
-    <div class="l11-steps">
-        <div class="l11-step">
-            <div class="l11-step-num">1</div>
-            <div class="l11-step-text">Откройте AI-ассистента и пройдите диалог — он проведёт вас через определение главного продукта компании и продуктов ключевых ролей</div>
-        </div>
-        <div class="l11-step">
-            <div class="l11-step-num">2</div>
-            <div class="l11-step-text">На выходе вы получите готовый документ «Политика продукта организации» — сохраните его в Google Docs</div>
-        </div>
-        <div class="l11-step">
-            <div class="l11-step-num">3</div>
-            <div class="l11-step-text">Проведите короткую презентацию для команды — объясните, что такое продукт роли и почему это важно для каждого</div>
-        </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
-        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Время на внедрение</div>
-        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 часа: 1 час на диалог с AI и подготовку документа + 2 часа на проведение презентации для команды</div>
-    </div>
-</div>
-
-<div class="l11-divider"></div>
-
-<div class="l11-section">
-    <div class="l11-section-label">Инструмент</div>
-    <div class="l11-tool">
-        <div class="l11-tool-header">
-            <div class="l11-tool-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <div>
-                <div class="l11-tool-title">AI-коуч продукта организации</div>
-                <div class="l11-tool-desc">Ассистент ведёт диалог и помогает сформулировать главный продукт компании и продукты ключевых ролей. На выходе — готовая Политика продукта организации.</div>
-            </div>
-        </div>
-        <a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Разработать продукт организации
-        </a>
-    </div>
-</div>`,
-
-                lessonContent_en: `<style>.l11e-section{margin-bottom:1.75rem}.l11e-section:last-child{margin-bottom:0}.l11e-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l11e-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l11e-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l11e-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l11e-card p{font-size:.9rem;color:#374151;line-height:1.65}.l11e-card p+p{margin-top:.7rem}.l11e-compare{display:grid;gap:.5rem;margin-top:.75rem}.l11e-bad{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l11e-good{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l11e-clabel{font-weight:700;font-size:.82rem;margin-bottom:.3rem}.l11e-ctext{font-size:.82rem;font-style:italic;line-height:1.5}.l11e-rule{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-top:.5rem}.l11e-ricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11e-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l11e-rtext{font-size:.82rem;color:#525252;line-height:1.5}.l11e-roles{display:grid;gap:.5rem;margin-top:.75rem}.l11e-role{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11e-rtname{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.3rem}.l11e-rprod{font-size:.82rem;color:#166534;font-weight:600;margin-bottom:.2rem}.l11e-rdesc{font-size:.78rem;color:#525252;line-height:1.4}.l11e-results{display:grid;gap:.35rem;margin-top:.75rem}.l11e-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l11e-steps{display:grid;gap:.55rem;margin-top:.75rem}.l11e-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11e-snum{width:26px;height:26px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l11e-stext{font-size:.85rem;color:#374151;line-height:1.5}.l11e-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l11e-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l11e-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11e-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l11e-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l11e-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l11e-section"><div class="l11e-label">Problem</div><div class="l11e-title">Why the team doesn't understand what is expected of it</div><div class="l11e-card"><p>Most companies can describe what they <em>do</em>. But they cannot clearly answer what <em>result</em> they create for the client.</p><p>This difference is critical. When the team understands the process but not the product — it evaluates its work through effort, not result. "I called 20 times" instead of "the client signed the contract."</p><p>The absence of a clear product creates the main management problem: <strong>it is impossible to assess whether a person is doing their role well</strong>.</p></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Concept</div><div class="l11e-title">What the Product of the Organization is</div><div class="l11e-card"><p>The product of the organization is the valuable final result that the client receives. Not an action, not a process, not a service as an abstraction — but a concrete change that happens in the life or business of the client after interacting with you.</p></div><div class="l11e-compare"><div class="l11e-bad"><div class="l11e-clabel" style="color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Process</div><div class="l11e-ctext" style="color:#7f1d1d">"We provide consultations", "We provide legal services", "We do advertising"</div></div><div class="l11e-good"><div class="l11e-clabel" style="color:#16a34a"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Product</div><div class="l11e-ctext" style="color:#14532d">"Business owner exits operations in 65 days", "Case won in court", "+40% inquiries per month"</div></div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">3 Criteria</div><div class="l11e-title">What a correct product must be</div><div class="l11e-rule"><div class="l11e-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l11e-rtitle">Specific and measurable</div><div class="l11e-rtext">The product can be seen, verified, handed over. "Report ready" — not a product. "Report with analysis of 5 competitors and recommendations, approved by the manager" — a product.</div></div></div><div class="l11e-rule"><div class="l11e-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><div class="l11e-rtitle">Valuable to the next in the chain</div><div class="l11e-rtext">Each role passes its result to the next role or to the client. Sales manager's product — a signed contract. Accountant's product — reports submitted on time.</div></div></div><div class="l11e-rule"><div class="l11e-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l11e-rtitle">Completed — not "in progress"</div><div class="l11e-rtext">A product is something that can be delivered and accepted. Half the work is not a product. "Application processed and passed to production" — a product.</div></div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Structure</div><div class="l11e-title">Products of roles — what it looks like in practice</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">Each role in the company has its own product. Together they create the main product of the organization.</p><div class="l11e-roles"><div class="l11e-role"><div class="l11e-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Sales Manager</div><div class="l11e-rprod">Product: a signed contract with a new client</div><div class="l11e-rdesc">Not "held meetings" and not "processed applications" — but a specific signed contract</div></div><div class="l11e-role"><div class="l11e-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Clinic Administrator</div><div class="l11e-rprod">Product: patient booked, arrived and satisfied with service</div><div class="l11e-rdesc">Not "answered calls" — but a filled appointment and a positive patient experience</div></div><div class="l11e-role"><div class="l11e-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Department Head</div><div class="l11e-rprod">Product: department completed the plan on time</div><div class="l11e-rdesc">Not "held meetings and assigned tasks" — but the plan completed by the team</div></div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Why it matters</div><div class="l11e-title">What changes when the product is defined</div><div class="l11e-results"><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Work can be assessed by result, not by presence</div><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Every employee understands exactly what is expected of them</div><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Easier to delegate — there is a clear definition of "done"</div><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Arguments "but I tried" disappear — results matter, not effort</div><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Foundation appears for a product-based motivation system</div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Assignment</div><div class="l11e-title">Develop the Organization Product Policy through the AI assistant</div><div class="l11e-steps"><div class="l11e-step"><div class="l11e-snum">1</div><div class="l11e-stext">Open the AI assistant and complete the dialogue — it will guide you through defining the main product of the company and the products of key roles</div></div><div class="l11e-step"><div class="l11e-snum">2</div><div class="l11e-stext">You will receive a ready "Organization Product Policy" document — save it in Google Docs</div></div><div class="l11e-step"><div class="l11e-snum">3</div><div class="l11e-stext">Give a short presentation to the team — explain what a role product is and why it matters to each person</div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Implementation time</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 hours: 1h AI dialogue & document preparation + 2h team presentation</div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Tool</div><div class="l11e-tool"><div class="l11e-thdr"><div class="l11e-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="l11e-ttitle">AI Organization Product Coach</div><div class="l11e-tdesc">The assistant leads a dialogue and helps formulate the main product of the company and the products of key roles. Output — ready Organization Product Policy.</div></div></div><a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11e-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Develop organization product</a></div></div>`,
-
-                lessonContent_pl: `<style>.l11p-section{margin-bottom:1.75rem}.l11p-section:last-child{margin-bottom:0}.l11p-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l11p-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l11p-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l11p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l11p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l11p-card p+p{margin-top:.7rem}.l11p-compare{display:grid;gap:.5rem;margin-top:.75rem}.l11p-bad{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l11p-good{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l11p-clabel{font-weight:700;font-size:.82rem;margin-bottom:.3rem}.l11p-ctext{font-size:.82rem;font-style:italic;line-height:1.5}.l11p-rule{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-top:.5rem}.l11p-ricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11p-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l11p-rtext{font-size:.82rem;color:#525252;line-height:1.5}.l11p-roles{display:grid;gap:.5rem;margin-top:.75rem}.l11p-role{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11p-rtname{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.3rem}.l11p-rprod{font-size:.82rem;color:#166534;font-weight:600;margin-bottom:.2rem}.l11p-rdesc{font-size:.78rem;color:#525252;line-height:1.4}.l11p-results{display:grid;gap:.35rem;margin-top:.75rem}.l11p-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l11p-steps{display:grid;gap:.55rem;margin-top:.75rem}.l11p-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11p-snum{width:26px;height:26px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l11p-stext{font-size:.85rem;color:#374151;line-height:1.5}.l11p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l11p-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l11p-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11p-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l11p-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l11p-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l11p-section"><div class="l11p-label">Problem</div><div class="l11p-title">Dlaczego zespół nie rozumie czego się od niego oczekuje</div><div class="l11p-card"><p>Większość firm potrafi opisać co <em>robi</em>. Ale nie potrafi jasno odpowiedzieć jaki <em>wynik</em> tworzy dla klienta.</p><p>Ta różnica jest krytyczna. Gdy zespół rozumie proces ale nie rozumie produktu — ocenia swoją pracę przez wysiłek, a nie wynik. "Zadzwoniłem 20 razy" zamiast "klient podpisał umowę."</p><p>Brak jasnego produktu rodzi główny problem zarządczy: <strong>nie można ocenić czy ktoś dobrze wykonuje swoją rolę</strong>.</p></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Koncepcja</div><div class="l11p-title">Czym jest Produkt Organizacji</div><div class="l11p-card"><p>Produkt organizacji to wartościowy końcowy wynik który otrzymuje klient. Nie działanie, nie proces, nie usługa jako abstrakcja — ale konkretna zmiana która zachodzi w życiu lub biznesie klienta po interakcji z tobą.</p></div><div class="l11p-compare"><div class="l11p-bad"><div class="l11p-clabel" style="color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Proces</div><div class="l11p-ctext" style="color:#7f1d1d">"Prowadzimy konsultacje", "Świadczymy usługi prawne", "Zajmujemy się reklamą"</div></div><div class="l11p-good"><div class="l11p-clabel" style="color:#16a34a"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Produkt</div><div class="l11p-ctext" style="color:#14532d">"Właściciel wychodzi z operacyjki w 65 dni", "Sprawa wygrana w sądzie", "+40% zapytań miesięcznie"</div></div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">3 Kryteria</div><div class="l11p-title">Jakim musi być prawidłowy produkt</div><div class="l11p-rule"><div class="l11p-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l11p-rtitle">Konkretny i mierzalny</div><div class="l11p-rtext">Produkt można zobaczyć, sprawdzić, przekazać. "Raport gotowy" — nie jest produktem. "Raport z analizą 5 konkurentów i rekomendacjami, zatwierdzony przez kierownika" — jest produktem.</div></div></div><div class="l11p-rule"><div class="l11p-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><div class="l11p-rtitle">Wartościowy dla następnego w łańcuchu</div><div class="l11p-rtext">Każda rola przekazuje wynik następnej roli lub klientowi. Produkt managera sprzedaży — podpisana umowa. Produkt księgowego — sprawozdania złożone na czas.</div></div></div><div class="l11p-rule"><div class="l11p-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l11p-rtitle">Ukończony — a nie "w trakcie"</div><div class="l11p-rtext">Produkt to coś co można zdać i przyjąć. Połowa pracy — nie jest produktem. "Zlecenie przetworzone i przekazane do produkcji" — jest produktem.</div></div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Struktura</div><div class="l11p-title">Produkty ról — jak to wygląda w praktyce</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">Każda rola w firmie ma swój produkt. Razem tworzą główny produkt organizacji.</p><div class="l11p-roles"><div class="l11p-role"><div class="l11p-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Manager sprzedaży</div><div class="l11p-rprod">Produkt: podpisana umowa z nowym klientem</div><div class="l11p-rdesc">Nie "odbył spotkania" i nie "przetworzył zgłoszeń" — ale konkretna podpisana umowa</div></div><div class="l11p-role"><div class="l11p-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Administrator kliniki</div><div class="l11p-rprod">Produkt: pacjent zapisany, przyszedł i jest zadowolony z obsługi</div><div class="l11p-rdesc">Nie "odbierał telefony" — ale wypełniony zapis i pozytywne doświadczenie pacjenta</div></div><div class="l11p-role"><div class="l11p-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Kierownik działu</div><div class="l11p-rprod">Produkt: dział wykonał plan w wyznaczonym terminie</div><div class="l11p-rdesc">Nie "prowadził narady i przydzielał zadania" — ale plan wykonany przez zespół</div></div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Po co to jest</div><div class="l11p-title">Co się zmienia gdy produkt jest zdefiniowany</div><div class="l11p-results"><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Pracę można oceniać przez wynik, a nie przez obecność</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Każdy pracownik rozumie czego dokładnie się od niego oczekuje</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Łatwiej delegować — jest jasna definicja "gotowe"</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Znikają spory "ale się starałem" — liczy się wynik, nie wysiłek</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Pojawia się podstawa dla systemu motywacji opartego na produkcie</div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Zadanie</div><div class="l11p-title">Opracuj Politykę Produktu Organizacji przez asystenta AI</div><div class="l11p-steps"><div class="l11p-step"><div class="l11p-snum">1</div><div class="l11p-stext">Otwórz asystenta AI i przeprowadź dialog — przeprowadzi cię przez określenie głównego produktu firmy i produktów kluczowych ról</div></div><div class="l11p-step"><div class="l11p-snum">2</div><div class="l11p-stext">Otrzymasz gotowy dokument "Polityka Produktu Organizacji" — zapisz go w Google Docs</div></div><div class="l11p-step"><div class="l11p-snum">3</div><div class="l11p-stext">Przeprowadź krótką prezentację dla zespołu — wyjaśnij czym jest produkt roli i dlaczego ma to znaczenie dla każdego</div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Czas wdrożenia</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 godziny: 1h dialog z AI i przygotowanie dokumentu + 2h prezentacja dla zespołu</div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Narzędzie</div><div class="l11p-tool"><div class="l11p-thdr"><div class="l11p-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="l11p-ttitle">AI Coach Produktu Organizacji</div><div class="l11p-tdesc">Asystent prowadzi dialog i pomaga sformułować główny produkt firmy i produkty kluczowych ról. Na wyjściu — gotowa Polityka Produktu Organizacji.</div></div></div><a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11p-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Opracuj produkt organizacji</a></div></div>`,
-
-                lessonContent_de: `<style>.l11d-section{margin-bottom:1.75rem}.l11d-section:last-child{margin-bottom:0}.l11d-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l11d-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l11d-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l11d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l11d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l11d-card p+p{margin-top:.7rem}.l11d-compare{display:grid;gap:.5rem;margin-top:.75rem}.l11d-bad{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l11d-good{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l11d-clabel{font-weight:700;font-size:.82rem;margin-bottom:.3rem}.l11d-ctext{font-size:.82rem;font-style:italic;line-height:1.5}.l11d-rule{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-top:.5rem}.l11d-ricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11d-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l11d-rtext{font-size:.82rem;color:#525252;line-height:1.5}.l11d-roles{display:grid;gap:.5rem;margin-top:.75rem}.l11d-role{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11d-rtname{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.3rem}.l11d-rprod{font-size:.82rem;color:#166534;font-weight:600;margin-bottom:.2rem}.l11d-rdesc{font-size:.78rem;color:#525252;line-height:1.4}.l11d-results{display:grid;gap:.35rem;margin-top:.75rem}.l11d-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l11d-steps{display:grid;gap:.55rem;margin-top:.75rem}.l11d-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11d-snum{width:26px;height:26px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l11d-stext{font-size:.85rem;color:#374151;line-height:1.5}.l11d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l11d-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l11d-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11d-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l11d-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l11d-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l11d-section"><div class="l11d-label">Problem</div><div class="l11d-title">Warum das Team nicht versteht was von ihm erwartet wird</div><div class="l11d-card"><p>Die meisten Unternehmen können beschreiben was sie <em>tun</em>. Aber sie können nicht klar antworten welches <em>Ergebnis</em> sie für den Kunden erzeugen.</p><p>Dieser Unterschied ist kritisch. Wenn das Team den Prozess versteht aber nicht das Produkt — bewertet es seine Arbeit durch Anstrengung, nicht durch Ergebnis. "Ich habe 20 Mal angerufen" statt "der Kunde hat den Vertrag unterschrieben."</p><p>Das Fehlen eines klaren Produkts erzeugt das Hauptmanagementproblem: <strong>es ist unmöglich zu beurteilen ob jemand seine Rolle gut erfüllt</strong>.</p></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Konzept</div><div class="l11d-title">Was das Produkt der Organisation ist</div><div class="l11d-card"><p>Das Produkt der Organisation ist das wertvolle Endergebnis das der Kunde erhält. Keine Handlung, kein Prozess, keine Dienstleistung als Abstraktion — sondern eine konkrete Veränderung die im Leben oder Geschäft des Kunden nach der Interaktion mit Ihnen eintritt.</p></div><div class="l11d-compare"><div class="l11d-bad"><div class="l11d-clabel" style="color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Prozess</div><div class="l11d-ctext" style="color:#7f1d1d">"Wir führen Beratungen durch", "Wir erbringen Rechtsdienstleistungen", "Wir machen Werbung"</div></div><div class="l11d-good"><div class="l11d-clabel" style="color:#16a34a"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Produkt</div><div class="l11d-ctext" style="color:#14532d">"Unternehmensinhaber verlässt das operative Geschäft in 65 Tagen", "Fall vor Gericht gewonnen", "+40% Anfragen pro Monat"</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">3 Kriterien</div><div class="l11d-title">Wie ein richtiges Produkt aussehen muss</div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l11d-rtitle">Konkret und messbar</div><div class="l11d-rtext">Das Produkt kann gesehen, geprüft, übergeben werden. "Bericht fertig" — kein Produkt. "Bericht mit Analyse von 5 Wettbewerbern und Empfehlungen, vom Manager genehmigt" — ein Produkt.</div></div></div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><div class="l11d-rtitle">Wertvoll für den Nächsten in der Kette</div><div class="l11d-rtext">Jede Rolle übergibt ihr Ergebnis an die nächste Rolle oder den Kunden. Produkt des Vertriebsleiters — ein unterzeichneter Vertrag. Produkt des Buchhalters — pünktlich eingereichte Berichte.</div></div></div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l11d-rtitle">Abgeschlossen — nicht "in Bearbeitung"</div><div class="l11d-rtext">Ein Produkt ist etwas das übergeben und abgenommen werden kann. Halbe Arbeit — kein Produkt. "Auftrag bearbeitet und an die Produktion übergeben" — ein Produkt.</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Struktur</div><div class="l11d-title">Rollenprodukte — wie es in der Praxis aussieht</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">Jede Rolle im Unternehmen hat ihr eigenes Produkt. Zusammen bilden sie das Hauptprodukt der Organisation.</p><div class="l11d-roles"><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Vertriebsleiter</div><div class="l11d-rprod">Produkt: ein unterzeichneter Vertrag mit einem Neukunden</div><div class="l11d-rdesc">Nicht "Meetings abgehalten" und nicht "Anfragen bearbeitet" — sondern ein konkreter unterzeichneter Vertrag</div></div><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Klinik-Administrator</div><div class="l11d-rprod">Produkt: Patient terminiert, erschienen und mit dem Service zufrieden</div><div class="l11d-rdesc">Nicht "Telefonate beantwortet" — sondern ein gebuchter Termin und eine positive Patientenerfahrung</div></div><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Abteilungsleiter</div><div class="l11d-rprod">Produkt: Abteilung hat den Plan termingerecht erfüllt</div><div class="l11d-rdesc">Nicht "Meetings abgehalten und Aufgaben gestellt" — sondern der vom Team erfüllte Plan</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Wozu es dient</div><div class="l11d-title">Was sich ändert wenn das Produkt definiert ist</div><div class="l11d-results"><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Arbeit kann durch Ergebnis bewertet werden, nicht durch Anwesenheit</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Jeder Mitarbeiter versteht genau was von ihm erwartet wird</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Einfacher zu delegieren — es gibt eine klare Definition von "erledigt"</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Streitigkeiten "aber ich habe mich bemüht" verschwinden — Ergebnisse zählen, nicht Anstrengung</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Grundlage für ein produktbasiertes Motivationssystem entsteht</div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Aufgabe</div><div class="l11d-title">Entwickeln Sie die Organisations-Produkt-Richtlinie durch den KI-Assistenten</div><div class="l11d-steps"><div class="l11d-step"><div class="l11d-snum">1</div><div class="l11d-stext">Öffnen Sie den KI-Assistenten und führen Sie den Dialog — er führt Sie durch die Definition des Hauptprodukts des Unternehmens und der Produkte der Schlüsselrollen</div></div><div class="l11d-step"><div class="l11d-snum">2</div><div class="l11d-stext">Sie erhalten ein fertiges Dokument "Organisations-Produkt-Richtlinie" — speichern Sie es in Google Docs</div></div><div class="l11d-step"><div class="l11d-snum">3</div><div class="l11d-stext">Geben Sie eine kurze Präsentation für das Team — erklären Sie was ein Rollenprodukt ist und warum es für jeden wichtig ist</div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Umsetzungszeit</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 Stunden: 1h KI-Dialog & Dokumentvorbereitung + 2h Teampräsentation</div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Werkzeug</div><div class="l11d-tool"><div class="l11d-thdr"><div class="l11d-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="l11d-ttitle">KI Organisations-Produkt-Coach</div><div class="l11d-tdesc">Der Assistent führt einen Dialog und hilft das Hauptprodukt des Unternehmens und die Produkte der Schlüsselrollen zu formulieren. Ausgabe — fertige Organisations-Produkt-Richtlinie.</div></div></div><a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Organisationsprodukt entwickeln</a></div></div>
-<style>
-/* === LESSON 11 PRES TRIGGER === */
-.l11-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
-.l11-pres-trigger-info{color:white}
-.l11-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
-.l11-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
-.l11-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
-.l11-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
-/* === OVERLAY === */
-#l11Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
-#l11Ov.on{display:flex}
-/* === SLIDE BASE === */
-.l11s{display:none;width:100%;height:100%;overflow:hidden}
-.l11s.on{display:flex}
-/* Dark full slide */
-.l11-dark{background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
-.l11-dark h1{color:#fff;font-size:clamp(2rem,6vw,3.8rem);font-weight:900;text-transform:uppercase;line-height:1.1;margin:0 0 1rem}
-.l11-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:600px;line-height:1.6}
-/* Split: dark left + white right */
-.l11-sl{width:34%;min-width:240px;background:linear-gradient(165deg,#09132b 0%,#142040 55%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 1.75rem 5rem;position:relative;flex-shrink:0}
-.l11-sl h2{color:#fff;font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase}
-.l11-sl h2 u{text-decoration-color:rgba(255,255,255,.4)}
-.l11-tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:90px solid transparent;border-bottom:90px solid rgba(255,255,255,.06)}
-.l11-snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px}
-/* White right */
-.l11-sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
-/* White slide with blue triangle top-right (slides 27,38,40) */
-.l11-wt{width:100%;background:#fff;display:flex;flex-direction:column;justify-content:flex-start;padding:clamp(2rem,5vw,4rem) clamp(2rem,6vw,5rem);position:relative;overflow:hidden}
-.l11-wt-tri{position:absolute;top:0;right:0;width:0;height:0;border-top:280px solid #09132b;border-left:280px solid transparent;opacity:.85}
-.l11-wt-tri2{position:absolute;top:0;right:0;width:0;height:0;border-top:180px solid #3b82f6;border-left:180px solid transparent;opacity:.3}
-/* Typography */
-.l11-sr h3,.l11-wt h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
-.l11-sr p,.l11-wt p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
-.l11-sr p.sm,.l11-wt p.sm{font-size:clamp(.75rem,1.4vw,.9rem);color:#6b7280}
-.l11-q{font-size:clamp(.95rem,2vw,1.2rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
-/* Definition box */
-.l11-def{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0}
-.l11-def .l11-dl{font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
-.l11-def .l11-dt{font-size:clamp(.9rem,1.9vw,1.15rem);color:#1e3a8a;line-height:1.65;font-weight:600}
-/* Highlight term */
-.l11-term{font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:900;color:#09132b;text-decoration:underline;text-underline-offset:4px}
-/* Green resume box */
-.l11-resume{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75;margin:.75rem 0}
-/* Exercise box */
-.l11-ex{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
-.l11-ex strong{color:#b45309}
-/* Bullet list */
-.l11-ul{list-style:none;padding:0;margin:.5rem 0}
-.l11-ul li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
-.l11-ul li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
-/* Rule list */
-.l11-rules .r{display:flex;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
-.l11-rules .r:last-child{border-bottom:none}
-.l11-rd{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
-/* Fill inputs */
-.l11-fg{margin:.65rem 0}
-.l11-fl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
-.l11-fi{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
-.l11-fi:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
-/* Icon badge */
-.l11-star{display:block;margin-bottom:.6rem}
-/* Nav */
-.l11-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
-.l11-nb{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
-.l11-nb:hover:not(:disabled){background:rgba(255,255,255,.25)}
-.l11-nb:disabled{opacity:.25;cursor:default}
-.l11-nc{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
-.l11-close{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
-.l11-save{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
-/* Left panel icons */
-.l11-ico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.8}
-/* Exchange diagram */
-.l11-exch{display:flex;align-items:center;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
-.l11-person{text-align:center}
-.l11-person svg{display:block;margin:0 auto .3rem}
-.l11-person-label{font-size:.82rem;font-weight:700;color:#1a3068}
-.l11-arrow-wrap{display:flex;flex-direction:column;gap:.5rem;align-items:center}
-.l11-arrow-text{font-size:.72rem;color:#6b7280;text-align:center;max-width:160px;line-height:1.4}
-/* CKP badge */
-.l11-ckp-badge{display:inline-flex;align-items:center;justify-content:center;background:#09132b;color:white;font-weight:900;font-size:clamp(1.2rem,3vw,2rem);padding:.5rem 1.5rem;border-radius:10px;letter-spacing:.05em;margin-bottom:.5rem}
-/* Two-col grid */
-.l11-2col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.75rem 0}
-.l11-card{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem 1.25rem}
-.l11-card .l11-cl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
-.l11-card .l11-ct{font-size:clamp(.82rem,1.6vw,1rem);line-height:1.6}
-</style>
-
-<!-- TRIGGER BUTTON at bottom of lesson -->
-<div class="l11-pres-trigger">
-  <div class="l11-pres-trigger-info">
-    <div class="l11-pres-trigger-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-      Заняття 2 — Цінний кінцевий продукт компанії (ЦКП)
-    </div>
-    <div class="l11-pres-trigger-sub">43 слайди · ~1.5 год · Показати команді після прочитання уроку</div>
-  </div>
-  <button class="l11-run-btn" onclick="window._l11Launch()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    Запустити презентацію
-  </button>
-</div>
-
-<!-- FULLSCREEN OVERLAY -->
-<div id="l11Ov">
+                presOverlay: `<div id="l11Ov">
 <div id="l11SW" style="flex:1;position:relative;overflow:hidden">
 
 <!-- S1: TITLE -->
@@ -8497,7 +7971,535 @@ Bist du dabei?</div>
   </div>
   <button class="l11-nb" id="l11Next" onclick="window._l11N()">Далі →</button>
 </div>
-</div><!-- /l11Ov -->
+</div><!-- /l11Ov -->`,
+
+                lessonContent: `
+
+<style>
+/* === LESSON 11 PRES TRIGGER === */
+.l11-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
+.l11-pres-trigger-info{color:white}
+.l11-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.l11-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
+.l11-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
+.l11-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
+/* === OVERLAY === */
+#l11Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l11Ov.on{display:flex}
+/* === SLIDE BASE === */
+.l11s{display:none;width:100%;height:100%;overflow:hidden}
+.l11s.on{display:flex}
+/* Dark full slide */
+.l11-dark{background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
+.l11-dark h1{color:#fff;font-size:clamp(2rem,6vw,3.8rem);font-weight:900;text-transform:uppercase;line-height:1.1;margin:0 0 1rem}
+.l11-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:600px;line-height:1.6}
+/* Split: dark left + white right */
+.l11-sl{width:34%;min-width:240px;background:linear-gradient(165deg,#09132b 0%,#142040 55%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 1.75rem 5rem;position:relative;flex-shrink:0}
+.l11-sl h2{color:#fff;font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase}
+.l11-sl h2 u{text-decoration-color:rgba(255,255,255,.4)}
+.l11-tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:90px solid transparent;border-bottom:90px solid rgba(255,255,255,.06)}
+.l11-snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px}
+/* White right */
+.l11-sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
+/* White slide with blue triangle top-right (slides 27,38,40) */
+.l11-wt{width:100%;background:#fff;display:flex;flex-direction:column;justify-content:flex-start;padding:clamp(2rem,5vw,4rem) clamp(2rem,6vw,5rem);position:relative;overflow:hidden}
+.l11-wt-tri{position:absolute;top:0;right:0;width:0;height:0;border-top:280px solid #09132b;border-left:280px solid transparent;opacity:.85}
+.l11-wt-tri2{position:absolute;top:0;right:0;width:0;height:0;border-top:180px solid #3b82f6;border-left:180px solid transparent;opacity:.3}
+/* Typography */
+.l11-sr h3,.l11-wt h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
+.l11-sr p,.l11-wt p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
+.l11-sr p.sm,.l11-wt p.sm{font-size:clamp(.75rem,1.4vw,.9rem);color:#6b7280}
+.l11-q{font-size:clamp(.95rem,2vw,1.2rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
+/* Definition box */
+.l11-def{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0}
+.l11-def .l11-dl{font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.l11-def .l11-dt{font-size:clamp(.9rem,1.9vw,1.15rem);color:#1e3a8a;line-height:1.65;font-weight:600}
+/* Highlight term */
+.l11-term{font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:900;color:#09132b;text-decoration:underline;text-underline-offset:4px}
+/* Green resume box */
+.l11-resume{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75;margin:.75rem 0}
+/* Exercise box */
+.l11-ex{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.l11-ex strong{color:#b45309}
+/* Bullet list */
+.l11-ul{list-style:none;padding:0;margin:.5rem 0}
+.l11-ul li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.l11-ul li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+/* Rule list */
+.l11-rules .r{display:flex;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
+.l11-rules .r:last-child{border-bottom:none}
+.l11-rd{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
+/* Fill inputs */
+.l11-fg{margin:.65rem 0}
+.l11-fl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.l11-fi{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
+.l11-fi:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
+/* Icon badge */
+.l11-star{display:block;margin-bottom:.6rem}
+/* Nav */
+.l11-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
+.l11-nb{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
+.l11-nb:hover:not(:disabled){background:rgba(255,255,255,.25)}
+.l11-nb:disabled{opacity:.25;cursor:default}
+.l11-nc{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
+.l11-close{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
+.l11-save{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+/* Left panel icons */
+.l11-ico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.8}
+/* Exchange diagram */
+.l11-exch{display:flex;align-items:center;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
+.l11-person{text-align:center}
+.l11-person svg{display:block;margin:0 auto .3rem}
+.l11-person-label{font-size:.82rem;font-weight:700;color:#1a3068}
+.l11-arrow-wrap{display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.l11-arrow-text{font-size:.72rem;color:#6b7280;text-align:center;max-width:160px;line-height:1.4}
+/* CKP badge */
+.l11-ckp-badge{display:inline-flex;align-items:center;justify-content:center;background:#09132b;color:white;font-weight:900;font-size:clamp(1.2rem,3vw,2rem);padding:.5rem 1.5rem;border-radius:10px;letter-spacing:.05em;margin-bottom:.5rem}
+/* Two-col grid */
+.l11-2col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.75rem 0}
+.l11-card{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem 1.25rem}
+.l11-card .l11-cl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.l11-card .l11-ct{font-size:clamp(.82rem,1.6vw,1rem);line-height:1.6}
+</style>
+
+<div class="l11-pres-trigger">
+  <div class="l11-pres-trigger-info">
+    <div class="l11-pres-trigger-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Заняття 2 — Цінний кінцевий продукт компанії (ЦКП)
+    </div>
+    <div class="l11-pres-trigger-sub">43 слайди · ~1.5 год · Показати команді після прочитання уроку</div>
+  </div>
+  <button class="l11-run-btn" onclick="window._l11Launch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Запустити презентацію
+  </button>
+</div>
+
+<!-- FULLSCREEN OVERLAY -->
+
+<style>
+.l11-section { margin-bottom:1.75rem; }
+.l11-section:last-child { margin-bottom:0; }
+.l11-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l11-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l11-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l11-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l11-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l11-card p+p { margin-top:0.7rem; }
+.l11-compare { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
+.l11-bad { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
+.l11-good { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
+.l11-compare-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
+.l11-compare-text { font-size:0.82rem; line-height:1.5; }
+.l11-rule { display:flex; align-items:flex-start; gap:0.85rem; padding:0.85rem 1rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; margin-bottom:0.5rem; }
+.l11-rule:last-child { margin-bottom:0; }
+.l11-rule-icon { width:34px; height:34px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l11-rule-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l11-rule-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l11-roles { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l11-role { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l11-role-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.5rem; }
+.l11-role-product { font-size:0.82rem; color:#16a34a; font-style:italic; }
+.l11-role-desc { font-size:0.78rem; color:#6b7280; margin-top:0.2rem; line-height:1.4; }
+.l11-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l11-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l11-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l11-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l11-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l11-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l11-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l11-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l11-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l11-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l11-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l11-step-text { font-size:0.875rem; color:#374151; line-height:1.5; }
+</style>
+
+<div class="l11-section">
+    <div class="l11-section-label">Проблема</div>
+    <div class="l11-section-title">Чому команда не розуміє, що від неї очікують</div>
+    <div class="l11-card">
+        <p>Більшість компаній можуть описати, що вони <em>роблять</em>. Але не можуть чітко відповісти, який <em>результат</em> вони створюють для клієнта.</p>
+        <p>Ця різниця критична. Коли команда розуміє процес, але не розуміє продукт — вона оцінює свою роботу через зусилля, а не через результат. «Я зателефонував 20 разів» замість «клієнт підписав контракт».</p>
+        <p>Відсутність чіткого продукту породжує головну управлінську проблему: <strong>неможливо оцінити, чи добре людина справляється зі своєю роллю</strong>.</p>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Концепція</div>
+    <div class="l11-section-title">Що таке Продукт організації</div>
+    <div class="l11-card">
+        <p>Продукт організації — це цінний кінцевий результат, який отримує клієнт. Не дія, не процес, не послуга як абстракція — а конкретна зміна, яка відбувається в житті або бізнесі клієнта після взаємодії з вами.</p>
+    </div>
+    <div class="l11-compare">
+        <div class="l11-bad">
+            <div class="l11-compare-label" style="color:#dc2626;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                Процес
+            </div>
+            <div class="l11-compare-text" style="color:#7f1d1d;">«Ми проводимо консультації», «Ми надаємо юридичні послуги», «Ми займаємося рекламою»</div>
+        </div>
+        <div class="l11-good">
+            <div class="l11-compare-label" style="color:#16a34a;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+                Продукт
+            </div>
+            <div class="l11-compare-text" style="color:#14532d;">«Власник бізнесу виходить з операційки за 65 днів», «Справа виграна в суді», «+40% заявок за місяць»</div>
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">3 критерії</div>
+    <div class="l11-section-title">Яким має бути правильний продукт</div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Конкретний і вимірюваний</div>
+            <div class="l11-rule-text">Продукт можна побачити, перевірити, передати. «Звіт готовий» — не продукт. «Звіт з аналізом 5 конкурентів і рекомендаціями, затверджений керівником» — продукт.</div>
+        </div>
+    </div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Цінний для наступного в ланцюжку</div>
+            <div class="l11-rule-text">Кожна роль передає результат наступній ролі або клієнту. Продукт менеджера з продажів — підписаний договір. Продукт бухгалтера — здана вчасно звітність.</div>
+        </div>
+    </div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Закінчений — а не «у процесі»</div>
+            <div class="l11-rule-text">Продукт — це те, що можна здати і прийняти. Половина роботи — не продукт. «Заявка оброблена і передана у виробництво» — продукт.</div>
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Структура</div>
+    <div class="l11-section-title">Продукти ролей — як це виглядає на практиці</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Кожна роль у компанії має свій продукт. Разом вони створюють головний продукт організації.</p>
+    <div class="l11-roles">
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Менеджер з продажів
+            </div>
+            <div class="l11-role-product">Продукт: підписаний договір з новим клієнтом</div>
+            <div class="l11-role-desc">Не «провів зустрічі» і не «обробив заявки» — а конкретний підписаний договір</div>
+        </div>
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Адміністратор клініки
+            </div>
+            <div class="l11-role-product">Продукт: пацієнт записаний, прийшов і задоволений сервісом</div>
+            <div class="l11-role-desc">Не «відповів на дзвінки» — а заповнений запис і позитивний досвід пацієнта</div>
+        </div>
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Керівник відділу
+            </div>
+            <div class="l11-role-product">Продукт: відділ виконав план у встановлений термін</div>
+            <div class="l11-role-desc">Не «провів наради і поставив задачі» — а план виконано командою</div>
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Навіщо це потрібно</div>
+    <div class="l11-section-title">Що змінюється, коли продукт визначений</div>
+    <div class="l11-result-list">
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Можна оцінювати роботу через результат, а не через присутність
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Кожен співробітник розуміє, що саме від нього очікується
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Легше делегувати — є чітке визначення «зроблено»
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Зникають суперечки «я ж старався» — важливий результат, а не зусилля
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            З'являється основа для системи мотивації через продукт
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Завдання</div>
+    <div class="l11-section-title">Розробіть Політику продукту організації через AI-асистента</div>
+    <div class="l11-steps">
+        <div class="l11-step">
+            <div class="l11-step-num">1</div>
+            <div class="l11-step-text">Відкрийте AI-асистента і пройдіть діалог — він проведе вас через визначення головного продукту компанії і продуктів ключових ролей</div>
+        </div>
+        <div class="l11-step">
+            <div class="l11-step-num">2</div>
+            <div class="l11-step-text">На виході ви отримаєте готовий документ «Політика продукту організації» — збережіть його в Google Docs</div>
+        </div>
+        <div class="l11-step">
+            <div class="l11-step-num">3</div>
+            <div class="l11-step-text">Проведіть коротку презентацію для команди — поясніть, що таке продукт ролі і чому це важливо для кожного</div>
+        </div>
+    </div>
+    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
+        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Час на впровадження</div>
+        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 години: 1 год на діалог з AI і підготовку документа + 2 год на проведення презентації для команди</div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Інструмент</div>
+    <div class="l11-tool">
+        <div class="l11-tool-header">
+            <div class="l11-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+                <div class="l11-tool-title">AI-коуч продукту організації</div>
+                <div class="l11-tool-desc">Асистент веде діалог і допомагає сформулювати головний продукт компанії та продукти ключових ролей. На виході — готова Політика продукту організації.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Розробити продукт організації
+        </a>
+    </div>
+</div>`,
+
+                lessonContent_ru: `
+<style>
+.l11-section { margin-bottom:1.75rem; }
+.l11-section:last-child { margin-bottom:0; }
+.l11-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l11-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l11-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l11-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l11-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l11-card p+p { margin-top:0.7rem; }
+.l11-compare { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
+.l11-bad { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
+.l11-good { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
+.l11-compare-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
+.l11-compare-text { font-size:0.82rem; line-height:1.5; }
+.l11-rule { display:flex; align-items:flex-start; gap:0.85rem; padding:0.85rem 1rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; margin-bottom:0.5rem; }
+.l11-rule:last-child { margin-bottom:0; }
+.l11-rule-icon { width:34px; height:34px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l11-rule-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l11-rule-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l11-roles { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l11-role { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l11-role-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.5rem; }
+.l11-role-product { font-size:0.82rem; color:#16a34a; font-style:italic; }
+.l11-role-desc { font-size:0.78rem; color:#6b7280; margin-top:0.2rem; line-height:1.4; }
+.l11-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l11-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l11-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l11-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l11-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l11-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l11-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l11-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l11-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l11-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l11-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l11-step-text { font-size:0.875rem; color:#374151; line-height:1.5; }
+</style>
+
+<div class="l11-section">
+    <div class="l11-section-label">Проблема</div>
+    <div class="l11-section-title">Почему команда не понимает, что от неё ожидают</div>
+    <div class="l11-card">
+        <p>Большинство компаний могут описать, что они <em>делают</em>. Но не могут чётко ответить, какой <em>результат</em> они создают для клиента.</p>
+        <p>Это различие критично. Когда команда понимает процесс, но не понимает продукт — она оценивает свою работу через усилия, а не через результат. «Я позвонил 20 раз» вместо «клиент подписал контракт».</p>
+        <p>Отсутствие чёткого продукта порождает главную управленческую проблему: <strong>невозможно оценить, хорошо ли человек справляется со своей ролью</strong>.</p>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Концепция</div>
+    <div class="l11-section-title">Что такое Продукт организации</div>
+    <div class="l11-card">
+        <p>Продукт организации — это ценный конечный результат, который получает клиент. Не действие, не процесс, не услуга как абстракция — а конкретное изменение, которое происходит в жизни или бизнесе клиента после взаимодействия с вами.</p>
+    </div>
+    <div class="l11-compare">
+        <div class="l11-bad">
+            <div class="l11-compare-label" style="color:#dc2626;">Процесс</div>
+            <div class="l11-compare-text" style="color:#7f1d1d;">«Мы проводим консультации», «Мы оказываем юридические услуги», «Мы занимаемся рекламой»</div>
+        </div>
+        <div class="l11-good">
+            <div class="l11-compare-label" style="color:#16a34a;">Продукт</div>
+            <div class="l11-compare-text" style="color:#14532d;">«Владелец выходит из операционки за 65 дней», «Дело выиграно в суде», «+40% заявок за месяц»</div>
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">3 критерия</div>
+    <div class="l11-section-title">Каким должен быть правильный продукт</div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Конкретный и измеримый</div>
+            <div class="l11-rule-text">Продукт можно увидеть, проверить, передать. «Отчёт готов» — не продукт. «Отчёт с анализом 5 конкурентов и рекомендациями, утверждённый руководителем» — продукт.</div>
+        </div>
+    </div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Ценный для следующего в цепочке</div>
+            <div class="l11-rule-text">Каждая роль передаёт результат следующей роли или клиенту. Продукт менеджера по продажам — подписанный договор. Продукт бухгалтера — сданная вовремя отчётность.</div>
+        </div>
+    </div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Завершённый — а не «в процессе»</div>
+            <div class="l11-rule-text">Продукт — это то, что можно сдать и принять. Половина работы — не продукт. «Заявка обработана и передана в производство» — продукт.</div>
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Структура</div>
+    <div class="l11-section-title">Продукты ролей — как это выглядит на практике</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Каждая роль в компании имеет свой продукт. Вместе они создают главный продукт организации.</p>
+    <div class="l11-roles">
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Менеджер по продажам
+            </div>
+            <div class="l11-role-product">Продукт: подписанный договор с новым клиентом</div>
+            <div class="l11-role-desc">Не «провёл встречи» и не «обработал заявки» — а конкретный подписанный договор</div>
+        </div>
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Администратор клиники
+            </div>
+            <div class="l11-role-product">Продукт: пациент записан, пришёл и доволен сервисом</div>
+            <div class="l11-role-desc">Не «ответил на звонки» — а заполненная запись и положительный опыт пациента</div>
+        </div>
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Руководитель отдела
+            </div>
+            <div class="l11-role-product">Продукт: отдел выполнил план в установленный срок</div>
+            <div class="l11-role-desc">Не «провёл совещания и поставил задачи» — а план выполнен командой</div>
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Зачем это нужно</div>
+    <div class="l11-section-title">Что меняется, когда продукт определён</div>
+    <div class="l11-result-list">
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Можно оценивать работу через результат, а не через присутствие
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Каждый сотрудник понимает, что именно от него ожидается
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Легче делегировать — есть чёткое определение «сделано»
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Исчезают споры «я же старался» — важен результат, а не усилия
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Появляется основа для системы мотивации через продукт
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Задание</div>
+    <div class="l11-section-title">Разработайте Политику продукта организации через AI-ассистента</div>
+    <div class="l11-steps">
+        <div class="l11-step">
+            <div class="l11-step-num">1</div>
+            <div class="l11-step-text">Откройте AI-ассистента и пройдите диалог — он проведёт вас через определение главного продукта компании и продуктов ключевых ролей</div>
+        </div>
+        <div class="l11-step">
+            <div class="l11-step-num">2</div>
+            <div class="l11-step-text">На выходе вы получите готовый документ «Политика продукта организации» — сохраните его в Google Docs</div>
+        </div>
+        <div class="l11-step">
+            <div class="l11-step-num">3</div>
+            <div class="l11-step-text">Проведите короткую презентацию для команды — объясните, что такое продукт роли и почему это важно для каждого</div>
+        </div>
+    </div>
+    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
+        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Время на внедрение</div>
+        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 часа: 1 час на диалог с AI и подготовку документа + 2 часа на проведение презентации для команды</div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Инструмент</div>
+    <div class="l11-tool">
+        <div class="l11-tool-header">
+            <div class="l11-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+                <div class="l11-tool-title">AI-коуч продукта организации</div>
+                <div class="l11-tool-desc">Ассистент ведёт диалог и помогает сформулировать главный продукт компании и продукты ключевых ролей. На выходе — готовая Политика продукта организации.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Разработать продукт организации
+        </a>
+    </div>
+</div>`,
+
+                lessonContent_en: `<style>.l11e-section{margin-bottom:1.75rem}.l11e-section:last-child{margin-bottom:0}.l11e-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l11e-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l11e-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l11e-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l11e-card p{font-size:.9rem;color:#374151;line-height:1.65}.l11e-card p+p{margin-top:.7rem}.l11e-compare{display:grid;gap:.5rem;margin-top:.75rem}.l11e-bad{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l11e-good{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l11e-clabel{font-weight:700;font-size:.82rem;margin-bottom:.3rem}.l11e-ctext{font-size:.82rem;font-style:italic;line-height:1.5}.l11e-rule{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-top:.5rem}.l11e-ricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11e-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l11e-rtext{font-size:.82rem;color:#525252;line-height:1.5}.l11e-roles{display:grid;gap:.5rem;margin-top:.75rem}.l11e-role{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11e-rtname{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.3rem}.l11e-rprod{font-size:.82rem;color:#166534;font-weight:600;margin-bottom:.2rem}.l11e-rdesc{font-size:.78rem;color:#525252;line-height:1.4}.l11e-results{display:grid;gap:.35rem;margin-top:.75rem}.l11e-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l11e-steps{display:grid;gap:.55rem;margin-top:.75rem}.l11e-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11e-snum{width:26px;height:26px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l11e-stext{font-size:.85rem;color:#374151;line-height:1.5}.l11e-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l11e-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l11e-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11e-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l11e-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l11e-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l11e-section"><div class="l11e-label">Problem</div><div class="l11e-title">Why the team doesn't understand what is expected of it</div><div class="l11e-card"><p>Most companies can describe what they <em>do</em>. But they cannot clearly answer what <em>result</em> they create for the client.</p><p>This difference is critical. When the team understands the process but not the product — it evaluates its work through effort, not result. "I called 20 times" instead of "the client signed the contract."</p><p>The absence of a clear product creates the main management problem: <strong>it is impossible to assess whether a person is doing their role well</strong>.</p></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Concept</div><div class="l11e-title">What the Product of the Organization is</div><div class="l11e-card"><p>The product of the organization is the valuable final result that the client receives. Not an action, not a process, not a service as an abstraction — but a concrete change that happens in the life or business of the client after interacting with you.</p></div><div class="l11e-compare"><div class="l11e-bad"><div class="l11e-clabel" style="color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Process</div><div class="l11e-ctext" style="color:#7f1d1d">"We provide consultations", "We provide legal services", "We do advertising"</div></div><div class="l11e-good"><div class="l11e-clabel" style="color:#16a34a"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Product</div><div class="l11e-ctext" style="color:#14532d">"Business owner exits operations in 65 days", "Case won in court", "+40% inquiries per month"</div></div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">3 Criteria</div><div class="l11e-title">What a correct product must be</div><div class="l11e-rule"><div class="l11e-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l11e-rtitle">Specific and measurable</div><div class="l11e-rtext">The product can be seen, verified, handed over. "Report ready" — not a product. "Report with analysis of 5 competitors and recommendations, approved by the manager" — a product.</div></div></div><div class="l11e-rule"><div class="l11e-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><div class="l11e-rtitle">Valuable to the next in the chain</div><div class="l11e-rtext">Each role passes its result to the next role or to the client. Sales manager's product — a signed contract. Accountant's product — reports submitted on time.</div></div></div><div class="l11e-rule"><div class="l11e-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l11e-rtitle">Completed — not "in progress"</div><div class="l11e-rtext">A product is something that can be delivered and accepted. Half the work is not a product. "Application processed and passed to production" — a product.</div></div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Structure</div><div class="l11e-title">Products of roles — what it looks like in practice</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">Each role in the company has its own product. Together they create the main product of the organization.</p><div class="l11e-roles"><div class="l11e-role"><div class="l11e-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Sales Manager</div><div class="l11e-rprod">Product: a signed contract with a new client</div><div class="l11e-rdesc">Not "held meetings" and not "processed applications" — but a specific signed contract</div></div><div class="l11e-role"><div class="l11e-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Clinic Administrator</div><div class="l11e-rprod">Product: patient booked, arrived and satisfied with service</div><div class="l11e-rdesc">Not "answered calls" — but a filled appointment and a positive patient experience</div></div><div class="l11e-role"><div class="l11e-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Department Head</div><div class="l11e-rprod">Product: department completed the plan on time</div><div class="l11e-rdesc">Not "held meetings and assigned tasks" — but the plan completed by the team</div></div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Why it matters</div><div class="l11e-title">What changes when the product is defined</div><div class="l11e-results"><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Work can be assessed by result, not by presence</div><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Every employee understands exactly what is expected of them</div><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Easier to delegate — there is a clear definition of "done"</div><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Arguments "but I tried" disappear — results matter, not effort</div><div class="l11e-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Foundation appears for a product-based motivation system</div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Assignment</div><div class="l11e-title">Develop the Organization Product Policy through the AI assistant</div><div class="l11e-steps"><div class="l11e-step"><div class="l11e-snum">1</div><div class="l11e-stext">Open the AI assistant and complete the dialogue — it will guide you through defining the main product of the company and the products of key roles</div></div><div class="l11e-step"><div class="l11e-snum">2</div><div class="l11e-stext">You will receive a ready "Organization Product Policy" document — save it in Google Docs</div></div><div class="l11e-step"><div class="l11e-snum">3</div><div class="l11e-stext">Give a short presentation to the team — explain what a role product is and why it matters to each person</div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Implementation time</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 hours: 1h AI dialogue & document preparation + 2h team presentation</div></div></div><div class="l11e-divider"></div><div class="l11e-section"><div class="l11e-label">Tool</div><div class="l11e-tool"><div class="l11e-thdr"><div class="l11e-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="l11e-ttitle">AI Organization Product Coach</div><div class="l11e-tdesc">The assistant leads a dialogue and helps formulate the main product of the company and the products of key roles. Output — ready Organization Product Policy.</div></div></div><a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11e-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Develop organization product</a></div></div>`,
+
+                lessonContent_pl: `<style>.l11p-section{margin-bottom:1.75rem}.l11p-section:last-child{margin-bottom:0}.l11p-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l11p-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l11p-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l11p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l11p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l11p-card p+p{margin-top:.7rem}.l11p-compare{display:grid;gap:.5rem;margin-top:.75rem}.l11p-bad{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l11p-good{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l11p-clabel{font-weight:700;font-size:.82rem;margin-bottom:.3rem}.l11p-ctext{font-size:.82rem;font-style:italic;line-height:1.5}.l11p-rule{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-top:.5rem}.l11p-ricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11p-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l11p-rtext{font-size:.82rem;color:#525252;line-height:1.5}.l11p-roles{display:grid;gap:.5rem;margin-top:.75rem}.l11p-role{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11p-rtname{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.3rem}.l11p-rprod{font-size:.82rem;color:#166534;font-weight:600;margin-bottom:.2rem}.l11p-rdesc{font-size:.78rem;color:#525252;line-height:1.4}.l11p-results{display:grid;gap:.35rem;margin-top:.75rem}.l11p-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l11p-steps{display:grid;gap:.55rem;margin-top:.75rem}.l11p-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11p-snum{width:26px;height:26px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l11p-stext{font-size:.85rem;color:#374151;line-height:1.5}.l11p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l11p-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l11p-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11p-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l11p-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l11p-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l11p-section"><div class="l11p-label">Problem</div><div class="l11p-title">Dlaczego zespół nie rozumie czego się od niego oczekuje</div><div class="l11p-card"><p>Większość firm potrafi opisać co <em>robi</em>. Ale nie potrafi jasno odpowiedzieć jaki <em>wynik</em> tworzy dla klienta.</p><p>Ta różnica jest krytyczna. Gdy zespół rozumie proces ale nie rozumie produktu — ocenia swoją pracę przez wysiłek, a nie wynik. "Zadzwoniłem 20 razy" zamiast "klient podpisał umowę."</p><p>Brak jasnego produktu rodzi główny problem zarządczy: <strong>nie można ocenić czy ktoś dobrze wykonuje swoją rolę</strong>.</p></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Koncepcja</div><div class="l11p-title">Czym jest Produkt Organizacji</div><div class="l11p-card"><p>Produkt organizacji to wartościowy końcowy wynik który otrzymuje klient. Nie działanie, nie proces, nie usługa jako abstrakcja — ale konkretna zmiana która zachodzi w życiu lub biznesie klienta po interakcji z tobą.</p></div><div class="l11p-compare"><div class="l11p-bad"><div class="l11p-clabel" style="color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Proces</div><div class="l11p-ctext" style="color:#7f1d1d">"Prowadzimy konsultacje", "Świadczymy usługi prawne", "Zajmujemy się reklamą"</div></div><div class="l11p-good"><div class="l11p-clabel" style="color:#16a34a"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Produkt</div><div class="l11p-ctext" style="color:#14532d">"Właściciel wychodzi z operacyjki w 65 dni", "Sprawa wygrana w sądzie", "+40% zapytań miesięcznie"</div></div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">3 Kryteria</div><div class="l11p-title">Jakim musi być prawidłowy produkt</div><div class="l11p-rule"><div class="l11p-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l11p-rtitle">Konkretny i mierzalny</div><div class="l11p-rtext">Produkt można zobaczyć, sprawdzić, przekazać. "Raport gotowy" — nie jest produktem. "Raport z analizą 5 konkurentów i rekomendacjami, zatwierdzony przez kierownika" — jest produktem.</div></div></div><div class="l11p-rule"><div class="l11p-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><div class="l11p-rtitle">Wartościowy dla następnego w łańcuchu</div><div class="l11p-rtext">Każda rola przekazuje wynik następnej roli lub klientowi. Produkt managera sprzedaży — podpisana umowa. Produkt księgowego — sprawozdania złożone na czas.</div></div></div><div class="l11p-rule"><div class="l11p-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l11p-rtitle">Ukończony — a nie "w trakcie"</div><div class="l11p-rtext">Produkt to coś co można zdać i przyjąć. Połowa pracy — nie jest produktem. "Zlecenie przetworzone i przekazane do produkcji" — jest produktem.</div></div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Struktura</div><div class="l11p-title">Produkty ról — jak to wygląda w praktyce</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">Każda rola w firmie ma swój produkt. Razem tworzą główny produkt organizacji.</p><div class="l11p-roles"><div class="l11p-role"><div class="l11p-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Manager sprzedaży</div><div class="l11p-rprod">Produkt: podpisana umowa z nowym klientem</div><div class="l11p-rdesc">Nie "odbył spotkania" i nie "przetworzył zgłoszeń" — ale konkretna podpisana umowa</div></div><div class="l11p-role"><div class="l11p-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Administrator kliniki</div><div class="l11p-rprod">Produkt: pacjent zapisany, przyszedł i jest zadowolony z obsługi</div><div class="l11p-rdesc">Nie "odbierał telefony" — ale wypełniony zapis i pozytywne doświadczenie pacjenta</div></div><div class="l11p-role"><div class="l11p-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Kierownik działu</div><div class="l11p-rprod">Produkt: dział wykonał plan w wyznaczonym terminie</div><div class="l11p-rdesc">Nie "prowadził narady i przydzielał zadania" — ale plan wykonany przez zespół</div></div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Po co to jest</div><div class="l11p-title">Co się zmienia gdy produkt jest zdefiniowany</div><div class="l11p-results"><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Pracę można oceniać przez wynik, a nie przez obecność</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Każdy pracownik rozumie czego dokładnie się od niego oczekuje</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Łatwiej delegować — jest jasna definicja "gotowe"</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Znikają spory "ale się starałem" — liczy się wynik, nie wysiłek</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Pojawia się podstawa dla systemu motywacji opartego na produkcie</div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Zadanie</div><div class="l11p-title">Opracuj Politykę Produktu Organizacji przez asystenta AI</div><div class="l11p-steps"><div class="l11p-step"><div class="l11p-snum">1</div><div class="l11p-stext">Otwórz asystenta AI i przeprowadź dialog — przeprowadzi cię przez określenie głównego produktu firmy i produktów kluczowych ról</div></div><div class="l11p-step"><div class="l11p-snum">2</div><div class="l11p-stext">Otrzymasz gotowy dokument "Polityka Produktu Organizacji" — zapisz go w Google Docs</div></div><div class="l11p-step"><div class="l11p-snum">3</div><div class="l11p-stext">Przeprowadź krótką prezentację dla zespołu — wyjaśnij czym jest produkt roli i dlaczego ma to znaczenie dla każdego</div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Czas wdrożenia</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 godziny: 1h dialog z AI i przygotowanie dokumentu + 2h prezentacja dla zespołu</div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Narzędzie</div><div class="l11p-tool"><div class="l11p-thdr"><div class="l11p-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="l11p-ttitle">AI Coach Produktu Organizacji</div><div class="l11p-tdesc">Asystent prowadzi dialog i pomaga sformułować główny produkt firmy i produkty kluczowych ról. Na wyjściu — gotowa Polityka Produktu Organizacji.</div></div></div><a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11p-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Opracuj produkt organizacji</a></div></div>`,
+
+                lessonContent_de: `<style>.l11d-section{margin-bottom:1.75rem}.l11d-section:last-child{margin-bottom:0}.l11d-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l11d-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l11d-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l11d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l11d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l11d-card p+p{margin-top:.7rem}.l11d-compare{display:grid;gap:.5rem;margin-top:.75rem}.l11d-bad{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l11d-good{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l11d-clabel{font-weight:700;font-size:.82rem;margin-bottom:.3rem}.l11d-ctext{font-size:.82rem;font-style:italic;line-height:1.5}.l11d-rule{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-top:.5rem}.l11d-ricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11d-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l11d-rtext{font-size:.82rem;color:#525252;line-height:1.5}.l11d-roles{display:grid;gap:.5rem;margin-top:.75rem}.l11d-role{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11d-rtname{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.3rem}.l11d-rprod{font-size:.82rem;color:#166534;font-weight:600;margin-bottom:.2rem}.l11d-rdesc{font-size:.78rem;color:#525252;line-height:1.4}.l11d-results{display:grid;gap:.35rem;margin-top:.75rem}.l11d-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l11d-steps{display:grid;gap:.55rem;margin-top:.75rem}.l11d-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11d-snum{width:26px;height:26px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l11d-stext{font-size:.85rem;color:#374151;line-height:1.5}.l11d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l11d-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l11d-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11d-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l11d-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l11d-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l11d-section"><div class="l11d-label">Problem</div><div class="l11d-title">Warum das Team nicht versteht was von ihm erwartet wird</div><div class="l11d-card"><p>Die meisten Unternehmen können beschreiben was sie <em>tun</em>. Aber sie können nicht klar antworten welches <em>Ergebnis</em> sie für den Kunden erzeugen.</p><p>Dieser Unterschied ist kritisch. Wenn das Team den Prozess versteht aber nicht das Produkt — bewertet es seine Arbeit durch Anstrengung, nicht durch Ergebnis. "Ich habe 20 Mal angerufen" statt "der Kunde hat den Vertrag unterschrieben."</p><p>Das Fehlen eines klaren Produkts erzeugt das Hauptmanagementproblem: <strong>es ist unmöglich zu beurteilen ob jemand seine Rolle gut erfüllt</strong>.</p></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Konzept</div><div class="l11d-title">Was das Produkt der Organisation ist</div><div class="l11d-card"><p>Das Produkt der Organisation ist das wertvolle Endergebnis das der Kunde erhält. Keine Handlung, kein Prozess, keine Dienstleistung als Abstraktion — sondern eine konkrete Veränderung die im Leben oder Geschäft des Kunden nach der Interaktion mit Ihnen eintritt.</p></div><div class="l11d-compare"><div class="l11d-bad"><div class="l11d-clabel" style="color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Prozess</div><div class="l11d-ctext" style="color:#7f1d1d">"Wir führen Beratungen durch", "Wir erbringen Rechtsdienstleistungen", "Wir machen Werbung"</div></div><div class="l11d-good"><div class="l11d-clabel" style="color:#16a34a"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Produkt</div><div class="l11d-ctext" style="color:#14532d">"Unternehmensinhaber verlässt das operative Geschäft in 65 Tagen", "Fall vor Gericht gewonnen", "+40% Anfragen pro Monat"</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">3 Kriterien</div><div class="l11d-title">Wie ein richtiges Produkt aussehen muss</div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l11d-rtitle">Konkret und messbar</div><div class="l11d-rtext">Das Produkt kann gesehen, geprüft, übergeben werden. "Bericht fertig" — kein Produkt. "Bericht mit Analyse von 5 Wettbewerbern und Empfehlungen, vom Manager genehmigt" — ein Produkt.</div></div></div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><div class="l11d-rtitle">Wertvoll für den Nächsten in der Kette</div><div class="l11d-rtext">Jede Rolle übergibt ihr Ergebnis an die nächste Rolle oder den Kunden. Produkt des Vertriebsleiters — ein unterzeichneter Vertrag. Produkt des Buchhalters — pünktlich eingereichte Berichte.</div></div></div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l11d-rtitle">Abgeschlossen — nicht "in Bearbeitung"</div><div class="l11d-rtext">Ein Produkt ist etwas das übergeben und abgenommen werden kann. Halbe Arbeit — kein Produkt. "Auftrag bearbeitet und an die Produktion übergeben" — ein Produkt.</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Struktur</div><div class="l11d-title">Rollenprodukte — wie es in der Praxis aussieht</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">Jede Rolle im Unternehmen hat ihr eigenes Produkt. Zusammen bilden sie das Hauptprodukt der Organisation.</p><div class="l11d-roles"><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Vertriebsleiter</div><div class="l11d-rprod">Produkt: ein unterzeichneter Vertrag mit einem Neukunden</div><div class="l11d-rdesc">Nicht "Meetings abgehalten" und nicht "Anfragen bearbeitet" — sondern ein konkreter unterzeichneter Vertrag</div></div><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Klinik-Administrator</div><div class="l11d-rprod">Produkt: Patient terminiert, erschienen und mit dem Service zufrieden</div><div class="l11d-rdesc">Nicht "Telefonate beantwortet" — sondern ein gebuchter Termin und eine positive Patientenerfahrung</div></div><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Abteilungsleiter</div><div class="l11d-rprod">Produkt: Abteilung hat den Plan termingerecht erfüllt</div><div class="l11d-rdesc">Nicht "Meetings abgehalten und Aufgaben gestellt" — sondern der vom Team erfüllte Plan</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Wozu es dient</div><div class="l11d-title">Was sich ändert wenn das Produkt definiert ist</div><div class="l11d-results"><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Arbeit kann durch Ergebnis bewertet werden, nicht durch Anwesenheit</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Jeder Mitarbeiter versteht genau was von ihm erwartet wird</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Einfacher zu delegieren — es gibt eine klare Definition von "erledigt"</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Streitigkeiten "aber ich habe mich bemüht" verschwinden — Ergebnisse zählen, nicht Anstrengung</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Grundlage für ein produktbasiertes Motivationssystem entsteht</div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Aufgabe</div><div class="l11d-title">Entwickeln Sie die Organisations-Produkt-Richtlinie durch den KI-Assistenten</div><div class="l11d-steps"><div class="l11d-step"><div class="l11d-snum">1</div><div class="l11d-stext">Öffnen Sie den KI-Assistenten und führen Sie den Dialog — er führt Sie durch die Definition des Hauptprodukts des Unternehmens und der Produkte der Schlüsselrollen</div></div><div class="l11d-step"><div class="l11d-snum">2</div><div class="l11d-stext">Sie erhalten ein fertiges Dokument "Organisations-Produkt-Richtlinie" — speichern Sie es in Google Docs</div></div><div class="l11d-step"><div class="l11d-snum">3</div><div class="l11d-stext">Geben Sie eine kurze Präsentation für das Team — erklären Sie was ein Rollenprodukt ist und warum es für jeden wichtig ist</div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Umsetzungszeit</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 Stunden: 1h KI-Dialog & Dokumentvorbereitung + 2h Teampräsentation</div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Werkzeug</div><div class="l11d-tool"><div class="l11d-thdr"><div class="l11d-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="l11d-ttitle">KI Organisations-Produkt-Coach</div><div class="l11d-tdesc">Der Assistent führt einen Dialog und hilft das Hauptprodukt des Unternehmens und die Produkte der Schlüsselrollen zu formulieren. Ausgabe — fertige Organisations-Produkt-Richtlinie.</div></div></div><a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Organisationsprodukt entwickeln</a></div></div>
 
 
 `,
