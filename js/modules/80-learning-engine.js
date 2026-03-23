@@ -5483,6 +5483,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 window._l10N = function() { if (c < T) go10(c + 1); };
                 window._l10Launch = async function() {
                     var ov = document.getElementById('l10Ov');
+                    if (!ov) return;
                     ov.style.cssText = 'display:flex;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000;'; ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
                     go10(1);
@@ -5528,6 +5529,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 window._l12N = function() { if (c < T) go12(c + 1); };
                 window._l12Launch = function() {
                     var ov = document.getElementById('l12Ov');
+                    if (!ov) return;
                     ov.style.cssText = 'display:flex;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000;'; ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
                     go12(1);
@@ -5579,6 +5581,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 window._l11N = function() { if (c < T) go11(c + 1); };
                 window._l11Launch = async function() {
                     var ov = document.getElementById('l11Ov');
+                    if (!ov) return;
                     ov.style.cssText = 'display:flex;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000;'; ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
                     go11(1);

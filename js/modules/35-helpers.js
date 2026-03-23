@@ -166,10 +166,11 @@
             }
             // Remove presentation overlays if navigating away from learning
             if (tabName !== 'learning') {
-                var _ov10 = document.getElementById('l10Ov');
-                var _ov11 = document.getElementById('l11Ov');
-                if (_ov10) _ov10.remove();
-                if (_ov11) _ov11.remove();
+                ['l10Ov','l11Ov','l12Ov'].forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el) { el.style.display = 'none'; el.remove(); }
+                });
+                document.body.style.overflow = '';
                 document.body.style.overflow = '';
             }
             
