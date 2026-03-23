@@ -5399,6 +5399,42 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     document.head.removeChild(ns);
                 });
             }
+            // Fallback: lesson 11 presentation
+            if (document.getElementById('l11Ov') && typeof window._l11Launch !== 'function') {
+                (function(){
+                    var T=43, c=1;
+                    function go(n){
+                        var ov=document.getElementById('l11Ov');
+                        ov.querySelector('.l11s.on').classList.remove('on');
+                        c=n;
+                        ov.querySelector('#l11_'+c).classList.add('on');
+                        document.getElementById('l11Ctr').textContent=c+' / '+T;
+                        document.getElementById('l11Prev').disabled=(c===1);
+                        document.getElementById('l11Next').disabled=(c===T);
+                    }
+                    window._l11P=function(){if(c>1)go(c-1);};
+                    window._l11N=function(){if(c<T)go(c+1);};
+                    window._l11Launch=function(){
+                        var ov=document.getElementById('l11Ov');
+                        ov.classList.add('on');
+                        document.body.style.overflow='hidden';
+                        c=1;
+                        ov.querySelectorAll('.l11s').forEach(function(s){s.classList.remove('on');});
+                        ov.querySelector('#l11_1').classList.add('on');
+                        document.getElementById('l11Ctr').textContent='1 / '+T;
+                        document.getElementById('l11Prev').disabled=true;
+                        document.getElementById('l11Next').disabled=false;
+                        try{window.storage.get('l11d').then(function(r){if(r&&r.value){var d=JSON.parse(r.value);['values_why','values_left','ckp','v123','goal','ckp_final'].forEach(function(k){var e=document.getElementById('l11f_'+k);if(e&&d[k])e.value=d[k];});}});}catch(e){}
+                    };
+                    window._l11Close=function(){
+                        document.getElementById('l11Ov').classList.remove('on');
+                        document.body.style.overflow='';
+                        window._l11SaveAll&&window._l11SaveAll();
+                    };
+                    window._l11SF=window._l11SF||function(){};
+                    window._l11SaveAll=window._l11SaveAll||function(){};
+                })();
+            }
             // Fallback: if lesson 10 pres overlay exists but launch fn not defined, init it
             if (document.getElementById('l10Ov') && typeof window._l10Launch !== 'function') {
                 window._l10Launch = function() {

@@ -7695,7 +7695,922 @@ Bist du dabei?</div>
 
                 lessonContent_pl: `<style>.l11p-section{margin-bottom:1.75rem}.l11p-section:last-child{margin-bottom:0}.l11p-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l11p-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l11p-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l11p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l11p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l11p-card p+p{margin-top:.7rem}.l11p-compare{display:grid;gap:.5rem;margin-top:.75rem}.l11p-bad{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l11p-good{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l11p-clabel{font-weight:700;font-size:.82rem;margin-bottom:.3rem}.l11p-ctext{font-size:.82rem;font-style:italic;line-height:1.5}.l11p-rule{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-top:.5rem}.l11p-ricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11p-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l11p-rtext{font-size:.82rem;color:#525252;line-height:1.5}.l11p-roles{display:grid;gap:.5rem;margin-top:.75rem}.l11p-role{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11p-rtname{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.3rem}.l11p-rprod{font-size:.82rem;color:#166534;font-weight:600;margin-bottom:.2rem}.l11p-rdesc{font-size:.78rem;color:#525252;line-height:1.4}.l11p-results{display:grid;gap:.35rem;margin-top:.75rem}.l11p-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l11p-steps{display:grid;gap:.55rem;margin-top:.75rem}.l11p-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11p-snum{width:26px;height:26px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l11p-stext{font-size:.85rem;color:#374151;line-height:1.5}.l11p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l11p-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l11p-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11p-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l11p-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l11p-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l11p-section"><div class="l11p-label">Problem</div><div class="l11p-title">Dlaczego zespół nie rozumie czego się od niego oczekuje</div><div class="l11p-card"><p>Większość firm potrafi opisać co <em>robi</em>. Ale nie potrafi jasno odpowiedzieć jaki <em>wynik</em> tworzy dla klienta.</p><p>Ta różnica jest krytyczna. Gdy zespół rozumie proces ale nie rozumie produktu — ocenia swoją pracę przez wysiłek, a nie wynik. "Zadzwoniłem 20 razy" zamiast "klient podpisał umowę."</p><p>Brak jasnego produktu rodzi główny problem zarządczy: <strong>nie można ocenić czy ktoś dobrze wykonuje swoją rolę</strong>.</p></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Koncepcja</div><div class="l11p-title">Czym jest Produkt Organizacji</div><div class="l11p-card"><p>Produkt organizacji to wartościowy końcowy wynik który otrzymuje klient. Nie działanie, nie proces, nie usługa jako abstrakcja — ale konkretna zmiana która zachodzi w życiu lub biznesie klienta po interakcji z tobą.</p></div><div class="l11p-compare"><div class="l11p-bad"><div class="l11p-clabel" style="color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Proces</div><div class="l11p-ctext" style="color:#7f1d1d">"Prowadzimy konsultacje", "Świadczymy usługi prawne", "Zajmujemy się reklamą"</div></div><div class="l11p-good"><div class="l11p-clabel" style="color:#16a34a"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Produkt</div><div class="l11p-ctext" style="color:#14532d">"Właściciel wychodzi z operacyjki w 65 dni", "Sprawa wygrana w sądzie", "+40% zapytań miesięcznie"</div></div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">3 Kryteria</div><div class="l11p-title">Jakim musi być prawidłowy produkt</div><div class="l11p-rule"><div class="l11p-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l11p-rtitle">Konkretny i mierzalny</div><div class="l11p-rtext">Produkt można zobaczyć, sprawdzić, przekazać. "Raport gotowy" — nie jest produktem. "Raport z analizą 5 konkurentów i rekomendacjami, zatwierdzony przez kierownika" — jest produktem.</div></div></div><div class="l11p-rule"><div class="l11p-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><div class="l11p-rtitle">Wartościowy dla następnego w łańcuchu</div><div class="l11p-rtext">Każda rola przekazuje wynik następnej roli lub klientowi. Produkt managera sprzedaży — podpisana umowa. Produkt księgowego — sprawozdania złożone na czas.</div></div></div><div class="l11p-rule"><div class="l11p-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l11p-rtitle">Ukończony — a nie "w trakcie"</div><div class="l11p-rtext">Produkt to coś co można zdać i przyjąć. Połowa pracy — nie jest produktem. "Zlecenie przetworzone i przekazane do produkcji" — jest produktem.</div></div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Struktura</div><div class="l11p-title">Produkty ról — jak to wygląda w praktyce</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">Każda rola w firmie ma swój produkt. Razem tworzą główny produkt organizacji.</p><div class="l11p-roles"><div class="l11p-role"><div class="l11p-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Manager sprzedaży</div><div class="l11p-rprod">Produkt: podpisana umowa z nowym klientem</div><div class="l11p-rdesc">Nie "odbył spotkania" i nie "przetworzył zgłoszeń" — ale konkretna podpisana umowa</div></div><div class="l11p-role"><div class="l11p-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Administrator kliniki</div><div class="l11p-rprod">Produkt: pacjent zapisany, przyszedł i jest zadowolony z obsługi</div><div class="l11p-rdesc">Nie "odbierał telefony" — ale wypełniony zapis i pozytywne doświadczenie pacjenta</div></div><div class="l11p-role"><div class="l11p-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Kierownik działu</div><div class="l11p-rprod">Produkt: dział wykonał plan w wyznaczonym terminie</div><div class="l11p-rdesc">Nie "prowadził narady i przydzielał zadania" — ale plan wykonany przez zespół</div></div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Po co to jest</div><div class="l11p-title">Co się zmienia gdy produkt jest zdefiniowany</div><div class="l11p-results"><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Pracę można oceniać przez wynik, a nie przez obecność</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Każdy pracownik rozumie czego dokładnie się od niego oczekuje</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Łatwiej delegować — jest jasna definicja "gotowe"</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Znikają spory "ale się starałem" — liczy się wynik, nie wysiłek</div><div class="l11p-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Pojawia się podstawa dla systemu motywacji opartego na produkcie</div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Zadanie</div><div class="l11p-title">Opracuj Politykę Produktu Organizacji przez asystenta AI</div><div class="l11p-steps"><div class="l11p-step"><div class="l11p-snum">1</div><div class="l11p-stext">Otwórz asystenta AI i przeprowadź dialog — przeprowadzi cię przez określenie głównego produktu firmy i produktów kluczowych ról</div></div><div class="l11p-step"><div class="l11p-snum">2</div><div class="l11p-stext">Otrzymasz gotowy dokument "Polityka Produktu Organizacji" — zapisz go w Google Docs</div></div><div class="l11p-step"><div class="l11p-snum">3</div><div class="l11p-stext">Przeprowadź krótką prezentację dla zespołu — wyjaśnij czym jest produkt roli i dlaczego ma to znaczenie dla każdego</div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Czas wdrożenia</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 godziny: 1h dialog z AI i przygotowanie dokumentu + 2h prezentacja dla zespołu</div></div></div><div class="l11p-divider"></div><div class="l11p-section"><div class="l11p-label">Narzędzie</div><div class="l11p-tool"><div class="l11p-thdr"><div class="l11p-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="l11p-ttitle">AI Coach Produktu Organizacji</div><div class="l11p-tdesc">Asystent prowadzi dialog i pomaga sformułować główny produkt firmy i produkty kluczowych ról. Na wyjściu — gotowa Polityka Produktu Organizacji.</div></div></div><a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11p-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Opracuj produkt organizacji</a></div></div>`,
 
-                lessonContent_de: `<style>.l11d-section{margin-bottom:1.75rem}.l11d-section:last-child{margin-bottom:0}.l11d-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l11d-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l11d-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l11d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l11d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l11d-card p+p{margin-top:.7rem}.l11d-compare{display:grid;gap:.5rem;margin-top:.75rem}.l11d-bad{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l11d-good{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l11d-clabel{font-weight:700;font-size:.82rem;margin-bottom:.3rem}.l11d-ctext{font-size:.82rem;font-style:italic;line-height:1.5}.l11d-rule{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-top:.5rem}.l11d-ricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11d-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l11d-rtext{font-size:.82rem;color:#525252;line-height:1.5}.l11d-roles{display:grid;gap:.5rem;margin-top:.75rem}.l11d-role{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11d-rtname{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.3rem}.l11d-rprod{font-size:.82rem;color:#166534;font-weight:600;margin-bottom:.2rem}.l11d-rdesc{font-size:.78rem;color:#525252;line-height:1.4}.l11d-results{display:grid;gap:.35rem;margin-top:.75rem}.l11d-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l11d-steps{display:grid;gap:.55rem;margin-top:.75rem}.l11d-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11d-snum{width:26px;height:26px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l11d-stext{font-size:.85rem;color:#374151;line-height:1.5}.l11d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l11d-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l11d-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11d-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l11d-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l11d-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l11d-section"><div class="l11d-label">Problem</div><div class="l11d-title">Warum das Team nicht versteht was von ihm erwartet wird</div><div class="l11d-card"><p>Die meisten Unternehmen können beschreiben was sie <em>tun</em>. Aber sie können nicht klar antworten welches <em>Ergebnis</em> sie für den Kunden erzeugen.</p><p>Dieser Unterschied ist kritisch. Wenn das Team den Prozess versteht aber nicht das Produkt — bewertet es seine Arbeit durch Anstrengung, nicht durch Ergebnis. "Ich habe 20 Mal angerufen" statt "der Kunde hat den Vertrag unterschrieben."</p><p>Das Fehlen eines klaren Produkts erzeugt das Hauptmanagementproblem: <strong>es ist unmöglich zu beurteilen ob jemand seine Rolle gut erfüllt</strong>.</p></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Konzept</div><div class="l11d-title">Was das Produkt der Organisation ist</div><div class="l11d-card"><p>Das Produkt der Organisation ist das wertvolle Endergebnis das der Kunde erhält. Keine Handlung, kein Prozess, keine Dienstleistung als Abstraktion — sondern eine konkrete Veränderung die im Leben oder Geschäft des Kunden nach der Interaktion mit Ihnen eintritt.</p></div><div class="l11d-compare"><div class="l11d-bad"><div class="l11d-clabel" style="color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Prozess</div><div class="l11d-ctext" style="color:#7f1d1d">"Wir führen Beratungen durch", "Wir erbringen Rechtsdienstleistungen", "Wir machen Werbung"</div></div><div class="l11d-good"><div class="l11d-clabel" style="color:#16a34a"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Produkt</div><div class="l11d-ctext" style="color:#14532d">"Unternehmensinhaber verlässt das operative Geschäft in 65 Tagen", "Fall vor Gericht gewonnen", "+40% Anfragen pro Monat"</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">3 Kriterien</div><div class="l11d-title">Wie ein richtiges Produkt aussehen muss</div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l11d-rtitle">Konkret und messbar</div><div class="l11d-rtext">Das Produkt kann gesehen, geprüft, übergeben werden. "Bericht fertig" — kein Produkt. "Bericht mit Analyse von 5 Wettbewerbern und Empfehlungen, vom Manager genehmigt" — ein Produkt.</div></div></div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><div class="l11d-rtitle">Wertvoll für den Nächsten in der Kette</div><div class="l11d-rtext">Jede Rolle übergibt ihr Ergebnis an die nächste Rolle oder den Kunden. Produkt des Vertriebsleiters — ein unterzeichneter Vertrag. Produkt des Buchhalters — pünktlich eingereichte Berichte.</div></div></div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l11d-rtitle">Abgeschlossen — nicht "in Bearbeitung"</div><div class="l11d-rtext">Ein Produkt ist etwas das übergeben und abgenommen werden kann. Halbe Arbeit — kein Produkt. "Auftrag bearbeitet und an die Produktion übergeben" — ein Produkt.</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Struktur</div><div class="l11d-title">Rollenprodukte — wie es in der Praxis aussieht</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">Jede Rolle im Unternehmen hat ihr eigenes Produkt. Zusammen bilden sie das Hauptprodukt der Organisation.</p><div class="l11d-roles"><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Vertriebsleiter</div><div class="l11d-rprod">Produkt: ein unterzeichneter Vertrag mit einem Neukunden</div><div class="l11d-rdesc">Nicht "Meetings abgehalten" und nicht "Anfragen bearbeitet" — sondern ein konkreter unterzeichneter Vertrag</div></div><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Klinik-Administrator</div><div class="l11d-rprod">Produkt: Patient terminiert, erschienen und mit dem Service zufrieden</div><div class="l11d-rdesc">Nicht "Telefonate beantwortet" — sondern ein gebuchter Termin und eine positive Patientenerfahrung</div></div><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Abteilungsleiter</div><div class="l11d-rprod">Produkt: Abteilung hat den Plan termingerecht erfüllt</div><div class="l11d-rdesc">Nicht "Meetings abgehalten und Aufgaben gestellt" — sondern der vom Team erfüllte Plan</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Wozu es dient</div><div class="l11d-title">Was sich ändert wenn das Produkt definiert ist</div><div class="l11d-results"><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Arbeit kann durch Ergebnis bewertet werden, nicht durch Anwesenheit</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Jeder Mitarbeiter versteht genau was von ihm erwartet wird</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Einfacher zu delegieren — es gibt eine klare Definition von "erledigt"</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Streitigkeiten "aber ich habe mich bemüht" verschwinden — Ergebnisse zählen, nicht Anstrengung</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Grundlage für ein produktbasiertes Motivationssystem entsteht</div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Aufgabe</div><div class="l11d-title">Entwickeln Sie die Organisations-Produkt-Richtlinie durch den KI-Assistenten</div><div class="l11d-steps"><div class="l11d-step"><div class="l11d-snum">1</div><div class="l11d-stext">Öffnen Sie den KI-Assistenten und führen Sie den Dialog — er führt Sie durch die Definition des Hauptprodukts des Unternehmens und der Produkte der Schlüsselrollen</div></div><div class="l11d-step"><div class="l11d-snum">2</div><div class="l11d-stext">Sie erhalten ein fertiges Dokument "Organisations-Produkt-Richtlinie" — speichern Sie es in Google Docs</div></div><div class="l11d-step"><div class="l11d-snum">3</div><div class="l11d-stext">Geben Sie eine kurze Präsentation für das Team — erklären Sie was ein Rollenprodukt ist und warum es für jeden wichtig ist</div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Umsetzungszeit</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 Stunden: 1h KI-Dialog & Dokumentvorbereitung + 2h Teampräsentation</div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Werkzeug</div><div class="l11d-tool"><div class="l11d-thdr"><div class="l11d-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="l11d-ttitle">KI Organisations-Produkt-Coach</div><div class="l11d-tdesc">Der Assistent führt einen Dialog und hilft das Hauptprodukt des Unternehmens und die Produkte der Schlüsselrollen zu formulieren. Ausgabe — fertige Organisations-Produkt-Richtlinie.</div></div></div><a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Organisationsprodukt entwickeln</a></div></div>`,
+                lessonContent_de: `<style>.l11d-section{margin-bottom:1.75rem}.l11d-section:last-child{margin-bottom:0}.l11d-divider{height:1px;background:#e2e8f0;margin:1.75rem 0}.l11d-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l11d-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l11d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l11d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l11d-card p+p{margin-top:.7rem}.l11d-compare{display:grid;gap:.5rem;margin-top:.75rem}.l11d-bad{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l11d-good{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l11d-clabel{font-weight:700;font-size:.82rem;margin-bottom:.3rem}.l11d-ctext{font-size:.82rem;font-style:italic;line-height:1.5}.l11d-rule{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-top:.5rem}.l11d-ricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11d-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l11d-rtext{font-size:.82rem;color:#525252;line-height:1.5}.l11d-roles{display:grid;gap:.5rem;margin-top:.75rem}.l11d-role{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11d-rtname{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.3rem}.l11d-rprod{font-size:.82rem;color:#166534;font-weight:600;margin-bottom:.2rem}.l11d-rdesc{font-size:.78rem;color:#525252;line-height:1.4}.l11d-results{display:grid;gap:.35rem;margin-top:.75rem}.l11d-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l11d-steps{display:grid;gap:.55rem;margin-top:.75rem}.l11d-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l11d-snum{width:26px;height:26px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l11d-stext{font-size:.85rem;color:#374151;line-height:1.5}.l11d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l11d-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l11d-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l11d-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l11d-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l11d-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l11d-section"><div class="l11d-label">Problem</div><div class="l11d-title">Warum das Team nicht versteht was von ihm erwartet wird</div><div class="l11d-card"><p>Die meisten Unternehmen können beschreiben was sie <em>tun</em>. Aber sie können nicht klar antworten welches <em>Ergebnis</em> sie für den Kunden erzeugen.</p><p>Dieser Unterschied ist kritisch. Wenn das Team den Prozess versteht aber nicht das Produkt — bewertet es seine Arbeit durch Anstrengung, nicht durch Ergebnis. "Ich habe 20 Mal angerufen" statt "der Kunde hat den Vertrag unterschrieben."</p><p>Das Fehlen eines klaren Produkts erzeugt das Hauptmanagementproblem: <strong>es ist unmöglich zu beurteilen ob jemand seine Rolle gut erfüllt</strong>.</p></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Konzept</div><div class="l11d-title">Was das Produkt der Organisation ist</div><div class="l11d-card"><p>Das Produkt der Organisation ist das wertvolle Endergebnis das der Kunde erhält. Keine Handlung, kein Prozess, keine Dienstleistung als Abstraktion — sondern eine konkrete Veränderung die im Leben oder Geschäft des Kunden nach der Interaktion mit Ihnen eintritt.</p></div><div class="l11d-compare"><div class="l11d-bad"><div class="l11d-clabel" style="color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Prozess</div><div class="l11d-ctext" style="color:#7f1d1d">"Wir führen Beratungen durch", "Wir erbringen Rechtsdienstleistungen", "Wir machen Werbung"</div></div><div class="l11d-good"><div class="l11d-clabel" style="color:#16a34a"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Produkt</div><div class="l11d-ctext" style="color:#14532d">"Unternehmensinhaber verlässt das operative Geschäft in 65 Tagen", "Fall vor Gericht gewonnen", "+40% Anfragen pro Monat"</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">3 Kriterien</div><div class="l11d-title">Wie ein richtiges Produkt aussehen muss</div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l11d-rtitle">Konkret und messbar</div><div class="l11d-rtext">Das Produkt kann gesehen, geprüft, übergeben werden. "Bericht fertig" — kein Produkt. "Bericht mit Analyse von 5 Wettbewerbern und Empfehlungen, vom Manager genehmigt" — ein Produkt.</div></div></div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><div class="l11d-rtitle">Wertvoll für den Nächsten in der Kette</div><div class="l11d-rtext">Jede Rolle übergibt ihr Ergebnis an die nächste Rolle oder den Kunden. Produkt des Vertriebsleiters — ein unterzeichneter Vertrag. Produkt des Buchhalters — pünktlich eingereichte Berichte.</div></div></div><div class="l11d-rule"><div class="l11d-ricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l11d-rtitle">Abgeschlossen — nicht "in Bearbeitung"</div><div class="l11d-rtext">Ein Produkt ist etwas das übergeben und abgenommen werden kann. Halbe Arbeit — kein Produkt. "Auftrag bearbeitet und an die Produktion übergeben" — ein Produkt.</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Struktur</div><div class="l11d-title">Rollenprodukte — wie es in der Praxis aussieht</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">Jede Rolle im Unternehmen hat ihr eigenes Produkt. Zusammen bilden sie das Hauptprodukt der Organisation.</p><div class="l11d-roles"><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Vertriebsleiter</div><div class="l11d-rprod">Produkt: ein unterzeichneter Vertrag mit einem Neukunden</div><div class="l11d-rdesc">Nicht "Meetings abgehalten" und nicht "Anfragen bearbeitet" — sondern ein konkreter unterzeichneter Vertrag</div></div><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Klinik-Administrator</div><div class="l11d-rprod">Produkt: Patient terminiert, erschienen und mit dem Service zufrieden</div><div class="l11d-rdesc">Nicht "Telefonate beantwortet" — sondern ein gebuchter Termin und eine positive Patientenerfahrung</div></div><div class="l11d-role"><div class="l11d-rtname"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Abteilungsleiter</div><div class="l11d-rprod">Produkt: Abteilung hat den Plan termingerecht erfüllt</div><div class="l11d-rdesc">Nicht "Meetings abgehalten und Aufgaben gestellt" — sondern der vom Team erfüllte Plan</div></div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Wozu es dient</div><div class="l11d-title">Was sich ändert wenn das Produkt definiert ist</div><div class="l11d-results"><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Arbeit kann durch Ergebnis bewertet werden, nicht durch Anwesenheit</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Jeder Mitarbeiter versteht genau was von ihm erwartet wird</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Einfacher zu delegieren — es gibt eine klare Definition von "erledigt"</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Streitigkeiten "aber ich habe mich bemüht" verschwinden — Ergebnisse zählen, nicht Anstrengung</div><div class="l11d-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Grundlage für ein produktbasiertes Motivationssystem entsteht</div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Aufgabe</div><div class="l11d-title">Entwickeln Sie die Organisations-Produkt-Richtlinie durch den KI-Assistenten</div><div class="l11d-steps"><div class="l11d-step"><div class="l11d-snum">1</div><div class="l11d-stext">Öffnen Sie den KI-Assistenten und führen Sie den Dialog — er führt Sie durch die Definition des Hauptprodukts des Unternehmens und der Produkte der Schlüsselrollen</div></div><div class="l11d-step"><div class="l11d-snum">2</div><div class="l11d-stext">Sie erhalten ein fertiges Dokument "Organisations-Produkt-Richtlinie" — speichern Sie es in Google Docs</div></div><div class="l11d-step"><div class="l11d-snum">3</div><div class="l11d-stext">Geben Sie eine kurze Präsentation für das Team — erklären Sie was ein Rollenprodukt ist und warum es für jeden wichtig ist</div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Umsetzungszeit</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 Stunden: 1h KI-Dialog & Dokumentvorbereitung + 2h Teampräsentation</div></div></div><div class="l11d-divider"></div><div class="l11d-section"><div class="l11d-label">Werkzeug</div><div class="l11d-tool"><div class="l11d-thdr"><div class="l11d-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="l11d-ttitle">KI Organisations-Produkt-Coach</div><div class="l11d-tdesc">Der Assistent führt einen Dialog und hilft das Hauptprodukt des Unternehmens und die Produkte der Schlüsselrollen zu formulieren. Ausgabe — fertige Organisations-Produkt-Richtlinie.</div></div></div><a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Organisationsprodukt entwickeln</a></div></div>
+<style>
+/* === LESSON 11 PRES TRIGGER === */
+.l11-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
+.l11-pres-trigger-info{color:white}
+.l11-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.l11-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
+.l11-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
+.l11-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
+/* === OVERLAY === */
+#l11Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l11Ov.on{display:flex}
+/* === SLIDE BASE === */
+.l11s{display:none;width:100%;height:100%;overflow:hidden}
+.l11s.on{display:flex}
+/* Dark full slide */
+.l11-dark{background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
+.l11-dark h1{color:#fff;font-size:clamp(2rem,6vw,3.8rem);font-weight:900;text-transform:uppercase;line-height:1.1;margin:0 0 1rem}
+.l11-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:600px;line-height:1.6}
+/* Split: dark left + white right */
+.l11-sl{width:34%;min-width:240px;background:linear-gradient(165deg,#09132b 0%,#142040 55%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 1.75rem 5rem;position:relative;flex-shrink:0}
+.l11-sl h2{color:#fff;font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase}
+.l11-sl h2 u{text-decoration-color:rgba(255,255,255,.4)}
+.l11-tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:90px solid transparent;border-bottom:90px solid rgba(255,255,255,.06)}
+.l11-snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px}
+/* White right */
+.l11-sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
+/* White slide with blue triangle top-right (slides 27,38,40) */
+.l11-wt{width:100%;background:#fff;display:flex;flex-direction:column;justify-content:flex-start;padding:clamp(2rem,5vw,4rem) clamp(2rem,6vw,5rem);position:relative;overflow:hidden}
+.l11-wt-tri{position:absolute;top:0;right:0;width:0;height:0;border-top:280px solid #09132b;border-left:280px solid transparent;opacity:.85}
+.l11-wt-tri2{position:absolute;top:0;right:0;width:0;height:0;border-top:180px solid #3b82f6;border-left:180px solid transparent;opacity:.3}
+/* Typography */
+.l11-sr h3,.l11-wt h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
+.l11-sr p,.l11-wt p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
+.l11-sr p.sm,.l11-wt p.sm{font-size:clamp(.75rem,1.4vw,.9rem);color:#6b7280}
+.l11-q{font-size:clamp(.95rem,2vw,1.2rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
+/* Definition box */
+.l11-def{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0}
+.l11-def .l11-dl{font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.l11-def .l11-dt{font-size:clamp(.9rem,1.9vw,1.15rem);color:#1e3a8a;line-height:1.65;font-weight:600}
+/* Highlight term */
+.l11-term{font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:900;color:#09132b;text-decoration:underline;text-underline-offset:4px}
+/* Green resume box */
+.l11-resume{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75;margin:.75rem 0}
+/* Exercise box */
+.l11-ex{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.l11-ex strong{color:#b45309}
+/* Bullet list */
+.l11-ul{list-style:none;padding:0;margin:.5rem 0}
+.l11-ul li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.l11-ul li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+/* Rule list */
+.l11-rules .r{display:flex;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
+.l11-rules .r:last-child{border-bottom:none}
+.l11-rd{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
+/* Fill inputs */
+.l11-fg{margin:.65rem 0}
+.l11-fl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.l11-fi{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
+.l11-fi:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
+/* Icon badge */
+.l11-star{display:block;margin-bottom:.6rem}
+/* Nav */
+.l11-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
+.l11-nb{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
+.l11-nb:hover:not(:disabled){background:rgba(255,255,255,.25)}
+.l11-nb:disabled{opacity:.25;cursor:default}
+.l11-nc{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
+.l11-close{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
+.l11-save{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+/* Left panel icons */
+.l11-ico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.8}
+/* Exchange diagram */
+.l11-exch{display:flex;align-items:center;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
+.l11-person{text-align:center}
+.l11-person svg{display:block;margin:0 auto .3rem}
+.l11-person-label{font-size:.82rem;font-weight:700;color:#1a3068}
+.l11-arrow-wrap{display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.l11-arrow-text{font-size:.72rem;color:#6b7280;text-align:center;max-width:160px;line-height:1.4}
+/* CKP badge */
+.l11-ckp-badge{display:inline-flex;align-items:center;justify-content:center;background:#09132b;color:white;font-weight:900;font-size:clamp(1.2rem,3vw,2rem);padding:.5rem 1.5rem;border-radius:10px;letter-spacing:.05em;margin-bottom:.5rem}
+/* Two-col grid */
+.l11-2col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.75rem 0}
+.l11-card{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem 1.25rem}
+.l11-card .l11-cl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.l11-card .l11-ct{font-size:clamp(.82rem,1.6vw,1rem);line-height:1.6}
+</style>
+
+<!-- TRIGGER BUTTON at bottom of lesson -->
+<div class="l11-pres-trigger">
+  <div class="l11-pres-trigger-info">
+    <div class="l11-pres-trigger-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Заняття 2 — Цінний кінцевий продукт компанії (ЦКП)
+    </div>
+    <div class="l11-pres-trigger-sub">43 слайди · ~1.5 год · Показати команді після прочитання уроку</div>
+  </div>
+  <button class="l11-run-btn" onclick="window._l11Launch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Запустити презентацію
+  </button>
+</div>
+
+<!-- FULLSCREEN OVERLAY -->
+<div id="l11Ov">
+<div id="l11SW" style="flex:1;position:relative;overflow:hidden">
+
+<!-- S1: TITLE -->
+<div class="l11s on" id="l11_1">
+  <div class="l11-dark">
+    <div style="margin-bottom:1.5rem;opacity:.5">
+      <svg viewBox="0 0 80 80" width="70" height="70"><rect x="10" y="10" width="60" height="60" rx="6" fill="none" stroke="white" stroke-width="3"/><line x1="22" y1="30" x2="58" y2="30" stroke="white" stroke-width="2.5"/><line x1="22" y1="42" x2="58" y2="42" stroke="white" stroke-width="2.5"/><line x1="22" y1="54" x2="44" y2="54" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h1>ЦІННИЙ КІНЦЕВИЙ<br>ПРОДУКТ КОМПАНІЇ</h1>
+    <p>ЗАНЯТТЯ 2 · З циклу семінарів з управління</p>
+    <div class="l11-snum" style="position:fixed;bottom:5.5rem;left:1.5rem">1</div>
+  </div>
+</div>
+
+<!-- S2: ПИТАННЯ 1 -->
+<div class="l11s" id="l11_2">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg>
+    </div>
+    <h2>ПИТАННЯ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">2</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-q">Бувало, що ви очікуєте від свого колеги результату, а отримуєте щось, що доводиться <strong>доробляти за нього</strong>?</div>
+    <div class="l11-q" style="margin-top:1rem">Ви сплатили за якусь послугу, а вам надали лише <strong>частину того, на що ви розраховували</strong> — які почуття виникають?</div>
+  </div>
+</div>
+
+<!-- S3: ПИТАННЯ 2 -->
+<div class="l11s" id="l11_3">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg>
+    </div>
+    <h2>ПИТАННЯ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">3</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-q">Було таке, що людина виконує <strong>багато дій</strong>, результату ніякого немає, але вона вважає, що "попрацювала" і цілком задоволена?</div>
+    <div class="l11-q" style="margin-top:1rem">Бувало, що вам дали якийсь результат, але він уже <strong>не цінний, оскільки наданий надто пізно</strong>?</div>
+  </div>
+</div>
+
+<!-- S4: ЦІЛЬ ЗАНЯТТЯ -->
+<div class="l11s" id="l11_4">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><circle cx="40" cy="40" r="20" fill="none" stroke="white" stroke-width="2" opacity=".6"/><circle cx="40" cy="40" r="8" fill="white" opacity=".8"/><line x1="65" y1="15" x2="48" y2="32" stroke="#ef4444" stroke-width="3"/></svg>
+    </div>
+    <h2>ЦІЛЬ<br>ЗАНЯТТЯ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">4</div>
+  </div>
+  <div class="l11-sr">
+    <div style="display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid #f0f4f8">
+      <div style="width:36px;height:36px;background:#09132b;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">1</div>
+      <div style="font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.7">Мета заняття — розібратися з тим, що <strong>цінно для наших клієнтів</strong> і за що вони готові платити компанії гроші, як кожен із нас впливає на виробництво цього продукту.</div>
+    </div>
+    <div style="display:flex;gap:1rem;padding:.75rem 0">
+      <div style="width:36px;height:36px;background:#09132b;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">2</div>
+      <div style="font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.7">Результатом цього заняття має бути ваше розуміння, який продукт виробляє наша компанія і як ви <strong>впливаєте на його цінність</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S5: ПРАВИЛА -->
+<div class="l11s" id="l11_5">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><rect x="15" y="12" width="50" height="68" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="28" x2="55" y2="28" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="40" x2="55" y2="40" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="52" x2="55" y2="52" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="64" x2="45" y2="64" stroke="white" stroke-width="1.5" opacity=".6"/></svg>
+    </div>
+    <h2>ПРАВИЛА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">5</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-rules">
+      <div class="r"><div class="l11-rd"></div><span>Заняття триватиме близько <strong>1 год. 40 хв.</strong> без перерви.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>Поставте мобільні телефони на <strong>беззвучний режим</strong>.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>Якщо отримаєте терміновий дзвінок — вийдіть з аудиторії і поверніться.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>Запитання можна ставити, <strong>піднімаючи руку</strong>.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>Якщо питань буде багато — запишемо та розберемо після завершення.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>У кожного має бути <strong>папір та ручка</strong> для записів.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- S6: ВАЖЛИВЕ ПРАВИЛО -->
+<div class="l11s" id="l11_6">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="45" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="56" r="4" fill="white"/></svg>
+    </div>
+    <h2>ВАЖЛИВЕ<br>ПРАВИЛО</h2>
+    <div class="l11-tri"></div><div class="l11-snum">6</div>
+  </div>
+  <div class="l11-sr">
+    <p>Коли ви почуєте <strong>незрозуміле слово</strong> — підніміть руку і запитайте мене про це.</p>
+    <div class="l11-resume" style="margin-top:1.5rem">Ніколи не робіть розумний вигляд — це не принесе нам результатів.</div>
+  </div>
+</div>
+
+<!-- S7: Що таке ПРОДУКТ -->
+<div class="l11s" id="l11_7">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="25" width="50" height="40" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="20" x2="25" y2="30" stroke="white" stroke-width="2"/><line x1="55" y1="20" x2="55" y2="30" stroke="white" stroke-width="2"/><line x1="35" y1="25" x2="45" y2="25" stroke="white" stroke-width="2"/></svg>
+    </div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1.1rem,3vw,1.8rem);text-align:center">Як ви розумієте слово<br><strong>ПРОДУКТ?</strong></div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">7</div>
+  </div>
+</div>
+
+<!-- S8: ПРОДУКТ визначення -->
+<div class="l11s" id="l11_8">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="25" width="50" height="40" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="20" x2="25" y2="30" stroke="white" stroke-width="2"/><line x1="55" y1="20" x2="55" y2="30" stroke="white" stroke-width="2"/></svg>
+    </div>
+    <h2><u>ПРОДУКТ</u></h2>
+    <div class="l11-tri"></div><div class="l11-snum">8</div>
+  </div>
+  <div class="l11-sr">
+    <svg width="32" height="32" viewBox="0 0 32 32" style="margin-bottom:.75rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l11-def">
+      <div class="l11-dl">Визначення</div>
+      <div class="l11-dt">ПРОДУКТ — це <strong>предмет</strong>, що є результатом <strong>праці</strong>, придатний для обміну.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.75rem;margin-top:1.25rem;padding:1rem;background:#f0f6ff;border-radius:12px">
+      <svg viewBox="0 0 50 50" width="50" height="50" flex-shrink="0"><circle cx="25" cy="15" r="10" fill="none" stroke="#1a3068" stroke-width="2.5"/><path d="M10 45 Q10 30 25 30 Q40 30 40 45" fill="none" stroke="#1a3068" stroke-width="2.5"/></svg>
+      <svg viewBox="0 0 30 30" width="30" height="30"><line x1="5" y1="15" x2="25" y2="15" stroke="#1a3068" stroke-width="2"/><polygon points="20,10 25,15 20,20" fill="#1a3068"/></svg>
+      <svg viewBox="0 0 60 50" width="60" height="50"><rect x="5" y="15" width="50" height="30" rx="3" fill="none" stroke="#1a3068" stroke-width="2.5"/><line x1="15" y1="10" x2="15" y2="20" stroke="#1a3068" stroke-width="2"/><line x1="45" y1="10" x2="45" y2="20" stroke="#1a3068" stroke-width="2"/></svg>
+      <p class="sm">Людина передає предмет — результат своєї праці</p>
+    </div>
+  </div>
+</div>
+
+<!-- S9: ПРЕДМЕТ -->
+<div class="l11s" id="l11_9">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="8" fill="white" opacity=".9"/><path d="M30 35 Q20 55 30 65 Q40 70 50 65 Q60 55 50 35" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="50" x2="55" y2="50" stroke="white" stroke-width="1.5" opacity=".4"/></svg>
+    </div>
+    <h2><u>ПРЕДМЕТ</u></h2>
+    <div class="l11-tri"></div><div class="l11-snum">9</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-def">
+      <div class="l11-dl">Визначення</div>
+      <div class="l11-dt">ПРЕДМЕТ — матеріальне явище, яке сприймається <strong>органами почуттів</strong> як щось особливе, що має конкретні властивості.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1.25rem">
+      <div style="text-align:center;padding:.75rem;background:#f8fafc;border-radius:10px">
+        <svg viewBox="0 0 40 40" width="32" height="32" style="display:block;margin:0 auto .4rem"><path d="M20 8 C10 8 5 20 20 32 C35 20 30 8 20 8Z" fill="none" stroke="#1a3068" stroke-width="2.5"/><circle cx="20" cy="20" r="5" fill="#1a3068" opacity=".3"/></svg>
+        <div style="font-size:.75rem;font-weight:700;color:#1a3068">ЗІР</div>
+      </div>
+      <div style="text-align:center;padding:.75rem;background:#f8fafc;border-radius:10px">
+        <svg viewBox="0 0 40 40" width="32" height="32" style="display:block;margin:0 auto .4rem"><path d="M14 10 Q14 5 20 5 Q26 5 26 10 L26 22 Q26 28 20 28 Q14 28 14 22Z" fill="none" stroke="#1a3068" stroke-width="2.5"/><path d="M10 18 Q10 34 20 34 Q30 34 30 18" fill="none" stroke="#1a3068" stroke-width="2"/></svg>
+        <div style="font-size:.75rem;font-weight:700;color:#1a3068">СЛУХ</div>
+      </div>
+      <div style="text-align:center;padding:.75rem;background:#f8fafc;border-radius:10px">
+        <svg viewBox="0 0 40 40" width="32" height="32" style="display:block;margin:0 auto .4rem"><ellipse cx="20" cy="22" rx="8" ry="12" fill="none" stroke="#1a3068" stroke-width="2.5"/><line x1="20" y1="10" x2="20" y2="5" stroke="#1a3068" stroke-width="2"/><line x1="14" y1="12" x2="10" y2="8" stroke="#1a3068" stroke-width="2"/><line x1="26" y1="12" x2="30" y2="8" stroke="#1a3068" stroke-width="2"/></svg>
+        <div style="font-size:.75rem;font-weight:700;color:#1a3068">НЮХ</div>
+      </div>
+      <div style="text-align:center;padding:.75rem;background:#f8fafc;border-radius:10px">
+        <svg viewBox="0 0 40 40" width="32" height="32" style="display:block;margin:0 auto .4rem"><path d="M15 8 L25 8 L28 20 L22 20 L22 32 L18 32 L18 20 L12 20Z" fill="none" stroke="#1a3068" stroke-width="2.5"/></svg>
+        <div style="font-size:.75rem;font-weight:700;color:#1a3068">ДОТИК</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S10: ПРЕДМЕТ питання -->
+<div class="l11s" id="l11_10">
+  <div class="l11-sl"><h2><u>ПРЕДМЕТ</u></h2><div class="l11-tri"></div><div class="l11-snum">10</div></div>
+  <div class="l11-sr">
+    <div class="l11-q">Наведіть приклади предметів, що сприймаються по-різному (слух, зір, нюх, дотик).</div>
+    <div class="l11-q" style="margin-top:1rem">Наведіть приклади того, що <strong>не є предметом</strong> (не сприймається органами почуттів).</div>
+  </div>
+</div>
+
+<!-- S11: ПРАЦЯ -->
+<div class="l11s" id="l11_11">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="30" cy="25" r="10" fill="none" stroke="white" stroke-width="2.5"/><path d="M15 65 Q15 45 30 45" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="10" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h2><u>ПРАЦЯ</u></h2>
+    <div class="l11-tri"></div><div class="l11-snum">11</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-def">
+      <div class="l11-dl">Визначення</div>
+      <div class="l11-dt">ПРАЦЯ — цілеспрямована робота, яка потребує <strong>фізичного чи розумового зусилля</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S12: ПРАЦЯ питання -->
+<div class="l11s" id="l11_12">
+  <div class="l11-sl"><h2><u>ПРАЦЯ</u></h2><div class="l11-tri"></div><div class="l11-snum">12</div></div>
+  <div class="l11-sr">
+    <div class="l11-q">Наведіть приклад предмета, створеного <strong>цілеспрямованою діяльністю</strong>.</div>
+    <div class="l11-q" style="margin-top:1rem">Наведіть приклад предмета, який є результатом діяльності, але <strong>не був результатом цілеспрямованої роботи</strong> (тому не є продуктом).</div>
+  </div>
+</div>
+
+<!-- S13: РЕЗЮМЕ -->
+<div class="l11s" id="l11_13">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%);font-size:1.3rem">ЦКП</div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">13</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-resume">Отже, ми розібралися, що таке <strong>продукт</strong> і що не є продуктом.<br><br>Прояснили поняття <strong>праця</strong> та <strong>предмет</strong>, які закладені у визначення продукту.</div>
+    <p style="margin-top:1.25rem">Наступний крок — розібратися з тим, що означає <span class="l11-term">ЦІННИЙ КІНЦЕВИЙ ПРОДУКТ</span>.</p>
+  </div>
+</div>
+
+<!-- S14: ЦКП визначення -->
+<div class="l11s" id="l11_14">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%);font-size:1.3rem">ЦКП</div>
+    <h2>ЦІННИЙ<br>КІНЦЕВИЙ<br>ПРОДУКТ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">14</div>
+  </div>
+  <div class="l11-sr">
+    <svg width="32" height="32" viewBox="0 0 32 32" style="margin-bottom:.75rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l11-def">
+      <div class="l11-dl">Визначення ЦКП</div>
+      <div class="l11-dt">ЦКП — результат праці, що становить для одержувача <strong>цінність</strong> та наданий йому у <strong>завершеному вигляді</strong>.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-top:1.25rem">
+      <div style="text-align:center;padding:.85rem;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px"><div style="font-size:1.3rem;font-weight:900;color:#166534">Ц</div><div style="font-size:.72rem;color:#166534;font-weight:700">ЦІННИЙ</div></div>
+      <div style="text-align:center;padding:.85rem;background:#eff6ff;border:1.5px solid #93c5fd;border-radius:10px"><div style="font-size:1.3rem;font-weight:900;color:#1e40af">К</div><div style="font-size:.72rem;color:#1e40af;font-weight:700">КІНЦЕВИЙ</div></div>
+      <div style="text-align:center;padding:.85rem;background:#fff7ed;border:1.5px solid #fbbf24;border-radius:10px"><div style="font-size:1.3rem;font-weight:900;color:#b45309">П</div><div style="font-size:.72rem;color:#b45309;font-weight:700">ПРОДУКТ</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- S15: ЦІННИЙ -->
+<div class="l11s" id="l11_15">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2 style="color:#22c55e">ЦІННИЙ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">15</div>
+  </div>
+  <div class="l11-sr">
+    <svg width="32" height="32" viewBox="0 0 32 32" style="margin-bottom:.75rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l11-def">
+      <div class="l11-dl" style="color:#16a34a">ЦІННИЙ означає</div>
+      <div class="l11-dt" style="color:#166534">це означає, що за нього <strong>готові щось віддати</strong>, хочуть отримати.</div>
+    </div>
+    <p style="margin-top:1rem">Клієнт платить гроші саме тому, що отримує щось, що має для нього <strong>реальну цінність</strong>.</p>
+  </div>
+</div>
+
+<!-- S16: НЕ цінний -->
+<div class="l11s" id="l11_16">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2 style="color:#ef4444">НЕ<br>цінний<br>продукт</h2>
+    <div class="l11-tri"></div><div class="l11-snum">16</div>
+  </div>
+  <div class="l11-sr">
+    <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:1.25rem;margin:.75rem 0">
+      <p style="color:#7f1d1d">Приклад: <strong>Морозиво</strong> в спеку — цінний продукт.<br>Те саме морозиво взимку в мороз — <strong>не цінний</strong> для більшості.</p>
+    </div>
+    <div class="l11-q" style="margin-top:1rem">Які ще приклади можна навести <strong>не цінного продукту</strong>?</div>
+  </div>
+</div>
+
+<!-- S17: КІНЦЕВИЙ -->
+<div class="l11s" id="l11_17">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2 style="color:#3b82f6">КІНЦЕВИЙ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">17</div>
+  </div>
+  <div class="l11-sr">
+    <svg width="32" height="32" viewBox="0 0 32 32" style="margin-bottom:.75rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l11-def">
+      <div class="l11-dl" style="color:#1d4ed8">КІНЦЕВИЙ означає</div>
+      <div class="l11-dt" style="color:#1e3a8a">не вимагає <strong>додаткового доопрацювання</strong>.</div>
+    </div>
+    <p style="margin-top:1rem">Продукт повністю завершений і готовий до передачі клієнту без жодних доробок з його боку.</p>
+  </div>
+</div>
+
+<!-- S18: НЕ кінцевий -->
+<div class="l11s" id="l11_18">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2 style="color:#ef4444">НЕ<br>кінцевий<br>продукт</h2>
+    <div class="l11-tri"></div><div class="l11-snum">18</div>
+  </div>
+  <div class="l11-sr">
+    <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:1.25rem">
+      <p style="color:#7f1d1d">Продукт виглядає готовим, але потребує доробки — клієнт отримує <strong>неповний результат</strong>.</p>
+    </div>
+    <div class="l11-q" style="margin-top:1rem">Як це впливає на <strong>цінність</strong>?</div>
+  </div>
+</div>
+
+<!-- S19: Продукт кінцевий але не цінний -->
+<div class="l11s" id="l11_19">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2>КІНЦЕВИЙ,<br>АЛЕ НЕ<br>ЦІННИЙ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">19</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume" style="text-align:center;font-size:clamp(.95rem,2vw,1.2rem)">
+      Продукт може бути повністю завершеним,<br>але якщо він <strong>не цінний для клієнта</strong> — це не ЦКП.<br><br>
+      Обидві умови мають виконуватись одночасно.
+    </div>
+  </div>
+</div>
+
+<!-- S20: ВПРАВА пари -->
+<div class="l11s" id="l11_20">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="25" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M10 65 Q10 45 25 45" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/><line x1="35" y1="32" x2="45" y2="32" stroke="white" stroke-width="2" opacity=".5"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">20</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-ex">
+      <strong>Об'єднайтеся в пари</strong> та наведіть один одному приклади різних ЦКП, з якими стикалися у роботі чи житті.
+      <ul class="l11-ul" style="margin-top:.75rem">
+        <li>Результат <strong>праці</strong></li>
+        <li><strong>Завершений</strong> (не потребує доробки)</li>
+        <li><strong>Цінний</strong> для одержувача</li>
+      </ul>
+    </div>
+    <div class="l11-q" style="margin-top:.75rem">Які з'явилися ідеї?</div>
+  </div>
+</div>
+
+<!-- S21: РЕЗЮМЕ ЦКП -->
+<div class="l11s" id="l11_21">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">21</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume">Якщо компанія чи людина не розуміє, який ЦКП хоче отримувати клієнт — мало шансів зробити такий продукт і відповідно <strong>не буде комерційного успіху</strong>.</div>
+  </div>
+</div>
+
+<!-- S22: ЦКП питання до команди -->
+<div class="l11s" id="l11_22">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <div class="l11-tri"></div><div class="l11-snum">22</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Хто з вас може сказати, що точно знає який <strong>цінний кінцевий продукт</strong> виробляє наша компанія?<br><br>Назвіть цей ЦКП.</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">22</div>
+  </div>
+</div>
+
+<!-- S23: Питання про різні уявлення -->
+<div class="l11s" id="l11_23">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">23</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q">Як впливає на нашу компанію те, що є <strong>різні уявлення</strong> про наш ЦКП?</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">23</div>
+  </div>
+</div>
+
+<!-- S24: ЦКП компанії визначення (white + blue triangle) -->
+<div class="l11s" id="l11_24">
+  <div class="l11-wt">
+    <div class="l11-wt-tri"></div>
+    <div class="l11-wt-tri2"></div>
+    <div style="position:relative;z-index:1;max-width:55%">
+      <p style="font-size:clamp(1.1rem,2.5vw,1.7rem);font-weight:700;color:#09132b;margin-bottom:1rem"><strong>ЦКП компанії</strong> —<br>це те, за що клієнт платить саме нашій компанії,<br>а не комусь іншому<br><span style="color:#6b7280">(Не конкурентам).</span></p>
+    </div>
+    <div style="position:relative;z-index:1;max-width:55%">
+      <svg viewBox="0 0 40 40" width="32" height="32" style="margin-bottom:.4rem"><polygon points="20,2 37,38 3,38" fill="#1a3068" opacity=".4"/></svg>
+      <p class="sm">Приклад продукту компанії-партнера.<br>Чим його цінність вища нам, ніж цінність, запропонована його конкурентом.</p>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">24</div>
+  </div>
+</div>
+
+<!-- S25: ОПИТУВАННЯ fill-in -->
+<div class="l11s" id="l11_25">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="10" y="15" width="60" height="55" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="22" y1="30" x2="58" y2="30" stroke="white" stroke-width="2" opacity=".6"/><line x1="22" y1="42" x2="58" y2="42" stroke="white" stroke-width="2" opacity=".6"/><line x1="22" y1="54" x2="44" y2="54" stroke="white" stroke-width="2" opacity=".6"/></svg>
+    </div>
+    <h2>ОПИТУ-<br>ВАННЯ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">25</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-fg">
+      <div class="l11-fl">3-4 цінності / причини з яких з вами працюють клієнти</div>
+      <textarea class="l11-fi" id="l11f_values_why" rows="3" placeholder="Наприклад: 1. Швидкість обслуговування  2. Індивідуальний підхід  3. Гарантія результату..." oninput="window._l11SF('values_why',this.value)"></textarea>
+    </div>
+    <div class="l11-fg">
+      <div class="l11-fl">3-4 причини чому клієнти йдуть</div>
+      <textarea class="l11-fi" id="l11f_values_left" rows="3" placeholder="Наприклад: 1. Висока ціна  2. Довге очікування  3. Відсутність зворотного зв'язку..." oninput="window._l11SF('values_left',this.value)"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S26: Питання про цінність -->
+<div class="l11s" id="l11_26">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">26</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Як ви вважаєте, що <strong>найціннішим для наших клієнтів</strong>, за що вони платять саме нам?</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">26</div>
+  </div>
+</div>
+
+<!-- S27: ЦКП компанії fill-in (white + blue triangle) -->
+<div class="l11s" id="l11_27">
+  <div class="l11-wt">
+    <div class="l11-wt-tri"></div>
+    <div class="l11-wt-tri2"></div>
+    <div style="position:relative;z-index:1;max-width:60%">
+      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦКП<br>компанії</h3>
+      <div style="height:4px;width:120px;background:#09132b;margin-bottom:1.5rem"></div>
+      <div class="l11-fg">
+        <div class="l11-fl">ЦКП вашої компанії (заповніть)</div>
+        <textarea class="l11-fi" id="l11f_ckp" rows="4" placeholder="Наприклад: Швидке обстеження + індивідуальний підхід + впевненість у здоров'ї..." oninput="window._l11SF('ckp',this.value)"></textarea>
+      </div>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">27</div>
+  </div>
+</div>
+
+<!-- S28: ВПРАВА цінності -->
+<div class="l11s" id="l11_28">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="25" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M10 65 Q10 45 25 45" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">28</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-fg">
+      <div class="l11-fl">В основі ЦКП є такі цінності (заповніть)</div>
+      <textarea class="l11-fi" id="l11f_v123" rows="3" placeholder="1. &#10;2. &#10;3. " oninput="window._l11SF('v123',this.value)"></textarea>
+    </div>
+    <div class="l11-ex" style="margin-top:.75rem">
+      <strong>Вправа:</strong> Наведіть за одним прикладом дій співробітника, які можуть:
+      <ul class="l11-ul" style="margin-top:.5rem">
+        <li>створювати чи руйнувати <strong>першу цінність</strong></li>
+        <li>створювати чи руйнувати <strong>другу цінність</strong></li>
+        <li>створювати чи руйнувати <strong>третю цінність</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S29: РЕЗЮМЕ цінність -->
+<div class="l11s" id="l11_29">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">29</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume">Таким чином ви бачите, що <strong>кожен з нас може підвищувати цінність нашої компанії</strong>, а може знижувати її.<br><br>Якщо кожен із нас над цим працюватиме — ми станемо набагато успішнішими.</div>
+  </div>
+</div>
+
+<!-- S30: 100% питання -->
+<div class="l11s" id="l11_30">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><text x="40" y="47" text-anchor="middle" font-size="18" fill="white" font-weight="900">100%</text></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">30</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Як ви вважаєте, ми завжди надаємо клієнтам ЦКП <strong>на 100%</strong>?</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">30</div>
+  </div>
+</div>
+
+<!-- S31: ОБМІН -->
+<div class="l11s" id="l11_31">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 50" width="80" height="50"><circle cx="15" cy="20" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="65" cy="20" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M27 15 Q45 8 53 15" fill="none" stroke="white" stroke-width="2"/><polygon points="50,12 55,15 50,18" fill="white"/><path d="M53 25 Q35 32 27 25" fill="none" stroke="white" stroke-width="2"/><polygon points="30,28 25,25 30,22" fill="white"/></svg>
+    </div>
+    <h2>ОБМІН</h2>
+    <div class="l11-tri"></div><div class="l11-snum">31</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-exch">
+      <div class="l11-person">
+        <svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="18" r="12" fill="none" stroke="#1a3068" stroke-width="2.5"/><path d="M12 55 Q12 38 30 38 Q48 38 48 55" fill="none" stroke="#1a3068" stroke-width="2.5"/><circle cx="22" cy="30" r="7" fill="#3b82f6" opacity=".3"/></svg>
+        <div class="l11-person-label">А</div>
+      </div>
+      <div class="l11-arrow-wrap">
+        <div class="l11-arrow-text" style="color:#166534">Гроші, подяка, хороше ставлення, продукти ↑</div>
+        <svg viewBox="0 0 120 30" width="120" height="30"><line x1="10" y1="15" x2="110" y2="15" stroke="#1a3068" stroke-width="2"/><polygon points="105,10 112,15 105,20" fill="#1a3068"/></svg>
+        <svg viewBox="0 0 120 30" width="120" height="30" style="transform:scaleX(-1)"><line x1="10" y1="15" x2="110" y2="15" stroke="#ef4444" stroke-width="2"/><polygon points="105,10 112,15 105,20" fill="#ef4444"/></svg>
+        <div class="l11-arrow-text" style="color:#dc2626">↓ Гроші, подяка, хороше ставлення, продукти</div>
+      </div>
+      <div class="l11-person">
+        <svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="18" r="12" fill="none" stroke="#1a3068" stroke-width="2.5"/><path d="M12 55 Q12 38 30 38 Q48 38 48 55" fill="none" stroke="#1a3068" stroke-width="2.5"/><circle cx="38" cy="30" r="7" fill="#ef4444" opacity=".3"/></svg>
+        <div class="l11-person-label">Б</div>
+      </div>
+    </div>
+    <div class="l11-resume" style="margin-top:.75rem">
+      Підприємства обмінюють свій ЦКП зазвичай на <strong>гроші</strong>.<br>
+      Чим більша цінність і чим більше продукту — <strong>тим більше грошей</strong>.
+    </div>
+  </div>
+</div>
+
+<!-- S32: Схема обміну -->
+<div class="l11s" id="l11_32">
+  <div class="l11-sl">
+    <h2>ОБМІН</h2>
+    <div class="l11-tri"></div><div class="l11-snum">32</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center;align-items:center">
+    <div class="l11-2col" style="width:100%">
+      <div class="l11-card" style="background:#f0fdf4;border-color:#86efac">
+        <div class="l11-cl" style="color:#16a34a">Обмін з перевищенням</div>
+        <div class="l11-ct" style="color:#166534">Ви даєте більше, ніж клієнт очікував</div>
+      </div>
+      <div class="l11-card" style="background:#eff6ff;border-color:#93c5fd">
+        <div class="l11-cl" style="color:#1d4ed8">Рівноцінний обмін</div>
+        <div class="l11-ct" style="color:#1e3a8a">Ви даєте рівно те, за що заплатили</div>
+      </div>
+      <div class="l11-card" style="background:#fff7ed;border-color:#fbbf24">
+        <div class="l11-cl" style="color:#b45309">Нерівноцінний обмін</div>
+        <div class="l11-ct" style="color:#92400e">Ви даєте менше, ніж клієнт заплатив</div>
+      </div>
+      <div class="l11-card" style="background:#fef2f2;border-color:#fecaca">
+        <div class="l11-cl" style="color:#dc2626">Обмін без обміну</div>
+        <div class="l11-ct" style="color:#7f1d1d">Клієнт платить, але нічого не отримує</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S33: ВПРАВА обмін -->
+<div class="l11s" id="l11_33">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="25" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M10 65 Q10 45 25 45" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">33</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-ex">
+      <strong>Об'єднайтесь у пари, наведіть один одному за одним прикладом:</strong>
+      <ul class="l11-ul" style="margin-top:.75rem">
+        <li>коли ви стикалися в житті з <strong>обміном із перевищенням</strong> — як ви себе при цьому відчували</li>
+        <li>коли ви стикалися з <strong>нерівноцінним обміном</strong> — як ви себе відчували</li>
+      </ul>
+    </div>
+    <div class="l11-q" style="margin-top:.75rem">Які з'явилися ідеї?</div>
+  </div>
+</div>
+
+<!-- S34: Який обмін -->
+<div class="l11s" id="l11_34">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 50" width="80" height="50"><circle cx="15" cy="20" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="65" cy="20" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M27 15 Q45 8 53 15" fill="none" stroke="white" stroke-width="2"/><polygon points="50,12 55,15 50,18" fill="white"/><path d="M53 25 Q35 32 27 25" fill="none" stroke="white" stroke-width="2"/><polygon points="30,28 25,25 30,22" fill="white"/></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">34</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Обмін якого виду потрібно надавати клієнтам, щоби <strong>компанія мала успіх</strong>?</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">34</div>
+  </div>
+</div>
+
+<!-- S35: Для успіху -->
+<div class="l11s" id="l11_35">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><path d="M40 10 L50 35 L77 35 L55 52 L63 77 L40 60 L17 77 L25 52 L3 35 L30 35Z" fill="none" stroke="#f59e0b" stroke-width="3"/></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">35</div>
+  </div>
+  <div class="l11-sr">
+    <h3>Для успіху компанії <span style="color:#22c55e">ВАЖЛИВО</span>:</h3>
+    <ul class="l11-ul">
+      <li>Підтримувати <strong>рівноцінний обмін</strong>, надаючи ЦКП на 100%</li>
+      <li>Надавати <strong>обмін із перевищенням</strong></li>
+    </ul>
+    <div class="l11-resume" style="margin-top:1.25rem">Робота кожного з вас впливає на те, який продукт ми представляємо і який обмін ми робимо в роботі з клієнтами.</div>
+  </div>
+</div>
+
+<!-- S36: ВПРАВА обмін з перевищенням -->
+<div class="l11s" id="l11_36">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="25" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M10 65 Q10 45 25 45" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">36</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-ex">
+      <strong>Об'єднайтесь у пари</strong> — наведіть один одному за одним прикладом:
+      <ul class="l11-ul" style="margin-top:.75rem">
+        <li>як ваша робота <strong>впливає на ЦКП компанії</strong></li>
+        <li>як ви могли б у своїй роботі <strong>надавати обмін із перевищенням</strong></li>
+      </ul>
+    </div>
+    <div class="l11-q" style="margin-top:.75rem">Які з'явилися ідеї?</div>
+  </div>
+</div>
+
+<!-- S37: РЕЗЮМЕ обмін -->
+<div class="l11s" id="l11_37">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">37</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume">Якщо ми завжди надаватимемо клієнтам ЦКП з перевищенням, <strong>дохід та добробут компанії зростатимуть</strong>.</div>
+  </div>
+</div>
+
+<!-- S38: ЦІЛЬ КОМПАНІЇ fill-in (white + blue triangle) -->
+<div class="l11s" id="l11_38">
+  <div class="l11-wt">
+    <div class="l11-wt-tri"></div>
+    <div class="l11-wt-tri2"></div>
+    <div style="position:relative;z-index:1;max-width:60%">
+      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦІЛЬ КОМПАНІЇ</h3>
+      <div style="height:4px;width:120px;background:#09132b;margin-bottom:1.5rem"></div>
+      <div class="l11-fg">
+        <div class="l11-fl">Впишіть ціль вашої компанії</div>
+        <textarea class="l11-fi" id="l11f_goal" rows="3" placeholder="Ціль нашої компанії..." oninput="window._l11SF('goal',this.value)"></textarea>
+      </div>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">38</div>
+  </div>
+</div>
+
+<!-- S39: ВДЯЧНІСТЬ -->
+<div class="l11s" id="l11_39">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><path d="M40 70 Q10 50 10 28 Q10 10 25 10 Q35 10 40 22 Q45 10 55 10 Q70 10 70 28 Q70 50 40 70Z" fill="none" stroke="white" stroke-width="3"/><path d="M25 35 Q30 28 40 35 Q50 28 55 35" fill="none" stroke="white" stroke-width="2" opacity=".5"/></svg>
+    </div>
+    <h2>ВДЯЧ-<br>НІСТЬ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">39</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume" style="text-align:center;font-size:clamp(.95rem,2vw,1.25rem)">
+      Дякуємо кожному з вас за участь.<br><br>
+      Те, що ви робите щодня — це внесок у наш спільний цінний кінцевий продукт.
+    </div>
+  </div>
+</div>
+
+<!-- S40: ЦКП компанії фінальний fill-in (white + blue triangle) -->
+<div class="l11s" id="l11_40">
+  <div class="l11-wt">
+    <div class="l11-wt-tri"></div>
+    <div class="l11-wt-tri2"></div>
+    <div style="position:relative;z-index:1;max-width:60%">
+      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦКП<br>компанії</h3>
+      <div style="height:4px;width:120px;background:#09132b;margin-bottom:1.5rem"></div>
+      <div class="l11-fg">
+        <div class="l11-fl">ЦКП вашої компанії (фінальне формулювання)</div>
+        <textarea class="l11-fi" id="l11f_ckp_final" rows="4" placeholder="Вставте ЦКП вашої компанії..." oninput="window._l11SF('ckp_final',this.value)"></textarea>
+      </div>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">40</div>
+  </div>
+</div>
+
+<!-- S41: ЗАВЕРШЕННЯ -->
+<div class="l11s" id="l11_41">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><path d="M28 40 L37 50 L55 30" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <div class="l11-sr">
+    <h3>ЗАВЕРШЕННЯ</h3>
+    <p><strong>На цьому занятті ми розглянули:</strong></p>
+    <ul class="l11-ul" style="margin-top:.5rem">
+      <li>поняття продукту та <strong>цінного кінцевого продукту</strong></li>
+      <li>цінний кінцевий продукт <strong>нашої компанії</strong></li>
+      <li>види обміну, і як кожен із вас може <strong>підвищувати цінність</strong> продукту компанії</li>
+      <li>кожен отримав опис ЦКП та зможе вивчити, як ми створюємо цю цінність</li>
+    </ul>
+    <div class="l11-q" style="margin-top:1.25rem">Чи залишились у вас питання?</div>
+    <p class="sm" style="margin-top:.5rem">Прошу вас написати на аркуші паперу відгуки про це заняття.</p>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">41</div>
+  </div>
+</div>
+
+<!-- S42: Очікування -->
+<div class="l11s" id="l11_42">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M20 68 Q20 50 40 50 Q60 50 60 68" fill="none" stroke="white" stroke-width="2.5"/><circle cx="40" cy="28" r="5" fill="white" opacity=".8"/></svg>
+    </div>
+  </div>
+  <div class="l11-sr">
+    <h3>Тепер я від вас чекаю:</h3>
+    <ul class="l11-ul" style="margin-top:.75rem">
+      <li>що кожен з вас точно знатиме, в чому <strong>цінний кінцевий продукт нашої компанії</strong>, за що нам платить наш клієнт</li>
+      <li>що кожен з вас <strong>підвищуватиме цю цінність</strong> для клієнтів, виконуючи свою роботу найкращим чином</li>
+    </ul>
+    <div class="l11-resume" style="margin-top:1.5rem;text-align:center;font-size:clamp(1rem,2.5vw,1.3rem);font-weight:800">
+      Дякую! Рости ми можемо тільки <strong>всі разом!</strong>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">42</div>
+  </div>
+</div>
+
+<!-- S43: КІНЕЦЬ -->
+<div class="l11s" id="l11_43">
+  <div class="l11-dark">
+    <div style="margin-bottom:1.5rem;opacity:.5">
+      <svg viewBox="0 0 80 80" width="70" height="70"><path d="M40 5 L50 30 L77 30 L55 48 L63 75 L40 58 L17 75 L25 48 L3 30 L30 30Z" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h1>КІНЕЦЬ<br>ЗАНЯТТЯ 2</h1>
+    <p>Дякуємо за участь!</p>
+    <div class="l11-snum" style="position:fixed;bottom:5.5rem;left:1.5rem">43</div>
+  </div>
+</div>
+
+</div><!-- /l11SW -->
+
+<!-- Nav -->
+<div class="l11-nav">
+  <button class="l11-nb" id="l11Prev" onclick="window._l11P()" disabled>← Назад</button>
+  <div style="display:flex;align-items:center;gap:.6rem">
+    <span class="l11-nc" id="l11Ctr">1 / 43</span>
+    <button class="l11-save" onclick="window._l11SaveAll()">💾 Зберегти</button>
+    <button class="l11-close" onclick="window._l11Close()">✕ Закрити</button>
+  </div>
+  <button class="l11-nb" id="l11Next" onclick="window._l11N()">Далі →</button>
+</div>
+</div><!-- /l11Ov -->
+
+<script>
+(function(){
+  var T=43,c=1,SK='l11d';
+  var FI=['values_why','values_left','ckp','v123','goal','ckp_final'];
+  async function load(){
+    try{
+      var r=await window.storage.get(SK);
+      if(r&&r.value){var d=JSON.parse(r.value);FI.forEach(function(k){var e=document.getElementById('l11f_'+k);if(e&&d[k])e.value=d[k];});}
+    }catch(e){}
+  }
+  window._l11SF=async function(k,v){
+    try{var r=await window.storage.get(SK);var d=r?JSON.parse(r.value):{};d[k]=v;await window.storage.set(SK,JSON.stringify(d));}catch(e){}
+  };
+  window._l11SaveAll=async function(){
+    try{var d={};FI.forEach(function(k){var e=document.getElementById('l11f_'+k);if(e)d[k]=e.value;});await window.storage.set(SK,JSON.stringify(d));if(window.showToast)window.showToast('Збережено','success');}catch(e){}
+  };
+  function go(n){
+    document.getElementById('l11_'+c).classList.remove('on');
+    c=n;
+    document.getElementById('l11_'+c).classList.add('on');
+    document.getElementById('l11Ctr').textContent=c+' / '+T;
+    document.getElementById('l11Prev').disabled=(c===1);
+    document.getElementById('l11Next').disabled=(c===T);
+  }
+  window._l11P=function(){if(c>1)go(c-1);};
+  window._l11N=function(){if(c<T)go(c+1);};
+  window._l11Launch=function(){
+    document.getElementById('l11Ov').classList.add('on');
+    document.body.style.overflow='hidden';
+    go(1);load();
+  };
+  window._l11Close=function(){
+    document.getElementById('l11Ov').classList.remove('on');
+    document.body.style.overflow='';
+    window._l11SaveAll();
+  };
+  document.addEventListener('keydown',function(e){
+    if(!document.getElementById('l11Ov').classList.contains('on'))return;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown')window._l11N();
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp')window._l11P();
+    if(e.key==='Escape')window._l11Close();
+  });
+})();
+</script>
+`,
 
                 homework: `<ol><li>Пройдіть діалог з AI-коучем продукту</li><li>Створіть документ «Політика продукту організації» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — поясніть продукт ролі кожному</li><li>Напишіть у полі відповіді: який головний продукт вашої компанії і продукт якої ролі виявився найскладнішим для формулювання</li></ol>`,
                 homework_en: `<ol><li>Complete the dialogue with the AI Product Coach</li><li>Create an "Organization Product Policy" document in Google Docs and attach the link</li><li>Present to the team — explain each person's role product</li><li>Write in the answer field: what is the main product of your company and which role's product was hardest to formulate</li></ol>`,
