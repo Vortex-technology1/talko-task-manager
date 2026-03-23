@@ -5883,12 +5883,15 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
 
     // ── 0. ENSURE OWNER IN USERS + CLEAR OLD DEMO DATA ─────
     try {
+        // Використовуємо set БЕЗ merge — щоб гарантовано перезаписати role
+        // навіть якщо існуючий запис має role:'employee' (від auto-patch)
         await cr.collection('users').doc(uid).set({
-            name:'Ірина Кравченко', role:'owner', position:'Власниця / Директор',
-            email:'irina.kravchenko@glowstudio.ua',
+            name: window.currentUserData?.name || 'Олександр Талько',
+            role:'owner', position:'Власник / Директор',
+            email: window.currentUser?.email || '',
             functionIds:[], primaryFunctionId:null,
             status:'active', createdAt:now, updatedAt:now,
-        }, {merge:true});
+        });
     } catch(e) { console.warn('[demo] owner upsert:', e.message); }
 
     // Clear old demo data from previous niches
