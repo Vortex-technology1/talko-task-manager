@@ -1976,6 +1976,8 @@ function _chatStartUnreadListener() {
                 }
             });
             _chatRenderContactsList();
+        }, err => {
+            console.error('[bots-contacts] contactsUnsub onSnapshot error:', err.code, err.message);
         });
 }
 
