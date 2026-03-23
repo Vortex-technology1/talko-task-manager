@@ -418,11 +418,16 @@
                                             <div style="font-size:0.72rem;font-weight:700;color:${s.color};padding:0.25rem 0;border-bottom:2px solid ${s.color};margin-bottom:0.25rem;">${s.label} (${data[s.key].length})</div>
                                             ${data[s.key].slice(0,10).map(tk => {
                                                 const isOv = tk.deadlineDate && tk.deadlineDate < todayStr && s.key !== 'done';
+                                                const _tkMins = (tk.timeLog || []).reduce((s, e) => s + (e.minutes || 0), 0);
+                                                const _tkPlan = tk.estimatedTime ? parseInt(tk.estimatedTime) : 0;
+                                                const _tkFmt = _tkMins >= 60 ? Math.floor(_tkMins/60)+'г'+((_tkMins%60)?(_tkMins%60)+'хв':'') : (_tkMins > 0 ? _tkMins+'хв' : '');
+                                                const _tkColor = _tkMins === 0 ? '#d1d5db' : (_tkPlan > 0 && _tkMins > _tkPlan * 1.1) ? '#ef4444' : '#22c55e';
                                                 return `<div class="control-task-item ${isOv ? 'overdue' : ''}" onclick="event.stopPropagation();openTaskModal('${escId(tk.id)}')" style="display:flex;align-items:center;gap:0.3rem;">
                                                     ${tk.reviewRejectedAt ? '<span style="color:#f59e0b;font-size:0.7rem;">↩</span>' : ''}
                                                     <span class="task-title" style="flex:1;">${esc(tk.title)}</span>
                                                     ${tk.function ? `<span style="font-size:0.65rem;color:#9ca3af;background:#f3f4f6;padding:1px 5px;border-radius:3px;">${esc(tk.function)}</span>` : ''}
                                                     <span style="font-size:0.68rem;color:${isOv?'#ef4444':'#9ca3af'};">${tk.deadlineDate || ''}</span>
+                                                    <span style="font-size:0.68rem;font-weight:600;color:${_tkColor};white-space:nowrap;" title="Витрачено часу${_tkPlan>0?' / план: '+(_tkPlan>=60?Math.floor(_tkPlan/60)+'г'+((_tkPlan%60)?(_tkPlan%60)+'хв':''):_tkPlan+'хв'):''}">⏱ ${_tkFmt || '—'}</span>
                                                 </div>`;
                                             }).join('')}
                                             ${data[s.key].length > 10 ? `<div style="font-size:0.7rem;color:#9ca3af;padding:0.2rem;">+${data[s.key].length - 10} ще...</div>` : ''}
