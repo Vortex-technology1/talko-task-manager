@@ -6967,7 +6967,7 @@ window._DEMO_NICHE_MAP['logistics'] = async function() {
         {from:'Львів',  to:'Харків',   cargo:'Текстиль',         wt:3,  vol:12,tariff:11000,dI:3,cI:4,fuel:1800,road:680, drv:1600,status:'paid',  d:-2, note:'Одяг, 8 паків. Завантаження 08:00, розвантаження до 18:00.'},
         {from:'Київ',   to:'Полтава',  cargo:'Продукти харчування',wt:12,vol:35,tariff:6500,dI:4,cI:6,fuel:780, road:280, drv:1000,status:'sent',  d:-1, note:'Рефрижератор +4°C. Термін доставки до 10:00.'},
         {from:'Одеса',  to:'Київ',     cargo:'Металопрокат',     wt:15, vol:20,tariff:12000,dI:0,cI:5,fuel:1600,road:580, drv:1800,status:'draft', d:0,  note:'Труби, арматура. Маса 15т. Потрібна платформа.'},
-        {from:'Київ',   to:'Запоріжжя','Будматеріали',           wt:8,  vol:24,tariff:8500, dI:1,cI:0,fuel:1100,road:400, drv:1400,status:'draft', d:1,  note:'ТОВ БудМайстер, 2-й рейс за тиждень. Цегла 8т.'},
+        {from:'Київ',   to:'Запоріжжя', cargo:'Будматеріали',           wt:8,  vol:24,tariff:8500, dI:1,cI:0,fuel:1100,road:400, drv:1400,status:'draft', d:1,  note:'ТОВ БудМайстер, 2-й рейс за тиждень. Цегла 8т.'},
     ];
     const rRefs=ROUTES.map(()=>cr.collection('sales_orders').doc());
     ROUTES.forEach((r,i)=>{
