@@ -1786,7 +1786,7 @@ let _tourStep    = 0;
 let _tourNiche   = null;
 let _tourSteps   = [];
 
-// ── Ін'єкція стилів ─────────────────────────────────────────
+// ── Ін\'єкція стилів ─────────────────────────────────────────
 function _injectStyles() {
     if (document.getElementById('demoTourStyles')) return;
     const s = document.createElement('style');

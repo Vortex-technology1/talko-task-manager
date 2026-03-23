@@ -204,7 +204,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         { t:'Публікація кейсу в Instagram/Facebook',
           type:'weekly', dow:4, fi:0, ai:5, tm:'12:00', est:60,
           result:'Пост опублікований з фото та описом готового проєкту' },
-        // Щотижневі — п'ятниця
+        // Щотижневі — п\'ятниця
         { t:'Щотижневий звіт продажів (кількість, сума, конверсія)',
           type:'weekly', dow:5, fi:1, ai:1, tm:'17:00', est:45,
           result:'Таблиця з показниками: нові ліди, замовлення, виручка, конверсія' },
@@ -656,7 +656,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     });
     await window.safeBatchCommit(clientOps);
 
-    // ── Крок 2: crm_deals з clientId прив'язаним до crm_clients ──
+    // ── Крок 2: crm_deals з clientId прив\'язаним до crm_clients ──
     const dealOps = [];
     DEALS.forEach((d, i) => {
         dealOps.push({type:'set', ref:cr.collection('crm_deals').doc(), data:{
@@ -776,7 +776,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
             type:'council_own',
             chairmanId: sRefs[0].id,
             participantIds:[sRefs[0].id, sRefs[1].id, sRefs[7].id],
-            schedule:{ day:5, time:'17:00' }, // П'ятниця 17:00
+            schedule:{ day:5, time:'17:00' }, // П\'ятниця 17:00
             status:'active',
             agendaItems:['stats','execution','reports','decisions'],
             dynamicAgenda:[],
@@ -1542,7 +1542,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }
     await window.safeBatchCommit(stdOps);
 
-    // Транзакції прив'язані до проєктів
+    // Транзакції прив\'язані до проєктів
     // (оновлюємо частину транзакцій з projectId після запису проєктів)
 
     // ── 13+. ДОПОВНЕННЯ — постачальники, локації, планування, процеси ─
@@ -1652,7 +1652,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     }});
     await window.safeBatchCommit(newTplOps);
 
-    // ── D. ЗАВДАННЯ ПРИВ'ЯЗАНІ ДО ПРОЄКТІВ ────────────────
+    // ── D. ЗАВДАННЯ ПРИВ\'ЯЗАНІ ДО ПРОЄКТІВ ────────────────
     const projSnap = await cr.collection('projects').get();
     // Знаходимо проєкти по назві — незалежно від порядку
     const _pByName = {};
@@ -1739,7 +1739,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     if (projTaskOps.length) await window.safeBatchCommit(projTaskOps);
 
     // ── E. ФІНАНСОВЕ ПЛАНУВАННЯ (бюджети по місяцях) ──────
-    // Отримуємо категорії витрат щоб прив'язати бюджет
+    // Отримуємо категорії витрат щоб прив\'язати бюджет
     const finCatSnap = await cr.collection('finance_categories').get();
     const finCatMap = {};
     finCatSnap.docs.forEach(d => { finCatMap[d.data().name] = d.id; });
@@ -2006,7 +2006,7 @@ if (window._NICHE_LABELS) {
 // ════════════════════════════════════════════════════════════
 // БУДІВЕЛЬНА КОМПАНІЯ — construction_eu
 // "БудМайстер" — ремонт та оздоблення приміщень, Київ
-// 12 осіб, 8 функцій, повний цикл від ліда до здачі об'єкту
+// 12 осіб, 8 функцій, повний цикл від ліда до здачі об\'єкту
 // ════════════════════════════════════════════════════════════
 window._DEMO_NICHE_MAP['construction_eu'] = async function() {
     const cr  = db.collection('companies').doc(currentCompany);
@@ -2319,7 +2319,7 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
     }
     await window.safeBatchCommit(ops); ops = [];
 
-    // Читаємо проєкти для прив'язки етапів і завдань
+    // Читаємо проєкти для прив\'язки етапів і завдань
     const projSnap = await cr.collection('projects').get();
     const projDocs = projSnap.docs.map(d => ({id:d.id, ...d.data()}));
 
@@ -2574,7 +2574,7 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
     ];
 
     const txOps = [];
-    // Завантажуємо проєкти для прив'язки транзакцій
+    // Завантажуємо проєкти для прив\'язки транзакцій
     const projSnapFin = await cr.collection('projects').get();
     const projDocsFin = projSnapFin.docs.map(d => ({id:d.id, ...d.data()}));
     const _getProjId = (note) => {
@@ -3381,7 +3381,7 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
     }}));
     await window.safeBatchCommit(stdOps);
 
-    // ── 15. ЗАВДАННЯ ПРИВ'ЯЗАНІ ДО ПРОЄКТІВ ─────────────────
+    // ── 15. ЗАВДАННЯ ПРИВ\'ЯЗАНІ ДО ПРОЄКТІВ ─────────────────
     const projSnap2 = await cr.collection('projects').get();
     const pByName = {};
     projSnap2.docs.forEach(d => {
@@ -3455,7 +3455,7 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
 
     if (projTaskOps.length) await window.safeBatchCommit(projTaskOps);
 
-    // Бюджети проєктів (транзакції прив'язані до проєктів)
+    // Бюджети проєктів (транзакції прив\'язані до проєктів)
     const projFin = await cr.collection('projects').get();
     const projFinMap = {};
     projFin.docs.forEach(d => {
@@ -3942,7 +3942,7 @@ window._DEMO_NICHE_MAP['medical'] = async function() {
     }
     if (stageOps.length) await window.safeBatchCommit(stageOps);
 
-    // Завдання прив'язані до проєктів
+    // Завдання прив\'язані до проєктів
     const pByName = {};
     projDocs.forEach(d => {
         const n = d.data ? d.data().name || '' : d.name || '';
