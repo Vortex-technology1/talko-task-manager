@@ -99,6 +99,54 @@
                         if (['users', 'functions'].includes(tab)) btn.style.display = 'none';
                     });
                 }
+
+                // ── ALLOWED TABS: обмежений доступ до модулів ──
+                // Якщо у юзера є поле allowedTabs: ['warehouse', ...] — показуємо ТІЛЬКИ ці таби
+                const _allowedTabs = currentUserData.allowedTabs;
+                if (Array.isArray(_allowedTabs) && _allowedTabs.length > 0) {
+                    window._userAllowedTabs = _allowedTabs;
+
+                    // Ховаємо всі tab-btn крім дозволених
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        const match = (btn.getAttribute('onclick') || '').match(/switchTab\('(\w+)'\)/);
+                        const tab = match ? match[1] : null;
+                        if (tab && !_allowedTabs.includes(tab)) btn.style.display = 'none';
+                    });
+
+                    // Ховаємо bottom-nav кнопки крім дозволених (+ "Ще" завжди залишаємо)
+                    document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+                        const tab = btn.dataset.tab;
+                        if (tab && tab !== 'more' && !_allowedTabs.includes(tab)) btn.style.display = 'none';
+                    });
+
+                    // Ховаємо групові nav-кнопки (Аналітика, Система, Бізнес) в хедері
+                    ['analyticsTabBtn','sysTabBtn','bizNavBtn','tasksTabBtn'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.style.display = 'none';
+                    });
+
+                    // Ховаємо inviteBtn, adminTabBtn, ownerAiButtons
+                    ['inviteBtn','adminTabBtn','ownerAiButtons','aiAssistantsBtnMenu'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.style.display = 'none';
+                    });
+
+                    // Відразу переходимо на перший дозволений таб
+                    const firstTab = _allowedTabs[0];
+                    if (typeof switchTab === 'function') {
+                        setTimeout(() => switchTab(firstTab), 300);
+                    }
+
+                    // Блокуємо switchTab — не дозволяємо перейти на недозволений таб
+                    const _origSwitchTab = window.switchTab;
+                    window.switchTab = function(tabName) {
+                        if (window._userAllowedTabs && !window._userAllowedTabs.includes(tabName)) {
+                            console.warn('[TALKO] Tab not allowed:', tabName);
+                            return;
+                        }
+                        if (typeof _origSwitchTab === 'function') _origSwitchTab(tabName);
+                    };
+                }
                 
                 // Кнопка Демо: для superadmin і owner
                 const showDemo = isSuperAdmin || currentUserData?.role === 'owner';

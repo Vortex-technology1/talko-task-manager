@@ -696,6 +696,33 @@
                     ${esc(f.name)}
                 </label>
             `).join('') || `<p style="color:#7f8c8d;">${window.t('noFunctions')}</p>`;
+
+            // Заповнюємо чекбокси allowedTabs
+            const ALL_MODULES = [
+                { key: 'myday',       label: '📅 Мій день' },
+                { key: 'tasks',       label: '✅ Завдання' },
+                { key: 'projects',    label: '📁 Проєкти' },
+                { key: 'processes',   label: '⚙️ Процеси' },
+                { key: 'warehouse',   label: '📦 Склад' },
+                { key: 'crm',         label: '🤝 CRM' },
+                { key: 'finance',     label: '💰 Фінанси' },
+                { key: 'control',     label: '🎯 Контроль' },
+                { key: 'regular',     label: '🔁 Регулярні' },
+                { key: 'booking',     label: '📆 Запис' },
+                { key: 'sales',       label: '🚗 Продажі' },
+                { key: 'estimate',    label: '📋 Кошторис' },
+                { key: 'learning',    label: '🎓 Навчання' },
+            ];
+            const tabsContainer = document.getElementById('allowedTabsCheckboxes');
+            const tabsGroup = document.getElementById('allowedTabsGroup');
+            if (tabsContainer) {
+                tabsContainer.innerHTML = ALL_MODULES.map(m => `
+                    <label style="display:flex;align-items:center;gap:0.35rem;background:white;border:1.5px solid #e8eaed;border-radius:7px;padding:0.3rem 0.6rem;cursor:pointer;font-size:0.8rem;">
+                        <input type="checkbox" data-allowed-tab="${m.key}" style="margin:0;">
+                        ${m.label}
+                    </label>
+                `).join('');
+            }
             
             if (userId) {
                 const user = users.find(u => u.id === userId);
@@ -717,12 +744,29 @@
                     _refreshPrimaryFunctionSelect(userFunctionIds, user.primaryFunctionId || '');
                     // functionRoles
                     _refreshFunctionRolesUI(userFunctionIds, user.functionRoles || {});
+
+                    // allowedTabs — показуємо блок тільки для employee, заповнюємо чекбокси
+                    if (tabsGroup) tabsGroup.style.display = (user.role === 'employee') ? '' : 'none';
+                    if (Array.isArray(user.allowedTabs) && tabsContainer) {
+                        tabsContainer.querySelectorAll('[data-allowed-tab]').forEach(cb => {
+                            cb.checked = user.allowedTabs.includes(cb.dataset.allowedTab);
+                        });
+                    }
                 }
             } else {
                 document.getElementById('userForm').reset();
                 document.getElementById('userModalTitle').textContent = window.t('addEmployee');
                 _refreshPrimaryFunctionSelect([], '');
                 document.getElementById('userFunctionRoles').textContent = 'Вибери функції вище, щоб налаштувати ролі';
+                if (tabsGroup) tabsGroup.style.display = 'none';
+            }
+
+            // Динамічне показування блоку allowedTabs при зміні ролі
+            const roleSelect = document.getElementById('userRole');
+            if (roleSelect) {
+                roleSelect.onchange = function() {
+                    if (tabsGroup) tabsGroup.style.display = (this.value === 'employee') ? '' : 'none';
+                };
             }
             
             modal.style.display = 'block';
@@ -795,15 +839,29 @@
                     if (sel.value) functionRoles[sel.dataset.roleFunc] = sel.value;
                 });
 
+                // Збираємо allowedTabs (тільки якщо роль employee)
+                let allowedTabs = null;
+                if (role === 'employee') {
+                    const checkedTabs = Array.from(document.querySelectorAll('[data-allowed-tab]:checked')).map(cb => cb.dataset.allowedTab);
+                    allowedTabs = checkedTabs.length > 0 ? checkedTabs : null;
+                }
+
                 // Оновлюємо дані користувача + нові поля функцій
-                await db.collection('companies').doc(currentCompany).collection('users').doc(editingUserId).update({
+                const updateData = {
                     name: name,
                     role: role,
                     position: position,
                     functionIds: selectedFunctions,
                     primaryFunctionId: primaryFunctionId,
                     functionRoles: functionRoles
-                });
+                };
+                if (role === 'employee') {
+                    updateData.allowedTabs = allowedTabs || firebase.firestore.FieldValue.delete();
+                } else {
+                    updateData.allowedTabs = firebase.firestore.FieldValue.delete();
+                }
+
+                await db.collection('companies').doc(currentCompany).collection('users').doc(editingUserId).update(updateData);
                 
                 // Оновлюємо функції (assigneeIds в documents functions)
                 for (const func of functions) {
@@ -834,7 +892,8 @@
                         position,
                         functionIds: selectedFunctions,
                         primaryFunctionId,
-                        functionRoles
+                        functionRoles,
+                        allowedTabs: allowedTabs || null
                     };
                 }
                 
