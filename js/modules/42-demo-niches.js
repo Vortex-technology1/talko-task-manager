@@ -6,14 +6,20 @@
 
 // Патчимо safeBatchCommit щоб автоматично додавав isDemo:true до set операцій
 const _origSafeBatch = window.safeBatchCommit;
-window.safeBatchCommit = async function(ops) {
+window.safeBatchCommit = async function(ops, _label) {
+    if (!ops || !ops.length) return;
     const markedOps = (ops || []).map(op => {
         if (op.type === 'set' && op.data && !op.data.isDemo) {
             return { ...op, data: { ...op.data, isDemo: true } };
         }
         return op;
     });
-    return _origSafeBatch(markedOps);
+    try {
+        return await _origSafeBatch(markedOps);
+    } catch(e) {
+        console.warn('[DemoNiche] batch error', _label || '?', e.message, 'ops sample:', markedOps.slice(0,2).map(o=>o.ref?.path||'?'));
+        // Don't rethrow — skip this batch and continue
+    }
 };
 
 function _demoDate(offsetDays) {
@@ -5908,7 +5914,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         const oldUsers = await cr.collection('users').get();
         if (!oldUsers.empty) {
             const delOps = oldUsers.docs.filter(d => d.id !== uid).map(d => ({type:'delete', ref:d.ref}));
-            if (delOps.length) await window.safeBatchCommit(delOps);
+            if (delOps.length) await window.safeBatchCommit(delOps, "step-1-delOps");
         }
     } catch(e) { console.warn('[demo] cleanup users:', e.message); }
 
@@ -5934,7 +5940,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             status:'active', createdAt:now, updatedAt:now,
         }});
     });
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-2-ops"); ops = [];
 
     // assigneeIds для функцій
     const faMap = {
@@ -6030,7 +6036,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             }});
         }
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-3-ops"); ops = [];
 
     // ── 4. ЗАВДАННЯ (25) ─────────────────────────────────────
     const TASKS = [
@@ -6082,7 +6088,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             requireReview:true, createdAt:now, updatedAt:now,
         }});
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-4-ops"); ops = [];
 
     // ── 5. РЕГУЛЯРНІ ЗАВДАННЯ (12) ───────────────────────────
     const REG_TASKS = [
@@ -6111,7 +6117,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             createdAt:now, updatedAt:now,
         }});
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-5-ops"); ops = [];
 
     // ── 6. ШАБЛОНИ ПРОЦЕСІВ (4) ──────────────────────────────
     const TPL_DEFS = [
@@ -6189,7 +6195,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             }});
         }
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-6-ops"); ops = [];
 
     // Активні процеси (7)
     const PROCS = [
@@ -6210,7 +6216,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             createdBy:uid, createdAt:now, updatedAt:now,
         }});
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-7-ops"); ops = [];
 
     // ── 7. ПРОЄКТИ (2 повних) ────────────────────────────────
     const PROJS = [
@@ -6233,7 +6239,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             assigneeId:uid, createdBy:uid, createdAt:now, updatedAt:now,
         }});
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-8-ops"); ops = [];
 
     // Етапи проєктів
     const projSnap = await cr.collection('projects').get();
@@ -6273,7 +6279,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             }});
         }
     }
-    if (stageOps.length) await window.safeBatchCommit(stageOps);
+    if (stageOps.length) await window.safeBatchCommit(stageOps, "step-9-stageOps");
 
     // Завдання проєктів
     const projSnap2 = await cr.collection('projects').get();
@@ -6326,7 +6332,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             requireReview:true, createdAt:now, updatedAt:now,
         }}));
     }
-    if (projTaskOps.length) await window.safeBatchCommit(projTaskOps);
+    if (projTaskOps.length) await window.safeBatchCommit(projTaskOps, "step-10-projTaskOps");
 
     // ── 8. КОШТОРИС (2 об'єкти) ──────────────────────────────
     const estRef1 = cr.collection('estimates').doc();
@@ -6345,7 +6351,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         projectId:pByName.cosm?.id || '',
         createdBy:uid, createdAt:now, updatedAt:now,
     }});
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-11-ops"); ops = [];
 
     // Позиції кошторису — точка Гулівер
     const estItems1 = [
@@ -6420,7 +6426,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         notes:i%3===0?'Важливий клієнт, запис тільки з підтвердженням':'',
         createdBy:uid, createdAt:now, updatedAt:now,
     }}));
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-12-ops"); ops = [];
 
     // CRM угоди/ліди
     const DEALS = [
@@ -6480,7 +6486,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     ];
     const catRefs = FIN_CATS.map(() => cr.collection('finance_categories').doc());
     FIN_CATS.forEach((c, i) => finOps.push({type:'set', ref:catRefs[i], data:{name:c.name, type:c.type, color:c.color, icon:c.icon, isDefault:false, createdBy:uid, createdAt:now}}));
-    await window.safeBatchCommit(finOps);
+    await window.safeBatchCommit(finOps, "step-13-finOps");
 
     // Транзакції — 5 тижнів (35 записів)
     const TXS = [
@@ -6535,7 +6541,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         projectId:'', functionId:'',
         createdBy:uid, createdAt:now,
     }}));
-    await window.safeBatchCommit(txOps);
+    await window.safeBatchCommit(txOps, "step-14-txOps");
 
     const regPays = [
         {name:'Оренда студії GlowStudio',            type:'expense', amount:32000, day:1,  freq:'monthly', comment:'вул. Хрещатик 12, Київ'},
@@ -6609,7 +6615,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             isActive:true, createdBy:uid, createdAt:now, updatedAt:now,
         }});
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-15-ops"); ops = [];
 
     // Реалізації (6 записів)
     const SALES = [
@@ -6637,7 +6643,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             createdBy:uid, createdAt:now, updatedAt:now,
         }});
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-16-ops"); ops = [];
 
     // ── 12. СТАНДАРТИ (4) ────────────────────────────────────
     const STANDARDS = [
@@ -6670,7 +6676,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             createdBy:uid, createdAt:now, updatedAt:now,
         }});
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-17-ops"); ops = [];
 
     // ── 13. КООРДИНАЦІЇ (5) ───────────────────────────────────
     const COORDS = [
@@ -6727,7 +6733,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             isActive:true, createdBy:uid, createdAt:now, updatedAt:now,
         }});
     }
-    await window.safeBatchCommit(ops); ops = [];
+    await window.safeBatchCommit(ops, "step-18-ops"); ops = [];
 
     // ── 14. БРОНЮВАННЯ — CALENDAR (5 тижнів) ─────────────────
     const SERVICES_LIST = [
@@ -6796,7 +6802,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             }});
         }
     }
-    await window.safeBatchCommit(bookingOps);
+    await window.safeBatchCommit(bookingOps, "step-19-bookingOps");
 
     // ── 15. МЕТРИКИ / СТАТИСТИКА (5 тижнів) ──────────────────
     const metricOps = [];
@@ -6840,7 +6846,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             createdAt:now,
         }});
     }
-    await window.safeBatchCommit(metricOps);
+    await window.safeBatchCommit(metricOps, "step-20-metricOps");
 
     // ── 16. ПРОФІЛЬ КОМПАНІЇ ─────────────────────────────────
     await cr.update({
