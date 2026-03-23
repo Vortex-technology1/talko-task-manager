@@ -97,7 +97,7 @@ const PRECACHE_URLS = [
   'js/modules/73-subtasks.js',
   'js/modules/74-bulk-duplicate.js',
   'js/modules/75-superadmin-panel.js',
-  'js/modules/78b-landing-pages.js',
+  'js/modules/78-landing-pages.js',
   'js/modules/84-event-bus.js',
   'js/modules/84b-event-tracking.js',
   'js/modules/85-ai-proxy-helper.js',

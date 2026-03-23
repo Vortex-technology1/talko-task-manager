@@ -4,11 +4,6 @@
 // ============================================================
 'use strict';
 
-// ── HTML escape (XSS protection) ───────────────────────────
-function _notifEsc(s) {
-    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
 // ── Schedule reminder for appointment ─────────────────────
 window.scheduleAppointmentReminders = async function(appointmentId, appointmentData) {
     if (!window.companyCol || !appointmentData) return;
@@ -160,7 +155,7 @@ window.initNotificationsPanel = async function(containerId) {
                 </table>
             </div>`;
     } catch(e) {
-        container.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:.82rem;">Помилка: ${_notifEsc(e.message)}</div>`;
+        container.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:.82rem;">Помилка: ${e.message}</div>`;
     }
 };
 

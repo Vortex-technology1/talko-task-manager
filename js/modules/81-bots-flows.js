@@ -854,7 +854,7 @@
             </div>`;
         } catch (e) {
             console.error('[renderBotsSettingsView]', e);
-            container.innerHTML = '<div style="color:#ef4444;padding:1rem;">Помилка завантаження налаштувань: ' + escH(e.message) + '</div>';
+            container.innerHTML = '<div style="color:#ef4444;padding:1rem;">Помилка завантаження налаштувань: ' + e.message + '</div>';
         }
     }
 

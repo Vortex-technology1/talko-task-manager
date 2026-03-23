@@ -1,5 +1,5 @@
 // ============================================================
-// 26b-staff-schedule.js — Розклад майстра + Рейтинги
+// 26-staff-schedule.js — Розклад майстра + Рейтинги
 // Beauty модуль для TALKO
 // ============================================================
 'use strict';
@@ -360,4 +360,4 @@ if (!window._esc) {
     };
 }
 
-console.log('[26b-staff-schedule] beauty module loaded ✓');
+console.log('[26-staff-schedule] beauty module loaded ✓');
