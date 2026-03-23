@@ -55,7 +55,7 @@
                         await db.collection('companies').doc(companyId).collection('users').doc(user.uid).set({
                             name: user.displayName || user.email.split('@')[0],
                             email: user.email.toLowerCase(),
-                            role: 'employee',
+                            role: isSuperAdmin ? 'owner' : 'employee',
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                             autoCreated: true
                         }, { merge: true });
@@ -66,6 +66,10 @@
                     }
                 }
                 currentUserData = userDoc.exists ? { id: user.uid, ...userDoc.data() } : { id: user.uid, email: user.email, role: 'employee' };
+                // SuperAdmin завжди має повний доступ незалежно від запису в users колекції
+                if (isSuperAdmin && currentUserData.role !== 'owner' && currentUserData.role !== 'manager') {
+                    currentUserData = { ...currentUserData, role: 'owner' };
+                }
                 window.currentUserData = currentUserData; // expose для CRM та інших модулів
                 
                 const companyDoc = await db.collection('companies').doc(companyId).get();
