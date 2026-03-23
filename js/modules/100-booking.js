@@ -1087,7 +1087,7 @@ window._bkCompleteAppointment = async function(apptId, amount) {
 };
 
 // Patch appt table to show master name + complete button
-const _origLoadAppts = loadAppointments;
+const _origLoadAppts = (typeof loadAppointments !== 'undefined') ? loadAppointments : null;
 // Override row rendering to include masterId/masterName columns
 window._bkRenderApptRow = function(a, isGroup, calName) {
     const masterBadge = a.masterName

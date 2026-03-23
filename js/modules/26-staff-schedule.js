@@ -323,7 +323,8 @@ window._submitReview = async function(masterId, masterName) {
         window._scheduleTabPending = true;
         return;
     }
-    window._patchUserDetailWithSchedule();
+    // window._patchUserDetailWithSchedule called after definition below
+    if (typeof window._patchUserDetailWithSchedule === 'function') window._patchUserDetailWithSchedule();
 })();
 
 window._patchUserDetailWithSchedule = function() {
