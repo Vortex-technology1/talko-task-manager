@@ -9532,6 +9532,301 @@ Bist du dabei?</div>
             homeworkLinkName: 'Перейти до AI-асистента',
             homeworkLinkName_ru: 'Перейти к AI-ассистенту',
         },
+        {
+            id: 104,
+            category: 'marketing',
+            title: 'ЯК СТВОРИТИ ОФФЕР, ЯКИЙ ПРОДАЄ',
+            title_ru: 'КАК СОЗДАТЬ ОФФЕР, КОТОРЫЙ ПРОДАЁТ',
+            title_en: 'HOW TO CREATE AN OFFER THAT SELLS',
+            subtitle: 'Формула конкретної обіцянки результату за конкретний час',
+            subtitle_ru: 'Формула конкретного обещания результата за конкретное время',
+            subtitle_en: 'The formula for a concrete promise of result in a specific time',
+            duration: 20,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `
+<style>
+.m104-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.m104-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.m104-block p+p{margin-top:.65rem}
+.m104-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem;margin-top:1.25rem}
+.m104-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.m104-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.m104-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.m104-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5;margin-bottom:.45rem}
+.m104-compare{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.75rem 0}
+.m104-bad{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.75rem}
+.m104-good{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.75rem}
+.m104-compare-title{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem}
+.m104-compare-item{font-size:.82rem;line-height:1.6;padding:.2rem 0;border-bottom:1px solid rgba(0,0,0,.05)}
+.m104-compare-item:last-child{border-bottom:none}
+.m104-table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0}
+.m104-table th{background:#f8fafc;padding:.5rem .75rem;text-align:left;font-weight:700;color:#374151;border:1px solid #e2e8f0}
+.m104-table td{padding:.5rem .75rem;border:1px solid #e2e8f0;color:#374151;line-height:1.5;vertical-align:top}
+.m104-table tr:nth-child(even) td{background:#fafafa}
+.m104-formula{display:grid;gap:.5rem;margin:.75rem 0}
+.m104-formula-part{display:flex;gap:.75rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.m104-fnum{width:28px;height:28px;background:#6366f1;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.m104-ftitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.m104-ftext{font-size:.82rem;color:#525252;line-height:1.5}
+.m104-example{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:1rem;margin:.75rem 0}
+.m104-example-label{font-size:.68rem;font-weight:700;color:#1e40af;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.4rem}
+.m104-example p{font-size:.85rem;color:#1e3a8a;line-height:1.6;font-style:italic}
+.m104-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.m104-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.m104-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}
+.m104-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.m104-words{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.6rem 0}
+.m104-word-box{border-radius:9px;padding:.75rem}
+.m104-word-title{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.m104-word-item{font-size:.82rem;line-height:1.7;padding:.1rem 0}
+.m104-ai-block{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem;margin:.75rem 0}
+.m104-ai-title{font-weight:700;color:#166534;font-size:.95rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.m104-ai-text{font-size:.85rem;color:#15803d;line-height:1.6}
+.m104-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.25rem;background:#22c55e;color:white;border-radius:10px;font-size:.875rem;font-weight:700;text-decoration:none;margin-top:.75rem}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Чому більшість пропозицій не працюють</div></div>
+    <div class="lesson-block-content">
+        <p>Підприємець пише: <em>"Я коуч і допомагаю людям розвиватись"</em> або <em>"Ми надаємо якісні стоматологічні послуги"</em>. Клієнт читає — і не розуміє трьох речей:</p>
+        <div class="m104-formula" style="margin-top:.75rem">
+            <div class="m104-formula-part">
+                <div class="m104-fnum" style="background:#ef4444">?</div>
+                <div><div class="m104-ftitle">Що конкретно він отримає?</div><div class="m104-ftext">Без конкретики — людина не бачить результату</div></div>
+            </div>
+            <div class="m104-formula-part">
+                <div class="m104-fnum" style="background:#ef4444">?</div>
+                <div><div class="m104-ftitle">За який час це відбудеться?</div><div class="m104-ftext">Без часових рамок — результат здається нереальним</div></div>
+            </div>
+            <div class="m104-formula-part">
+                <div class="m104-fnum" style="background:#ef4444">?</div>
+                <div><div class="m104-ftitle">Чому саме зараз, а не потім?</div><div class="m104-ftext">Без причини діяти — людина відкладає рішення</div></div>
+            </div>
+        </div>
+        <div class="m104-quote">Загальні пропозиції ні про що — бо вони говорять про вас, а не про результат клієнта.</div>
+    </div>
+</div>
+
+<div class="m104-divider"></div>
+
+<div class="m104-label">Що таке оффер</div>
+<div class="m104-title">Конкретна обіцянка конкретного результату</div>
+
+<table class="m104-table">
+    <tr><th>Загальна пропозиція</th><th>Оффер</th></tr>
+    <tr><td>«Допомагаю бізнесу рости»</td><td>«За консультацію ви отримаєте план виходу з операційки на 30 днів — навіть якщо немає надійних менеджерів»</td></tr>
+    <tr><td>«Лікуємо зуби якісно»</td><td>«За 1 візит позбудетесь болю і зможете спати спокійно вже сьогодні»</td></tr>
+    <tr><td>«Робимо ремонт»</td><td>«Через 14 днів ви заселитесь у квартиру — без пилу, без затримок, в обумовлений день»</td></tr>
+    <tr><td>«Допомагаю схуднути»</td><td>«Мінус 5 кг за 30 днів під контролем тренера — без жорстких дієт і зривів»</td></tr>
+</table>
+
+<div class="m104-divider"></div>
+
+<div class="m104-label">Формула оффера</div>
+<div class="m104-title">4 елементи сильного оффера</div>
+
+<div class="m104-formula">
+    <div class="m104-formula-part">
+        <div class="m104-fnum">1</div>
+        <div>
+            <div class="m104-ftitle">За [час]</div>
+            <div class="m104-ftext">Конкретний проміжок — не "швидко", а "за 1 візит", "за 30 днів", "за 2 години". Час знімає невизначеність і робить обіцянку реальною.</div>
+        </div>
+    </div>
+    <div class="m104-formula-part">
+        <div class="m104-fnum">2</div>
+        <div>
+            <div class="m104-ftitle">Ви отримаєте [конкретний результат]</div>
+            <div class="m104-ftext">Не процес, а результат. Не "проведемо діагностику" — а "ви дізнаєтесь причину болю". Клієнт купує результат, а не процес.</div>
+        </div>
+    </div>
+    <div class="m104-formula-part">
+        <div class="m104-fnum">3</div>
+        <div>
+            <div class="m104-ftitle">За допомогою [метод/підхід]</div>
+            <div class="m104-ftext">Ваш спосіб досягнення результату. Відрізняє вас від конкурентів, які обіцяють те саме. Система, методика, авторський підхід — назвіть конкретно.</div>
+        </div>
+    </div>
+    <div class="m104-formula-part">
+        <div class="m104-fnum">4</div>
+        <div>
+            <div class="m104-ftitle">Навіть якщо [головне заперечення]</div>
+            <div class="m104-ftext">Найсильніша частина. Ви закриваєте заперечення ще до того як клієнт його висловив. "Навіть якщо вже пробували і не вийшло". Клієнт думає: "вони розуміють мою ситуацію".</div>
+        </div>
+    </div>
+</div>
+
+<div class="m104-example">
+    <div class="m104-example-label">Приклад готового оффера</div>
+    <p>"За час консультації ви отримаєте чіткий план виходу з операційки на 30 днів, за допомогою системи 'Керований хаос' — навіть якщо у вас немає надійних менеджерів і ви боїтеся втратити контроль."</p>
+</div>
+
+<div class="m104-divider"></div>
+
+<div class="m104-label">3 кроки консультації</div>
+<div class="m104-title">Покажіть ЯК ви досягнете результату</div>
+<div class="m104-block"><p>Клієнт бачить обіцянку результату — і одразу виникає питання "а як?". Три кроки відповідають на це питання і знімають невизначеність.</p></div>
+
+<div class="m104-step">
+    <div class="m104-snum">1</div>
+    <div>
+        <div class="m104-stitle">Аудит поточної ситуації</div>
+        <div class="m104-stext">Ми з вами пропишемо всі задачі, які зараз висять на вас → <strong>Ви усвідомите що саме забирає ваш час і де найбільші втрати</strong></div>
+    </div>
+</div>
+<div class="m104-step">
+    <div class="m104-snum">2</div>
+    <div>
+        <div class="m104-stitle">Матриця делегування</div>
+        <div class="m104-stext">Разом складемо список того, що можна передати вже зараз → <strong>Ви зрозумієте кому і як делегувати кожну задачу без ризику</strong></div>
+    </div>
+</div>
+<div class="m104-step">
+    <div class="m104-snum">3</div>
+    <div>
+        <div class="m104-stitle">План на 30 днів</div>
+        <div class="m104-stext">Ми з вами запустимо покроковий план виходу з операційки → <strong>Ви отримаєте чіткий графік дій на кожен тиждень</strong></div>
+    </div>
+</div>
+
+<div class="m104-divider"></div>
+
+<div class="m104-label">Які слова використовувати</div>
+<div class="m104-words">
+    <div class="m104-word-box" style="background:#eff6ff;border:1px solid #bfdbfe">
+        <div class="m104-word-title" style="color:#1e40af">Про спільну роботу</div>
+        <div class="m104-word-item" style="color:#1e3a8a">Ми з вами пропишемо...</div>
+        <div class="m104-word-item" style="color:#1e3a8a">Ми з вами зробимо...</div>
+        <div class="m104-word-item" style="color:#1e3a8a">Ми з вами запустимо...</div>
+        <div class="m104-word-item" style="color:#1e3a8a">Ми з вами опрацюємо...</div>
+    </div>
+    <div class="m104-word-box" style="background:#f0fdf4;border:1px solid #bbf7d0">
+        <div class="m104-word-title" style="color:#166534">Про результат клієнта</div>
+        <div class="m104-word-item" style="color:#166534">Ви отримаєте...</div>
+        <div class="m104-word-item" style="color:#166534">Ви усвідомите...</div>
+        <div class="m104-word-item" style="color:#166534">Ви зрозумієте...</div>
+        <div class="m104-word-item" style="color:#166534">Ви побачите...</div>
+    </div>
+</div>
+<div class="m104-warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div>Уникайте: <strong>"поговоримо", "обговоримо", "розберемо ситуацію"</strong> — це процес, а не результат. Клієнт купує те що отримає після "розбору", а не сам розбір.</div>
+</div>
+
+<div class="m104-divider"></div>
+
+<div class="m104-ai-block">
+    <div class="m104-ai-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        AI-генератор оффера
+    </div>
+    <div class="m104-ai-text">
+        Вставте тип клієнта і опис вашої експертизи з Уроку 3 — і асистент згенерує готовий оффер за формулою плюс три кроки консультації.<br><br>
+        <strong>Збережіть результат</strong> — у наступному уроці ми беремо ваш оффер і будуємо на ньому продаючий текст для сайту, реклами або сторінки в соцмережах.
+    </div>
+    <a href="https://chatgpt.com/g/g-68720c940fd081919a3f160179c184e4-ai-offer-generator" target="_blank" class="m104-ai-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Перейти до AI-генератора оффера
+    </a>
+</div>
+
+<div class="result-block">
+    <strong>Результат уроку.</strong> Готовий оффер за формулою + три кроки консультації. Це ляже в основу вашої реклами, сайту і всіх комунікацій з клієнтами.
+</div>`,
+
+            lessonContent_ru: `
+<style>
+.m104-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.m104-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.m104-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem;margin-top:1.25rem}
+.m104-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.m104-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.m104-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.m104-table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0}
+.m104-table th{background:#f8fafc;padding:.5rem .75rem;text-align:left;font-weight:700;color:#374151;border:1px solid #e2e8f0}
+.m104-table td{padding:.5rem .75rem;border:1px solid #e2e8f0;color:#374151;line-height:1.5;vertical-align:top}
+.m104-table tr:nth-child(even) td{background:#fafafa}
+.m104-formula{display:grid;gap:.5rem;margin:.75rem 0}
+.m104-formula-part{display:flex;gap:.75rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.m104-fnum{width:28px;height:28px;background:#6366f1;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.m104-ftitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.m104-ftext{font-size:.82rem;color:#525252;line-height:1.5}
+.m104-example{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:1rem;margin:.75rem 0}
+.m104-example-label{font-size:.68rem;font-weight:700;color:#1e40af;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.4rem}
+.m104-example p{font-size:.85rem;color:#1e3a8a;line-height:1.6;font-style:italic}
+.m104-step{display:flex;gap:.75rem;padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.m104-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.m104-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}
+.m104-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.m104-ai-block{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem;margin:.75rem 0}
+.m104-ai-title{font-weight:700;color:#166534;font-size:.95rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.m104-ai-text{font-size:.85rem;color:#15803d;line-height:1.6}
+.m104-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.25rem;background:#22c55e;color:white;border-radius:10px;font-size:.875rem;font-weight:700;text-decoration:none;margin-top:.75rem}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Почему большинство предложений не работают</div></div>
+    <div class="lesson-block-content">
+        <p>Предприниматель пишет: <em>"Я коуч и помогаю людям развиваться"</em>. Клиент читает — и не понимает: что конкретно получит? За какое время? Почему сейчас?</p>
+        <div class="m104-quote">Общие предложения ни о чём — они говорят о вас, а не о результате клиента.</div>
+    </div>
+</div>
+
+<div class="m104-divider"></div>
+<div class="m104-label">Формула оффера</div>
+<div class="m104-title">4 элемента сильного оффера</div>
+
+<div class="m104-formula">
+    <div class="m104-formula-part"><div class="m104-fnum">1</div><div><div class="m104-ftitle">За [время]</div><div class="m104-ftext">Не "быстро" — а "за 1 визит", "за 30 дней", "за 2 часа". Время снимает неопределённость.</div></div></div>
+    <div class="m104-formula-part"><div class="m104-fnum">2</div><div><div class="m104-ftitle">Вы получите [конкретный результат]</div><div class="m104-ftext">Не процесс — результат. Не "проведём диагностику" — а "вы узнаете причину боли".</div></div></div>
+    <div class="m104-formula-part"><div class="m104-fnum">3</div><div><div class="m104-ftitle">С помощью [метод/подход]</div><div class="m104-ftext">Ваш способ достижения результата. Отличает вас от конкурентов с теми же обещаниями.</div></div></div>
+    <div class="m104-formula-part"><div class="m104-fnum">4</div><div><div class="m104-ftitle">Даже если [главное возражение]</div><div class="m104-ftext">Закрываете возражение до того как клиент его высказал. "Даже если уже пробовали и не вышло".</div></div></div>
+</div>
+
+<div class="m104-example">
+    <div class="m104-example-label">Пример готового оффера</div>
+    <p>"За время консультации вы получите чёткий план выхода из операционки на 30 дней, с помощью системы 'Управляемый хаос' — даже если у вас нет надёжных менеджеров и вы боитесь потерять контроль."</p>
+</div>
+
+<div class="m104-divider"></div>
+<div class="m104-label">3 шага консультации</div>
+
+<div class="m104-step"><div class="m104-snum">1</div><div><div class="m104-stitle">Аудит текущей ситуации</div><div class="m104-stext">Мы с вами пропишем все задачи → <strong>Вы осознаете что именно забирает ваше время</strong></div></div></div>
+<div class="m104-step"><div class="m104-snum">2</div><div><div class="m104-stitle">Матрица делегирования</div><div class="m104-stext">Составим список того что можно передать → <strong>Вы поймёте кому и как делегировать без риска</strong></div></div></div>
+<div class="m104-step"><div class="m104-snum">3</div><div><div class="m104-stitle">План на 30 дней</div><div class="m104-stext">Запустим пошаговый план выхода → <strong>Вы получите чёткий график действий на каждую неделю</strong></div></div></div>
+
+<div class="m104-ai-block">
+    <div class="m104-ai-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#166634" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        AI-генератор оффера
+    </div>
+    <div class="m104-ai-text">Вставьте тип клиента и описание экспертизы из Урока 3 — и ассистент сгенерирует готовый оффер по формуле плюс три шага консультации.</div>
+    <a href="https://chatgpt.com/g/g-68720c940fd081919a3f160179c184e4-ai-offer-generator" target="_blank" class="m104-ai-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Перейти к AI-генератору оффера
+    </a>
+</div>
+
+<div class="result-block">
+    <strong>Результат урока.</strong> Готовый оффер по формуле + три шага консультации. Это ляжет в основу вашей рекламы, сайта и всех коммуникаций с клиентами.
+</div>`,
+
+            homework: `<ol>
+<li><strong>Підготуйте матеріал:</strong> Візьміть результат домашнього завдання з Уроку 3 — тип клієнта і опис вашої експертизи.</li>
+<li><strong>Перейдіть до AI-асистента</strong> за посиланням нижче. Вставте тип клієнта і експертизу — асистент згенерує готовий оффер за формулою + три кроки.</li>
+<li><strong>Збережіть результат</strong> — у Уроці 5 ми будуємо продаючий текст на основі вашого оффера.</li>
+</ol>`,
+            homework_ru: `<ol>
+<li><strong>Подготовьте материал:</strong> Возьмите результат домашнего задания Урока 3 — тип клиента и описание экспертизы.</li>
+<li><strong>Перейдите к AI-ассистенту</strong> по ссылке ниже. Вставьте тип клиента и экспертизу — ассистент сгенерирует готовый оффер по формуле + три шага.</li>
+<li><strong>Сохраните результат</strong> — в Уроке 5 строим продающий текст на основе вашего оффера.</li>
+</ol>`,
+            homeworkLink: 'https://chatgpt.com/g/g-68720c940fd081919a3f160179c184e4-ai-offer-generator',
+            homeworkLinkName: 'Перейти до AI-генератора оффера',
+            homeworkLinkName_ru: 'Перейти к AI-генератору оффера',
+        },
     ];
 
     // Merge into main course data
