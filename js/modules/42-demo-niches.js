@@ -5935,7 +5935,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         'warehouse_items','warehouse_operations','warehouse_suppliers',
         'metricEntries','metrics','metricTargets','bookings','estimates',
         'estimate_norms','project_estimates','norm_definitions',
-        'finance_invoices','coordination_sessions','booking_calendars','booking_schedules'];
+        'finance_invoices','coordination_sessions','booking_calendars','booking_schedules','sales'];
     try {
         for (const col of _clearCols) {
             const snap = await cr.collection(col).where('isDemo','==',true).get();
@@ -5989,12 +5989,12 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     STAFF.forEach((s, i) => {
         const fid = s.fi !== null ? fRefs[s.fi].id : null;
         if (i === 0) {
-            // Власник — зберігаємо реальне ім'я, тільки оновлюємо роль
-            ops.push({type:'set', ref:sRefs[i], data:{
+            // Власник — використовуємо update щоб не перезаписати ім'я
+            ops.push({type:'update', ref:sRefs[i], data:{
                 role:'owner', position:s.pos,
                 functionIds:[], primaryFunctionId:null,
                 status:'active', updatedAt:now,
-            }, merge:true});
+            }});
         } else {
             ops.push({type:'set', ref:sRefs[i], data:{
             name:s.name, role:s.role, position:s.pos,
