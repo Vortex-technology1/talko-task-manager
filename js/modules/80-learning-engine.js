@@ -5564,6 +5564,12 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
     // ── Back ──────────────────────────────────────────────────
     window._closeLearningModule = function() {
+        // Remove presentation overlays injected into body
+        var ov10 = document.getElementById('l10Ov');
+        var ov11 = document.getElementById('l11Ov');
+        if (ov10) ov10.remove();
+        if (ov11) ov11.remove();
+        document.body.style.overflow = '';
         currentLearningModule = null;
         renderLearning();
     };

@@ -164,6 +164,14 @@
             if (tabName !== 'projects' && openProjectId) {
                 openProjectId = null;
             }
+            // Remove presentation overlays if navigating away from learning
+            if (tabName !== 'learning') {
+                var _ov10 = document.getElementById('l10Ov');
+                var _ov11 = document.getElementById('l11Ov');
+                if (_ov10) _ov10.remove();
+                if (_ov11) _ov11.remove();
+                document.body.style.overflow = '';
+            }
             
             document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
