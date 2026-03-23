@@ -5894,9 +5894,12 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     // Clear old demo data from previous niches
     const _clearCols = ['tasks','regularTasks','functions','processTemplates','processes',
         'projects','projectStages','workStandards','coordinations','crm_clients','crm_deals',
-        'finance_transactions','finance_categories','finance_accounts','finance_recurring',
-        'finance_budgets','finance_settings','warehouse_items','metricEntries','metrics',
-        'bookings','estimates','norm_definitions'];
+        'crm_pipeline','crm_activities','finance_transactions','finance_categories',
+        'finance_accounts','finance_recurring','finance_budgets','finance_settings',
+        'warehouse_items','warehouse_operations','warehouse_suppliers',
+        'metricEntries','metrics','metricTargets','bookings','estimates',
+        'estimate_norms','project_estimates','norm_definitions',
+        'finance_invoices','coordination_sessions','booking_calendars','booking_schedules'];
     try {
         for (const col of _clearCols) {
             const snap = await cr.collection(col).where('isDemo','==',true).get();
@@ -6060,7 +6063,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         {t:'Запустити таргетовану рекламу Instagram — акція на квітень',    fi:0, ai:9, d:3,  pr:'high',   est:120, r:'Кампанія активна, перші ліди є'},
         {t:'Зробити Reels для TikTok — нарощування нігтів Аліна',          fi:0, ai:9, d:5,  pr:'high',   est:180, r:'Відео опубліковано, 5000+ переглядів'},
         {t:'Відповісти на всі відгуки Google за тиждень',                   fi:0, ai:1, d:1,  pr:'medium', est:30,  r:'Всі відгуки отримали відповідь'},
-        {t:'Розробити офер на абонемент "5+1 безкоштовно" — промо травень', fi:0, ai:0, d:7,  pr:'high',   est:90,  r:'Офер погоджений, пост готовий до публікації'},
+        {t:'Розробити офер на абонемент "5+1 безкоштовно" — промо травень', fi:0, ai:0, d:0,  pr:'high',   est:90,  r:'Офер погоджений, пост готовий до публікації'},
         // Адміністрування (fi:1)
         {t:'Дзвінок всім клієнтам, які не були більше 6 тижнів (win-back)', fi:1, ai:7, d:2,  pr:'high',   est:240, r:'50 клієнтів обдзвонено, 8 записів'},
         {t:'Оновити розклад майстрів на травень — погодити відпустки',      fi:1, ai:1, d:4,  pr:'high',   est:60,  r:'Розклад затверджений, всі майстри погодили'},
@@ -6093,13 +6096,15 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     ];
 
     for (const t of TASKS) {
+        // Завдання власника з d<=1 показуємо сьогодні або вчора (для "Мій день")
+        const _deadline = (t.ai === 0 && t.d > 0) ? _demoDate(0) : _demoDate(t.d);
         ops.push({type:'set', ref:cr.collection('tasks').doc(), data:{
             title:t.t,
             functionId:fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
             assigneeId:sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
             creatorId:uid, creatorName:STAFF[0].name,
             status:'new', priority:t.pr,
-            deadlineDate:_demoDate(t.d), deadlineTime:'18:00',
+            deadlineDate:_deadline, deadlineTime:'18:00',
             estimatedTime:String(t.est), expectedResult:t.r,
             requireReview:true, createdAt:now, updatedAt:now,
         }});
@@ -6111,15 +6116,15 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         {t:'Щоденний звіт виручки — внести в таблицю',       fi:6, ai:8, freq:'daily',   dow:null, est:15, r:'Дані внесені, відхилень від плану немає'},
         {t:'Перевірка відгуків Google та відповідь',          fi:0, ai:9, freq:'daily',   dow:null, est:20, r:'Всі відгуки оброблені'},
         {t:'Зарплата майстрів — щомісячний розрахунок',       fi:6, ai:8, freq:'monthly', dow:null, est:120,r:'Розрахунок готовий, виплати ініційовані'},
-        {t:'Нарада команди — підсумки тижня',                 fi:7, ai:0, freq:'weekly',  dow:1,    est:60, r:'Нарада проведена, задачі розподілені'},
-        {t:'Поповнення запасів витратних матеріалів',         fi:5, ai:1, freq:'weekly',  dow:2,    est:45, r:'Матеріали замовлено, дефіцитів немає'},
-        {t:'Контроль KPI майстрів — тижневий звіт',           fi:4, ai:0, freq:'weekly',  dow:5,    est:60, r:'Звіт підготовлено, аутсайдери отримали фідбек'},
-        {t:'Win-back: дзвінки клієнтам 6+ тижнів без візиту',fi:3, ai:7, freq:'weekly',  dow:3,    est:120,r:'Обдзвонено, частина записалась'},
-        {t:'SMM: 3 пости за тиждень + Stories щодня',         fi:0, ai:9, freq:'weekly',  dow:1,    est:180,r:'Пости опубліковано, охоплення в нормі'},
+        {t:'Нарада команди — підсумки тижня',                 fi:7, ai:0, freq:'weekly',  dow:'1',    est:60, r:'Нарада проведена, задачі розподілені'},
+        {t:'Поповнення запасів витратних матеріалів',         fi:5, ai:1, freq:'weekly',  dow:'2',    est:45, r:'Матеріали замовлено, дефіцитів немає'},
+        {t:'Контроль KPI майстрів — тижневий звіт',           fi:4, ai:0, freq:'weekly',  dow:'5',    est:60, r:'Звіт підготовлено, аутсайдери отримали фідбек'},
+        {t:'Win-back: дзвінки клієнтам 6+ тижнів без візиту',fi:3, ai:7, freq:'weekly',  dow:'3',    est:120,r:'Обдзвонено, частина записалась'},
+        {t:'SMM: 3 пости за тиждень + Stories щодня',         fi:0, ai:9, freq:'weekly',  dow:'1',    est:180,r:'Пости опубліковано, охоплення в нормі'},
         {t:'Підтвердження записів на наступний день — SMS',   fi:1, ai:1, freq:'daily',   dow:null, est:20, r:'SMS відправлено, підтвердження отримані'},
-        {t:'Нарахування бонусних балів клієнтам за тиждень',  fi:3, ai:7, freq:'weekly',  dow:5,    est:30, r:'Бали нараховані'},
+        {t:'Нарахування бонусних балів клієнтам за тиждень',  fi:3, ai:7, freq:'weekly',  dow:'5',    est:30, r:'Бали нараховані'},
         {t:'Ревізія складу гель-лаків та списання',           fi:5, ai:1, freq:'monthly', dow:null, est:90, r:'Ревізія проведена, прострочене списано'},
-        {t:'Планова дезінфекція інструментів — стерилізація', fi:2, ai:2, freq:'weekly',  dow:1,    est:45, r:'Стерилізація проведена, журнал підписано'},
+        {t:'Планова дезінфекція інструментів — стерилізація', fi:2, ai:2, freq:'weekly',  dow:'1',    est:45, r:'Стерилізація проведена, журнал підписано'},
     ];
     for (const t of REG_TASKS) {
         ops.push({type:'set', ref:cr.collection('regularTasks').doc(), data:{
@@ -6127,7 +6132,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             functionId:fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
             assigneeId:sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
             creatorId:uid, creatorName:STAFF[0].name,
-            frequency:t.freq, dayOfWeek:t.dow,
+            period:t.freq, dayOfWeek:t.dow,
             estimatedTime:String(t.est), expectedResult:t.r,
             status:'active', priority:'medium',
             createdAt:now, updatedAt:now,
@@ -6911,6 +6916,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     await window.safeBatchCommit([{type:'set', ref:pipRef, data:{
         isDemo:true,
         name:'GlowStudio — Залучення клієнтів',
+        isDefault:true,
         stages:[
             {id:'new',        label:'Новий лід',          color:'#6b7280', order:1},
             {id:'contacted',  label:'Контакт встановлено', color:'#3b82f6', order:2},
