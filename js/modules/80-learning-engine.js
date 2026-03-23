@@ -5387,6 +5387,17 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         </div>`;
 
         if (window.refreshIcons) window.refreshIcons();
+
+        // Execute <script> tags from lessonContent (innerHTML does not run them)
+        const _lc = document.querySelector(".l-lesson-content");
+        if (_lc) {
+            _lc.querySelectorAll("script").forEach(function(s) {
+                const ns = document.createElement("script");
+                ns.textContent = s.textContent;
+                document.head.appendChild(ns);
+                document.head.removeChild(ns);
+            });
+        }
     };
 
     // ── Back ──────────────────────────────────────────────────
