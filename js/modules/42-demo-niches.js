@@ -6345,11 +6345,289 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
 };
 
 if (window._NICHE_LABELS) window._NICHE_LABELS['beauty_salon'] = 'GlowStudio — Студія краси (Київ)';;
+
+// ════════════════════════════════════════════════════════════════════════════
+// HORECA — Кафе "Сонячне"
+// ════════════════════════════════════════════════════════════════════════════
+window._DEMO_NICHE_MAP['autoservice'] = async function() {
+    if (!window.currentCompanyId || !window.db) throw new Error('No company');
+    const cr = window.db.collection('companies').doc(window.currentCompanyId);
+    const uid = window.currentUser?.uid;
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    function dDate(d){const dt=new Date();dt.setDate(dt.getDate()+d);return dt.toISOString().slice(0,10);}
+    function dTs(d){return firebase.firestore.Timestamp.fromDate(new Date(Date.now()+d*86400000));}
+    let ops=[];
+
+    // ФУНКЦІЇ
+    const FUNCS=[
+        {name:'0. Маркетинг',       color:'#ec4899',desc:'Реклама, Google Business, SMM, залучення нових клієнтів'},
+        {name:'1. Продажі та запис', color:'#22c55e',desc:'Прийом дзвінків, запис авто, консультації, кошторис'},
+        {name:'2. Прийом та діагностика',color:'#f97316',desc:'Прийом авто, діагностика, замовлення-наряд'},
+        {name:'3. Ремонт та ТО',    color:'#6366f1',desc:'Виконання робіт, заміна запчастин, контроль якості'},
+        {name:'4. Склад та закупівлі',color:'#0ea5e9',desc:'Облік запчастин, замовлення, мінімальні залишки'},
+        {name:'5. Фінанси',         color:'#10b981',desc:'Каса, розрахунки, зарплата, P&L'},
+        {name:'6. Команда',         color:'#8b5cf6',desc:'Майстри, графік, навчання, KPI'},
+        {name:'7. Управління',      color:'#f59e0b',desc:'Стратегія, стандарти, аналітика'},
+    ];
+    const fRefs=FUNCS.map(()=>cr.collection('functions').doc());
+    FUNCS.forEach((f,i)=>{ops.push({type:'set',ref:fRefs[i],data:{name:f.name,color:f.color,description:f.desc,order:i,status:'active',isDemo:true,createdAt:now}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // СПІВРОБІТНИКИ
+    try{const o=await cr.collection('users').get();if(!o.empty){const d=[];o.docs.forEach(doc=>{if(doc.id!==uid)d.push({type:'delete',ref:cr.collection('users').doc(doc.id)});});if(d.length)await window.safeBatchCommit(d);}}catch(e){}
+    const STAFF=[
+        {name:'Олексій Бондаренко',role:'Майстер-механік',     fn:3,email:'bondarenko@sto.ua',phone:'+380671110001'},
+        {name:'Сергій Коваль',     role:'Майстер-автоелектрик',fn:3,email:'koval@sto.ua',     phone:'+380671110002'},
+        {name:'Василь Петренко',   role:'Шиномонтажник',       fn:3,email:'petrenko@sto.ua',  phone:'+380671110003'},
+        {name:'Ірина Мельник',     role:'Адміністратор',        fn:1,email:'melnyk@sto.ua',    phone:'+380671110004'},
+        {name:'Дмитро Сидоренко',  role:'Кузовний майстер',     fn:3,email:'sydorenko@sto.ua', phone:'+380671110005'},
+        {name:'Андрій Левченко',   role:'Помічник механіка',    fn:3,email:'levchenko@sto.ua', phone:'+380671110006'},
+        {name:'Олена Власенко',    role:'Бухгалтер',            fn:5,email:'vlasenko@sto.ua',  phone:'+380671110007'},
+    ];
+    const sRefs=STAFF.map(()=>cr.collection('staff').doc());
+    const uRefs=STAFF.map(()=>cr.collection('users').doc());
+    STAFF.forEach((s,i)=>{
+        ops.push({type:'set',ref:sRefs[i],data:{name:s.name,role:s.role,functionId:fRefs[s.fn].id,functionName:FUNCS[s.fn].name,phone:s.phone,isActive:true,isDemo:true,createdAt:now}});
+        ops.push({type:'set',ref:uRefs[i],data:{name:s.name,email:s.email,role:'employee',functionId:fRefs[s.fn].id,functionName:FUNCS[s.fn].name,staffId:sRefs[i].id,isDemo:true,createdAt:now}});
+    });
+    FUNCS.forEach((f,i)=>{const oi=STAFF.findIndex(s=>s.fn===i);if(oi>=0)ops.push({type:'update',ref:fRefs[i],data:{ownerId:sRefs[oi].id,ownerName:STAFF[oi].name}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // CRM КЛІЄНТИ
+    const CL=[
+        {name:'Іванченко Михайло',phone:'+380671111001',email:'ivan@gmail.com',   car:'Mazda CX-5, AA1234BC',    spent:4460, d:-5 },
+        {name:'Ковальська Оксана',phone:'+380671111002',email:'kova@ukr.net',      car:'Toyota Camry, KA5678HI',  spent:3280, d:-12},
+        {name:'Шевченко Петро',   phone:'+380671111003',email:'shev@gmail.com',    car:'VW Passat, AA9012EH',     spent:6840, d:-2 },
+        {name:'Бойко Андрій',     phone:'+380671111004',email:'boyko@meta.ua',     car:'BMW X5, AA3456KM',        spent:12400,d:-30},
+        {name:'Ткаченко Юлія',    phone:'+380671111005',email:'tkach@gmail.com',   car:'Hyundai Tucson, KA7890OR',spent:2100, d:-120},
+        {name:'Марченко Василь',  phone:'+380671111006',email:'march@ukr.net',     car:'Ford Focus, AA2345ST',    spent:1840, d:-7 },
+        {name:'Гриценко Наталія', phone:'+380671111007',email:'gryts@gmail.com',   car:'Skoda Octavia, KA6789UF', spent:3600, d:-1 },
+        {name:'Олійник Сергій',   phone:'+380671111008',email:'oliynyk@meta.ua',   car:'Renault Duster, AA0123HC',spent:1920, d:-45},
+        {name:'Павленко Ірина',   phone:'+380671111009',email:'pavl@gmail.com',    car:'Kia Sportage, KA3456PQ',  spent:5200, d:-3 },
+        {name:'Кравченко Юрій',   phone:'+380671111010',email:'krav@ukr.net',      car:'Mercedes C200, AA7890RS', spent:18600,d:-60},
+    ];
+    const cRefs=CL.map(()=>cr.collection('crm_clients').doc());
+    CL.forEach((c,i)=>{ops.push({type:'set',ref:cRefs[i],data:{name:c.name,phone:c.phone,email:c.email,source:'direct',status:'active',notes:`Авто: ${c.car}`,totalSpent:c.spent,lastOrderDate:dDate(c.d),niche:'autoservice',isDemo:true,createdAt:dTs(c.d-10)}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // CRM УГОДИ
+    const DEALS=[
+        {t:'Mazda CX-5 Іванченко — заміна масла + свічки',          c:0,amt:1820, stage:'in_work',    ai:0,d:0 },
+        {t:'Toyota Camry Ковальська — гальма колодки + диски',       c:1,amt:3960, stage:'in_work',    ai:1,d:0 },
+        {t:'VW Passat Шевченко — підвіска амортизатори',             c:2,amt:4800, stage:'in_work',    ai:0,d:0 },
+        {t:'BMW X5 Бойко — повна діагностика + ТО',                  c:3,amt:8400, stage:'consultation',ai:3,d:-2},
+        {t:'Hyundai Tucson Ткаченко — шиномонтаж 4 колеса',          c:4,amt:960,  stage:'ready',      ai:2,d:-1},
+        {t:'Skoda Octavia Гриценко — заміна ременя ГРМ',             c:6,amt:2800, stage:'new',        ai:3,d:0 },
+        {t:'Kia Sportage Павленко — кузовний ремонт після ДТП',      c:8,amt:6200, stage:'consultation',ai:4,d:-3},
+        {t:'Mercedes C200 Кравченко — капітальний ремонт двигуна',   c:9,amt:24000,stage:'new',        ai:3,d:0 },
+    ];
+    DEALS.forEach(d=>{ops.push({type:'set',ref:cr.collection('crm_deals').doc(),data:{title:d.t,clientId:cRefs[d.c].id,clientName:CL[d.c].name,phone:CL[d.c].phone,amount:d.amt,stage:d.stage,assigneeId:sRefs[d.ai].id,assigneeName:STAFF[d.ai].name,source:'phone',isDemo:true,createdAt:dTs(d.d)}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // КАРТКИ АВТО
+    const VEH=[
+        {plate:'AA1234BC',make:'Mazda',     model:'CX-5',    year:2019,vin:'JMZKE1W2500123456',color:'Сірий',   cI:0,km:85420},
+        {plate:'KA5678HI',make:'Toyota',    model:'Camry',   year:2021,vin:'4T1BF1FK0CU123456',color:'Білий',   cI:1,km:42100},
+        {plate:'AA9012EH',make:'Volkswagen',model:'Passat',  year:2018,vin:'WVWZZZ3CZ9E123456',color:'Чорний',  cI:2,km:98300},
+        {plate:'AA3456KM',make:'BMW',       model:'X5',      year:2020,vin:'WBAKS410100E12345',color:'Синій',   cI:3,km:61500},
+        {plate:'KA7890OR',make:'Hyundai',   model:'Tucson',  year:2022,vin:'KMHJ3813BE123456', color:'Червоний',cI:4,km:28900},
+        {plate:'AA2345ST',make:'Ford',      model:'Focus',   year:2017,vin:'WF0DXXGCHDHJ12345',color:'Зелений', cI:5,km:112000},
+        {plate:'KA6789UF',make:'Skoda',     model:'Octavia', year:2020,vin:'TMBEA7NE0L0123456',color:'Срібний', cI:6,km:74200},
+        {plate:'AA0123HC',make:'Renault',   model:'Duster',  year:2019,vin:'VF1HSRDB5H0123456',color:'Оранж.',  cI:7,km:89600},
+        {plate:'KA3456PQ',make:'Kia',       model:'Sportage',year:2021,vin:'U5YH2814BML123456',color:'Білий',   cI:8,km:38700},
+        {plate:'AA7890RS',make:'Mercedes',  model:'C200',    year:2018,vin:'WDD2050451F123456', color:'Чорний',  cI:9,km:143000},
+    ];
+    const vRefs=VEH.map(()=>cr.collection('sales_vehicles').doc());
+    VEH.forEach((v,i)=>{const c=CL[v.cI];ops.push({type:'set',ref:vRefs[i],data:{plate:v.plate,vin:v.vin,make:v.make,model:v.model,year:v.year,color:v.color,clientId:cRefs[v.cI].id,clientName:c.name,clientPhone:c.phone,mileageHistory:[{date:dDate(-180),mileage:v.km-18000,orderId:''},{date:dDate(-60),mileage:v.km-5000,orderId:''},{date:dDate(-5),mileage:v.km,orderId:''}],notes:'',isDemo:true,createdAt:dTs(-90)}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // СКЛАД ЗАПЧАСТИН
+    const PARTS=[
+        {name:'Масло 5W-30 Castrol 4л', sku:'OIL-5W30',  cat:'Мастила',   unit:'шт',   qty:22,min:8, price:840 },
+        {name:'Масло 5W-40 Mobil 4л',   sku:'OIL-5W40',  cat:'Мастила',   unit:'шт',   qty:16,min:6, price:960 },
+        {name:'Масло 0W-20 Toyota 4л',  sku:'OIL-0W20',  cat:'Мастила',   unit:'шт',   qty:8, min:4, price:1240},
+        {name:'Фільтр оливи MANN',       sku:'FILT-OIL',  cat:'Фільтри',   unit:'шт',   qty:35,min:15,price:185 },
+        {name:'Фільтр повітряний MANN',  sku:'FILT-AIR',  cat:'Фільтри',   unit:'шт',   qty:24,min:10,price:240 },
+        {name:'Фільтр салону MANN',      sku:'FILT-CAB',  cat:'Фільтри',   unit:'шт',   qty:18,min:8, price:290 },
+        {name:'Колодки передні TRW',     sku:'BRAKE-PAD-F',cat:'Гальма',  unit:'компл',qty:14,min:5, price:720 },
+        {name:'Колодки задні TRW',       sku:'BRAKE-PAD-R',cat:'Гальма',  unit:'компл',qty:11,min:4, price:580 },
+        {name:'Диск гальмівний 280мм',   sku:'DISC-280',  cat:'Гальма',    unit:'шт',   qty:6, min:4, price:1350},
+        {name:'Диск гальмівний 300мм',   sku:'DISC-300',  cat:'Гальма',    unit:'шт',   qty:4, min:3, price:1580},
+        {name:'Свічки NGK (4 шт)',        sku:'SPARK-NGK', cat:'Запалювання',unit:'компл',qty:28,min:10,price:380},
+        {name:'Антифриз G12+ 1л',        sku:'COOL-G12',  cat:'Охолодження',unit:'шт',  qty:32,min:12,price:145 },
+        {name:'Ремінь ГРМ Gates',        sku:'BELT-GRM',  cat:'ГРМ',       unit:'шт',   qty:8, min:3, price:720 },
+        {name:'Комплект ГРМ повний',     sku:'KIT-GRM',   cat:'ГРМ',       unit:'компл',qty:5, min:2, price:1840},
+        {name:'Амортизатор передній KYB',sku:'SHOCK-F',   cat:'Підвіска',  unit:'шт',   qty:6, min:3, price:1680},
+        {name:'Амортизатор задній KYB',  sku:'SHOCK-R',   cat:'Підвіска',  unit:'шт',   qty:6, min:2, price:1420},
+        {name:'Сайлентблок важеля',      sku:'BUSH-ARM',  cat:'Підвіска',  unit:'шт',   qty:16,min:6, price:380 },
+        {name:'Рідина гальмівна DOT4',   sku:'BRAKE-FL',  cat:'Рідини',    unit:'шт',   qty:20,min:8, price:95  },
+        {name:'Акумулятор Bosch 60Ah',   sku:'BATT-60',   cat:'Акумулятор',unit:'шт',   qty:4, min:2, price:3200},
+    ];
+    const pRefs=PARTS.map(()=>cr.collection('warehouse_items').doc());
+    PARTS.forEach((p,i)=>{ops.push({type:'set',ref:pRefs[i],data:{name:p.name,sku:p.sku,category:p.cat,unit:p.unit,quantity:p.qty,minQuantity:p.min,price:p.price,isActive:true,isDemo:true,createdAt:now}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // КАТАЛОГ ПОСЛУГ
+    const SVC=[
+        {name:'Заміна масла та фільтра',           price:500, unit:'послуга',cat:'ТО'},
+        {name:'ТО комплексне',                      price:1200,unit:'послуга',cat:'ТО'},
+        {name:'Комп\'ютерна діагностика',           price:400, unit:'послуга',cat:'Діагностика'},
+        {name:'Повна діагностика авто',             price:800, unit:'послуга',cat:'Діагностика'},
+        {name:'Заміна колодок (передні)',           price:600, unit:'послуга',cat:'Гальма'},
+        {name:'Заміна колодок (задні)',             price:500, unit:'послуга',cat:'Гальма'},
+        {name:'Заміна дисків (передні)',            price:800, unit:'послуга',cat:'Гальма'},
+        {name:'Заміна ременя ГРМ',                  price:1200,unit:'послуга',cat:'ГРМ'},
+        {name:'Шиномонтаж 4 колеса',               price:400, unit:'послуга',cat:'Шини'},
+        {name:'Балансування 4 колеса',              price:280, unit:'послуга',cat:'Шини'},
+        {name:'Заміна свічок',                      price:300, unit:'послуга',cat:'Двигун'},
+        {name:'Заміна антифризу',                   price:350, unit:'послуга',cat:'Охолодження'},
+        {name:'Заміна амортизаторів (2 шт)',        price:1200,unit:'послуга',cat:'Підвіска'},
+        {name:'Заміна сайлентблоків (4 шт)',        price:800, unit:'послуга',cat:'Підвіска'},
+        {name:'Кузовний огляд',                     price:200, unit:'послуга',cat:'Кузов'},
+    ];
+    const svcRefs=SVC.map(()=>cr.collection('sales_products').doc());
+    SVC.forEach((s,i)=>{ops.push({type:'set',ref:svcRefs[i],data:{name:s.name,price:s.price,unit:s.unit,category:s.cat,isActive:true,isDemo:true,createdAt:now}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // НАРЯДИ
+    const yr=new Date().getFullYear();
+    const WO=[
+        {v:0,c:0,m:0,status:'closed', d:-14,km:83200, ws:[0,1],ps:[{p:0,q:1},{p:3,q:1}],          note:'Оригінальне масло Toyota 5W-30. Пробіг від останнього ТО 12 000 км.'},
+        {v:1,c:1,m:1,status:'closed', d:-10,km:40800, ws:[4,5], ps:[{p:6,q:1},{p:7,q:1}],          note:'Колодки скрипіли при гальмуванні. Передні зношені до 2 мм.'},
+        {v:2,c:2,m:0,status:'closed', d:-7, km:96500, ws:[7],   ps:[{p:12,q:1},{p:13,q:1}],        note:'ГРМ — ресурс перевищено на 7 000 км. Ролики теж замінили.'},
+        {v:5,c:5,m:2,status:'closed', d:-5, km:109800,ws:[8,9], ps:[],                              note:'Шиномонтаж — клієнт приїхав зі своїми шинами Michelin.'},
+        {v:7,c:7,m:0,status:'paid',   d:-3, km:87900, ws:[2,0], ps:[{p:0,q:1},{p:3,q:1},{p:4,q:1}],note:'Діагностика виявила підвищене зношення повітряного фільтра.'},
+        {v:0,c:0,m:0,status:'in_work',d:0,  km:85420, ws:[0,10],ps:[{p:0,q:1},{p:3,q:1},{p:10,q:1}],note:'Іванченко — масло Castrol 5W-30. Свічки NGK всі 4.'},
+        {v:1,c:1,m:1,status:'in_work',d:0,  km:42100, ws:[4,6,9],ps:[{p:6,q:1},{p:8,q:2},{p:9,q:2}],note:'Гальма — колодки + диски передні. Лій новий DOT4.'},
+        {v:2,c:2,m:0,status:'draft',  d:0,  km:98300, ws:[12,13],ps:[{p:14,q:2},{p:16,q:4}],       note:'Підвіска — 2 амортизатори + 4 сайлентблоки.'},
+        {v:6,c:6,m:0,status:'draft',  d:1,  km:74200, ws:[7],    ps:[{p:12,q:1}],                  note:'Запис на завтра. ГРМ — ресурс 107 000 км перевищено.'},
+        {v:8,c:8,m:4,status:'draft',  d:1,  km:38700, ws:[14],   ps:[],                             note:'Кузовний огляд + рихтування після ДТП.'},
+    ];
+    const woRefs=WO.map(()=>cr.collection('sales_orders').doc());
+    WO.forEach((o,i)=>{
+        const v=VEH[o.v];const cl=CL[o.c];const m=STAFF[o.m];
+        const items=[
+            ...o.ws.map(si=>{const s=SVC[si];return{id:'s'+si,name:s.name,qty:1,unit:s.unit,price:s.price,discount:0,total:s.price};}),
+            ...o.ps.map(pi=>{const pt=PARTS[pi.p];return{id:'p'+pi.p,name:pt.name,qty:pi.q,unit:pt.unit,price:pt.price,discount:0,total:pt.price*pi.q,warehouseItemId:pRefs[pi.p].id};}),
+        ];
+        const total=items.reduce((s,x)=>s+x.total,0);
+        const isPaid=o.status==='closed'||o.status==='paid';
+        ops.push({type:'set',ref:woRefs[i],data:{
+            type:'work_order',number:`WO-${yr}-${String(i+1).padStart(4,'0')}`,
+            status:o.status,clientId:cRefs[o.c].id,clientName:cl.name,clientPhone:cl.phone,
+            vehicleId:vRefs[o.v].id,vehicleInfo:{plate:v.plate,vin:v.vin,make:v.make,model:v.model,year:v.year,mileage:o.km},
+            masterId:sRefs[o.m].id,masterName:m.name,date:dDate(o.d),
+            items,subtotal:total,discountTotal:0,total,
+            paymentMethod:'cash',paymentStatus:isPaid?'paid':'unpaid',paidAmount:isPaid?total:0,
+            notes:o.note,isDemo:true,createdAt:dTs(o.d),updatedAt:now,
+        }});
+    });
+    await window.safeBatchCommit(ops);ops=[];
+
+    // ЗАВДАННЯ
+    const TASKS=[
+        {t:'Mazda CX-5 Іванченко — заміна масла і свічок (до 12:00)',           fi:3,ai:0,st:'in_progress',pr:'high',  d:0, tm:'09:00',est:90, r:'Виконаний наряд WO, авто повернено клієнту'},
+        {t:'Toyota Camry Ковальська — гальма: колодки + диски (до 14:00)',       fi:3,ai:1,st:'in_progress',pr:'high',  d:0, tm:'11:00',est:120,r:'Наряд виконано, клієнт перевірив і підписав'},
+        {t:'VW Passat Шевченко — прийняти, скласти наряд підвіска',             fi:2,ai:3,st:'new',        pr:'high',  d:0, tm:'13:00',est:30, r:'Заповнений наряд з узгодженою сумою'},
+        {t:'Зателефонувати Бойку — підтвердити запис на BMW X5 (повна діагностика)',fi:1,ai:3,st:'new',  pr:'medium',d:0, tm:'10:00',est:15, r:'Клієнт підтвердив дату і час'},
+        {t:'Замовити диски Brembo 280мм — залишок 2 шт, мінімум 4',            fi:4,ai:3,st:'new',        pr:'high',  d:0, tm:'09:30',est:20, r:'Email постачальнику відправлено, підтвердження отримано'},
+        {t:'BMW X5 Бойко — повна діагностика 4 год',                            fi:2,ai:0,st:'new',        pr:'high',  d:2, tm:'10:00',est:240,r:'Звіт діагностики, узгоджений план ремонту'},
+        {t:'Skoda Octavia Гриценко — ремінь ГРМ (записана на завтра)',          fi:3,ai:0,st:'new',        pr:'high',  d:1, tm:'09:00',est:180,r:'Виконаний наряд, авто повернено'},
+        {t:'Kia Sportage Павленко — кузовний огляд після ДТП',                  fi:3,ai:4,st:'new',        pr:'medium',d:1, tm:'11:00',est:60, r:'Складений кошторис ремонту кузова'},
+        {t:'Атестація Андрія Левченка (3 місяці в колективі)',                  fi:6,ai:3,st:'new',        pr:'low',   d:3, tm:'16:00',est:60, r:'Форма атестації заповнена, рішення по зарплаті'},
+        {t:'Оновити прайс — підняти вартість діагностики на 15%',              fi:0,ai:3,st:'new',        pr:'low',   d:4, tm:'11:00',est:30, r:'Новий прайс на сайті і в WhatsApp'},
+        {t:'Звіт P&L за тиждень (щопонеділка)',                                fi:5,ai:6,st:'new',        pr:'medium',d:1, tm:'09:00',est:45, r:'Таблиця P&L заповнена, надіслана власнику'},
+        {t:'Перевірити залишки складу і замовити (щоп\'ятниці)',               fi:4,ai:3,st:'new',        pr:'medium',d:4, tm:'16:00',est:30, r:'Залишки оновлені, замовлення відправлені'},
+        {t:'Mercedes C200 Кравченко — не передзвонили після запиту 60 днів',   fi:1,ai:3,st:'overdue',   pr:'high',  d:-3,tm:'09:00',est:15, r:'Клієнт записаний або відмова — статус в CRM оновлено'},
+        {t:'Google Business — нові фото і відповіді на відгуки (прострочено)', fi:0,ai:3,st:'overdue',   pr:'low',   d:-5,tm:'10:00',est:30, r:'Додано 5+ фото, відповіді на всі відгуки за місяць'},
+    ];
+    TASKS.forEach(tk=>{ops.push({type:'set',ref:cr.collection('tasks').doc(),data:{title:tk.t,function:FUNCS[tk.fi].name,functionId:fRefs[tk.fi].id,assigneeId:sRefs[tk.ai].id,assigneeName:STAFF[tk.ai].name,status:tk.st,priority:tk.pr,deadlineDate:dDate(tk.d),scheduledTime:tk.tm,estimatedMinutes:tk.est,expectedResult:tk.r,isDemo:true,createdAt:now,updatedAt:now}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // ПРОЦЕСИ
+    const P1_STEPS=[
+        {n:'Запис клієнта',       fn:1,ai:3,dur:15,desc:'Прийняти дзвінок, записати авто. Уточнити: марка, рік, пробіг, скарга.'},
+        {n:'Прийом авто',         fn:2,ai:0,dur:20,desc:'Зустріти клієнта, оглянути авто. Зафіксувати пошкодження. Уточнити пробіг.'},
+        {n:'Діагностика та наряд',fn:2,ai:0,dur:40,desc:'Провести діагностику. Скласти наряд. Узгодити суму з клієнтом.'},
+        {n:'Замовлення запчастин',fn:4,ai:3,dur:20,desc:'Перевірити склад. Замовити відсутнє. Повідомити клієнта про терміни.'},
+        {n:'Виконання ремонту',   fn:3,ai:0,dur:120,desc:'Виконати роботи згідно наряду. Фотографувати критичні вузли.'},
+        {n:'Контроль якості',     fn:3,ai:0,dur:30,desc:'Перевірити якість. Тест-драйв. Прибирання авто.'},
+        {n:'Видача та оплата',    fn:1,ai:3,dur:20,desc:'Показати виконані роботи. Пояснити що замінено. Отримати оплату.'},
+        {n:'Зворотній зв\'язок',fn:1,ai:3,dur:10,desc:'Через 3 дні: дзвінок клієнту. Чи все ok? Запросити відгук.'},
+    ];
+    ops.push({type:'set',ref:cr.collection('processes').doc(),data:{name:'Стандарт обслуговування авто',description:'Повний цикл: запис → прийом → діагностика → ремонт → видача → відгук. 8 кроків.',category:'Основний',status:'active',steps:P1_STEPS.map((s,i)=>({id:`s${i}`,name:s.n,description:s.desc,functionId:fRefs[s.fn].id,functionName:FUNCS[s.fn].name,assigneeId:sRefs[s.ai].id,assigneeName:STAFF[s.ai].name,estimatedMinutes:s.dur,order:i,status:'active'})),isDemo:true,createdAt:now}});
+
+    const P2_STEPS=[
+        {n:'Виявлення потреби',   fn:4,ai:3,dur:15,desc:'Моніторинг залишків. Позиції нижче мінімуму.'},
+        {n:'Формування замовлення',fn:4,ai:3,dur:20,desc:'Список замовлення. Вибір постачальника. Узгодження цін.'},
+        {n:'Відправка замовлення',fn:4,ai:3,dur:10,desc:'Відправити постачальнику. Отримати підтвердження і дату.'},
+        {n:'Прийом та перевірка', fn:4,ai:3,dur:30,desc:'Прийняти товар. Звірити з накладною. Оприбуткувати.'},
+        {n:'Оплата',              fn:5,ai:6,dur:15,desc:'Перевірити рахунок. Провести оплату. Зберегти документи.'},
+    ];
+    ops.push({type:'set',ref:cr.collection('processes').doc(),data:{name:'Закупівля запчастин',description:'Стандарт замовлення та прийому запчастин. 5 кроків.',category:'Склад',status:'active',steps:P2_STEPS.map((s,i)=>({id:`s${i}`,name:s.n,description:s.desc,functionId:fRefs[s.fn].id,functionName:FUNCS[s.fn].name,assigneeId:sRefs[s.ai].id,assigneeName:STAFF[s.ai].name,estimatedMinutes:s.dur,order:i,status:'active'})),isDemo:true,createdAt:now}});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // ФІНАНСИ
+    try{for(const col of['finance_transactions','finance_categories','finance_accounts']){const s=await cr.collection(col).get();if(!s.empty){const d=s.docs.map(doc=>({type:'delete',ref:doc.ref}));await window.safeBatchCommit(d);}}}catch(e){}
+    const accCash=cr.collection('finance_accounts').doc();
+    const accCard=cr.collection('finance_accounts').doc();
+    ops.push({type:'set',ref:accCash,data:{name:'Каса (готівка)',  type:'cash',currency:'UAH',balance:18400, isDefault:true, isDemo:true,createdAt:now}});
+    ops.push({type:'set',ref:accCard,data:{name:'ПриватБанк ФОП', type:'card',currency:'UAH',balance:142600,isDefault:false,isDemo:true,createdAt:now}});
+    const CAT_I=['Ремонтні роботи','Запчастини (продаж)','Діагностика','Шиномонтаж'];
+    const CAT_O=['Запчастини (закупівля)','Оренда боксів','Зарплата майстрів','Реклама','Комунальні'];
+    const ciRefs=CAT_I.map(()=>cr.collection('finance_categories').doc());
+    const coRefs=CAT_O.map(()=>cr.collection('finance_categories').doc());
+    CAT_I.forEach((n,i)=>{ops.push({type:'set',ref:ciRefs[i],data:{name:n,type:'income', isDemo:true,createdAt:now}});});
+    CAT_O.forEach((n,i)=>{ops.push({type:'set',ref:coRefs[i],data:{name:n,type:'expense',isDemo:true,createdAt:now}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    const TXNS=[
+        {tp:'income', ci:0,acc:accCash,amt:1820, note:'Наряд WO-0001 — Mazda CX-5 Іванченко (масло+ТО)',      d:-14},
+        {tp:'income', ci:0,acc:accCash,amt:3960, note:'Наряд WO-0002 — Toyota Camry Ковальська (гальма)',      d:-10},
+        {tp:'income', ci:0,acc:accCash,amt:2800, note:'Наряд WO-0003 — VW Passat Шевченко (ремінь ГРМ)',       d:-7},
+        {tp:'income', ci:3,acc:accCash,amt:680,  note:'Шиномонтаж — Ford Focus Марченко',                      d:-5},
+        {tp:'income', ci:0,acc:accCash,amt:3240, note:'Наряд WO-0005 — Renault Duster Олійник',                d:-3},
+        {tp:'income', ci:0,acc:accCard,amt:9240, note:'Наряд WO-0009 — Kia Sportage Павленко (підвіска)',      d:-1},
+        {tp:'income', ci:0,acc:accCash,amt:8400, note:'Виручка 3-й тиждень березня (4 наряди)',                d:-18},
+        {tp:'income', ci:0,acc:accCard,amt:12600,note:'Виручка 4-й тиждень березня (5 нарядів)',               d:-11},
+        {tp:'income', ci:1,acc:accCash,amt:4200, note:'Запчастини (продаж клієнтам, березень)',                d:-11},
+        {tp:'income', ci:0,acc:accCash,amt:7800, note:'Виручка 1-й тиждень квітня (4 наряди)',                 d:-4},
+        {tp:'expense',ci:0,acc:accCard,amt:12400,note:'Закупівля — AutoParts Pro (накл. №А-1842)',             d:-15},
+        {tp:'expense',ci:1,acc:accCash,amt:18000,note:'Оренда 3 боксів (березень)',                           d:-30},
+        {tp:'expense',ci:2,acc:accCard,amt:42000,note:'Зарплата 6 майстрів (березень)',                       d:-28},
+        {tp:'expense',ci:0,acc:accCard,amt:8600, note:'Закупівля — MotoZip (накл. №МЗ-4421)',                 d:-8},
+        {tp:'expense',ci:3,acc:accCard,amt:3200, note:'Google Ads + Facebook (квітень)',                      d:-2},
+        {tp:'expense',ci:4,acc:accCash,amt:4800, note:'Електроенергія + водопостачання (квітень)',            d:-1},
+        {tp:'expense',ci:2,acc:accCard,amt:42000,note:'Зарплата 6 майстрів (квітень)',                        d:-1},
+        {tp:'expense',ci:1,acc:accCash,amt:18000,note:'Оренда 3 боксів (квітень)',                            d:-1},
+    ];
+    TXNS.forEach(tx=>{ops.push({type:'set',ref:cr.collection('finance_transactions').doc(),data:{type:tx.tp,categoryId:(tx.tp==='income'?ciRefs:coRefs)[tx.ci].id,categoryName:(tx.tp==='income'?CAT_I:CAT_O)[tx.ci],accountId:tx.acc.id,amount:tx.amt,note:tx.note,date:dDate(tx.d),createdAt:dTs(tx.d),isDemo:true}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    // KPI
+    const KPI=[
+        {name:'Виручка тижнева',             unit:'₴', target:35000,vals:[28400,31200,29800,33600,35100,32400,34800]},
+        {name:'Кількість нарядів за тиждень',unit:'шт',target:25,   vals:[18,21,19,23,25,22,24]},
+        {name:'Середній чек наряду',          unit:'₴', target:1400, vals:[1240,1180,1320,1410,1480,1390,1520]},
+        {name:'Завантаженість майстрів',      unit:'%', target:80,   vals:[62,68,71,75,78,74,82]},
+        {name:'Повернення клієнтів (60 днів)',unit:'%', target:60,   vals:[42,45,48,51,55,53,58]},
+    ];
+    KPI.forEach(k=>{ops.push({type:'set',ref:cr.collection('kpi_metrics').doc(),data:{name:k.name,unit:k.unit,target:k.target,values:k.vals.map((v,i)=>({value:v,date:dDate(-42+i*7)})),currentValue:k.vals[k.vals.length-1],trend:k.vals[k.vals.length-1]>k.vals[k.vals.length-2]?'up':'down',isDemo:true,createdAt:now}});});
+    await window.safeBatchCommit(ops);ops=[];
+
+    await cr.update({name:'АвтоМайстер СТО',niche:'autoservice',nicheLabel:'Автосервіс — ремонт і обслуговування авто',description:'СТО АвтоМайстер — повний спектр послуг. 6 майстрів, 3 підйомники, комп\'ютерна діагностика. Київ, вул. Промислова 15.',city:'Київ',employees:7,currency:'UAH',avgCheck:1840,monthlyRevenue:145000,companyGoal:'Стати №1 СТО в районі за рейтингом Google та завантаженістю 85%+ майстрів',companyConcept:'Кожен клієнт знає що ми пам\'ятаємо його авто. Прозорий наряд, фото до/після, дзвінок через 3 дні.',targetAudience:'Власники авто 2015-2023 р.в. з доходом середній+. Цінують якість і прозорість.',modules:{scheduling:true,clientProfile:true,loyalty:false,subscriptions:false,reviews:true,winback:true,notifications:true,estimates:false,warehouse:true,booking:false,sales:true},updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+};
 if (window._NICHE_LABELS) window._NICHE_LABELS['autoservice'] = 'АвтоМайстер СТО (Київ)';
 
 // ════════════════════════════════════════════════════════════════════════════
 // HORECA — Кафе "Сонячне"
 // ════════════════════════════════════════════════════════════════════════════
+if (window._NICHE_LABELS) window._NICHE_LABELS['autoservice'] = 'АвтоМайстер СТО (Київ)';
+
+// ════════════════════════════════════════════════════════════════════════════
+// HORECA — Кафе "Сонячне"
+// ════════════════════════════════════════════════════════════════════════════
+
 window._DEMO_NICHE_MAP['horeca'] = async function() {
     if (!window.currentCompanyId || !window.db) throw new Error('No company');
     const cr = window.db.collection('companies').doc(window.currentCompanyId);
