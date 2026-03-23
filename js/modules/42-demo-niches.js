@@ -5881,7 +5881,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     const now = firebase.firestore.FieldValue.serverTimestamp();
     let ops   = [];
 
-    // ── 0. ENSURE OWNER IN USERS (before all writes) ─────────
+    // ── 0. ENSURE OWNER IN USERS + CLEAR OLD DEMO DATA ─────
     try {
         await cr.collection('users').doc(uid).set({
             name:'Ірина Кравченко', role:'owner', position:'Власниця / Директор',
@@ -5890,6 +5890,21 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             status:'active', createdAt:now, updatedAt:now,
         }, {merge:true});
     } catch(e) { console.warn('[demo] owner upsert:', e.message); }
+
+    // Clear old demo data from previous niches
+    const _clearCols = ['tasks','regularTasks','functions','processTemplates','processes',
+        'projects','projectStages','workStandards','coordinations','crm_clients','crm_deals',
+        'finance_transactions','finance_categories','finance_accounts','finance_recurring',
+        'finance_budgets','finance_settings','warehouse_items','metricEntries','metrics',
+        'bookings','estimates','norm_definitions'];
+    try {
+        for (const col of _clearCols) {
+            const snap = await cr.collection(col).where('isDemo','==',true).get();
+            if (!snap.empty) {
+                await window.safeBatchCommit(snap.docs.map(d=>({type:'delete',ref:d.ref})), 'clear-'+col);
+            }
+        }
+    } catch(e) { console.warn('[demo] clear old:', e.message); }
 
     // ── 1. ФУНКЦІЇ (8 блоків) ────────────────────────────────
     const FUNCS = [
@@ -5930,7 +5945,8 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         { name:'Тетяна Савченко',  role:'employee', fi:6,    pos:'Бухгалтер' },
         { name:'Оксана Поліщук',   role:'employee', fi:0,    pos:'SMM / Таргетолог' },
     ];
-    const sRefs = STAFF.map(() => cr.collection('users').doc());
+    // Use uid for owner slot so tasks assigned to owner show in "My Day"
+    const sRefs = STAFF.map((s, i) => i === 0 ? cr.collection('users').doc(uid) : cr.collection('users').doc());
     STAFF.forEach((s, i) => {
         const fid = s.fi !== null ? fRefs[s.fi].id : null;
         ops.push({type:'set', ref:sRefs[i], data:{
@@ -6533,12 +6549,35 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         {ci:9, acc:0, amt:185000,note:'RF-ліфтинг апарат Beautytek — оплата',             d:-35},
     ];
 
+    // Map transaction notes to project IDs
+    const projSnapFin = await cr.collection('projects').get();
+    const projDocsFin = projSnapFin.docs.map(d => ({id:d.id, name:d.data().name||''}));
+    const _getProjId = (note) => {
+        const n = (note||'').toLowerCase();
+        const p = projDocsFin.find(p => {
+            if ((n.includes('гулівер') || n.includes('друг')) && p.name.includes('Гулівер')) return true;
+            if (n.includes('косметолог') && p.name.includes('косметолог')) return true;
+            return false;
+        });
+        return p ? p.id : '';
+    };
+    const _getFuncId = (note) => {
+        const n = (note||'').toLowerCase();
+        if (n.includes('таргет') || n.includes('реклам') || n.includes('smm')) return fRefs[0].id;
+        if (n.includes('запис') || n.includes('адмін')) return fRefs[1].id;
+        if (n.includes('майстр') || n.includes('виручка') || n.includes('послуг')) return fRefs[2].id;
+        if (n.includes('зарплат')) return fRefs[6].id;
+        if (n.includes('оренда')) return fRefs[5].id;
+        if (n.includes('матеріал') || n.includes('закуп') || n.includes('косметик')) return fRefs[5].id;
+        return '';
+    };
     const txOps = TXS.map(tx => ({type:'set', ref:cr.collection('finance_transactions').doc(), data:{
         categoryId:catRefs[tx.ci].id, categoryName:FIN_CATS[tx.ci].name,
         accountId:accRefs[tx.acc].id, accountName:ACCOUNTS[tx.acc].name,
         type:FIN_CATS[tx.ci].type, amount:tx.amt, currency:'UAH',
         note:tx.note, date:_demoTsFinance(tx.d),
-        projectId:'', functionId:'',
+        projectId:_getProjId(tx.note),
+        functionId:_getFuncId(tx.note),
         createdBy:uid, createdAt:now,
     }}));
     await window.safeBatchCommit(txOps, "step-14-txOps");
@@ -6669,7 +6708,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         },
     ];
     for (const s of STANDARDS) {
-        ops.push({type:'set', ref:cr.collection('standards').doc(), data:{
+        ops.push({type:'set', ref:cr.collection('workStandards').doc(), data:{
             name:s.name, category:s.category, content:s.content,
             functionId:fRefs[s.fi].id, functionName:FUNCS[s.fi].name,
             isActive:true, version:1,
@@ -6805,48 +6844,60 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     await window.safeBatchCommit(bookingOps, "step-19-bookingOps");
 
     // ── 15. МЕТРИКИ / СТАТИСТИКА (5 тижнів) ──────────────────
-    const metricOps = [];
-    const WEEKS_DATA = [
-        {wk:-4, revenue:41200, clients:52, avg_check:792,  nps:8.8, new_clients:6,  repeat:46, visits:52},
-        {wk:-3, revenue:37600, clients:48, avg_check:783,  nps:8.9, new_clients:4,  repeat:44, visits:48},
-        {wk:-2, revenue:39800, clients:51, avg_check:780,  nps:9.1, new_clients:7,  repeat:44, visits:51},
-        {wk:-1, revenue:42600, clients:54, avg_check:788,  nps:9.0, new_clients:5,  repeat:49, visits:54},
-        {wk: 0, revenue:38400, clients:49, avg_check:784,  nps:9.2, new_clients:8,  repeat:41, visits:49},
+    // Step 1: Create metric definitions
+    const METRIC_DEFS = [
+        {name:'Виручка тижня',           unit:'грн',   freq:'weekly',  fi:6, icon:'trending-up',  color:'#22c55e'},
+        {name:'Кількість клієнтів',      unit:'осіб',  freq:'weekly',  fi:2, icon:'users',        color:'#3b82f6'},
+        {name:'Середній чек',            unit:'грн',   freq:'weekly',  fi:6, icon:'credit-card',  color:'#f59e0b'},
+        {name:'NPS (задоволеність)',      unit:'балів', freq:'weekly',  fi:3, icon:'star',         color:'#8b5cf6'},
+        {name:'Нові клієнти',            unit:'осіб',  freq:'weekly',  fi:0, icon:'user-plus',    color:'#ec4899'},
     ];
+    const mDefRefs = METRIC_DEFS.map(() => cr.collection('metrics').doc());
+    const mDefOps = METRIC_DEFS.map((m, i) => ({type:'set', ref:mDefRefs[i], data:{
+        name:m.name, unit:m.unit, frequency:m.freq,
+        functionId:fRefs[m.fi].id, functionName:FUNCS[m.fi].name,
+        icon:m.icon, color:m.color,
+        target:0, isActive:true,
+        createdBy:uid, createdAt:now, updatedAt:now, isDemo:true,
+    }}));
+    await window.safeBatchCommit(mDefOps, 'step-metric-defs');
+
+    // Step 2: Create metric entries (5 weeks of data)
+    const WEEKS_DATA = [
+        {wk:-4, revenue:41200, clients:52, avg_check:792, nps:8.8, new_clients:6},
+        {wk:-3, revenue:37600, clients:48, avg_check:783, nps:8.9, new_clients:4},
+        {wk:-2, revenue:39800, clients:51, avg_check:780, nps:9.1, new_clients:7},
+        {wk:-1, revenue:42600, clients:54, avg_check:788, nps:9.0, new_clients:5},
+        {wk: 0, revenue:38400, clients:49, avg_check:784, nps:9.2, new_clients:8},
+    ];
+    const entryValues = [
+        w => w.revenue,
+        w => w.clients,
+        w => w.avg_check,
+        w => w.nps,
+        w => w.new_clients,
+    ];
+    const entryOps = [];
     for (const w of WEEKS_DATA) {
-        const weekStart = _demoDate(w.wk * 7);
-        metricOps.push({type:'set', ref:cr.collection('metrics').doc(), data:{
-            period:'week', periodStart:weekStart,
-            revenue:w.revenue, clientsCount:w.clients,
-            avgCheck:w.avg_check, nps:w.nps,
-            newClients:w.new_clients, repeatClients:w.repeat,
-            totalVisits:w.visits,
-            masterMetrics: masterIndices.map((mi, idx) => ({
-                masterId:sRefs[mi].id, masterName:STAFF[mi].name,
-                revenue:Math.round(w.revenue / masterIndices.length * (0.8 + idx * 0.1)),
-                clients:Math.round(w.clients / masterIndices.length),
-                avgCheck:w.avg_check,
-            })),
-            createdAt:now, updatedAt:now,
-        }});
+        const periodKey = _demoDate(w.wk * 7);
+        for (let mi = 0; mi < METRIC_DEFS.length; mi++) {
+            entryOps.push({type:'set', ref:cr.collection('metricEntries').doc(), data:{
+                metricId: mDefRefs[mi].id,
+                value: entryValues[mi](w),
+                period: periodKey,
+                periodKey: periodKey,
+                periodType: 'weekly',
+                date: periodKey,
+                scope: 'company',
+                scopeId: uid,
+                source: 'demo',
+                createdBy: uid,
+                createdAt: now,
+                isDemo: true,
+            }});
+        }
     }
-    // Щоденні метрики за 5 тижнів
-    for (let d = -35; d <= 0; d++) {
-        if (d % 7 === 0) continue; // неділя
-        const baseRev = 5500 + Math.floor(Math.sin(d/3)*800 + Math.random()*1000);
-        const baseClients = 7 + Math.floor(Math.random()*4);
-        metricOps.push({type:'set', ref:cr.collection('metrics_daily').doc(), data:{
-            date:_demoDate(d),
-            revenue:baseRev,
-            clientsCount:baseClients,
-            avgCheck:Math.round(baseRev/baseClients),
-            completedVisits:baseClients,
-            cancelledVisits:Math.floor(Math.random()*2),
-            newClients:Math.floor(Math.random()*3),
-            createdAt:now,
-        }});
-    }
-    await window.safeBatchCommit(metricOps, "step-20-metricOps");
+    await window.safeBatchCommit(entryOps, 'step-metric-entries');
 
     // ── 16. ПРОФІЛЬ КОМПАНІЇ ─────────────────────────────────
     await cr.update({
