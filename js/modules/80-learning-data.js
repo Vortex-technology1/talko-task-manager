@@ -8503,1843 +8503,993 @@ Bist du dabei?</div>
                 videoLink: null,
                 materialsLink: null,
                 presOverlay: `<style>
-/* === L12 PRES === */
-#l12Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Onest:wght@300;400;500;600;700&display=swap');
+
+#l12Ov{
+  position:fixed;inset:0;z-index:99999;display:none;flex-direction:column;
+  background:#08090d;
+  font-family:'Onest',sans-serif;
+}
 #l12Ov.on{display:flex}
-.l12s{display:none;width:100%;height:100%;overflow:hidden}
-.l12s.on{display:flex}
-/* Dark full */
-.l12-dark{background:linear-gradient(165deg,#09132b 0%,#142040 55%,#1a3068 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
-.l12-dark h1{color:#fff;font-size:clamp(2rem,6vw,4rem);font-weight:900;text-transform:uppercase;line-height:1.1;margin:0 0 .75rem;letter-spacing:.04em}
-.l12-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:600px;line-height:1.6}
-/* Split: dark left + white right */
-.l12-sl{width:34%;min-width:220px;background:linear-gradient(165deg,#09132b 0%,#142040 55%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 1.75rem 5rem;position:relative;flex-shrink:0}
-.l12-sl h2{color:#fff;font-size:clamp(1.4rem,3vw,2.4rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase}
-.l12-sl .l12-sub{color:#94a3b8;font-size:.8rem;margin-top:.4rem;text-transform:uppercase;font-weight:600;letter-spacing:.06em}
-.l12-tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:90px solid transparent;border-bottom:90px solid rgba(255,255,255,.06)}
-.l12-snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px}
-/* White right */
-.l12-sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3rem) clamp(1.5rem,5vw,3.5rem);display:flex;flex-direction:column;overflow-y:auto;position:relative}
-/* Full white (no left panel) */
-.l12-fw{width:100%;background:#fff;padding:clamp(2rem,5vw,4rem) clamp(2rem,6vw,5rem);display:flex;flex-direction:column;overflow-y:auto;position:relative}
-/* Corner decoration for white slides */
-.l12-corner{position:absolute;top:0;right:0;width:0;height:0;border-top:160px solid #1a3068;border-left:160px solid transparent;opacity:.12;pointer-events:none}
-.l12-corner2{position:absolute;top:0;right:0;width:0;height:0;border-top:90px solid #3b82f6;border-left:90px solid transparent;opacity:.12;pointer-events:none}
-/* Typography */
-.l12-sr h3,.l12-fw h3{font-size:clamp(1.1rem,2.5vw,1.8rem);font-weight:900;color:#09132b;margin:0 0 1rem;line-height:1.15}
-.l12-sr p,.l12-fw p{font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.75;margin:.5rem 0}
-.l12-sr p.sm,.l12-fw p.sm{font-size:clamp(.75rem,1.3vw,.88rem);color:#6b7280}
-.l12-q{font-size:clamp(.9rem,1.9vw,1.15rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.85rem 1rem;border-radius:0 10px 10px 0;margin:.85rem 0;line-height:1.6}
-/* Icon star */
-.l12-star{display:block;margin-bottom:.75rem}
-/* Def box */
-.l12-def{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
-.l12-def .dl{font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem}
-.l12-def .dt{font-size:clamp(.88rem,1.8vw,1.1rem);color:#1e3a8a;line-height:1.65;font-weight:600}
-/* Green resume */
-.l12-res{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#166534;line-height:1.75}
-/* Bullet list */
-.l12-ul{list-style:none;padding:0;margin:.5rem 0}
-.l12-ul li{display:flex;align-items:flex-start;gap:.65rem;padding:.3rem 0;font-size:clamp(.83rem,1.6vw,1rem);color:#333;line-height:1.65}
-.l12-ul li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+#l12Ov *{box-sizing:border-box}
+
+/* Noise texture overlay */
+#l12Ov::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* Grid bg lines */
+#l12Ov::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,.03) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+.l12-slides{flex:1;position:relative;overflow:hidden;z-index:1}
+.l12s{display:none;width:100%;height:100%;padding:0;position:relative;overflow:hidden}
+.l12s.on{display:flex;flex-direction:column}
+
+/* CSS vars */
+#l12Ov{
+  --cyan:#00e5ff;
+  --cyan2:#00b4cc;
+  --green:#39ff87;
+  --amber:#ffb800;
+  --red:#ff4757;
+  --bg:#08090d;
+  --bg2:#0d0f16;
+  --bg3:#12151f;
+  --border:rgba(0,229,255,.12);
+  --border2:rgba(255,255,255,.06);
+  --text:#e8eaf0;
+  --muted:#6b7280;
+  --muted2:#9ca3af;
+}
+
+/* ── TITLE SLIDE ── */
+.l12-title-slide{
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  padding:5rem 7vw;
+  background:radial-gradient(ellipse 80% 60% at 70% 50%, rgba(0,229,255,.07) 0%, transparent 70%),
+             radial-gradient(ellipse 40% 40% at 10% 80%, rgba(57,255,135,.05) 0%, transparent 60%),
+             var(--bg);
+  position:relative;overflow:hidden;
+}
+.l12-title-slide .l12-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  border:1px solid var(--border);background:rgba(0,229,255,.06);
+  color:var(--cyan);font-size:.72rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;padding:.4rem 1rem;border-radius:100px;
+  margin-bottom:2rem;
+}
+.l12-title-slide h1{
+  font-family:'Unbounded',sans-serif;
+  font-size:clamp(2.5rem,8vw,6rem);font-weight:900;
+  line-height:1;margin:0 0 .5rem;color:#fff;
+  text-transform:uppercase;letter-spacing:-.02em;
+}
+.l12-title-slide h1 span{color:var(--cyan)}
+.l12-title-slide .l12-subtitle{
+  font-size:clamp(.9rem,2vw,1.2rem);color:var(--muted2);
+  margin-top:1rem;font-weight:400;
+}
+/* Decorative circle */
+.l12-title-slide .deco{
+  position:absolute;right:-5vw;top:50%;transform:translateY(-50%);
+  width:clamp(200px,40vw,500px);height:clamp(200px,40vw,500px);
+  border-radius:50%;
+  border:1px solid rgba(0,229,255,.1);
+  box-shadow:inset 0 0 100px rgba(0,229,255,.05),0 0 100px rgba(0,229,255,.03);
+}
+.l12-title-slide .deco::before{
+  content:'';position:absolute;inset:20%;border-radius:50%;
+  border:1px solid rgba(0,229,255,.08);
+}
+.l12-title-slide .deco::after{
+  content:'';position:absolute;inset:40%;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,229,255,.12),transparent);
+}
+/* Slide number */
+.l12-num-tag{
+  position:absolute;bottom:2rem;left:7vw;
+  font-family:'Unbounded',sans-serif;
+  font-size:.65rem;font-weight:700;letter-spacing:.15em;
+  color:var(--muted);text-transform:uppercase;
+  display:flex;align-items:center;gap:.75rem;
+}
+.l12-num-tag::before{content:'';display:block;width:2rem;height:1px;background:var(--muted)}
+
+/* ── STANDARD SLIDE LAYOUT ── */
+.l12-slide-wrap{
+  display:flex;flex-direction:column;
+  padding:3.5rem 7vw 6rem;
+  height:100%;
+  background:radial-gradient(ellipse 60% 50% at 100% 0%, rgba(0,229,255,.04) 0%, transparent 60%),var(--bg);
+  position:relative;
+}
+.l12-label{
+  font-size:.68rem;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--cyan);
+  display:flex;align-items:center;gap:.6rem;margin-bottom:1.25rem;
+}
+.l12-label::before{content:'';display:inline-block;width:1.5rem;height:2px;background:var(--cyan);border-radius:2px}
+.l12-h{
+  font-family:'Unbounded',sans-serif;
+  font-size:clamp(1.2rem,3.5vw,2.4rem);font-weight:700;
+  color:#fff;line-height:1.15;margin:0 0 1.75rem;
+  max-width:900px;
+}
+.l12-h span{color:var(--cyan)}
+.l12-body{font-size:clamp(.88rem,1.6vw,1.05rem);color:var(--text);line-height:1.8;max-width:780px}
+.l12-body strong{color:#fff;font-weight:600}
+
+/* Cards grid */
+.l12-grid{display:grid;gap:1px;margin-top:1.5rem}
+.l12-grid-2{grid-template-columns:1fr 1fr}
+.l12-grid-3{grid-template-columns:1fr 1fr 1fr}
+
+.l12-card{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:1.5rem;
+  position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.l12-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.l12-card:hover{border-color:rgba(0,229,255,.25)}
+.l12-card:hover::before{opacity:.6}
+.l12-card .l12-card-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:.85rem;
+}
+.l12-card-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:.4rem}
+.l12-card-title{font-size:clamp(.9rem,1.5vw,1.05rem);font-weight:600;color:#fff;margin-bottom:.5rem;line-height:1.3}
+.l12-card-text{font-size:clamp(.78rem,1.3vw,.92rem);color:var(--muted2);line-height:1.65}
+.l12-card-text strong{color:var(--text)}
+
+/* Highlight box */
+.l12-highlight{
+  background:rgba(0,229,255,.05);
+  border:1px solid rgba(0,229,255,.15);
+  border-radius:16px;padding:1.25rem 1.5rem;
+  margin-top:1.25rem;max-width:780px;
+}
+.l12-highlight p{font-size:clamp(.85rem,1.5vw,1rem);color:var(--text);line-height:1.75;margin:0}
+.l12-highlight strong{color:var(--cyan);font-weight:600}
+
+/* Definition style */
+.l12-def-block{
+  border-left:2px solid var(--cyan);padding-left:1.5rem;margin-top:1.25rem;max-width:780px;
+}
+.l12-def-block .l12-def-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.l12-def-block .l12-def-text{font-size:clamp(.9rem,1.6vw,1.1rem);color:#fff;line-height:1.7;font-weight:500}
+.l12-def-block .l12-def-text u{text-decoration-color:var(--cyan);text-underline-offset:3px}
+
+/* Question style */
+.l12-question{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:1.5rem;
+  background:rgba(255,255,255,.02);
+  margin-top:1rem;max-width:780px;
+  position:relative;
+}
+.l12-question::before{
+  content:'?';
+  position:absolute;top:-12px;left:1.5rem;
+  background:var(--bg);color:var(--cyan);
+  font-family:'Unbounded',sans-serif;font-weight:900;font-size:.75rem;
+  padding:0 .5rem;
+}
+.l12-question p{font-size:clamp(.9rem,1.7vw,1.1rem);color:var(--text);line-height:1.7;margin:.5rem 0;font-weight:500}
+.l12-question p+p{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border2)}
+
+/* List */
+.l12-list{list-style:none;padding:0;margin:.75rem 0;max-width:780px}
+.l12-list li{
+  display:flex;align-items:flex-start;gap:.85rem;
+  padding:.6rem 0;border-bottom:1px solid var(--border2);
+  font-size:clamp(.85rem,1.5vw,.98rem);color:var(--text);line-height:1.65;
+}
+.l12-list li:last-child{border-bottom:none}
+.l12-list li::before{
+  content:'';display:block;width:5px;height:5px;border-radius:50%;
+  background:var(--cyan);flex-shrink:0;margin-top:.55rem;
+}
+.l12-list li strong{color:#fff}
+
 /* Task badge */
-.l12-task{display:inline-flex;align-items:center;gap:.5rem;background:#1a3068;color:white;font-size:.78rem;font-weight:800;padding:.35rem .85rem;border-radius:8px;letter-spacing:.06em;margin-bottom:.75rem}
-/* Orgchart area */
-.l12-org{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;margin:.75rem 0;overflow:auto}
-/* Two-col for command/comm lines */
-.l12-2col{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:.75rem 0}
-.l12-card{border-radius:12px;padding:1rem 1.1rem}
-/* Ico left panel */
-.l12-ico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.85}
-/* Nav */
-.l12-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
-.l12-nb{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700}
-.l12-nb:hover:not(:disabled){background:rgba(255,255,255,.25)}
-.l12-nb:disabled{opacity:.25;cursor:default}
-.l12-nc{color:#94a3b8;font-size:.8rem;font-weight:700}
-.l12-close{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
-.l12-save{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+.l12-task-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);
+  color:var(--cyan);font-size:.72rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:.4rem .9rem;border-radius:8px;margin-bottom:1rem;
+}
+.l12-task-num{
+  width:20px;height:20px;border-radius:4px;
+  background:var(--cyan);color:#000;
+  font-size:.65rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Resume / outro */
+.l12-resume{
+  background:linear-gradient(135deg,rgba(0,229,255,.06),rgba(57,255,135,.04));
+  border:1px solid rgba(0,229,255,.15);
+  border-radius:16px;padding:1.5rem 2rem;
+  margin-top:1.25rem;max-width:860px;
+}
+.l12-resume p{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--text);line-height:1.8;margin:.3rem 0}
+.l12-resume strong{color:#fff}
+.l12-resume .l12-r-accent{color:var(--cyan);font-weight:600}
+
+/* Outro full slide */
+.l12-outro{
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  padding:5rem 7vw;height:100%;
+  background:radial-gradient(ellipse 70% 60% at 30% 50%,rgba(0,229,255,.06),transparent 70%),var(--bg);
+  position:relative;
+}
+.l12-outro h2{
+  font-family:'Unbounded',sans-serif;
+  font-size:clamp(1.8rem,5vw,3.5rem);font-weight:900;
+  color:#fff;line-height:1.1;margin:0 0 1rem;
+}
+.l12-outro h2 span{color:var(--cyan)}
+.l12-outro p{font-size:clamp(.9rem,1.8vw,1.15rem);color:var(--muted2);max-width:560px;line-height:1.7;margin:.5rem 0}
+
+/* Two-col layout */
+.l12-two{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:1.25rem;max-width:860px}
+
+/* Comparison row */
+.l12-compare{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;gap:1rem;margin-top:1.25rem;max-width:860px;
+}
+.l12-compare-box{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:14px;padding:1.1rem 1.25rem;
+}
+.l12-compare-box .l12-c-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem}
+.l12-compare-box .l12-c-text{font-size:.9rem;color:var(--text);line-height:1.6}
+.l12-compare-arrow{color:var(--muted);font-size:.8rem;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+
+/* Org chart */
+.l12-org-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:16px;
+  padding:1.5rem;overflow:auto;margin-top:1.25rem;
+}
+
+/* NAV */
+.l12-nav{
+  position:relative;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 7vw;
+  background:rgba(8,9,13,.9);backdrop-filter:blur(16px);
+  border-top:1px solid var(--border2);
+}
+.l12-nav-btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:transparent;border:1px solid var(--border2);
+  color:var(--muted2);border-radius:10px;padding:.5rem 1.25rem;
+  cursor:pointer;font-size:.82rem;font-weight:600;
+  font-family:'Onest',sans-serif;
+  transition:all .15s;
+}
+.l12-nav-btn:hover:not(:disabled){border-color:var(--cyan);color:var(--cyan)}
+.l12-nav-btn:disabled{opacity:.25;cursor:default}
+.l12-nav-center{display:flex;align-items:center;gap:1rem}
+.l12-nav-counter{
+  font-family:'Unbounded',sans-serif;
+  font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.08em;
+}
+.l12-nav-progress{
+  width:120px;height:2px;background:var(--border2);border-radius:2px;overflow:hidden;
+}
+.l12-nav-progress-fill{
+  height:100%;background:var(--cyan);border-radius:2px;transition:width .3s ease;
+}
+.l12-close-btn{
+  background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.25);
+  color:#ff4757;border-radius:10px;padding:.5rem 1.1rem;
+  cursor:pointer;font-size:.82rem;font-weight:700;
+  font-family:'Onest',sans-serif;
+  transition:all .15s;
+}
+.l12-close-btn:hover{background:rgba(255,71,87,.2)}
+
+/* Animations */
+.l12s.on .l12-slide-wrap > *,
+.l12s.on .l12-title-slide > *,
+.l12s.on .l12-outro > *{
+  animation:l12fadein .4s ease both;
+}
+.l12s.on .l12-slide-wrap > *:nth-child(1){animation-delay:.05s}
+.l12s.on .l12-slide-wrap > *:nth-child(2){animation-delay:.1s}
+.l12s.on .l12-slide-wrap > *:nth-child(3){animation-delay:.15s}
+.l12s.on .l12-slide-wrap > *:nth-child(4){animation-delay:.2s}
+.l12s.on .l12-slide-wrap > *:nth-child(5){animation-delay:.25s}
+@keyframes l12fadein{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* Fullscreen orgchart slide */
+.l12-fs-org{
+  display:flex;flex-direction:column;
+  padding:2.5rem 5vw;height:100%;
+  background:var(--bg2);position:relative;overflow:hidden;
+}
+.l12-fs-org::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.l12-fs-org h3{
+  font-family:'Unbounded',sans-serif;
+  font-size:clamp(1rem,2.5vw,1.5rem);font-weight:700;
+  color:#fff;margin:0 0 1.25rem;position:relative;z-index:1;
+}
+.l12-org-svg{flex:1;width:100%;position:relative;z-index:1}
+
+/* Steps numbered */
+.l12-steps{display:flex;flex-direction:column;gap:.75rem;margin-top:1rem;max-width:780px}
+.l12-step{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.25rem;background:var(--bg3);border:1px solid var(--border2);border-radius:14px}
+.l12-step-num{width:28px;height:28px;border-radius:8px;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2);color:var(--cyan);font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Unbounded',sans-serif}
+.l12-step-text{font-size:clamp(.85rem,1.5vw,.98rem);color:var(--text);line-height:1.65}
+.l12-step-text strong{color:#fff}
+
+/* Buro box */
+.l12-buro{
+  background:rgba(255,71,87,.05);border:1px solid rgba(255,71,87,.15);
+  border-radius:16px;padding:1.25rem 1.5rem;margin-top:1.25rem;max-width:780px;
+}
+.l12-buro .l12-buro-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#ff4757;margin-bottom:.4rem}
+.l12-buro .l12-buro-text{font-size:clamp(.88rem,1.5vw,1rem);color:var(--text);line-height:1.7}
+.l12-buro strong{color:#fff}
 </style>
 
 <div id="l12Ov">
-<div id="l12SW" style="flex:1;position:relative;overflow:hidden">
+<div class="l12-slides" id="l12SW">
 
 <!-- S1: TITLE -->
 <div class="l12s on" id="l12_1">
-  <div class="l12-dark">
-    <div style="margin-bottom:1.5rem;opacity:.5">
-      <svg viewBox="0 0 80 80" width="70" height="70"><rect x="10" y="10" width="60" height="22" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="32" x2="40" y2="44" stroke="white" stroke-width="2"/><rect x="5" y="44" width="26" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="49" y="44" width="26" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg>
-    </div>
-    <h1>ОРГСХЕМА</h1>
-    <p>нарада</p>
-    <div class="l12-snum" style="position:fixed;bottom:5.5rem;left:1.5rem">1</div>
+<div class="l12-title-slide">
+  <div class="l12-badge">
+    <svg viewBox="0 0 16 16" width="12" height="12" fill="none"><rect x="1" y="4" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 13v2M11 13v2M3 15h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    Заняття 3 · Оргсхема нарада
   </div>
+  <h1>ОРГСХЕМА<br><span>компанії</span></h1>
+  <p class="l12-subtitle">Від хаосу до структури — як побудувати<br>організацію, що працює без вас</p>
+  <div class="deco"></div>
+  <div class="l12-num-tag">01 / 33</div>
+</div>
 </div>
 
 <!-- S2: МЕТА НАРАДИ -->
 <div class="l12s" id="l12_2">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><circle cx="40" cy="40" r="20" fill="none" stroke="white" stroke-width="2" opacity=".5"/><circle cx="40" cy="40" r="8" fill="white" opacity=".8"/><line x1="65" y1="15" x2="48" y2="32" stroke="#ef4444" stroke-width="3"/></svg></div>
-    <h2>МЕТА<br>НАРАДИ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">2</div>
-  </div>
-  <div class="l12-sr">
-    <div style="display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid #f0f4f8">
-      <div style="width:34px;height:34px;background:#1a3068;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.85rem">1</div>
-      <div style="font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.7">Розібратися у функціях оргсхеми, прояснити всі питання та сумніви, все, що незрозуміло хоч одному з вас.</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Мета наради</div>
+  <h2 class="l12-h">Що ми хочемо<br>отримати сьогодні</h2>
+  <div class="l12-two">
+    <div class="l12-card">
+      <div class="l12-card-label">Мета 1</div>
+      <div class="l12-card-title">Розібратися у функціях оргсхеми</div>
+      <div class="l12-card-text">Прояснити всі питання та сумніви, все, що незрозуміло хоч одному з вас.</div>
     </div>
-    <div style="display:flex;gap:1rem;padding:.75rem 0">
-      <div style="width:34px;height:34px;background:#1a3068;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.85rem">2</div>
-      <div style="font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.7">Доопрацювати та затвердити повний набір функцій, який необхідний нашій компанії для розвитку.</div>
+    <div class="l12-card">
+      <div class="l12-card-label">Мета 2</div>
+      <div class="l12-card-title">Доопрацювати та затвердити функції</div>
+      <div class="l12-card-text">Визначити повний набір функцій, необхідний нашій компанії для розвитку.</div>
     </div>
-    <div class="l12-res" style="margin-top:1rem">Результатом наради стане <strong>чернетка організуючої схеми</strong>.</div>
   </div>
+  <div class="l12-highlight">
+    <p>Результатом наради стане <strong>чернетка організуючої схеми</strong>.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">02 / 33</div>
 </div>
 
 <!-- S3: ПРАВИЛА -->
 <div class="l12s" id="l12_3">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 70 90" width="60" height="80"><rect x="10" y="10" width="50" height="70" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="20" y1="28" x2="50" y2="28" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="20" y1="40" x2="50" y2="40" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="20" y1="52" x2="50" y2="52" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="20" y1="64" x2="40" y2="64" stroke="white" stroke-width="1.5" opacity=".6"/></svg></div>
-    <h2>ПРАВИЛА</h2>
-    <div class="l12-tri"></div><div class="l12-snum">3</div>
-  </div>
-  <div class="l12-sr">
-    <ul class="l12-ul">
-      <li>Нарада триватиме <strong>4–5 годин</strong>. Буде одна чи дві перерви.</li>
-      <li>Поставте мобільні телефони на <strong>беззвучний режим</strong>.</li>
-      <li>Якщо отримаєте терміновий дзвінок — вийдіть з аудиторії і поверніться.</li>
-      <li>Я вестиму протокол, записуватиму питання, на які не знайшли відповіді.</li>
-      <li>Я буду вносити ваші <strong>коригування в оргсхему</strong> під час наради.</li>
-      <li>У розмові беремо участь всі, висловлюємо всі ідеї, <strong>ідеї не критикуємо</strong>.</li>
-    </ul>
-  </div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Правила наради</div>
+  <h2 class="l12-h">Як ми проводимо<br>цю зустріч</h2>
+  <ul class="l12-list">
+    <li>Нарада триватиме <strong>4–5 годин</strong>. Буде одна чи дві перерви залежно від того, як швидко рухатимемося.</li>
+    <li>Поставте мобільні телефони на <strong>беззвучний режим</strong>, планшети та комп'ютери теж.</li>
+    <li>Якщо отримаєте терміновий та важливий дзвінок — вийдіть з аудиторії, щоб відповісти, і поверніться назад.</li>
+    <li>Я вестиму протокол, записуватиму питання, на які ми не знайшли відповіді.</li>
+    <li>Я буду вносити ваші <strong>коригування в оргсхему</strong> під час наради.</li>
+    <li>У розмові беремо участь всі, висловлюємо всі ідеї, <strong>ідеї не критикуємо</strong>.</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">03 / 33</div>
 </div>
 
 <!-- S4: ВАЖЛИВЕ ПРАВИЛО -->
 <div class="l12s" id="l12_4">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="45" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="56" r="4" fill="white"/></svg></div>
-    <h2>ВАЖЛИВЕ<br>ПРАВИЛО</h2>
-    <div class="l12-tri"></div><div class="l12-snum">4</div>
-  </div>
-  <div class="l12-sr">
-    <p>Коли ви почуєте або побачите <strong>незрозуміле слово</strong> — підніміть руку і запитайте мене про це.</p>
-    <div class="l12-res" style="margin-top:1.5rem">Ніколи не робіть розумний вигляд — це не принесе нам результатів.</div>
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Важливе правило</div>
+  <h2 class="l12-h" style="font-size:clamp(1.5rem,4vw,3rem)">Коли ви почуєте незрозуміле слово —<br><span>підніміть руку</span></h2>
+  <div class="l12-highlight">
+    <p>Запитайте мене про це одразу.</p>
+    <p style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(0,229,255,.1)">Ніколи не робіть розумний вигляд — <strong>це не принесе нам результатів.</strong></p>
   </div>
 </div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">04 / 33</div>
+</div>
 
-<!-- S5: ОРГАНІЗАЦІЯ - питання -->
+<!-- S5: ОРГАНІЗАЦІЯ — питання -->
 <div class="l12s" id="l12_5">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M20 68 Q20 48 40 48 Q60 48 60 68" fill="none" stroke="white" stroke-width="2.5"/></svg></div>
-    <h2>ОРГАНІ-<br>ЗАЦІЯ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">5</div>
-  </div>
-  <div class="l12-sr">
-    <div class="l12-q">Навіщо потрібна організація?</div>
-    <div class="l12-q" style="margin-top:.75rem">Як ви думаєте, а що взагалі являє собою <strong>організація</strong>?</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Організація</div>
+  <h2 class="l12-h">Навіщо потрібна<br><span>організація?</span></h2>
+  <div class="l12-question">
+    <p>Як ви думаєте, а що взагалі являє собою організація?</p>
   </div>
 </div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">05 / 33</div>
+</div>
 
-<!-- S6: ОРГАНІЗАЦІЯ - визначення -->
+<!-- S6: ОРГАНІЗАЦІЯ — визначення -->
 <div class="l12s" id="l12_6">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="18" fill="none" stroke="#c9a84c" stroke-width="3"/><circle cx="20" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/><circle cx="60" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/><line x1="28" y1="40" x2="32" y2="40" stroke="#c9a84c" stroke-width="2"/><line x1="48" y1="40" x2="52" y2="40" stroke="#c9a84c" stroke-width="2"/></svg></div>
-    <h2>ОРГАНІ-<br>ЗАЦІЯ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">6</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Організація · Визначення</div>
+  <div class="l12-def-block">
+    <div class="l12-def-label">Організація</div>
+    <div class="l12-def-text">— це певний набір <u>спеціалізованих функцій</u>, які виконують окремі співробітники або цілі підрозділи, здійснюючи <u>узгоджену взаємодію</u>.</div>
   </div>
-  <div class="l12-sr">
-    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
-    <div class="l12-def">
-      <div class="dl">Визначення</div>
-      <div class="dt">Організація — це певний набір <strong>спеціалізованих функцій</strong>, які виконують окремі співробітники або цілі підрозділи, здійснюючи <strong>узгоджену взаємодію</strong>.</div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">06 / 33</div>
+</div>
+
+<!-- S7: ОРГАНІЗАЦІЯ — знання функцій -->
+<div class="l12s" id="l12_7">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Організація</div>
+  <h2 class="l12-h">З чого починається<br>організація</h2>
+  <div class="l12-highlight">
+    <p>Організація починається з того, що кожен співробітник має <strong>точно встановлені і добре зрозумілі йому функції</strong>, а також знає функції та продукти інших співробітників та підрозділів.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">07 / 33</div>
+</div>
+
+<!-- S8: ПЕРЕВАГИ ПОДІЛУ -->
+<div class="l12s" id="l12_8">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Організація · Переваги</div>
+  <h2 class="l12-h">Що дає спеціалізований<br>поділ функцій</h2>
+  <div class="l12-grid l12-grid-3" style="margin-top:1.25rem;max-width:900px">
+    <div class="l12-card">
+      <div class="l12-card-label">01</div>
+      <div class="l12-card-title">Висока ефективність</div>
+      <div class="l12-card-text">Збільшення ефективності роботи у <strong>багато разів</strong> за рахунок компетентності кожного</div>
+    </div>
+    <div class="l12-card">
+      <div class="l12-card-label">02</div>
+      <div class="l12-card-title">100% ЦКП</div>
+      <div class="l12-card-text">Компанія надає клієнту <strong>цінний кінцевий продукт</strong> в повному обсязі</div>
+    </div>
+    <div class="l12-card">
+      <div class="l12-card-label">03</div>
+      <div class="l12-card-title">Успішний обмін</div>
+      <div class="l12-card-text">Успішне здійснення <strong>обміну з клієнтами</strong> на рівноцінній основі</div>
     </div>
   </div>
 </div>
-
-<!-- S7: ОРГАНІЗАЦІЯ - знання функцій -->
-<div class="l12s" id="l12_7">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="18" fill="none" stroke="#c9a84c" stroke-width="3"/><circle cx="20" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/><circle cx="60" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/></svg></div>
-    <h2>ОРГАНІ-<br>ЗАЦІЯ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">7</div>
-  </div>
-  <div class="l12-sr">
-    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
-    <p>Організація починається з того, що кожен співробітник має <strong>точно встановлені і добре зрозумілі</strong> йому функції, а також знає функції та продукти інших співробітників та підрозділів.</p>
-  </div>
-</div>
-
-<!-- S8: Переваги поділу функцій -->
-<div class="l12s" id="l12_8">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="18" fill="none" stroke="#c9a84c" stroke-width="3"/><circle cx="20" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/><circle cx="60" cy="40" r="12" fill="none" stroke="#c9a84c" stroke-width="2.5"/></svg></div>
-    <div class="l12-tri"></div><div class="l12-snum">8</div>
-  </div>
-  <div class="l12-sr">
-    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
-    <p>Спеціалізований поділ та розподіл функцій між співробітниками дозволяє:</p>
-    <ul class="l12-ul" style="margin-top:.75rem">
-      <li>збільшити ефективність роботи у багато разів за рахунок <strong>високої компетентності</strong> навичок кожного</li>
-      <li>надавати компанією <strong>100% ЦКП</strong></li>
-      <li>успішно здійснювати <strong>обмін із клієнтами</strong></li>
-    </ul>
-  </div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">08 / 33</div>
 </div>
 
 <!-- S9: ПРИКЛАД -->
 <div class="l12s" id="l12_9">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="20" width="50" height="40" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="15" y1="34" x2="65" y2="34" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="35" y1="20" x2="35" y2="60" stroke="white" stroke-width="1.5" opacity=".5"/></svg></div>
-    <h2>ПРИКЛАД</h2>
-    <div class="l12-tri"></div><div class="l12-snum">9</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Приклад</div>
+  <h2 class="l12-h">Обговорення</h2>
+  <div class="l12-question">
+    <p>Наведіть приклади, як <strong>поділ функцій</strong> може значно збільшити ефективність роботи. Вкажіть у прикладах за рахунок чого.</p>
+    <p>Наведіть приклади, як <strong>переключення працівника</strong> з однієї функції на іншу може призвести до втрат ефективності.</p>
   </div>
-  <div class="l12-sr">
-    <div class="l12-q">Наведіть приклади, як <strong>поділ функцій</strong> може значно збільшити ефективність роботи — вкажіть за рахунок чого.</div>
-    <div class="l12-q" style="margin-top:.75rem">Наведіть приклади, як <strong>переключення</strong> працівника з однієї функції на іншу може призвести до <strong>втрат ефективності</strong>.</div>
-  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">09 / 33</div>
 </div>
 
 <!-- S10: РЕЗЮМЕ -->
 <div class="l12s" id="l12_10">
-  <div class="l12-sl">
-    <h2>РЕЗЮМЕ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">10</div>
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Резюме</div>
+  <div class="l12-resume">
+    <p>Якщо співробітник <strong>перемикається</strong> з однієї функції на іншу — він втрачає час і ефективність роботи падає.</p>
+    <p style="margin-top:.85rem;padding-top:.85rem;border-top:1px solid rgba(0,229,255,.1)">Якщо людина виконує <strong>конкретну функцію</strong> — підвищується узгодженість у діях та ефективність підвищується.</p>
   </div>
-  <div class="l12-sr" style="justify-content:center">
-    <div class="l12-res">Якщо співробітник <strong>перемикається</strong> з однієї функції на іншу — він втрачає час і ефективність падає.<br><br>Якщо людина виконує <strong>конкретну функцію</strong> — підвищується узгодженість у діях та ефективність зростає.</div>
-  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">10 / 33</div>
 </div>
 
 <!-- S11: ПИТАННЯ про слабку ланку -->
 <div class="l12s" id="l12_11">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg></div>
-    <h2>ПИТАННЯ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">11</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Питання</div>
+  <h2 class="l12-h">Сильна чи<br><span>слабка ланка?</span></h2>
+  <div class="l12-question">
+    <p>Як ви вважаєте, при поділі функцій, обсяг виробництва компанії залежатиме від <strong>найсильнішої функції</strong> чи <strong>найслабшої</strong>?</p>
+    <p>Чому? Аргументуйте свою відповідь.</p>
   </div>
-  <div class="l12-sr">
-    <div class="l12-q">При поділі функцій, обсяг виробництва компанії залежатиме від <strong>найсильнішої функції</strong> чи <strong>найслабшої</strong>?</div>
-    <div class="l12-q" style="margin-top:.75rem">Чому? <strong>Аргументуйте</strong> свою відповідь.</div>
-  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">11 / 33</div>
 </div>
 
 <!-- S12: Слабка функція -->
 <div class="l12s" id="l12_12">
-  <div class="l12-sl">
-    <div class="l12-tri"></div><div class="l12-snum">12</div>
-  </div>
-  <div class="l12-sr">
-    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
-    <div class="l12-def">
-      <div class="dl">Висновок</div>
-      <div class="dt">Загальна продуктивність залежить від <strong>слабкої функції</strong>.</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Висновок</div>
+  <h2 class="l12-h">Загальна продуктивність<br>залежить від <span>слабкої функції</span></h2>
+  <div class="l12-body" style="margin-top:.5rem">Приклад як найслабша функція у компанії впливає на інші підрозділи і організацію загалом.</div>
+  <div style="display:flex;align-items:center;gap:.75rem;margin-top:1.5rem;flex-wrap:wrap">
+    <div class="l12-card" style="flex:1;min-width:160px;border-color:rgba(57,255,135,.2);background:rgba(57,255,135,.04)">
+      <div class="l12-card-label" style="color:#39ff87">Сильна функція</div>
+      <div class="l12-card-text">Висока продуктивність, виконує ЦКП</div>
     </div>
-    <p style="margin-top:1rem">Приклад як найслабша функція у компанії впливає на інші підрозділи і організацію загалом.</p>
-    <div style="margin-top:1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
-      <div style="padding:.5rem 1rem;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;font-size:.88rem;color:#166534;font-weight:700">Сильна функція</div>
-      <svg viewBox="0 0 24 10" width="24" height="10"><line x1="2" y1="5" x2="22" y2="5" stroke="#6b7280" stroke-width="1.5"/><polygon points="18,2 22,5 18,8" fill="#6b7280"/></svg>
-      <div style="padding:.5rem 1rem;background:#fef2f2;border:1.5px solid #fecaca;border-radius:8px;font-size:.88rem;color:#dc2626;font-weight:700">Вузьке місце</div>
-      <svg viewBox="0 0 24 10" width="24" height="10"><line x1="2" y1="5" x2="22" y2="5" stroke="#6b7280" stroke-width="1.5"/><polygon points="18,2 22,5 18,8" fill="#6b7280"/></svg>
-      <div style="padding:.5rem 1rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.88rem;color:#6b7280">Стримує всіх</div>
+    <div style="color:var(--muted);font-size:1.5rem">→</div>
+    <div class="l12-card" style="flex:1;min-width:160px;border-color:rgba(255,71,87,.25);background:rgba(255,71,87,.05)">
+      <div class="l12-card-label" style="color:#ff4757">Вузьке місце</div>
+      <div class="l12-card-text">Стримує всю систему, блокує результат</div>
+    </div>
+    <div style="color:var(--muted);font-size:1.5rem">→</div>
+    <div class="l12-card" style="flex:1;min-width:160px;border-color:rgba(255,184,0,.2);background:rgba(255,184,0,.04)">
+      <div class="l12-card-label" style="color:#ffb800">Загальний результат</div>
+      <div class="l12-card-text">Обмежений найслабшою ланкою</div>
     </div>
   </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">12 / 33</div>
 </div>
 
 <!-- S13: Функція без оргсхеми -->
 <div class="l12s" id="l12_13">
-  <div class="l12-sl">
-    <div class="l12-tri"></div><div class="l12-snum">13</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Увага</div>
+  <h2 class="l12-h">Невидима функція —<br>майбутнє <span>вузьке місце</span></h2>
+  <div class="l12-highlight">
+    <p>Якщо функція <strong>потрібна у компанії</strong>, але ми про це не знаємо і її немає в нашій оргсхемі — вона рано чи пізно стане "вузьким місцем".</p>
   </div>
-  <div class="l12-sr">
-    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
-    <p>Якщо функція <strong>потрібна у компанії</strong>, але ми про це не знаємо і її немає в нашій оргсхемі — вона рано чи пізно стане <strong>"вузьким місцем"</strong>.</p>
-    <div class="l12-q" style="margin-top:1rem">Наведіть приклад таких функцій для вашої компанії та їх вплив на інші функції і загальну продуктивність.</div>
+  <div class="l12-question" style="margin-top:1rem">
+    <p>Наведіть приклад таких функцій для вашої компанії та вплив на інші функції та загальну продуктивність.</p>
   </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">13 / 33</div>
 </div>
 
 <!-- S14: РЕЗЮМЕ -->
 <div class="l12s" id="l12_14">
-  <div class="l12-sl">
-    <h2>РЕЗЮМЕ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">14</div>
-  </div>
-  <div class="l12-sr" style="justify-content:center">
-    <div class="l12-res">Щоб компанія <strong>продуктивно працювала</strong>, необхідно дуже добре розуміти, які функції у ній мають бути та їх виконувати.</div>
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Резюме</div>
+  <div class="l12-resume">
+    <p>Щоб компанія продуктивно працювала, необхідно <strong>дуже добре розуміти</strong>, які функції у ній мають бути та їх виконувати.</p>
   </div>
 </div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">14 / 33</div>
+</div>
 
-<!-- S15: ОРГСХЕМА - навіщо -->
+<!-- S15: ОРГСХЕМА — навіщо -->
 <div class="l12s" id="l12_15">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><line x1="15" y1="35" x2="65" y2="35" stroke="white" stroke-width="1.5" opacity=".5"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><line x1="17" y1="53" x2="17" y2="63" stroke="white" stroke-width="1.5"/><line x1="30" y1="53" x2="30" y2="63" stroke="white" stroke-width="1.5"/></svg></div>
-    <h2>ОРГСХЕМА</h2>
-    <div class="l12-tri"></div><div class="l12-snum">15</div>
-  </div>
-  <div class="l12-sr">
-    <div class="l12-q">Навіщо потрібна оргсхема?</div>
-    <p style="margin-top:1rem">Оргсхема вирішує кілька важливих завдань, щоб компанія могла <strong>процвітати та розширюватися</strong>.</p>
-    <p>Давайте розберемося.</p>
-  </div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Оргсхема</div>
+  <h2 class="l12-h">Навіщо потрібна<br><span>оргсхема?</span></h2>
+  <div class="l12-body">Оргсхема вирішує кілька важливих завдань, щоб компанія могла <strong>процвітати та розширюватися</strong>.</div>
+  <div class="l12-body" style="margin-top:.5rem">Давайте розберемося.</div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">15 / 33</div>
 </div>
 
 <!-- S16: ЗАВДАННЯ 1 -->
 <div class="l12s" id="l12_16">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><line x1="15" y1="35" x2="65" y2="35" stroke="white" stroke-width="1.5" opacity=".5"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
-    <h2>ОРГСХЕМА</h2>
-    <div class="l12-tri"></div><div class="l12-snum">16</div>
-  </div>
-  <div class="l12-sr">
-    <div class="l12-task"><svg viewBox="0 0 20 20" width="14" height="14"><circle cx="10" cy="10" r="9" fill="none" stroke="white" stroke-width="1.5"/><text x="10" y="14" text-anchor="middle" font-size="10" fill="white" font-weight="700">1</text></svg>ЗАВДАННЯ №1</div>
-    <h3>Оргсхема показує, які функції необхідні розвитку нашої компанії.</h3>
-    <ul class="l12-ul" style="margin-top:.75rem">
-      <li>Як в оргсхемі можна побачити функції</li>
-      <li>Як на оргсхемі позначаються 7 основних функцій, 21 основна функція та окремі функції</li>
-      <li>Де на оргсхемі знаходяться головні функції</li>
-    </ul>
-  </div>
+<div class="l12-slide-wrap">
+  <div class="l12-task-badge"><div class="l12-task-num">1</div>Завдання оргсхеми</div>
+  <h2 class="l12-h">Оргсхема показує, які функції<br>необхідні <span>розвитку компанії</span></h2>
+  <ul class="l12-list">
+    <li>Як в оргсхемі можна побачити функції</li>
+    <li>Як на оргсхемі позначаються 7 основних функцій, 21 основна функція та окремі функції</li>
+    <li>Де на оргсхемі знаходяться головні функції</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">16 / 33</div>
 </div>
 
-<!-- S17: НАША СТРУКТУРА (повний слайд) -->
+<!-- S17: НАША СТРУКТУРА -->
 <div class="l12s" id="l12_17">
-  <div class="l12-fw">
-    <div class="l12-corner"></div><div class="l12-corner2"></div>
-    <h3 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:1rem">Наша структура</h3>
-    <div class="l12-org" style="flex:1;min-height:200px">
-      <!-- SVG org chart -->
-      <svg viewBox="0 0 800 420" width="100%" style="max-height:360px">
-        <!-- Top: Власник → Опер.директор -->
-        <rect x="20" y="10" width="90" height="36" rx="5" fill="#ef4444" opacity=".9"/>
-        <text x="65" y="32" text-anchor="middle" font-size="11" fill="white" font-weight="700">Власник</text>
-        <line x1="110" y1="28" x2="660" y2="28" stroke="#333" stroke-width="1.5"/>
-        <polygon points="657,24 663,28 657,32" fill="#333"/>
-        <rect x="660" y="10" width="110" height="36" rx="5" fill="#6b7280"/>
-        <text x="715" y="28" text-anchor="middle" font-size="10" fill="white">Операційний</text>
-        <text x="715" y="40" text-anchor="middle" font-size="10" fill="white">директор</text>
-        <!-- Arrows down -->
-        <line x1="715" y1="46" x2="715" y2="68" stroke="#333" stroke-width="1.5"/>
-        <line x1="715" y1="68" x2="130" y2="68" stroke="#333" stroke-width="1.5"/>
-        <line x1="130" y1="68" x2="130" y2="80" stroke="#333" stroke-width="1.5"/>
-        <line x1="280" y1="68" x2="280" y2="80" stroke="#333" stroke-width="1.5"/>
-        <line x1="430" y1="68" x2="430" y2="80" stroke="#333" stroke-width="1.5"/>
-        <line x1="580" y1="68" x2="580" y2="80" stroke="#333" stroke-width="1.5"/>
-        <polygon points="127,77 130,83 133,77" fill="#333"/>
-        <polygon points="277,77 280,83 283,77" fill="#333"/>
-        <polygon points="427,77 430,83 433,77" fill="#333"/>
-        <polygon points="577,77 580,83 583,77" fill="#333"/>
-        <!-- Dept boxes row -->
-        <rect x="80" y="83" width="100" height="40" rx="5" fill="#f59e0b"/>
-        <text x="130" y="100" text-anchor="middle" font-size="10" fill="white" font-weight="700">1. Адмін</text>
-        <text x="130" y="114" text-anchor="middle" font-size="9" fill="white">відділення</text>
-        <rect x="230" y="83" width="100" height="40" rx="5" fill="#3b82f6"/>
-        <text x="280" y="100" text-anchor="middle" font-size="10" fill="white" font-weight="700">2. Досягнення</text>
-        <text x="280" y="114" text-anchor="middle" font-size="9" fill="white">цілей</text>
-        <rect x="380" y="83" width="100" height="40" rx="5" fill="#8b5cf6"/>
-        <text x="430" y="100" text-anchor="middle" font-size="10" fill="white" font-weight="700">3. Відділ</text>
-        <text x="430" y="114" text-anchor="middle" font-size="9" fill="white">кадрів</text>
-        <rect x="530" y="83" width="100" height="40" rx="5" fill="#ec4899"/>
-        <text x="580" y="100" text-anchor="middle" font-size="10" fill="white" font-weight="700">4. Маркетинг</text>
-        <text x="580" y="114" text-anchor="middle" font-size="9" fill="white">та продажі</text>
-        <!-- Sub boxes -->
-        <line x1="130" y1="123" x2="130" y2="140" stroke="#f59e0b" stroke-width="1.5"/>
-        <rect x="90" y="140" width="80" height="30" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
-        <text x="130" y="159" text-anchor="middle" font-size="9" fill="#92400e">Адмін. секції</text>
-        <line x1="280" y1="123" x2="280" y2="140" stroke="#3b82f6" stroke-width="1.5"/>
-        <rect x="240" y="140" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
-        <text x="280" y="159" text-anchor="middle" font-size="9" fill="#1e3a8a">ЦКП клієнтів</text>
-        <line x1="430" y1="123" x2="430" y2="140" stroke="#8b5cf6" stroke-width="1.5"/>
-        <rect x="390" y="140" width="80" height="30" rx="4" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
-        <text x="430" y="159" text-anchor="middle" font-size="9" fill="#4c1d95">Навчання</text>
-        <line x1="580" y1="123" x2="580" y2="140" stroke="#ec4899" stroke-width="1.5"/>
-        <rect x="540" y="140" width="80" height="30" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
-        <text x="580" y="159" text-anchor="middle" font-size="9" fill="#831843">Реклама</text>
-        <!-- More depts row 2 -->
-        <line x1="130" y1="170" x2="130" y2="185" stroke="#f59e0b" stroke-width="1.5"/>
-        <rect x="90" y="185" width="80" height="30" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
-        <text x="130" y="204" text-anchor="middle" font-size="9" fill="#92400e">Якість</text>
-        <line x1="280" y1="170" x2="280" y2="185" stroke="#3b82f6" stroke-width="1.5"/>
-        <rect x="240" y="185" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
-        <text x="280" y="204" text-anchor="middle" font-size="9" fill="#1e3a8a">Фінанси</text>
-        <line x1="430" y1="170" x2="430" y2="185" stroke="#8b5cf6" stroke-width="1.5"/>
-        <rect x="390" y="185" width="80" height="30" rx="4" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
-        <text x="430" y="204" text-anchor="middle" font-size="9" fill="#4c1d95">Набір кадрів</text>
-        <line x1="580" y1="170" x2="580" y2="185" stroke="#ec4899" stroke-width="1.5"/>
-        <rect x="540" y="185" width="80" height="30" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
-        <text x="580" y="204" text-anchor="middle" font-size="9" fill="#831843">Продажі</text>
-        <!-- Row 3 -->
-        <line x1="130" y1="215" x2="130" y2="230" stroke="#f59e0b" stroke-width="1.5"/>
-        <rect x="90" y="230" width="80" height="30" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
-        <text x="130" y="249" text-anchor="middle" font-size="9" fill="#92400e">Статистика</text>
-        <line x1="280" y1="215" x2="280" y2="230" stroke="#3b82f6" stroke-width="1.5"/>
-        <rect x="240" y="230" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
-        <text x="280" y="249" text-anchor="middle" font-size="9" fill="#1e3a8a">Виробництво</text>
-        <line x1="580" y1="215" x2="580" y2="230" stroke="#ec4899" stroke-width="1.5"/>
-        <rect x="540" y="230" width="80" height="30" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
-        <text x="580" y="249" text-anchor="middle" font-size="9" fill="#831843">Сервіс</text>
-        <!-- Row 4 -->
-        <line x1="280" y1="260" x2="280" y2="275" stroke="#3b82f6" stroke-width="1.5"/>
-        <rect x="240" y="275" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
-        <text x="280" y="294" text-anchor="middle" font-size="9" fill="#1e3a8a">Логістика</text>
-        <line x1="280" y1="305" x2="280" y2="320" stroke="#3b82f6" stroke-width="1.5"/>
-        <rect x="240" y="320" width="80" height="30" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
-        <text x="280" y="339" text-anchor="middle" font-size="9" fill="#1e3a8a">Контроль</text>
-      </svg>
-    </div>
-    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">17</div>
+<div class="l12-fs-org">
+  <div class="l12-label">Наша структура</div>
+  <div class="l12-org-svg">
+    <svg viewBox="0 0 920 480" width="100%" height="100%" style="max-height:400px">
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="rgba(0,229,255,.4)"/></marker>
+      </defs>
+      <!-- Owner -->
+      <rect x="20" y="20" width="100" height="44" rx="8" fill="rgba(255,71,87,.15)" stroke="rgba(255,71,87,.5)" stroke-width="1.5"/>
+      <text x="70" y="46" text-anchor="middle" font-family="Onest,sans-serif" font-size="11" font-weight="700" fill="#ff4757">Власник</text>
+      <!-- Arrow to Oper dir -->
+      <line x1="120" y1="42" x2="720" y2="42" stroke="rgba(0,229,255,.3)" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- Oper Director -->
+      <rect x="720" y="20" width="130" height="44" rx="8" fill="rgba(107,114,128,.15)" stroke="rgba(107,114,128,.3)" stroke-width="1.5"/>
+      <text x="785" y="38" text-anchor="middle" font-family="Onest,sans-serif" font-size="10" fill="#9ca3af">Операційний</text>
+      <text x="785" y="52" text-anchor="middle" font-family="Onest,sans-serif" font-size="10" fill="#9ca3af">директор</text>
+      <!-- Vertical from oper dir -->
+      <line x1="785" y1="64" x2="785" y2="90" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <!-- Horizontal connector -->
+      <line x1="100" y1="90" x2="785" y2="90" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <!-- 5 dept verticals -->
+      <line x1="100" y1="90" x2="100" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <line x1="270" y1="90" x2="270" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <line x1="440" y1="90" x2="440" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <line x1="610" y1="90" x2="610" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <line x1="785" y1="90" x2="785" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <!-- Dept 1 -->
+      <rect x="40" y="110" width="120" height="50" rx="8" fill="rgba(255,184,0,.1)" stroke="rgba(255,184,0,.3)" stroke-width="1.5"/>
+      <text x="100" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#ffb800">1. Адмін</text>
+      <text x="100" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(255,184,0,.7)">відділення</text>
+      <!-- Dept 2 -->
+      <rect x="210" y="110" width="120" height="50" rx="8" fill="rgba(0,229,255,.07)" stroke="rgba(0,229,255,.25)" stroke-width="1.5"/>
+      <text x="270" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#00e5ff">2. Досягнення</text>
+      <text x="270" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(0,229,255,.6)">цілей клієнтів</text>
+      <!-- Dept 3 -->
+      <rect x="380" y="110" width="120" height="50" rx="8" fill="rgba(139,92,246,.1)" stroke="rgba(139,92,246,.3)" stroke-width="1.5"/>
+      <text x="440" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#a78bfa">3. Відділ</text>
+      <text x="440" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(167,139,250,.7)">кадрів</text>
+      <!-- Dept 4 -->
+      <rect x="550" y="110" width="120" height="50" rx="8" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.3)" stroke-width="1.5"/>
+      <text x="610" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#f472b6">4. Маркетинг</text>
+      <text x="610" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(244,114,182,.7)">і продажі</text>
+      <!-- Dept 5 -->
+      <rect x="720" y="110" width="130" height="50" rx="8" fill="rgba(57,255,135,.07)" stroke="rgba(57,255,135,.2)" stroke-width="1.5"/>
+      <text x="785" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#39ff87">5. Якість</text>
+      <text x="785" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(57,255,135,.6)">і контроль</text>
+      <!-- Sub-items row 2 -->
+      <line x1="100" y1="160" x2="100" y2="185" stroke="rgba(255,184,0,.2)" stroke-width="1"/>
+      <rect x="45" y="185" width="110" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(255,184,0,.15)" stroke-width="1"/>
+      <text x="100" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(255,184,0,.6)">Адмін. секції</text>
+      <line x1="100" y1="221" x2="100" y2="246" stroke="rgba(255,184,0,.2)" stroke-width="1"/>
+      <rect x="45" y="246" width="110" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(255,184,0,.15)" stroke-width="1"/>
+      <text x="100" y="269" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(255,184,0,.6)">Якість сервісу</text>
+      <line x1="100" y1="282" x2="100" y2="307" stroke="rgba(255,184,0,.2)" stroke-width="1"/>
+      <rect x="45" y="307" width="110" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(255,184,0,.15)" stroke-width="1"/>
+      <text x="100" y="330" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(255,184,0,.6)">Статистика</text>
+
+      <line x1="270" y1="160" x2="270" y2="185" stroke="rgba(0,229,255,.2)" stroke-width="1"/>
+      <rect x="210" y="185" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(0,229,255,.15)" stroke-width="1"/>
+      <text x="270" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(0,229,255,.6)">ЦКП клієнтів</text>
+      <line x1="270" y1="221" x2="270" y2="246" stroke="rgba(0,229,255,.2)" stroke-width="1"/>
+      <rect x="210" y="246" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(0,229,255,.15)" stroke-width="1"/>
+      <text x="270" y="269" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(0,229,255,.6)">Фінанси</text>
+      <line x1="270" y1="282" x2="270" y2="307" stroke="rgba(0,229,255,.2)" stroke-width="1"/>
+      <rect x="210" y="307" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(0,229,255,.15)" stroke-width="1"/>
+      <text x="270" y="330" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(0,229,255,.6)">Виробництво</text>
+      <line x1="270" y1="343" x2="270" y2="368" stroke="rgba(0,229,255,.2)" stroke-width="1"/>
+      <rect x="210" y="368" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(0,229,255,.15)" stroke-width="1"/>
+      <text x="270" y="391" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(0,229,255,.6)">Логістика</text>
+
+      <line x1="440" y1="160" x2="440" y2="185" stroke="rgba(139,92,246,.2)" stroke-width="1"/>
+      <rect x="380" y="185" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(139,92,246,.15)" stroke-width="1"/>
+      <text x="440" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(167,139,250,.6)">Навчання</text>
+      <line x1="440" y1="221" x2="440" y2="246" stroke="rgba(139,92,246,.2)" stroke-width="1"/>
+      <rect x="380" y="246" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(139,92,246,.15)" stroke-width="1"/>
+      <text x="440" y="269" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(167,139,250,.6)">Набір кадрів</text>
+
+      <line x1="610" y1="160" x2="610" y2="185" stroke="rgba(236,72,153,.2)" stroke-width="1"/>
+      <rect x="550" y="185" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(236,72,153,.15)" stroke-width="1"/>
+      <text x="610" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(244,114,182,.6)">Реклама</text>
+      <line x1="610" y1="221" x2="610" y2="246" stroke="rgba(236,72,153,.2)" stroke-width="1"/>
+      <rect x="550" y="246" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(236,72,153,.15)" stroke-width="1"/>
+      <text x="610" y="269" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(244,114,182,.6)">Продажі</text>
+      <line x1="610" y1="282" x2="610" y2="307" stroke="rgba(236,72,153,.2)" stroke-width="1"/>
+      <rect x="550" y="307" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(236,72,153,.15)" stroke-width="1"/>
+      <text x="610" y="330" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(244,114,182,.6)">Сервіс клієнтів</text>
+
+      <line x1="785" y1="160" x2="785" y2="185" stroke="rgba(57,255,135,.15)" stroke-width="1"/>
+      <rect x="720" y="185" width="130" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(57,255,135,.12)" stroke-width="1"/>
+      <text x="785" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(57,255,135,.5)">KPI / аналітика</text>
+    </svg>
   </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:5vw">17 / 33</div>
 </div>
 
 <!-- S18: ЗАВДАННЯ 2 -->
 <div class="l12s" id="l12_18">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
-    <h2>ОРГСХЕМА</h2>
-    <div class="l12-tri"></div><div class="l12-snum">18</div>
+<div class="l12-slide-wrap">
+  <div class="l12-task-badge"><div class="l12-task-num">2</div>Завдання оргсхеми</div>
+  <h2 class="l12-h">Оргсхема дозволяє точно визначити,<br>хто за що <span>відповідає</span></h2>
+  <div class="l12-highlight">
+    <p>Чому ми звертаємось не до "Сергія", а до "Адміністратора секції"? У системі ми будуємо <strong>структуру, а не "клуб добрих знайомств"</strong>.</p>
   </div>
-  <div class="l12-sr">
-    <div class="l12-task"><svg viewBox="0 0 20 20" width="14" height="14"><circle cx="10" cy="10" r="9" fill="none" stroke="white" stroke-width="1.5"/><text x="10" y="14" text-anchor="middle" font-size="10" fill="white" font-weight="700">2</text></svg>ЗАВДАННЯ №2</div>
-    <h3>Оргсхема дозволяє точно визначити, хто за що відповідає.</h3>
-    <div class="l12-def" style="margin-top:1rem">
-      <div class="dl">Чому ми звертаємось до функції, а не до імені</div>
-      <div class="dt" style="font-size:.88rem;font-weight:500">У системі ми будуємо <strong>структуру</strong>, а не "клуб добрих знайомств".<br>Не: <span style="color:#dc2626">"Сергій, подивись, будь ласка..."</span><br>А: <span style="color:#166534">"Адміністратор секції графіків, потрібно узгодити зміни на середу"</span></div>
+  <div class="l12-two" style="margin-top:1rem">
+    <div class="l12-card" style="border-color:rgba(255,71,87,.2);background:rgba(255,71,87,.04)">
+      <div class="l12-card-label" style="color:#ff4757">❌ Неправильно</div>
+      <div class="l12-card-text">"Сергій, подивись, будь ласка..."</div>
     </div>
-    <ul class="l12-ul" style="margin-top:.75rem">
-      <li><strong>Чіткість</strong> — одразу зрозуміло, хто за що відповідає</li>
-      <li><strong>Відповідальність</strong> — людина виступає як представник ролі</li>
-      <li><strong>Повага до функції</strong>, а не "особистих домовленостей"</li>
-    </ul>
+    <div class="l12-card" style="border-color:rgba(57,255,135,.2);background:rgba(57,255,135,.04)">
+      <div class="l12-card-label" style="color:#39ff87">✓ Правильно</div>
+      <div class="l12-card-text">"Адміністратор секції графіків, потрібно узгодити зміни на середу"</div>
+    </div>
   </div>
 </div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">18 / 33</div>
+</div>
 
-<!-- S19: Поділ за функціями -->
+<!-- S19: ПОДІЛ ЗА ФУНКЦІЯМИ -->
 <div class="l12s" id="l12_19">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
-    <div class="l12-tri"></div><div class="l12-snum">19</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Організаційна культура</div>
+  <h2 class="l12-h">Що дає поділ<br>за функціями</h2>
+  <div class="l12-steps">
+    <div class="l12-step"><div class="l12-step-num">1</div><div class="l12-step-text">Розуміти, яка його <strong>роль в організації</strong></div></div>
+    <div class="l12-step"><div class="l12-step-num">2</div><div class="l12-step-text">Розуміти, з ким взаємодіяти <strong>з різних питань</strong></div></div>
+    <div class="l12-step"><div class="l12-step-num">3</div><div class="l12-step-text">Оцінювати власну <strong>продуктивність</strong> за кожною функцією та планувати роботу</div></div>
   </div>
-  <div class="l12-sr">
-    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
-    <p>Такий поділ за функціями допомагає співробітнику:</p>
-    <ul class="l12-ul" style="margin-top:.75rem">
-      <li>розуміти, яка <strong>його роль</strong> в організації</li>
-      <li>розуміти, <strong>з ким взаємодіяти</strong> з різних питань</li>
-      <li>оцінювати власну <strong>продуктивність</strong> за кожною функцією та планувати роботу</li>
-    </ul>
-    <div class="l12-res" style="margin-top:1rem">Одна людина може виконувати <strong>кілька функцій</strong> — і це нормально на старті.</div>
+  <div class="l12-highlight" style="margin-top:1rem">
+    <p>Одна людина може виконувати <strong>кілька функцій</strong> — і це нормально на старті.</p>
   </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">19 / 33</div>
 </div>
 
 <!-- S20: ЗАВДАННЯ 3 -->
 <div class="l12s" id="l12_20">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
-    <h2>ОРГСХЕМА</h2>
-    <div class="l12-tri"></div><div class="l12-snum">20</div>
-  </div>
-  <div class="l12-sr">
-    <div class="l12-task"><svg viewBox="0 0 20 20" width="14" height="14"><circle cx="10" cy="10" r="9" fill="none" stroke="white" stroke-width="1.5"/><text x="10" y="14" text-anchor="middle" font-size="10" fill="white" font-weight="700">3</text></svg>ЗАВДАННЯ №3</div>
-    <h3>Оргсхема показує, який продукт очікується від кожного підрозділу.</h3>
-    <ul class="l12-ul" style="margin-top:.75rem">
-      <li>Де на оргсхемі можна побачити продукт відділення, відділу, секції, усієї компанії</li>
-      <li>Приклад продуктів відділу доходу (7) та відділу продажів (6)</li>
-    </ul>
-  </div>
+<div class="l12-slide-wrap">
+  <div class="l12-task-badge"><div class="l12-task-num">3</div>Завдання оргсхеми</div>
+  <h2 class="l12-h">Оргсхема показує, який продукт<br>очікується від кожного <span>підрозділу</span></h2>
+  <ul class="l12-list">
+    <li>Де на оргсхемі можна побачити продукт відділення, відділу, секції, усієї компанії</li>
+    <li>Приклад продуктів відділу доходу (7) та відділу продажів (6)</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">20 / 33</div>
 </div>
 
 <!-- S21: ЗАВДАННЯ 4 -->
 <div class="l12s" id="l12_21">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="25" y="5" width="30" height="20" rx="3" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="25" x2="40" y2="35" stroke="white" stroke-width="2"/><rect x="5" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/><rect x="55" y="35" width="25" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/></svg></div>
-    <h2>ОРГСХЕМА</h2>
-    <div class="l12-tri"></div><div class="l12-snum">21</div>
-  </div>
-  <div class="l12-sr">
-    <div class="l12-task"><svg viewBox="0 0 20 20" width="14" height="14"><circle cx="10" cy="10" r="9" fill="none" stroke="white" stroke-width="1.5"/><text x="10" y="14" text-anchor="middle" font-size="10" fill="white" font-weight="700">4</text></svg>ЗАВДАННЯ №4</div>
-    <h3>Оргсхема дає можливість вирішувати питання безпосередньо.</h3>
-    <ul class="l12-ul" style="margin-top:.75rem">
-      <li>Відомо хто за які питання відповідає</li>
-      <li>Дозволяє домагатися, щоб суміжні підрозділи робили свою роботу і давали вам те, що необхідно</li>
-    </ul>
-  </div>
+<div class="l12-slide-wrap">
+  <div class="l12-task-badge"><div class="l12-task-num">4</div>Завдання оргсхеми</div>
+  <h2 class="l12-h">Оргсхема дає можливість<br>вирішувати питання <span>безпосередньо</span></h2>
+  <ul class="l12-list">
+    <li>Відомо хто за які питання відповідає</li>
+    <li>Дозволяє домагатися, щоб суміжні підрозділи робили свою роботу і давали вам те, що необхідно для вашої роботи</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">21 / 33</div>
 </div>
 
-<!-- S22: ВИДИ ВЗАЄМОДІЯ -->
+<!-- S22: ВИДИ ВЗАЄМОДІЇ -->
 <div class="l12s" id="l12_22">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 60" width="80" height="60"><circle cx="18" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><circle cx="62" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M32 18 Q45 10 50 18" fill="none" stroke="white" stroke-width="2"/><polygon points="47,15 52,19 47,23" fill="white"/><path d="M48 32 Q35 40 30 32" fill="none" stroke="white" stroke-width="2"/><polygon points="33,35 28,31 33,27" fill="white"/></svg></div>
-    <h2>ВИДИ<br>ВЗАЄМО-<br>ДІЯ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">22</div>
-  </div>
-  <div class="l12-sr">
-    <p>На оргсхемі ви бачите точний поділ функцій і наступне, що необхідно зробити — це забезпечити <strong>злагоджену взаємодію</strong> між ними.</p>
-    <p>Є два види взаємодії: <strong>командні лінії та комунікаційні лінії</strong>. Вони створюють "систему швидкого потоку".</p>
-    <div style="margin-top:1.25rem;text-align:center">
-      <div style="font-weight:800;font-size:.9rem;color:#1a3068;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.06em">СИСТЕМА ШВИДКОГО ПОТОКУ</div>
-      <svg viewBox="0 0 400 150" width="100%" style="max-height:130px">
-        <circle cx="200" cy="25" r="18" fill="none" stroke="#1a3068" stroke-width="2"/>
-        <line x1="200" y1="43" x2="200" y2="60" stroke="#1a3068" stroke-width="1.5" stroke-dasharray="4,2"/>
-        <text x="120" y="58" font-size="9" fill="#6b7280">Розпорядження по командних лініях</text>
-        <line x1="80" y1="60" x2="320" y2="60" stroke="#1a3068" stroke-width="1.5"/>
-        <circle cx="80" cy="78" r="14" fill="none" stroke="#1a3068" stroke-width="1.5"/>
-        <circle cx="200" cy="78" r="14" fill="none" stroke="#1a3068" stroke-width="1.5"/>
-        <circle cx="320" cy="78" r="14" fill="none" stroke="#1a3068" stroke-width="1.5"/>
-        <line x1="80" y1="60" x2="80" y2="64" stroke="#1a3068" stroke-width="1.5"/>
-        <line x1="200" y1="60" x2="200" y2="64" stroke="#1a3068" stroke-width="1.5"/>
-        <line x1="320" y1="60" x2="320" y2="64" stroke="#1a3068" stroke-width="1.5"/>
-        <line x1="40" y1="110" x2="360" y2="110" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3"/>
-        <circle cx="60" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
-        <circle cx="120" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
-        <circle cx="180" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
-        <circle cx="240" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
-        <circle cx="300" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
-        <circle cx="360" cy="110" r="11" fill="none" stroke="#1a3068" stroke-width="1.5"/>
-        <text x="200" y="140" text-anchor="middle" font-size="9" fill="#3b82f6">Комунікаційні частинки йдуть напряму</text>
-      </svg>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Взаємодія</div>
+  <h2 class="l12-h">Два види взаємодії —<br><span>система швидкого потоку</span></h2>
+  <div class="l12-body">На оргсхемі ви бачите точне поділ функцій і наступне, що необхідно зробити — це забезпечити <strong>злагоджену взаємодію</strong> між ними.</div>
+  <div class="l12-two" style="margin-top:1.25rem">
+    <div class="l12-card">
+      <div class="l12-card-label">Командні лінії</div>
+      <div class="l12-card-title">Вертикальна комунікація</div>
+      <div class="l12-card-text">Зверху вниз: <strong>інструкції, розпорядження</strong><br>Знизу вгору: <strong>пропозиції, звіти, плани</strong></div>
+    </div>
+    <div class="l12-card" style="border-color:rgba(57,255,135,.15);background:rgba(57,255,135,.03)">
+      <div class="l12-card-label" style="color:#39ff87">Комунікаційні лінії</div>
+      <div class="l12-card-title">Горизонтальна комунікація</div>
+      <div class="l12-card-text">Передача <strong>послань, повідомлень, відповідей, інформації, запитів</strong> між підрозділами</div>
     </div>
   </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">22 / 33</div>
 </div>
 
 <!-- S23: КОМАНДНІ ЛІНІЇ -->
 <div class="l12s" id="l12_23">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 60" width="80" height="60"><circle cx="18" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><circle cx="62" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M32 18 Q45 10 50 18" fill="none" stroke="white" stroke-width="2"/><polygon points="47,15 52,19 47,23" fill="white"/></svg></div>
-    <h2>ВИДИ<br>ВЗАЄМО-<br>ДІЯ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">23</div>
-  </div>
-  <div class="l12-sr">
-    <div class="l12-task">КОМАНДНІ ЛІНІЇ</div>
-    <p>Командні лінії йдуть від <strong>вищого керівника</strong> через керівників підрозділів до пересічних співробітників.</p>
-    <div class="l12-2col" style="margin-top:1rem">
-      <div class="l12-card" style="background:#eff6ff;border:1.5px solid #93c5fd">
-        <div style="font-size:.72rem;font-weight:800;color:#1d4ed8;text-transform:uppercase;margin-bottom:.35rem">Зверху вниз</div>
-        <div style="font-size:.88rem;color:#1e3a8a">Інструкції, розпорядження</div>
-      </div>
-      <div class="l12-card" style="background:#f0fdf4;border:1.5px solid #86efac">
-        <div style="font-size:.72rem;font-weight:800;color:#166534;text-transform:uppercase;margin-bottom:.35rem">Знизу вгору</div>
-        <div style="font-size:.88rem;color:#166534">Пропозиції, плани, звіти про виконання</div>
-      </div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Командні лінії</div>
+  <h2 class="l12-h">Від вищого керівника —<br>через підрозділи вниз</h2>
+  <div class="l12-body">Командні лінії йдуть від <strong>вищого керівника</strong> через керівників підрозділів до пересічних співробітників. По цих лініях:</div>
+  <div class="l12-two" style="margin-top:1.25rem">
+    <div class="l12-card">
+      <div class="l12-card-label">Зверху вниз ↓</div>
+      <div class="l12-card-text">Інструкції, розпорядження тощо</div>
     </div>
-    <p class="sm" style="margin-top:.75rem">Приклади питань, що рухаються командними лініями.</p>
+    <div class="l12-card">
+      <div class="l12-card-label">Знизу вгору ↑</div>
+      <div class="l12-card-text">Пропозиції, плани та звіти про виконання, які вимагають схвалення</div>
+    </div>
   </div>
+  <div class="l12-body" style="margin-top:1rem;color:var(--muted2)">Приклади питань, що рухаються командними лініями.</div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">23 / 33</div>
 </div>
 
 <!-- S24: КОМУНІКАЦІЙНІ ЛІНІЇ -->
 <div class="l12s" id="l12_24">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 60" width="80" height="60"><circle cx="18" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><circle cx="62" cy="25" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M32 18 Q45 10 50 18" fill="none" stroke="white" stroke-width="2"/><polygon points="47,15 52,19 47,23" fill="white"/><path d="M48 32 Q35 40 30 32" fill="none" stroke="white" stroke-width="2"/><polygon points="33,35 28,31 33,27" fill="white"/></svg></div>
-    <h2>ВИДИ<br>ВЗАЄМО-<br>ДІЯ</h2>
-    <div class="l12-tri"></div><div class="l12-snum">24</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Комунікаційні лінії</div>
+  <h2 class="l12-h">Горизонтальна<br><span>взаємодія підрозділів</span></h2>
+  <div class="l12-highlight">
+    <p>Лінії, якими відбувається передача послань, повідомлень, відповідей, інформації, запитів тощо.</p>
   </div>
-  <div class="l12-sr">
-    <div class="l12-task">КОМУНІКАЦІЙНІ ЛІНІЇ</div>
-    <p>Лінії, якими відбувається передача <strong>послань, повідомлень, відповідей, інформації, запитів</strong> тощо між рівноправними підрозділами.</p>
-    <div class="l12-q" style="margin-top:1rem">Приклади ситуацій, коли керівник не міг отримати потрібне від суміжного підрозділу і звертався до директора. Як він міг би вчинити, знаючи ПІБ відповідального?</div>
+  <div class="l12-question" style="margin-top:1rem">
+    <p>Приклади ситуацій, коли керівник не міг отримати те, що йому потрібно від суміжного підрозділу та звертався безпосередньо до директора. Як він міг би вчинити, якби знав ПІБ спеціаліста, який за це відповідає?</p>
+    <p>Приклади питань (не менше п'яти), які необхідно вирішувати за комунікаційними лініями.</p>
   </div>
 </div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">24 / 33</div>
+</div>
 
-<!-- S25: Питання про затримки -->
+<!-- S25: ЗАТРИМКИ -->
 <div class="l12s" id="l12_25">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg></div>
-    <div class="l12-tri"></div><div class="l12-snum">25</div>
-  </div>
-  <div class="l12-sr" style="justify-content:center">
-    <div class="l12-q" style="font-size:clamp(1rem,2.5vw,1.3rem)">Як ви вважаєте, чому вирішення деяких питань часто <strong>затягується</strong>?</div>
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Питання</div>
+  <div class="l12-question">
+    <p>Як ви вважаєте, чому вирішення деяких питань часто <strong>затягується</strong>?</p>
   </div>
 </div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">25 / 33</div>
+</div>
 
-<!-- S26: Бюрократія причина -->
+<!-- S26: ПРИЧИНА -->
 <div class="l12s" id="l12_26">
-  <div class="l12-sl">
-    <div class="l12-tri"></div><div class="l12-snum">26</div>
-  </div>
-  <div class="l12-sr">
-    <svg viewBox="0 0 32 32" width="28" height="28" style="margin-bottom:.6rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
-    <p>Співробітники з різних відділів часом не знають, що відбувається у <strong>сусідньому відділі</strong>.</p>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Причина затримок</div>
+  <h2 class="l12-h">Чому виникає<br><span>бюрократія</span></h2>
+  <div class="l12-body">Співробітники з різних відділів часом не знають, що відбувається у сусідньому відділі.</div>
+  <div class="l12-highlight" style="margin-top:1rem">
     <p>Їм простіше надсилати запити своєму керівнику, використовуючи <strong>командну лінію замість комунікаційної</strong> та завалювати його дурною роботою.</p>
-    <div class="l12-res" style="margin-top:1rem">Тому вирішення питань <strong>затягується</strong> — і ми отримуємо бюрократію.</div>
+    <p style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(0,229,255,.1)">Тому вирішення питань затягується, і ми отримуємо <strong>бюрократію</strong>.</p>
   </div>
 </div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">26 / 33</div>
+</div>
 
-<!-- S27: Бюрократія визначення -->
+<!-- S27: БЮРОКРАТІЯ -->
 <div class="l12s" id="l12_27">
-  <div class="l12-sl">
-    <div class="l12-ico"><svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="10" width="50" height="60" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="28" x2="55" y2="28" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="40" x2="55" y2="40" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="52" x2="45" y2="52" stroke="white" stroke-width="1.5" opacity=".5"/></svg></div>
-    <div class="l12-tri"></div><div class="l12-snum">27</div>
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Визначення</div>
+  <div class="l12-buro">
+    <div class="l12-buro-label">Бюрократія</div>
+    <div class="l12-buro-text">це коли всі питання вирішуються по <strong>командних лініях</strong>, і чекають на вирішення найпростіших питань, які стопорять виробництво всередині відділу, і при цьому ці питання можна було б вирішити безпосередньо <strong>в сусідньому відділі</strong>.</div>
   </div>
-  <div class="l12-sr">
-    <div class="l12-def">
-      <div class="dl">Бюрократія</div>
-      <div class="dt">Це коли всі питання вирішуються по <strong>командних лініях</strong>, і чекають на вирішення найпростіших питань, які стопорять виробництво — хоча ці питання можна було б вирішити <strong>безпосередньо в сусідньому відділі</strong>.</div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">27 / 33</div>
+</div>
+
+<!-- S28: РОЗУМІННЯ -->
+<div class="l12s" id="l12_28">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Усвідомлення</div>
+  <h2 class="l12-h">Тепер ви розумієте<br>необхідність <span>оргсхеми</span>?</h2>
+  <div class="l12-two" style="margin-top:1.25rem">
+    <div class="l12-card" style="border-color:rgba(255,71,87,.15);background:rgba(255,71,87,.03)">
+      <div class="l12-card-label" style="color:#ff4757">Без оргсхеми</div>
+      <ul class="l12-list" style="margin:0">
+        <li style="font-size:.85rem">"Мене постійно смикають не по моїй темі"</li>
+        <li style="font-size:.85rem">"Я не знаю, до кого перекинути питання"</li>
+        <li style="font-size:.85rem">"Не бачу всієї картини — є тривожність"</li>
+      </ul>
+    </div>
+    <div class="l12-card" style="border-color:rgba(57,255,135,.15);background:rgba(57,255,135,.03)">
+      <div class="l12-card-label" style="color:#39ff87">З оргсхемою</div>
+      <ul class="l12-list" style="margin:0">
+        <li style="font-size:.85rem">✔ Тепер я знаю, хто за що</li>
+        <li style="font-size:.85rem">✔ Можу звернутись напряму</li>
+        <li style="font-size:.85rem">✔ Є порядок — простіше дихати</li>
+      </ul>
     </div>
   </div>
 </div>
-
-<!-- S28: Розуміння оргсхеми -->
-<div class="l12s" id="l12_28">
-  <div class="l12-fw">
-    <div class="l12-corner"></div><div class="l12-corner2"></div>
-    <div style="position:relative;z-index:1;max-width:65%">
-      <div class="l12-q" style="font-size:clamp(.95rem,2vw,1.25rem);margin-bottom:1.5rem">Тепер ви розумієте необхідність оргсхеми в покращенні взаємодії в команді?</div>
-      <div style="background:#f0f6ff;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:1rem">
-        <div style="font-size:.78rem;font-weight:800;color:#1d4ed8;margin-bottom:.6rem">Без оргсхеми</div>
-        <ul class="l12-ul" style="margin:0">
-          <li style="font-size:.85rem;color:#374151">"Мене постійно смикають не по моїй темі"</li>
-          <li style="font-size:.85rem;color:#374151">"Я не знаю, до кого перекинути це питання"</li>
-          <li style="font-size:.85rem;color:#374151">"Не бачу всієї картини — звідси тривожність"</li>
-        </ul>
-      </div>
-      <div style="background:#f0fdf4;border-radius:12px;padding:1.1rem 1.3rem">
-        <div style="font-size:.78rem;font-weight:800;color:#166534;margin-bottom:.6rem">З оргсхемою</div>
-        <ul class="l12-ul" style="margin:0">
-          <li style="font-size:.85rem;color:#374151">✔ Тепер я знаю, хто за що</li>
-          <li style="font-size:.85rem;color:#374151">✔ Можу звернутись напряму, без трьох дозволів</li>
-          <li style="font-size:.85rem;color:#374151">✔ Є порядок — простіше дихати</li>
-        </ul>
-      </div>
-    </div>
-    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">28</div>
-  </div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">28 / 33</div>
 </div>
 
 <!-- S29: РЕЗЮМЕ -->
 <div class="l12s" id="l12_29">
-  <div class="l12-fw">
-    <div class="l12-corner"></div><div class="l12-corner2"></div>
-    <h3 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:1rem">РЕЗЮМЕ</h3>
-    <div style="height:4px;width:80px;background:#09132b;margin-bottom:1.5rem"></div>
-    <p>У кожного з нас є конкретна функція. І коли ми чітко закриваємо свої задачі та відповідаємо за ЦКП:</p>
-    <ul class="l12-ul" style="margin-top:.5rem">
-      <li>система працює</li>
-      <li>команда не буксує</li>
-      <li>клієнт отримує якісний результат</li>
-    </ul>
-    <div style="margin-top:1rem;padding:.85rem 1.1rem;background:#fff3cd;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0">
-      <strong>Ми — медична клініка. І наша робота впливає на життя людей.</strong><br>
-      Ми не просто лікуємо — ми створюємо довіру до сучасної української стоматології.<br>
-      Ми будуємо бренд, якому хочеться довіряти — і всередині, і зовні.
-    </div>
-    <p style="margin-top:1rem"><strong>Тільки так ми зможемо масштабуватись, не втрачаючи якості, не вигораючи — і нести цінність далі.</strong></p>
-    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">29</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Резюме</div>
+  <h2 class="l12-h">У кожного з нас —<br><span>конкретна функція</span></h2>
+  <div class="l12-body">І коли ми чітко закриваємо свої задачі та відповідаємо за ЦКП:</div>
+  <div class="l12-grid l12-grid-3" style="margin-top:1rem;max-width:760px">
+    <div class="l12-card"><div class="l12-card-text">🔹 система <strong>працює</strong></div></div>
+    <div class="l12-card"><div class="l12-card-text">🔹 команда не <strong>буксує</strong></div></div>
+    <div class="l12-card"><div class="l12-card-text">🔹 клієнт отримує <strong>якісний результат</strong></div></div>
   </div>
+  <div class="l12-highlight" style="margin-top:1rem">
+    <p>Ми — медична клініка. І наша робота <strong>впливає на життя людей</strong>. Ми не просто лікуємо — ми створюємо довіру до сучасної української стоматології. Ми будуємо бренд, якому хочеться довіряти.</p>
+    <p style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(0,229,255,.1)"><strong>Тільки так ми зможемо масштабуватись, не втрачаючи якості, не вигораючи — і нести цінність далі.</strong></p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">29 / 33</div>
 </div>
 
 <!-- S30: РЕГЛАМЕНТ -->
 <div class="l12s" id="l12_30">
-  <div class="l12-fw">
-    <div class="l12-corner"></div><div class="l12-corner2"></div>
-    <h3>Регламент</h3>
-    <p>Регламент — це не "ще один документ для галочки". Це <strong>інструкція до всієї нашої організації</strong>, яка:</p>
-    <ul class="l12-ul" style="margin-top:.75rem">
-      <li>пояснює хто за що відповідає</li>
-      <li>що означають всі ці нові функції, ролі, ЦКП</li>
-      <li>які поняття ми використовуємо (щоб не було плутанини)</li>
-      <li>як працює наша оргструктура в реальності, а не "на папері"</li>
-    </ul>
-    <div class="l12-res" style="margin-top:1rem">Це як мати карту — ви знаєте, куди йти, до кого звернутись, і як не втратити час на зайве.</div>
-    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">30</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Регламент</div>
+  <h2 class="l12-h">Інструкція до<br><span>всієї організації</span></h2>
+  <div class="l12-body">Регламент — це не "ще один документ для галочки". Це інструкція до всієї нашої організації, яка:</div>
+  <ul class="l12-list">
+    <li>пояснює хто за що відповідає</li>
+    <li>що означають всі ці нові функції, ролі, ЦКП</li>
+    <li>які поняття ми використовуємо (щоб не було плутанини)</li>
+    <li>як працює наша оргструктура в реальності, а не "на папері"</li>
+  </ul>
+  <div class="l12-highlight" style="margin-top:1rem">
+    <p>Це як мати карту — ви знаєте, <strong>куди йти, до кого звернутись</strong>, і як не втратити час на зайве.</p>
   </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">30 / 33</div>
 </div>
 
 <!-- S31: ТЕСТИ -->
 <div class="l12s" id="l12_31">
-  <div class="l12-fw">
-    <div class="l12-corner"></div><div class="l12-corner2"></div>
-    <h3>Наступний крок: тести для закріплення</h3>
-    <p>Щоб впевнено рухатися далі, важливо переконатись, що кожен:</p>
-    <ul class="l12-ul" style="margin-top:.5rem">
-      <li>розуміє свою роль у структурі</li>
-      <li>знає, що саме входить до його функції</li>
-      <li>усвідомлює, як це впливає на загальний результат</li>
-    </ul>
-    <div class="l12-res" style="margin-top:1rem">Ми не перевіряємо — ми <strong>налаштовуємо команду на єдину хвилю</strong>. Тести — це як "дзеркало": щоб побачити, чи все зрозуміло.</div>
-    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">31</div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Наступний крок</div>
+  <h2 class="l12-h">Тести для<br><span>закріплення</span></h2>
+  <div class="l12-body">Щоб впевнено рухатися далі, важливо переконатись, що кожен:</div>
+  <div class="l12-steps" style="margin-top:1rem">
+    <div class="l12-step"><div class="l12-step-num">1</div><div class="l12-step-text">Розуміє свою <strong>роль у структурі</strong></div></div>
+    <div class="l12-step"><div class="l12-step-num">2</div><div class="l12-step-text">Знає, що саме входить до його <strong>функції</strong></div></div>
+    <div class="l12-step"><div class="l12-step-num">3</div><div class="l12-step-text">Усвідомлює, як це впливає на <strong>загальний результат клініки</strong></div></div>
   </div>
+  <div class="l12-highlight" style="margin-top:1rem">
+    <p>Ми не перевіряємо — ми <strong>налаштовуємо команду на єдину хвилю</strong>.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">31 / 33</div>
 </div>
 
 <!-- S32: ЩО ВАЖЛИВО ДАЛІ -->
 <div class="l12s" id="l12_32">
-  <div class="l12-fw">
-    <div class="l12-corner"></div><div class="l12-corner2"></div>
-    <h3>Що важливо від кожного далі:</h3>
-    <ul class="l12-ul" style="margin-top:.75rem">
-      <li>Коли виникає питання — <strong>дивимось у оргсхему</strong>. Там уже є відповідь: хто, за що і куди звертатись.</li>
-      <li>Шукаємо порозуміння через <strong>структуру</strong>, а не через конфлікти. Оргсхема — наш "арбітр".</li>
-      <li>Якщо помітили функцію "в повітрі" — <strong>дайте знати</strong>. Це шанс зробити систему ще сильнішою.</li>
-      <li>Пояснюйте колегам, як <strong>користуватись оргсхемою</strong>. Коли розумієш структуру — зникає хаос.</li>
-    </ul>
-    <div class="l12-res" style="margin-top:1rem;text-align:center;font-size:clamp(.95rem,2vw,1.15rem);font-weight:700">
-      Дякую! Ми сьогодні справді зробили сильний крок до зрозумілої, злагодженої та <strong>професійної роботи</strong>.
-    </div>
-    <div class="l12-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">32</div>
-  </div>
+<div class="l12-slide-wrap">
+  <div class="l12-label">Що важливо від кожного далі</div>
+  <ul class="l12-list">
+    <li>Коли виникає питання — <strong>дивимось у оргсхему</strong>. Там уже є відповідь: хто, за що і куди звертатись.</li>
+    <li>Шукаємо порозуміння через <strong>структуру</strong>, а не через конфлікти. Оргсхема — це наш "арбітр".</li>
+    <li>Якщо помітили функцію "в повітрі" — <strong>дайте знати</strong>. Це шанс зробити систему ще сильнішою.</li>
+    <li>Пояснюйте своїм колегам, як <strong>користуватись оргсхемою</strong>. Коли розумієш структуру — зникає плутанина і хаос.</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">32 / 33</div>
 </div>
 
 <!-- S33: КІНЕЦЬ -->
 <div class="l12s" id="l12_33">
-  <div class="l12-dark">
-    <svg viewBox="0 0 80 80" width="70" height="70" style="margin-bottom:1.5rem;opacity:.5">
-      <rect x="10" y="10" width="60" height="22" rx="4" fill="none" stroke="white" stroke-width="2.5"/>
-      <line x1="40" y1="32" x2="40" y2="44" stroke="white" stroke-width="2"/>
-      <rect x="5" y="44" width="26" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/>
-      <rect x="49" y="44" width="26" height="18" rx="3" fill="none" stroke="white" stroke-width="2"/>
-    </svg>
-    <h1>КІНЕЦЬ</h1>
-    <p>Дякуємо за участь!</p>
-    <div class="l12-snum" style="position:fixed;bottom:5.5rem;left:1.5rem">33</div>
-  </div>
+<div class="l12-outro">
+  <div class="l12-badge">Оргсхема нарада · Завершення</div>
+  <h2>Дякую!<br><span>Ми сьогодні зробили</span><br>сильний крок</h2>
+  <p>до зрозумілої, злагодженої та <strong style="color:var(--text)">професійної роботи</strong>.</p>
+  <p style="margin-top:.5rem">І саме на цьому будується компанія, яка <strong style="color:var(--text)">росте</strong>.</p>
+  <div class="deco" style="opacity:.4"></div>
+  <div class="l12-num-tag">33 / 33</div>
+</div>
 </div>
 
 </div><!-- /l12SW -->
 
+<!-- NAV -->
 <div class="l12-nav">
-  <button class="l12-nb" id="l12Prev" onclick="window._l12P()" disabled>← Назад</button>
-  <div style="display:flex;align-items:center;gap:.6rem">
-    <span class="l12-nc" id="l12Ctr">1 / 33</span>
-    <button class="l12-close" onclick="window._l12Close()">✕ Закрити</button>
+  <button class="l12-nav-btn" id="l12Prev" onclick="window._l12P()" disabled>← Назад</button>
+  <div class="l12-nav-center">
+    <span class="l12-nav-counter" id="l12Ctr">1 / 33</span>
+    <div class="l12-nav-progress"><div class="l12-nav-progress-fill" id="l12PF" style="width:3%"></div></div>
   </div>
-  <button class="l12-nb" id="l12Next" onclick="window._l12N()">Далі →</button>
+  <button class="l12-close-btn" onclick="window._l12Close()">✕ Закрити</button>
+  <button class="l12-nav-btn" id="l12Next" onclick="window._l12N()">Далі →</button>
 </div>
-</div><!-- /l12Ov -->
+</div>
 `,
-
-                lessonContent: `
-<style>
-.l12-section { margin-bottom:1.75rem; }
-.l12-section:last-child { margin-bottom:0; }
-.l12-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
-.l12-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
-.l12-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
-.l12-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
-.l12-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
-.l12-card p+p { margin-top:0.7rem; }
-.l12-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.875rem; color:#166534; font-style:italic; line-height:1.6; }
-.l12-reasons { display:grid; gap:0.6rem; margin-top:0.75rem; }
-.l12-reason { border-radius:11px; overflow:hidden; border:1px solid #e2e8f0; }
-.l12-reason-header { display:flex; align-items:center; gap:0.7rem; padding:0.75rem 0.95rem; background:#f8fafc; }
-.l12-reason-num { width:28px; height:28px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; flex-shrink:0; }
-.l12-reason-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
-.l12-reason-body { padding:0.65rem 0.95rem 0.8rem; background:white; border-top:1px solid #f1f5f9; font-size:0.85rem; color:#525252; line-height:1.55; }
-.l12-problems { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l12-problem { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
-.l12-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l12-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
-.l12-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
-.l12-step-body { flex:1; }
-.l12-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l12-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l12-functions { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l12-fn { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
-.l12-fn-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem; }
-.l12-fn-num { font-size:0.7rem; font-weight:700; color:#9ca3af; }
-.l12-fn-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
-.l12-fn-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l12-fn-stat { display:inline-block; margin-top:0.4rem; padding:0.2rem 0.55rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:5px; font-size:0.72rem; font-weight:600; color:#16a34a; }
-.l12-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l12-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
-.l12-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
-.l12-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
-.l12-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l12-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
-.l12-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l12-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
-.l12-mgr { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l12-mgr-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; }
-.l12-mgr-icon { width:32px; height:32px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l12-mgr-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l12-mgr-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-</style>
-
-<div class="l12-section">
-    <div class="l12-section-label">Вступ</div>
-    <div class="l12-section-title">Чому при зростанні стає не легше, а важче</div>
-    <div class="l12-card">
-        <p>Є питання, з яким рано чи пізно стикається кожен власник малого бізнесу: чому при зростанні стає не легше, а важче? Більше людей — більше хаосу. Більше замовлень — більше помилок. Більше виручки — більше головного болю.</p>
-        <p>Відповідь, як правило, одна: бізнес не організований. Не в сенсі «зареєстрований» — а в сенсі «кожна робота закріплена за конкретною людиною, і всі частини взаємодіють між собою».</p>
-        <p>Функціональна структура — це фундамент, без якого будь-яка система, CRM, автоматизація чи мотивація — просто надбудова на піску.</p>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 1</div>
-    <div class="l12-section-title">Що означає «організувати бізнес» — і чому більшість це розуміє неправильно</div>
-    <div class="l12-card">
-        <p>Організувати — це розкласти все по поличках і налагодити роботу так, щоб досягти того, чого хочеш. Як прибрати в кімнаті: кожна річ має своє місце. Не тому що так красиво, а тому що коли річ лежить на своєму місці — ти знаєш де вона і можеш нею скористатись.</p>
-        <p>Але більшість власників під «організувати» розуміють щось інше: «найняти більше людей», «купити CRM», «провести нараду», «написати регламент». Це все — інструменти. А організація — це принцип, який стоїть за ними.</p>
-        <p>У бізнесі те саме що з кімнатою: кожна категорія роботи — у своєму «відсіку». Кожна функція має своє місце, і всі знають де вона знаходиться.</p>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 2</div>
-    <div class="l12-section-title">Що таке «функція» — і чому це найважливіше слово в управлінні</div>
-    <div class="l12-card">
-        <p>«Функція» — це конкретна робота, яку хтось виконує. Простіше кажучи: «за що ти відповідаєш». Не посада. Не назва. Не запис у трудовій. А реальна відповідь на питання: <strong>що саме ти робиш і що після тебе залишається?</strong></p>
-        <p>У бізнесі функції — це аналоги позицій у футболі. Є той, хто знаходить клієнтів. Є той, хто продає. Є той, хто виробляє. Є той, хто доставляє. Є той, хто рахує гроші. Кожна з цих робіт — окрема функція.</p>
-    </div>
-    <div class="l12-quote">Бізнес — це пазл, де кожна частинка — окрема функція: продажі, реклама, гроші, виробництво, люди, доставка. Якщо хоча б одна частинка випала — картинка неповна. Пазл не складається.</div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Візуалізація</div>
-    <div class="l12-section-title">Ось як це виглядає на практиці</div>
-    <div class="l12-card" style="margin-bottom:1rem;">
-        <p>Нижче — приклад того, як виглядає функціональна структура реального бізнесу. Кожна колонка — це окрема функція. Під кожною функцією — підфункції: конкретні роботи, які виконуються всередині цієї зони відповідальності.</p>
-        <p>Поки що просто подивіться і зрозумійте логіку. Свою структуру ви будуватимете пізніше — у розділі <strong>«Система: Структура»</strong>.</p>
-    </div>
-    <div style="overflow-x:auto;">
-    <div style="display:flex;gap:8px;min-width:700px;">
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Адміністру-вання</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Стратегічне планування</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Регламенти та технології</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Наради та контроль</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Найм та управління персоналом</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Пошук і відбір</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Введення в посаду</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Навчання</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Мотивація і KPI</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Розвиток команди</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Маркетинг</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Розробка офера</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Розробка продукту</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Воронка залучення</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Сайт і посадкові</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Запуск реклами</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Продажі</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Обробка звернень</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Продажі</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Повторні продажі</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">CRM</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Фінанси</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Доходи</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Витрати</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Облік</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Виробництво / надання послуги</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Планування</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Забезпечення</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Виробництво</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Логістика</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Контроль якості</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Показники якості</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Перевірки</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Відгуки клієнтів</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Виправлення помилок</div>
-        </div>
-
-    </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;display:flex;align-items:center;gap:0.75rem;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <div style="font-size:0.82rem;color:#166534;line-height:1.5;">Свою структуру ви побудуєте у розділі <strong>«Система: Структура»</strong> — там є покроковий AI-інструмент, який допоможе визначити функції саме вашого бізнесу та знайти «діри».</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Як бізнес росте</div>
-    <div class="l12-section-title">Коли бізнес зростає — функції діляться на підрозділи</div>
-    <div class="l12-card">
-        <p>На старті одна людина може закривати кілька функцій одночасно. Це нормально. Але коли бізнес росте — всередині кожної функції з'являються окремі зони відповідальності.</p>
-        <p>Наприклад: в <strong>Адмініструванні</strong> виділяється окремий <strong>Директор</strong> (стратегія, партнерства) і <strong>Операційний керівник</strong> (регламенти, контроль команди). У <strong>Виробництві</strong> — чотири окремих підрозділи: Планування, Забезпечення, Виробництво і Логістика.</p>
-        <p>Структура не змінюється — вона деталізується.</p>
-    </div>
-    <div style="overflow-x:auto;margin-top:1rem;">
-    <div style="display:flex;gap:6px;min-width:780px;">
-        <div style="display:flex;flex-direction:column;gap:0;flex:2;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Адміністрування</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ДИРЕКТОР</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Стратегія</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Ключові рішення</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Зовн. партнерства</div>
-                </div>
-                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ОПЕРАЦІЙНИЙ</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Регламенти</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Наради і звіти</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Контроль команди</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Найм та управління</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Пошук і відбір</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Навчання</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Мотивація і KPI</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Маркетинг</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Розробка офера</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Воронка</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Реклама</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Продажі</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Обробка звернень</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Продажі</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">CRM</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Фінанси</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Доходи</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Витрати</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Облік</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:4;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Виробництво / надання послуги</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ПЛАНУВАННЯ</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Графік робіт</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Розподіл ресурсів</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Пріоритети</div>
-                </div>
-                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ЗАБЕЗПЕЧЕННЯ</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Закупівля</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Склад</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Постачальники</div>
-                </div>
-                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ВИРОБНИЦТВО</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Надання послуги</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Стандарти</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Виконавці</div>
-                </div>
-                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ЛОГІСТИКА</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Доставка</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Передача клієнту</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Документи</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Контроль якості</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Показники</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Перевірки</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Відгуки</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Проблема = відсутня функція</div>
-    <div class="l12-section-title">Будь-яка проблема в бізнесі — це відсутня або зламана функція</div>
-    <div class="l12-card">
-        <p>Власники шукають причину проблем у людях: «поганий менеджер», «ліниві працівники», «не той клієнт». Насправді причина майже завжди одна — у бізнесі є функція, яку <strong>ніхто не виконує</strong>.</p>
-        <p>Знайди відсутню функцію — знайдеш причину. Виправ функцію — вирішиш проблему.</p>
-    </div>
-    <div style="margin-top:0.75rem;">
-        <div style="display:flex;gap:0;margin-bottom:8px;padding:0 4px;">
-            <div style="flex:1.2;font-size:9px;font-weight:700;color:#A32D2D;text-transform:uppercase;letter-spacing:0.06em;">Симптом (що болить)</div>
-            <div style="width:32px;flex-shrink:0;"></div>
-            <div style="flex:1;font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.06em;">Відсутня функція</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Немає клієнтів або їх дуже мало</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Маркетинг</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Клієнти купують раз і не повертаються</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Повторні продажі / утримання</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Постійно не вистачає матеріалів або товару</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Забезпечення виробництва</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Власник не може піти у відпустку — все зупиняється</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Операційне управління</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Нові люди місяцями не виходять на результат</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Адаптація та навчання персоналу</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Гроші є, але їх постійно не вистачає</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Фінансове планування</div></div></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Що робити</div>
-    <div class="l12-section-title">Знайшов проблему — додай функцію в структуру</div>
-    <div class="l12-card">
-        <p>Коли ви знаходите проблему — не шукайте винного. Запитайте себе: <strong>яка функція у нас відсутня або не виконується?</strong></p>
-        <p>Відповідь на це питання — і є рішення. Не штраф, не звільнення, не нова CRM. А конкретна функція, яку потрібно додати в структуру і призначити відповідального.</p>
-    </div>
-    <div class="l12-steps" style="margin-top:0.75rem;">
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#ef4444;">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Знайди симптом</div>
-                <div class="l12-step-text">Що конкретно не працює? Опиши це як факт, без емоцій: «клієнти не повертаються», «матеріалів постійно не вистачає», «нові люди довго не виходять на результат».</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#f59e0b;">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Визнач відсутню функцію</div>
-                <div class="l12-step-text">Запитай: яка робота мала б виконуватись щоб цієї проблеми не існувало? Це і є відсутня функція. Назви її конкретно.</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#22c55e;">3</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Додай у структуру і признач відповідального</div>
-                <div class="l12-step-text">Внеси функцію в карту бізнесу. Призначте людину, яка буде за неї відповідати. Тепер ця «діра» закрита — і проблема вирішена системно, а не вручну.</div>
-            </div>
-        </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:#EEEDFE;border:1px solid #7F77DD;border-radius:12px;">
-        <div style="font-size:0.82rem;color:#26215C;line-height:1.6;"><strong>Запам'ятайте:</strong> структура — це не папір на стіні. Це живий документ, який оновлюється кожного разу, коли ви знаходите нову «діру» в бізнесі.</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 3</div>
-    <div class="l12-section-title">Чотири причини, чому треба ділити роботу на функції</div>
-    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">«Навіщо все це ускладнювати? Просто найму людей і скажу: робіть що треба». Це найпоширеніша думка власника, який застряг. «Роби що треба» — це найдорожча команда, яку ви можете дати.</p>
-    <div class="l12-reasons">
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">1</div>
-                <div class="l12-reason-title">Маленьке завдання легше пояснити і передати</div>
-            </div>
-            <div class="l12-reason-body">Коли робота не поділена — ви передаєте людині щось величезне і розмите. «Займися маркетингом». «Контролюй виробництво». Що це означає? З чого починати? Для більшості людей — це стрес і параліч. Вони або роблять що завгодно (не те, що потрібно), або не роблять нічого і чекають конкретики.</div>
-        </div>
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">2</div>
-                <div class="l12-reason-title">Легше побачити, що зроблено, а що ні</div>
-            </div>
-            <div class="l12-reason-body">Як список покупок: хліб — є, молоко — є, яйця — немає. Одразу видно чого не вистачає. Коли роботи не поділені — ви не можете зробити такий список. «Маркетинг» — він є чи немає? Щось робиться. А що саме? Достатньо? Правильно? Незрозуміло. І вам доводиться або довіряти наосліп, або контролювати кожен крок вручну.</div>
-        </div>
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">3</div>
-                <div class="l12-reason-title">Якщо щось не працює — можна замінити одну частину</div>
-            </div>
-            <div class="l12-reason-body">Зламалась лампочка в фарі — міняєте лампочку, не весь автомобіль. Коли є чіткі функції — ви точно знаєте де проблема. Функція «генерація лідів» — 50 заявок, добре. Функція «конверсія в угоду» — 5% при нормі 20%. Ось де зламалась лампочка. Міняємо лампочку — а не увесь відділ.</div>
-        </div>
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">4</div>
-                <div class="l12-reason-title">Люди стають майстрами</div>
-            </div>
-            <div class="l12-reason-body">Коли людина довго робить одну справу — вона в ній росте. Стає експертом. Робить швидше, краще, з меншою кількістю помилок. Хірург-кардіолог, який робить лише операції на серці — оперує набагато краще, ніж хірург-загальнопрактик, який робить все підряд. Спеціалізація — це не обмеження. Це шлях до майстерності.</div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 4</div>
-    <div class="l12-section-title">Генрі Форд і революція функцій — як поділ роботи змінив світ</div>
-    <div class="l12-card">
-        <p>До Форда автомобіль був предметом розкоші — як сьогодні яхта або приватний літак. Один майстер робив автомобіль від початку до кінця: і болти закручував, і двигун збирав, і кузов підганяв. Майстер мав бути кваліфікованим у всьому — а значить, таких людей було мало і коштували вони дорого.</p>
-        <p>Форд зробив інакше: кожен робітник виконує одну просту операцію. Один закручує болти зліва. Інший — справа. Третій кріпить колеса. Четвертий встановлює сидіння. Один конкретний рух. Один конкретний результат.</p>
-    </div>
-    <div class="l12-quote">Поділ роботи на чіткі функції — це не бюрократія і не ускладнення. Це шлях до більшої продуктивності, нижчих витрат і кращої якості одночасно.</div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 5</div>
-    <div class="l12-section-title">Бізнес — це конвеєр. Як рухається робота від початку до кінця</div>
-    <div class="l12-card">
-        <p>Є одна ідея, яка повністю змінює погляд на бізнес: <strong>бізнес — це конвеєр</strong>. У будь-якому бізнесі є потік: щось приходить (замовлення, клієнт, запит) → з цим щось роблять (обробляють, перетворюють) → щось виходить (задоволений клієнт, оплачений рахунок). Між «приходить» і «виходить» — ланцюжок функцій. Кожна функція приймає щось від попередньої, робить свою частину і передає наступній.</p>
-    </div>
-    <div class="l12-card" style="margin-top:0.6rem;">
-        <p><strong>Реальний кейс:</strong> компанія відправила товар клієнту без документів. Клієнт сказав: «Терміново потрібно, оплачу завтра». Товар отримав — і відмовився платити. «Де документи? Нема документів — нема оплати». Одна пропущена ланка — не було функції контролю документів, ніхто за це не відповідав — обійшлась компанії в піврічний бюджет.</p>
-    </div>
-    <div class="l12-quote">Мало просто поділити роботу. Функції мають передавати роботу одна одній. Якщо між ними немає передачі — кожна функція живе у своєму «підводному човні».</div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 6</div>
-    <div class="l12-section-title">Пастка «зробити самому» — і чому вона руйнує бізнес</div>
-    <div class="l12-card">
-        <p>«Мої працівники не роблять як треба. Простіше зробити самому». Якщо ви хоч раз так думали — ви вже потрапили в пастку. Коли власник намагається замінити людей собою — він стає найдорожчим і найнезамінимішим виконавцем у своєму ж бізнесі.</p>
-        <p>Вихід — не «найняти кращих людей». Вихід — організувати роботу так, щоб звичайні люди давали передбачуваний результат. Це і є функціональна структура.</p>
-    </div>
-    <div class="l12-section-label" style="margin-top:1rem;">Дві дії, коли команда не справляється</div>
-    <div class="l12-steps">
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#ef4444;">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Погасити пожежу</div>
-                <div class="l12-step-text">Вирішити проблему, яка горить прямо зараз. Це вимушено, але необхідно. Але якщо зупинитись тут — пожежа спалахне знову.</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#22c55e;">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Побудувати систему</div>
-                <div class="l12-step-text">Організувати роботу так, щоб такі пожежі більше не виникали. Визначити функції. Описати як вони взаємодіють. Поставити людей на свої місця. Перша дія — витрати. Друга — інвестиція.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 7</div>
-    <div class="l12-section-title">Пастка «багатоверстатника» — коли одна людина робить все</div>
-    <div class="l12-card">
-        <p>Малий бізнес часто виглядає так: є Сергій. Сергій — і продавець, і бухгалтер, і завгосп, і оператор соцмереж, і кур'єр при необхідності. Здається, це добре: одна людина, яка вміє все. Насправді — це катастрофа в уповільненому режимі.</p>
-        <p>Чим більше функцій у людини — тим складніше нею керувати. У неї завжди є відмазка: «Я іншим займався». І технічно вона права.</p>
-    </div>
-    <div class="l12-problems">
-        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко знайти.</strong> Де взяти людину, яка вміє і продавати, і рахувати, і з постачальниками, і в соцмережах? Таких або немає, або їм нудно і вони йдуть.</div></div>
-        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко навчити.</strong> Навчити людину 5 різним справам — у 5 разів довше і дорожче. І при цьому жодній вона не буде навчена добре.</div></div>
-        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко керувати.</strong> Завжди є причина чому конкретна робота не зроблена. Немає чіткої функції — немає чіткого KPI — немає об'єктивної оцінки.</div></div>
-    </div>
-    <div class="l12-card" style="margin-top:0.75rem;">
-        <p>Коли бізнес маленький — одна людина робить кілька функцій. Це нормально на старті. Але різниця між «так виходить» і «так і треба»: <strong>якщо ви знаєте всі функції і бачите їх на карті — ви керуєте усвідомлено</strong>. Ви знаєте, що Сергій зараз робить функцію продажів. І коли з'являться гроші — точно знаєте кого наймати першим.</p>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 8</div>
-    <div class="l12-section-title">Карта бізнесу — як побачити всі функції і знайти «діри»</div>
-    <div class="l12-card">
-        <p>Найнебезпечніший тип проблеми в бізнесі — та, яку ви не бачите. Не та, де горить і болить. А та, де тихо втрачаються гроші, і ви навіть не розумієте чому.</p>
-        <p>Власник добре знає своє ремесло: лікар чудово лікує, кравець чудово шиє. Але у бізнесу є десятки функцій, які ніяк не пов'язані з основним ремеслом — і власник просто не знає, що вони існують.</p>
-    </div>
-    <div class="l12-section-label" style="margin-top:1rem;">Приклад: звичайний роздрібний магазин — мінімум 6 функцій</div>
-    <div class="l12-functions">
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 1</span><span class="l12-fn-title">Визначити що продаємо і кому</span></div>
-            <div class="l12-fn-text">Який товар? Хто покупець? Яка цінова категорія? Яка ніша? Це не разове рішення при відкритті — це регулярна робота. Ринок змінюється. Покупці змінюються.</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 2</span><span class="l12-fn-title">Як люди дізнаються про нас</span></div>
-            <div class="l12-fn-text">Реклама, вивіска, соцмережі, сарафанне радіо, партнерства. Якщо цього немає або це відбувається само собою — у вас немає функції маркетингу. Є лише удача.</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 3</span><span class="l12-fn-title">Як виглядає магазин</span></div>
-            <div class="l12-fn-text">Вітрина, оформлення, навігація, атмосфера.</div>
-            <div class="l12-fn-stat">+30–40% трафіку від привабливого зовнішнього вигляду</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 4</span><span class="l12-fn-title">Як розкладений товар</span></div>
-            <div class="l12-fn-text">Мерчандайзинг — це ціла наука. Де стоїть товар, як він підсвічений, що знаходиться поряд — все це впливає на середній чек.</div>
-            <div class="l12-fn-stat">+20–25% продажів при правильному мерчандайзингу</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 5</span><span class="l12-fn-title">Як продаємо</span></div>
-            <div class="l12-fn-text">Скрипти консультантів, робота на касі, як відповідаємо на питання, як пропонуємо супутні товари. Без цієї функції магазин — просто склад, з якого люди беруть те, за чим прийшли, і йдуть.</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 6</span><span class="l12-fn-title">Як повертаємо покупців</span></div>
-            <div class="l12-fn-text">Програми лояльності, розсилки, акції для постійних клієнтів, робота з відгуками.</div>
-            <div class="l12-fn-stat">Утримання клієнта в 5–7 разів дешевше ніж залучення нового</div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 9</div>
-    <div class="l12-section-title">Одна зламана ланка — і система стоїть. Роль керівника</div>
-    <div class="l12-card">
-        <p>Власники часто думають після побудови структури: «Все, розписав функції, призначив людей, тепер воно само їде». Ні. Після побудови структури з'являється нова критична роль: керівник, який стежить за тим, щоб всі ланки працювали.</p>
-        <p>Уявіть годинник. Десятки шестерень, кожна виконує свою функцію. Якщо хоча б одна зубчаста ланка зламалась — годинник зупиняється. Не важливо, що всі інші 99 шестерень в ідеальному стані.</p>
-    </div>
-    <div class="l12-section-label" style="margin-top:1rem;">Три завдання керівника в організованому бізнесі</div>
-    <div class="l12-mgr">
-        <div class="l12-mgr-item">
-            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-            <div><div class="l12-mgr-title">Бачити</div><div class="l12-mgr-text">Мати інформацію про те, що відбувається в кожній функції — не через наради раз на тиждень, а через систему показників, яка дає сигнал в реальному часі.</div></div>
-        </div>
-        <div class="l12-mgr-item">
-            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-            <div><div class="l12-mgr-title">Помічати</div><div class="l12-mgr-text">Бачити проблеми до того, як вони стали катастрофою. Якщо менеджер продав вдвічі менше цього тижня — це сигнал. Ранній сигнал коштує значно дешевше, ніж пізня реакція.</div></div>
-        </div>
-        <div class="l12-mgr-item">
-            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-            <div><div class="l12-mgr-title">Виправляти</div><div class="l12-mgr-text">Швидко втручатися і вирішувати. Не «потім розберемось» — а зараз, поки мала проблема не стала великою.</div></div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 10</div>
-    <div class="l12-section-title">Три кроки побудови функціональної структури — з чого починати</div>
-    <div class="l12-steps">
-        <div class="l12-step">
-            <div class="l12-step-num">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Розібратись із «сировиною»</div>
-                <div class="l12-step-text">Що приходить у ваш бізнес? Звідки беруться замовлення? Хто ваш клієнт? Що ви отримуєте на вході — і що має бути на виході? Більшість власників не можуть чітко відповісти. «Ну, клієнти звертаються...» Як? Звідки? Через що? Без відповіді на це — ви не можете побудувати конвеєр.</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Визначити всі кроки трансформації</div>
-                <div class="l12-step-text">Що треба зробити, щоб перетворити «сировину» на «готовий продукт»? Випишіть всі кроки — не думайте поки про людей, просто всі дії між «прийшло» і «вийшло». Кожна дія — потенційна функція. На цьому етапі ви знаходите кроки, яких зараз не робите взагалі: «Стоп, а хто у нас контролює якість перед відправкою?» — «Ніхто». Ось ваша «діра».</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">3</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Поставити людей на місця</div>
-                <div class="l12-step-text">До кожної функції — призначте відповідального. «Відповідальний» — не означає «виконує сам». Але він повинен знати, що ця функція — його зона відповідальності. І ви обидва маєте знати: ця робота зроблена або не зроблена.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Підсумок</div>
-    <div class="l12-section-title">Що таке функціональна структура і навіщо вона вам</div>
-    <div class="l12-card">
-        <p>Функціональна структура — це не оргструктура зі стрілочками і квадратиками. Це відповідь на питання: <strong>які роботи мають виконуватись у вашому бізнесі, хто за кожну відповідає і як вони передають роботу одна одній.</strong></p>
-        <p>Це фундамент. Без нього CRM — просто база даних, якою ніхто не користується. Регламенти — папери, які ніхто не читає. Мотивація — хаотичні бонуси, які нікого не мотивують.</p>
-    </div>
-    <div class="l12-result-list">
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Зрозумієте які функції є у вашому бізнесі — і яких немає</div>
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Знайдете «діри» — де тихо втрачаються гроші</div>
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Зможете осмислено ставити людей на конкретні ролі</div>
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Перестанете бути «найнезамінимішим виконавцем» у власному бізнесі</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Завдання</div>
-    <div class="l12-section-title">Розробіть функціональну структуру вашого бізнесу через AI-асистента</div>
-    <div class="l12-steps">
-        <div class="l12-step">
-            <div class="l12-step-num">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Пройдіть діалог з AI-коучем структури</div>
-                <div class="l12-step-text">Асистент проведе вас через визначення всіх функцій вашого бізнесу, знайде «діри» і допоможе розподілити ролі</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Збережіть результат у Google Docs</div>
-                <div class="l12-step-text">На виході — готова «Функціональна карта бізнесу» з переліком функцій і відповідальних</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">3</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Проведіть презентацію для команди</div>
-                <div class="l12-step-text">Покажіть кожному його функцію і зону відповідальності — це ключовий момент впровадження</div>
-            </div>
-        </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
-        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Час на впровадження</div>
-        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 години: 1 год на діалог з AI і підготовку карти + 2 год на презентацію команді</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Інструмент</div>
-    <div class="l12-tool">
-        <div class="l12-tool-header">
-            <div class="l12-tool-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            </div>
-            <div>
-                <div class="l12-tool-title">AI-коуч функціональної структури</div>
-                <div class="l12-tool-desc">Асистент веде діалог і допомагає побудувати повну карту функцій вашого бізнесу: визначає всі роботи, знаходить «діри» і розподіляє відповідальність. На виході — готова Функціональна карта бізнесу.</div>
-            </div>
-        </div>
-        <a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura" target="_blank" class="l12-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Розробити функціональну структуру
-        </a>
-    </div>
-</div>`,
-
-                lessonContent_ru: `
-<style>
-.l12-section { margin-bottom:1.75rem; }
-.l12-section:last-child { margin-bottom:0; }
-.l12-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
-.l12-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
-.l12-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
-.l12-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
-.l12-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
-.l12-card p+p { margin-top:0.7rem; }
-.l12-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.875rem; color:#166534; font-style:italic; line-height:1.6; }
-.l12-reasons { display:grid; gap:0.6rem; margin-top:0.75rem; }
-.l12-reason { border-radius:11px; overflow:hidden; border:1px solid #e2e8f0; }
-.l12-reason-header { display:flex; align-items:center; gap:0.7rem; padding:0.75rem 0.95rem; background:#f8fafc; }
-.l12-reason-num { width:28px; height:28px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; flex-shrink:0; }
-.l12-reason-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
-.l12-reason-body { padding:0.65rem 0.95rem 0.8rem; background:white; border-top:1px solid #f1f5f9; font-size:0.85rem; color:#525252; line-height:1.55; }
-.l12-problems { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l12-problem { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
-.l12-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l12-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
-.l12-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
-.l12-step-body { flex:1; }
-.l12-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l12-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l12-functions { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l12-fn { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
-.l12-fn-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem; }
-.l12-fn-num { font-size:0.7rem; font-weight:700; color:#9ca3af; }
-.l12-fn-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
-.l12-fn-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l12-fn-stat { display:inline-block; margin-top:0.4rem; padding:0.2rem 0.55rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:5px; font-size:0.72rem; font-weight:600; color:#16a34a; }
-.l12-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l12-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
-.l12-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
-.l12-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
-.l12-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l12-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
-.l12-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l12-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
-.l12-mgr { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l12-mgr-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; }
-.l12-mgr-icon { width:32px; height:32px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l12-mgr-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l12-mgr-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-</style>
-
-<div class="l12-section">
-    <div class="l12-section-label">Введение</div>
-    <div class="l12-section-title">Почему при росте становится не легче, а тяжелее</div>
-    <div class="l12-card">
-        <p>Есть вопрос, с которым рано или поздно сталкивается каждый владелец малого бизнеса: почему при росте становится не легче, а тяжелее? Больше людей — больше хаоса. Больше заказов — больше ошибок. Больше выручки — больше головной боли.</p>
-        <p>Ответ, как правило, один: бизнес не организован. Не в смысле «зарегистрирован» — а в смысле «каждая работа закреплена за конкретным человеком, и все части взаимодействуют между собой».</p>
-        <p>Функциональная структура — это фундамент, без которого любая система, CRM, автоматизация или мотивация — просто надстройка на песке.</p>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 1</div>
-    <div class="l12-section-title">Что означает «организовать бизнес» — и почему большинство понимает это неправильно</div>
-    <div class="l12-card">
-        <p>Организовать — это разложить всё по полочкам и наладить работу так, чтобы достичь того, чего хочешь. Как прибрать в комнате: каждая вещь на своём месте. Не потому что красиво, а потому что когда вещь лежит на своём месте — ты знаешь где она и можешь ею воспользоваться.</p>
-        <p>Но большинство владельцев под «организовать» понимают что-то другое: «нанять больше людей», «купить CRM», «провести совещание», «написать регламент». Это всё — инструменты. А организация — это принцип, который стоит за ними.</p>
-        <p>В бизнесе то же самое что с комнатой: каждая категория работы — в своём «отсеке». Каждая функция имеет своё место, и все знают где она находится.</p>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 2</div>
-    <div class="l12-section-title">Что такое «функция» — и почему это самое важное слово в управлении</div>
-    <div class="l12-card">
-        <p>«Функция» — это конкретная работа, которую кто-то выполняет. Проще говоря: «за что ты отвечаешь». Не должность. Не название. Не запись в трудовой. А реальный ответ на вопрос: <strong>что именно ты делаешь и что после тебя остаётся?</strong></p>
-        <p>В бизнесе функции — это аналоги позиций в футболе. Есть тот, кто находит клиентов. Есть тот, кто продаёт. Есть тот, кто производит. Есть тот, кто доставляет. Есть тот, кто считает деньги. Каждая из этих работ — отдельная функция.</p>
-    </div>
-    <div class="l12-quote">Бизнес — это пазл, где каждая частица — отдельная функция: продажи, реклама, деньги, производство, люди, доставка. Если хотя бы одна частица выпала — картинка неполная. Пазл не складывается.</div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Визуализация</div>
-    <div class="l12-section-title">Вот как это выглядит на практике</div>
-    <div class="l12-card" style="margin-bottom:1rem;">
-        <p>Ниже — пример того, как выглядит функциональная структура реального бизнеса. Каждая колонка — это отдельная функция. Под каждой функцией — подфункции: конкретные работы, которые выполняются внутри этой зоны ответственности.</p>
-        <p>Пока просто посмотрите и поймите логику. Свою структуру вы будете строить позже — в разделе <strong>«Система: Структура»</strong>.</p>
-    </div>
-    <div style="overflow-x:auto;">
-    <div style="display:flex;gap:8px;min-width:700px;">
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Администри-рование</div><div style="text-align:center;font-size:12px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Стратегическое планирование</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Регламенты и технологии</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Совещания и контроль</div></div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Найм и управление персоналом</div><div style="text-align:center;font-size:12px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Поиск и отбор</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Ввод в должность</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Обучение</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Мотивация и KPI</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Развитие команды</div></div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Маркетинг</div><div style="text-align:center;font-size:12px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Разработка оффера</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Разработка продукта</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Воронка привлечения</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Сайт и лендинги</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Запуск рекламы</div></div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Продажи</div><div style="text-align:center;font-size:12px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Обработка обращений</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Продажи</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Повторные продажи</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">CRM</div></div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Финансы</div><div style="text-align:center;font-size:12px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Доходы</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Расходы</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Учёт</div></div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Производство / оказание услуги</div><div style="text-align:center;font-size:12px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Планирование</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Обеспечение</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Производство</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Логистика</div></div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Контроль качества</div><div style="text-align:center;font-size:12px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Показатели качества</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Проверки</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Отзывы клиентов</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Исправление ошибок</div></div>
-    </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;display:flex;align-items:center;gap:0.75rem;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <div style="font-size:0.82rem;color:#166534;line-height:1.5;">Свою структуру вы построите в разделе <strong>«Система: Структура»</strong> — там есть пошаговый AI-инструмент, который поможет определить функции именно вашего бизнеса и найти «дыры».</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Как бизнес растёт</div>
-    <div class="l12-section-title">Когда бизнес растёт — функции делятся на подразделения</div>
-    <div class="l12-card">
-        <p>На старте один человек может закрывать несколько функций одновременно. Это нормально. Но когда бизнес растёт — внутри каждой функции появляются отдельные зоны ответственности.</p>
-        <p>Например: в <strong>Администрировании</strong> выделяется отдельный <strong>Директор</strong> (стратегия, партнёрства) и <strong>Операционный руководитель</strong> (регламенты, контроль команды). В <strong>Производстве</strong> — четыре отдельных подразделения: Планирование, Обеспечение, Производство и Логистика.</p>
-        <p>Структура не меняется — она детализируется.</p>
-    </div>
-    <div style="overflow-x:auto;margin-top:1rem;">
-    <div style="display:flex;gap:6px;min-width:780px;">
-        <div style="display:flex;flex-direction:column;gap:0;flex:2;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Администрирование</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;"><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ДИРЕКТОР</div><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Стратегия</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Ключевые решения</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Внеш. партнёрства</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ОПЕРАЦИОННЫЙ</div><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Регламенты</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Совещания и отчёты</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Контроль команды</div></div></div></div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Найм и персонал</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;"><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Поиск и отбор</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Обучение</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Мотивация и KPI</div></div></div></div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Маркетинг</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;"><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Разработка оффера</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Воронка</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Реклама</div></div></div></div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Продажи</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;"><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Обработка обращений</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Продажи</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">CRM</div></div></div></div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Финансы</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;"><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Доходы</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Расходы</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Учёт</div></div></div></div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:4;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Производство / оказание услуги</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;"><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ПЛАНИРОВАНИЕ</div><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">График работ</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Распределение ресурсов</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Приоритеты</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ОБЕСПЕЧЕНИЕ</div><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Закупка материалов</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Склад</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Поставщики</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ПРОИЗВОДСТВО</div><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Оказание услуги</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Стандарты</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Исполнители</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ЛОГИСТИКА</div><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Доставка</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Передача клиенту</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Документы</div></div></div></div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Контроль качества</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;"><div style="display:flex;flex-direction:column;gap:4px;flex:1;"><div style="text-align:center;font-size:11px;color:#888780;">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Показатели</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Проверки</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Отзывы</div></div></div></div>
-    </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Проблема = отсутствующая функция</div>
-    <div class="l12-section-title">Любая проблема в бизнесе — это отсутствующая или сломанная функция</div>
-    <div class="l12-card">
-        <p>Владельцы ищут причину проблем в людях: «плохой менеджер», «ленивые сотрудники», «не тот клиент». На самом деле причина почти всегда одна — в бизнесе есть функция, которую <strong>никто не выполняет</strong>.</p>
-        <p>Найди отсутствующую функцию — найдёшь причину. Исправь функцию — решишь проблему.</p>
-    </div>
-    <div style="margin-top:0.75rem;display:flex;flex-direction:column;gap:6px;">
-        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Нет клиентов или их очень мало</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Маркетинг</div></div></div></div>
-        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Клиенты покупают раз и не возвращаются</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Повторные продажи / удержание</div></div></div></div>
-        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Постоянно не хватает материалов или товара</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Обеспечение производства</div></div></div></div>
-        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Владелец не может уйти в отпуск — всё останавливается</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Операционное управление</div></div></div></div>
-        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Новые люди месяцами не выходят на результат</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Адаптация и обучение персонала</div></div></div></div>
-        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Деньги есть, но их постоянно не хватает</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Финансовое планирование</div></div></div></div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Что делать</div>
-    <div class="l12-section-title">Нашёл проблему — добавь функцию в структуру</div>
-    <div class="l12-card">
-        <p>Когда вы находите проблему — не ищите виноватого. Спросите себя: <strong>какая функция у нас отсутствует или не выполняется?</strong></p>
-        <p>Ответ на этот вопрос — и есть решение. Не штраф, не увольнение, не новая CRM. А конкретная функция, которую нужно добавить в структуру и назначить ответственного.</p>
-    </div>
-    <div class="l12-steps" style="margin-top:0.75rem;">
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#ef4444;">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Найди симптом</div>
-                <div class="l12-step-text">Что конкретно не работает? Опиши это как факт, без эмоций: «клиенты не возвращаются», «материалов постоянно не хватает», «новые люди долго не выходят на результат».</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#f59e0b;">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Определи отсутствующую функцию</div>
-                <div class="l12-step-text">Спроси: какая работа должна была выполняться, чтобы этой проблемы не существовало? Это и есть отсутствующая функция. Назови её конкретно.</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#22c55e;">3</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Добавь в структуру и назначь ответственного</div>
-                <div class="l12-step-text">Внеси функцию в карту бизнеса. Назначь человека, который будет за неё отвечать. Теперь эта «дыра» закрыта — и проблема решена системно, а не вручную.</div>
-            </div>
-        </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:#EEEDFE;border:1px solid #7F77DD;border-radius:12px;">
-        <div style="font-size:0.82rem;color:#26215C;line-height:1.6;"><strong>Запомните:</strong> структура — это не бумага на стене. Это живой документ, который обновляется каждый раз, когда вы находите новую «дыру» в бизнесе.</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 3</div>
-    <div class="l12-section-title">Четыре причины, почему надо делить работу на функции</div>
-    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">«Зачем всё это усложнять? Просто найму людей и скажу: делайте что нужно». Это самая распространённая мысль владельца, который застрял. «Делайте что нужно» — это самая дорогая команда, которую вы можете дать.</p>
-    <div class="l12-reasons">
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">1</div>
-                <div class="l12-reason-title">Маленькое задание легче объяснить и передать</div>
-            </div>
-            <div class="l12-reason-body">Когда работа не разделена — вы передаёте человеку что-то огромное и размытое. «Займись маркетингом». «Контролируй производство». Что это означает? С чего начинать? Для большинства людей — это стресс и паралич. Они либо делают что попало (не то, что нужно), либо не делают ничего и ждут конкретики.</div>
-        </div>
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">2</div>
-                <div class="l12-reason-title">Легче увидеть, что сделано, а что нет</div>
-            </div>
-            <div class="l12-reason-body">Как список покупок: хлеб — есть, молоко — есть, яйца — нет. Сразу видно чего не хватает. Когда работы не разделены — вы не можете сделать такой список. «Маркетинг» — он есть или нет? Что-то делается. А что именно? Достаточно? Правильно? Непонятно. И вам приходится либо доверять вслепую, либо контролировать каждый шаг вручную.</div>
-        </div>
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">3</div>
-                <div class="l12-reason-title">Если что-то не работает — можно заменить одну часть</div>
-            </div>
-            <div class="l12-reason-body">Сломалась лампочка в фаре — меняете лампочку, не весь автомобиль. Когда есть чёткие функции — вы точно знаете где проблема. Функция «генерация лидов» — 50 заявок, хорошо. Функция «конверсия в сделку» — 5% при норме 20%. Вот где сломалась лампочка. Меняем лампочку — а не весь отдел.</div>
-        </div>
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">4</div>
-                <div class="l12-reason-title">Люди становятся мастерами</div>
-            </div>
-            <div class="l12-reason-body">Когда человек долго делает одно дело — он в нём растёт. Становится экспертом. Делает быстрее, лучше, с меньшим количеством ошибок. Хирург-кардиолог, который делает только операции на сердце — оперирует намного лучше, чем хирург-общепрактик, который делает всё подряд. Специализация — это не ограничение. Это путь к мастерству.</div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 4</div>
-    <div class="l12-section-title">Генри Форд и революция функций — как разделение труда изменило мир</div>
-    <div class="l12-card">
-        <p>До Форда автомобиль был предметом роскоши — как сегодня яхта или частный самолёт. Один мастер делал автомобиль от начала до конца: и болты закручивал, и двигатель собирал, и кузов подгонял. Мастер должен был быть квалифицирован во всём — а значит, таких людей было мало и стоили они дорого.</p>
-        <p>Форд сделал иначе: каждый рабочий выполняет одну простую операцию. Один закручивает болты слева. Другой — справа. Третий крепит колёса. Четвёртый устанавливает сиденья. Одно конкретное движение. Один конкретный результат.</p>
-    </div>
-    <div class="l12-quote">Разделение работы на чёткие функции — это не бюрократия и не усложнение. Это путь к большей производительности, меньшим затратам и лучшему качеству одновременно.</div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 5</div>
-    <div class="l12-section-title">Бизнес — это конвейер. Как движется работа от начала до конца</div>
-    <div class="l12-card">
-        <p>Есть одна идея, которая полностью меняет взгляд на бизнес: <strong>бизнес — это конвейер</strong>. В любом бизнесе есть поток: что-то приходит (заказ, клиент, запрос) → с этим что-то делают (обрабатывают, преобразовывают) → что-то выходит (довольный клиент, оплаченный счёт). Между «приходит» и «выходит» — цепочка функций. Каждая функция принимает что-то от предыдущей, делает свою часть и передаёт следующей.</p>
-    </div>
-    <div class="l12-card" style="margin-top:0.6rem;">
-        <p><strong>Реальный кейс:</strong> компания отправила товар клиенту без документов. Клиент сказал: «Срочно нужно, оплачу завтра». Товар получил — и отказался платить. «Где документы? Нет документов — нет оплаты». Одно пропущенное звено — не было функции контроля документов, никто за это не отвечал — обошлось компании в полугодовой бюджет.</p>
-    </div>
-    <div class="l12-quote">Мало просто разделить работу. Функции должны передавать работу друг другу. Если между ними нет передачи — каждая функция живёт в своей «подводной лодке».</div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 6</div>
-    <div class="l12-section-title">Ловушка «сделать самому» — и почему она разрушает бизнес</div>
-    <div class="l12-card">
-        <p>«Мои сотрудники не делают как надо. Проще сделать самому». Если вы хоть раз так думали — вы уже попали в ловушку. Когда владелец пытается заменить людей собой — он становится самым дорогим и самым незаменимым исполнителем в своём же бизнесе.</p>
-        <p>Выход — не «нанять лучших людей». Выход — организовать работу так, чтобы обычные люди давали предсказуемый результат. Это и есть функциональная структура.</p>
-    </div>
-    <div class="l12-section-label" style="margin-top:1rem;">Два действия, когда команда не справляется</div>
-    <div class="l12-steps">
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#ef4444;">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Потушить пожар</div>
-                <div class="l12-step-text">Решить проблему, которая горит прямо сейчас. Это вынужденно, но необходимо. Но если остановиться здесь — пожар вспыхнет снова.</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#22c55e;">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Построить систему</div>
-                <div class="l12-step-text">Организовать работу так, чтобы такие пожары больше не возникали. Определить функции. Описать как они взаимодействуют. Поставить людей на свои места. Первое действие — затраты. Второе — инвестиция.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 7</div>
-    <div class="l12-section-title">Ловушка «многостаночника» — когда один человек делает всё</div>
-    <div class="l12-card">
-        <p>Малый бизнес часто выглядит так: есть Сергей. Сергей — и продавец, и бухгалтер, и завхоз, и оператор соцсетей, и курьер при необходимости. Кажется, это хорошо: один человек, который умеет всё. На самом деле — это катастрофа в замедленном режиме.</p>
-        <p>Чем больше функций у человека — тем сложнее им управлять. У него всегда есть отмазка: «Я другим занимался». И технически он прав.</p>
-    </div>
-    <div class="l12-problems">
-        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Сложно найти.</strong> Где взять человека, который умеет и продавать, и считать, и с поставщиками, и в соцсетях? Таких или нет, или им скучно и они уходят.</div></div>
-        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Сложно обучить.</strong> Обучить человека 5 разным делам — в 5 раз дольше и дороже. И при этом ни одному он не будет обучен хорошо.</div></div>
-        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Сложно управлять.</strong> Всегда есть причина почему конкретная работа не сделана. Нет чёткой функции — нет чёткого KPI — нет объективной оценки.</div></div>
-    </div>
-    <div class="l12-card" style="margin-top:0.75rem;">
-        <p>Когда бизнес маленький — один человек делает несколько функций. Это нормально на старте. Но разница между «так получается» и «так и надо»: <strong>если вы знаете все функции и видите их на карте — вы управляете осознанно</strong>. Вы знаете, что Сергей сейчас делает функцию продаж. И когда появятся деньги — точно знаете кого нанимать первым.</p>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 8</div>
-    <div class="l12-section-title">Карта бизнеса — как увидеть все функции и найти «дыры»</div>
-    <div class="l12-card">
-        <p>Самый опасный тип проблемы в бизнесе — та, которую вы не видите. Не та, где горит и болит. А та, где тихо теряются деньги, и вы даже не понимаете почему.</p>
-        <p>Владелец хорошо знает своё ремесло: врач отлично лечит, портной отлично шьёт. Но у бизнеса есть десятки функций, которые никак не связаны с основным ремеслом — и владелец просто не знает, что они существуют.</p>
-    </div>
-    <div class="l12-section-label" style="margin-top:1rem;">Пример: обычный розничный магазин — минимум 6 функций</div>
-    <div class="l12-functions">
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функция 1</span><span class="l12-fn-title">Определить что продаём и кому</span></div>
-            <div class="l12-fn-text">Какой товар? Кто покупатель? Какая ценовая категория? Какая ниша? Это не разовое решение при открытии — это регулярная работа. Рынок меняется. Покупатели меняются.</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функция 2</span><span class="l12-fn-title">Как люди узнают о нас</span></div>
-            <div class="l12-fn-text">Реклама, вывеска, соцсети, сарафанное радио, партнёрства. Если этого нет или это происходит само собой — у вас нет функции маркетинга. Есть только удача.</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функция 3</span><span class="l12-fn-title">Как выглядит магазин</span></div>
-            <div class="l12-fn-text">Витрина, оформление, навигация, атмосфера.</div>
-            <div class="l12-fn-stat">+30–40% трафика от привлекательного внешнего вида</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функция 4</span><span class="l12-fn-title">Как разложен товар</span></div>
-            <div class="l12-fn-text">Мерчандайзинг — это целая наука. Где стоит товар, как он подсвечен, что находится рядом — всё это влияет на средний чек.</div>
-            <div class="l12-fn-stat">+20–25% продаж при правильном мерчандайзинге</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функция 5</span><span class="l12-fn-title">Как продаём</span></div>
-            <div class="l12-fn-text">Скрипты консультантов, работа на кассе, как отвечаем на вопросы, как предлагаем сопутствующие товары. Без этой функции магазин — просто склад, из которого люди берут то, за чем пришли, и уходят.</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функция 6</span><span class="l12-fn-title">Как возвращаем покупателей</span></div>
-            <div class="l12-fn-text">Программы лояльности, рассылки, акции для постоянных клиентов, работа с отзывами.</div>
-            <div class="l12-fn-stat">Удержание клиента в 5–7 раз дешевле привлечения нового</div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 9</div>
-    <div class="l12-section-title">Одно сломанное звено — и система стоит. Роль руководителя</div>
-    <div class="l12-card">
-        <p>Владельцы часто думают после построения структуры: «Всё, расписал функции, назначил людей, теперь само едет». Нет. После построения структуры появляется новая критическая роль: руководитель, который следит за тем, чтобы все звенья работали.</p>
-        <p>Представьте часы. Десятки шестерёнок, каждая выполняет свою функцию. Если хотя бы одно зубчатое звено сломалось — часы останавливаются. Не важно, что все остальные 99 шестерёнок в идеальном состоянии.</p>
-    </div>
-    <div class="l12-section-label" style="margin-top:1rem;">Три задачи руководителя в организованном бизнесе</div>
-    <div class="l12-mgr">
-        <div class="l12-mgr-item">
-            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-            <div><div class="l12-mgr-title">Видеть</div><div class="l12-mgr-text">Иметь информацию о том, что происходит в каждой функции — не через совещания раз в неделю, а через систему показателей, которая даёт сигнал в реальном времени.</div></div>
-        </div>
-        <div class="l12-mgr-item">
-            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-            <div><div class="l12-mgr-title">Замечать</div><div class="l12-mgr-text">Видеть проблемы до того, как они стали катастрофой. Если менеджер продал вдвое меньше на этой неделе — это сигнал. Ранний сигнал стоит значительно дешевле, чем поздняя реакция.</div></div>
-        </div>
-        <div class="l12-mgr-item">
-            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-            <div><div class="l12-mgr-title">Исправлять</div><div class="l12-mgr-text">Быстро вмешиваться и решать. Не «потом разберёмся» — а сейчас, пока маленькая проблема не стала большой.</div></div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Раздел 10</div>
-    <div class="l12-section-title">Три шага построения функциональной структуры — с чего начинать</div>
-    <div class="l12-steps">
-        <div class="l12-step">
-            <div class="l12-step-num">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Разобраться с «сырьём»</div>
-                <div class="l12-step-text">Что приходит в ваш бизнес? Откуда берутся заказы? Кто ваш клиент? Что вы получаете на входе — и что должно быть на выходе? Большинство владельцев не могут чётко ответить. «Ну, клиенты обращаются...» Как? Откуда? Через что? Без ответа на это — вы не можете построить конвейер.</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Определить все шаги трансформации</div>
-                <div class="l12-step-text">Что нужно сделать, чтобы превратить «сырьё» в «готовый продукт»? Выпишите все шаги — не думайте пока о людях, просто все действия между «пришло» и «вышло». Каждое действие — потенциальная функция. На этом этапе вы находите шаги, которых сейчас не делаете вообще: «Стоп, а кто у нас контролирует качество перед отправкой?» — «Никто». Вот ваша «дыра».</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">3</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Поставить людей на места</div>
-                <div class="l12-step-text">К каждой функции — назначьте ответственного. «Ответственный» — не означает «выполняет сам». Но он должен знать, что эта функция — его зона ответственности. И вы оба должны знать: эта работа сделана или не сделана.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Итог</div>
-    <div class="l12-section-title">Что такое функциональная структура и зачем она вам</div>
-    <div class="l12-card">
-        <p>Функциональная структура — это не оргструктура со стрелочками и квадратиками. Это ответ на вопрос: <strong>какие работы должны выполняться в вашем бизнесе, кто за каждую отвечает и как они передают работу друг другу.</strong></p>
-        <p>Это фундамент. Без него CRM — просто база данных, которой никто не пользуется. Регламенты — бумаги, которые никто не читает. Мотивация — хаотичные бонусы, которые никого не мотивируют.</p>
-    </div>
-    <div class="l12-result-list">
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Поймёте какие функции есть в вашем бизнесе — и каких нет</div>
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Найдёте «дыры» — где тихо теряются деньги</div>
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Сможете осознанно ставить людей на конкретные роли</div>
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Перестанете быть «самым незаменимым исполнителем» в собственном бизнесе</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Задание</div>
-    <div class="l12-section-title">Разработайте функциональную структуру вашего бизнеса через AI-ассистента</div>
-    <div class="l12-steps">
-        <div class="l12-step">
-            <div class="l12-step-num">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Пройдите диалог с AI-коучем структуры</div>
-                <div class="l12-step-text">Ассистент проведёт вас через определение всех функций вашего бизнеса, найдёт «дыры» и поможет распределить роли</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Сохраните результат в Google Docs</div>
-                <div class="l12-step-text">На выходе — готовая «Функциональная карта бизнеса» с перечнем функций и ответственных</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">3</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Проведите презентацию для команды</div>
-                <div class="l12-step-text">Покажите каждому его функцию и зону ответственности — это ключевой момент внедрения</div>
-            </div>
-        </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
-        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Время на внедрение</div>
-        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 часа: 1 час на диалог с AI и подготовку карты + 2 часа на презентацию команде</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Инструмент</div>
-    <div class="l12-tool">
-        <div class="l12-tool-header">
-            <div class="l12-tool-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            </div>
-            <div>
-                <div class="l12-tool-title">AI-коуч функциональной структуры</div>
-                <div class="l12-tool-desc">Ассистент ведёт диалог и помогает построить полную карту функций вашего бизнеса: определяет все работы, находит «дыры» и распределяет ответственность. На выходе — готовая Функциональная карта бизнеса.</div>
-            </div>
-        </div>
-        <a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura" target="_blank" class="l12-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Разработать функциональную структуру
-        </a>
-    </div>
-</div>`,
-
-                lessonContent_en: `<style>.l12e-s{margin-bottom:1.75rem}.l12e-s:last-child{margin-bottom:0}.l12e-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l12e-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l12e-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l12e-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l12e-card p{font-size:.9rem;color:#374151;line-height:1.65}.l12e-card p+p{margin-top:.7rem}.l12e-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:3px solid #22c55e;border-radius:0 10px 10px 0;font-size:.875rem;color:#166534;font-style:italic;line-height:1.6}.l12e-reasons{display:grid;gap:.55rem;margin-top:.75rem}.l12e-reason{padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12e-rhdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem}.l12e-rnum{width:24px;height:24px;background:#22c55e;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0}.l12e-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem}.l12e-rbody{font-size:.82rem;color:#525252;line-height:1.5}.l12e-steps{display:grid;gap:.55rem;margin-top:.75rem}.l12e-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12e-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l12e-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l12e-stext{font-size:.82rem;color:#525252;line-height:1.5}.l12e-problems{display:grid;gap:.45rem;margin-top:.75rem}.l12e-problem{display:flex;align-items:flex-start;gap:.65rem;padding:.75rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l12e-fns{display:grid;gap:.5rem;margin-top:.75rem}.l12e-fn{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12e-fnhdr{display:flex;align-items:center;gap:.55rem;margin-bottom:.3rem}.l12e-fnnum{font-size:.72rem;font-weight:700;color:#22c55e;background:#f0fdf4;padding:.2rem .55rem;border-radius:6px}.l12e-fntitle{font-weight:700;color:#1a1a1a;font-size:.84rem}.l12e-fntext{font-size:.78rem;color:#525252;line-height:1.4}.l12e-fnstat{font-size:.75rem;color:#15803d;font-weight:600;margin-top:.3rem;padding:.25rem .55rem;background:#f0fdf4;border-radius:5px;display:inline-block}.l12e-mgr{display:grid;gap:.5rem;margin-top:.75rem}.l12e-mgri{display:flex;gap:.7rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12e-mgricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l12e-mgrtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l12e-mgrtext{font-size:.82rem;color:#525252;line-height:1.5}.l12e-results{display:grid;gap:.4rem;margin-top:.75rem}.l12e-ri{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l12e-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l12e-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l12e-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l12e-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l12e-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l12e-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l12e-s"><div class="l12e-lbl">Introduction</div><div class="l12e-title">Why growth makes things harder, not easier</div><div class="l12e-card"><p>Every small business owner eventually faces this question: why does growth make things harder, not easier? More people — more chaos. More orders — more mistakes. More revenue — more headaches.</p><p>The answer is usually the same: the business is not organized. Not in the sense of "registered" — but in the sense of "every task is assigned to a specific person, and all parts interact with each other."</p><p>Functional structure is the foundation without which any system, CRM, automation or motivation is just a superstructure on sand.</p></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 1</div><div class="l12e-title">What "organizing a business" means — and why most people misunderstand it</div><div class="l12e-card"><p>To organize means to put everything in order and set up work so you achieve what you want. Like tidying a room: every item has its place. Not because it looks nice, but because when an item is in its place — you know where it is and can use it.</p><p>Most owners understand "organize" as: "hire more people," "buy a CRM," "hold a meeting," "write regulations." These are all tools. Organization is the principle behind them.</p></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 2</div><div class="l12e-title">What a "function" is — and why it's the most important word in management</div><div class="l12e-card"><p>A "function" is a specific task that someone performs. Simply put: "what you are responsible for." Not a job title. Not a name. But a real answer to: <strong>what exactly do you do and what do you leave behind?</strong></p><p>In business, functions are like positions in football. Someone finds clients. Someone sells. Someone produces. Someone delivers. Someone counts money. Each of these is a separate function.</p></div><div class="l12e-quote">Business is a puzzle where each piece is a separate function: sales, marketing, money, production, people, delivery. If even one piece falls out — the picture is incomplete. The puzzle doesn\'t come together.</div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Visualization</div><div class="l12e-title">Here\'s what it looks like in practice</div><div class="l12e-card" style="margin-bottom:1rem"><p>Below is an example of a functional business structure. Each column is a separate function. Under each — subfunctions: specific work performed within that responsibility zone.</p><p>For now just look and understand the logic. You\'ll build your own structure later — in the <strong>\"System: Structure\"</strong> section.</p></div><div style="overflow-x:auto"><div style="display:flex;gap:8px;min-width:700px"><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Administration</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Strategic planning</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Regulations</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Meetings &amp; control</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Hiring &amp; HR</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Recruitment</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Onboarding</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Motivation &amp; KPI</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Marketing</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Offer</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Funnel &amp; ads</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Analytics</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Sales</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Lead handling</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Sales</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Repeat / CRM</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Finance</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Revenue</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Expenses</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Accounting</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Production / service</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Planning</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Supply</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Production</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Logistics</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Quality control</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">KPIs</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Inspections</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Feedback</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;font-size:.82rem;color:#166534">You\'ll build your own structure in the <strong>\"System: Structure\"</strong> section.</div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">How business grows</div><div class="l12e-title">As business grows — functions split into departments</div><div class="l12e-card"><p>At the start one person handles multiple functions. Normal. But as the business grows — separate responsibility zones appear within each function.</p><p><strong>Administration</strong> splits into Director (strategy) and Operations Manager (regulations, team control). <strong>Production</strong> — four departments: Planning, Supply, Production, Logistics.</p></div><div style="overflow-x:auto;margin-top:1rem"><div style="display:flex;gap:6px;min-width:780px"><div style="display:flex;flex-direction:column;gap:0;flex:2"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Administration</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">DIRECTOR</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Strategy</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Key decisions</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Partnerships</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">OPERATIONS</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Regulations</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Meetings &amp; reports</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Team control</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">HR</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Recruitment</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Training</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Motivation</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Marketing</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Offer</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Funnel</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Ads</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Sales</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Lead handling</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Sales</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">CRM</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Finance</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Revenue</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Expenses</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Accounting</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:4"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Production / service delivery</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">PLANNING</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Work schedule</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Resources</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Priorities</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">SUPPLY</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Purchasing</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Warehouse</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Suppliers</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">PRODUCTION</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Service delivery</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Standards</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Executors</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">LOGISTICS</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Delivery</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Handoff</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Documents</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Quality control</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">KPIs</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Inspections</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Feedback</div></div></div></div></div></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Problem = missing function</div><div class="l12e-title">Every business problem is a missing or broken function</div><div class="l12e-card"><p>Owners look for the cause in people: \"bad manager\", \"lazy employees\". In reality the cause is almost always one thing — a function that <strong>nobody performs</strong>.</p><p>Find the missing function — find the cause. Fix the function — solve the problem.</p></div><div style="margin-top:.75rem;display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.75\" width=\"14\" height=\"14\" style=\"flex-shrink:0\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500">No clients or very few</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.5\" width=\"14\" height=\"14\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Missing function</div><div style="font-size:12px;font-weight:700;color:#04342C">Marketing</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.75\" width=\"14\" height=\"14\" style=\"flex-shrink:0\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500">Clients buy once and never return</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.5\" width=\"14\" height=\"14\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Missing function</div><div style="font-size:12px;font-weight:700;color:#04342C">Repeat sales / retention</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.75\" width=\"14\" height=\"14\" style=\"flex-shrink:0\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500">Always running out of materials</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.5\" width=\"14\" height=\"14\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Missing function</div><div style="font-size:12px;font-weight:700;color:#04342C">Supply &amp; procurement</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.75\" width=\"14\" height=\"14\" style=\"flex-shrink:0\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500">Owner can\'t take vacation — everything stops</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.5\" width=\"14\" height=\"14\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Missing function</div><div style="font-size:12px;font-weight:700;color:#04342C">Operations management</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.75\" width=\"14\" height=\"14\" style=\"flex-shrink:0\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500">New hires take months to perform</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.5\" width=\"14\" height=\"14\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Missing function</div><div style="font-size:12px;font-weight:700;color:#04342C">Onboarding &amp; training</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.75\" width=\"14\" height=\"14\" style=\"flex-shrink:0\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500">Money exists but always runs short</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.5\" width=\"14\" height=\"14\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Missing function</div><div style="font-size:12px;font-weight:700;color:#04342C">Financial planning</div></div></div></div></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">What to do</div><div class="l12e-title">Found a problem — add the function to your structure</div><div class="l12e-card"><p>When you find a problem — don\'t look for someone to blame. Ask: <strong>which function is missing or not being performed?</strong></p><p>The answer is the solution. Not a fine, not a firing, not a new CRM. A specific function to add to the structure with an assigned owner.</p></div><div class="l12e-steps" style="margin-top:.75rem"><div class="l12e-step"><div class="l12e-snum" style="background:#ef4444">1</div><div><div class="l12e-stitle">Find the symptom</div><div class="l12e-stext">What exactly is not working? State it as a fact: \"clients don\'t come back\", \"materials always run out\", \"new hires take months to perform\".</div></div></div><div class="l12e-step"><div class="l12e-snum" style="background:#f59e0b">2</div><div><div class="l12e-stitle">Identify the missing function</div><div class="l12e-stext">Ask: what work should have been done so this problem didn\'t exist? That\'s the missing function. Name it specifically.</div></div></div><div class="l12e-step"><div class="l12e-snum" style="background:#22c55e">3</div><div><div class="l12e-stitle">Add to structure and assign an owner</div><div class="l12e-stext">Put the function on the business map. Assign a responsible person. Now that gap is closed — the problem is solved systemically, not manually.</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:#EEEDFE;border:1px solid #7F77DD;border-radius:12px;font-size:.82rem;color:#26215C"><strong>Remember:</strong> structure is not a paper on the wall. It\'s a living document updated every time you find a new gap.</div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 3</div><div class="l12e-title">Four reasons why work must be divided into functions</div><p style="font-size:.875rem;color:#525252;line-height:1.6;margin-bottom:.75rem">"Why complicate everything? Just hire people and say: do what\'s needed." This is the most common thought of an owner who is stuck. "Do what\'s needed" is the most expensive instruction you can give.</p><div class="l12e-reasons"><div class="l12e-reason"><div class="l12e-rhdr"><div class="l12e-rnum">1</div><div class="l12e-rtitle">A small task is easier to explain and delegate</div></div><div class="l12e-rbody">When work isn't divided — you give someone something huge and vague. "Handle marketing." "Control production." What does that mean? Where to start? For most people — stress and paralysis.</div></div><div class="l12e-reason"><div class="l12e-rhdr"><div class="l12e-rnum">2</div><div class="l12e-rtitle">Easier to see what's done and what isn't</div></div><div class="l12e-rbody">Like a shopping list: bread — yes, milk — yes, eggs — no. Immediately clear what's missing. When work isn't divided — you can't make such a list. "Marketing" — is it there or not? Something is being done. But what exactly?</div></div><div class="l12e-reason"><div class="l12e-rhdr"><div class="l12e-rnum">3</div><div class="l12e-rtitle">If something doesn't work — you can replace one part</div></div><div class="l12e-rbody">A headlight bulb broke — you replace the bulb, not the whole car. With clear functions — you know exactly where the problem is. "Lead generation" — 50 applications, good. "Conversion to deal" — 5% vs. 20% norm. There's the broken bulb. Replace the bulb — not the whole department.</div></div><div class="l12e-reason"><div class="l12e-rhdr"><div class="l12e-rnum">4</div><div class="l12e-rtitle">People become masters</div></div><div class="l12e-rbody">When someone does one thing for a long time — they grow in it. Become an expert. Works faster, better, with fewer errors. A cardiac surgeon who only does heart operations is far better than a general surgeon who does everything.</div></div></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 4</div><div class="l12e-title">Henry Ford and the function revolution — how division of labor changed the world</div><div class="l12e-card"><p>Before Ford, a car was a luxury item. One craftsman built a car from start to finish: tightened bolts, assembled the engine, fitted the body. Ford did it differently: each worker performs one simple operation. One specific movement. One specific result.</p></div><div class="l12e-quote">Dividing work into clear functions is not bureaucracy or complication. It is the path to greater productivity, lower costs and better quality — all at once.</div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 5</div><div class="l12e-title">Business is a conveyor. How work moves from start to finish</div><div class="l12e-card"><p>One idea that completely changes the view of business: <strong>business is a conveyor</strong>. In any business there is a flow: something comes in (order, client, request) → something is done with it → something comes out (satisfied client, paid invoice). Between "comes in" and "comes out" — a chain of functions.</p></div><div class="l12e-card" style="margin-top:.6rem"><p><strong>Real case:</strong> A company shipped goods to a client without documents. The client said "urgent, I'll pay tomorrow." Got the goods — refused to pay. "Where are the documents? No documents — no payment." One missing link — no one was responsible for document control — cost the company half a year's budget.</p></div><div class="l12e-quote">It's not enough to just divide work. Functions must hand work to each other. Without handoffs — each function lives in its own submarine.</div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 6</div><div class="l12e-title">The "do it myself" trap — and why it destroys the business</div><div class="l12e-card"><p>"My employees don't do it right. Easier to do it myself." If you've thought this even once — you've already fallen into the trap. When the owner tries to replace people with themselves — they become the most expensive and most indispensable executor in their own business.</p><p>The solution is not "hire better people." The solution is to organize work so that ordinary people produce predictable results. That is functional structure.</p></div><div class="l12e-lbl" style="margin-top:1rem">Two actions when the team fails</div><div class="l12e-steps"><div class="l12e-step"><div class="l12e-snum" style="background:#ef4444">1</div><div><div class="l12e-stitle">Put out the fire</div><div class="l12e-stext">Solve the problem that is burning right now. Forced but necessary. But if you stop here — the fire will flare up again.</div></div></div><div class="l12e-step"><div class="l12e-snum" style="background:#22c55e">2</div><div><div class="l12e-stitle">Build a system</div><div class="l12e-stext">Organize work so such fires no longer arise. Define functions. Describe how they interact. Put people in their places. The first action — expense. The second — investment.</div></div></div></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 7</div><div class="l12e-title">The "multi-tasker" trap — when one person does everything</div><div class="l12e-card"><p>Small business often looks like this: there's Sergiy. Sergiy is the salesman, the accountant, the supply manager, the social media operator, and the courier when needed. Seems useful. In reality — it's a slow-motion disaster.</p><p>The more functions a person has — the harder they are to manage. They always have an excuse: "I was busy with something else." And technically they're right.</p></div><div class="l12e-problems"><div class="l12e-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Hard to find.</strong> Where do you find someone who can sell, do accounting, handle suppliers and run social media? Such people either don't exist or get bored and leave.</div></div><div class="l12e-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Hard to train.</strong> Training someone in 5 different things is 5 times longer and more expensive. And they won't be properly trained in any of them.</div></div><div class="l12e-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Hard to manage.</strong> There's always a reason why specific work wasn't done. No clear function — no clear KPI — no objective assessment.</div></div></div><div class="l12e-card" style="margin-top:.75rem"><p>When the business is small — one person handles several functions. Normal at the start. The difference between "it just happens" and "that's how it should be": <strong>if you know all functions and see them on the map — you manage consciously</strong>. You know Sergiy is currently doing the sales function. And when money appears — you know exactly who to hire first.</p></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 8</div><div class="l12e-title">Business map — how to see all functions and find the "gaps"</div><div class="l12e-card"><p>The most dangerous type of problem in business is the one you don't see. Not where it's burning and hurting. But where money is silently leaking and you don't even understand why.</p></div><div class="l12e-lbl" style="margin-top:1rem">Example: ordinary retail store — minimum 6 functions</div><div class="l12e-fns"><div class="l12e-fn"><div class="l12e-fnhdr"><span class="l12e-fnnum">Function 1</span><span class="l12e-fntitle">Define what we sell and to whom</span></div><div class="l12e-fntext">What product? Who is the buyer? What price range? What niche? This isn't a one-time decision at opening — it's ongoing work. Markets change. Buyers change.</div></div><div class="l12e-fn"><div class="l12e-fnhdr"><span class="l12e-fnnum">Function 2</span><span class="l12e-fntitle">How people find out about us</span></div><div class="l12e-fntext">Advertising, signage, social media, word of mouth, partnerships. If this doesn't exist or "happens by itself" — you have no marketing function. Only luck.</div></div><div class="l12e-fn"><div class="l12e-fnhdr"><span class="l12e-fnnum">Function 3</span><span class="l12e-fntitle">How the store looks</span></div><div class="l12e-fntext">Storefront, design, navigation, atmosphere.</div><div class="l12e-fnstat">+30–40% foot traffic from attractive appearance</div></div><div class="l12e-fn"><div class="l12e-fnhdr"><span class="l12e-fnnum">Function 4</span><span class="l12e-fntitle">How products are displayed</span></div><div class="l12e-fntext">Merchandising is a science. Where a product stands, how it's lit, what's nearby — all affects the average check.</div><div class="l12e-fnstat">+20–25% sales with correct merchandising</div></div><div class="l12e-fn"><div class="l12e-fnhdr"><span class="l12e-fnnum">Function 5</span><span class="l12e-fntitle">How we sell</span></div><div class="l12e-fntext">Consultant scripts, checkout work, answering questions, offering related products. Without this function, the store is just a warehouse people take what they came for and leave.</div></div><div class="l12e-fn"><div class="l12e-fnhdr"><span class="l12e-fnnum">Function 6</span><span class="l12e-fntitle">How we bring buyers back</span></div><div class="l12e-fntext">Loyalty programs, newsletters, promotions for regulars, review management.</div><div class="l12e-fnstat">Retaining a client is 5–7x cheaper than acquiring a new one</div></div></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 9</div><div class="l12e-title">One broken link — and the system stops. The manager's role</div><div class="l12e-card"><p>Owners often think after building a structure: "Done, I've mapped the functions, assigned people, now it runs itself." No. After building the structure, a new critical role appears: a manager who monitors that all links are working.</p><p>Imagine a clock. Dozens of gears, each performing its function. If even one gear breaks — the clock stops. No matter that all other 99 gears are in perfect condition.</p></div><div class="l12e-lbl" style="margin-top:1rem">Three tasks of a manager in an organized business</div><div class="l12e-mgr"><div class="l12e-mgri"><div class="l12e-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l12e-mgrtitle">See</div><div class="l12e-mgrtext">Have information about what's happening in each function — not through meetings once a week, but through a metrics system that gives a real-time signal.</div></div></div><div class="l12e-mgri"><div class="l12e-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="l12e-mgrtitle">Notice</div><div class="l12e-mgrtext">See problems before they become a catastrophe. If the manager sold twice less this week — that's a signal. Early signals cost far less than late reactions.</div></div></div><div class="l12e-mgri"><div class="l12e-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l12e-mgrtitle">Fix</div><div class="l12e-mgrtext">Intervene quickly and resolve. Not "we'll figure it out later" — but now, while a small problem hasn't become a big one.</div></div></div></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Section 10</div><div class="l12e-title">Three steps to build a functional structure — where to start</div><div class="l12e-steps"><div class="l12e-step"><div class="l12e-snum">1</div><div><div class="l12e-stitle">Understand the "raw material"</div><div class="l12e-stext">What comes into your business? Where do orders come from? Who is your client? What do you receive as input — and what must come out? Most owners can't answer this clearly. Without this you can't build a conveyor.</div></div></div><div class="l12e-step"><div class="l12e-snum">2</div><div><div class="l12e-stitle">Define all transformation steps</div><div class="l12e-stext">What needs to be done to turn "raw material" into "finished product"? Write down all steps — don't think about people yet, just all actions between "came in" and "came out." Each action is a potential function. At this stage you find steps you're currently not doing at all: "Wait, who checks quality before shipping?" — "Nobody." There's your gap.</div></div></div><div class="l12e-step"><div class="l12e-snum">3</div><div><div class="l12e-stitle">Assign people to roles</div><div class="l12e-stext">For each function — assign an owner. "Owner" doesn't mean "does it themselves." But they must know this function is their zone of responsibility. And both of you must know: this work is done or not done.</div></div></div></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Summary</div><div class="l12e-title">What functional structure is and why you need it</div><div class="l12e-card"><p>Functional structure is not an org chart with arrows and boxes. It is the answer to: <strong>what work must be done in your business, who is responsible for each part, and how they hand work to each other.</strong></p><p>This is the foundation. Without it CRM is just a database nobody uses. Regulations — papers nobody reads. Motivation — chaotic bonuses that motivate no one.</p></div><div class="l12e-results"><div class="l12e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>You'll understand which functions exist in your business — and which don't</div><div class="l12e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>You'll find the "gaps" — where money is silently leaking</div><div class="l12e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>You'll be able to put people in specific roles consciously</div><div class="l12e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>You'll stop being the "most indispensable executor" in your own business</div></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Assignment</div><div class="l12e-title">Develop the functional structure of your business through the AI assistant</div><div class="l12e-steps"><div class="l12e-step"><div class="l12e-snum">1</div><div><div class="l12e-stitle">Complete the dialogue with the AI Structure Coach</div><div class="l12e-stext">The assistant will guide you through defining all functions of your business, find gaps and help distribute roles</div></div></div><div class="l12e-step"><div class="l12e-snum">2</div><div><div class="l12e-stitle">Save the result in Google Docs</div><div class="l12e-stext">Output — a ready "Functional Business Map" with a list of functions and owners</div></div></div><div class="l12e-step"><div class="l12e-snum">3</div><div><div class="l12e-stitle">Present to the team</div><div class="l12e-stext">Show each person their function and zone of responsibility — this is the key moment of implementation</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Implementation time</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 hours: 1h AI dialogue & map preparation + 2h team presentation</div></div></div><div class="l12e-div"></div><div class="l12e-s"><div class="l12e-lbl">Tool</div><div class="l12e-tool"><div class="l12e-thdr"><div class="l12e-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><div><div class="l12e-ttitle">AI Functional Structure Coach</div><div class="l12e-tdesc">The assistant leads a dialogue and helps build the complete function map of your business: identifies all work, finds gaps and distributes responsibility. Output — a ready Functional Business Map.</div></div></div><a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura" target="_blank" class="l12e-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Develop functional structure</a></div></div>`,
-
-                lessonContent_pl: `<style>.l12p-s{margin-bottom:1.75rem}.l12p-s:last-child{margin-bottom:0}.l12p-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l12p-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l12p-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l12p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l12p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l12p-card p+p{margin-top:.7rem}.l12p-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:3px solid #22c55e;border-radius:0 10px 10px 0;font-size:.875rem;color:#166534;font-style:italic;line-height:1.6}.l12p-reasons{display:grid;gap:.55rem;margin-top:.75rem}.l12p-reason{padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12p-rhdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem}.l12p-rnum{width:24px;height:24px;background:#22c55e;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0}.l12p-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem}.l12p-rbody{font-size:.82rem;color:#525252;line-height:1.5}.l12p-steps{display:grid;gap:.55rem;margin-top:.75rem}.l12p-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12p-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l12p-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l12p-stext{font-size:.82rem;color:#525252;line-height:1.5}.l12p-problems{display:grid;gap:.45rem;margin-top:.75rem}.l12p-problem{display:flex;align-items:flex-start;gap:.65rem;padding:.75rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l12p-fns{display:grid;gap:.5rem;margin-top:.75rem}.l12p-fn{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12p-fnhdr{display:flex;align-items:center;gap:.55rem;margin-bottom:.3rem}.l12p-fnnum{font-size:.72rem;font-weight:700;color:#22c55e;background:#f0fdf4;padding:.2rem .55rem;border-radius:6px}.l12p-fntitle{font-weight:700;color:#1a1a1a;font-size:.84rem}.l12p-fntext{font-size:.78rem;color:#525252;line-height:1.4}.l12p-fnstat{font-size:.75rem;color:#15803d;font-weight:600;margin-top:.3rem;padding:.25rem .55rem;background:#f0fdf4;border-radius:5px;display:inline-block}.l12p-mgr{display:grid;gap:.5rem;margin-top:.75rem}.l12p-mgri{display:flex;gap:.7rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12p-mgricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l12p-mgrtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l12p-mgrtext{font-size:.82rem;color:#525252;line-height:1.5}.l12p-results{display:grid;gap:.4rem;margin-top:.75rem}.l12p-ri{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l12p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l12p-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l12p-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l12p-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l12p-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l12p-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l12p-s"><div class="l12p-lbl">Wprowadzenie</div><div class="l12p-title">Dlaczego przy wzroście robi się trudniej, nie łatwiej</div><div class="l12p-card"><p>Każdy właściciel małego biznesu napotyka w końcu to pytanie: dlaczego przy wzroście robi się trudniej, nie łatwiej? Więcej ludzi — więcej chaosu. Więcej zamówień — więcej błędów.</p><p>Odpowiedź jest zazwyczaj jedna: biznes nie jest zorganizowany. Nie w sensie "zarejestrowany" — ale w sensie "każda praca przypisana konkretnej osobie, i wszystkie części współdziałają ze sobą."</p><p>Struktura funkcjonalna to fundament bez którego każdy system, CRM, automatyzacja lub motywacja — to tylko nadbudowa na piasku.</p></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 1</div><div class="l12p-title">Co oznacza "zorganizować biznes" — i dlaczego większość rozumie to źle</div><div class="l12p-card"><p>Zorganizować to ułożyć wszystko w porządku i ustawić pracę tak aby osiągnąć to czego chcesz. Jak posprzątać pokój: każda rzecz ma swoje miejsce.</p><p>Większość właścicieli przez "zorganizować" rozumie: "zatrudnić więcej ludzi", "kupić CRM", "zrobić spotkanie", "napisać regulaminy." To wszystko narzędzia. Organizacja to zasada stojąca za nimi.</p></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 2</div><div class="l12p-title">Czym jest "funkcja" — i dlaczego to najważniejsze słowo w zarządzaniu</div><div class="l12p-card"><p>"Funkcja" to konkretna praca którą ktoś wykonuje. Prosto mówiąc: "za co odpowiadasz." Nie stanowisko. Nie tytuł. Ale realna odpowiedź na: <strong>co dokładnie robisz i co po tobie pozostaje?</strong></p><p>W biznesie funkcje to jak pozycje w piłce nożnej. Ktoś znajduje klientów. Ktoś sprzedaje. Ktoś produkuje. Ktoś dostarcza. Ktoś liczy pieniądze.</p></div><div class="l12p-quote">Biznes to puzzle gdzie każdy element to osobna funkcja: sprzedaż, marketing, pieniądze, produkcja, ludzie, dostawa. Jeśli choć jeden element wypadnie — obrazek jest niepełny.</div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Wizualizacja</div><div class="l12p-title">Oto jak to wygląda w praktyce</div><div class="l12p-card" style="margin-bottom:1rem"><p>Poniżej przykład jak wygląda struktura funkcjonalna prawdziwego biznesu. Każda kolumna to osobna funkcja. Pod każdą funkcją — podfunkcje: konkretne prace wykonywane w tej strefie odpowiedzialności.</p><p>Na razie po prostu przejrzyj i zrozum logikę. Swoją strukturę zbudujesz później — w sekcji <strong>"System: Struktura"</strong>.</p></div><div style="overflow-x:auto"><div style="display:flex;gap:8px;min-width:700px"><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Administracja</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Planowanie strategiczne</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Regulaminy i technologie</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Narady i kontrola</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Rekrutacja i personel</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Poszukiwanie i selekcja</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Wdrożenie</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Motywacja i KPI</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Marketing</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Opracowanie oferty</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Lejek pozyskiwania</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Reklama</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Sprzedaż</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Obsługa zgłoszeń</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Sprzedaż</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Powtórna sprzedaż / CRM</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Finanse</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Przychody</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Koszty</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Księgowość</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Produkcja / świadczenie usług</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Planowanie</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Zaopatrzenie</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Produkcja</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Logistyka</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Kontrola jakości</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Wskaźniki</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Kontrole</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Opinie klientów</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;font-size:.82rem;color:#166534">Swoją strukturę zbudujesz w sekcji <strong>"System: Struktura"</strong> — tam jest narzędzie AI krok po kroku, które pomoże określić funkcje właśnie twojego biznesu.</div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Jak biznes rośnie</div><div class="l12p-title">Gdy biznes rośnie — funkcje dzielą się na działy</div><div class="l12p-card"><p>Na starcie jedna osoba może obsługiwać kilka funkcji jednocześnie. To normalne. Ale gdy biznes rośnie — wewnątrz każdej funkcji pojawiają się osobne strefy odpowiedzialności.</p><p>Na przykład: w <strong>Administracji</strong> wyodrębnia się osobny <strong>Dyrektor</strong> (strategia, partnerstwa) i <strong>Kierownik operacyjny</strong> (regulaminy, kontrola zespołu). W <strong>Produkcji</strong> — cztery osobne działy: Planowanie, Zaopatrzenie, Produkcja i Logistyka.</p><p>Struktura nie zmienia się — ona się uszczegóławia.</p></div><div style="overflow-x:auto;margin-top:1rem"><div style="display:flex;gap:6px;min-width:780px"><div style="display:flex;flex-direction:column;gap:0;flex:2"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Administracja</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">DYREKTOR</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Strategia</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Kluczowe decyzje</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Partnerstwa</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">OPERACYJNY</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Regulaminy</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Narady i raporty</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Kontrola zespołu</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">HR</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Rekrutacja</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Szkolenie</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Motywacja</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Marketing</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Oferta</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Lejek</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Reklama</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Sprzedaż</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Obsługa</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Sprzedaż</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">CRM</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Finanse</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Przychody</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Koszty</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Księgowość</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:4"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Produkcja / świadczenie usług</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">PLANOWANIE</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Harmonogram</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Zasoby</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Priorytety</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">ZAOPATRZENIE</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Zakupy</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Magazyn</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Dostawcy</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">PRODUKCJA</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Świadczenie usługi</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Standardy</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Wykonawcy</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">LOGISTYKA</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Dostawa</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Przekazanie klientowi</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Dokumenty</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Kontrola jakości</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Wskaźniki</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Kontrole</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Opinie</div></div></div></div></div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Problem = brakująca funkcja</div><div class="l12p-title">Każdy problem w biznesie to brakująca lub zepsuta funkcja</div><div class="l12p-card"><p>Właściciele szukają przyczyny problemów w ludziach: "zły menedżer", "leniwi pracownicy", "nie ten klient". W rzeczywistości przyczyna jest prawie zawsze jedna — w biznesie jest funkcja, której <strong>nikt nie wykonuje</strong>.</p><p>Znajdź brakującą funkcję — znajdziesz przyczynę. Napraw funkcję — rozwiążesz problem.</p></div><div style="margin-top:.75rem;display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Brak klientów lub bardzo mało</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Brakująca funkcja</div><div style="font-size:12px;font-weight:700;color:#04342C">Marketing</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Klienci kupują raz i nie wracają</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Brakująca funkcja</div><div style="font-size:12px;font-weight:700;color:#04342C">Ponowna sprzedaż / utrzymanie</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Ciągle brakuje materiałów lub towaru</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Brakująca funkcja</div><div style="font-size:12px;font-weight:700;color:#04342C">Zaopatrzenie produkcji</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Właściciel nie może wziąć urlopu — wszystko staje</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Brakująca funkcja</div><div style="font-size:12px;font-weight:700;color:#04342C">Zarządzanie operacyjne</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Nowi pracownicy miesiącami nie osiągają wyników</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Brakująca funkcja</div><div style="font-size:12px;font-weight:700;color:#04342C">Adaptacja i szkolenie personelu</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Pieniądze są, ale ciągle ich nie starcza</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Brakująca funkcja</div><div style="font-size:12px;font-weight:700;color:#04342C">Planowanie finansowe</div></div></div></div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Co robić</div><div class="l12p-title">Znalazłeś problem — dodaj funkcję do struktury</div><div class="l12p-card"><p>Gdy znajdziesz problem — nie szukaj winnego. Zapytaj siebie: <strong>jakiej funkcji nam brakuje lub która nie jest wykonywana?</strong></p><p>Odpowiedź na to pytanie — to właśnie rozwiązanie. Nie kara, nie zwolnienie, nie nowy CRM. A konkretna funkcja, którą trzeba dodać do struktury i wyznaczyć odpowiedzialnego.</p></div><div class="l12p-steps" style="margin-top:.75rem"><div class="l12p-step"><div class="l12p-snum" style="background:#ef4444">1</div><div><div class="l12p-stitle">Znajdź objaw</div><div class="l12p-stext">Co konkretnie nie działa? Opisz to jako fakt, bez emocji: "klienci nie wracają", "materiałów ciągle brakuje", "nowi pracownicy długo nie osiągają wyników".</div></div></div><div class="l12p-step"><div class="l12p-snum" style="background:#f59e0b">2</div><div><div class="l12p-stitle">Określ brakującą funkcję</div><div class="l12p-stext">Zapytaj: jaka praca powinna być wykonywana, żeby ten problem nie istniał? To właśnie brakująca funkcja. Nazwij ją konkretnie.</div></div></div><div class="l12p-step"><div class="l12p-snum" style="background:#22c55e">3</div><div><div class="l12p-stitle">Dodaj do struktury i wyznacz odpowiedzialnego</div><div class="l12p-stext">Wpisz funkcję na mapę biznesu. Wyznacz osobę, która będzie za nią odpowiadać. Teraz ta "dziura" jest zamknięta — problem rozwiązany systemowo, nie ręcznie.</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:#EEEDFE;border:1px solid #7F77DD;border-radius:12px;font-size:.82rem;color:#26215C"><strong>Pamiętaj:</strong> struktura to nie papier na ścianie. To żywy dokument, który aktualizuje się za każdym razem gdy znajdziesz nową "dziurę" w biznesie.</div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 3</div><div class="l12p-title">Cztery powody dlaczego pracę trzeba dzielić na funkcje</div><div class="l12p-reasons"><div class="l12p-reason"><div class="l12p-rhdr"><div class="l12p-rnum">1</div><div class="l12p-rtitle">Małe zadanie łatwiej wytłumaczyć i przekazać</div></div><div class="l12p-rbody">Gdy praca nie jest podzielona — dajesz komuś coś ogromnego i nieokreślonego. "Zajmij się marketingiem." Co to oznacza? Od czego zacząć? Dla większości ludzi — stres i paraliż.</div></div><div class="l12p-reason"><div class="l12p-rhdr"><div class="l12p-rnum">2</div><div class="l12p-rtitle">Łatwiej zobaczyć co zrobione a co nie</div></div><div class="l12p-rbody">Jak lista zakupów: chleb — jest, mleko — jest, jajka — nie ma. Od razu widać czego brakuje. Gdy praca nie jest podzielona — nie możesz zrobić takiej listy.</div></div><div class="l12p-reason"><div class="l12p-rhdr"><div class="l12p-rnum">3</div><div class="l12p-rtitle">Jeśli coś nie działa — możesz wymienić jedną część</div></div><div class="l12p-rbody">Przepaliła się żarówka w reflektorze — wymieniasz żarówkę, nie cały samochód. Przy jasnych funkcjach — wiesz dokładnie gdzie jest problem.</div></div><div class="l12p-reason"><div class="l12p-rhdr"><div class="l12p-rnum">4</div><div class="l12p-rtitle">Ludzie stają się mistrzami</div></div><div class="l12p-rbody">Gdy ktoś długo robi jedną rzecz — rośnie w niej. Chirurg kardiolog który robi tylko operacje serca jest znacznie lepszy niż chirurg ogólny który robi wszystko.</div></div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 4</div><div class="l12p-title">Henry Ford i rewolucja funkcji — jak podział pracy zmienił świat</div><div class="l12p-card"><p>Przed Fordem samochód był luksusem. Jeden rzemieślnik budował samochód od początku do końca. Ford zrobił inaczej: każdy pracownik wykonuje jedną prostą operację. Jeden konkretny ruch. Jeden konkretny wynik.</p></div><div class="l12p-quote">Dzielenie pracy na jasne funkcje to nie biurokracja ani komplikowanie. To droga do większej produktywności, niższych kosztów i lepszej jakości — jednocześnie.</div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 5</div><div class="l12p-title">Biznes to taśma produkcyjna. Jak praca przemieszcza się od początku do końca</div><div class="l12p-card"><p>Jedna idea która całkowicie zmienia spojrzenie na biznes: <strong>biznes to taśma produkcyjna</strong>. W każdym biznesie jest przepływ: coś przychodzi → coś się z tym robi → coś wychodzi. Między "przychodzi" a "wychodzi" — łańcuch funkcji.</p></div><div class="l12p-card" style="margin-top:.6rem"><p><strong>Prawdziwy przypadek:</strong> Firma wysłała towar do klienta bez dokumentów. Klient powiedział "pilne, zapłacę jutro." Dostał towar — odmówił zapłaty. "Gdzie dokumenty? Brak dokumentów — brak płatności." Jedna brakująca funkcja kosztowała firmę półroczny budżet.</p></div><div class="l12p-quote">Nie wystarczy tylko podzielić pracę. Funkcje muszą sobie przekazywać pracę. Bez przekazania — każda funkcja żyje we własnej łodzi podwodnej.</div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 6</div><div class="l12p-title">Pułapka "zrobię sam" — i dlaczego niszczy biznes</div><div class="l12p-card"><p>"Moi pracownicy nie robią jak trzeba. Łatwiej zrobić samemu." Jeśli choć raz tak myślałeś — już wpadłeś w pułapkę. Rozwiązanie — zorganizować pracę tak aby zwykli ludzie dawali przewidywalne wyniki.</p></div><div class="l12p-lbl" style="margin-top:1rem">Dwa działania gdy zespół nie daje rady</div><div class="l12p-steps"><div class="l12p-step"><div class="l12p-snum" style="background:#ef4444">1</div><div><div class="l12p-stitle">Ugasić pożar</div><div class="l12p-stext">Rozwiąż problem który płonie teraz. Wymuszone ale konieczne. Jeśli się tu zatrzymasz — pożar wybuchnie znowu.</div></div></div><div class="l12p-step"><div class="l12p-snum" style="background:#22c55e">2</div><div><div class="l12p-stitle">Zbudować system</div><div class="l12p-stext">Zorganizuj pracę tak aby takie pożary już nie powstawały. Zdefiniuj funkcje. Opisz jak się ze sobą komunikują. Postaw ludzi na miejsca.</div></div></div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 7</div><div class="l12p-title">Pułapka "wielozadaniowca" — gdy jedna osoba robi wszystko</div><div class="l12p-card"><p>Mały biznes często wygląda tak: jest Maciej. Maciej jest i sprzedawcą, i księgowym, i kierownikiem zaopatrzenia, i operatorem mediów społecznościowych. Wydaje się to pomocne. W rzeczywistości — katastrofa w zwolnionym tempie.</p></div><div class="l12p-problems"><div class="l12p-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Trudno znaleźć.</strong> Gdzie znaleźć kogoś kto umie sprzedawać, robić księgowość, pracować z dostawcami i w mediach społecznościowych? Takich osób prawie nie ma.</div></div><div class="l12p-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Trudno szkolić.</strong> Szkolenie kogoś w 5 różnych rzeczach jest 5 razy dłuższe i droższe.</div></div><div class="l12p-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Trudno zarządzać.</strong> Zawsze jest powód dlaczego konkretna praca nie jest zrobiona. Brak jasnej funkcji — brak jasnego KPI.</div></div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 8</div><div class="l12p-title">Mapa biznesu — jak zobaczyć wszystkie funkcje i znaleźć "dziury"</div><div class="l12p-card"><p>Najbardziej niebezpieczny typ problemu w biznesie — ten którego nie widzisz. Nie ten gdzie płonie i boli. Ale ten gdzie pieniądze cicho przeciekają.</p></div><div class="l12p-lbl" style="margin-top:1rem">Przykład: zwykły sklep detaliczny — minimum 6 funkcji</div><div class="l12p-fns"><div class="l12p-fn"><div class="l12p-fnhdr"><span class="l12p-fnnum">Funkcja 1</span><span class="l12p-fntitle">Zdefiniuj co sprzedajemy i komu</span></div><div class="l12p-fntext">Jaki produkt? Kto jest kupującym? Jaki przedział cenowy? To nie jednorazowa decyzja przy otwarciu — to regularna praca.</div></div><div class="l12p-fn"><div class="l12p-fnhdr"><span class="l12p-fnnum">Funkcja 2</span><span class="l12p-fntitle">Jak ludzie dowiadują się o nas</span></div><div class="l12p-fntext">Reklama, szyld, media społecznościowe, poczta pantoflowa, partnerstwa. Jeśli tego nie ma — nie masz funkcji marketingowej. Masz tylko szczęście.</div></div><div class="l12p-fn"><div class="l12p-fnhdr"><span class="l12p-fnnum">Funkcja 3</span><span class="l12p-fntitle">Jak wygląda sklep</span></div><div class="l12p-fntext">Witryna, aranżacja, nawigacja, atmosfera.</div><div class="l12p-fnstat">+30–40% ruchu od atrakcyjnego wyglądu</div></div><div class="l12p-fn"><div class="l12p-fnhdr"><span class="l12p-fnnum">Funkcja 4</span><span class="l12p-fntitle">Jak ułożone są produkty</span></div><div class="l12p-fntext">Merchandising to nauka. Gdzie stoi produkt, jak jest oświetlony, co jest obok — wszystko wpływa na średni paragon.</div><div class="l12p-fnstat">+20–25% sprzedaży przy prawidłowym merchandisingu</div></div><div class="l12p-fn"><div class="l12p-fnhdr"><span class="l12p-fnnum">Funkcja 5</span><span class="l12p-fntitle">Jak sprzedajemy</span></div><div class="l12p-fntext">Skrypty doradców, praca przy kasie, odpowiadanie na pytania, proponowanie produktów powiązanych.</div></div><div class="l12p-fn"><div class="l12p-fnhdr"><span class="l12p-fnnum">Funkcja 6</span><span class="l12p-fntitle">Jak sprowadzamy kupujących z powrotem</span></div><div class="l12p-fntext">Programy lojalnościowe, newslettery, promocje dla stałych klientów.</div><div class="l12p-fnstat">Utrzymanie klienta jest 5–7x tańsze niż pozyskanie nowego</div></div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 9</div><div class="l12p-title">Jedno zepsute ogniwo — i system stoi. Rola kierownika</div><div class="l12p-card"><p>Właściciele często myślą po zbudowaniu struktury: "Gotowe, rozpisałem funkcje, przypisałem ludzi, teraz jedzie samo." Nie. Po zbudowaniu struktury pojawia się nowa krytyczna rola: kierownik który pilnuje żeby wszystkie ogniwa działały.</p></div><div class="l12p-lbl" style="margin-top:1rem">Trzy zadania kierownika w zorganizowanym biznesie</div><div class="l12p-mgr"><div class="l12p-mgri"><div class="l12p-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l12p-mgrtitle">Widzieć</div><div class="l12p-mgrtext">Mieć informacje o tym co dzieje się w każdej funkcji — nie przez spotkania raz w tygodniu, ale przez system wskaźników który daje sygnał w czasie rzeczywistym.</div></div></div><div class="l12p-mgri"><div class="l12p-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="l12p-mgrtitle">Zauważać</div><div class="l12p-mgrtext">Widzieć problemy zanim staną się katastrofą. Wczesne sygnały kosztują znacznie mniej niż późna reakcja.</div></div></div><div class="l12p-mgri"><div class="l12p-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l12p-mgrtitle">Naprawiać</div><div class="l12p-mgrtext">Szybko interweniować i rozwiązywać. Nie "rozwiążemy to później" — ale teraz, zanim mały problem stał się dużym.</div></div></div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Sekcja 10</div><div class="l12p-title">Trzy kroki budowania struktury funkcjonalnej — od czego zacząć</div><div class="l12p-steps"><div class="l12p-step"><div class="l12p-snum">1</div><div><div class="l12p-stitle">Zrozumieć "surowiec"</div><div class="l12p-stext">Co przychodzi do twojego biznesu? Skąd biorą się zamówienia? Kim jest twój klient? Bez odpowiedzi na to — nie możesz zbudować taśmy produkcyjnej.</div></div></div><div class="l12p-step"><div class="l12p-snum">2</div><div><div class="l12p-stitle">Zdefiniować wszystkie kroki transformacji</div><div class="l12p-stext">Co trzeba zrobić aby zamienić "surowiec" w "gotowy produkt"? Wypisz wszystkie kroki. Na tym etapie znajdziesz kroki których teraz w ogóle nie robisz: "Chwila, kto u nas kontroluje jakość przed wysyłką?" — "Nikt." Oto twoja "dziura".</div></div></div><div class="l12p-step"><div class="l12p-snum">3</div><div><div class="l12p-stitle">Przypisać ludzi do ról</div><div class="l12p-stext">Do każdej funkcji — wyznacz odpowiedzialnego. "Odpowiedzialny" nie oznacza "robi to sam." Ale musi wiedzieć że ta funkcja to jego strefa odpowiedzialności.</div></div></div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Podsumowanie</div><div class="l12p-title">Czym jest struktura funkcjonalna i dlaczego jej potrzebujesz</div><div class="l12p-card"><p>Struktura funkcjonalna to nie organigramem ze strzałkami i kwadratami. To odpowiedź na: <strong>jakie prace muszą być wykonane w twoim biznesie, kto za każdą odpowiada i jak sobie przekazują pracę.</strong></p><p>To fundament. Bez niego CRM to tylko baza danych której nikt nie używa.</p></div><div class="l12p-results"><div class="l12p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Zrozumiesz jakie funkcje istnieją w twoim biznesie — i jakich nie ma</div><div class="l12p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Znajdziesz "dziury" — gdzie cicho przeciekają pieniądze</div><div class="l12p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Będziesz mógł świadomie przypisywać ludzi do konkretnych ról</div><div class="l12p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Przestaniesz być "najniezastąpialszym wykonawcą" w swoim własnym biznesie</div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Zadanie</div><div class="l12p-title">Opracuj strukturę funkcjonalną swojego biznesu przez asystenta AI</div><div class="l12p-steps"><div class="l12p-step"><div class="l12p-snum">1</div><div><div class="l12p-stitle">Przeprowadź dialog z AI Coachem Struktury</div><div class="l12p-stext">Asystent przeprowadzi cię przez określenie wszystkich funkcji twojego biznesu, znajdzie "dziury" i pomoże rozdzielić role</div></div></div><div class="l12p-step"><div class="l12p-snum">2</div><div><div class="l12p-stitle">Zapisz wynik w Google Docs</div><div class="l12p-stext">Na wyjściu — gotowa "Funkcjonalna Mapa Biznesu" z listą funkcji i odpowiedzialnych</div></div></div><div class="l12p-step"><div class="l12p-snum">3</div><div><div class="l12p-stitle">Przeprowadź prezentację dla zespołu</div><div class="l12p-stext">Pokaż każdemu jego funkcję i strefę odpowiedzialności</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Czas wdrożenia</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 godziny: 1h dialog z AI i przygotowanie mapy + 2h prezentacja dla zespołu</div></div></div><div class="l12p-div"></div><div class="l12p-s"><div class="l12p-lbl">Narzędzie</div><div class="l12p-tool"><div class="l12p-thdr"><div class="l12p-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><div><div class="l12p-ttitle">AI Coach Struktury Funkcjonalnej</div><div class="l12p-tdesc">Asystent prowadzi dialog i pomaga zbudować pełną mapę funkcji twojego biznesu: identyfikuje wszystkie prace, znajduje "dziury" i rozdziela odpowiedzialność. Na wyjściu — gotowa Funkcjonalna Mapa Biznesu.</div></div></div><a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura" target="_blank" class="l12p-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Opracuj strukturę funkcjonalną</a></div></div>`,
-
-                lessonContent_de: `<style>.l12d-s{margin-bottom:1.75rem}.l12d-s:last-child{margin-bottom:0}.l12d-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l12d-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l12d-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l12d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l12d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l12d-card p+p{margin-top:.7rem}.l12d-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:3px solid #22c55e;border-radius:0 10px 10px 0;font-size:.875rem;color:#166534;font-style:italic;line-height:1.6}.l12d-reasons{display:grid;gap:.55rem;margin-top:.75rem}.l12d-reason{padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12d-rhdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem}.l12d-rnum{width:24px;height:24px;background:#22c55e;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0}.l12d-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem}.l12d-rbody{font-size:.82rem;color:#525252;line-height:1.5}.l12d-steps{display:grid;gap:.55rem;margin-top:.75rem}.l12d-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12d-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l12d-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l12d-stext{font-size:.82rem;color:#525252;line-height:1.5}.l12d-problems{display:grid;gap:.45rem;margin-top:.75rem}.l12d-problem{display:flex;align-items:flex-start;gap:.65rem;padding:.75rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l12d-fns{display:grid;gap:.5rem;margin-top:.75rem}.l12d-fn{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12d-fnhdr{display:flex;align-items:center;gap:.55rem;margin-bottom:.3rem}.l12d-fnnum{font-size:.72rem;font-weight:700;color:#22c55e;background:#f0fdf4;padding:.2rem .55rem;border-radius:6px}.l12d-fntitle{font-weight:700;color:#1a1a1a;font-size:.84rem}.l12d-fntext{font-size:.78rem;color:#525252;line-height:1.4}.l12d-fnstat{font-size:.75rem;color:#15803d;font-weight:600;margin-top:.3rem;padding:.25rem .55rem;background:#f0fdf4;border-radius:5px;display:inline-block}.l12d-mgr{display:grid;gap:.5rem;margin-top:.75rem}.l12d-mgri{display:flex;gap:.7rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12d-mgricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l12d-mgrtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l12d-mgrtext{font-size:.82rem;color:#525252;line-height:1.5}.l12d-results{display:grid;gap:.4rem;margin-top:.75rem}.l12d-ri{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l12d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l12d-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l12d-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l12d-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l12d-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l12d-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l12d-s"><div class="l12d-lbl">Einführung</div><div class="l12d-title">Warum Wachstum es schwerer, nicht leichter macht</div><div class="l12d-card"><p>Jeder Kleinunternehmer stellt sich irgendwann diese Frage: Warum wird es beim Wachstum schwerer, nicht leichter? Mehr Menschen — mehr Chaos. Mehr Bestellungen — mehr Fehler.</p><p>Die Antwort ist meist dieselbe: Das Unternehmen ist nicht organisiert. Nicht im Sinne von "eingetragen" — sondern im Sinne von "jede Arbeit ist einer bestimmten Person zugewiesen und alle Teile interagieren miteinander."</p><p>Funktionale Struktur ist das Fundament ohne das jedes System, CRM, Automatisierung oder Motivation nur ein Aufbau auf Sand ist.</p></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 1</div><div class="l12d-title">Was "ein Unternehmen organisieren" bedeutet — und warum die meisten es falsch verstehen</div><div class="l12d-card"><p>Organisieren heißt alles ordnen und die Arbeit so einrichten dass man erreicht was man will. Wie ein Zimmer aufräumen: jede Sache hat ihren Platz.</p><p>Die meisten Inhaber verstehen "organisieren" als: "mehr Leute einstellen", "ein CRM kaufen", "ein Meeting abhalten". Das sind alles Werkzeuge. Organisation ist das Prinzip dahinter.</p></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 2</div><div class="l12d-title">Was eine "Funktion" ist — und warum es das wichtigste Wort im Management ist</div><div class="l12d-card"><p>"Funktion" ist eine konkrete Aufgabe die jemand ausführt. Einfach gesagt: "wofür du verantwortlich bist." Nicht die Stellenbezeichnung. Sondern eine echte Antwort auf: <strong>was genau tust du und was bleibt nach dir?</strong></p></div><div class="l12d-quote">Unternehmen ist ein Puzzle wo jedes Stück eine eigene Funktion ist: Vertrieb, Marketing, Geld, Produktion, Menschen, Lieferung. Wenn auch nur ein Stück fehlt — ist das Bild unvollständig.</div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Visualisierung</div><div class="l12d-title">So sieht es in der Praxis aus</div><div class="l12d-card" style="margin-bottom:1rem"><p>Unten ein Beispiel wie eine funktionale Unternehmensstruktur aussieht. Jede Spalte ist eine eigene Funktion. Unter jeder Funktion — Unterfunktionen: konkrete Arbeiten innerhalb dieser Verantwortungszone.</p><p>Schauen Sie sich das zunächst nur an und verstehen Sie die Logik. Ihre eigene Struktur erstellen Sie später — im Abschnitt <strong>"System: Struktur"</strong>.</p></div><div style="overflow-x:auto"><div style="display:flex;gap:8px;min-width:700px"><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Verwaltung</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Strategische Planung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Vorschriften &amp; Technologien</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Besprechungen &amp; Kontrolle</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Einstellung &amp; Personal</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Suche &amp; Auswahl</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Einarbeitung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Motivation &amp; KPI</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Marketing</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Angebotsentwicklung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Akquisitionstrichter</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Werbung</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Vertrieb</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Anfragenbearbeitung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Vertrieb</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Wiederholungsverkauf / CRM</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Finanzen</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Einnahmen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Ausgaben</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Buchhaltung</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Produktion / Dienstleistung</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Planung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Beschaffung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Produktion</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Logistik</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Qualitätskontrolle</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Kennzahlen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Kontrollen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Kundenfeedback</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;font-size:.82rem;color:#166534">Ihre eigene Struktur erstellen Sie im Abschnitt <strong>"System: Struktur"</strong> — dort gibt es ein schrittweises KI-Tool.</div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Wie das Unternehmen wächst</div><div class="l12d-title">Wenn das Unternehmen wächst — teilen sich Funktionen in Abteilungen</div><div class="l12d-card"><p>Am Anfang kann eine Person mehrere Funktionen gleichzeitig übernehmen. Das ist normal. Wenn das Unternehmen wächst — entstehen innerhalb jeder Funktion separate Verantwortungszonen.</p><p>Zum Beispiel: in der <strong>Verwaltung</strong> entsteht ein eigener <strong>Direktor</strong> (Strategie, Partnerschaften) und ein <strong>Betriebsleiter</strong> (Vorschriften, Teamkontrolle). In der <strong>Produktion</strong> — vier separate Abteilungen: Planung, Beschaffung, Produktion und Logistik.</p><p>Die Struktur ändert sich nicht — sie wird detaillierter.</p></div><div style="overflow-x:auto;margin-top:1rem"><div style="display:flex;gap:6px;min-width:780px"><div style="display:flex;flex-direction:column;gap:0;flex:2"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Verwaltung</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">DIREKTOR</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Strategie</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Schlüsselentscheidungen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Externe Partnerschaften</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">BETRIEBSLEITER</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Vorschriften</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Besprechungen &amp; Berichte</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Teamkontrolle</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">HR</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Rekrutierung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Schulung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Motivation</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Marketing</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Angebot</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Trichter</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Werbung</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Vertrieb</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Anfragen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Verkauf</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">CRM</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Finanzen</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Einnahmen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Ausgaben</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Buchhaltung</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:4"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Produktion / Dienstleistung</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">PLANUNG</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Arbeitsplan</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Ressourcen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Prioritäten</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">BESCHAFFUNG</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Einkauf</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Lager</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Lieferanten</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">PRODUKTION</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Dienstleistungserbringung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Standards</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Ausführende</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">LOGISTIK</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Lieferung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Übergabe an Kunden</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Dokumente</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Qualitätskontrolle</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Kennzahlen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Kontrollen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Feedback</div></div></div></div></div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Problem = fehlende Funktion</div><div class="l12d-title">Jedes Problem im Unternehmen ist eine fehlende oder defekte Funktion</div><div class="l12d-card"><p>Inhaber suchen die Ursache von Problemen bei Menschen: "schlechter Manager", "faule Mitarbeiter", "falscher Kunde". In Wirklichkeit gibt es fast immer eine Ursache — es gibt eine Funktion, die <strong>niemand ausführt</strong>.</p><p>Finde die fehlende Funktion — finde die Ursache. Behebe die Funktion — löse das Problem.</p></div><div style="margin-top:.75rem;display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Keine oder sehr wenige Kunden</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Fehlende Funktion</div><div style="font-size:12px;font-weight:700;color:#04342C">Marketing</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Kunden kaufen einmal und kommen nicht zurück</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Fehlende Funktion</div><div style="font-size:12px;font-weight:700;color:#04342C">Wiederholungsverkauf / Kundenbindung</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Ständig fehlen Materialien oder Waren</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Fehlende Funktion</div><div style="font-size:12px;font-weight:700;color:#04342C">Produktionsbeschaffung</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Inhaber kann nicht in Urlaub — alles stoppt</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Fehlende Funktion</div><div style="font-size:12px;font-weight:700;color:#04342C">Operative Unternehmensführung</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Neue Mitarbeiter erreichen monatelang keine Ergebnisse</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Fehlende Funktion</div><div style="font-size:12px;font-weight:700;color:#04342C">Einarbeitung &amp; Schulung</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Geld ist da, aber es reicht ständig nicht</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Fehlende Funktion</div><div style="font-size:12px;font-weight:700;color:#04342C">Finanzplanung</div></div></div></div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Was tun</div><div class="l12d-title">Problem gefunden — Funktion zur Struktur hinzufügen</div><div class="l12d-card"><p>Wenn Sie ein Problem finden — suchen Sie nicht nach Schuldigen. Fragen Sie sich: <strong>Welche Funktion fehlt uns oder wird nicht ausgeführt?</strong></p><p>Die Antwort auf diese Frage ist die Lösung. Keine Strafe, keine Kündigung, kein neues CRM. Eine konkrete Funktion, die zur Struktur hinzugefügt werden muss mit einem Verantwortlichen.</p></div><div class="l12d-steps" style="margin-top:.75rem"><div class="l12d-step"><div class="l12d-snum" style="background:#ef4444">1</div><div><div class="l12d-stitle">Symptom finden</div><div class="l12d-stext">Was funktioniert konkret nicht? Beschreiben Sie es als Tatsache, ohne Emotionen: "Kunden kommen nicht zurück", "Materialien fehlen ständig", "neue Mitarbeiter erreichen lange keine Ergebnisse".</div></div></div><div class="l12d-step"><div class="l12d-snum" style="background:#f59e0b">2</div><div><div class="l12d-stitle">Fehlende Funktion bestimmen</div><div class="l12d-stext">Fragen Sie: welche Arbeit hätte ausgeführt werden sollen, damit dieses Problem nicht existiert? Das ist die fehlende Funktion. Benennen Sie sie konkret.</div></div></div><div class="l12d-step"><div class="l12d-snum" style="background:#22c55e">3</div><div><div class="l12d-stitle">Zur Struktur hinzufügen und Verantwortlichen bestimmen</div><div class="l12d-stext">Fügen Sie die Funktion in die Unternehmenskarte ein. Bestimmen Sie eine Person, die dafür verantwortlich ist. Jetzt ist diese "Lücke" geschlossen — das Problem ist systemisch gelöst, nicht manuell.</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:#EEEDFE;border:1px solid #7F77DD;border-radius:12px;font-size:.82rem;color:#26215C"><strong>Merken Sie sich:</strong> Struktur ist kein Papier an der Wand. Es ist ein lebendiges Dokument, das jedes Mal aktualisiert wird wenn Sie eine neue "Lücke" im Unternehmen finden.</div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 3</div><div class="l12d-title">Vier Gründe warum Arbeit in Funktionen aufgeteilt werden muss</div><div class="l12d-reasons"><div class="l12d-reason"><div class="l12d-rhdr"><div class="l12d-rnum">1</div><div class="l12d-rtitle">Eine kleine Aufgabe ist leichter zu erklären und zu übertragen</div></div><div class="l12d-rbody">Wenn Arbeit nicht aufgeteilt ist — geben Sie jemandem etwas Riesiges und Vages. "Kümmere dich um Marketing." Was bedeutet das? Wo anfangen? Für die meisten Menschen — Stress und Lähmung.</div></div><div class="l12d-reason"><div class="l12d-rhdr"><div class="l12d-rnum">2</div><div class="l12d-rtitle">Einfacher zu sehen was erledigt ist und was nicht</div></div><div class="l12d-rbody">Wie eine Einkaufsliste: Brot — ja, Milch — ja, Eier — nein. Sofort klar was fehlt. Wenn Arbeit nicht aufgeteilt ist — kann man keine solche Liste erstellen.</div></div><div class="l12d-reason"><div class="l12d-rhdr"><div class="l12d-rnum">3</div><div class="l12d-rtitle">Wenn etwas nicht funktioniert — kann man ein Teil ersetzen</div></div><div class="l12d-rbody">Eine Scheinwerferbirne kaputt — ersetzen Sie die Birne, nicht das ganze Auto. Bei klaren Funktionen wissen Sie genau wo das Problem ist.</div></div><div class="l12d-reason"><div class="l12d-rhdr"><div class="l12d-rnum">4</div><div class="l12d-rtitle">Menschen werden Meister</div></div><div class="l12d-rbody">Wenn jemand lange eine Sache macht — wächst er darin. Ein Herzchirurg der nur Herzoperationen macht ist weit besser als ein Allgemeinchirurg der alles macht.</div></div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 4</div><div class="l12d-title">Henry Ford und die Funktionsrevolution — wie die Arbeitsteilung die Welt veränderte</div><div class="l12d-card"><p>Vor Ford war ein Auto Luxus. Ein Handwerker baute ein Auto von Anfang bis Ende. Ford machte es anders: Jeder Arbeiter führt eine einfache Operation aus. Eine konkrete Bewegung. Ein konkretes Ergebnis.</p></div><div class="l12d-quote">Arbeit in klare Funktionen aufzuteilen ist keine Bürokratie. Es ist der Weg zu mehr Produktivität, niedrigeren Kosten und besserer Qualität — gleichzeitig.</div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 5</div><div class="l12d-title">Unternehmen ist ein Fließband. Wie Arbeit von Anfang bis Ende fließt</div><div class="l12d-card"><p>Eine Idee die das Bild von Unternehmen völlig verändert: <strong>Unternehmen ist ein Fließband</strong>. In jedem Unternehmen gibt es einen Fluss: etwas kommt rein → etwas wird damit gemacht → etwas kommt raus. Zwischen "kommt rein" und "kommt raus" — eine Kette von Funktionen.</p></div><div class="l12d-card" style="margin-top:.6rem"><p><strong>Echter Fall:</strong> Ein Unternehmen lieferte Waren ohne Dokumente. Der Kunde sagte "dringend, ich zahle morgen." Bekam die Waren — weigerte sich zu zahlen. "Wo sind die Dokumente?" Eine fehlende Funktion kostete das Unternehmen ein halbes Jahresbudget.</p></div><div class="l12d-quote">Es reicht nicht nur Arbeit aufzuteilen. Funktionen müssen Arbeit aneinander weitergeben. Ohne Übergabe — lebt jede Funktion in ihrem eigenen U-Boot.</div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 6</div><div class="l12d-title">Die "mach ich selbst"-Falle — und warum sie das Unternehmen zerstört</div><div class="l12d-card"><p>"Meine Mitarbeiter machen es nicht richtig. Einfacher mach ich es selbst." Wenn Sie das auch nur einmal gedacht haben — sind Sie bereits in der Falle. Die Lösung — Arbeit so organisieren dass gewöhnliche Menschen vorhersehbare Ergebnisse liefern.</p></div><div class="l12d-lbl" style="margin-top:1rem">Zwei Maßnahmen wenn das Team versagt</div><div class="l12d-steps"><div class="l12d-step"><div class="l12d-snum" style="background:#ef4444">1</div><div><div class="l12d-stitle">Den Brand löschen</div><div class="l12d-stext">Das Problem lösen das gerade brennt. Erzwungen aber notwendig. Aber wenn Sie hier aufhören — entfacht das Feuer erneut.</div></div></div><div class="l12d-step"><div class="l12d-snum" style="background:#22c55e">2</div><div><div class="l12d-stitle">Ein System aufbauen</div><div class="l12d-stext">Arbeit so organisieren dass solche Brände nicht mehr entstehen. Funktionen definieren. Beschreiben wie sie interagieren. Menschen auf ihre Plätze stellen.</div></div></div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 7</div><div class="l12d-title">Die "Alleskönner"-Falle — wenn eine Person alles macht</div><div class="l12d-card"><p>Kleines Unternehmen sieht oft so aus: Es gibt Michael. Michael ist Verkäufer, Buchhalter, Einkaufsleiter und Social-Media-Betreiber. Scheint nützlich. In Wirklichkeit — Katastrophe im Zeitlupentempo.</p></div><div class="l12d-problems"><div class="l12d-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schwer zu finden.</strong> Wo findet man jemanden der verkaufen, buchen, mit Lieferanten arbeiten und Social Media betreiben kann?</div></div><div class="l12d-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schwer zu schulen.</strong> Jemanden in 5 verschiedenen Dingen zu schulen ist 5-mal länger und teurer.</div></div><div class="l12d-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schwer zu führen.</strong> Es gibt immer einen Grund warum eine bestimmte Arbeit nicht erledigt wurde. Keine klare Funktion — kein klarer KPI.</div></div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 8</div><div class="l12d-title">Unternehmenskarte — wie man alle Funktionen sieht und "Lücken" findet</div><div class="l12d-card"><p>Der gefährlichste Problemtyp im Unternehmen — der den man nicht sieht. Nicht wo es brennt. Sondern wo Geld still verloren geht.</p></div><div class="l12d-lbl" style="margin-top:1rem">Beispiel: gewöhnliches Einzelhandelsgeschäft — mindestens 6 Funktionen</div><div class="l12d-fns"><div class="l12d-fn"><div class="l12d-fnhdr"><span class="l12d-fnnum">Funktion 1</span><span class="l12d-fntitle">Definieren was wir verkaufen und an wen</span></div><div class="l12d-fntext">Welches Produkt? Wer ist der Käufer? Welche Preisklasse? Das ist keine einmalige Entscheidung bei der Eröffnung — es ist laufende Arbeit.</div></div><div class="l12d-fn"><div class="l12d-fnhdr"><span class="l12d-fnnum">Funktion 2</span><span class="l12d-fntitle">Wie erfahren Menschen von uns</span></div><div class="l12d-fntext">Werbung, Schild, Social Media, Mundpropaganda, Partnerschaften. Wenn das fehlt — haben Sie keine Marketingfunktion. Nur Glück.</div></div><div class="l12d-fn"><div class="l12d-fnhdr"><span class="l12d-fnnum">Funktion 3</span><span class="l12d-fntitle">Wie das Geschäft aussieht</span></div><div class="l12d-fntext">Schaufenster, Gestaltung, Navigation, Atmosphäre.</div><div class="l12d-fnstat">+30–40% Besucherverkehr durch attraktives Aussehen</div></div><div class="l12d-fn"><div class="l12d-fnhdr"><span class="l12d-fnnum">Funktion 4</span><span class="l12d-fntitle">Wie Produkte präsentiert werden</span></div><div class="l12d-fntext">Merchandising ist eine Wissenschaft. Wo ein Produkt steht, wie es beleuchtet ist, was daneben ist — alles beeinflusst den Durchschnittsumsatz.</div><div class="l12d-fnstat">+20–25% Umsatz mit richtigem Merchandising</div></div><div class="l12d-fn"><div class="l12d-fnhdr"><span class="l12d-fnnum">Funktion 5</span><span class="l12d-fntitle">Wie wir verkaufen</span></div><div class="l12d-fntext">Berater-Skripte, Kassenarbeit, Fragen beantworten, verwandte Produkte anbieten.</div></div><div class="l12d-fn"><div class="l12d-fnhdr"><span class="l12d-fnnum">Funktion 6</span><span class="l12d-fntitle">Wie wir Käufer zurückbringen</span></div><div class="l12d-fntext">Treueprogramme, Newsletter, Aktionen für Stammkunden.</div><div class="l12d-fnstat">Kundenbindung ist 5–7x günstiger als Neukundengewinnung</div></div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 9</div><div class="l12d-title">Ein kaputtes Glied — und das System steht. Die Rolle des Managers</div><div class="l12d-card"><p>Inhaber denken oft nach dem Aufbau der Struktur: "Fertig, Funktionen aufgezeichnet, Leute zugewiesen, jetzt läuft es von allein." Nein. Nach dem Aufbau entsteht eine neue kritische Rolle: Ein Manager der überwacht dass alle Glieder funktionieren.</p></div><div class="l12d-lbl" style="margin-top:1rem">Drei Aufgaben eines Managers in einem organisierten Unternehmen</div><div class="l12d-mgr"><div class="l12d-mgri"><div class="l12d-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l12d-mgrtitle">Sehen</div><div class="l12d-mgrtext">Informationen darüber haben was in jeder Funktion passiert — nicht durch wöchentliche Meetings, sondern durch ein Kennzahlensystem das Echtzeitsignale gibt.</div></div></div><div class="l12d-mgri"><div class="l12d-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="l12d-mgrtitle">Bemerken</div><div class="l12d-mgrtext">Probleme sehen bevor sie zur Katastrophe werden. Frühzeitige Signale kosten weit weniger als späte Reaktionen.</div></div></div><div class="l12d-mgri"><div class="l12d-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l12d-mgrtitle">Beheben</div><div class="l12d-mgrtext">Schnell eingreifen und lösen. Nicht "klären wir später" — sondern jetzt, bevor ein kleines Problem groß wird.</div></div></div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Abschnitt 10</div><div class="l12d-title">Drei Schritte zum Aufbau einer funktionalen Struktur — wo anfangen</div><div class="l12d-steps"><div class="l12d-step"><div class="l12d-snum">1</div><div><div class="l12d-stitle">Den "Rohstoff" verstehen</div><div class="l12d-stext">Was kommt in Ihr Unternehmen? Woher kommen Bestellungen? Wer ist Ihr Kunde? Ohne Antwort darauf können Sie kein Fließband bauen.</div></div></div><div class="l12d-step"><div class="l12d-snum">2</div><div><div class="l12d-stitle">Alle Transformationsschritte definieren</div><div class="l12d-stext">Was muss getan werden um "Rohstoff" in "Fertigprodukt" zu verwandeln? Schreiben Sie alle Schritte auf. Auf dieser Stufe finden Sie Schritte die Sie derzeit gar nicht tun: "Wer kontrolliert bei uns die Qualität vor dem Versand?" — "Niemand." Das ist Ihre "Lücke".</div></div></div><div class="l12d-step"><div class="l12d-snum">3</div><div><div class="l12d-stitle">Personen den Rollen zuweisen</div><div class="l12d-stext">Für jede Funktion — einen Verantwortlichen benennen. "Verantwortlich" bedeutet nicht "macht es selbst." Aber sie müssen wissen dass diese Funktion ihre Verantwortungszone ist.</div></div></div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Zusammenfassung</div><div class="l12d-title">Was funktionale Struktur ist und warum Sie sie brauchen</div><div class="l12d-card"><p>Funktionale Struktur ist kein Organigramm mit Pfeilen und Kästchen. Es ist die Antwort auf: <strong>welche Arbeiten in Ihrem Unternehmen erledigt werden müssen, wer für jeden Teil verantwortlich ist und wie sie Arbeit aneinander weitergeben.</strong></p><p>Das ist das Fundament. Ohne es ist CRM nur eine Datenbank die niemand nutzt.</p></div><div class="l12d-results"><div class="l12d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Sie verstehen welche Funktionen in Ihrem Unternehmen existieren — und welche nicht</div><div class="l12d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Sie finden die "Lücken" — wo Geld still verloren geht</div><div class="l12d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Sie können Menschen bewusst konkreten Rollen zuweisen</div><div class="l12d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Sie hören auf der "unentbehrlichste Ausführende" in Ihrem eigenen Unternehmen zu sein</div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Aufgabe</div><div class="l12d-title">Entwickeln Sie die funktionale Struktur Ihres Unternehmens durch den KI-Assistenten</div><div class="l12d-steps"><div class="l12d-step"><div class="l12d-snum">1</div><div><div class="l12d-stitle">Führen Sie den Dialog mit dem KI-Struktur-Coach</div><div class="l12d-stext">Der Assistent führt Sie durch die Definition aller Funktionen Ihres Unternehmens, findet Lücken und hilft Rollen zu verteilen</div></div></div><div class="l12d-step"><div class="l12d-snum">2</div><div><div class="l12d-stitle">Speichern Sie das Ergebnis in Google Docs</div><div class="l12d-stext">Ausgabe — eine fertige "Funktionale Unternehmenskarte" mit Liste der Funktionen und Verantwortlichen</div></div></div><div class="l12d-step"><div class="l12d-snum">3</div><div><div class="l12d-stitle">Präsentieren Sie dem Team</div><div class="l12d-stext">Zeigen Sie jedem seine Funktion und Verantwortungszone</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Umsetzungszeit</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 Stunden: 1h KI-Dialog & Kartenvorbereitung + 2h Teampräsentation</div></div></div><div class="l12d-div"></div><div class="l12d-s"><div class="l12d-lbl">Werkzeug</div><div class="l12d-tool"><div class="l12d-thdr"><div class="l12d-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><div><div class="l12d-ttitle">KI Funktionale Struktur Coach</div><div class="l12d-tdesc">Der Assistent führt einen Dialog und hilft die vollständige Funktionskarte Ihres Unternehmens zu erstellen: identifiziert alle Arbeiten, findet Lücken und verteilt Verantwortung. Ausgabe — fertige Funktionale Unternehmenskarte.</div></div></div><a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura" target="_blank" class="l12d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Funktionale Struktur entwickeln</a></div></div>`,
-                lessonContent_cs: `<style>.l12c-s{margin-bottom:1.75rem}.l12c-s:last-child{margin-bottom:0}.l12c-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l12c-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l12c-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l12c-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l12c-card p{font-size:.9rem;color:#374151;line-height:1.65}.l12c-card p+p{margin-top:.7rem}.l12c-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:3px solid #22c55e;border-radius:0 10px 10px 0;font-size:.875rem;color:#166534;font-style:italic;line-height:1.6}.l12c-reasons{display:grid;gap:.55rem;margin-top:.75rem}.l12c-reason{padding:.9rem 1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12c-rhdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem}.l12c-rnum{width:24px;height:24px;background:#22c55e;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0}.l12c-rtitle{font-weight:700;color:#1a1a1a;font-size:.875rem}.l12c-rbody{font-size:.82rem;color:#525252;line-height:1.5}.l12c-steps{display:grid;gap:.55rem;margin-top:.75rem}.l12c-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12c-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}.l12c-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.25rem}.l12c-stext{font-size:.82rem;color:#525252;line-height:1.5}.l12c-problems{display:grid;gap:.45rem;margin-top:.75rem}.l12c-problem{display:flex;align-items:flex-start;gap:.65rem;padding:.75rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5}.l12c-fns{display:grid;gap:.5rem;margin-top:.75rem}.l12c-fn{padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12c-fnhdr{display:flex;align-items:center;gap:.55rem;margin-bottom:.3rem}.l12c-fnnum{font-size:.72rem;font-weight:700;color:#22c55e;background:#f0fdf4;padding:.2rem .55rem;border-radius:6px}.l12c-fntitle{font-weight:700;color:#1a1a1a;font-size:.84rem}.l12c-fntext{font-size:.78rem;color:#525252;line-height:1.4}.l12c-fnstat{font-size:.75rem;color:#15803d;font-weight:600;margin-top:.3rem;padding:.25rem .55rem;background:#f0fdf4;border-radius:5px;display:inline-block}.l12c-mgr{display:grid;gap:.5rem;margin-top:.75rem}.l12c-mgri{display:flex;gap:.7rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}.l12c-mgricon{width:30px;height:30px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l12c-mgrtitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l12c-mgrtext{font-size:.82rem;color:#525252;line-height:1.5}.l12c-results{display:grid;gap:.4rem;margin-top:.75rem}.l12c-ri{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534}.l12c-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l12c-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}.l12c-ticon{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l12c-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l12c-tdesc{font-size:.82rem;color:#525252;line-height:1.5}.l12c-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}</style><div class="l12c-s"><div class="l12c-lbl">Úvod</div><div class="l12c-title">Warum Wachstum es schwerer, nicht leichter macht</div><div class="l12c-card"><p>Jeder Kleinunternehmer stellt sich irgendwann diese Frage: Warum wird es beim Wachstum schwerer, nicht leichter? Mehr Menschen — mehr Chaos. Mehr Bestellungen — mehr Fehler.</p><p>Die Antwort ist meist dieselbe: Das Unternehmen ist nicht organisiert. Nicht im Sinne von "eingetragen" — sondern im Sinne von "jede Arbeit ist einer bestimmten Person zugewiesen und alle Teile interagieren miteinander."</p><p>Funktionale Struktura ist das Fundament ohne das jedes System, CRM, Automatisierung oder Motivace nur ein Aufbau auf Sand ist.</p></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 1</div><div class="l12c-title">Co znamená „organizovat podnikání" — und warum die meisten es falsch verstehen</div><div class="l12c-card"><p>Organisieren heißt alles ordnen und die Arbeit so einrichten dass man erreicht was man will. Wie ein Zimmer aufräumen: jede Sache hat ihren Platz.</p><p>Die meisten Inhaber verstehen "organisieren" als: "mehr Leute einstellen", "ein CRM kaufen", "ein Meeting abhalten". Das sind alles Nástroje. Organisation ist das Prinzip dahinter.</p></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 2</div><div class="l12c-title">Co je „funkce" — und warum es das wichtigste Wort im Management ist</div><div class="l12c-card"><p>"Funktion" ist eine konkrete Úkol die jemand ausführt. Einfach gesagt: "wofür du verantwortlich bist." Nicht die Stellenbezeichnung. Sondern eine echte Antwort auf: <strong>was genau tust du und was bleibt nach dir?</strong></p></div><div class="l12c-quote">Unternehmen ist ein Puzzle wo jedes Stück eine eigene Funktion ist: Vertrieb, Marketing, Geld, Výroba, Menschen, Dodávka. Wenn auch nur ein Stück fehlt — ist das Bild unvollständig.</div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Vizualizace</div><div class="l12c-title">So sieht es in der Praxis aus</div><div class="l12c-card" style="margin-bottom:1rem"><p>Unten ein Beispiel wie eine funktionale Unternehmensstruktur aussieht. Jede Spalte ist eine eigene Funktion. Unter jeder Funktion — Unterfunktionen: konkrete Arbeiten innerhalb dieser Verantwortungszone.</p><p>Schauen Sie sich das zunächst nur an und verstehen Sie die Logik. Ihre eigene Struktura erstellen Sie später — im Sekce <strong>"System: Struktura"</strong>.</p></div><div style="overflow-x:auto"><div style="display:flex;gap:8px;min-width:700px"><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Verwaltung</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Strategische Plánování</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Vorschriften &amp; Technologien</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Besprechungen &amp; Kontrolle</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Einstellung &amp; Personal</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Suche &amp; Auswahl</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Einarbeitung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Motivace &amp; KPI</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Marketing</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Nabídkasentwicklung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Akquisitionstrichter</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Reklama</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Vertrieb</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Anfragenbearbeitung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Vertrieb</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Wiederholungsverkauf / CRM</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Finance</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Příjmy</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Výdaje</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Účetnictví</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Výroba / Dienstleistung</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Plánování</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Zásobování</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Výroba</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Logistika</div></div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;min-height:52px;display:flex;align-items:center;justify-content:center">Kontrola kvality</div><div style="text-align:center;font-size:12px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">KPI</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Kontrollen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C">Kundenfeedback</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;font-size:.82rem;color:#166534">Ihre eigene Struktura erstellen Sie im Sekce <strong>"System: Struktura"</strong> — dort gibt es ein schrittweises KI-Tool.</div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Jak firma roste</div><div class="l12c-title">Wenn das Unternehmen wächst — teilen sich Funktionen in Abteilungen</div><div class="l12c-card"><p>Am Anfang kann eine Person mehrere Funktionen gleichzeitig übernehmen. Das ist normal. Wenn das Unternehmen wächst — entstehen innerhalb jeder Funktion separate Verantwortungszonen.</p><p>Zum Beispiel: in der <strong>Verwaltung</strong> entsteht ein eigener <strong>Ředitel</strong> (Strategie, Partnerství) und ein <strong>Provozsleiter</strong> (Vorschriften, Kontrola týmu). In der <strong>Výroba</strong> — vier separate Abteilungen: Plánování, Zásobování, Výroba und Logistika.</p><p>Die Struktura ändert sich nicht — sie wird detaillierter.</p></div><div style="overflow-x:auto;margin-top:1rem"><div style="display:flex;gap:6px;min-width:780px"><div style="display:flex;flex-direction:column;gap:0;flex:2"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Verwaltung</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">DIREKTOR</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Strategie</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Klíčová rozhodnutí</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Externe Partnerství</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">BETRIEBSLEITER</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Vorschriften</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Besprechungen &amp; Berichte</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Kontrola týmu</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">HR</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Rekrutierung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Školení</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Motivace</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Marketing</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Nabídka</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Trychtýř</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Reklama</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Vertrieb</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Anfragen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Verkauf</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">CRM</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Finance</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Příjmy</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Výdaje</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Účetnictví</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:4"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Výroba / Dienstleistung</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">PLANUNG</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Pracovní plán</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Zdroje</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Priority</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">BESCHAFFUNG</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Nákup</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Sklad</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Dodavatelé</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">PRODUKTION</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Dienstleistungserbringung</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Standardy</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Vykonavatelé</div></div><div style="width:1px;background:#C4C1F0;flex-shrink:0"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px">LOGISTIK</div><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Dodávka</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Předání an Kunden</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Dokumenty</div></div></div></div><div style="display:flex;flex-direction:column;gap:0;flex:1"><div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;min-height:44px;display:flex;align-items:center;justify-content:center">Kontrola kvality</div><div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff"><div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="text-align:center;font-size:11px;color:#888780">↓</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">KPI</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Kontrollen</div><div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C">Zpětná vazba</div></div></div></div></div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Problém = chybějící funkce</div><div class="l12c-title">Jedes Problém im Unternehmen ist eine fehlende oder defekte Funktion</div><div class="l12c-card"><p>Inhaber suchen die Ursache von Problémen bei Menschen: "schlechter Manager", "faule Mitarbeiter", "falscher Kunde". In Wirklichkeit gibt es fast immer eine Ursache — es gibt eine Funktion, die <strong>niemand ausführt</strong>.</p><p>Finde die fehlende Funktion — finde die Ursache. Behebe die Funktion — löse das Problém.</p></div><div style="margin-top:.75rem;display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Keine oder sehr wenige Kunden</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Chybějící funkce</div><div style="font-size:12px;font-weight:700;color:#04342C">Marketing</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Kunden kaufen einmal und kommen nicht zurück</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Chybějící funkce</div><div style="font-size:12px;font-weight:700;color:#04342C">Opakovaný prodej / udržení zákazníků</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Ständig fehlen Materialien oder Waren</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Chybějící funkce</div><div style="font-size:12px;font-weight:700;color:#04342C">Výrobasbeschaffung</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Inhaber kann nicht in Urlaub — alles stoppt</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Chybějící funkce</div><div style="font-size:12px;font-weight:700;color:#04342C">Operative Unternehmensführung</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Neue Mitarbeiter erreichen monatelang keine Ergebnisse</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Chybějící funkce</div><div style="font-size:12px;font-weight:700;color:#04342C">Einarbeitung &amp; Školení</div></div></div></div><div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#7f1d1d;font-weight:500">Geld ist da, aber es reicht ständig nicht</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0">→</div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;margin-bottom:1px">Chybějící funkce</div><div style="font-size:12px;font-weight:700;color:#04342C">Finanční plánování</div></div></div></div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Was tun</div><div class="l12c-title">Problém gefunden — Funktion zur Struktura hinzufügen</div><div class="l12c-card"><p>Wenn Sie ein Problém finden — suchen Sie nicht nach Schuldigen. Fragen Sie sich: <strong>Welche Funktion fehlt uns oder wird nicht ausgeführt?</strong></p><p>Die Antwort auf diese Frage ist die Lösung. Keine Strafe, keine Kündigung, kein neues CRM. Eine konkrete Funktion, die zur Struktura hinzugefügt werden muss mit einem Verantwortlichen.</p></div><div class="l12c-steps" style="margin-top:.75rem"><div class="l12c-step"><div class="l12c-snum" style="background:#ef4444">1</div><div><div class="l12c-stitle">Najít symptom</div><div class="l12c-stext">Was funktioniert konkret nicht? Beschreiben Sie es als Tatsache, ohne Emotionen: "Kunden kommen nicht zurück", "Materialien fehlen ständig", "neue Mitarbeiter erreichen lange keine Ergebnisse".</div></div></div><div class="l12c-step"><div class="l12c-snum" style="background:#f59e0b">2</div><div><div class="l12c-stitle">Chybějící funkce bestimmen</div><div class="l12c-stext">Fragen Sie: welche Arbeit hätte ausgeführt werden sollen, damit dieses Problém nicht existiert? Das ist die fehlende Funktion. Benennen Sie sie konkret.</div></div></div><div class="l12c-step"><div class="l12c-snum" style="background:#22c55e">3</div><div><div class="l12c-stitle">Zur Struktura hinzufügen und Verantwortlichen bestimmen</div><div class="l12c-stext">Fügen Sie die Funktion in die Unternehmenskarte ein. Bestimmen Sie eine Person, die dafür verantwortlich ist. Jetzt ist diese "Lücke" geschlossen — das Problém ist systemisch gelöst, nicht manuell.</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:#EEEDFE;border:1px solid #7F77DD;border-radius:12px;font-size:.82rem;color:#26215C"><strong>Merken Sie sich:</strong> Struktura ist kein Papier an der Wand. Es ist ein lebendiges Dokument, das jedes Mal aktualisiert wird wenn Sie eine neue "Lücke" im Unternehmen finden.</div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 3</div><div class="l12c-title">Vier Gründe warum Arbeit in Funktionen aufgeteilt werden muss</div><div class="l12c-reasons"><div class="l12c-reason"><div class="l12c-rhdr"><div class="l12c-rnum">1</div><div class="l12c-rtitle">Eine kleine Úkol ist leichter zu erklären und zu übertragen</div></div><div class="l12c-rbody">Wenn Arbeit nicht aufgeteilt ist — geben Sie jemandem etwas Riesiges und Vages. "Kümmere dich um Marketing." Was bedeutet das? Wo anfangen? Für die meisten Menschen — Stress und Lähmung.</div></div><div class="l12c-reason"><div class="l12c-rhdr"><div class="l12c-rnum">2</div><div class="l12c-rtitle">Einfacher zu sehen was erledigt ist und was nicht</div></div><div class="l12c-rbody">Wie eine Nákupsliste: Brot — ja, Milch — ja, Eier — nein. Sofort klar was fehlt. Wenn Arbeit nicht aufgeteilt ist — kann man keine solche Liste erstellen.</div></div><div class="l12c-reason"><div class="l12c-rhdr"><div class="l12c-rnum">3</div><div class="l12c-rtitle">Wenn etwas nicht funktioniert — kann man ein Teil ersetzen</div></div><div class="l12c-rbody">Eine Scheinwerferbirne kaputt — ersetzen Sie die Birne, nicht das ganze Auto. Bei klaren Funktionen wissen Sie genau wo das Problém ist.</div></div><div class="l12c-reason"><div class="l12c-rhdr"><div class="l12c-rnum">4</div><div class="l12c-rtitle">Menschen werden Meister</div></div><div class="l12c-rbody">Wenn jemand lange eine Sache macht — wächst er darin. Ein Herzchirurg der nur Herzoperationen macht ist weit besser als ein Allgemeinchirurg der alles macht.</div></div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 4</div><div class="l12c-title">Henry Ford a revoluce funkcí — wie die Arbeitsteilung die Welt veränderte</div><div class="l12c-card"><p>Vor Ford war ein Auto Luxus. Ein Handwerker baute ein Auto von Anfang bis Ende. Ford machte es anders: Jeder Arbeiter führt eine einfache Operation aus. Eine konkrete Bewegung. Ein konkretes Ergebnis.</p></div><div class="l12c-quote">Arbeit in klare Funktionen aufzuteilen ist keine Bürokratie. Es ist der Weg zu mehr Produktivität, niedrigeren Kosten und besserer Qualität — gleichzeitig.</div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 5</div><div class="l12c-title">Unternehmen ist ein Fließband. Wie Arbeit von Anfang bis Ende fließt</div><div class="l12c-card"><p>Eine Idee die das Bild von Unternehmen völlig verändert: <strong>Unternehmen ist ein Fließband</strong>. In jedem Unternehmen gibt es einen Fluss: etwas kommt rein → etwas wird damit gemacht → etwas kommt raus. Zwischen "kommt rein" und "kommt raus" — eine Kette von Funktionen.</p></div><div class="l12c-card" style="margin-top:.6rem"><p><strong>Echter Fall:</strong> Ein Unternehmen lieferte Waren ohne Dokumenty. Der Kunde sagte "dringend, ich zahle morgen." Bekam die Waren — weigerte sich zu zahlen. "Wo sind die Dokumenty?" Eine fehlende Funktion kostete das Unternehmen ein halbes Jahresbudget.</p></div><div class="l12c-quote">Es reicht nicht nur Arbeit aufzuteilen. Funktionen müssen Arbeit aneinander weitergeben. Ohne Předání — lebt jede Funktion in ihrem eigenen U-Boot.</div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 6</div><div class="l12c-title">Die "mach ich selbst"-Falle — und warum sie das Unternehmen zerstört</div><div class="l12c-card"><p>"Meine Mitarbeiter machen es nicht richtig. Einfacher mach ich es selbst." Wenn Sie das auch nur einmal gedacht haben — sind Sie bereits in der Falle. Die Lösung — Arbeit so organisieren dass gewöhnliche Menschen vorhersehbare Ergebnisse liefern.</p></div><div class="l12c-lbl" style="margin-top:1rem">Zwei Maßnahmen wenn das Team versagt</div><div class="l12c-steps"><div class="l12c-step"><div class="l12c-snum" style="background:#ef4444">1</div><div><div class="l12c-stitle">Den Brand löschen</div><div class="l12c-stext">Das Problém lösen das gerade brennt. Erzwungen aber notwendig. Aber wenn Sie hier aufhören — entfacht das Feuer erneut.</div></div></div><div class="l12c-step"><div class="l12c-snum" style="background:#22c55e">2</div><div><div class="l12c-stitle">Vybudovat systém</div><div class="l12c-stext">Arbeit so organisieren dass solche Brände nicht mehr entstehen. Funktionen definieren. Beschreiben wie sie interagieren. Menschen auf ihre Plätze stellen.</div></div></div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 7</div><div class="l12c-title">Past „zvládne všechno" — wenn eine Person alles macht</div><div class="l12c-card"><p>Kleines Unternehmen sieht oft so aus: Es gibt Michael. Michael ist Verkäufer, Buchhalter, Nákupsleiter und Social-Media-Betreiber. Scheint nützlich. In Wirklichkeit — Katastrophe im Zeitlupentempo.</p></div><div class="l12c-problems"><div class="l12c-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schwer zu finden.</strong> Wo findet man jemanden der verkaufen, buchen, mit Dodavatelé arbeiten und Social Media betreiben kann?</div></div><div class="l12c-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schwer zu schulen.</strong> Jemanden in 5 verschiedenen Dingen zu schulen ist 5-mal länger und teurer.</div></div><div class="l12c-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Schwer zu führen.</strong> Es gibt immer einen Grund warum eine bestimmte Arbeit nicht erledigt wurde. Keine klare Funktion — kein klarer KPI.</div></div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 8</div><div class="l12c-title">Unternehmenskarte — wie man alle Funktionen sieht und "Lücken" findet</div><div class="l12c-card"><p>Der gefährlichste Problémtyp im Unternehmen — der den man nicht sieht. Nicht wo es brennt. Sondern wo Geld still verloren geht.</p></div><div class="l12c-lbl" style="margin-top:1rem">Beispiel: gewöhnliches Einzelhandelsgeschäft — mindestens 6 Funktionen</div><div class="l12c-fns"><div class="l12c-fn"><div class="l12c-fnhdr"><span class="l12c-fnnum">Funktion 1</span><span class="l12c-fntitle">Definieren was wir verkaufen und an wen</span></div><div class="l12c-fntext">Welches Produkt? Wer ist der Käufer? Welche Preisklasse? Das ist keine einmalige Entscheidung bei der Eröffnung — es ist laufende Arbeit.</div></div><div class="l12c-fn"><div class="l12c-fnhdr"><span class="l12c-fnnum">Funktion 2</span><span class="l12c-fntitle">Wie erfahren Menschen von uns</span></div><div class="l12c-fntext">Reklama, Schild, Social Media, Mundpropaganda, Partnerství. Wenn das fehlt — haben Sie keine Marketingfunktion. Nur Glück.</div></div><div class="l12c-fn"><div class="l12c-fnhdr"><span class="l12c-fnnum">Funktion 3</span><span class="l12c-fntitle">Wie das Geschäft aussieht</span></div><div class="l12c-fntext">Schaufenster, Gestaltung, Navigation, Atmosphäre.</div><div class="l12c-fnstat">+30–40% Besucherverkehr durch attraktives Aussehen</div></div><div class="l12c-fn"><div class="l12c-fnhdr"><span class="l12c-fnnum">Funktion 4</span><span class="l12c-fntitle">Wie Produkte präsentiert werden</span></div><div class="l12c-fntext">Merchandising ist eine Wissenschaft. Wo ein Produkt steht, wie es beleuchtet ist, was daneben ist — alles beeinflusst den Durchschnittsumsatz.</div><div class="l12c-fnstat">+20–25% Umsatz mit richtigem Merchandising</div></div><div class="l12c-fn"><div class="l12c-fnhdr"><span class="l12c-fnnum">Funktion 5</span><span class="l12c-fntitle">Wie wir verkaufen</span></div><div class="l12c-fntext">Berater-Skripte, Kassenarbeit, Fragen beantworten, verwandte Produkte anbieten.</div></div><div class="l12c-fn"><div class="l12c-fnhdr"><span class="l12c-fnnum">Funktion 6</span><span class="l12c-fntitle">Wie wir Käufer zurückbringen</span></div><div class="l12c-fntext">Treueprogramme, Newsletter, Aktionen für Stammkunden.</div><div class="l12c-fnstat">Kundenbindung ist 5–7x günstiger als Neukundengewinnung</div></div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 9</div><div class="l12c-title">Ein kaputtes Glied — und das System steht. Die Rolle des Managers</div><div class="l12c-card"><p>Inhaber denken oft nach dem Aufbau der Struktura: "Fertig, Funktionen aufgezeichnet, Leute zugewiesen, jetzt läuft es von allein." Nein. Nach dem Aufbau entsteht eine neue kritische Rolle: Ein Manager der überwacht dass alle Glieder funktionieren.</p></div><div class="l12c-lbl" style="margin-top:1rem">Drei Úkoln eines Managers in einem organisierten Unternehmen</div><div class="l12c-mgr"><div class="l12c-mgri"><div class="l12c-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l12c-mgrtitle">Vidět</div><div class="l12c-mgrtext">Informationen darüber haben was in jeder Funktion passiert — nicht durch wöchentliche Meetings, sondern durch ein KPIsystem das Echtzeitsignale gibt.</div></div></div><div class="l12c-mgri"><div class="l12c-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="l12c-mgrtitle">Všimnout si</div><div class="l12c-mgrtext">Probléme sehen bevor sie zur Katastrophe werden. Frühzeitige Signale kosten weit weniger als späte Reaktionen.</div></div></div><div class="l12c-mgri"><div class="l12c-mgricon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l12c-mgrtitle">Opravit</div><div class="l12c-mgrtext">Schnell eingreifen und lösen. Nicht "klären wir später" — sondern jetzt, bevor ein kleines Problém groß wird.</div></div></div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Sekce 10</div><div class="l12c-title">Tři kroky k vybudování funkční struktury — wo anfangen</div><div class="l12c-steps"><div class="l12c-step"><div class="l12c-snum">1</div><div><div class="l12c-stitle">Den "Rohstoff" verstehen</div><div class="l12c-stext">Was kommt in Ihr Unternehmen? Woher kommen Bestellungen? Wer ist Ihr Kunde? Ohne Antwort darauf können Sie kein Fließband bauen.</div></div></div><div class="l12c-step"><div class="l12c-snum">2</div><div><div class="l12c-stitle">Definovat všechny kroky transformace</div><div class="l12c-stext">Was muss getan werden um "Rohstoff" in "Fertigprodukt" zu verwandeln? Schreiben Sie alle Schritte auf. Auf dieser Stufe finden Sie Schritte die Sie derzeit gar nicht tun: "Wer kontrolliert bei uns die Qualität vor dem Versand?" — "Niemand." Das ist Ihre "Lücke".</div></div></div><div class="l12c-step"><div class="l12c-snum">3</div><div><div class="l12c-stitle">Personen den Rollen zuweisen</div><div class="l12c-stext">Für jede Funktion — einen Verantwortlichen benennen. "Verantwortlich" bedeutet nicht "macht es selbst." Aber sie müssen wissen dass diese Funktion ihre Verantwortungszone ist.</div></div></div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Shrnutí</div><div class="l12c-title">Co je funkční struktura a proč ji potřebujete</div><div class="l12c-card"><p>Funktionale Struktura ist kein Organigramm mit Pfeilen und Kästchen. Es ist die Antwort auf: <strong>welche Arbeiten in Ihrem Unternehmen erledigt werden müssen, wer für jeden Teil verantwortlich ist und wie sie Arbeit aneinander weitergeben.</strong></p><p>Das ist das Fundament. Ohne es ist CRM nur eine Datenbank die niemand nutzt.</p></div><div class="l12c-results"><div class="l12c-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Sie verstehen welche Funktionen in Ihrem Unternehmen existieren — und welche nicht</div><div class="l12c-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Sie finden die "Lücken" — wo Geld still verloren geht</div><div class="l12c-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Sie können Menschen bewusst konkreten Rollen zuweisen</div><div class="l12c-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Sie hören auf der "unentbehrlichste Vykonavatelé" in Ihrem eigenen Unternehmen zu sein</div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Úkol</div><div class="l12c-title">Vytvořte funkční strukturu svého podnikání durch den KI-Assistenten</div><div class="l12c-steps"><div class="l12c-step"><div class="l12c-snum">1</div><div><div class="l12c-stitle">Führen Sie den Dialog mit dem KI-Struktura-Coach</div><div class="l12c-stext">Der Assistent führt Sie durch die Definition aller Funktionen Ihres Unternehmens, findet Lücken und hilft Rollen zu verteilen</div></div></div><div class="l12c-step"><div class="l12c-snum">2</div><div><div class="l12c-stitle">Speichern Sie das Ergebnis in Google Docs</div><div class="l12c-stext">Ausgabe — eine fertige "Funktionale Unternehmenskarte" mit Liste der Funktionen und Verantwortlichen</div></div></div><div class="l12c-step"><div class="l12c-snum">3</div><div><div class="l12c-stitle">Präsentieren Sie dem Team</div><div class="l12c-stext">Zeigen Sie jedem seine Funktion und Verantwortungszone</div></div></div></div><div style="margin-top:1rem;padding:.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px"><div style="font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.3rem">Čas implementace</div><div style="font-size:.82rem;color:#15803d;line-height:1.5">~3 hodiny: 1h KI-Dialog & Kartenvorbereitung + 2h Teampräsentation</div></div></div><div class="l12c-div"></div><div class="l12c-s"><div class="l12c-lbl">Nástroj</div><div class="l12c-tool"><div class="l12c-thdr"><div class="l12c-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><div><div class="l12c-ttitle">KI Funktionale Struktura Coach</div><div class="l12c-tdesc">Asistent vede dialog a pomáhá die vollständige Funktionskarte Ihres Unternehmens zu erstellen: identifiziert alle Arbeiten, findet Lücken und verteilt Verantwortung. Ausgabe — fertige Funktionale Unternehmenskarte.</div></div></div><a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura" target="_blank" class="l12c-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Funktionale Struktura entwickeln</a></div></div>`,
-
-                homework: `<ol><li>Пройдіть діалог з AI-коучем функціональної структури</li><li>Створіть «Функціональну карту бізнесу» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — покажіть кожному його функцію і зону відповідальності</li><li>Напишіть у полі відповіді: яку «діру» ви знайшли — функцію, за яку зараз ніхто не відповідає</li></ol>`,
-                homework_en: `<ol><li>Complete the dialogue with the AI Structure Coach</li><li>Create a "Business Function Map" document in Google Docs and attach the link</li><li>Present to the team — show each person their function and area of responsibility</li><li>Write in the answer field: what "gap" you found — a function that no one is currently responsible for</li></ol>`,
-                homework_pl: `<ol><li>Przeprowadź dialog z AI Coachem Struktury Funkcjonalnej</li><li>Utwórz «Funkcjonalną Mapę Biznesu» w Google Docs i dołącz link</li><li>Przeprowadź prezentację dla zespołu — pokaż każdemu jego funkcję i obszar odpowiedzialności</li><li>Napisz w polu odpowiedzi: jaką «dziurę» znalazłeś(aś) — funkcję za którą nikt teraz nie odpowiada</li></ol>`,
-                homework_de: `<ol><li>Führen Sie den Dialog mit dem KI-Struktur-Coach</li><li>Erstellen Sie eine «Funktionale Unternehmenskarte» in Google Docs und fügen Sie den Link ein</li><li>Präsentieren Sie dem Team — zeigen Sie jedem seine Funktion und seinen Verantwortungsbereich</li><li>Schreiben Sie im Antwortfeld: welche «Lücke» Sie gefunden haben — eine Funktion für die niemand verantwortlich ist</li></ol>`,
-                homework_ru: `<ol><li>Пройдите диалог с AI-коучем функциональной структуры</li><li>Создайте «Функциональную карту бизнеса» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — покажите каждому его функцию</li><li>Напишите в поле ответа: какую «дыру» вы нашли — функцию, за которую сейчас никто не отвечает</li></ol>`,
 
                 homeworkLink: "https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura",
                 homeworkLinkName: "→ AI-коуч структури",

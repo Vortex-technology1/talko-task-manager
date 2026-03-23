@@ -5511,6 +5511,8 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     if (next) next.classList.add('on');
                     var ctr = document.getElementById('l12Ctr');
                     if (ctr) ctr.textContent = c + ' / ' + T;
+                    var pf = document.getElementById('l12PF');
+                    if (pf) pf.style.width = Math.round((c/T)*100) + '%';
                     var prev = document.getElementById('l12Prev');
                     var nxt = document.getElementById('l12Next');
                     if (prev) prev.disabled = (c === 1);
