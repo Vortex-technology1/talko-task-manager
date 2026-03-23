@@ -52,10 +52,14 @@
                 if (!userDoc.exists || !hasRole) {
                     console.warn('[Auth] User doc missing or no role — patching', user.uid);
                     try {
+                        // Визначаємо роль при патчингу — SuperAdmin або власник компанії отримують owner
+                        const _patchCompanyDoc = await db.collection('companies').doc(companyId).get();
+                        const _patchOwnerId = _patchCompanyDoc.data()?.ownerId;
+                        const _patchRole = isSuperAdmin ? 'owner' : (_patchOwnerId === user.uid ? 'owner' : 'employee');
                         await db.collection('companies').doc(companyId).collection('users').doc(user.uid).set({
                             name: user.displayName || user.email.split('@')[0],
                             email: user.email.toLowerCase(),
-                            role: 'employee',
+                            role: _patchRole,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                             autoCreated: true
                         }, { merge: true });
@@ -66,6 +70,10 @@
                     }
                 }
                 currentUserData = userDoc.exists ? { id: user.uid, ...userDoc.data() } : { id: user.uid, email: user.email, role: 'employee' };
+                // SuperAdmin завжди отримує owner-рівень незалежно від запису в Firestore
+                if (isSuperAdmin && currentUserData.role !== 'owner') {
+                    currentUserData.role = 'owner';
+                }
                 window.currentUserData = currentUserData; // expose для CRM та інших модулів
                 
                 const companyDoc = await db.collection('companies').doc(companyId).get();
