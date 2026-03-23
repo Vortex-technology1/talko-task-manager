@@ -9261,6 +9261,277 @@ Bist du dabei?</div>
             homeworkLinkName: null,
             homeworkLinkName_ru: null,
         },
+        {
+            id: 103,
+            category: 'marketing',
+            title: 'ХТО ВАШ КЛІЄНТ І В ЧОМУ ВАША ЕКСПЕРТИЗА',
+            title_ru: 'КТО ВАШ КЛИЕНТ И В ЧЁМ ВАША ЭКСПЕРТИЗА',
+            title_en: 'WHO IS YOUR CLIENT AND WHAT IS YOUR EXPERTISE',
+            subtitle: 'Фундамент оффера — точний клієнт і чіткий результат',
+            subtitle_ru: 'Фундамент оффера — точный клиент и чёткий результат',
+            subtitle_en: 'The foundation of your offer — precise client and clear result',
+            duration: 20,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `
+<style>
+.m103-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.m103-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.m103-block p+p{margin-top:.65rem}
+.m103-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem;margin-top:1.25rem}
+.m103-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.m103-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.m103-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.m103-warn{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;line-height:1.5;margin-bottom:.45rem}
+.m103-compare{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.75rem 0}
+.m103-bad{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.75rem}
+.m103-good{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.75rem}
+.m103-compare-title{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem}
+.m103-compare-item{font-size:.82rem;line-height:1.6;padding:.2rem 0;border-bottom:1px solid rgba(0,0,0,.05)}
+.m103-compare-item:last-child{border-bottom:none}
+.m103-type{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.85rem 1rem;margin-bottom:.5rem}
+.m103-type-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#f59e0b;color:white;border-radius:50%;font-size:.75rem;font-weight:700;margin-right:.5rem;flex-shrink:0}
+.m103-type-title{font-weight:700;color:#1a1a1a;font-size:.875rem;display:flex;align-items:center}
+.m103-type-desc{font-size:.82rem;color:#525252;line-height:1.5;margin-top:.35rem}
+.m103-type-ex{font-size:.75rem;color:#9ca3af;margin-top:.3rem;font-style:italic}
+.m103-table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0}
+.m103-table th{background:#f8fafc;padding:.5rem .75rem;text-align:left;font-weight:700;color:#374151;border:1px solid #e2e8f0}
+.m103-table td{padding:.5rem .75rem;border:1px solid #e2e8f0;color:#374151;line-height:1.5}
+.m103-table tr:nth-child(even) td{background:#fafafa}
+.m103-ai-block{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem;margin:.75rem 0}
+.m103-ai-title{font-weight:700;color:#166534;font-size:.95rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.m103-ai-text{font-size:.85rem;color:#15803d;line-height:1.6}
+.m103-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.25rem;background:#22c55e;color:white;border-radius:10px;font-size:.875rem;font-weight:700;text-decoration:none;margin-top:.75rem}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Чому розмитість вбиває навіть технічно правильний маркетинг</div></div>
+    <div class="lesson-block-content">
+        <p>Розмита реклама. Розмитий сайт. Розмитий оффер. І в основі всього — розмите розуміння того, <strong>хто саме ваш клієнт і в чому конкретно ви йому допомагаєте</strong>.</p>
+        <p>Коли ви намагаєтесь говорити з усіма — ви не говорите ні з ким. Людина читає і думає "ну окей" — і гортає далі. Не тому що їй не потрібно. А тому що вона не <strong>впізнала себе</strong>.</p>
+        <div class="m103-quote">Чим точніше ви описуєте людину — тим сильніше вона відчуває що ви саме для неї.</div>
+    </div>
+</div>
+
+<div class="m103-divider"></div>
+
+<div class="m103-label">Частина 1</div>
+<div class="m103-title">"Всі" — найгірша відповідь на питання "хто ваш клієнт"</div>
+
+<div class="m103-warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div><strong>"Всі, кому потрібна наша послуга"</strong>, "Люди 25-55", "Ті, хто цінує якість" — це опис нікого. Так само відповідають усі ваші конкуренти.</div>
+</div>
+
+<div class="m103-compare">
+    <div class="m103-bad">
+        <div class="m103-compare-title" style="color:#dc2626;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Говорить з усіма
+        </div>
+        <div class="m103-compare-item" style="color:#7f1d1d;">"Стоматологія для всієї сім'ї"</div>
+        <div class="m103-compare-item" style="color:#7f1d1d;">"Якісне лікування за доступними цінами"</div>
+        <div class="m103-compare-item" style="color:#7f1d1d;">Реакція: "ну окей" → гортає далі</div>
+    </div>
+    <div class="m103-good">
+        <div class="m103-compare-title" style="color:#16a34a;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+            Говорить з конкретною людиною
+        </div>
+        <div class="m103-compare-item" style="color:#166534;">"Не спали від зубного болю?"</div>
+        <div class="m103-compare-item" style="color:#166534;">"Приймемо вас сьогодні, без черг"</div>
+        <div class="m103-compare-item" style="color:#166534;">Реакція: "це про мене" → дзвонить</div>
+    </div>
+</div>
+
+<div class="m103-divider"></div>
+
+<div class="m103-label">Частина 2</div>
+<div class="m103-title">10 типів клієнтів — знайдіть свого</div>
+<div class="m103-block"><p>Один бізнес може працювати з кількома типами. Але <strong>для маркетингу обирається один</strong> — найбільш прибутковий або найбільш "гарячий".</p></div>
+
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">1</span> "Гострий біль"</div>
+    <div class="m103-type-desc">Проблема болить прямо зараз. Не порівнює ціни — шукає рішення сьогодні. Готовий платити більше за швидкість.</div>
+    <div class="m103-type-ex">Зубний біль, прорив труби, гостра ситуація зі здоров'ям</div>
+</div>
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">2</span> "Важлива подія"</div>
+    <div class="m103-type-desc">Є чітка дата — і до неї треба виглядати, встигнути, підготуватись. Рішення приймає швидко.</div>
+    <div class="m103-type-ex">Весілля, корпоратив, презентація, відкриття бізнесу</div>
+</div>
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">3</span> "Втомився шукати сам"</div>
+    <div class="m103-type-desc">Довго намагався вирішити самостійно — нічого не вийшло. Готовий заплатити фахівцю, який нарешті вирішить.</div>
+    <div class="m103-type-ex">Хронічна проблема зі здоров'ям, бізнес без росту</div>
+</div>
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">4</span> "Хочу як у них"</div>
+    <div class="m103-type-desc">Побачив результат у когось іншого і хоче те саме. Є чіткий образ бажаного результату.</div>
+    <div class="m103-type-ex">Побачила фото після процедури, почула від подруги</div>
+</div>
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">5</span> "Ризик і тривога"</div>
+    <div class="m103-type-desc">Ще немає гострої проблеми — але боїться що з'явиться. Платить за спокій і впевненість.</div>
+    <div class="m103-type-ex">Профілактичний огляд, страховка, технічне обслуговування</div>
+</div>
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">6</span> "Статус і образ"</div>
+    <div class="m103-type-desc">Важливо як виглядає в очах інших або у власних. Купує відчуття і сприйняття, а не послугу.</div>
+    <div class="m103-type-ex">Преміум б'юті, бізнес-атрибути, ресторани</div>
+</div>
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">7</span> "Зайнятий і делегує"</div>
+    <div class="m103-type-desc">Дефіцит часу. Не потрібно дешево — потрібно щоб зробили замість нього, добре і без зайвих питань.</div>
+    <div class="m103-type-ex">Прибирання, доставка, бухгалтерія, організація заходів</div>
+</div>
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">8</span> "Перший раз"</div>
+    <div class="m103-type-desc">Ніколи раніше не користувався таким продуктом. Є страх помилитися. Потребує впевненості і простого першого кроку.</div>
+    <div class="m103-type-ex">Перший візит до спеціаліста, перший курс, перша покупка в категорії</div>
+</div>
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">9</span> "Розчарований конкурентом"</div>
+    <div class="m103-type-desc">Вже мав поганий досвід з іншим бізнесом. Шукає альтернативу з недовірою. Якщо розумієте його біль — він ваш.</div>
+    <div class="m103-type-ex">"Мені зробили погано там, шукаю нормального майстра"</div>
+</div>
+<div class="m103-type">
+    <div class="m103-type-title"><span class="m103-type-num">10</span> "Постійний в пошуку кращого"</div>
+    <div class="m103-type-desc">Вже користується подібною послугою, але не повністю задоволений. Якщо покажете конкретну різницю — переключиться.</div>
+    <div class="m103-type-ex">Клієнт конкурента, який бачить вашу рекламу і порівнює</div>
+</div>
+
+<div class="m103-divider"></div>
+
+<div class="m103-label">Частина 3</div>
+<div class="m103-title">Що таке ваша експертиза і чому її треба сформулювати</div>
+<div class="m103-block">
+    <p><strong>Експертиза — це не те, що ви вмієте робити.</strong> Це те, яку конкретну проблему конкретної людини ви вирішуєте, і що відбувається після того як ви це зробили.</p>
+</div>
+
+<table class="m103-table">
+    <tr><th>Як зазвичай</th><th>Як треба</th></tr>
+    <tr><td>«Ми робимо масаж»</td><td>«Після 3 сеансів пацієнти з болями в спині повертаються до нормального сну»</td></tr>
+    <tr><td>«Ми ведемо соцмережі»</td><td>«За 60 днів малий бізнес отримує перших клієнтів з Instagram»</td></tr>
+    <tr><td>«Ми робимо ремонт»</td><td>«Здаємо квартири під ключ — клієнт заїжджає в обумовлений день»</td></tr>
+    <tr><td>«Ми навчаємо англійській»</td><td>«За 3 місяці людина починає розуміти фільми без субтитрів»</td></tr>
+</table>
+
+<div class="m103-quote">Перший варіант описує процес. Другий — результат, який отримує клієнт.</div>
+
+<div class="m103-divider"></div>
+
+<div class="m103-label">Частина 4</div>
+<div class="m103-title">AI-асистент допоможе сформулювати вашу експертизу</div>
+
+<div class="m103-ai-block">
+    <div class="m103-ai-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        AI-асистент визначення експертизи
+    </div>
+    <div class="m103-ai-text">
+        Асистент ставить вам кілька конкретних запитань про ваш бізнес і генерує чіткий опис вашої експертизи мовою клієнта.<br><br>
+        <strong>Що ви отримуєте:</strong><br>
+        · Опис того, кому ви допомагаєте і з якою проблемою<br>
+        · Формулювання результату мовою клієнта<br>
+        · Готову базу для оффера — наступний урок починається з цього<br><br>
+        Займе 5-10 хвилин.
+    </div>
+    <a href="https://chatgpt.com/g/g-68737ce1b05c819183d6fa0344b43237-ai-definition-of-expertise" target="_blank" class="m103-ai-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Перейти до AI-асистента
+    </a>
+</div>
+
+<div class="result-block">
+    <strong>Результат уроку.</strong> У вас є один чітко обраний тип клієнта і сформульована експертиза мовою результату. Це фундамент оффера, який будуємо в наступному уроці.
+</div>`,
+
+            lessonContent_ru: `
+<style>
+.m103-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.m103-block p{font-size:.9rem;color:#374151;line-height:1.65}
+.m103-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem;margin-top:1.25rem}
+.m103-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.m103-divider{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.m103-quote{padding:.85rem 1rem;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;font-size:.85rem;color:#166534;line-height:1.6;margin:.75rem 0}
+.m103-type{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.85rem 1rem;margin-bottom:.5rem}
+.m103-type-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#f59e0b;color:white;border-radius:50%;font-size:.75rem;font-weight:700;margin-right:.5rem;flex-shrink:0}
+.m103-type-title{font-weight:700;color:#1a1a1a;font-size:.875rem;display:flex;align-items:center}
+.m103-type-desc{font-size:.82rem;color:#525252;line-height:1.5;margin-top:.35rem}
+.m103-type-ex{font-size:.75rem;color:#9ca3af;margin-top:.3rem;font-style:italic}
+.m103-table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0}
+.m103-table th{background:#f8fafc;padding:.5rem .75rem;text-align:left;font-weight:700;color:#374151;border:1px solid #e2e8f0}
+.m103-table td{padding:.5rem .75rem;border:1px solid #e2e8f0;color:#374151;line-height:1.5}
+.m103-table tr:nth-child(even) td{background:#fafafa}
+.m103-ai-block{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem;margin:.75rem 0}
+.m103-ai-title{font-weight:700;color:#166534;font-size:.95rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.m103-ai-text{font-size:.85rem;color:#15803d;line-height:1.6}
+.m103-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.25rem;background:#22c55e;color:white;border-radius:10px;font-size:.875rem;font-weight:700;text-decoration:none;margin-top:.75rem}
+</style>
+
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Почему размытость убивает даже технически правильный маркетинг</div></div>
+    <div class="lesson-block-content">
+        <p>Размытая реклама. Размытый сайт. Размытый оффер. И в основе всего — размытое понимание того, <strong>кто именно ваш клиент и в чём конкретно вы ему помогаете</strong>.</p>
+        <div class="m103-quote">Чем точнее вы описываете человека — тем сильнее он чувствует что вы именно для него.</div>
+    </div>
+</div>
+
+<div class="m103-divider"></div>
+<div class="m103-label">10 типов клиентов</div>
+
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">1</span> "Острая боль"</div><div class="m103-type-desc">Проблема болит прямо сейчас. Не сравнивает цены — ищет решение сегодня.</div><div class="m103-type-ex">Зубная боль, прорыв трубы, острая ситуация со здоровьем</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">2</span> "Важное событие"</div><div class="m103-type-desc">Есть чёткая дата — и к ней надо успеть. Решение принимает быстро.</div><div class="m103-type-ex">Свадьба, корпоратив, презентация</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">3</span> "Устал искать сам"</div><div class="m103-type-desc">Долго пытался решить самостоятельно — ничего не вышло. Готов заплатить специалисту.</div><div class="m103-type-ex">Хроническая проблема со здоровьем, бизнес без роста</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">4</span> "Хочу как у них"</div><div class="m103-type-desc">Увидел результат у кого-то и хочет то же самое. Есть чёткий образ желаемого.</div><div class="m103-type-ex">Увидела фото после процедуры, услышала от подруги</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">5</span> "Риск и тревога"</div><div class="m103-type-desc">Ещё нет острой проблемы — но боится что появится. Платит за спокойствие.</div><div class="m103-type-ex">Профилактический осмотр, страховка, техобслуживание</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">6</span> "Статус и образ"</div><div class="m103-type-desc">Важно как выглядит в глазах других. Покупает ощущение, а не услугу.</div><div class="m103-type-ex">Премиум б'юти, бизнес-атрибуты</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">7</span> "Занятой и делегирует"</div><div class="m103-type-desc">Дефицит времени. Нужно чтобы сделали вместо него, хорошо и без лишних вопросов.</div><div class="m103-type-ex">Уборка, доставка, бухгалтерия, организация мероприятий</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">8</span> "Первый раз"</div><div class="m103-type-desc">Никогда раньше не пользовался. Есть страх ошибиться. Нужен простой первый шаг.</div><div class="m103-type-ex">Первый визит к специалисту, первый курс</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">9</span> "Разочарован конкурентом"</div><div class="m103-type-desc">Уже имел плохой опыт с другим бизнесом. Если покажете понимание его боли — он ваш.</div><div class="m103-type-ex">"Мне сделали плохо там, ищу нормального мастера"</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">10</span> "Постоянный в поиске лучшего"</div><div class="m103-type-desc">Уже пользуется похожей услугой, но не полностью доволен. Покажите конкретную разницу.</div><div class="m103-type-ex">Клиент конкурента, который видит вашу рекламу</div></div>
+
+<div class="m103-divider"></div>
+<div class="m103-label">Экспертиза</div>
+<div class="m103-title">Не процесс — результат</div>
+
+<table class="m103-table">
+    <tr><th>Как обычно</th><th>Как надо</th></tr>
+    <tr><td>«Мы делаем массаж»</td><td>«После 3 сеансов пациенты с болями в спине возвращаются к нормальному сну»</td></tr>
+    <tr><td>«Мы ведём соцсети»</td><td>«За 60 дней малый бизнес получает первых клиентов из Instagram»</td></tr>
+    <tr><td>«Мы делаем ремонт»</td><td>«Сдаём квартиры под ключ — клиент въезжает в оговорённый день»</td></tr>
+</table>
+
+<div class="m103-ai-block">
+    <div class="m103-ai-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        AI-ассистент определения экспертизы
+    </div>
+    <div class="m103-ai-text">Ассистент задаёт несколько вопросов о вашем бизнесе и генерирует чёткое описание вашей экспертизы языком клиента. Займёт 5-10 минут.</div>
+    <a href="https://chatgpt.com/g/g-68737ce1b05c819183d6fa0344b43237-ai-definition-of-expertise" target="_blank" class="m103-ai-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Перейти к AI-ассистенту
+    </a>
+</div>
+
+<div class="result-block">
+    <strong>Результат урока.</strong> Один чётко выбранный тип клиента и сформулированная экспертиза языком результата. Это фундамент оффера следующего урока.
+</div>`,
+
+            homework: `<ol>
+<li><strong>Оберіть тип клієнта (1 з 10):</strong> Поверніться до списку. Оберіть <strong>один</strong> — того, з ким найчастіше працюєте. Запишіть: чому саме він і які приклади таких клієнтів у вас вже були.</li>
+<li><strong>Перейдіть до AI-асистента:</strong> Він поставить запитання про ваш бізнес і допоможе сформулювати експертизу мовою клієнта. Збережіть результат — він знадобиться в Уроці 4.</li>
+</ol>`,
+            homework_ru: `<ol>
+<li><strong>Выберите тип клиента (1 из 10):</strong> Выберите <strong>один</strong> — с которым чаще всего работаете. Запишите почему именно он.</li>
+<li><strong>Перейдите к AI-ассистенту:</strong> Он поможет сформулировать экспертизу языком клиента. Сохраните результат — он понадобится в Уроке 4.</li>
+</ol>`,
+            homeworkLink: 'https://chatgpt.com/g/g-68737ce1b05c819183d6fa0344b43237-ai-definition-of-expertise',
+            homeworkLinkName: 'Перейти до AI-асистента',
+            homeworkLinkName_ru: 'Перейти к AI-ассистенту',
+        },
     ];
 
     // Merge into main course data
