@@ -8869,7 +8869,7 @@ Bist du dabei?</div>
 
 <div class="m101-compare">
     <div class="m101-bad">
-        <div class="m101-compare-title" style="color:#dc2626;">❌ Підхід 1: Кричати</div>
+        <div class="m101-compare-title" style="color:#dc2626;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Підхід 1: Кричати</div>
         <div class="m101-compare-item" style="color:#7f1d1d;">Більше реклами</div>
         <div class="m101-compare-item" style="color:#7f1d1d;">Нижча ціна</div>
         <div class="m101-compare-item" style="color:#7f1d1d;">"Акція тільки сьогодні!"</div>
@@ -8877,7 +8877,7 @@ Bist du dabei?</div>
         <div class="m101-compare-item" style="color:#7f1d1d;">Нескінченна цінова гонка</div>
     </div>
     <div class="m101-good">
-        <div class="m101-compare-title" style="color:#16a34a;">✓ Підхід 2: Розмовляти</div>
+        <div class="m101-compare-title" style="color:#16a34a;"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg> Підхід 2: Розмовляти</div>
         <div class="m101-compare-item" style="color:#166534;">Точний опис ситуації</div>
         <div class="m101-compare-item" style="color:#166534;">Конкретна проблема клієнта</div>
         <div class="m101-compare-item" style="color:#166534;">"Це ніби про мене"</div>
@@ -8893,15 +8893,15 @@ Bist du dabei?</div>
 <div class="m101-block"><p>Помилка — думати що маркетинг це тільки "зовні": реклама, сайт, соцмережі. Насправді маркетинг є скрізь де клієнт контактує з твоїм бізнесом.</p></div>
 
 <div class="m101-touchpoint">
-    <div class="m101-tp-title">📢 До того як прийшов</div>
+    <div class="m101-tp-title"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg> До того як прийшов</div>
     <div class="m101-tp-items">Реклама (побачив) · Сайт (зайшов, подивився) · Відгуки (перевірив) · Рекомендація (почув)</div>
 </div>
 <div class="m101-touchpoint">
-    <div class="m101-tp-title">💬 Коли звернувся</div>
+    <div class="m101-tp-title"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Коли звернувся</div>
     <div class="m101-tp-items">Як відповіли на дзвінок чи повідомлення · Як пояснили що і як · Чи зрозуміло виглядає ціна</div>
 </div>
 <div class="m101-touchpoint">
-    <div class="m101-tp-title">🔄 Після того як скористався</div>
+    <div class="m101-tp-title"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Після того як скористався</div>
     <div class="m101-tp-items">Чи запитали про враження · Чи нагадали про себе · Чи є причина повернутися або порекомендувати</div>
 </div>
 
@@ -8966,8 +8966,8 @@ Bist du dabei?</div>
 
 <div class="m101-divider"></div>
 <div class="m101-compare">
-    <div class="m101-bad"><div class="m101-compare-title" style="color:#dc2626;">❌ Кричать громче</div><div class="m101-compare-item" style="color:#7f1d1d;">Больше рекламы</div><div class="m101-compare-item" style="color:#7f1d1d;">Ниже цена</div><div class="m101-compare-item" style="color:#7f1d1d;">Борется за внимание</div><div class="m101-compare-item" style="color:#7f1d1d;">Бесконечная ценовая гонка</div></div>
-    <div class="m101-good"><div class="m101-compare-title" style="color:#16a34a;">✓ Говорить нужное</div><div class="m101-compare-item" style="color:#166534;">Точное описание ситуации</div><div class="m101-compare-item" style="color:#166534;">Конкретная проблема</div><div class="m101-compare-item" style="color:#166534;">Зарабатывает доверие</div><div class="m101-compare-item" style="color:#166534;">Клиенты приходят сами</div></div>
+    <div class="m101-bad"><div class="m101-compare-title" style="color:#dc2626;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Кричать громче</div><div class="m101-compare-item" style="color:#7f1d1d;">Больше рекламы</div><div class="m101-compare-item" style="color:#7f1d1d;">Ниже цена</div><div class="m101-compare-item" style="color:#7f1d1d;">Борется за внимание</div><div class="m101-compare-item" style="color:#7f1d1d;">Бесконечная ценовая гонка</div></div>
+    <div class="m101-good"><div class="m101-compare-title" style="color:#16a34a;"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg> Говорить нужное</div><div class="m101-compare-item" style="color:#166534;">Точное описание ситуации</div><div class="m101-compare-item" style="color:#166534;">Конкретная проблема</div><div class="m101-compare-item" style="color:#166534;">Зарабатывает доверие</div><div class="m101-compare-item" style="color:#166534;">Клиенты приходят сами</div></div>
 </div>
 
 <div class="result-block" style="margin-top:1rem;">
@@ -9095,11 +9095,11 @@ Bist du dabei?</div>
 
 <div class="m102-hot-cold">
     <div class="m102-cold">
-        <div class="m102-person-title" style="color:#0369a1;">🥶 Людина A</div>
+        <div class="m102-person-title" style="color:#0369a1;"><svg viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="1.75" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg> Людина A</div>
         <div class="m102-person-desc" style="color:#0c4a6e;">Відчуває легкий дискомфорт. Думає "треба б записатись колись". Проблема є, але не пече.</div>
     </div>
     <div class="m102-hot">
-        <div class="m102-person-title" style="color:#c2410c;">🔥 Людина B</div>
+        <div class="m102-person-title" style="color:#c2410c;"><svg viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="1.75" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><path d="M12 2c0 0-4 4-4 9a4 4 0 0 0 8 0c0-5-4-9-4-9z"/><path d="M12 11c0 0-2 2-2 4a2 2 0 0 0 4 0c0-2-2-4-2-4z" fill="#c2410c" stroke="none"/></svg> Людина B</div>
         <div class="m102-person-desc" style="color:#7c2d12;">Не спить від болю третю ніч. Вже шукає де записатись сьогодні. Прийме рішення в десятки разів швидше.</div>
     </div>
 </div>
@@ -9231,8 +9231,8 @@ Bist du dabei?</div>
 <div class="m102-divider"></div>
 <div class="m102-title">Горячий vs холодный клиент</div>
 <div class="m102-hot-cold">
-    <div class="m102-cold"><div class="m102-person-title" style="color:#0369a1;">🥶 Человек A</div><div class="m102-person-desc" style="color:#0c4a6e;">Лёгкий дискомфорт. Думает "надо бы записаться когда-нибудь". Проблема есть, но не жжёт.</div></div>
-    <div class="m102-hot"><div class="m102-person-title" style="color:#c2410c;">🔥 Человек B</div><div class="m102-person-desc" style="color:#7c2d12;">Не спит от боли третью ночь. Уже ищет куда записаться сегодня. Примет решение в десятки раз быстрее.</div></div>
+    <div class="m102-cold"><div class="m102-person-title" style="color:#0369a1;"><svg viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="1.75" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg> Человек A</div><div class="m102-person-desc" style="color:#0c4a6e;">Лёгкий дискомфорт. Думает "надо бы записаться когда-нибудь". Проблема есть, но не жжёт.</div></div>
+    <div class="m102-hot"><div class="m102-person-title" style="color:#c2410c;"><svg viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="1.75" width="14" height="14" style="vertical-align:-2px;margin-right:4px;flex-shrink:0"><path d="M12 2c0 0-4 4-4 9a4 4 0 0 0 8 0c0-5-4-9-4-9z"/><path d="M12 11c0 0-2 2-2 4a2 2 0 0 0 4 0c0-2-2-4-2-4z" fill="#c2410c" stroke="none"/></svg> Человек B</div><div class="m102-person-desc" style="color:#7c2d12;">Не спит от боли третью ночь. Уже ищет куда записаться сегодня. Примет решение в десятки раз быстрее.</div></div>
 </div>
 
 <div class="m102-divider"></div>
