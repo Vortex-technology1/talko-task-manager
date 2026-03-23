@@ -97,12 +97,10 @@
 
     // ── Main Render ───────────────────────────────────────────
     function _cleanPresOverlays() {
-        var o10 = document.getElementById('l10Ov');
-        var o11 = document.getElementById('l11Ov');
-        var o12 = document.getElementById('l12Ov');
-        if (o10) o10.remove();
-        if (o11) o11.remove();
-        if (o12) o12.remove();
+        ['l10Ov','l11Ov','l12Ov'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) { el.style.display = 'none'; el.remove(); }
+        });
         document.body.style.overflow = '';
     }
 
@@ -5261,7 +5259,6 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         const title = getLangField(module, 'title', lang);
         const subtitle = getLangField(module, 'subtitle', lang);
         const content = getLangField(module, 'lessonContent', lang);
-        if (moduleId === 12) console.log('[L12 DEBUG] content length:', content ? content.length : 'EMPTY', 'module keys:', Object.keys(module).filter(k=>k.startsWith('lesson')));
         const isCompleted = module.completed;
         const hwText = (learningProgress[moduleId] || {}).homeworkText || '';
         const hwDone = (learningProgress[moduleId] || {}).homeworkDone || false;
@@ -5479,7 +5476,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 window._l10N = function() { if (c < T) go10(c + 1); };
                 window._l10Launch = async function() {
                     var ov = document.getElementById('l10Ov');
-                    ov.classList.add('on');
+                    ov.style.display = 'flex'; ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
                     go10(1);
                     try {
@@ -5523,7 +5520,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 window._l12N = function() { if (c < T) go12(c + 1); };
                 window._l12Launch = function() {
                     var ov = document.getElementById('l12Ov');
-                    ov.classList.add('on');
+                    ov.style.display = 'flex'; ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
                     go12(1);
                 };
@@ -5573,7 +5570,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 window._l11N = function() { if (c < T) go11(c + 1); };
                 window._l11Launch = async function() {
                     var ov = document.getElementById('l11Ov');
-                    ov.classList.add('on');
+                    ov.style.display = 'flex'; ov.classList.add('on');
                     document.body.style.overflow = 'hidden';
                     go11(1);
                     try {

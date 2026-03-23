@@ -5690,7 +5690,88 @@ Bist du dabei?</div>
 
                 videoLink: null,
                 materialsLink: null,
-                presOverlay: `<div id="l10Ov">
+                presOverlay: `<style>
+/* ===== PRESENTATION STYLES ===== */
+.l10-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
+.l10-pres-trigger-info{color:white}
+.l10-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.l10-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
+.l10-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
+.l10-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
+/* ===== FULLSCREEN OVERLAY ===== */
+#l10Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l10Ov.on{display:flex}
+/* ===== SLIDE LAYOUT ===== */
+.l10s{display:none;width:100%;height:100%;overflow:hidden}
+.l10s.on{display:flex}
+/* Split layout: dark left + white right */
+.sl{width:36%;min-width:260px;background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 2rem 5rem;position:relative;flex-shrink:0}
+.sl h2{color:#fff;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
+.sl h2 u{text-decoration-color:rgba(255,255,255,.35)}
+.sl .sub{color:#94a3b8;font-size:.88rem;margin-top:.5rem;line-height:1.5}
+/* Triangle corner decoration */
+.tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:100px solid transparent;border-bottom:100px solid rgba(255,255,255,.06)}
+/* Slide number badge */
+.snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+/* Right white content panel */
+.sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
+/* Full dark slide (title/end) */
+.s-dark{background:linear-gradient(165deg,#09132b,#142040);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
+.s-dark h1{color:#fff;font-size:clamp(2rem,6vw,4rem);font-weight:900;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin:0 0 1rem}
+.s-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:560px;line-height:1.6}
+/* ===== TYPOGRAPHY ===== */
+.sr h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
+.sr p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
+.sr p.sm{font-size:clamp(.75rem,1.4vw,.92rem);color:#6b7280}
+.sr .q{font-size:clamp(.95rem,2vw,1.25rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
+.sr .ql{font-size:clamp(.88rem,1.8vw,1.1rem);font-weight:700;color:#09132b;margin:.9rem 0;line-height:1.6}
+/* ===== VISUAL ELEMENTS ===== */
+.rule-row{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
+.rule-row:last-child{border-bottom:none}
+.rule-dot{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
+.num-row{display:flex;align-items:flex-start;gap:1rem;padding:.75rem 0;border-bottom:1px solid #f0f4f8}
+.num-row:last-child{border-bottom:none}
+.nbox{width:36px;height:36px;background:#1a3068;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;flex-shrink:0}
+.ntext{font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.7}
+.green-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.green-card .gl{font-size:.7rem;font-weight:800;color:#16a34a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.green-card .gt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#166534;line-height:1.65;font-style:italic}
+.blue-card{background:#eff6ff;border:1.5px solid #93c5fd;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.blue-card .bl{font-size:.7rem;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.blue-card .bt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#1e3a8a;line-height:1.65;font-style:italic}
+.resume-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75}
+.exercise-box{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.exercise-box strong{color:#b45309}
+.ex-list{list-style:none;padding:0;margin:.5rem 0}
+.ex-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.3rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.ex-list li::before{content:"▶";color:#1a3068;font-size:.7rem;margin-top:.35rem;flex-shrink:0}
+.ul-list{list-style:none;padding:0;margin:.5rem 0}
+.ul-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.ul-list li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+/* ===== FILL INPUTS ===== */
+.fill-grp{margin:.65rem 0}
+.fill-lbl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.fill-in{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
+.fill-in:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
+/* ===== VISUAL DECORATIONS (SVG areas) ===== */
+.vis{position:absolute;right:2rem;bottom:5rem;opacity:.12;pointer-events:none}
+.vis-right{position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);opacity:.08;pointer-events:none}
+/* ===== CORNER DECORATIONS ON WHITE SLIDES ===== */
+.corner-tl{position:absolute;top:0;right:0;width:140px;height:140px;overflow:hidden;pointer-events:none}
+.corner-tl svg{position:absolute;top:0;right:0}
+.corner-br{position:absolute;bottom:5rem;right:0;width:120px;height:120px;overflow:hidden;pointer-events:none}
+/* ===== NAV BAR ===== */
+.l10-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
+.nbtn{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
+.nbtn:hover:not(:disabled){background:rgba(255,255,255,.25)}
+.nbtn:disabled{opacity:.25;cursor:default}
+.nctr{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
+.nclose{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
+.nsave{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+/* ===== LEFT PANEL SVG ICONS ===== */
+.lico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.85}
+</style>
+<div id="l10Ov" style="display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000">
 <div id="l10SW" style="flex:1;position:relative;overflow:hidden">
 
 <!-- S1: TITLE -->
@@ -7190,7 +7271,93 @@ Bist du dabei?</div>
 
                 videoLink: null,
                 materialsLink: null,
-                presOverlay: `<div id="l11Ov">
+                presOverlay: `<style>
+/* === LESSON 11 PRES TRIGGER === */
+.l11-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
+.l11-pres-trigger-info{color:white}
+.l11-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.l11-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
+.l11-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
+.l11-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
+/* === OVERLAY === */
+#l11Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l11Ov.on{display:flex}
+/* === SLIDE BASE === */
+.l11s{display:none;width:100%;height:100%;overflow:hidden}
+.l11s.on{display:flex}
+/* Dark full slide */
+.l11-dark{background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
+.l11-dark h1{color:#fff;font-size:clamp(2rem,6vw,3.8rem);font-weight:900;text-transform:uppercase;line-height:1.1;margin:0 0 1rem}
+.l11-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:600px;line-height:1.6}
+/* Split: dark left + white right */
+.l11-sl{width:34%;min-width:240px;background:linear-gradient(165deg,#09132b 0%,#142040 55%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 1.75rem 5rem;position:relative;flex-shrink:0}
+.l11-sl h2{color:#fff;font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase}
+.l11-sl h2 u{text-decoration-color:rgba(255,255,255,.4)}
+.l11-tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:90px solid transparent;border-bottom:90px solid rgba(255,255,255,.06)}
+.l11-snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px}
+/* White right */
+.l11-sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
+/* White slide with blue triangle top-right (slides 27,38,40) */
+.l11-wt{width:100%;background:#fff;display:flex;flex-direction:column;justify-content:flex-start;padding:clamp(2rem,5vw,4rem) clamp(2rem,6vw,5rem);position:relative;overflow:hidden}
+.l11-wt-tri{position:absolute;top:0;right:0;width:0;height:0;border-top:280px solid #09132b;border-left:280px solid transparent;opacity:.85}
+.l11-wt-tri2{position:absolute;top:0;right:0;width:0;height:0;border-top:180px solid #3b82f6;border-left:180px solid transparent;opacity:.3}
+/* Typography */
+.l11-sr h3,.l11-wt h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
+.l11-sr p,.l11-wt p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
+.l11-sr p.sm,.l11-wt p.sm{font-size:clamp(.75rem,1.4vw,.9rem);color:#6b7280}
+.l11-q{font-size:clamp(.95rem,2vw,1.2rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
+/* Definition box */
+.l11-def{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0}
+.l11-def .l11-dl{font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.l11-def .l11-dt{font-size:clamp(.9rem,1.9vw,1.15rem);color:#1e3a8a;line-height:1.65;font-weight:600}
+/* Highlight term */
+.l11-term{font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:900;color:#09132b;text-decoration:underline;text-underline-offset:4px}
+/* Green resume box */
+.l11-resume{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75;margin:.75rem 0}
+/* Exercise box */
+.l11-ex{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.l11-ex strong{color:#b45309}
+/* Bullet list */
+.l11-ul{list-style:none;padding:0;margin:.5rem 0}
+.l11-ul li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.l11-ul li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+/* Rule list */
+.l11-rules .r{display:flex;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
+.l11-rules .r:last-child{border-bottom:none}
+.l11-rd{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
+/* Fill inputs */
+.l11-fg{margin:.65rem 0}
+.l11-fl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.l11-fi{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
+.l11-fi:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
+/* Icon badge */
+.l11-star{display:block;margin-bottom:.6rem}
+/* Nav */
+.l11-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
+.l11-nb{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
+.l11-nb:hover:not(:disabled){background:rgba(255,255,255,.25)}
+.l11-nb:disabled{opacity:.25;cursor:default}
+.l11-nc{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
+.l11-close{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
+.l11-save{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+/* Left panel icons */
+.l11-ico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.8}
+/* Exchange diagram */
+.l11-exch{display:flex;align-items:center;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
+.l11-person{text-align:center}
+.l11-person svg{display:block;margin:0 auto .3rem}
+.l11-person-label{font-size:.82rem;font-weight:700;color:#1a3068}
+.l11-arrow-wrap{display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.l11-arrow-text{font-size:.72rem;color:#6b7280;text-align:center;max-width:160px;line-height:1.4}
+/* CKP badge */
+.l11-ckp-badge{display:inline-flex;align-items:center;justify-content:center;background:#09132b;color:white;font-weight:900;font-size:clamp(1.2rem,3vw,2rem);padding:.5rem 1.5rem;border-radius:10px;letter-spacing:.05em;margin-bottom:.5rem}
+/* Two-col grid */
+.l11-2col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.75rem 0}
+.l11-card{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem 1.25rem}
+.l11-card .l11-cl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.l11-card .l11-ct{font-size:clamp(.82rem,1.6vw,1rem);line-height:1.6}
+</style>
+<div id="l11Ov" style="display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000">
 <div id="l11SW" style="flex:1;position:relative;overflow:hidden">
 
 <!-- S1: TITLE -->
@@ -8973,6 +9140,51 @@ Bist du dabei?</div>
                 videoLink: null,
                 materialsLink: null,
                 presOverlay: `<style>
+.l12-section { margin-bottom:1.75rem; }
+.l12-section:last-child { margin-bottom:0; }
+.l12-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l12-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l12-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l12-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l12-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l12-card p+p { margin-top:0.7rem; }
+.l12-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.875rem; color:#166534; font-style:italic; line-height:1.6; }
+.l12-reasons { display:grid; gap:0.6rem; margin-top:0.75rem; }
+.l12-reason { border-radius:11px; overflow:hidden; border:1px solid #e2e8f0; }
+.l12-reason-header { display:flex; align-items:center; gap:0.7rem; padding:0.75rem 0.95rem; background:#f8fafc; }
+.l12-reason-num { width:28px; height:28px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; flex-shrink:0; }
+.l12-reason-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l12-reason-body { padding:0.65rem 0.95rem 0.8rem; background:white; border-top:1px solid #f1f5f9; font-size:0.85rem; color:#525252; line-height:1.55; }
+.l12-problems { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l12-problem { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
+.l12-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l12-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l12-step-body { flex:1; }
+.l12-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l12-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-functions { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-fn { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l12-fn-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem; }
+.l12-fn-num { font-size:0.7rem; font-weight:700; color:#9ca3af; }
+.l12-fn-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l12-fn-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-fn-stat { display:inline-block; margin-top:0.4rem; padding:0.2rem 0.55rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:5px; font-size:0.72rem; font-weight:600; color:#16a34a; }
+.l12-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l12-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l12-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l12-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l12-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l12-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l12-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l12-mgr { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-mgr-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; }
+.l12-mgr-icon { width:32px; height:32px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l12-mgr-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l12-mgr-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+</style>
+<style>
 /* fonts loaded externally */
 
 #l12Ov{
@@ -9330,7 +9542,7 @@ Bist du dabei?</div>
 .l12-buro strong{color:#fff}
 </style>
 
-<div id="l12Ov">
+<div id="l12Ov" style="display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000">
 <div class="l12-slides" id="l12SW">
 
 <!-- S1: TITLE -->
