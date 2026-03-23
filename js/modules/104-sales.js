@@ -140,7 +140,9 @@
         const q = f.search.toLowerCase();
         const inNum = (o.number||'').toLowerCase().includes(q);
         const inCli = (o.clientName||'').toLowerCase().includes(q);
-        if (!inNum && !inCli) return false;
+        const inNote = (o.note||'').toLowerCase().includes(q);
+        const inItems = Array.isArray(o.items) && o.items.some(i => (i.name||'').toLowerCase().includes(q));
+        if (!inNum && !inCli && !inNote && !inItems) return false;
       }
       return true;
     });
@@ -206,8 +208,8 @@
           <td style="text-align:right"><b>${fmt(o.total||0)} ₴</b></td>
           <td><span style="color:${statusColor};font-weight:600;font-size:.78rem">${esc(statusLabel)}</span></td>
           <td style="text-align:right">
-            <button onclick="event.stopPropagation();window._salesEditOrder('${esc(o.id)}')" style="background:none;border:none;cursor:pointer;color:#6366f1;font-size:.75rem;padding:2px 6px;border-radius:4px;background:#eef2ff" title="Редагувати">✏️</button>
-            ${o.type==='invoice'?`<button onclick="event.stopPropagation();window._salesPrintInvoice('${esc(o.id)}')" style="background:none;border:none;cursor:pointer;color:#059669;font-size:.75rem;padding:2px 6px;border-radius:4px;background:#d1fae5;margin-left:4px" title="PDF">📄</button>`:''}
+            <button onclick="event.stopPropagation();window._salesEditOrder('${esc(o.id)}')" style="background:none;border:none;cursor:pointer;color:#6366f1;font-size:.75rem;padding:2px 6px;border-radius:4px;background:#eef2ff" title="Редагувати"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="12" height="12"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+            ${o.type==='invoice'?`<button onclick="event.stopPropagation();window._salesPrintInvoice('${esc(o.id)}')" style="background:none;border:none;cursor:pointer;color:#059669;font-size:.75rem;padding:2px 6px;border-radius:4px;background:#d1fae5;margin-left:4px" title="PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="12" height="12"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button>`:''}
           </td>
         </tr>`;
     }).join('');
@@ -243,7 +245,7 @@
       <div style="background:#fff;border-radius:12px;width:min(760px,98vw);padding:1.5rem;margin-bottom:2rem;position:relative">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
           <h3 style="margin:0;font-size:1.05rem;font-weight:700">${order ? 'Редагувати рахунок' : 'Новий рахунок'}</h3>
-          <button onclick="document.getElementById('salesInvoiceOverlay').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#9ca3af">✕</button>
+          <button onclick="document.getElementById('salesInvoiceOverlay').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#9ca3af"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
 
         <!-- Header fields -->
@@ -282,7 +284,7 @@
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
             <b style="font-size:.85rem">Позиції</b>
             <div style="display:flex;gap:.5rem">
-              <button onclick="window._salesAddCatalogItem()" class="sl-btn-sm" style="background:#eef2ff;color:#6366f1">📦 З каталогу</button>
+              <button onclick="window._salesAddCatalogItem()" class="sl-btn-sm" style="background:#eef2ff;color:#6366f1">З каталогу</button>
               <button onclick="window._salesAddInvoiceItem()" class="sl-btn-sm" style="background:#f0fdf4;color:#16a34a">+ Позиція</button>
             </div>
           </div>
@@ -320,7 +322,7 @@
         <div style="margin-bottom:1rem">
           <label class="sl-label">Спосіб оплати</label>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-            ${[['cash','💵 Готівка'],['terminal','💳 Термінал'],['transfer','📱 Переказ'],['mixed','🔀 Змішана']].map(([v,l])=>`
+            ${[['cash','Готівка'],['terminal','Термінал'],['transfer','Переказ'],['mixed','Змішана']].map(([v,l])=>`
               <label style="display:flex;align-items:center;gap:4px;padding:5px 12px;border:1px solid #e5e7eb;border-radius:6px;cursor:pointer;font-size:.83rem">
                 <input type="radio" name="slInvPayMethod" value="${v}" ${(order?.paymentMethod||'cash')===v?'checked':''}> ${l}
               </label>`).join('')}
@@ -335,9 +337,9 @@
         <!-- Actions -->
         <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:flex-end">
           <button onclick="document.getElementById('salesInvoiceOverlay').remove()" class="sl-btn" style="background:#f3f4f6;color:#374151">Скасувати</button>
-          <button onclick="window._salesSaveInvoice(false)" class="sl-btn" style="background:#6366f1;color:#fff">💾 Зберегти</button>
-          ${order?.status !== 'paid' ? `<button onclick="window._salesSaveInvoice(true)" class="sl-btn" style="background:#10b981;color:#fff">✓ Зберегти та позначити оплаченим</button>` : ''}
-          ${order ? `<button onclick="window._salesPrintInvoice('${esc(order.id)}')" class="sl-btn" style="background:#f59e0b;color:#fff">📄 PDF</button>` : ''}
+          <button onclick="window._salesSaveInvoice(false)" class="sl-btn" style="background:#6366f1;color:#fff">Зберегти</button>
+          ${order?.status !== 'paid' ? `<button onclick="window._salesSaveInvoice(true)" class="sl-btn" style="background:#10b981;color:#fff">Зберегти та позначити оплаченим</button>` : ''}
+          ${order ? `<button onclick="window._salesPrintInvoice('${esc(order.id)}')" class="sl-btn" style="background:#f59e0b;color:#fff">PDF</button>` : ''}
         </div>
       </div>
     `;
@@ -423,7 +425,7 @@
         <div style="background:#fff;border-radius:10px;padding:1.25rem;width:min(440px,95vw);max-height:80vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
             <b>Вибір з каталогу</b>
-            <button onclick="document.getElementById('slCatalogOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem">✕</button>
+            <button onclick="document.getElementById('slCatalogOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
           <input class="sl-inp" placeholder="Пошук..." oninput="window._salesCatalogSearch(this.value)" style="margin-bottom:.75rem" id="slCatalogSearch">
           <div id="slCatalogList">
@@ -644,8 +646,8 @@
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:12px;width:min(560px,98vw);padding:1.5rem;margin-bottom:2rem;position:relative">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
-          <h3 style="margin:0;font-size:1.05rem;font-weight:700">💵 ${order ? 'Редагувати чек' : 'Касовий чек'} ${esc(number)}</h3>
-          <button onclick="document.getElementById('salesReceiptOverlay').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#9ca3af">✕</button>
+          <h3 style="margin:0;font-size:1.05rem;font-weight:700">${order ? 'Редагувати чек' : 'Касовий чек'} ${esc(number)}</h3>
+          <button onclick="document.getElementById('salesReceiptOverlay').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#9ca3af"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem">
@@ -665,7 +667,7 @@
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
             <b style="font-size:.85rem">Позиції</b>
             <div style="display:flex;gap:.5rem">
-              <button onclick="window._salesAddCatalogItemRcp()" class="sl-btn-sm" style="background:#eef2ff;color:#6366f1">📦 З каталогу</button>
+              <button onclick="window._salesAddCatalogItemRcp()" class="sl-btn-sm" style="background:#eef2ff;color:#6366f1">З каталогу</button>
               <button onclick="window._salesAddReceiptItem()" class="sl-btn-sm" style="background:#f0fdf4;color:#16a34a">+ Позиція</button>
             </div>
           </div>
@@ -682,7 +684,7 @@
         <div style="margin-bottom:1.25rem">
           <label class="sl-label">Оплата</label>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-            ${[['cash','💵 Готівка'],['terminal','💳 Термінал'],['transfer','📱 Переказ']].map(([v,l])=>`
+            ${[['cash','Готівка'],['terminal','Термінал'],['transfer','Переказ']].map(([v,l])=>`
               <label style="display:flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600">
                 <input type="radio" name="slRcpPayMethod" value="${v}" ${(order?.paymentMethod||'cash')===v?'checked':''}> ${l}
               </label>`).join('')}
@@ -691,7 +693,7 @@
 
         <div style="display:flex;gap:.75rem;justify-content:flex-end">
           <button onclick="document.getElementById('salesReceiptOverlay').remove()" class="sl-btn" style="background:#f3f4f6;color:#374151">Скасувати</button>
-          <button onclick="window._salesSaveReceipt()" class="sl-btn" style="background:#10b981;color:#fff;font-size:1rem">✓ Провести чек</button>
+          <button onclick="window._salesSaveReceipt()" class="sl-btn" style="background:#10b981;color:#fff;font-size:1rem">Провести чек</button>
         </div>
       </div>
     `;
@@ -742,7 +744,7 @@
         <div style="background:#fff;border-radius:10px;padding:1.25rem;width:min(400px,95vw);max-height:80vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
             <b>Вибір з каталогу</b>
-            <button onclick="document.getElementById('slCatalogOverlay2').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem">✕</button>
+            <button onclick="document.getElementById('slCatalogOverlay2').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
           ${S.products.map(p=>`
             <div onclick="window._salesPickProductRcp('${p.id}')" style="padding:.5rem .75rem;border-radius:6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border:1px solid #f3f4f6;margin-bottom:4px">
@@ -820,7 +822,7 @@
             <td style="padding:7px 8px;text-align:center">${esc(p.unit||'шт')}</td>
             <td style="padding:7px 8px;text-align:right;font-weight:700;color:#6366f1">${fmt(p.price)} ₴</td>
             <td style="padding:7px 8px;text-align:center">
-              <button onclick="window._salesOpenProductForm('${p.id}')" style="background:none;border:none;cursor:pointer;color:#6366f1;font-size:.75rem;padding:2px 8px;background:#eef2ff;border-radius:4px">✏️</button>
+              <button onclick="window._salesOpenProductForm('${p.id}')" style="background:none;border:none;cursor:pointer;color:#6366f1;font-size:.75rem;padding:2px 8px;background:#eef2ff;border-radius:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="12" height="12"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
             </td>
           </tr>`).join('')}
         </tbody>
@@ -837,7 +839,7 @@
       <div style="background:#fff;border-radius:10px;padding:1.25rem;width:min(400px,96vw)">
         <div style="display:flex;justify-content:space-between;margin-bottom:1rem">
           <b>${p ? 'Редагувати' : 'Новий товар/послуга'}</b>
-          <button onclick="document.getElementById('salesProductOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem">✕</button>
+          <button onclick="document.getElementById('salesProductOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
         <div style="display:flex;flex-direction:column;gap:.75rem">
           <div><label class="sl-label">Назва *</label><input id="slProdName" class="sl-inp" value="${esc(p?.name||'')}"></div>
@@ -934,16 +936,18 @@
 
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem;padding:1rem 1rem 0">
-        <h2 style="margin:0;font-size:1.1rem;font-weight:700">💳 Реалізація</h2>
+        <h2 style="margin:0;font-size:1.1rem;font-weight:700">Реалізація</h2>
         <div style="position:relative">
           <button id="slNewDocBtn" onclick="window._salesToggleNewMenu()" class="sl-btn" style="background:#6366f1;color:#fff;display:flex;align-items:center;gap:6px">
-            + Новий документ ▾
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Нова реалізація ▾
           </button>
-          <div id="slNewDocMenu" style="display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;min-width:180px;padding:6px">
-            <button onclick="window._salesNewDoc('invoice')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">📋 Рахунок</button>
-            <button onclick="window._salesNewDoc('receipt')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">🧾 Чек</button>
-            ${showWorkOrders() ? `<button onclick="window._salesNewDoc('work_order')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">🔧 Наряд</button>` : ''}
-            ${showRoutes() ? `<button onclick="window._salesNewDoc('route')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">🚛 Рейс</button>` : ''}
+          <div id="slNewDocMenu" style="display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;min-width:200px;padding:6px">
+            <div style="font-size:.7rem;color:#9ca3af;padding:4px 12px 2px;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Тип документа</div>
+            <button onclick="window._salesNewDoc('invoice')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Рахунок-фактура</button>
+            <button onclick="window._salesNewDoc('receipt')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="flex-shrink:0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Касовий чек / оплата</button>
+            ${showWorkOrders() ? `<button onclick="window._salesNewDoc('work_order')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="flex-shrink:0"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Наряд-замовлення</button>` : ''}
+            ${showRoutes() ? `<button onclick="window._salesNewDoc('route')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;cursor:pointer;border-radius:5px;font-size:.85rem" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="flex-shrink:0"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Рейс</button>` : ''}
           </div>
         </div>
       </div>
@@ -954,19 +958,19 @@
       <!-- SubTabs -->
       <div style="display:flex;gap:.35rem;flex-wrap:wrap;padding:0 1rem;margin-bottom:.75rem">
         <button class="sl-subtab active" id="slSubAll" onclick="window._salesSubTab('all',this)">Всі</button>
-        <button class="sl-subtab" id="slSubInvoice" onclick="window._salesSubTab('invoice',this)">📋 Рахунки</button>
-        <button class="sl-subtab" id="slSubReceipt" onclick="window._salesSubTab('receipt',this)">🧾 Каса</button>
-        ${showWorkOrders() ? `<button class="sl-subtab" id="slSubWO" onclick="window._salesSubTab('work_order',this)">🔧 Наряди</button>` : ''}
-        ${showRoutes() ? `<button class="sl-subtab" id="slSubRoute" onclick="window._salesSubTab('route',this)">🚛 Рейси</button>` : ''}
-        <button class="sl-subtab" id="slSubCatalog" onclick="window._salesSubTab('catalog',this)">📦 Каталог</button>
-        <button class="sl-subtab" id="slSubShifts" onclick="window._salesSubTab('shifts',this)">🔄 Зміни</button>
-        <button class="sl-subtab" id="slSubVehicles" onclick="window._salesSubTab('vehicles',this)" style="display:${showWorkOrders()?'':'none'}">🚗 Авто</button>
-        <button class="sl-subtab" id="slSubRoutesPanel" onclick="window._salesSubTab('routes_panel',this)" style="display:${showRoutes()?'':'none'}">🗺 Маршрути</button>
+        <button class="sl-subtab" id="slSubInvoice" onclick="window._salesSubTab('invoice',this)">Рахунки</button>
+        <button class="sl-subtab" id="slSubReceipt" onclick="window._salesSubTab('receipt',this)">Каса</button>
+        ${showWorkOrders() ? `<button class="sl-subtab" id="slSubWO" onclick="window._salesSubTab('work_order',this)">Наряди</button>` : ''}
+        ${showRoutes() ? `<button class="sl-subtab" id="slSubRoute" onclick="window._salesSubTab('route',this)">Рейси</button>` : ''}
+        <button class="sl-subtab" id="slSubCatalog" onclick="window._salesSubTab('catalog',this)">Каталог</button>
+        <button class="sl-subtab" id="slSubShifts" onclick="window._salesSubTab('shifts',this)">Зміни</button>
+        <button class="sl-subtab" id="slSubVehicles" onclick="window._salesSubTab('vehicles',this)" style="display:${showWorkOrders()?'':'none'}">Авто</button>
+        <button class="sl-subtab" id="slSubRoutesPanel" onclick="window._salesSubTab('routes_panel',this)" style="display:${showRoutes()?'':'none'}">Маршрути</button>
       </div>
 
       <!-- Filters -->
       <div id="slFiltersRow" style="display:flex;gap:.5rem;flex-wrap:wrap;padding:0 1rem;margin-bottom:.75rem;align-items:center">
-        <input class="sl-inp" placeholder="🔍 Пошук..." style="width:180px;max-width:100%" oninput="window._salesFilter('search',this.value)">
+        <input class="sl-inp" placeholder="Пошук за номером, клієнтом, товаром..." style="width:260px;max-width:100%" oninput="window._salesFilter('search',this.value)">
         <select class="sl-inp" style="width:130px" onchange="window._salesFilter('status',this.value)">
           <option value="all">Всі статуси</option>
           ${Object.entries(STATUS_LABELS).map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}
