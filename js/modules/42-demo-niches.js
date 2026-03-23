@@ -6090,7 +6090,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         {t:'Планова дезінфекція інструментів — стерилізація', fi:2, ai:2, freq:'weekly',  dow:1,    est:45, r:'Стерилізація проведена, журнал підписано'},
     ];
     for (const t of REG_TASKS) {
-        ops.push({type:'set', ref:cr.collection('recurring_tasks').doc(), data:{
+        ops.push({type:'set', ref:cr.collection('regularTasks').doc(), data:{
             title:t.t,
             functionId:fRefs[t.fi].id, functionName:FUNCS[t.fi].name,
             assigneeId:sRefs[t.ai].id, assigneeName:STAFF[t.ai].name,
@@ -6159,7 +6159,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             ],
         },
     ];
-    const tplRefs = TPL_DEFS.map(() => cr.collection('process_templates').doc());
+    const tplRefs = TPL_DEFS.map(() => cr.collection('processTemplates').doc());
     for (let i = 0; i < TPL_DEFS.length; i++) {
         const tpl = TPL_DEFS[i];
         ops.push({type:'set', ref:tplRefs[i], data:{

@@ -735,6 +735,51 @@ service cloud.firestore {
       // FALLBACK — нові колекції до деплою специфічних правил
       // Вужчий ніж раніше: read тільки member, write тільки manager
       // =====================
+
+      // BOOKING (demo/internal)
+      match /bookings/{bookingId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // SALES / РЕАЛІЗАЦІЇ
+      match /sales/{saleId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // ESTIMATES / КОШТОРИСИ
+      match /estimates/{estId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+        match /{sub=**} {
+          allow read: if isCompanyMember(companyId);
+          allow write: if isManagerOrOwner(companyId);
+        }
+      }
+
+      // STANDARDS / СТАНДАРТИ
+      match /standards/{stdId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // NORM DEFINITIONS / НОРМИ КОШТОРИСУ
+      match /norm_definitions/{normId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+        match /{sub=**} {
+          allow read: if isCompanyMember(companyId);
+          allow write: if isManagerOrOwner(companyId);
+        }
+      }
+
+      // METRICS DAILY
+      match /metrics_daily/{mId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
       match /{subcollection}/{docId} {
         allow read: if isCompanyMember(companyId);
         allow write: if isManagerOrOwner(companyId);
