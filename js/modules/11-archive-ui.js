@@ -133,7 +133,7 @@
                         </td>
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td>${taskDeadline ? formatDateShort(taskDeadline) : '-'}</td>
-                        <td>${esc(task.function) || '-'}</td>
+                        <td>${esc(task.functionName || task.function) || '-'}</td>
                         <td style="font-size:0.8rem;color:#9ca3af;">${archivedDate}</td>
                         <td>
                             <button class="action-btn" onclick="restoreFromArchive('${escId(task.id)}')" title="${window.t('reopen')}">
@@ -160,7 +160,7 @@
                         </div>
                         <div class="mobile-task-meta">
                             ${task.assigneeName ? `<div class="mobile-task-meta-item"><i data-lucide="user" class="icon icon-sm"></i> ${esc(task.assigneeName)}</div>` : ''}
-                            ${task.function ? `<div class="mobile-task-meta-item"><i data-lucide="tag" class="icon icon-sm"></i> ${esc(task.function)}</div>` : ''}
+                            ${(task.functionName || task.function) ? `<div class="mobile-task-meta-item"><i data-lucide="tag" class="icon icon-sm"></i> ${esc(task.functionName || task.function)}</div>` : ''}
                             <div class="mobile-task-meta-item"><i data-lucide="archive" class="icon icon-sm"></i> ${archivedDate}</div>
                         </div>
                         <div class="mobile-task-actions">
@@ -266,7 +266,11 @@
                     // Прямий виконавець з регулярного завдання
                     assigneeIds = [rt.assigneeId];
                 } else {
-                    const func = functions.find(f => f.name === rt.function);
+                    const func = functions.find(f => 
+                        (rt.functionId && f.id === rt.functionId) ||
+                        (rt.functionName && f.name === rt.functionName) ||
+                        (rt.function && f.name === rt.function)
+                    );
                     assigneeIds = func?.assigneeIds || [];
                 }
                 if (assigneeIds.length === 0) continue;
@@ -281,7 +285,9 @@
                     const assignee = users.find(u => u.id === assigneeId);
                     tasksToCreate.push({
                         title: rt.title,
-                        function: rt.function,
+                        functionName: rt.functionName || rt.function || '',
+                        function: rt.functionName || rt.function || '',
+                        functionId: rt.functionId || '',
                         assigneeId: assigneeId,
                         assigneeName: assignee?.name || assignee?.email || '',
                         deadlineDate: todayStr,
