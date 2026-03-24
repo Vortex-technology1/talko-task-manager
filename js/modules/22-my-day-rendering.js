@@ -399,11 +399,11 @@
                     if (taskToUpdate) {
                         // Оновлюємо існуюче завдання
                         const newStatus = currentDone ? 'progress' : 'done'; // BUG-J FIX: was 'new' → broke status flow
-                        await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).update({
+                        await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).set({
                             status: newStatus,
                             completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null,
-                            completedDate: newStatus === 'done' ? ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]) : null,  // P0 FIX
-                        });
+                            completedDate: newStatus === 'done' ? ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]) : null,
+                        }, { merge: true });
                         // AUDIT LOG
                         logTaskChange(taskToUpdate.id, newStatus === 'done' ? 'complete' : 'reopen', { status: newStatus }, { status: currentDone ? 'done' : 'new' });
                     } else if (!currentDone) {
@@ -471,12 +471,12 @@
                     const newStatus = currentDone ? 'progress' : (needsReview ? 'review' : 'done'); // BUG-J FIX: was 'new'
                     
                     const _cd = ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]);
-                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
+                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).set({
                         status: newStatus,
                         completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null,
-                        completedDate: newStatus === 'done' ? _cd : null,  // P0 FIX
+                        completedDate: newStatus === 'done' ? _cd : null,
                         ...(needsReview ? { sentForReviewAt: firebase.firestore.FieldValue.serverTimestamp() } : {})
-                    });
+                    }, { merge: true });
                     // AUDIT LOG
                     logTaskChange(id, newStatus === 'done' || newStatus === 'review' ? 'complete' : 'reopen', { status: newStatus }, { status: currentDone ? 'done' : 'new' });
                     
