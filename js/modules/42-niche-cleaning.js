@@ -180,8 +180,12 @@ window._DEMO_NICHE_MAP['cleaning'] = async function() {
 
     // ── 4. TASKS (25+) ────────────────────────────────────────
     const TASKS = [
-        // Today (6)
-        { t:'Dispatch crews to 8 locations — morning briefing',               fi:2, ai:3,  st:'new',      pr:'high',   d:0,  tm:'07:00', est:30,  r:'All 8 crews dispatched with routes, locations, and checklists confirmed' },
+        // Today — MY DAY (owner ai:0)
+        { t:'Review weekly KPIs — revenue, jobs completed, NPS',             fi:7, ai:0,  st:'new',      pr:'high',   d:0,  tm:'09:00', est:30,  r:'KPIs documented, deviations identified and actioned' },
+        { t:'Call Marriott Hotel GM — close $12,400/month contract',         fi:1, ai:0,  st:'new',      pr:'high',   d:0,  tm:'10:30', est:30,  r:'Contract signed or next meeting scheduled' },
+        { t:'Approve Q2 marketing budget — Google Ads + Yelp',               fi:0, ai:0,  st:'new',      pr:'medium', d:0,  tm:'14:00', est:30,  r:'Budget approved, campaigns scheduled' },
+        { t:'1-on-1 with Operations Manager — performance review',           fi:7, ai:0,  st:'new',      pr:'medium', d:0,  tm:'16:00', est:45,  r:'Feedback given, goals set for next month' },
+        // Today — team
         { t:'Follow up on Marriott Hotel proposal — $12,400/month contract',  fi:1, ai:2,  st:'new',      pr:'high',   d:0,  tm:'10:00', est:45,  r:'Meeting scheduled or written response received, next step defined' },
         { t:'QC inspection — Johnson residence post-cleaning',                fi:4, ai:7,  st:'progress', pr:'high',   d:0,  tm:'14:00', est:60,  r:'QC checklist completed, photos taken, client signed off' },
         { t:'Reply to 5 Google review responses',                             fi:0, ai:8,  st:'new',      pr:'medium', d:0,  tm:'11:00', est:30,  r:'All 5 reviews responded to professionally within 24 hours' },
