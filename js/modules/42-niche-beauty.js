@@ -11,6 +11,9 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     const uid = currentUser.uid;
     const now = firebase.firestore.FieldValue.serverTimestamp();
     let ops   = [];
+    const _demoDate = window._demoDate;
+    const _demoTs = window._demoTs;
+    const _demoTsFinance = window._demoTsFinance;
 
     // ── 0. ENSURE OWNER IN USERS + CLEAR OLD DEMO DATA ─────
     try {
@@ -28,7 +31,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
         'crm_pipeline','crm_activities','finance_transactions','finance_categories',
         'finance_accounts','finance_recurring','finance_budgets','finance_settings',
         'warehouse_items','warehouse_operations','warehouse_suppliers',
-        'metricEntries','metrics','metricTargets','bookings','estimates',
+        'metricEntries','metrics','metricTargets','booking_appointments','estimates',
         'estimate_norms','project_estimates','norm_definitions',
         'finance_invoices','coordination_sessions','booking_calendars','booking_schedules','sales'];
     try {
@@ -944,7 +947,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
                 const clientIdx = Math.floor((slot * day + Math.abs(week) * 3) % CLIENTS.length);
                 const hour = 10 + slot * 1;
                 const timeStr = `${String(hour).padStart(2,'0')}:00`;
-                bookingOps.push({type:'set', ref:cr.collection('bookings').doc(), data:{
+                bookingOps.push({type:'set', ref:cr.collection('booking_appointments').doc(), data:{
                     clientId:crmRefs[clientIdx].id,
                     clientName:CLIENTS[clientIdx].n,
                     clientPhone:CLIENTS[clientIdx].phone,
@@ -970,7 +973,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
             const svc = SERVICES_LIST[Math.floor((slot + day) % SERVICES_LIST.length)];
             const clientIdx = Math.floor((slot + day * 2) % CLIENTS.length);
             const hour = 10 + slot * 2;
-            bookingOps.push({type:'set', ref:cr.collection('bookings').doc(), data:{
+            bookingOps.push({type:'set', ref:cr.collection('booking_appointments').doc(), data:{
                 clientId:crmRefs[clientIdx].id,
                 clientName:CLIENTS[clientIdx].n,
                 clientPhone:CLIENTS[clientIdx].phone,

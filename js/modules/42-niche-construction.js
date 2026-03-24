@@ -9,6 +9,9 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
     const uid = currentUser.uid;
     const now = firebase.firestore.FieldValue.serverTimestamp();
     let ops   = [];
+    const _demoDate = window._demoDate;
+    const _demoTs = window._demoTs;
+    const _demoTsFinance = window._demoTsFinance;
 
     // ── 0. OWNER PRE-WRITE + ОЧИСТКА ─────────────────────────
     try {
@@ -24,7 +27,7 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
         'finance_recurring','finance_budgets','finance_settings',
         'warehouse_items','warehouse_operations','warehouse_suppliers',
         'metricEntries','metrics','metricTargets',
-        'booking_calendars','booking_schedules','bookings',
+        'booking_calendars','booking_schedules','booking_appointments',
         'estimates','estimate_norms','project_estimates','norm_definitions',
         'finance_invoices','coordination_sessions','sales'];
     try {

@@ -25,4 +25,26 @@
     window.safeBatchCommit._isDemoPatchedV2 = true;
 })();
 
+// ── Глобальні хелпери для демо-ніш ───────────────────────────
+// Використовуються в construction, medical, beauty та ін.
+window._demoDate = function(offsetDays) {
+    offsetDays = offsetDays || 0;
+    const d = new Date();
+    d.setDate(d.getDate() + offsetDays);
+    return d.getFullYear() + '-' +
+        String(d.getMonth()+1).padStart(2,'0') + '-' +
+        String(d.getDate()).padStart(2,'0');
+};
+window._demoTs = function(offsetDays) {
+    return firebase.firestore.Timestamp.fromDate(
+        new Date(Date.now() + (offsetDays||0) * 86400000)
+    );
+};
+window._demoTsFinance = function(offsetDays) {
+    const d = new Date();
+    d.setDate(d.getDate() + (offsetDays||0));
+    d.setHours(12, 0, 0, 0);
+    return firebase.firestore.Timestamp.fromDate(d);
+};
+
 window._DEMO_NICHE_MAP = window._DEMO_NICHE_MAP || {};

@@ -11,6 +11,9 @@ window._DEMO_NICHE_MAP['medical'] = async function() {
     const uid = currentUser.uid;
     const now = firebase.firestore.FieldValue.serverTimestamp();
     let ops   = [];
+    const _demoDate = window._demoDate;
+    const _demoTs = window._demoTs;
+    const _demoTsFinance = window._demoTsFinance;
 
     // ── 0. OWNER PRE-WRITE + ОЧИСТКА ─────────────────────────
     try {
