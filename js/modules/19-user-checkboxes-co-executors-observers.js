@@ -36,7 +36,7 @@
                             ${users.map(user => {
                                 const checked = selectedSet.has(user.id);
                                 const roleIcon = user.role === 'owner' ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M3 20h18"/></svg> ' : user.role === 'manager' ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ' : '';
-                                return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
+                                return `<label class="user-ms-item" data-name="${esc((user.name || user.email || '').toLowerCase())}" 
                                                 style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;${checked ? 'background:#f0fdf4;' : ''}" 
                                                 onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
                                                 onmouseout="if(!this.querySelector('input').checked)this.style.background=''">
