@@ -13,6 +13,13 @@
         if (typeof window.checkEscalations !== 'function') {
             window.checkEscalations = function() {};
         }
+        if (typeof window.loadManualIncidents !== 'function') {
+            window.loadManualIncidents = function() { return Promise.resolve(); };
+        }
+        // showCompletedProcesses — глобальна змінна, реально керується в 27-processes.js
+        if (typeof window.showCompletedProcesses === 'undefined') {
+            window.showCompletedProcesses = false;
+        }
         async function loadAllData() {
 
             if (!currentCompany) return;
@@ -42,7 +49,7 @@
                 const base = db.collection('companies').doc(currentCompany);
                 
                 let processQuery = base.collection('processes');
-                if (!showCompletedProcesses) {
+                if (!window.showCompletedProcesses) {
                     processQuery = processQuery.where('status', '==', 'active');
                 }
                 
@@ -286,12 +293,12 @@
                 if (thisLoadVersion === loadingVersion) {
                     isLoading = false;
                     // Check escalations after data is loaded
-                    checkEscalations();
+                    if (typeof window.checkEscalations === 'function') window.checkEscalations();
                     if (typeof initUsersTabVisibility === 'function') initUsersTabVisibility();
                 if (typeof initOwnerReportOption === 'function') initOwnerReportOption();
                 if (typeof initOwnerDashboardVisibility === 'function') initOwnerDashboardVisibility();
                     // Load manual incidents for journal
-                    loadManualIncidents().catch(() => {});
+                    if (typeof window.loadManualIncidents === 'function') window.loadManualIncidents().catch(() => {});
                     // Load project-driven data (stages, materials, QC) for owner dashboard
                     if (currentUserData?.role !== 'employee') {
                         Promise.all([

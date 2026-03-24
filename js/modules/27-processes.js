@@ -4,7 +4,8 @@
 'use strict';
         let processTemplates = [];
         let processes = [];
-        let showCompletedProcesses = false;
+        window.showCompletedProcesses = window.showCompletedProcesses || false;
+        let showCompletedProcesses = window.showCompletedProcesses;
         
         async function loadProcessData() {
             if (!currentCompany) return;
@@ -31,6 +32,7 @@
         
         function toggleShowCompletedProcesses() {
             showCompletedProcesses = !showCompletedProcesses;
+            window.showCompletedProcesses = showCompletedProcesses;
             const btn = document.getElementById('toggleCompletedBtn');
             if (btn) {
                 btn.classList.toggle('active', showCompletedProcesses);
