@@ -665,8 +665,8 @@
     function coordCard(c) {
         const type    = TYPES[c.type]||{ label:c.type, icon:'', color:'#6b7280', duration:60 };
         const chair   = coordUsers.find(u => u.id === c.chairmanId);
-        const chairName = chair ? (chair.name||chair.email) : '—';
-        const chairInitial = chair ? (chair.name||chair.email||'?')[0].toUpperCase() : '?';
+        const chairName = chair ? (chair.name || chair.email || '—') : (c.chairmanName || '—');
+        const chairInitial = chairName[0]?.toUpperCase() || '?';
         const participants = (c.participantIds||[]).map(pid => coordUsers.find(u=>u.id===pid)).filter(Boolean);
         const cnt     = participants.length;
         const sched   = c.schedule?.day != null && c.schedule?.time
@@ -731,7 +731,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
               <div style="display:flex;align-items:center;gap:.4rem;">
                 <div style="width:22px;height:22px;border-radius:50%;background:${type.color};display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:#fff;flex-shrink:0;">${chairInitial}</div>
-                <span style="font-size:.75rem;color:#374151;font-weight:500;">${esc(chairName.split(' ')[0])}</span>
+                <span style="font-size:.75rem;color:#374151;font-weight:500;">${esc((chairName||'').split(' ')[0])}</span>
               </div>
               <!-- Аватари учасників -->
               <div style="display:flex;align-items:center;">
