@@ -15,7 +15,7 @@
         return AI_TECH_LEAD_URL + '?q=' + prompt;
     }
     
-    function getAiHelpButton(taskTitle, taskDescription, taskFunction, size) {
+    window.getAiHelpButton = function getAiHelpButton(taskTitle, taskDescription, taskFunction, size) {
         const url = getAiHelpUrl(taskTitle, taskDescription, taskFunction);
         if (size === 'small') {
             return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" class="myday-ai-btn" title="${window.t('askAI')}">

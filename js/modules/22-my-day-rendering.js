@@ -2,6 +2,9 @@
         // MY DAY RENDERING
         // =====================
 'use strict';
+        if (typeof window.getAiHelpButton !== 'function') {
+            window.getAiHelpButton = function() { return ''; };
+        }
         function renderMyDay() {
         if (!currentUser) return; // auth guard — avoid crash before auth completes
 

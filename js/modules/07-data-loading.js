@@ -10,6 +10,9 @@
         if (typeof window.hideSkeletonLoading !== 'function') {
             window.hideSkeletonLoading = function() {};
         }
+        if (typeof window.checkEscalations !== 'function') {
+            window.checkEscalations = function() {};
+        }
         async function loadAllData() {
 
             if (!currentCompany) return;
