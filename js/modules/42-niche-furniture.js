@@ -50,6 +50,32 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     const now  = firebase.firestore.FieldValue.serverTimestamp();
     let ops    = [];
 
+    // ── 0. OWNER PRE-WRITE + ОЧИСТКА ─────────────────────────
+    try {
+        await cr.collection('users').doc(uid).set(
+            { role:'owner', status:'active', updatedAt:now }, { merge:true }
+        );
+    } catch(e) { console.warn('[demo] owner:', e.message); }
+
+    const _clearCols = ['tasks','regularTasks','functions','processTemplates',
+        'processes','projects','projectStages','workStandards','coordinations',
+        'crm_clients','crm_deals','crm_pipeline','crm_activities',
+        'finance_transactions','finance_categories','finance_accounts',
+        'finance_recurring','finance_budgets','finance_settings',
+        'warehouse_items','warehouse_operations','warehouse_suppliers',
+        'metricEntries','metrics','metricTargets',
+        'booking_calendars','booking_schedules','booking_appointments',
+        'estimates','estimate_norms','project_estimates',
+        'finance_invoices','coordination_sessions','sales'];
+    try {
+        for (const col of _clearCols) {
+            const snap = await cr.collection(col).where('isDemo','==',true).get();
+            if (!snap.empty) await window.safeBatchCommit(
+                snap.docs.map(d=>({type:'delete',ref:d.ref})), 'clear-'+col);
+        }
+    } catch(e) { console.warn('[demo] clear:', e.message); }
+
+
     // ── 1. ФУНКЦІЇ (8 основних блоків виробництва) ──────────
     // 0.Маркетинг 1.Продажі 2.Підготовка 3.Виробництво
     // 4.Доставка/Монтаж 5.Фінанси 6.Люди 7.Управління
@@ -694,6 +720,47 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         }});
     });
     await window.safeBatchCommit(dealOps);
+
+    // ── 7б. CRM АКТИВНОСТІ ────────────────────────────────────
+    const crmCliSnapF = await cr.collection('crm_clients').get();
+    const crmDocsF = crmCliSnapF.docs.slice(0, 10);
+    const ACT_TEXTS_F = [
+        'Клієнт зацікавлений у кухні на замовлення, уточнює терміни',
+        'Виїзний замір проведено, ескіз передано дизайнеру',
+        'Презентовано 3D-проєкт, клієнт обрав варіант №2',
+        'Договір підписано, аванс 50% отримано',
+        'Матеріали закуплено, виробництво розпочато',
+        'Проміжний контроль якості — все в нормі',
+        'Доставка узгоджена, монтажна бригада призначена',
+        'Монтаж завершено, акт здачі підписано',
+        'Клієнт залишив відгук 5★ на Google',
+        'Рекомендував нас сусіду — нарахований бонус',
+    ];
+    await window.safeBatchCommit(crmDocsF.map((doc, i) => ({type:'set', ref:cr.collection('crm_activities').doc(), data:{
+        clientId:doc.id, clientName:doc.data().name,
+        type:['note','meeting','meeting','note','note','call','call','meeting','note','note'][i],
+        text:ACT_TEXTS_F[i],
+        date:_furnitureDemoDate(-(i+1)),
+        managerId:sRefs[1].id, managerName:STAFF[1].name,
+        functionId:fRefs[1].id, functionName:FUNCS[1].name,
+        createdBy:uid, createdAt:now,
+    }})), 'step-crm-activities');
+
+    // ── 7в. РАХУНКИ-ФАКТУРИ ───────────────────────────────────
+    const INVOICES_F = [
+        {client:'Коваленко Марина',  amount:48500,  status:'paid',    d:-30, items:[{name:'Кухня на замовлення (аванс 50%)',    qty:1, price:48500}]},
+        {client:'Петров Андрій',     amount:32000,  status:'paid',    d:-15, items:[{name:'Шафа-купе + комод',                  qty:1, price:32000}]},
+        {client:'Бондаренко Олена',  amount:67000,  status:'pending', d:7,   items:[{name:'Меблі для спальні (фінальний платіж)',qty:1, price:67000}]},
+        {client:'Тищенко Василь',    amount:21500,  status:'pending', d:14,  items:[{name:'Дитяча кімната — комплект',          qty:1, price:21500}]},
+        {client:'Романова Світлана', amount:15000,  status:'overdue', d:-5,  items:[{name:'Передоплата за проєктування',        qty:1, price:15000}]},
+    ];
+    await window.safeBatchCommit(INVOICES_F.map(inv => ({type:'set', ref:cr.collection('finance_invoices').doc(), data:{
+        clientName:inv.client, amount:inv.amount, currency:'UAH',
+        status:inv.status, dueDate:_furnitureDemoDate(inv.d),
+        items:inv.items,
+        functionId:fRefs[5].id, functionName:FUNCS[5].name,
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }})), 'step-invoices');
 
     // ── 8. ФІНАНСИ — категорії, рахунки, транзакції ────────
     // (FIN_CATS видалено — використовується тільки FIN_CATS2 нижче з повним набором полів)

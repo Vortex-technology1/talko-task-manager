@@ -12,6 +12,32 @@ window._DEMO_NICHE_MAP['cleaning'] = async function() {
     const now = firebase.firestore.FieldValue.serverTimestamp();
     let ops   = [];
 
+    // ── 0. OWNER PRE-WRITE + ОЧИСТКА ─────────────────────────
+    try {
+        await cr.collection('users').doc(uid).set(
+            { role:'owner', status:'active', updatedAt:now }, { merge:true }
+        );
+    } catch(e) { console.warn('[demo] owner:', e.message); }
+
+    const _clearCols = ['tasks','regularTasks','functions','processTemplates',
+        'processes','projects','projectStages','workStandards','coordinations',
+        'crm_clients','crm_deals','crm_pipeline','crm_activities',
+        'finance_transactions','finance_categories','finance_accounts',
+        'finance_recurring','finance_budgets','finance_settings',
+        'warehouse_items','warehouse_operations','warehouse_suppliers',
+        'metricEntries','metrics','metricTargets',
+        'booking_calendars','booking_schedules','booking_appointments',
+        'estimates','estimate_norms','project_estimates',
+        'finance_invoices','coordination_sessions','sales'];
+    try {
+        for (const col of _clearCols) {
+            const snap = await cr.collection(col).where('isDemo','==',true).get();
+            if (!snap.empty) await window.safeBatchCommit(
+                snap.docs.map(d=>({type:'delete',ref:d.ref})), 'clear-'+col);
+        }
+    } catch(e) { console.warn('[demo] clear:', e.message); }
+
+
     // ── 1. FUNCTIONS (8 blocks) ──────────────────────────────
     const FUNCS = [
         { name:'0. Marketing & Lead Generation',  color:'#ec4899', desc:'Ads, SEO, Google reviews, referrals, Instagram, lead tracking and nurturing' },
@@ -617,6 +643,47 @@ window._DEMO_NICHE_MAP['cleaning'] = async function() {
         assigneeId:sRefs[2].id, assigneeName:STAFF[2].name,
         deleted:false, tags:[], createdAt:_demoTs(-1), updatedAt:now,
     }})));
+
+    // ── 9б. CRM ACTIVITIES ────────────────────────────────────
+    const crmCliSnap9c = await cr.collection('crm_clients').get();
+    const crmDocs9c = crmCliSnap9c.docs.slice(0, 10);
+    const ACT_TEXTS_C = [
+        'Client inquired about recurring weekly office cleaning',
+        'Walkthrough completed, custom quote sent ($320/visit)',
+        'Contract signed, first clean scheduled for next Monday',
+        'First clean completed — client gave 5★ on Google',
+        'Client requested add-on: carpet steam cleaning',
+        'Followed up after move-out clean, all items approved',
+        'Reminder sent for upcoming quarterly deep clean',
+        'Client referred 2 neighbors — referral bonus applied',
+        'Complaint about missed window — re-clean scheduled',
+        'Annual contract renewal discussed, 10% loyalty discount',
+    ];
+    await window.safeBatchCommit(crmDocs9c.map((doc, i) => ({type:'set', ref:cr.collection('crm_activities').doc(), data:{
+        clientId:doc.id, clientName:doc.data().name,
+        type:['note','call','meeting','email','note','call','note','note','call','meeting'][i],
+        text:ACT_TEXTS_C[i],
+        date:_demoDate(-(i+1)),
+        managerId:sRefs[2].id, managerName:STAFF[2].name,
+        functionId:fRefs[1].id, functionName:FUNCS[1].name,
+        createdBy:uid, createdAt:now,
+    }})), 'step-crm-activities');
+
+    // ── 9в. INVOICES ──────────────────────────────────────────
+    const INVOICES_C = [
+        {client:'Sunrise Office Park',  amount:1280, status:'paid',    d:-30, items:[{name:'Commercial cleaning — 4 visits', qty:4, price:320}]},
+        {client:'Johnson Residence',    amount:185,  status:'paid',    d:-15, items:[{name:'Deep clean — 3br/2ba',           qty:1, price:185}]},
+        {client:'Lakeview Apartments',  amount:960,  status:'pending', d:7,   items:[{name:'Turnover cleaning — 8 units',   qty:8, price:120}]},
+        {client:'Metro Dental Group',   amount:640,  status:'pending', d:14,  items:[{name:'Office cleaning — bi-weekly',   qty:2, price:320}]},
+        {client:'Smith Residence',      amount:220,  status:'overdue', d:-5,  items:[{name:'Move-out clean + carpet',       qty:1, price:220}]},
+    ];
+    await window.safeBatchCommit(INVOICES_C.map(inv => ({type:'set', ref:cr.collection('finance_invoices').doc(), data:{
+        clientName:inv.client, amount:inv.amount, currency:'USD',
+        status:inv.status, dueDate:_demoDate(inv.d),
+        items:inv.items,
+        functionId:fRefs[5].id, functionName:FUNCS[5].name,
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }})), 'step-invoices');
 
     // ── 10. FINANCE (USD) ─────────────────────────────────────
     const finSettingsRef = cr.collection('finance_settings').doc('main');

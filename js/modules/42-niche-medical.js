@@ -12,6 +12,32 @@ window._DEMO_NICHE_MAP['medical'] = async function() {
     const now = firebase.firestore.FieldValue.serverTimestamp();
     let ops   = [];
 
+    // ── 0. OWNER PRE-WRITE + ОЧИСТКА ─────────────────────────
+    try {
+        await cr.collection('users').doc(uid).set(
+            { role:'owner', status:'active', updatedAt:now }, { merge:true }
+        );
+    } catch(e) { console.warn('[demo] owner:', e.message); }
+
+    const _clearCols = ['tasks','regularTasks','functions','processTemplates',
+        'processes','projects','projectStages','workStandards','coordinations',
+        'crm_clients','crm_deals','crm_pipeline','crm_activities',
+        'finance_transactions','finance_categories','finance_accounts',
+        'finance_recurring','finance_budgets','finance_settings',
+        'warehouse_items','warehouse_operations','warehouse_suppliers',
+        'metricEntries','metrics','metricTargets',
+        'booking_calendars','booking_schedules','booking_appointments',
+        'estimates','estimate_norms','project_estimates',
+        'finance_invoices','coordination_sessions','sales'];
+    try {
+        for (const col of _clearCols) {
+            const snap = await cr.collection(col).where('isDemo','==',true).get();
+            if (!snap.empty) await window.safeBatchCommit(
+                snap.docs.map(d=>({type:'delete',ref:d.ref})), 'clear-'+col);
+        }
+    } catch(e) { console.warn('[demo] clear:', e.message); }
+
+
     // ── 1. ФУНКЦІЇ (8 блоків) ────────────────────────────────
     const FUNCS = [
         { name:'0. Маркетинг та залучення пацієнтів',  color:'#ec4899', desc:'Реклама, SMM, корпоративні партнерства, воронка залучення нових пацієнтів' },
@@ -629,6 +655,47 @@ window._DEMO_NICHE_MAP['medical'] = async function() {
         assigneeId:sRefs[1].id, assigneeName:STAFF[1].name,
         deleted:false, tags:[], createdAt:_demoTs(-1), updatedAt:now,
     }})));
+
+    // ── 9б. CRM АКТИВНОСТІ ────────────────────────────────────
+    const crmCliSnap9m = await cr.collection('crm_clients').get();
+    const crmDocs9m = crmCliSnap9m.docs.slice(0, 10);
+    const ACT_TEXTS_M = [
+        'Пацієнт цікавиться комплексним обстеженням, уточнює вартість',
+        'Проведена первинна консультація, призначено аналізи',
+        'Отримано результати аналізів, підготовано план лікування',
+        'Пацієнт підтвердив курс лікування, підписана згода',
+        'Завершено перший тиждень лікування, динаміка позитивна',
+        'Пацієнт запитав про повторний прийом через місяць',
+        'Нагадування про профілактичний огляд надіслано',
+        'Пацієнт залишив відгук 5★ на Google Maps',
+        'Надіслано результати УЗД на email',
+        'Рекомендував клініку другу — нарахований бонус',
+    ];
+    await window.safeBatchCommit(crmDocs9m.map((doc, i) => ({type:'set', ref:cr.collection('crm_activities').doc(), data:{
+        clientId:doc.id, clientName:doc.data().name,
+        type:['note','call','meeting','email','note','call','note','note','email','note'][i],
+        text:ACT_TEXTS_M[i],
+        date:_demoDate(-(i+1)),
+        managerId:sRefs[1].id, managerName:STAFF[1].name,
+        functionId:fRefs[1].id, functionName:FUNCS[1].name,
+        createdBy:uid, createdAt:now,
+    }})), 'step-crm-activities');
+
+    // ── 9в. РАХУНКИ-ФАКТУРИ ───────────────────────────────────
+    const INVOICES_M = [
+        {client:'Петренко Олег',   amount:3200,  status:'paid',    d:-30, items:[{name:'Комплексне обстеження',      qty:1, price:3200}]},
+        {client:'Коваль Оксана',   amount:1800,  status:'paid',    d:-15, items:[{name:'Консультація кардіолога',     qty:1, price:1800}]},
+        {client:'Бондар Сергій',   amount:5400,  status:'pending', d:7,   items:[{name:'Курс лікування — 5 сеансів', qty:1, price:5400}]},
+        {client:'Мельник Тетяна',  amount:2600,  status:'pending', d:14,  items:[{name:'УЗД + консультація',          qty:1, price:2600}]},
+        {client:'Іванченко Роман', amount:1200,  status:'overdue', d:-5,  items:[{name:'Первинний прийом',            qty:1, price:1200}]},
+    ];
+    await window.safeBatchCommit(INVOICES_M.map(inv => ({type:'set', ref:cr.collection('finance_invoices').doc(), data:{
+        clientName:inv.client, amount:inv.amount, currency:'UAH',
+        status:inv.status, dueDate:_demoDate(inv.d),
+        items:inv.items,
+        functionId:fRefs[5].id, functionName:FUNCS[5].name,
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }})), 'step-invoices');
 
     // ── 10. ФІНАНСИ ──────────────────────────────────────────
     const finSettingsRef = cr.collection('finance_settings').doc('main');
