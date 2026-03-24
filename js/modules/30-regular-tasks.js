@@ -652,12 +652,12 @@
             if (existingTasks.length > 0) {
                 // Оновлюємо статус існуючого завдання
                 const taskToUpdate = existingTasks[0];
-                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).update({
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).set({
                     status: 'done',
                     completedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    completedDate: completedDate,   // BUG 3 FIX
-                    completedBy: completedBy         // BUG 3 FIX
-                });
+                    completedDate: completedDate,
+                    completedBy: completedBy
+                }, { merge: true });
                 logTaskChange(taskToUpdate.id, 'complete', { status: 'done' }, { status: taskToUpdate.status });
                 // Локальне оновлення
                 taskToUpdate.status = 'done';
