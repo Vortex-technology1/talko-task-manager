@@ -138,10 +138,11 @@ window._DEMO_NICHE_MAP['food_production'] = async function() {
     function _tsF(n){const d=new Date();d.setDate(d.getDate()+n);d.setHours(12,0,0,0);return firebase.firestore.Timestamp.fromDate(d);}
 
     const TASKS = [
-        // Власник (ai:0)
+        // Власник (ai:0) — МІЙ ДЕНЬ
         {t:'Переговори з АТБ — введення нового SKU',          fi:0, ai:0, st:'new',      pr:'high',   d:0,  tm:'11:00'},
-        {t:'Підписати контракт з дистриб\'ютором Захід',      fi:0, ai:0, st:'new',      pr:'high',   d:1,  tm:'14:00'},
         {t:'Перевірити P&L та собівартість за березень',      fi:6, ai:0, st:'new',      pr:'high',   d:0,  tm:'09:00'},
+        {t:'Огляд виробничого цеху — контроль якості',        fi:3, ai:0, st:'new',      pr:'medium', d:0,  tm:'14:00'},
+        {t:'Підписати контракт з дистриб\'ютором Захід',      fi:0, ai:0, st:'new',      pr:'high',   d:1,  tm:'14:00'},
         {t:'Затвердити рецептуру нового смаку — паприка',     fi:2, ai:0, st:'new',      pr:'medium', d:2,  tm:'15:00'},
         {t:'Зустріч з банком — кредитна лінія для обладнання',fi:6, ai:0, st:'new',      pr:'high',   d:3,  tm:'10:00'},
         {t:'Оновити комерційну пропозицію для мереж',         fi:0, ai:0, st:'new',      pr:'medium', d:-1, tm:'10:00'},

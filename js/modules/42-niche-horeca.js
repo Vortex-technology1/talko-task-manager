@@ -138,11 +138,12 @@ window._DEMO_NICHE_MAP['horeca'] = async function() {
     function _tsF(n){const d=new Date();d.setDate(d.getDate()+n);d.setHours(12,0,0,0);return firebase.firestore.Timestamp.fromDate(d);}
 
     const TASKS = [
-        // Власник (ai:0)
+        // Власник (ai:0) — МІЙ ДЕНЬ
         {t:'Перевірити виручку та P&L за тиждень',           fi:6, ai:0, st:'new',      pr:'high',   d:0,  tm:'09:00'},
+        {t:'Переглянути відгуки Google Maps та TripAdvisor',  fi:0, ai:0, st:'progress', pr:'medium', d:0,  tm:'10:00'},
+        {t:'Провести 1-on-1 з шеф-кухарем — план на місяць', fi:7, ai:0, st:'new',      pr:'medium', d:0,  tm:'15:00'},
         {t:'Затвердити сезонне меню — літні страви',          fi:4, ai:0, st:'new',      pr:'high',   d:1,  tm:'11:00'},
         {t:'Зустріч з постачальником фермерських продуктів',  fi:5, ai:0, st:'new',      pr:'medium', d:2,  tm:'14:00'},
-        {t:'Переглянути відгуки Google Maps та TripAdvisor',  fi:0, ai:0, st:'progress', pr:'medium', d:0,  tm:'10:00'},
         {t:'Підписати договір з Glovo на доставку',           fi:0, ai:0, st:'new',      pr:'high',   d:1,  tm:'15:00'},
         {t:'Оплатити рахунок за оренду',                      fi:6, ai:0, st:'new',      pr:'high',   d:-1, tm:'12:00'},
         // Адміністратор

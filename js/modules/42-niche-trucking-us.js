@@ -138,10 +138,11 @@ window._DEMO_NICHE_MAP['trucking_us'] = async function() {
     function _tsF(n){const d=new Date();d.setDate(d.getDate()+n);d.setHours(12,0,0,0);return firebase.firestore.Timestamp.fromDate(d);}
 
     const TASKS = [
-        // Owner (ai:0)
+        // Owner (ai:0) — МІЙ ДЕНЬ
         {t:'Переговори з новим брокером Coyote Logistics',    fi:4, ai:0, st:'new',      pr:'high',   d:0,  tm:'10:00'},
-        {t:'Підписати контракт на пряму ліну з Amazon',       fi:4, ai:0, st:'new',      pr:'high',   d:1,  tm:'14:00'},
         {t:'Перевірити P&L та cash flow за тиждень',          fi:6, ai:0, st:'new',      pr:'high',   d:0,  tm:'09:00'},
+        {t:'Перевірити ELD compliance всього парку',          fi:3, ai:0, st:'new',      pr:'high',   d:0,  tm:'14:00'},
+        {t:'Підписати контракт на пряму ліну з Amazon',       fi:4, ai:0, st:'new',      pr:'high',   d:1,  tm:'14:00'},
         {t:'Поновити страховку парку — 5 траків',             fi:3, ai:0, st:'new',      pr:'high',   d:3,  tm:'10:00'},
         {t:'Подача IFTA звіту за Q1',                         fi:6, ai:0, st:'new',      pr:'high',   d:-1, tm:'17:00'},
         {t:'Зустріч з банком — кредит на новий трак',         fi:6, ai:0, st:'progress', pr:'medium', d:2,  tm:'11:00'},

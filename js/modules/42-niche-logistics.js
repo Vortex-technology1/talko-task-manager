@@ -138,10 +138,11 @@ window._DEMO_NICHE_MAP['logistics'] = async function() {
     function _tsF(n){const d=new Date();d.setDate(d.getDate()+n);d.setHours(12,0,0,0);return firebase.firestore.Timestamp.fromDate(d);}
 
     const TASKS = [
-        // Власник (ai:0)
+        // Власник (ai:0) — МІЙ ДЕНЬ
         {t:'Переговори з новим клієнтом — Агропром Плюс',     fi:0, ai:0, st:'new',      pr:'high',   d:0,  tm:'11:00'},
-        {t:'Підписати контракт з Нова Пошта Фрейт',           fi:4, ai:0, st:'new',      pr:'high',   d:1,  tm:'14:00'},
         {t:'Перевірити P&L за березень',                      fi:6, ai:0, st:'new',      pr:'high',   d:0,  tm:'17:00'},
+        {t:'Перевірити стан автопарку — технічний огляд',     fi:5, ai:0, st:'new',      pr:'medium', d:0,  tm:'09:00'},
+        {t:'Підписати контракт з Нова Пошта Фрейт',           fi:4, ai:0, st:'new',      pr:'high',   d:1,  tm:'14:00'},
         {t:'Затвердити план рейсів на наступний тиждень',      fi:1, ai:0, st:'new',      pr:'medium', d:1,  tm:'09:00'},
         {t:'Зустріч з страховою компанією — поновлення',       fi:5, ai:0, st:'new',      pr:'medium', d:2,  tm:'10:00'},
         {t:'Оновити тарифи — зростання ціни дизелю',          fi:6, ai:0, st:'new',      pr:'high',   d:-1, tm:'10:00'},
