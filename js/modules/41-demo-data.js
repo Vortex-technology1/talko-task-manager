@@ -63,6 +63,43 @@
             manufacturing:    'Виробництво (базово)',
         };
 
+        // Глобальна функція очищення демо — видаляє ВСІ завдання/регулярні
+        // (не тільки isDemo:true, бо старі дані можуть не мати цього поля)
+        window._clearDemoColsFull = async function() {
+            const cr = db.collection('companies').doc(currentCompany);
+            // Колекції що очищаємо ПОВНІСТЮ (всі документи)
+            const fullClearCols = ['tasks', 'regularTasks'];
+            // Колекції що очищаємо тільки isDemo:true
+            const demoClearCols = ['functions','processTemplates','processes',
+                'projects','projectStages','workStandards','coordinations',
+                'crm_clients','crm_deals','crm_pipeline','crm_activities',
+                'finance_transactions','finance_categories','finance_accounts',
+                'finance_recurring','finance_budgets','finance_settings',
+                'warehouse_items','warehouse_operations','warehouse_suppliers',
+                'metricEntries','metrics','metricTargets',
+                'booking_calendars','booking_schedules','booking_appointments',
+                'estimates','estimate_norms','project_estimates',
+                'finance_invoices','coordination_sessions','sales'];
+            try {
+                // Повне очищення tasks і regularTasks (без фільтра isDemo)
+                for (const col of fullClearCols) {
+                    const snap = await cr.collection(col).get();
+                    if (!snap.empty) {
+                        const ops = snap.docs.map(d=>({type:'delete',ref:d.ref}));
+                        await window.safeBatchCommit(ops, 'full-clear-'+col);
+                    }
+                }
+                // Очищення решти колекцій тільки isDemo:true
+                for (const col of demoClearCols) {
+                    const snap = await cr.collection(col).where('isDemo','==',true).get();
+                    if (!snap.empty) {
+                        await window.safeBatchCommit(
+                            snap.docs.map(d=>({type:'delete',ref:d.ref})), 'clear-'+col);
+                    }
+                }
+            } catch(e) { console.warn('[clearDemoColsFull]', e.message); }
+        };
+
         window.loadDemoDataFull = async function(nicheKey) {
             const isOwner = window.currentUserData?.role === 'owner';
             if (!isSuperAdmin && !isOwner) { showToast('Тільки для власника компанії', 'error'); return; }
@@ -72,6 +109,11 @@
             closeDemoDataModal();
 
             if (!await _confirmDemoLoad(label)) return;
+
+            showToast('Очищення старих даних...', 'info');
+            try {
+                await window._clearDemoColsFull();
+            } catch(e) { console.warn('[clearDemo]', e.message); }
 
             showToast('Завантаження демо-середовища...', 'info');
             try {
