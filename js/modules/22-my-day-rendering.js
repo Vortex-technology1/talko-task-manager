@@ -5,6 +5,15 @@
         if (typeof window.getAiHelpButton !== 'function') {
             window.getAiHelpButton = function() { return ''; };
         }
+        if (typeof window.getTimerButtonHtml !== 'function') {
+            window.getTimerButtonHtml = function() { return ''; };
+        }
+        if (typeof window.updateOverdueBadge !== 'function') {
+            window.updateOverdueBadge = function() {};
+        }
+        if (typeof window.renderMyAnalytics !== 'function') {
+            window.renderMyAnalytics = function() {};
+        }
         function renderMyDay() {
         if (!currentUser) return; // auth guard — avoid crash before auth completes
 

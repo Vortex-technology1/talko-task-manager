@@ -103,7 +103,7 @@
         if (display) display.textContent = `${m}:${s.toString().padStart(2, '0')}`;
     }
     
-    function getTimerButtonHtml(taskId) {
+    window.getTimerButtonHtml = function getTimerButtonHtml(taskId) {
         const isRunning = activeTimer?.taskId === taskId;
         const icon = isRunning 
             ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'

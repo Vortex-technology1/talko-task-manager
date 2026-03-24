@@ -722,7 +722,7 @@
         }
         
         // Overdue badge
-        function updateOverdueBadge() {
+        window.updateOverdueBadge = function updateOverdueBadge() {
             const badge = document.getElementById('overdueNavBadge');
             if (!badge) return;
             const today = getLocalDateStr();
