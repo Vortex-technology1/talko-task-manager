@@ -24,7 +24,7 @@
                 </button>
             `;
             container.appendChild(item);
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
             // Фокус на нове поле
             if (!text) item.querySelector('input[type="text"]').focus();
         }

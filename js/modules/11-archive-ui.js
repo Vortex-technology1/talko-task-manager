@@ -39,7 +39,7 @@
                 archiveBtn.style.background = '#6b7280';
                 archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>' + window.t('archive') + '</span>';
             }
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         async function loadArchiveTasks() {
@@ -70,7 +70,7 @@
                             <p>' + window.t('archiveEmpty') + '</p>
                             <p style="font-size:0.8rem;">' + window.t('archiveAutoHint') + '</p>
                         </div>`;
-                    refreshIcons();
+                    if (typeof window.refreshIcons === 'function') window.refreshIcons();
                     return;
                 }
                 
@@ -174,7 +174,7 @@
             html += `</div>`;
             
             listEl.innerHTML = html;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         async function restoreFromArchive(taskId) {

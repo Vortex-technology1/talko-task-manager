@@ -675,7 +675,7 @@
                     ${detailHTML}
                 </div>
             `}).join('');
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function toggleUserDetail(userId, event) {
@@ -687,7 +687,7 @@
             section.style.display = isOpen ? 'none' : 'block';
             if (toggle) {
                 toggle.setAttribute('data-lucide', isOpen ? 'chevron-down' : 'chevron-up');
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
             }
         }
         

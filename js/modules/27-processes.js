@@ -77,7 +77,7 @@
             if (filteredProcesses.length === 0) {
                 container.style.display = 'none';
                 emptyState.style.display = 'block';
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
                 return;
             }
             
@@ -112,7 +112,7 @@
                 counter.style.display = activeCount > 0 ? 'inline' : 'none';
             }
             
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function renderProcessPipelineRow(process) {

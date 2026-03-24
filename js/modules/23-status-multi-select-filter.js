@@ -489,7 +489,7 @@
             // Pagination: show only first TASKS_PAGE_SIZE tasks, add "Load More"
             applyTasksPagination();
             
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
             initSwipeHandlers();
             initTableColumnResize();
             restoreColumnWidths();
@@ -573,7 +573,7 @@
         function loadMoreTasks() {
             tasksVisibleCount += TASKS_PAGE_SIZE;
             applyTasksPagination();
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
             initSwipeHandlers();
         }
         

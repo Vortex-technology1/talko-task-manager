@@ -50,7 +50,7 @@
                     </div>
                 </div>
             `;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function resetDropdownPosition(dd) {

@@ -627,7 +627,7 @@
                 }
             }
             
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function clearControlFilters() {

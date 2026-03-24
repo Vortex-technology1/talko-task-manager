@@ -475,7 +475,7 @@
                     ${renderFunctionLoad(visibleTasks)}
                 </div>
             `;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function renderWeeklyChart(visibleTasks, today) {
@@ -775,7 +775,7 @@
             if (typeof window.setLanguage === 'function') window.setLanguage(_initLang);
             // Ініціалізуємо Lucide іконки
             if (typeof lucide !== 'undefined') {
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
             }
         });
         

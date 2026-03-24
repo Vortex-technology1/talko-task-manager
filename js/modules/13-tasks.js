@@ -156,7 +156,7 @@
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
                                     <i data-lucide="rotate-ccw" class="icon"></i> ${window.t('reviseTask')}
                                 </button>`;
-                            refreshIcons();
+                            if (typeof window.refreshIcons === 'function') window.refreshIcons();
                         } else if (isAssignee && (task.status === 'new' || task.status === 'progress')) {
                             // Виконавець бачить кнопку Виконано
                             reviewActions.style.display = 'block';
@@ -177,7 +177,7 @@
                                     <i data-lucide="check-circle" class="icon"></i> ${window.t('markDone')}
                                 </button>
                                 ${manageButtons}`;
-                            refreshIcons();
+                            if (typeof window.refreshIcons === 'function') window.refreshIcons();
                         } else if (!isAssignee && canManage && (task.status === 'new' || task.status === 'progress')) {
                             // Менеджер дивиться чужу задачу (не на ревью)
                             reviewActions.style.display = 'block';
@@ -194,7 +194,7 @@
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
                                     <i data-lucide="message-circle" class="icon"></i> ${window.t('reviseTask')}
                                 </button>`;
-                            refreshIcons();
+                            if (typeof window.refreshIcons === 'function') window.refreshIcons();
                         } else if (isAssignee && task.status === 'review') {
                             // Працівник бачить що його задача на перевірці
                             reviewActions.style.display = 'block';
@@ -204,7 +204,7 @@
                             const btns = document.getElementById('taskActionsButtons');
                             label.innerHTML = '<i data-lucide="clock" class="icon icon-sm" style="color:#d97706;"></i> <span style="color:#d97706;">Завдання на перевірці у керівника</span>';
                             btns.innerHTML = '<p style="font-size:0.85rem;color:#92400e;margin:0;">' + window.t('awaitConfirmNote') + '</p>';
-                            refreshIcons();
+                            if (typeof window.refreshIcons === 'function') window.refreshIcons();
                         } else if (canManage && task.status === 'done') {
                             reviewActions.style.display = 'block';
                             reviewActions.style.background = 'linear-gradient(135deg,#f0fdf4,#ecfdf5)';
@@ -216,7 +216,7 @@
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="reopenTaskFromModal()">
                                     <i data-lucide="rotate-ccw" class="icon"></i> ${window.t('returnToWork')}
                                 </button>`;
-                            refreshIcons();
+                            if (typeof window.refreshIcons === 'function') window.refreshIcons();
                         } else {
                             reviewActions.style.display = 'none';
                         }
@@ -343,7 +343,7 @@
                     </div>
                 </div>
             `;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function updateNotifyCheckboxStyle(checkbox) {

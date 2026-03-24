@@ -22,7 +22,7 @@
                 input.type = 'password';
                 btn.innerHTML = '<i data-lucide="eye" class="icon icon-sm"></i>';
             }
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
 
         async function selfRegisterCompany() {

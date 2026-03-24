@@ -527,7 +527,7 @@
         const orig = window.renderControl;
         window.renderControl = function() {
             orig();
-            renderOwnerProjectDashboard();
+            if (typeof window.renderOwnerProjectDashboard === 'function') window.renderOwnerProjectDashboard();
         };
         _controlHookInstalled = true;
     }

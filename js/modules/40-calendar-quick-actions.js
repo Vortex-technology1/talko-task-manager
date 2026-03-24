@@ -20,7 +20,7 @@
             document.getElementById('taskFunction').value = '';
             
             const _modal = document.getElementById('taskModal'); if (!_modal) return; _modal.style.display = 'flex';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         // Quick menu for task actions

@@ -15,7 +15,7 @@
             document.addEventListener('scroll', closeOnce, { once: true, capture: true });
             window.addEventListener('scroll', closeOnce, { once: true, capture: true });
         }
-        refreshIcons();
+        if (typeof window.refreshIcons === 'function') window.refreshIcons();
     }
     
     function closeAddTaskMenu() {
@@ -62,7 +62,7 @@
                     </div>`;
             }
             document.getElementById('templatePickerModal').style.display = 'block';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         });
     }
     
@@ -127,7 +127,7 @@
         }
         
         body.innerHTML = html;
-        refreshIcons();
+        if (typeof window.refreshIcons === 'function') window.refreshIcons();
     }
     
     function openTemplateEditor(templateId) {
@@ -176,7 +176,7 @@
                 </button>
             </div>
         </div>`;
-        refreshIcons();
+        if (typeof window.refreshIcons === 'function') window.refreshIcons();
     }
     
     function editTemplate(id) { openTemplateEditor(id); }

@@ -10,7 +10,7 @@
                 return;
             }
             document.getElementById('demoDataModal').style.display = 'flex';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function closeDemoDataModal() {
@@ -1038,7 +1038,7 @@
                 return;
             }
             document.getElementById('demoDataModal').style.display = 'flex';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function closeDemoDataModal() {

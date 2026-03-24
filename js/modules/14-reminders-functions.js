@@ -59,7 +59,7 @@
                     </div>
                 </div>
             `;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         // Встановлюємо чекбокси контролю

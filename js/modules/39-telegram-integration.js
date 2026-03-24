@@ -337,7 +337,7 @@
             if (extEl && currentUserData) extEl.value = currentUserData.extension || '';
             
             modal.style.display = 'flex';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
 
         let _extSaving = false;

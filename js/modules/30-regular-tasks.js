@@ -862,7 +862,7 @@
             const todayBtn = document.getElementById('regularTodayBtn');
             if (todayBtn) {
                 todayBtn.innerHTML = `<i data-lucide="calendar-check" class="icon"></i> ${window.t('todaysTasks')} (${todayDayName})`;
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
             }
             
             if (filtered.length === 0) {
@@ -974,7 +974,7 @@
             
             html += `</tbody></table>`;
             c.innerHTML = html;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function showInstruction(id) {

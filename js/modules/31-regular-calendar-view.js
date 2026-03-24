@@ -142,7 +142,7 @@
             }
             
             bodyEl.innerHTML = bodyHTML;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
             
             // Also update mobile view
             updateRegularDayTabs();
@@ -457,7 +457,7 @@
             }
             
             container.innerHTML = html;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function renderRegularTaskCard(rt, extraLabel = null) {

@@ -208,7 +208,7 @@
                 btn.classList.remove('btn-warning');
                 btn.classList.add('btn-success');
             }
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         // Clear old notifications daily
@@ -247,7 +247,7 @@
         // Mobile menu functions
         function openMobileMenu() {
             document.getElementById('mobileMenuModal').style.display = 'flex';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function closeMobileMenu() {

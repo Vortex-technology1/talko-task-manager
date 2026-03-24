@@ -288,7 +288,7 @@
             else if (currentProjectView === 'list') renderProjectsList(container, filtered);
             else if (currentProjectView === 'timeline') renderProjectsTimeline(container, filtered);
             
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function renderProjectsGrid(container, filtered) {
@@ -611,7 +611,7 @@
                 <div id="projectEstimateView" style="display:none;"><div id="projectEstimateContent"></div></div>
             `;
             
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function switchProjectView(view, btn) {
@@ -881,7 +881,7 @@
         function openProcessTemplatesModal() {
             renderTemplatesList();
             document.getElementById('processTemplatesModal').style.display = 'block';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function renderTemplatesList() {
@@ -894,7 +894,7 @@
                         <p>${window.t('noTemplates')}</p>
                     </div>
                 `;
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
                 return;
             }
             
@@ -923,7 +923,7 @@
                 `;
             }).join('');
             
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function openEditTemplateModal(templateId = null) {
@@ -945,7 +945,7 @@
             
             closeModal('processTemplatesModal');
             document.getElementById('editProcessTemplateModal').style.display = 'block';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function renderTemplateStepEditor(step, index) {
@@ -1013,7 +1013,7 @@
             }
             
             container.insertAdjacentHTML('beforeend', renderTemplateStepEditor({ function: '', title: '' }, newIndex));
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function removeTemplateStep(index) {
@@ -1159,7 +1159,7 @@
             document.getElementById('startProcessPreview').style.display = 'none';
             
             document.getElementById('startProcessModal').style.display = 'block';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function updateStartProcessPreview() {
@@ -1187,7 +1187,7 @@
             `).join('');
             
             preview.style.display = 'block';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         // === SMART ASSIGN — find least loaded person in function ===
@@ -1353,7 +1353,7 @@
                         <p>${window.t('templateDeleted')}</p>
                     </div>`;
                 document.getElementById('viewProcessModal').style.display = 'block';
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
                 return;
             }
             
@@ -1449,7 +1449,7 @@
             `;
             
             document.getElementById('viewProcessModal').style.display = 'block';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         async function deleteProcess(processId) {

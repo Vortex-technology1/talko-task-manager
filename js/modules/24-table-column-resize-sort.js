@@ -145,7 +145,7 @@
             const dd = document.getElementById('exportDropdown');
             dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
             if (dd.style.display === 'block') {
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
                 const closeOnce = () => closeExportDropdown();
                 setTimeout(() => {
                     document.addEventListener('click', closeOnce, { once: true });
@@ -464,7 +464,7 @@
             
             // Sync current filters
             syncFilterChips();
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function closeFilterModal() {

@@ -477,7 +477,7 @@
                     ${financeHTML}
                 </div>
             `}).join('');
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
             
             const mergeBtn = document.getElementById('mergeFunctionsBtn');
             if (mergeBtn) {
@@ -497,7 +497,7 @@
                 toggle.innerHTML = isOpen 
                     ? `<i data-lucide="chevron-down" class="icon icon-sm"></i> ${window.t('showRegularTasks')}`
                     : `<i data-lucide="chevron-up" class="icon icon-sm"></i> ${window.t('hideRegularTasks')}`;
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
             }
         }
 

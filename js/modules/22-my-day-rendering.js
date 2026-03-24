@@ -189,7 +189,7 @@
                         <h3>${window.t('noTasksForToday')}</h3>
                         <p style="color:var(--gray);margin-top:0.5rem;">${window.t('timeToRest')}</p>
                     </div>`;
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
                 return;
             }
             
@@ -208,7 +208,7 @@
                         </div>
                         ${myTasks.map(t => renderMyDayItem(t)).join('')}
                     </div>`;
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
                 return;
             }
             
@@ -269,7 +269,7 @@
             }
             
             container.innerHTML = html;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
             updateOverdueBadge();
             renderMyAnalytics();
         }
@@ -357,7 +357,7 @@
             if (checkbox && !currentDone) {
                 checkbox.classList.add('checked');
                 checkbox.innerHTML = '<i data-lucide="check" class="icon icon-sm"></i>';
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
             }
             if (item && !currentDone) {
                 item.style.transform = 'scale(0.98)';

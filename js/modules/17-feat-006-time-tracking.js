@@ -19,7 +19,7 @@
                 const btn = document.getElementById('timeTrackBtn');
                 btn.style.background = '#ef4444';
                 btn.innerHTML = '<i data-lucide="square" class="icon icon-sm"></i> <span>' + window.t('btnStop') + '</span>';
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
                 
                 window.timeTrackerInterval = setInterval(() => {
                     if (!window.timeTrackerStart) return;
@@ -41,7 +41,7 @@
             const btn = document.getElementById('timeTrackBtn');
             btn.style.background = '#22c55e';
             btn.innerHTML = '<i data-lucide="play" class="icon icon-sm"></i> <span data-i18n="startTimer">Старт</span>';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
             
             if (elapsed >= 1) {
                 addTimeEntry(elapsed);

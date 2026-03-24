@@ -14,7 +14,7 @@
             document.getElementById('functionsContainer').style.display = view === 'cards' ? '' : 'none';
             document.getElementById('functionsStructureContainer').style.display = view === 'structure' ? '' : 'none';
             if (view === 'structure') renderFunctionsStructure();
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function getStructureCategories() {
@@ -114,7 +114,7 @@
             </div>`;
             
             container.innerHTML = html;
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         let draggedFuncId = null;
@@ -224,7 +224,7 @@
             document.getElementById('executeMergeBtn').disabled = true;
             
             document.getElementById('mergeFunctionsModal').style.display = 'block';
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
         
         function updateMergePreview() {
@@ -415,7 +415,7 @@
             } finally {
                 executeBtn.disabled = false;
                 executeBtn.innerHTML = `<i data-lucide="git-merge" class="icon"></i> <span data-i18n="merge">${window.t('merge')}</span>`;
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
             }
         }
 
@@ -438,7 +438,7 @@
             if (cv) cv.style.display = view === 'canvas' ? '' : 'none';
             if (view === 'structure') renderFunctionsStructure();
             if (view === 'canvas') renderFunctionsCanvas();
-            refreshIcons();
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
         }
 
         window.setCanvasMode = function(mode) {

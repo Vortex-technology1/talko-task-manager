@@ -28,7 +28,7 @@
             
             // Re-initialize lucide icons for comment section
             if (typeof lucide !== 'undefined') {
-                refreshIcons();
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
             }
         }
         
