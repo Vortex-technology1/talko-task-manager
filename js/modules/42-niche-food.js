@@ -610,7 +610,7 @@ window._DEMO_NICHE_MAP['food_production'] = async function() {
             const offset = -(m.vals.length-1-j)*pd;
             const dt = new Date(now_ms+offset*86400000);
             const pk = m.freq==='weekly'
-                ?`${dt.getFullYear()}-W${String(Math.ceil(dt.getDate()/7)).padStart(2,'0')}`
+                ?(function(d){var dt2=new Date(d);dt2.setHours(12,0,0,0);var dow=dt2.getDay()||7;dt2.setDate(dt2.getDate()-dow+4);var y=dt2.getFullYear();var j1=new Date(y,0,1);var wn=Math.ceil(((dt2-j1)/864e5+j1.getDay()+1)/7);return y+'-W'+String(wn).padStart(2,'0');})(dt)
                 :`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
             mOps.push({type:'set',ref:cr.collection('metricEntries').doc(),data:{
                 metricId:mRefs[i].id, metricName:m.name,

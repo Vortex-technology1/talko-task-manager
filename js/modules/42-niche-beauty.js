@@ -1034,7 +1034,14 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     ];
     const entryOps = [];
     for (const w of WEEKS_DATA) {
-        const periodKey = _demoDate(w.wk * 7);
+        const _dt = new Date(Date.now() + w.wk * 7 * 86400000);
+        _dt.setHours(12,0,0,0);
+        const _dow = _dt.getDay() || 7;
+        _dt.setDate(_dt.getDate() - _dow + 4);
+        const _y = _dt.getFullYear();
+        const _j1 = new Date(_y, 0, 1);
+        const _wn = Math.ceil(((_dt - _j1) / 864e5 + _j1.getDay() + 1) / 7);
+        const periodKey = _y + '-W' + String(_wn).padStart(2, '0');
         for (let mi = 0; mi < METRIC_DEFS.length; mi++) {
             entryOps.push({type:'set', ref:cr.collection('metricEntries').doc(), data:{
                 metricId: mDefRefs[mi].id,
@@ -1042,6 +1049,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
                 period: periodKey,
                 periodKey: periodKey,
                 periodType: 'weekly',
+                frequency: 'weekly',
                 date: periodKey,
                 scope: 'company',
                 scopeId: uid,
