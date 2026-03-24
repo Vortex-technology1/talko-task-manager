@@ -455,7 +455,9 @@
                 generatedRefs.push({ ref, assigneeId });
                 batch.set(ref, {
                     title: rt.title,
-                    function: rt.function,
+                    function: rt.functionName || rt.function || '',
+                    functionName: rt.functionName || rt.function || '',
+                    functionId: rt.functionId || '',
                     assigneeId: assigneeId,
                     assigneeName: users.find(u => u.id === assigneeId)?.name || '',
                     deadlineDate: deadlineDate,
@@ -489,7 +491,9 @@
                 tasks.unshift({
                     id: ref.id,
                     title: rt.title,
-                    function: rt.function,
+                    function: rt.functionName || rt.function || '',
+                    functionName: rt.functionName || rt.function || '',
+                    functionId: rt.functionId || '',
                     assigneeId: assigneeId,
                     assigneeName: users.find(u => u.id === assigneeId)?.name || '',
                     deadlineDate: deadlineDate,
@@ -530,7 +534,9 @@
                 const ref = db.collection('companies').doc(currentCompany).collection('tasks').doc();
                 const taskData = {
                     title: rt.title,
-                    function: rt.function,
+                    function: rt.functionName || rt.function || '',
+                    functionName: rt.functionName || rt.function || '',
+                    functionId: rt.functionId || '',
                     assigneeId: assigneeId,
                     assigneeName: users.find(u => u.id === assigneeId)?.name || '',
                     deadlineDate: todayStr,
@@ -662,7 +668,9 @@
                 // Створюємо нове і одразу виконане
                 const newTaskData = {
                     title: rt.title,
-                    function: rt.function,
+                    function: rt.functionName || rt.function || '',
+                    functionName: rt.functionName || rt.function || '',
+                    functionId: rt.functionId || '',
                     assigneeId: currentUser?.uid || '',
                     assigneeName: currentUserData?.name || currentUser.email,
                     deadlineDate: today,

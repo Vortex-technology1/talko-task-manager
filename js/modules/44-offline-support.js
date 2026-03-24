@@ -26,7 +26,7 @@
                     deadlineTime: t.deadlineTime,
                     // deadline: не серіалізуємо Timestamp (стає {} через JSON)
                     // deadlineDate + deadlineTime достатньо для parseDeadline
-                    function: t.function,
+                    function: t.functionName || t.function || '',
                     priority: t.priority,
                     pinned: t.pinned,
                     estimatedTime: t.estimatedTime,
@@ -44,7 +44,7 @@
                     regularTasks: regularTasks.map(rt => ({
                         id: rt.id,
                         title: rt.title,
-                        function: rt.function,
+                        function: rt.functionName || rt.function || '',
                         period: rt.period,
                         daysOfWeek: rt.daysOfWeek,
                         dayOfWeek: rt.dayOfWeek,
