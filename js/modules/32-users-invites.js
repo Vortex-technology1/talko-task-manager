@@ -29,10 +29,14 @@
                 const autonomy = done.length > 0 ? Math.round(doneNoReturn / done.length * 100) : null;
 
                 const userRegular = regularTasks.filter(rt => {
-                    const func = functions.find(f => f.name === rt.function && f.status !== 'archived');
-                    if (!func?.assigneeIds?.includes(u.id)) return false;
-                    // Якщо rt.assigneeId вказаний — тільки ця людина виконує; якщо порожній — всі функції
-                    return !rt.assigneeId || rt.assigneeId === u.id;
+                    const func = functions.find(f =>
+                        (rt.functionId && f.id === rt.functionId) ||
+                        (rt.functionName && f.name === rt.functionName) ||
+                        (rt.function && f.name === rt.function)
+                    );
+                    if (!func || func.status === 'archived') return false;
+                    if (rt.assigneeId) return rt.assigneeId === u.id;
+                    return func?.assigneeIds?.includes(u.id);
                 });
                 let weeklyMin = 0;
                 userRegular.forEach(rt => {
@@ -161,14 +165,18 @@
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
                 <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.75rem;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>${window.t('funcLoadTitle') || 'Навантаження по функціях'}</div>
                 ${functions.filter(f => f.status !== 'archived').map(f => {
-                    const fTasks = tasks.filter(tk => tk.function === f.name);
+                    const fTasks = tasks.filter(tk => tk.functionName === f.name || tk.function === f.name || tk.ownerFunctionId === f.id);
                     const fActive = fTasks.filter(tk => tk.status !== 'done');
                     const fNew = fTasks.filter(tk => tk.status === 'new').length;
                     const fProgress = fTasks.filter(tk => tk.status === 'progress').length;
                     const fReview = fTasks.filter(tk => tk.status === 'review').length;
                     const fDone = fTasks.filter(tk => tk.status === 'done').length;
                     const assigneesCount = f.assigneeIds?.length || 0;
-                    const fRegular = regularTasks.filter(rt => rt.function === f.name);
+                    const fRegular = regularTasks.filter(rt =>
+                        (rt.functionId && rt.functionId === f.id) ||
+                        (rt.functionName && rt.functionName === f.name) ||
+                        (rt.function && rt.function === f.name)
+                    );
                     let fMin = 0;
                     fRegular.forEach(rt => {
                         let dur = rt.estimatedTime || 60;
@@ -499,9 +507,14 @@
                 
                 // Regular tasks & weekly hours
                 const userRegular = regularTasks.filter(rt => {
-                    const func = functions.find(f => f.name === rt.function && f.status !== 'archived');
-                    if (!func?.assigneeIds?.includes(u.id)) return false;
-                    return !rt.assigneeId || rt.assigneeId === u.id;
+                    const func = functions.find(f =>
+                        (rt.functionId && f.id === rt.functionId) ||
+                        (rt.functionName && f.name === rt.functionName) ||
+                        (rt.function && f.name === rt.function)
+                    );
+                    if (!func || func.status === 'archived') return false;
+                    if (rt.assigneeId) return rt.assigneeId === u.id;
+                    return func?.assigneeIds?.includes(u.id);
                 });
                 let weeklyMin = 0;
                 userRegular.forEach(rt => {
