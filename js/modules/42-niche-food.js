@@ -5,6 +5,24 @@
 // ============================================================
 'use strict';
 
+// Патч safeBatchCommit — автоматично додає isDemo:true до ВСІХ set операцій
+(function() {
+    const _orig = window.safeBatchCommit;
+    if (!_orig || _orig._isPatched) return;
+    window.safeBatchCommit = async function(ops, _label) {
+        if (!ops || !ops.length) return;
+        const markedOps = ops.map(op => {
+            if (op.type === 'set' && op.data && !op.data.isDemo) {
+                return { ...op, data: { ...op.data, isDemo: true } };
+            }
+            return op;
+        });
+        try { return await _orig(markedOps, _label); }
+        catch(e) { console.warn('[DemoNiche] batch error', _label || '?', e.message); }
+    };
+    window.safeBatchCommit._isPatched = true;
+})();
+
 window._DEMO_NICHE_MAP = window._DEMO_NICHE_MAP || {};
 
 window._DEMO_NICHE_MAP['food_production'] = async function() {

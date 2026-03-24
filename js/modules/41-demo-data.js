@@ -264,7 +264,9 @@
                 const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
                 
                 const taskRef = companyRef.collection('tasks').doc();
-                batch.set(taskRef, { 
+                batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId: assigneeId,
                     assigneeName: assigneeName,
@@ -291,6 +293,8 @@
             for (const task of ownerTasks) {
                 const taskRef = companyRef.collection('tasks').doc();
                 batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId: ownerUserId,
                     assigneeName: ownerName,
@@ -345,6 +349,8 @@
             for (const template of clinicProcessTemplates) {
                 const templateRef = companyRef.collection('processTemplates').doc();
                 batch.set(templateRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...template,
                     createdBy: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -354,6 +360,7 @@
                 if (template.name === 'Прийом нового пацієнта') {
                     const procRef = companyRef.collection('processes').doc();
                     batch.set(procRef, {
+                    isDemo: true,
                         name: 'Пацієнт Іванов І.І. — імплантація',
                         templateId: templateRef.id,
                         currentStep: 3,
@@ -367,6 +374,7 @@
                 if (template.name === 'Маркетингова кампанія') {
                     const procRef = companyRef.collection('processes').doc();
                     batch.set(procRef, {
+                    isDemo: true,
                         name: 'Акція "Безкоштовна консультація"',
                         templateId: templateRef.id,
                         currentStep: 1,
@@ -411,6 +419,8 @@
             for (const proj of clinicProjects) {
                 const projRef = companyRef.collection('projects').doc();
                 batch.set(projRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...proj,
                     creatorId: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -444,6 +454,8 @@
                 const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
                 const taskRef = companyRef.collection('tasks').doc();
                 batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId, assigneeName,
                     createdBy: currentUser.uid,
@@ -530,7 +542,9 @@
                 const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
                 
                 const taskRef = companyRef.collection('tasks').doc();
-                batch.set(taskRef, { 
+                batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId: assigneeId,
                     assigneeName: assigneeName,
@@ -586,6 +600,8 @@
             for (const template of mfgProcessTemplates) {
                 const templateRef = companyRef.collection('processTemplates').doc();
                 batch.set(templateRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...template,
                     createdBy: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -595,6 +611,7 @@
                 if (template.name === 'Виконання замовлення клієнта') {
                     const procRef = companyRef.collection('processes').doc();
                     batch.set(procRef, {
+                    isDemo: true,
                         name: 'Замовлення #1247 — ТОВ "Альфа"',
                         templateId: templateRef.id,
                         currentStep: 4,
@@ -606,6 +623,7 @@
                     });
                     const procRef2 = companyRef.collection('processes').doc();
                     batch.set(procRef2, {
+                    isDemo: true,
                         name: 'Замовлення #1250 — ФОП Петренко',
                         templateId: templateRef.id,
                         currentStep: 1,
@@ -619,6 +637,7 @@
                 if (template.name === 'Ремонт обладнання') {
                     const procRef = companyRef.collection('processes').doc();
                     batch.set(procRef, {
+                    isDemo: true,
                         name: 'Ремонт конвеєра — лінія 2',
                         templateId: templateRef.id,
                         currentStep: 3,
@@ -663,6 +682,8 @@
             for (const proj of mfgProjects) {
                 const projRef = companyRef.collection('projects').doc();
                 batch.set(projRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...proj,
                     creatorId: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -706,6 +727,8 @@
                 const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
                 const taskRef = companyRef.collection('tasks').doc();
                 batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId, assigneeName,
                     createdBy: currentUser.uid,
@@ -1160,7 +1183,9 @@
                 const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
                 
                 const taskRef = companyRef.collection('tasks').doc();
-                batch.set(taskRef, { 
+                batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId: assigneeId,
                     assigneeName: assigneeName,
@@ -1187,6 +1212,8 @@
             for (const task of ownerTasks) {
                 const taskRef = companyRef.collection('tasks').doc();
                 batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId: ownerUserId,
                     assigneeName: ownerName,
@@ -1241,6 +1268,8 @@
             for (const template of clinicProcessTemplates) {
                 const templateRef = companyRef.collection('processTemplates').doc();
                 batch.set(templateRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...template,
                     createdBy: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1250,6 +1279,7 @@
                 if (template.name === 'Прийом нового пацієнта') {
                     const procRef = companyRef.collection('processes').doc();
                     batch.set(procRef, {
+                    isDemo: true,
                         name: 'Пацієнт Іванов І.І. — імплантація',
                         templateId: templateRef.id,
                         currentStep: 3,
@@ -1263,6 +1293,7 @@
                 if (template.name === 'Маркетингова кампанія') {
                     const procRef = companyRef.collection('processes').doc();
                     batch.set(procRef, {
+                    isDemo: true,
                         name: 'Акція "Безкоштовна консультація"',
                         templateId: templateRef.id,
                         currentStep: 1,
@@ -1307,6 +1338,8 @@
             for (const proj of clinicProjects) {
                 const projRef = companyRef.collection('projects').doc();
                 batch.set(projRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...proj,
                     creatorId: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1340,6 +1373,8 @@
                 const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
                 const taskRef = companyRef.collection('tasks').doc();
                 batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId, assigneeName,
                     createdBy: currentUser.uid,
@@ -1426,7 +1461,9 @@
                 const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
                 
                 const taskRef = companyRef.collection('tasks').doc();
-                batch.set(taskRef, { 
+                batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId: assigneeId,
                     assigneeName: assigneeName,
@@ -1482,6 +1519,8 @@
             for (const template of mfgProcessTemplates) {
                 const templateRef = companyRef.collection('processTemplates').doc();
                 batch.set(templateRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...template,
                     createdBy: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1491,6 +1530,7 @@
                 if (template.name === 'Виконання замовлення клієнта') {
                     const procRef = companyRef.collection('processes').doc();
                     batch.set(procRef, {
+                    isDemo: true,
                         name: 'Замовлення #1247 — ТОВ "Альфа"',
                         templateId: templateRef.id,
                         currentStep: 4,
@@ -1502,6 +1542,7 @@
                     });
                     const procRef2 = companyRef.collection('processes').doc();
                     batch.set(procRef2, {
+                    isDemo: true,
                         name: 'Замовлення #1250 — ФОП Петренко',
                         templateId: templateRef.id,
                         currentStep: 1,
@@ -1515,6 +1556,7 @@
                 if (template.name === 'Ремонт обладнання') {
                     const procRef = companyRef.collection('processes').doc();
                     batch.set(procRef, {
+                    isDemo: true,
                         name: 'Ремонт конвеєра — лінія 2',
                         templateId: templateRef.id,
                         currentStep: 3,
@@ -1559,6 +1601,8 @@
             for (const proj of mfgProjects) {
                 const projRef = companyRef.collection('projects').doc();
                 batch.set(projRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...proj,
                     creatorId: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1602,6 +1646,8 @@
                 const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
                 const taskRef = companyRef.collection('tasks').doc();
                 batch.set(taskRef, {
+                    isDemo: true,
+                    isDemo: true,
                     ...task,
                     assigneeId, assigneeName,
                     createdBy: currentUser.uid,
