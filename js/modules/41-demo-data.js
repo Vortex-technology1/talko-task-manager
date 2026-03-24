@@ -121,6 +121,14 @@
                 if (!fn) { showToast('Нішу не знайдено: ' + nicheKey, 'error'); return; }
                 await fn();
                 await loadAllData();
+                // Оновлюємо назву компанії в хедері після завантаження ніші
+                try {
+                    const compDoc = await db.collection('companies').doc(currentCompany).get();
+                    if (compDoc.exists) {
+                        const badge = document.getElementById('companyBadge');
+                        if (badge) badge.textContent = compDoc.data()?.name || '';
+                    }
+                } catch(e) { console.warn('[demo] badge update:', e.message); }
                 showAlertModal('Демо готове! Перейдіть у Завдання, Контроль, Бізнес → Фінанси.');
             } catch(e) {
                 console.error('[DemoFull]', e);
