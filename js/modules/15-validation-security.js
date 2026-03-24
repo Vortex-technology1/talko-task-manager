@@ -137,7 +137,7 @@
             return s;
         }
         
-        function isTaskVisibleToUser(task) {
+        window.isTaskVisibleToUser = function isTaskVisibleToUser(task) {
             if (!currentUserData || !currentUser) return true;
             if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'admin' || currentUserData.role === 'manager') return true;
             if (_visibleTaskIds === null) _visibleTaskIds = _buildVisibleSet();

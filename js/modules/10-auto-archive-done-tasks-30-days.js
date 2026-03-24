@@ -2,7 +2,7 @@
         // AUTO-ARCHIVE DONE TASKS (> 30 days)
         // =====================
 'use strict';
-        async function autoArchiveDoneTasks() {
+        window.autoArchiveDoneTasks = async function autoArchiveDoneTasks() {
             if (!currentCompany) return;
             
             // Run once per day max

@@ -14,7 +14,7 @@
         if (typeof window.renderMyAnalytics !== 'function') {
             window.renderMyAnalytics = function() {};
         }
-        function renderMyDay() {
+        window.renderMyDay = function renderMyDay() {
         if (!currentUser) return; // auth guard — avoid crash before auth completes
 
             _visibleTaskIds = null; // Invalidate visibility cache

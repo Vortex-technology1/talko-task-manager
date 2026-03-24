@@ -217,7 +217,7 @@
             }
         }
         
-        async function autoGenerateRegularTasks() {
+        window.autoGenerateRegularTasks = async function autoGenerateRegularTasks() {
             if (!currentUser || !currentCompany) return;
             
             const today = new Date();

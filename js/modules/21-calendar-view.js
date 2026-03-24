@@ -197,7 +197,7 @@
             renderCalendar();
         }
         
-        function renderCalendar() {
+        window.renderCalendar = function renderCalendar() {
             updateCalendarTitle();
             renderWeekStrip(); // Mobile week strip
             updateCalendarFilterUI();

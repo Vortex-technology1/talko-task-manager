@@ -20,6 +20,14 @@
         if (typeof window.showCompletedProcesses === 'undefined') {
             window.showCompletedProcesses = false;
         }
+        if (typeof window.autoArchiveDoneTasks !== 'function') window.autoArchiveDoneTasks = function() { return Promise.resolve(); };
+        if (typeof window.autoGenerateRegularTasks !== 'function') window.autoGenerateRegularTasks = function() { return Promise.resolve(); };
+        if (typeof window.checkMorningStart !== 'function') window.checkMorningStart = function() {};
+        if (typeof window.isTaskVisibleToUser !== 'function') window.isTaskVisibleToUser = function() { return true; };
+        if (typeof window.saveDailySnapshot !== 'function') window.saveDailySnapshot = function() { return Promise.resolve(); };
+        if (typeof window.startOnboarding !== 'function') window.startOnboarding = function() {};
+        if (typeof window.renderMyDay !== 'function') window.renderMyDay = function() {};
+        if (typeof window.renderCalendar !== 'function') window.renderCalendar = function() {};
         async function loadAllData() {
 
             if (!currentCompany) return;
