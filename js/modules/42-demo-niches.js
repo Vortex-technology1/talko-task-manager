@@ -2272,7 +2272,7 @@ window._DEMO_NICHE_MAP['medical'] = async function() {
         ops.push({type:'set', ref:cr.collection('regularTasks').doc(), data:{
             title:r.t, period:r.type, daysOfWeek:dows, dayOfMonth:r.dom || null,
             skipWeekends:r.type==='daily', timeStart:r.tm, timeEnd, duration:r.est,
-            function:FUNCS[r.fi].name,
+            functionName:FUNCS[r.fi].name,
             assigneeId:sRefs[r.ai].id,
             expectedResult:r.result || '',
             reportFormat:'Короткий звіт у вільній формі',
@@ -3447,7 +3447,7 @@ window._DEMO_NICHE_MAP['cleaning'] = async function() {
         ops.push({type:'set', ref:cr.collection('regularTasks').doc(), data:{
             title:r.t, period:r.type, daysOfWeek:dows, dayOfMonth:r.dom || null,
             skipWeekends:r.type==='daily', timeStart:r.tm, timeEnd, duration:r.est,
-            function:FUNCS[r.fi].name,
+            functionName:FUNCS[r.fi].name,
             assigneeId:sRefs[r.ai].id,
             expectedResult:r.result || '',
             reportFormat:'Short summary in free form',
@@ -6033,7 +6033,7 @@ window._DEMO_NICHE_MAP['autoservice'] = async function() {
         {t:'Mercedes C200 Кравченко — не передзвонили після запиту 60 днів',   fi:1,ai:3,st:'overdue',   pr:'high',  d:-3,tm:'09:00',est:15, r:'Клієнт записаний або відмова — статус в CRM оновлено'},
         {t:'Google Business — нові фото і відповіді на відгуки (прострочено)', fi:0,ai:3,st:'overdue',   pr:'low',   d:-5,tm:'10:00',est:30, r:'Додано 5+ фото, відповіді на всі відгуки за місяць'},
     ];
-    TASKS.forEach(tk=>{ops.push({type:'set',ref:cr.collection('tasks').doc(),data:{title:tk.t,function:FUNCS[tk.fi].name,functionId:fRefs[tk.fi].id,assigneeId:sRefs[tk.ai].id,assigneeName:STAFF[tk.ai].name,status:tk.st,priority:tk.pr,deadlineDate:dDate(tk.d),scheduledTime:tk.tm,estimatedMinutes:tk.est,expectedResult:tk.r,isDemo:true,createdAt:now,updatedAt:now}});});
+    TASKS.forEach(tk=>{ops.push({type:'set',ref:cr.collection('tasks').doc(),data:{title:tk.t,functionName:FUNCS[tk.fi].name,functionId:fRefs[tk.fi].id,assigneeId:sRefs[tk.ai].id,assigneeName:STAFF[tk.ai].name,status:tk.st,priority:tk.pr,deadlineDate:dDate(tk.d),scheduledTime:tk.tm,estimatedMinutes:tk.est,expectedResult:tk.r,isDemo:true,createdAt:now,updatedAt:now}});});
     await window.safeBatchCommit(ops);ops=[];
 
     // ПРОЦЕСИ
@@ -6319,7 +6319,7 @@ window._DEMO_NICHE_MAP['horeca'] = async function() {
         {t:'Оновити меню — додати сезонні страви (весна)',                       fi:7,ai:0,st:'new',        pr:'low',   d:5, tm:'11:00',est:120,r:'Нові 3-5 позицій в меню, оновлені роздруківки'},
         {t:'Закупівля продуктів на тиждень (щопонеділка)',                       fi:4,ai:9,st:'new',        pr:'high',  d:1, tm:'08:00',est:60, r:'Всі продукти куплені, склад поповнено'},
     ];
-    TASKS.forEach(tk=>{ops.push({type:'set',ref:cr.collection('tasks').doc(),data:{title:tk.t,function:FUNCS[tk.fi].name,functionId:fRefs[tk.fi].id,assigneeId:sRefs[tk.ai].id,assigneeName:STAFF[tk.ai].name,status:tk.st,priority:tk.pr,deadlineDate:dDate(tk.d),scheduledTime:tk.tm,estimatedMinutes:tk.est,expectedResult:tk.r,isDemo:true,createdAt:now,updatedAt:now}});});
+    TASKS.forEach(tk=>{ops.push({type:'set',ref:cr.collection('tasks').doc(),data:{title:tk.t,functionName:FUNCS[tk.fi].name,functionId:fRefs[tk.fi].id,assigneeId:sRefs[tk.ai].id,assigneeName:STAFF[tk.ai].name,status:tk.st,priority:tk.pr,deadlineDate:dDate(tk.d),scheduledTime:tk.tm,estimatedMinutes:tk.est,expectedResult:tk.r,isDemo:true,createdAt:now,updatedAt:now}});});
     await window.safeBatchCommit(ops);ops=[];
 
     // ПРОЦЕСИ
@@ -6495,7 +6495,7 @@ window._DEMO_NICHE_MAP['logistics'] = async function() {
         {t:'Мороз Василь — продовження ліцензії водія (спливає 15.06)',             fi:5,ai:5,st:'new',        pr:'medium',d:7,tm:'09:00',est:30,r:'Документи подані, дата отримання відома'},
         {t:'Оновити сайт — додати нові напрямки і тарифи',                          fi:0,ai:6,st:'new',        pr:'low',   d:5,tm:'11:00',est:60,r:'Сайт оновлений, нові напрямки вказані'},
     ];
-    TASKS.forEach(tk=>{ops.push({type:'set',ref:cr.collection('tasks').doc(),data:{title:tk.t,function:FUNCS[tk.fi].name,functionId:fRefs[tk.fi].id,assigneeId:sRefs[tk.ai].id,assigneeName:STAFF[tk.ai].name,status:tk.st,priority:tk.pr,deadlineDate:dDate(tk.d),scheduledTime:tk.tm,estimatedMinutes:tk.est,expectedResult:tk.r,isDemo:true,createdAt:now,updatedAt:now}});});
+    TASKS.forEach(tk=>{ops.push({type:'set',ref:cr.collection('tasks').doc(),data:{title:tk.t,functionName:FUNCS[tk.fi].name,functionId:fRefs[tk.fi].id,assigneeId:sRefs[tk.ai].id,assigneeName:STAFF[tk.ai].name,status:tk.st,priority:tk.pr,deadlineDate:dDate(tk.d),scheduledTime:tk.tm,estimatedMinutes:tk.est,expectedResult:tk.r,isDemo:true,createdAt:now,updatedAt:now}});});
     await window.safeBatchCommit(ops);ops=[];
 
     // ПРОЦЕСИ
@@ -6788,7 +6788,7 @@ window._DEMO_NICHE_MAP['food_production'] = async function() {
         {t:'Звіт рентабельності по стравах за квітень',                             fi:5,ai:4,st:'new',        pr:'medium',d:1,tm:'17:00',est:60, r:'Таблиця: борщ 95% маржа, брауні 63%, хліб 42%'},
         {t:'ФОП Іванченко (магазин) — збільшити обсяг хліба з 15 до 25 буханок',   fi:0,ai:4,st:'overdue',   pr:'medium',d:-2,tm:'11:00',est:20, r:'Домовились + оновили договір'},
     ];
-    TASKS.forEach(tk=>{ops.push({type:'set',ref:cr.collection('tasks').doc(),data:{title:tk.t,function:FUNCS[tk.fi].name,functionId:fRefs[tk.fi].id,assigneeId:sRefs[tk.ai].id,assigneeName:STAFF[tk.ai].name,status:tk.st,priority:tk.pr,deadlineDate:dDate(tk.d),scheduledTime:tk.tm,estimatedMinutes:tk.est,expectedResult:tk.r,isDemo:true,createdAt:now,updatedAt:now}});});
+    TASKS.forEach(tk=>{ops.push({type:'set',ref:cr.collection('tasks').doc(),data:{title:tk.t,functionName:FUNCS[tk.fi].name,functionId:fRefs[tk.fi].id,assigneeId:sRefs[tk.ai].id,assigneeName:STAFF[tk.ai].name,status:tk.st,priority:tk.pr,deadlineDate:dDate(tk.d),scheduledTime:tk.tm,estimatedMinutes:tk.est,expectedResult:tk.r,isDemo:true,createdAt:now,updatedAt:now}});});
     await window.safeBatchCommit(ops);ops=[];
 
     // ПРОЦЕСИ
