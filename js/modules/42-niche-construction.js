@@ -502,6 +502,49 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
     }}));
     await window.safeBatchCommit(todayDealOps);
 
+    // ── 7б. CRM АКТИВНОСТІ ────────────────────────────────────
+    const crmCliSnap = await cr.collection('crm_clients').get();
+    const crmDocs = crmCliSnap.docs.slice(0,10);
+    const ACT_TEXTS = [
+        'Клієнт зацікавлений у ремонті квартири 85м², бюджет €35 000',
+        'Зустріч проведена, підписали NDA, чекаємо кошторис',
+        'Виїзний замір виконано, фото зроблено, кошторис у роботі',
+        'Надіслали КП, клієнт взяв 3 дні на роздуми',
+        'Договір підписано, аванс 30% отримано',
+        'Замовник задоволений першим тижнем робіт',
+        'Питання по кольору плитки — узгодили зразки',
+        'Проміжна здача — клієнт прийняв, підписав акт',
+        'Претензія по рівню підлоги — виїхали, виправили',
+        'Об\'єкт зданий, акт підписано, відгук 5★ на Google',
+    ];
+    await window.safeBatchCommit(crmDocs.map((doc, i) => ({type:'set', ref:cr.collection('crm_activities').doc(), data:{
+        isDemo:true,
+        clientId:doc.id, clientName:doc.data().name,
+        type:['note','call','meeting','email','note','call','meeting','note','call','meeting'][i],
+        text:ACT_TEXTS[i],
+        date:_demoDate(-(i+1)),
+        managerId:sRefs[1].id, managerName:STAFF[1].name,
+        functionId:fRefs[1].id,
+        createdBy:uid, createdAt:now,
+    }})), 'step-crm-activities');
+
+    // ── 7в. РАХУНКИ-ФАКТУРИ ───────────────────────────────────
+    const INVOICES_CON = [
+        {client:'Franz Müller',   amount:45000, status:'paid',    d:-30, items:[{name:'Ремонт квартири 85м² — аванс 30%', qty:1, price:45000}]},
+        {client:'Klaus Weber',    amount:85000, status:'paid',    d:-15, items:[{name:'Офісний ремонт — перший транш',     qty:1, price:85000}]},
+        {client:'Anna Schmidt',   amount:62000, status:'pending', d:7,   items:[{name:'Ремонт будинку 200м² — етап 2',     qty:1, price:62000}]},
+        {client:'Hans Becker',    amount:28000, status:'pending', d:14,  items:[{name:'Оздоблення фасаду — аванс',         qty:1, price:28000}]},
+        {client:'Thomas Schulz',  amount:15000, status:'overdue', d:-5,  items:[{name:'Консультація + проект',             qty:1, price:15000}]},
+    ];
+    await window.safeBatchCommit(INVOICES_CON.map(inv => ({type:'set', ref:cr.collection('finance_invoices').doc(), data:{
+        isDemo:true,
+        clientName:inv.client, amount:inv.amount, currency:'EUR',
+        status:inv.status, dueDate:_demoDate(inv.d),
+        items:inv.items,
+        functionId:fRefs[5].id, functionName:FUNCS[5].name,
+        createdBy:uid, createdAt:now, updatedAt:now,
+    }})), 'step-invoices');
+
     // ── 8. ФІНАНСИ ───────────────────────────────────────────
     const finSettingsRef = cr.collection('finance_settings').doc('main');
     await finSettingsRef.set({
