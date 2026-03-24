@@ -6,7 +6,7 @@
 'use strict';
         let skeletonShown = false;
         
-        function showSkeletonLoading() {
+        window.showSkeletonLoading = function showSkeletonLoading() {
             // Показуємо skeleton тільки якщо контент порожній (перше завантаження)
             const mydayContent = document.getElementById('mydayContent');
             if (!mydayContent || mydayContent.children.length > 0) return;
@@ -26,7 +26,7 @@
             mydayContent.innerHTML = `<div id="skeletonContainer">${skeletonHTML}</div>`;
         }
         
-        function hideSkeletonLoading() {
+        window.hideSkeletonLoading = function hideSkeletonLoading() {
             const skeleton = document.getElementById('skeletonContainer');
             if (skeleton) skeleton.remove();
             skeletonShown = false;

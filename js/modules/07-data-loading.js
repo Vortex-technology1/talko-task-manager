@@ -2,6 +2,14 @@
         // DATA LOADING
         // =====================
 'use strict';
+
+        // Fallback stubs — реальні функції визначаються в 43-pull-to-refresh-mobile.js
+        if (typeof window.showSkeletonLoading !== 'function') {
+            window.showSkeletonLoading = function() {};
+        }
+        if (typeof window.hideSkeletonLoading !== 'function') {
+            window.hideSkeletonLoading = function() {};
+        }
         async function loadAllData() {
 
             if (!currentCompany) return;
