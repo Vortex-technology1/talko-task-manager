@@ -234,9 +234,7 @@ if (typeof window !== 'undefined') {
     window.confirmRestore    = confirmRestore;
     window.initBackupTab     = initBackupTab;
 
-    // Показуємо кнопку після завантаження даних юзера
-    document.addEventListener('talko:userLoaded', initBackupTab);
-    document.addEventListener('talko:roleResolved', initBackupTab);
+    // Кнопка показується через 06-auth-state-listener.js
 }
 
 console.log('[95-backup] loaded ✓');

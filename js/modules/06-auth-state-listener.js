@@ -188,6 +188,9 @@
                 // AI buttons: Generator + Import = owner only, AI config = admin/superadmin only
                 const isOwnerRole = currentUserData?.role === 'owner';
                 document.getElementById('ownerAiButtons').style.display = (isOwnerRole || isSuperAdmin) ? 'grid' : 'none';
+                // Backup tab — owner only
+                const backupNavBtn = document.getElementById('backupNavBtn');
+                if (backupNavBtn) backupNavBtn.style.display = (isOwnerRole || isSuperAdmin) ? 'flex' : 'none';
                 document.getElementById('aiAssistantsBtnMenu').style.display = isSuperAdmin ? 'flex' : 'none';
                 document.getElementById('aiStructureBtnDesktop').style.display = 'none'; // temporarily disabled
                 
