@@ -651,6 +651,8 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
     const pipRef = cr.collection('crm_pipeline').doc();
     await pipRef.set({
         isDemo: true,
+        isDefault: true,
+        defaultStageId: 'new',
         name:'Продажі меблів',
         stages:[
             {id:'new',          label:'Новий лід',        color:'#6b7280', order:1},

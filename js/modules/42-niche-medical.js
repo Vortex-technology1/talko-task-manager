@@ -589,6 +589,8 @@ window._DEMO_NICHE_MAP['medical'] = async function() {
     const pipRef = cr.collection('crm_pipeline').doc();
     await pipRef.set({
         isDemo:true,
+        isDefault:true,
+        defaultStageId:'new',
         name:'Медичні послуги',
         stages:[
             {id:'new',          label:'Новий лід',          color:'#6b7280', order:1},

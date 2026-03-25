@@ -420,6 +420,8 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
     const pipRef = cr.collection('crm_pipeline').doc();
     await pipRef.set({
         isDemo:true,
+        isDefault:true,
+        defaultStageId:'new',
         name:'Ремонтні послуги',
         stages:[
             {id:'new',          label:'Новий лід',          color:'#6b7280', order:1},

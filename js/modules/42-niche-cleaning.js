@@ -574,6 +574,8 @@ window._DEMO_NICHE_MAP['cleaning'] = async function() {
     const pipRef = cr.collection('crm_pipeline').doc();
     await pipRef.set({
         isDemo:true,
+        isDefault:true,
+        defaultStageId:'new_lead',
         name:'Cleaning Services',
         stages:[
             {id:'new_lead',    label:'New Lead',              color:'#6b7280', order:1},
