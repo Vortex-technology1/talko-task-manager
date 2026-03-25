@@ -1379,7 +1379,7 @@ exports.leadWebhook = functions
         if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
         try {
-            const { companyId, apiKey, name, phone, email, source, message, processTemplate } = req.body;
+            const { companyId, apiKey, name, phone, email, source, message, processTemplate, city, country, niche, utmSource, utmCampaign, adId } = req.body;
             if (!companyId) return res.status(400).json({ error: 'companyId is required' });
 
             const companyDoc = await db.collection('companies').doc(companyId).get();
@@ -1400,6 +1400,12 @@ exports.leadWebhook = functions
                     name: name || 'Невідомий',
                     phone: phone || '', email: email || '',
                     source: source || 'Сайт', message: message || '',
+                    city: city || '',
+                    country: country || '',
+                    niche: niche || '',
+                    utmSource: utmSource || '',
+                    utmCampaign: utmCampaign || '',
+                    adId: adId || '',
                     status: 'new',
                     createdAt: admin.firestore.FieldValue.serverTimestamp()
                 });
@@ -1563,6 +1569,9 @@ exports.leadWebhook = functions
                         phone: phone || '',
                         email: email || '',
                         source: source || 'Сайт',
+                        city: city || '',
+                        country: country || '',
+                        niche: niche || '',
                         leadId: leadRef.id,
                         createdAt: admin.firestore.FieldValue.serverTimestamp(),
                         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -1593,6 +1602,12 @@ exports.leadWebhook = functions
                     email: email || '',
                     source: source || 'Сайт',
                     message: message || '',
+                    city: city || '',
+                    country: country || '',
+                    niche: niche || '',
+                    utmSource: utmSource || '',
+                    utmCampaign: utmCampaign || '',
+                    adId: adId || '',
                     stage: firstStageId || 'lead',
                     pipelineId: pipelineId,
                     amount: 0,
