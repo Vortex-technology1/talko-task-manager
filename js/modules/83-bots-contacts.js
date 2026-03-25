@@ -242,7 +242,7 @@ function renderBotsTab() {
                 <div style="background:white;border-radius:12px;padding:0.55rem 0.75rem;
                     box-shadow:0 1px 3px rgba(0,0,0,0.07);border:1px solid #f1f5f9;
                     border-left:3px solid ${bot.connected?color:'#e5e7eb'};
-                    display:flex;align-items:center;gap:0.6rem;cursor:pointer;
+                    display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem;cursor:pointer;
                     transition:background 0.15s;"
                     onmouseenter="this.style.background='#f8fafc'"
                     onmouseleave="this.style.background='white'"
@@ -272,13 +272,13 @@ function renderBotsTab() {
                     </div>
 
                     <!-- Кнопки дій -->
-                    <div style="display:flex;gap:0.25rem;flex-shrink:0;" onclick="event.stopPropagation()">
+                    <div style="display:flex;gap:0.25rem;flex-shrink:0;margin-left:auto;" onclick="event.stopPropagation()">
                         <button onclick="openBot('${bot.id}')"
                             title=${window.t('openWord')}
-                            style="padding:0.35rem 0.65rem;background:#22c55e;color:white;
+                            style="padding:0.35rem 0.6rem;background:#22c55e;color:white;
                             border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;
-                            display:flex;align-items:center;gap:3px;">
-                            Відкрити
+                            display:flex;align-items:center;gap:3px;white-space:nowrap;">
+                            ${window.innerWidth <= 480 ? '▶' : 'Відкрити'}
                         </button>
                         <button onclick="openBotSettings('${bot.id}')"
                             title=${window.t('flowSettings')}
