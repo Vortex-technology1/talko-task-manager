@@ -3219,6 +3219,12 @@ exports.dailyBackup = functions
 exports.manualBackup = functions
     .runWith({ timeoutSeconds: 300, memory: '512MB' })
     .https.onRequest(async (req, res) => {
+        // CORS — дозволяємо запити з нашого домену
+        res.set('Access-Control-Allow-Origin', 'https://taskmanagerai-vert.vercel.app');
+        res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+        res.set('Access-Control-Allow-Headers', 'Content-Type, x-backup-secret');
+        if (req.method === 'OPTIONS') return res.status(204).send('');
+
         // Простий захист — перевіряємо secret header
         const secret = req.headers['x-backup-secret'];
         if (secret !== (process.env.BACKUP_SECRET || 'talko-backup-2026')) {
