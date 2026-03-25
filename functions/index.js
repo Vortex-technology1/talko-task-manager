@@ -3220,7 +3220,7 @@ exports.manualBackup = functions
     .runWith({ timeoutSeconds: 300, memory: '512MB' })
     .https.onRequest(async (req, res) => {
         // CORS — дозволяємо запити з нашого домену
-        res.set('Access-Control-Allow-Origin', 'https://taskmanagerai-vert.vercel.app');
+        res.set('Access-Control-Allow-Origin', '*');
         res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
         res.set('Access-Control-Allow-Headers', 'Content-Type, x-backup-secret');
         if (req.method === 'OPTIONS') return res.status(204).send('');
@@ -3243,6 +3243,50 @@ exports.manualBackup = functions
             res.json({ ok: true, companyId, date: dateStr, sizeKb: (bytes/1024).toFixed(1) });
         } catch (e) {
             console.error('[manualBackup]', e);
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+// ── Відновлення з бекапу ──────────────────────────────────────
+exports.restoreBackup = functions
+    .runWith({ timeoutSeconds: 540, memory: '1GB' })
+    .https.onRequest(async (req, res) => {
+        res.set('Access-Control-Allow-Origin', '*');
+        res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+        res.set('Access-Control-Allow-Headers', 'Content-Type, x-backup-secret');
+        if (req.method === 'OPTIONS') return res.status(204).send('');
+
+        const secret = req.headers['x-backup-secret'];
+        if (secret !== (process.env.BACKUP_SECRET || 'talko-backup-2026')) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
+        const { companyId, date } = req.body;
+        if (!companyId || !date) return res.status(400).json({ error: 'companyId and date required' });
+
+        try {
+            const storage = admin.storage().bucket(BACKUP_BUCKET);
+            const file = storage.file(`backups/${companyId}/${date}.json`);
+            const [exists] = await file.exists();
+            if (!exists) return res.status(404).json({ error: `Backup ${date} not found` });
+
+            const [content] = await file.download();
+            const backup = JSON.parse(content.toString());
+
+            let restored = 0;
+            for (const [colName, docs] of Object.entries(backup.collections || {})) {
+                for (const doc of docs) {
+                    const { id, ...data } = doc;
+                    await db.collection('companies').doc(companyId)
+                        .collection(colName).doc(id).set(data);
+                    restored++;
+                }
+            }
+
+            console.log(`[restore] ✅ ${companyId} from ${date}: ${restored} docs`);
+            res.json({ ok: true, companyId, date, restored });
+        } catch(e) {
+            console.error('[restoreBackup]', e);
             res.status(500).json({ error: e.message });
         }
     });
