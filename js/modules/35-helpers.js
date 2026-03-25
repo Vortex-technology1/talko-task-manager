@@ -195,7 +195,7 @@
             // Підсвічування dropdown-батьків по новій структурі меню
             var tasksTabs    = ['tasks','regular'];
             var analyticsTabs = ['statistics','analytics','ownerDashboard'];
-            var sysTabs      = ['functions','bizstructure','users','admin','onboarding'];
+            var sysTabs      = ['functions','bizstructure','users','admin','onboarding','backup'];
             var bizTabs      = ['crm','finance','warehouse','marketing','bots','sites','integrations','booking','estimate','sales','foodProduction'];
 
             var tasksBtn     = document.getElementById('tasksTabBtn');
@@ -261,6 +261,9 @@
                     break;
                 case 'onboarding':
                     lazyLoad('onboarding', function() { if (typeof window.initOnboarding === 'function') window.initOnboarding(); });
+                    break;
+                case 'backup':
+                    if (typeof window.renderBackupTab === 'function') window.renderBackupTab();
                     break;
                 case 'marketing':
                     lazyLoad('funnels', function() { if (typeof window.initLandingPagesModule === 'function') window.initLandingPagesModule(); });

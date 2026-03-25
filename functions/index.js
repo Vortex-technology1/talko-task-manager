@@ -3163,6 +3163,20 @@ async function backupCompany(companyId, companyData, dateStr) {
     });
 
     console.log(`[backup] ✅ ${companyId} → ${dateStr}.json (${(json.length/1024).toFixed(1)} KB)`);
+
+    // Зберігаємо метадані в Firestore для відображення в UI
+    try {
+        await db.collection('companies').doc(companyId)
+            .collection('backupMeta').doc(dateStr).set({
+                date: dateStr,
+                sizeKb: (json.length / 1024).toFixed(1),
+                type: 'auto',
+                createdAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+    } catch(e) {
+        console.warn('[backup] meta save failed:', e.message);
+    }
+
     return json.length;
 }
 
