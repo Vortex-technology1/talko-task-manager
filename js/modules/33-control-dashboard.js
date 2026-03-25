@@ -128,7 +128,7 @@
 
             const rows = filtered.map(task => {
                 const assignee = users.find(u => u.id === task.assigneeId);
-                const name = assignee ? (assignee.name || assignee.email).split(' ')[0] : '—';
+                const name = assignee ? (assignee.name || assignee.email || '').split(' ')[0] || '—' : '—';
                 const d = parseDeadline(task).date || '';
                 const isOverdue = d && d < today && task.status !== 'done';
                 const dateColor = isOverdue ? '#ef4444' : '#6b7280';

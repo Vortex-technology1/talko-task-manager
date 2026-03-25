@@ -76,7 +76,7 @@ window.renderOwnerDashboard = function(targetEl) {
     // --- Прострочені завдання ---
     const overdueRows = overdue.slice(0, 8).map(t => {
         const u = users?.find(u => u.id === t.assigneeId);
-        const name = u ? (u.name || u.email).split(' ')[0] : '—';
+        const name = u ? (u.name || u.email || '').split(' ')[0] || '—' : '—';
         const d = parseDeadline(t).date || '';
         const daysAgo = d ? Math.floor((now - new Date(d + 'T23:59')) / 86400000) : 0;
         const urgency = daysAgo >= 7 ? '#dc2626' : daysAgo >= 3 ? '#f97316' : '#ef4444';
@@ -90,7 +90,7 @@ window.renderOwnerDashboard = function(targetEl) {
     // --- Завершені за тиждень ---
     const doneRows = doneThisWeek.slice(0, 5).map(t => {
         const u = users?.find(u => u.id === t.assigneeId);
-        const name = u ? (u.name || u.email).split(' ')[0] : '—';
+        const name = u ? (u.name || u.email || '').split(' ')[0] || '—' : '—';
         return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0;border-bottom:1px solid #f3f4f6;">
             <span style="color:#22c55e;">✓</span>
             <span style="flex:1;font-size:0.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(t.title||'')}</span>
