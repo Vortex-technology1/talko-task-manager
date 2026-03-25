@@ -109,10 +109,14 @@ const PRECACHE_URLS = [
 // Install — precache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(PRECACHE_URLS))
-      .then(() => self.skipWaiting())
-      .catch(err => console.log('[SW] Precache failed:', err))
+    caches.open(CACHE_NAME).then(cache => {
+      // addAll є атомарним — один збій валить весь SW
+      // Тому кешуємо по одному, ігноруємо помилки окремих файлів
+      const safeAdd = url => fetch(url, { cache: 'no-store' })
+        .then(r => { if (r.ok) return cache.put(url, r); })
+        .catch(() => {/* ignore individual failures */});
+      return Promise.all(PRECACHE_URLS.map(safeAdd));
+    }).then(() => self.skipWaiting())
   );
 });
 
@@ -198,7 +202,23 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(function() { return caches.match(event.request); })
+        .catch(function() {
+          return caches.match(event.request).then(function(cached) {
+            // Захист від корумпованого кешу: перевіряємо Content-Length
+            if (cached) {
+              var cl = cached.headers.get('content-length');
+              if (cl && parseInt(cl) === 0) {
+                // Корумпований файл — видаляємо з кешу, повертаємо 503
+                return caches.open(CACHE_NAME)
+                  .then(function(c) { return c.delete(event.request); })
+                  .then(function() {
+                    return new Response('// SW: corrupt cache cleared', { status: 503 });
+                  });
+              }
+            }
+            return cached || new Response('// SW: offline', { status: 503 });
+          });
+        })
     );
     return;
   }
