@@ -242,8 +242,8 @@ function renderBotsTab() {
                 <div style="background:white;border-radius:12px;padding:0.55rem 0.75rem;
                     box-shadow:0 1px 3px rgba(0,0,0,0.07);border:1px solid #f1f5f9;
                     border-left:3px solid ${bot.connected?color:'#e5e7eb'};
-                    display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem;cursor:pointer;
-                    transition:background 0.15s;"
+                    display:flex;align-items:center;flex-wrap:nowrap;gap:0.5rem;cursor:pointer;
+                    transition:background 0.15s;overflow:hidden;"
                     onmouseenter="this.style.background='#f8fafc'"
                     onmouseleave="this.style.background='white'"
                     onclick="openBot('${bot.id}')">
@@ -255,7 +255,7 @@ function renderBotsTab() {
                     </div>
 
                     <!-- Основна інфо -->
-                    <div style="flex:1;min-width:0;">
+                    <div style="flex:1;min-width:0;overflow:hidden;">
                         <div style="display:flex;align-items:center;gap:5px;">
                             ${statusDot}
                             <span style="font-weight:700;font-size:0.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
@@ -263,22 +263,22 @@ function renderBotsTab() {
                             </span>
                         </div>
                         <div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;display:flex;align-items:center;gap:4px;">
-                            <span>@${escH(bot.username||'—')}</span>
+                            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px;">@${escH(bot.username||'—')}</span>
                             <span style="color:#e5e7eb;">·</span>
-                            <span>${bot.flowCount||0} ланц.</span>
-                            <span style="color:#e5e7eb;">·</span>
-                            <span>${bot.contactCount||0} конт.</span>
+                            <span style="flex-shrink:0;">${bot.flowCount||0} ланц.</span>
+                            <span style="color:#e5e7eb;flex-shrink:0;">·</span>
+                            <span style="flex-shrink:0;">${bot.contactCount||0} конт.</span>
                         </div>
                     </div>
 
                     <!-- Кнопки дій -->
-                    <div style="display:flex;gap:0.25rem;flex-shrink:0;margin-left:auto;" onclick="event.stopPropagation()">
+                    <div style="display:flex;gap:0.25rem;flex-shrink:0;margin-left:auto;align-items:center;" onclick="event.stopPropagation()">
                         <button onclick="openBot('${bot.id}')"
                             title=${window.t('openWord')}
                             style="padding:0.35rem 0.6rem;background:#22c55e;color:white;
                             border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;
                             display:flex;align-items:center;gap:3px;white-space:nowrap;">
-                            ${window.innerWidth <= 480 ? '▶' : 'Відкрити'}
+                            Відкрити
                         </button>
                         <button onclick="openBotSettings('${bot.id}')"
                             title=${window.t('flowSettings')}
