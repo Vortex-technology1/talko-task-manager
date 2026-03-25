@@ -3104,3 +3104,125 @@ exports.processEscalations = functions
         }
         return null;
     });
+
+// ─────────────────────────────────────────────────────────────
+// DAILY BACKUP: кожна компанія → окремий JSON у Cloud Storage
+// Запускається щодня о 02:00 UTC
+// Bucket: task-manager-44e84-backups (потрібно створити вручну)
+// Структура: backups/{companyId}/2026-03-25.json
+// ─────────────────────────────────────────────────────────────
+
+const BACKUP_BUCKET = 'task-manager-44e84-backups';
+
+// Всі підколекції що бекапимо для кожної компанії
+const BACKUP_SUBCOLLECTIONS = [
+    'tasks', 'users', 'functions', 'processes', 'regularTasks',
+    'metrics', 'metricEntries', 'crm_deals', 'crm_clients',
+    'crm_pipeline', 'settings', 'assistants', 'decisions',
+    'escalations', 'aiUsageLog', 'scheduledTasks',
+    'processTemplates', 'leads', 'metricAuditLog',
+];
+
+async function backupCompany(companyId, companyData, dateStr) {
+    const snapshot = { companyId, date: dateStr, collections: {} };
+
+    for (const col of BACKUP_SUBCOLLECTIONS) {
+        try {
+            const snap = await db.collection('companies').doc(companyId)
+                .collection(col).get();
+            if (!snap.empty) {
+                snapshot.collections[col] = snap.docs.map(d => ({
+                    id: d.id,
+                    ...d.data()
+                }));
+            }
+        } catch (e) {
+            console.warn(`[backup] skip ${companyId}/${col}:`, e.message);
+        }
+    }
+
+    // Додаємо мета-дані компанії
+    snapshot.companyMeta = companyData;
+
+    const json = JSON.stringify(snapshot, (key, val) => {
+        // Конвертуємо Firestore Timestamp → ISO string
+        if (val && typeof val === 'object' && val._seconds !== undefined) {
+            return new Date(val._seconds * 1000).toISOString();
+        }
+        return val;
+    }, 2);
+
+    const storage = admin.storage().bucket(BACKUP_BUCKET);
+    const file = storage.file(`backups/${companyId}/${dateStr}.json`);
+    await file.save(json, {
+        contentType: 'application/json',
+        metadata: {
+            cacheControl: 'no-cache',
+            metadata: { companyId, date: dateStr }
+        }
+    });
+
+    console.log(`[backup] ✅ ${companyId} → ${dateStr}.json (${(json.length/1024).toFixed(1)} KB)`);
+    return json.length;
+}
+
+exports.dailyBackup = functions
+    .runWith({ timeoutSeconds: 540, memory: '512MB' })
+    .pubsub.schedule('0 2 * * *')
+    .timeZone('Europe/Kyiv')
+    .onRun(async () => {
+        const dateStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+        console.log(`[backup] Starting daily backup for ${dateStr}`);
+
+        // Беремо всі компанії
+        const companiesSnap = await db.collection('companies').get();
+        if (companiesSnap.empty) {
+            console.log('[backup] No companies found');
+            return null;
+        }
+
+        let success = 0, failed = 0, totalBytes = 0;
+
+        // Обробляємо по 5 компаній паралельно (щоб не вбити квоти)
+        const companies = companiesSnap.docs;
+        for (let i = 0; i < companies.length; i += 5) {
+            const batch = companies.slice(i, i + 5);
+            const results = await Promise.allSettled(
+                batch.map(doc => backupCompany(doc.id, doc.data(), dateStr))
+            );
+            results.forEach((r, idx) => {
+                if (r.status === 'fulfilled') { success++; totalBytes += r.value; }
+                else { failed++; console.error(`[backup] ❌ ${batch[idx].id}:`, r.reason?.message); }
+            });
+        }
+
+        console.log(`[backup] Done: ${success} ok, ${failed} failed, ${(totalBytes/1024/1024).toFixed(2)} MB total`);
+        return null;
+    });
+
+// Ручний тригер бекапу однієї компанії (через Firebase Console або API)
+// POST /manualBackup з body { companyId: "..." }
+exports.manualBackup = functions
+    .runWith({ timeoutSeconds: 300, memory: '512MB' })
+    .https.onRequest(async (req, res) => {
+        // Простий захист — перевіряємо secret header
+        const secret = req.headers['x-backup-secret'];
+        if (secret !== (process.env.BACKUP_SECRET || 'talko-backup-2026')) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
+        const { companyId } = req.body;
+        if (!companyId) return res.status(400).json({ error: 'companyId required' });
+
+        const dateStr = new Date().toISOString().slice(0, 10);
+        try {
+            const compDoc = await db.collection('companies').doc(companyId).get();
+            if (!compDoc.exists) return res.status(404).json({ error: 'Company not found' });
+
+            const bytes = await backupCompany(companyId, compDoc.data(), dateStr);
+            res.json({ ok: true, companyId, date: dateStr, sizeKb: (bytes/1024).toFixed(1) });
+        } catch (e) {
+            console.error('[manualBackup]', e);
+            res.status(500).json({ error: e.message });
+        }
+    });
