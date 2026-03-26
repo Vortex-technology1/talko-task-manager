@@ -4578,14 +4578,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/93-sites-list.js?v=20260317v1" defer></script>
     <script src="js/modules/95-backup.js?v=20260325v1" defer></script>
     <script src="js/modules/95-sites-forms.js?v=20260316v11" defer></script>
-    <script>
-      // Keep webhook warm — пінг кожні 20 сек поки юзер на сайті
-      (function() {
-        function ping() { fetch('/api/webhook?_ping=1', {method:'GET'}).catch(()=>{}); }
-        ping();
-        setInterval(ping, 20000);
-      })();
-    </script>
+    <!-- ping removed: webhook GET requires DIAG_TOKEN, causes 403 spam -->
 
     <!-- ═══ LAZY LOADING SYSTEM ══════════════════════════════════════════════ -->
     <script>
