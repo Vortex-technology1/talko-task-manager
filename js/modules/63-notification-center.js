@@ -227,6 +227,32 @@
                 window.dbg&&dbg('[SW] Registered:', reg.scope);
                 // Перевірка оновлень кожні 30 хвилин
                 setInterval(() => reg.update(), 30 * 60 * 1000);
+
+                // Якщо є новий SW що чекає — одразу активувати і перезавантажити
+                function activateNewSW(worker) {
+                    worker.postMessage({ type: 'SKIP_WAITING' });
+                }
+                if (reg.waiting) {
+                    // Новий SW вже встановлений і чекає
+                    activateNewSW(reg.waiting);
+                }
+                reg.addEventListener('updatefound', () => {
+                    const newWorker = reg.installing;
+                    if (!newWorker) return;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // Новий SW встановлений — активуємо без очікування
+                            activateNewSW(newWorker);
+                        }
+                    });
+                });
+                // Коли новий SW взяв контроль — перезавантажуємо сторінку
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!window._swReloading) {
+                        window._swReloading = true;
+                        window.location.reload();
+                    }
+                });
             }).catch(err => {
                 window.dbg&&dbg('[SW] Registration skipped:', err.message);
             });

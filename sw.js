@@ -107,6 +107,13 @@ const PRECACHE_URLS = [
 ];
 
 // Install — precache static assets
+// Message handler — дозволяє клієнту примусово активувати новий SW
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
