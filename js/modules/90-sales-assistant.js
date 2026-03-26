@@ -71,7 +71,7 @@
     try {
       const user = firebase.auth().currentUser;
       const idToken = await user.getIdToken();
-      const res = await fetch('/api/sales-assistant-token', {
+      const res = await fetch('/api/sales-assistant?action=token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
         body: JSON.stringify({ companyId }),
@@ -146,7 +146,7 @@
     try {
       const user = firebase.auth().currentUser;
       const idToken = await user.getIdToken();
-      const res = await fetch('/api/sales-assistant-save', {
+      const res = await fetch('/api/sales-assistant?action=save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
         body: JSON.stringify({
