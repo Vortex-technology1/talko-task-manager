@@ -4039,15 +4039,36 @@ function _renderAnalytics() {
     c.innerHTML = `
     <div style="padding-bottom:2rem;display:flex;flex-direction:column;gap:0.75rem;">
 
-        <!-- Sub-nav: Огляд | Зріз по нішах -->
-        <div style="display:flex;gap:6px;background:#f4f5f7;border-radius:10px;padding:4px;width:fit-content;margin-bottom:4px;">
-          <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;background:#6366f1;color:white;">
-            Огляд
-          </button>
-          <button onclick="crmSwitchAnalyticsMode('niche')"
-            style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:transparent;color:#6b7280;">
-            Зріз по нішах
-          </button>
+        <!-- Sub-nav: Огляд | Зріз по нішах + Period picker -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+          <div style="display:flex;gap:6px;background:#f4f5f7;border-radius:10px;padding:4px;">
+            <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;background:#6366f1;color:white;">
+              Огляд
+            </button>
+            <button onclick="crmSwitchAnalyticsMode('niche')"
+              style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:transparent;color:#6b7280;">
+              Зріз по нішах
+            </button>
+          </div>
+          <!-- Фільтр періоду для Огляду -->
+          <div style="display:flex;align-items:center;gap:6px;">
+            ${['7','14','30','90','custom'].map(p => {
+              const labels = {7:'7 дн',14:'14 дн',30:'30 дн',90:'90 дн',custom:'Свій'};
+              const active = _leadsReportPeriod === p;
+              return `<button onclick="crm._leadsReportPeriod='${p}';crm._leadsReportFrom='';crm._leadsReportTo='';_renderAnalytics();"
+                style="padding:4px 10px;border-radius:7px;font-size:.75rem;font-weight:600;cursor:pointer;
+                border:1.5px solid ${active?'#6366f1':'#e5e7eb'};
+                background:${active?'#eef2ff':'white'};
+                color:${active?'#4f46e5':'#6b7280'};">${labels[p]}</button>`;
+            }).join('')}
+            ${_leadsReportPeriod === 'custom' ? `
+              <input type="date" value="${_leadsReportFrom}" onchange="crm._leadsReportFrom=this.value;_renderAnalytics();"
+                style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 7px;font-size:.75rem;color:#374151;">
+              <span style="font-size:.75rem;color:#9ca3af;">—</span>
+              <input type="date" value="${_leadsReportTo}" onchange="crm._leadsReportTo=this.value;_renderAnalytics();"
+                style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 7px;font-size:.75rem;color:#374151;">
+            ` : ''}
+          </div>
         </div>
 
         <!-- KPI картки -->
