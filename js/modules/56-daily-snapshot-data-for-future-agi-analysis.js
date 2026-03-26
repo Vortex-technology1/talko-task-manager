@@ -98,12 +98,13 @@
                     const tmpl = processTemplates.find(t => t.id === p.templateId);
                     const step = tmpl?.steps?.[p.currentStep || 0];
                     return {
-                        processId: p.id,
+                        processId: p.id || null,
                         processName: p.name || '',
-                        stepFunction: step?.function || '',
+                        stepFunction: step?.functionName || step?.name || '',
                         currentStep: p.currentStep || 0,
                     };
-                });
+                })
+                .filter(p => p.processId);
         })();
 
         // Юзери з нульовою активністю 3+ дні
@@ -157,9 +158,20 @@
             createdBy: currentUser.uid
         };
         
+        // Sanitize: Firestore не приймає undefined — замінюємо на null
+        const _sanitizeSnap = (obj) => {
+            if (obj === undefined) return null;
+            if (obj === null || typeof obj !== 'object') return obj;
+            if (Array.isArray(obj)) return obj.map(_sanitizeSnap);
+            const r = {};
+            for (const [k, v] of Object.entries(obj)) r[k] = _sanitizeSnap(v);
+            return r;
+        };
+        const safeSnapshot = _sanitizeSnap(snapshot);
+
         try {
             await db.collection('companies').doc(currentCompany)
-                .collection('snapshots').doc(todayStr).set(snapshot);
+                .collection('snapshots').doc(todayStr).set(safeSnapshot);
             localStorage.setItem(key, '1');
             window.dbg&&dbg('[Snapshot] Daily snapshot saved for', todayStr);
         } catch (e) {
