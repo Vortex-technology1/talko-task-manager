@@ -1,9 +1,9 @@
-const CACHE_VERSION = '2026-03-26-v19.0';
+const CACHE_VERSION = '2026-03-26-v20.0';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache — core shell only (JS modules via network-first)
 const PRECACHE_URLS = [
-  'index.html',
+  // index.html intentionally excluded — always network-only, never cached
   'manifest.json',
   'icons/icon-192x192.png',
   'icons/icon-512x512.png',
