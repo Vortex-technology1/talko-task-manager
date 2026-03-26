@@ -148,7 +148,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/app.html"
+      "destination": "/api/app"
     },
     {
       "source": "/api/stripe",
@@ -232,8 +232,8 @@
       "maxDuration": 30,
       "memory": 256
     },
-    "api/utils.js": {
-      "maxDuration": 10,
+    "api/app.js": {
+      "maxDuration": 5,
       "memory": 128
     }
   },
