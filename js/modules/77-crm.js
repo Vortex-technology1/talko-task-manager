@@ -596,17 +596,26 @@ function _kanbanFilterBar() {
             <option value="">${window.t('allSources')}</option>
             ${sourceOpts}
         </select>
-        ${countries.length > 1 ? `<select id="crmKanbanFilterCountry" onchange="crmApplyFilters(true)" style="${sel}">
-            <option value="">🌍 Всі країни</option>
-            ${countries.map(c => `<option value="${_esc(c)}" ${f.country===c?'selected':''}>${_esc(c)}</option>`).join('')}
-        </select>` : ''}
-        ${niches.length > 1 ? `<select id="crmKanbanFilterNiche" onchange="crmApplyFilters(true)" style="${sel}">
-            <option value="">🏢 Всі ніші</option>
-            ${niches.map(n => `<option value="${_esc(n)}" ${f.niche===n?'selected':''}>${_esc(n)}</option>`).join('')}
-        </select>` : ''}
-        <input id="crmKanbanFilterCity" type="text" placeholder="🏙️ Місто..." value="${f.city||''}"
-            oninput="crmApplyFilters()"
-            style="width:90px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
+        ${countries.length > 1 ? `<div style="display:flex;align-items:center;gap:3px;border:1px solid #e8eaed;border-radius:6px;background:white;padding:0 0.4rem;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <select id="crmKanbanFilterCountry" onchange="crmApplyFilters(true)" style="border:none;background:none;outline:none;font-size:0.75rem;cursor:pointer;padding:0.25rem 0;">
+                <option value="">Всі країни</option>
+                ${countries.map(c => `<option value="${_esc(c)}" ${f.country===c?'selected':''}>${_esc(c)}</option>`).join('')}
+            </select>
+        </div>` : ''}
+        ${niches.length > 1 ? `<div style="display:flex;align-items:center;gap:3px;border:1px solid #e8eaed;border-radius:6px;background:white;padding:0 0.4rem;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            <select id="crmKanbanFilterNiche" onchange="crmApplyFilters(true)" style="border:none;background:none;outline:none;font-size:0.75rem;cursor:pointer;padding:0.25rem 0;">
+                <option value="">Всі ніші</option>
+                ${niches.map(n => `<option value="${_esc(n)}" ${f.niche===n?'selected':''}>${_esc(n)}</option>`).join('')}
+            </select>
+        </div>` : ''}
+        <div style="display:flex;align-items:center;gap:3px;border:1px solid #e8eaed;border-radius:6px;background:white;padding:0 0.4rem;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <input id="crmKanbanFilterCity" type="text" placeholder="Місто..." value="${f.city||''}"
+                oninput="crmApplyFilters()"
+                style="border:none;background:none;outline:none;font-size:0.75rem;width:75px;padding:0.25rem 0;">
+        </div>
         <select id="crmKanbanFilterTag" onchange="crmApplyFilters(true)" style="${sel}">
             <option value="">${window.t('allTags')}</option>
             ${tagOpts}
