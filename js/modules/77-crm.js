@@ -3982,6 +3982,40 @@ function _renderAnalytics() {
     const totalLost = lostDealsAll.length || 1;
     const lostColors = ['#ef4444','#f97316','#f59e0b','#6b7280','#8b5cf6','#3b82f6','#22c55e'];
 
+    // ── Звіт по лідах з вибором періоду ──────────────────
+    const _leadsReportPeriod = crm._leadsReportPeriod || '7';
+    const _leadsReportFrom   = crm._leadsReportFrom   || '';
+    const _leadsReportTo     = crm._leadsReportTo     || '';
+    const _now = Date.now();
+    const _periodMs = {
+        '7':  7  * 86400000,
+        '14': 14 * 86400000,
+        '30': 30 * 86400000,
+        '90': 90 * 86400000,
+    };
+    const _leadsFiltered = crm.deals.filter(d => {
+        if (!d.createdAt) return false;
+        const ts = d.createdAt?.toMillis?.() || new Date(d.createdAt).getTime() || 0;
+        if (_leadsReportPeriod === 'custom') {
+            const from = _leadsReportFrom ? new Date(_leadsReportFrom).getTime() : 0;
+            const to   = _leadsReportTo   ? new Date(_leadsReportTo).getTime() + 86400000 : _now;
+            return ts >= from && ts <= to;
+        }
+        return ts >= _now - (_periodMs[_leadsReportPeriod] || 7 * 86400000);
+    });
+    // Групуємо по source + niche
+    const _bySourceNiche = {};
+    _leadsFiltered.forEach(d => {
+        const src   = d.source || 'manual';
+        const niche = d.clientNiche || d.niche || '—';
+        const key   = src + '||' + niche;
+        if (!_bySourceNiche[key]) _bySourceNiche[key] = { src, niche, count:0, won:0, amount:0 };
+        _bySourceNiche[key].count++;
+        if (d.stage === 'won') { _bySourceNiche[key].won++; _bySourceNiche[key].amount += d.amount||0; }
+    });
+    const _srcNicheRows = Object.values(_bySourceNiche).sort((a,b) => b.count - a.count);
+    const _srcLabels = { telegram:'Telegram', instagram:'Instagram', site_form:'Сайт', manual:'Вручну', referral:'Referral', ads:'Реклама', phone_call:'Дзвінок', facebook_lead:'Facebook Lead', telegram_bot:'Telegram Bot' };
+
     c.innerHTML = `
     <div style="padding-bottom:2rem;display:flex;flex-direction:column;gap:0.75rem;">
 
@@ -4201,6 +4235,50 @@ function _renderAnalytics() {
                     <div style="font-size:0.78rem;font-weight:700;color:#22c55e;">${_fmt(u.amount)}</div>
                 </div>
             </div>`).join('') : '<div style="color:#9ca3af;font-size:0.8rem;">Ще немає угод з відповідальними</div>'}
+        </div>
+
+        <!-- ── Звіт по лідах ── -->
+        <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.85rem;">
+                <div style="font-weight:700;font-size:0.85rem;color:#111827;display:flex;align-items:center;gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Ліди: джерело і ніша
+                    <span style="background:#f3f4f6;color:#6b7280;border-radius:20px;padding:2px 8px;font-size:0.72rem;font-weight:600;">${_leadsFiltered.length}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;">
+                    ${['7','14','30','90','custom'].map(p => `<button onclick="crm._leadsReportPeriod='${p}';_renderAnalytics();" style="padding:0.2rem 0.5rem;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;border:1px solid ${_leadsReportPeriod===p?'#3b82f6':'#e5e7eb'};background:${_leadsReportPeriod===p?'#eff6ff':'white'};color:${_leadsReportPeriod===p?'#3b82f6':'#6b7280'};">${{7:'7 дн',14:'14 дн',30:'30 дн',90:'90 дн',custom:'Свій'}[p]}</button>`).join('')}
+                </div>
+            </div>
+            ${_leadsReportPeriod === 'custom' ? `<div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;">
+                <input type="date" value="${_leadsReportFrom}" onchange="crm._leadsReportFrom=this.value;_renderAnalytics();" style="border:1px solid #e5e7eb;border-radius:6px;padding:0.25rem 0.5rem;font-size:0.78rem;">
+                <span style="color:#9ca3af;">—</span>
+                <input type="date" value="${_leadsReportTo}" onchange="crm._leadsReportTo=this.value;_renderAnalytics();" style="border:1px solid #e5e7eb;border-radius:6px;padding:0.25rem 0.5rem;font-size:0.78rem;">
+            </div>` : ''}
+            ${_srcNicheRows.length === 0 ? `<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1.5rem 0;">Немає лідів за вибраний період</div>` : `
+            <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+                <thead><tr style="border-bottom:2px solid #f3f4f6;">
+                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Джерело</th>
+                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Ніша</th>
+                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Лідів</th>
+                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Виграно</th>
+                    <th style="text-align:right;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Дохід</th>
+                </tr></thead>
+                <tbody>${_srcNicheRows.map((r,i) => `
+                <tr style="border-bottom:1px solid #f9fafb;${i%2===0?'background:#fafafa;':''}">
+                    <td style="padding:0.45rem 0.5rem;"><span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:${{telegram:'#3b82f6',instagram:'#e879f9',site_form:'#22c55e',manual:'#f59e0b',ads:'#f97316',referral:'#8b5cf6',phone_call:'#06b6d4',facebook_lead:'#1877f2',telegram_bot:'#3b82f6'}[r.src]||'#9ca3af'};display:inline-block;"></span>${_srcLabels[r.src]||r.src}</span></td>
+                    <td style="padding:0.45rem 0.5rem;color:#374151;">${r.niche}</td>
+                    <td style="padding:0.45rem 0.5rem;text-align:center;font-weight:700;">${r.count}</td>
+                    <td style="padding:0.45rem 0.5rem;text-align:center;color:#22c55e;font-weight:600;">${r.won>0?r.won:'—'}</td>
+                    <td style="padding:0.45rem 0.5rem;text-align:right;color:#16a34a;font-weight:600;">${r.amount>0?_fmt(r.amount):'—'}</td>
+                </tr>`).join('')}</tbody>
+                <tfoot><tr style="border-top:2px solid #e5e7eb;background:#f9fafb;">
+                    <td colspan="2" style="padding:0.45rem 0.5rem;font-weight:700;font-size:0.78rem;">Всього</td>
+                    <td style="padding:0.45rem 0.5rem;text-align:center;font-weight:700;">${_leadsFiltered.length}</td>
+                    <td style="padding:0.45rem 0.5rem;text-align:center;font-weight:700;color:#22c55e;">${_srcNicheRows.reduce((s,r)=>s+r.won,0)||'—'}</td>
+                    <td style="padding:0.45rem 0.5rem;text-align:right;font-weight:700;color:#16a34a;">${_fmt(_srcNicheRows.reduce((s,r)=>s+r.amount,0))}</td>
+                </tr></tfoot>
+            </table></div>`}
         </div>
 
     </div>`;
