@@ -2123,7 +2123,8 @@ function _renderDealDetails(deal) {
         <textarea id="dd_note" rows="3" style="${inp}resize:vertical;">${_esc(deal.note||'')}</textarea>
     </div>
 
-    <!-- Доставка / Оплата -->
+    <!-- Доставка / Оплата — тільки для ніш з доставкою -->
+    ${['furniture','construction','cleaning','logistics','retail',''].includes(window.currentCompanyData?.niche||'') || !window.currentCompanyData?.niche ? `
     <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
         <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Доставка та оплата</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
@@ -2157,6 +2158,8 @@ function _renderDealDetails(deal) {
         </button>` : ''}
     </div>
 
+    ` : ''}
+    ${['furniture','construction','cleaning-us'].includes(window.currentCompanyData?.niche||'') ? `
     <!-- ── ЗАМОВЛЕННЯ (ШТОРИ) ──────────────────────────────────── -->
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
         <div style="font-size:0.68rem;font-weight:700;color:#15803d;text-transform:uppercase;margin-bottom:0.6rem;">
@@ -2240,6 +2243,7 @@ function _renderDealDetails(deal) {
         </div>
     </div>
     <!-- ── /ЗАМОВЛЕННЯ (ШТОРИ) ─────────────────────────────────── -->
+    ` : ''}
 
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
     <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;margin-bottom:0.9rem;">
