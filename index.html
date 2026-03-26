@@ -4565,7 +4565,7 @@ document.addEventListener('mousedown', function(e) {
     <script>
       // Keep webhook warm — пінг кожні 20 сек поки юзер на сайті
       (function() {
-        function ping() { fetch('/api/ping', {method:'GET'}).catch(()=>{}); }
+        function ping() { fetch('/api/webhook?_ping=1', {method:'GET'}).catch(()=>{}); }
         ping();
         setInterval(ping, 20000);
       })();
