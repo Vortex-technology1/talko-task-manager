@@ -2018,7 +2018,13 @@ function _renderDealDetails(deal) {
         </div>
         <div>
             <label style="${lbl}">Ніша</label>
-            <input id="dd_niche" value="${_esc(deal.clientNiche||'')}" style="${inp}">
+            <input id="dd_niche" value="${_esc(deal.clientNiche||'')}"
+                list="dd_nicheList"
+                autocomplete="off"
+                style="${inp}">
+            <datalist id="dd_nicheList">
+                ${[...new Set(crm.deals.map(d=>d.clientNiche||d.niche).filter(Boolean))].sort().map(n=>`<option value="${_esc(n)}">`).join('')}
+            </datalist>
         </div>
     </div>
     <!-- Омніканал — швидкі дії по контакту -->
@@ -3185,7 +3191,17 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 </div>
                 <div>
                     <label style="${lbl}">Ніша</label>
-                    <input id="nd_niche" placeholder="${window.t('crmNichePh')}" style="${inp}">
+                    <div style="position:relative;">
+                        <input id="nd_niche" placeholder="Меблі UA, Клініка, Ремонт..."
+                            list="nd_nicheList"
+                            autocomplete="off"
+                            style="${inp}"
+                            oninput="document.getElementById('nd_nicheHint') && (document.getElementById('nd_nicheHint').style.display=this.value?'none':'flex')">
+                        <datalist id="nd_nicheList">
+                            ${[...new Set(crm.deals.map(d=>d.clientNiche||d.niche).filter(Boolean))].sort().map(n=>`<option value="${_esc(n)}">`).join('')}
+                        </datalist>
+                        <div id="nd_nicheHint" style="position:absolute;top:50%;right:8px;transform:translateY(-50%);font-size:.65rem;color:#9ca3af;pointer-events:none;">вибери або впиши</div>
+                    </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                     <div>
