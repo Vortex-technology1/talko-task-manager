@@ -133,7 +133,11 @@
                         window.companyFeatures    = cd.features || {};
                         // Tier-модель: basic | pro | enterprise (default: pro до впровадження billing)
                         window.currentPlan        = cd.plan || 'pro';
-                        window.currentCompanyData = window.currentCompanyData || { id: window.currentCompanyId, ...cd };
+                        // Merge всі поля з Firestore в currentCompanyData (включно з niche)
+                        window.currentCompanyData = { id: window.currentCompanyId, ...cd, ...(window.currentCompanyData || {}) };
+                        // Завжди оновлюємо niche та name з Firestore
+                        if (cd.niche) window.currentCompanyData.niche = cd.niche;
+                        if (cd.name)  window.currentCompanyData.name  = cd.name;
                     }
                 } catch(e) { console.error('[07-data-loading]', e.message); }
 

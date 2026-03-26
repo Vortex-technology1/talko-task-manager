@@ -4388,6 +4388,9 @@ document.addEventListener('mousedown', function(e) {
             const snap = await window.db.collection('companies').doc(window.currentCompany).get();
             if (!snap.exists) return;
             const d = snap.data();
+            // Оновлюємо currentCompanyData щоб CRM бачив нішу
+            window.currentCompanyData = window.currentCompanyData || {};
+            if (d.niche) window.currentCompanyData.niche = d.niche;
             const el = (id) => document.getElementById(id);
             if (el('settingNiche'))         el('settingNiche').value         = d.niche          || '';
             if (el('settingGoal'))          el('settingGoal').value          = d.companyGoal     || '';
