@@ -4050,24 +4050,19 @@ function _renderAnalytics() {
               Зріз по нішах
             </button>
           </div>
-          <!-- Фільтр періоду для Огляду -->
+          <!-- Фільтр: з ... до -->
           <div style="display:flex;align-items:center;gap:6px;">
-            ${['7','14','30','90','custom'].map(p => {
-              const labels = {7:'7 дн',14:'14 дн',30:'30 дн',90:'90 дн',custom:'Свій'};
-              const active = _leadsReportPeriod === p;
-              return `<button onclick="crm._leadsReportPeriod='${p}';crm._leadsReportFrom='';crm._leadsReportTo='';_renderAnalytics();"
-                style="padding:4px 10px;border-radius:7px;font-size:.75rem;font-weight:600;cursor:pointer;
-                border:1.5px solid ${active?'#6366f1':'#e5e7eb'};
-                background:${active?'#eef2ff':'white'};
-                color:${active?'#4f46e5':'#6b7280'};">${labels[p]}</button>`;
-            }).join('')}
-            ${_leadsReportPeriod === 'custom' ? `
-              <input type="date" value="${_leadsReportFrom}" onchange="crm._leadsReportFrom=this.value;_renderAnalytics();"
-                style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 7px;font-size:.75rem;color:#374151;">
-              <span style="font-size:.75rem;color:#9ca3af;">—</span>
-              <input type="date" value="${_leadsReportTo}" onchange="crm._leadsReportTo=this.value;_renderAnalytics();"
-                style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 7px;font-size:.75rem;color:#374151;">
-            ` : ''}
+            <span style="font-size:.75rem;color:#6b7280;font-weight:600;">З</span>
+            <input type="date" value="${_leadsReportFrom}"
+              onchange="crm._leadsReportPeriod='custom';crm._leadsReportFrom=this.value;_renderAnalytics();"
+              style="border:1.5px solid #e5e7eb;border-radius:7px;padding:4px 8px;font-size:.78rem;color:#374151;cursor:pointer;outline:none;">
+            <span style="font-size:.75rem;color:#9ca3af;">—</span>
+            <span style="font-size:.75rem;color:#6b7280;font-weight:600;">До</span>
+            <input type="date" value="${_leadsReportTo}"
+              onchange="crm._leadsReportPeriod='custom';crm._leadsReportTo=this.value;_renderAnalytics();"
+              style="border:1.5px solid #e5e7eb;border-radius:7px;padding:4px 8px;font-size:.78rem;color:#374151;cursor:pointer;outline:none;">
+            ${(_leadsReportFrom||_leadsReportTo) ? `<button onclick="crm._leadsReportPeriod='7';crm._leadsReportFrom='';crm._leadsReportTo='';_renderAnalytics();"
+              style="padding:3px 8px;border:1px solid #fecaca;border-radius:6px;background:#fef2f2;color:#dc2626;font-size:.72rem;cursor:pointer;">×</button>` : ''}
           </div>
         </div>
 
