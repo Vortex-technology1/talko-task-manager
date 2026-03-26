@@ -1112,6 +1112,55 @@ window.OB_I18N.ru.warehouse_calendar = {
   ],
 };
 
+
+// ── RU: warehouse_points, estimate_norms, estimate_project ──
+window.OB_I18N.ru.warehouse_points = {
+  title:'Склад: точки, перемещения, инвентаризация', subtitle:'Блок 8 · Бизнес', est:'15 мин',
+  actionLabel:'Открыть склад',
+  description:'<b>Боль без этого:</b> есть главный склад и несколько точек — но неизвестно где что лежит, сколько потратил каждый салон и куда пропадают материалы между инвентаризациями.<br><br>'
+    + '<div style="display:grid;gap:6px;margin:8px 0;">'
+    + '<div style="background:#eef6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.6rem .9rem;"><b style="color:#1e3a5f;font-size:.72rem;">ПО ТОЧКАМ</b><br>Таблица: товар → сколько есть на складе и в каждом салоне одновременно. Фильтр по одной точке.</div>'
+    + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.6rem .9rem;"><b style="color:#166534;font-size:.72rem;">ПЕРЕМЕЩЕНИЯ</b><br>Передать товар со склада в салон или между салонами. Система фиксирует кто, когда, сколько и куда.</div>'
+    + '<div style="background:#fff8e1;border:1px solid #fde68a;border-radius:8px;padding:.6rem .9rem;"><b style="color:#92400e;font-size:.72rem;">ИНВЕНТАРИЗАЦИЯ</b><br>Ежемесячно по каждой точке: вводите фактическое количество → система сравнивает с ожидаемым → показывает отклонение → корректирует остатки автоматически.</div>'
+    + '<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:8px;padding:.6rem .9rem;"><b style="color:#6b21a8;font-size:.72rem;">ОТЧЁТЫ</b><br>По месяцам · Сравнение салонов · Годовой обзор. Видите где расходы выше и как меняется динамика.</div>'
+    + '</div>'
+    + '<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Спросить AI-ассистента</a>',
+  tipText:'Первая инвентаризация — важнейший шаг. Именно она заполняет реальные остатки по точкам. Без неё вкладка «По точкам» будет пустой.',
+  tasks:[
+    {text:'Проверить локации: Склад → Локации', detail:'Убедитесь что каждая точка создана с правильным названием. При необходимости — добавьте или переименуйте.'},
+    {text:'Открыть «По точкам» — просмотреть таблицу остатков', detail:'Склад → вкладка «По точкам». После первой инвентаризации здесь появятся реальные остатки по каждой точке.'},
+    {text:'Сделать первое перемещение товара между локациями', detail:'«Перемещение» → «Новое перемещение» → выберите товар, откуда, куда, количество. Проверьте что остатки обновились в «По точкам».'},
+    {text:'Провести первую инвентаризацию по одной точке', detail:'«Инвентаризация» → «Новая инвентаризация» → выберите локацию и месяц → введите фактическое количество → «Подтвердить и скорректировать».'},
+    {text:'Просмотреть отчёт по месяцам', detail:'«Отчёты» → «По месяцам» → выберите год. После нескольких операций здесь появятся данные по расходам каждой точки.'},
+  ],
+};
+
+window.OB_I18N.ru.estimate_norms = {
+  title:'Справочник норм материалов', subtitle:'Блок 8 · Бизнес', est:'10 мин',
+  actionLabel:'Открыть справочник норм',
+  description:'<b>Боль без этого:</b> сколько материалов нужно на проект? Владелец считает вручную или на пальцах — ошибается, переплачивает или материалов не хватает на объекте.<br><br><b>Справочник норм</b> — один раз настроил нормы расхода → система сама считает по любому проекту. Выбрал тип работы, ввёл площадь — получил спецификацию.<br><br><b>Где найти:</b> Бизнес → Смета → Справочник норм.<br><br>'
+    + '<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Спросить AI-ассистента</a>',
+  tipText:'Без справочника норм система не может считать материалы автоматически. Это фундамент модуля сметы.',
+  tasks:[
+    {text:'Открыть Справочник норм', detail:'Бизнес → Смета → вкладка «Справочник норм».'},
+    {text:'Загрузить стандартные нормы для вашей ниши', detail:'«Загрузить стандартные» → выберите нишу (Строительство / Ремонт / Металлоконструкции) → подтвердить.'},
+    {text:'Отредактировать или добавить свою норму', detail:'«Редактировать» → изменить нормативы под реалии вашего бизнеса, или «+ Добавить норму» для собственного типа работ.'},
+  ],
+};
+
+window.OB_I18N.ru.estimate_project = {
+  title:'Смета проекта', subtitle:'Блок 8 · Бизнес', est:'15 мин',
+  actionLabel:'Открыть Сметы',
+  description:'<b>Боль без этого:</b> материалы заказали — не то или не столько. Проект стоит. Деньги потрачены, а объект не сдали в срок.<br><br><b>Смета</b> = спецификация + склад + финансы на одном экране. Видно сразу: есть материал, дефицит, сколько докупить и за сколько.<br><br><b>Привязана к проекту</b> — смета видна во вкладке «Смета» внутри проекта.<br><br>При утверждении → автоматическая транзакция в финансах. При дефиците → автоматическая задача «Закупить материалы».<br><br>'
+    + '<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Спросить AI-ассистента</a>',
+  tipText:'Смета привязана к проекту, сделке в CRM и складу одновременно. Дефицит материалов → автоматическая задача на закупку.',
+  tasks:[
+    {text:'Создать первую смету', detail:'Бизнес → Смета → «+ Новая смета» → введите название и привяжите к проекту.'},
+    {text:'Добавить тип работы и ввести объёмы', detail:'«+ Добавить тип работы» → выберите норму → введите площадь или объём. Система рассчитает материалы.'},
+    {text:'Проверить дефицит материалов по складу', detail:'В таблице материалов оранжевым отображается дефицит — сколько нужно докупить.'},
+    {text:'Утвердить смету', detail:'«Утвердить смету» → создаётся плановая транзакция в финансах.'},
+  ],
+};
 // ── DE: new steps + warehouse + booking ────────────────────
 window.OB_I18N.de.crm_capabilities = {
   title:'CRM: Deal- und Kundenverwaltung', subtitle:'Block 3 · System', est:'30 Min',
