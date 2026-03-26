@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-03-26-v22.0';
+const CACHE_VERSION = '2026-03-26-v23.0';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache — core shell only (JS modules via network-first)
@@ -223,14 +223,21 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // HTML navigate requests — always fetch /api/app fresh, never cache
-  if (event.request.mode === 'navigate' || url.pathname === '/' || url.pathname === '/index.html') {
+  // HTML navigate requests — serve /api/app ONLY for root app URL
+  // DO NOT intercept sub-pages like biz-structure.html, book/, s/, p/ — they serve themselves
+  const isRootApp = (url.pathname === '/' || url.pathname === '/index.html');
+  const isSubPage = url.pathname.endsWith('.html') || url.pathname.startsWith('/book/') || url.pathname.startsWith('/s/') || url.pathname.startsWith('/p/');
+  if (event.request.mode === 'navigate' && isRootApp) {
     event.respondWith(
       fetch('/api/app', { cache: 'no-store' })
         .then(r => r)
         .catch(() => new Response('<h2>Offline</h2><p>Перевірте підключення до інтернету</p>', { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } }))
     );
     return;
+  }
+  // Sub-pages (.html files, book/, s/, p/) — bypass SW entirely, go direct to network
+  if (event.request.mode === 'navigate' && isSubPage) {
+    return; // SW не перехоплює — браузер іде напряму
   }
 
   // App shell (CSS etc) — network first, fallback to cache
