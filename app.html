@@ -4374,8 +4374,7 @@ document.addEventListener('mousedown', function(e) {
 
     // Зберігаємо профіль компанії (ніша + стратегічні поля)
     window.saveCompanyProfile = async function() {
-        console.log('[saveCompanyProfile] START — currentCompany:', window.currentCompany, '| db:', typeof firebase !== "undefined" ? "firebase ok" : "NO FIREBASE");
-        if (!window.currentCompany) { console.error('[saveCompanyProfile] EXIT: no currentCompany'); return; }
+        if (!window.currentCompany) return;
         const profile = {
             niche:          document.getElementById('settingNiche')?.value || '',
             companyGoal:    document.getElementById('settingGoal')?.value?.trim() || '',
@@ -4399,16 +4398,13 @@ document.addEventListener('mousedown', function(e) {
         if (!window.currentCompany) return;
         try {
             const snap = await firebase.firestore().collection('companies').doc(window.currentCompany).get();
-            console.log('[loadCompanyProfile] exists:', snap.exists, 'niche:', snap.data()?.niche);
             if (!snap.exists) return;
             const d = snap.data();
             // Оновлюємо currentCompanyData щоб CRM бачив нішу
             window.currentCompanyData = window.currentCompanyData || {};
             if (d.niche) window.currentCompanyData.niche = d.niche;
             const el = (id) => document.getElementById(id);
-            console.log('[loadCompanyProfile] settingNiche el:', el('settingNiche'), 'setting to:', d.niche);
             if (el('settingNiche'))         el('settingNiche').value         = d.niche          || '';
-            console.log('[loadCompanyProfile] settingNiche value after set:', el('settingNiche')?.value);
             if (el('settingGoal'))          el('settingGoal').value          = d.companyGoal     || '';
             if (el('settingConcept'))       el('settingConcept').value       = d.companyConcept  || '';
             if (el('settingCKP'))           el('settingCKP').value           = d.companyCKP      || '';
