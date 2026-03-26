@@ -4372,7 +4372,10 @@ document.addEventListener('mousedown', function(e) {
         };
         try {
             await window.db.collection('companies').doc(window.currentCompany).set(profile, { merge: true });
-            if (typeof showToast === 'function') showToast('Профіль компанії збережено', 'success');
+            // Оновлюємо currentCompanyData щоб CRM одразу бачив нову нішу
+            window.currentCompanyData = window.currentCompanyData || {};
+            Object.assign(window.currentCompanyData, profile);
+            if (typeof showToast === 'function') showToast('Профіль компанії збережено ✅', 'success');
         } catch(e) {
             if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
         }
