@@ -4287,13 +4287,13 @@ document.addEventListener('mousedown', function(e) {
             }
         }
         if (tab === 'company') {
-            if (typeof loadCompanySettings === 'function') loadCompanySettings();
-            // Pre-fill niche from already-loaded currentCompanyData (instant, no fetch needed)
+            // Pre-fill niche instantly from cached data
             const _nicheEl = document.getElementById('settingNiche');
             if (_nicheEl && window.currentCompanyData?.niche) {
                 _nicheEl.value = window.currentCompanyData.niche;
             }
-            // Also fetch fresh data from Firestore
+            // loadCompanyProfile loads ALL fields (name, timezone, weeklyReport, niche, modules)
+            // loadCompanySettings() removed — redundant double Firestore request
             if (typeof loadCompanyProfile === 'function') {
                 if (window.currentCompany) {
                     loadCompanyProfile();
@@ -4508,7 +4508,7 @@ document.addEventListener('mousedown', function(e) {
         window.exportCompanyData = async function() {
             if (!requireAuth()) return;
             try {
-                const base = db.collection('companies').doc(currentCompany);
+                const base = firebase.firestore().collection('companies').doc(window.currentCompany || currentCompany);
                 const [tasksSnap, usersSnap, funcsSnap] = await Promise.all([
                     base.collection('tasks').limit(1000).get(),
                     base.collection('users').get(),
