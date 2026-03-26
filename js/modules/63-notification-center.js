@@ -223,7 +223,7 @@
     
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
+            navigator.serviceWorker.register('sw.js?v=20260326', { updateViaCache: 'none' }).then(reg => {
                 window.dbg&&dbg('[SW] Registered:', reg.scope);
                 // Перевірка оновлень кожні 30 хвилин
                 setInterval(() => reg.update(), 30 * 60 * 1000);
