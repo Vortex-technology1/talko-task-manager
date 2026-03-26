@@ -121,7 +121,7 @@ function _renderShell() {
         ['activities', I.calendar,  window.t('crmTabActivities')],
         ['analytics',  I.chart,     window.t('crmTabAnalytics')],
         ['settings',   I.settings,  window.t('crmTabSettings')],
-        ['howto',      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', 'Як це працює'],
+        ['howto',      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', window.t('howItWorksBtn') || 'Як це працює'],
     ];
 
     if (isMobile) {
@@ -4023,6 +4023,17 @@ function _renderAnalytics() {
     c.innerHTML = `
     <div style="padding-bottom:2rem;display:flex;flex-direction:column;gap:0.75rem;">
 
+        <!-- Sub-nav: Огляд | Зріз по нішах -->
+        <div style="display:flex;gap:6px;background:#f4f5f7;border-radius:10px;padding:4px;width:fit-content;margin-bottom:4px;">
+          <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;background:#6366f1;color:white;">
+            Огляд
+          </button>
+          <button onclick="crmSwitchAnalyticsMode('niche')"
+            style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:transparent;color:#6b7280;">
+            Зріз по нішах
+          </button>
+        </div>
+
         <!-- KPI картки -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;">
             ${kpis.map(([l,v,col]) => `
@@ -4287,6 +4298,297 @@ function _renderAnalytics() {
 
     </div>`;
 }
+
+
+
+
+// ══════════════════════════════════════════════════════════
+// ЗРІЗ ПО НІШАХ — матриця тижні × ніші/джерела
+// ══════════════════════════════════════════════════════════
+function _renderCrmNicheMatrix() {
+    const c = document.getElementById('crmViewAnalytics');
+    if (!c) return;
+
+    // ── стан фільтрів ──────────────────────────────────────
+    if (!window._nmState) window._nmState = {
+        groupBy: 'niche',      // 'niche' | 'source'
+        period:  'week',       // 'week' | 'month'
+        metric:  'leads',      // 'leads' | 'won' | 'revenue' | 'conv'
+        dateFrom: '',
+        dateTo:   '',
+    };
+    const st = window._nmState;
+
+    // ── допоміжні ─────────────────────────────────────────
+    const _fmtN = n => n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n);
+    const _fmtR = n => n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'k' : String(Math.round(n));
+
+    function _getWeekStart(date) {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = d.getDate() - (day === 0 ? 6 : day - 1);
+        d.setDate(diff);
+        d.setHours(0,0,0,0);
+        return d;
+    }
+    function _getPeriodKey(date, period) {
+        if (period === 'week') {
+            const ws = _getWeekStart(date);
+            const we = new Date(ws); we.setDate(we.getDate() + 6);
+            const fmt = d => d.getDate().toString().padStart(2,'0') + '.' + (d.getMonth()+1).toString().padStart(2,'0');
+            return fmt(ws) + '–' + fmt(we) + '.' + we.getFullYear().toString().slice(-2);
+        } else {
+            const months = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+            return months[date.getMonth()] + ' ' + date.getFullYear().toString().slice(-2);
+        }
+    }
+    function _getPeriodSortKey(date, period) {
+        if (period === 'week') {
+            const ws = _getWeekStart(date);
+            return ws.getTime();
+        }
+        return new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    }
+
+    // ── фільтрація дат ─────────────────────────────────────
+    let deals = crm.deals.slice();
+    if (st.dateFrom) {
+        const from = new Date(st.dateFrom);
+        deals = deals.filter(d => {
+            const dt = d.createdAt?.toDate ? d.createdAt.toDate() : (d.createdAt ? new Date(d.createdAt) : null);
+            return dt && dt >= from;
+        });
+    }
+    if (st.dateTo) {
+        const to = new Date(st.dateTo);
+        to.setHours(23,59,59,999);
+        deals = deals.filter(d => {
+            const dt = d.createdAt?.toDate ? d.createdAt.toDate() : (d.createdAt ? new Date(d.createdAt) : null);
+            return dt && dt <= to;
+        });
+    }
+
+    // ── групування ─────────────────────────────────────────
+    const groupVal = d => {
+        if (st.groupBy === 'niche')  return d.clientNiche || d.niche || '(не вказано)';
+        if (st.groupBy === 'source') return d.source || '(не вказано)';
+        return '—';
+    };
+
+    // Збираємо унікальні групи та періоди
+    const groups = [...new Set(deals.map(groupVal))].sort();
+    const periodMap = {}; // { periodKey: { sortKey, groups: { g: { leads, won, revenue } } } }
+
+    deals.forEach(d => {
+        const dt = d.createdAt?.toDate ? d.createdAt.toDate() : (d.createdAt ? new Date(d.createdAt) : null);
+        if (!dt) return;
+        const pk  = _getPeriodKey(dt, st.period);
+        const sk  = _getPeriodSortKey(dt, st.period);
+        const grp = groupVal(d);
+        if (!periodMap[pk]) periodMap[pk] = { sortKey: sk, groups: {} };
+        if (!periodMap[pk].groups[grp]) periodMap[pk].groups[grp] = { leads: 0, won: 0, revenue: 0 };
+        periodMap[pk].groups[grp].leads++;
+        if (d.stage === 'won') {
+            periodMap[pk].groups[grp].won++;
+            periodMap[pk].groups[grp].revenue += d.amount || 0;
+        }
+    });
+
+    const periods = Object.entries(periodMap)
+        .sort((a,b) => a[1].sortKey - b[1].sortKey)
+        .map(([k,v]) => ({ key: k, ...v }));
+
+    // ── метрика ────────────────────────────────────────────
+    const metricVal = (cell) => {
+        if (!cell) return 0;
+        if (st.metric === 'leads')   return cell.leads;
+        if (st.metric === 'won')     return cell.won;
+        if (st.metric === 'revenue') return cell.revenue;
+        if (st.metric === 'conv')    return cell.leads ? Math.round(cell.won / cell.leads * 100) : 0;
+        return 0;
+    };
+    const metricFmt = (val) => {
+        if (st.metric === 'revenue') return _fmtR(val);
+        if (st.metric === 'conv')    return val + '%';
+        return _fmtN(val);
+    };
+
+    // ── колірна шкала ─────────────────────────────────────
+    const allVals = periods.flatMap(p => groups.map(g => metricVal(p.groups[g])));
+    const maxVal  = Math.max(...allVals, 1);
+    const cellBg  = (val) => {
+        if (!val) return '#f9fafb';
+        const pct = val / maxVal;
+        if (pct > 0.7) return '#dcfce7';
+        if (pct > 0.4) return '#fef9c3';
+        return '#fff';
+    };
+    const cellColor = (val) => {
+        if (!val) return '#9ca3af';
+        const pct = val / maxVal;
+        if (pct > 0.7) return '#15803d';
+        if (pct > 0.4) return '#854d0e';
+        return '#374151';
+    };
+
+    // ── рядки підсумків ────────────────────────────────────
+    const totalByGroup = {};
+    groups.forEach(g => {
+        totalByGroup[g] = { leads: 0, won: 0, revenue: 0 };
+    });
+    periods.forEach(p => {
+        groups.forEach(g => {
+            const cell = p.groups[g];
+            if (cell) {
+                totalByGroup[g].leads   += cell.leads;
+                totalByGroup[g].won     += cell.won;
+                totalByGroup[g].revenue += cell.revenue;
+            }
+        });
+    });
+
+    const groupByLabel  = st.groupBy === 'niche' ? 'Нішами' : 'Джерелами';
+    const periodLabel   = st.period  === 'week'  ? 'Тижні'  : 'Місяці';
+    const metricLabels  = { leads: 'Ліди', won: 'Виграно', revenue: 'Revenue', conv: 'Конверсія' };
+
+    // ── render ─────────────────────────────────────────────
+    c.innerHTML = `
+<div style="padding:1rem;max-width:100%;">
+
+  <!-- Sub-tab switcher -->
+  <div style="display:flex;gap:6px;margin-bottom:1rem;background:#f4f5f7;border-radius:10px;padding:4px;width:fit-content;">
+    <button onclick="crmSwitchAnalyticsMode('overview')"
+      style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:white;color:#6b7280;box-shadow:none;">
+      ← Огляд
+    </button>
+    <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:#22c55e;color:white;">
+      Зріз по ${groupByLabel.toLowerCase()}
+    </button>
+  </div>
+
+  <!-- Фільтри -->
+  <div style="background:white;border:1px solid #e5e7eb;border-radius:12px;padding:1rem;margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;">
+
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span style="font-size:.75rem;color:#6b7280;font-weight:600;">ГРУПУВАТИ:</span>
+      ${['niche','source'].map(v => `
+        <button onclick="window._nmState.groupBy='${v}';_renderCrmNicheMatrix()" style="padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;border:1.5px solid ${st.groupBy===v?'#22c55e':'#e5e7eb'};background:${st.groupBy===v?'#f0fdf4':'white'};color:${st.groupBy===v?'#16a34a':'#374151'};">
+          ${v==='niche'?'Ніша':'Джерело'}
+        </button>`).join('')}
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span style="font-size:.75rem;color:#6b7280;font-weight:600;">ПЕРІОД:</span>
+      ${['week','month'].map(v => `
+        <button onclick="window._nmState.period='${v}';_renderCrmNicheMatrix()" style="padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;border:1.5px solid ${st.period===v?'#6366f1':'#e5e7eb'};background:${st.period===v?'#eef2ff':'white'};color:${st.period===v?'#4f46e5':'#374151'};">
+          ${v==='week'?'Тижні':'Місяці'}
+        </button>`).join('')}
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span style="font-size:.75rem;color:#6b7280;font-weight:600;">МЕТРИКА:</span>
+      ${[['leads','Ліди'],['won','Виграно'],['revenue','Revenue'],['conv','Конверс.']].map(([v,l]) => `
+        <button onclick="window._nmState.metric='${v}';_renderCrmNicheMatrix()" style="padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;border:1.5px solid ${st.metric===v?'#f59e0b':'#e5e7eb'};background:${st.metric===v?'#fefce8':'white'};color:${st.metric===v?'#b45309':'#374151'};">
+          ${l}
+        </button>`).join('')}
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+      <span style="font-size:.75rem;color:#6b7280;font-weight:600;">ДІАПАЗОН:</span>
+      <input type="date" value="${st.dateFrom}" onchange="window._nmState.dateFrom=this.value;_renderCrmNicheMatrix()"
+        style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 7px;font-size:.75rem;color:#374151;">
+      <span style="font-size:.75rem;color:#9ca3af;">—</span>
+      <input type="date" value="${st.dateTo}" onchange="window._nmState.dateTo=this.value;_renderCrmNicheMatrix()"
+        style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 7px;font-size:.75rem;color:#374151;">
+      ${(st.dateFrom||st.dateTo)?`<button onclick="window._nmState.dateFrom='';window._nmState.dateTo='';_renderCrmNicheMatrix()" style="padding:2px 8px;border:1px solid #fecaca;border-radius:5px;background:#fef2f2;color:#dc2626;font-size:.72rem;cursor:pointer;">×</button>`:''}
+    </div>
+  </div>
+
+  ${periods.length === 0 ? `
+    <div style="text-align:center;padding:3rem;color:#9ca3af;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:.75rem;opacity:.4"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
+      <div>Немає угод за обраний період</div>
+    </div>
+  ` : `
+  <!-- Таблиця -->
+  <div style="overflow-x:auto;border:1px solid #e5e7eb;border-radius:12px;">
+    <table style="width:100%;border-collapse:collapse;min-width:${Math.max(600, groups.length * 120 + 120)}px;">
+      <thead>
+        <tr style="background:#f8fafc;">
+          <th style="padding:.6rem .75rem;font-size:.72rem;font-weight:700;color:#6b7280;text-align:left;border-bottom:2px solid #e5e7eb;position:sticky;left:0;background:#f8fafc;min-width:110px;">
+            ${periodLabel}
+          </th>
+          ${groups.map(g => `
+            <th style="padding:.6rem .75rem;font-size:.72rem;font-weight:700;color:#374151;text-align:center;border-bottom:2px solid #e5e7eb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;" title="${g}">
+              ${g.length > 18 ? g.slice(0,17)+'…' : g}
+            </th>`).join('')}
+          <th style="padding:.6rem .75rem;font-size:.72rem;font-weight:700;color:#6b7280;text-align:center;border-bottom:2px solid #e5e7eb;background:#f8fafc;">
+            Всього
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        ${periods.map((p, pi) => {
+          const rowTotal = groups.reduce((s,g) => s + metricVal(p.groups[g]), 0);
+          return `
+          <tr style="background:${pi%2===0?'white':'#fafafa'};">
+            <td style="padding:.55rem .75rem;font-size:.78rem;font-weight:600;color:#374151;border-bottom:1px solid #f1f5f9;position:sticky;left:0;background:${pi%2===0?'white':'#fafafa'};">
+              ${p.key}
+            </td>
+            ${groups.map(g => {
+              const cell = p.groups[g];
+              const val  = metricVal(cell);
+              return `
+              <td style="padding:.55rem .5rem;text-align:center;border-bottom:1px solid #f1f5f9;background:${cellBg(val)};">
+                <span style="font-size:.82rem;font-weight:${val?'700':'400'};color:${cellColor(val)};">
+                  ${val ? metricFmt(val) : '—'}
+                </span>
+              </td>`;
+            }).join('')}
+            <td style="padding:.55rem .75rem;text-align:center;border-bottom:1px solid #f1f5f9;font-weight:700;font-size:.82rem;color:#374151;background:#f8fafc;">
+              ${rowTotal ? metricFmt(rowTotal) : '—'}
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+      <tfoot>
+        <tr style="background:#f0fdf4;border-top:2px solid #22c55e;">
+          <td style="padding:.6rem .75rem;font-size:.78rem;font-weight:700;color:#15803d;position:sticky;left:0;background:#f0fdf4;">
+            Всього
+          </td>
+          ${groups.map(g => {
+            const val = metricVal(totalByGroup[g]);
+            return `
+            <td style="padding:.6rem .5rem;text-align:center;font-weight:700;font-size:.82rem;color:#15803d;">
+              ${val ? metricFmt(val) : '—'}
+            </td>`;
+          }).join('')}
+          <td style="padding:.6rem .75rem;text-align:center;font-weight:700;font-size:.85rem;color:#15803d;background:#f0fdf4;">
+            ${metricFmt(groups.reduce((s,g) => s + metricVal(totalByGroup[g]), 0))}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Підказка -->
+  <div style="margin-top:.75rem;font-size:.72rem;color:#9ca3af;text-align:right;">
+    ${metricLabels[st.metric]} · ${periods.length} ${st.period==='week'?'тижнів':'місяців'} · ${groups.length} ${st.groupBy==='niche'?'ніш':'джерел'} · ${deals.length} угод
+  </div>
+  `}
+</div>`;
+}
+
+window._renderCrmNicheMatrix = _renderCrmNicheMatrix;
+
+// Switch analytics sub-mode
+window.crmSwitchAnalyticsMode = function(mode) {
+    if (mode === 'niche') {
+        _renderCrmNicheMatrix();
+    } else {
+        _renderAnalytics();
+    }
+};
 
 
 // ══════════════════════════════════════════════════════════
