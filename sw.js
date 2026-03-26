@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-03-26-v20.0';
+const CACHE_VERSION = '2026-03-26-v21.0';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache — core shell only (JS modules via network-first)
@@ -223,9 +223,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // App shell (HTML, CSS) — network first, fallback to cache
+  // HTML navigate requests — always fetch /api/app fresh, never cache
+  if (event.request.mode === 'navigate' || url.pathname === '/' || url.pathname === '/index.html') {
+    event.respondWith(
+      fetch('/api/app', { cache: 'no-store' })
+        .then(r => r)
+        .catch(() => caches.match('/index.html').then(c => c || new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } })))
+    );
+    return;
+  }
+
+  // App shell (CSS etc) — network first, fallback to cache
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: 'no-store' })
       .then(response => {
         if (response.ok) {
           const clone = response.clone();
