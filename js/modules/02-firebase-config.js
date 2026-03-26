@@ -16,3 +16,7 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
         const googleProvider = new firebase.auth.GoogleAuthProvider();
+        // Expose globals so all modules can use db, auth, storage without re-init
+        window.db      = db;
+        window.auth    = auth;
+        window.storage = storage;
