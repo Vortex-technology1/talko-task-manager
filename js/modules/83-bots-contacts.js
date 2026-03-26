@@ -2560,7 +2560,7 @@ async function renderSettingsTab() {
 
     const compDoc = await         window.companyRef().get();
     const compData = compDoc.data() || {};
-    const webhookUrl = `${location.origin}/api/webhook?companyId=${window.currentCompanyId}&channel=telegram&botId=${botId}`;
+    const webhookUrl = `${location.origin}/api/webhook?companyId=${window.currentCompanyId}&channel=telegram&botId=${bot.id}`;
 
     const sectionStyle = 'background:white;border-radius:14px;padding:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);';
     const labelStyle = 'font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;';
