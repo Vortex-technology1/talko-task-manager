@@ -539,7 +539,9 @@ module.exports = async (req, res) => {
         if (!botToken) {
             botToken = channel === 'viber'
                 ? _compData?.viberBotToken
-                : _compData?.integrations?.telegram?.botToken;
+                : _compData?.integrations?.telegram?.botToken
+                    || _compData?.telegram?.botToken  // legacy field
+                    || _compData?.botToken;
         }
         if (!botToken) return res.status(200).json({ ok: true, skipped: 'no token' });
 

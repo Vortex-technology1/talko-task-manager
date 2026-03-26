@@ -168,21 +168,9 @@
       "maxDuration": 60,
       "memory": 512
     },
-    "api/ping.js": {
-      "maxDuration": 5,
-      "memory": 128
-    },
     "api/ai-proxy.js": {
       "maxDuration": 30,
       "memory": 256
-    },
-    "api/ai-crm.js": {
-      "maxDuration": 60,
-      "memory": 256
-    },
-    "api/track-visit.js": {
-      "maxDuration": 5,
-      "memory": 128
     },
     "api/weekly-report.js": {
       "maxDuration": 60,
@@ -192,17 +180,9 @@
       "maxDuration": 10,
       "memory": 256
     },
-    "api/crm-form.js": {
-      "maxDuration": 15,
-      "memory": 256
-    },
     "api/funnel-ai.js": {
       "maxDuration": 30,
       "memory": 256
-    },
-    "api/telegram.js": {
-      "maxDuration": 30,
-      "memory": 512
     },
     "api/crm-reminders.js": {
       "maxDuration": 60,
@@ -224,8 +204,8 @@
       "maxDuration": 30,
       "memory": 256
     },
-    "api/whatsapp-send.js": {
-      "maxDuration": 15,
+    "api/utils.js": {
+      "maxDuration": 10,
       "memory": 128
     }
   },
