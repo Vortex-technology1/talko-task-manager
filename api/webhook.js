@@ -52,8 +52,12 @@ module.exports = async (req, res) => {
         return res.status(200).json(diag);
     }
 
+    // ── Sales Assistant routes (GET + POST) ──────────────────
+    if (req.query._sa === '1') {
+        return require('../lib/sales-assistant-router')(req, res);
+    }
+
     if (req.method !== 'POST') return res.status(405).end();
-    // TEMP DEBUG: показуємо initError
     if (initError) return res.status(200).json({ ok: false, initError: initError });
 
     // ── POST /api/webhook?action=send-message ────────────────

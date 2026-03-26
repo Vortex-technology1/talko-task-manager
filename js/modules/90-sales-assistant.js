@@ -28,7 +28,7 @@
       const user = firebase.auth().currentUser;
       const idToken = await user.getIdToken();
 
-      const res = await fetch('/api/sales-assistant', {
+      const res = await fetch('/api/webhook?_sa=1', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +71,7 @@
     try {
       const user = firebase.auth().currentUser;
       const idToken = await user.getIdToken();
-      const res = await fetch('/api/sales-assistant?action=token', {
+      const res = await fetch('/api/webhook?_sa=1&action=token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
         body: JSON.stringify({ companyId }),
@@ -146,7 +146,7 @@
     try {
       const user = firebase.auth().currentUser;
       const idToken = await user.getIdToken();
-      const res = await fetch('/api/sales-assistant?action=save', {
+      const res = await fetch('/api/webhook?_sa=1&action=save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
         body: JSON.stringify({
