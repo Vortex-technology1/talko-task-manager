@@ -2560,7 +2560,7 @@ async function renderSettingsTab() {
 
     const compDoc = await         window.companyRef().get();
     const compData = compDoc.data() || {};
-    const webhookUrl = `https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`;
+    const webhookUrl = `${location.origin}/api/webhook?companyId=${window.currentCompanyId}&channel=telegram&botId=${botId}`;
 
     const sectionStyle = 'background:white;border-radius:14px;padding:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);';
     const labelStyle = 'font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;';
@@ -2804,7 +2804,7 @@ window.bpReinstallWebhook = async function(botId) {
     }
 
     try {
-        const webhookUrl = `https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`;
+        const webhookUrl = `${location.origin}/api/webhook?companyId=${window.currentCompanyId}&channel=telegram&botId=${botId}`;
         const res = await _tgFetch(`https://api.telegram.org/bot${bot.token}/setWebhook`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2840,7 +2840,7 @@ window.bpReconnectBot = async function(botId) {
         const me = await meRes.json();
         if (!me.ok) throw new Error(me.description);
 
-        const webhookUrl = `https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`;
+        const webhookUrl = `${location.origin}/api/webhook?companyId=${window.currentCompanyId}&channel=telegram&botId=${botId}`;
         const whRes = await _tgFetch(`https://api.telegram.org/bot${token}/setWebhook`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
