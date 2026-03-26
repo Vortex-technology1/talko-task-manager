@@ -5852,4 +5852,6 @@ function _renderCRMHowto() {
     </div>`; // end c.innerHTML
 }
 
+// Expose analytics renderer globally for onclick handlers
+window._renderAnalytics = _renderAnalytics;
 })();
