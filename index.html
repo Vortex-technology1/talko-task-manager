@@ -4374,7 +4374,8 @@ document.addEventListener('mousedown', function(e) {
 
     // Зберігаємо профіль компанії (ніша + стратегічні поля)
     window.saveCompanyProfile = async function() {
-        if (!window.currentCompany) return;
+        console.log('[saveCompanyProfile] START — currentCompany:', window.currentCompany, '| db:', typeof firebase !== "undefined" ? "firebase ok" : "NO FIREBASE");
+        if (!window.currentCompany) { console.error('[saveCompanyProfile] EXIT: no currentCompany'); return; }
         const profile = {
             niche:          document.getElementById('settingNiche')?.value || '',
             companyGoal:    document.getElementById('settingGoal')?.value?.trim() || '',
