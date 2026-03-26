@@ -1949,7 +1949,7 @@ async function _chatGetBotToken(ct) {
     // Завантажуємо якщо немає в cache
     try {
         const doc = await firebase.firestore()
-            .doc(window.currentCompanyId + '/bots/' + botId).get();
+            .collection('companies').doc(window.currentCompanyId).collection('bots').doc(botId).get();
         return doc.data()?.token || null;
     } catch { return null; }
 }
@@ -2777,7 +2777,7 @@ window.bpCheckBotStatus = async function(botId) {
         // Оновлюємо статус в Firestore якщо змінився
         if (me.ok && !bot.connected) {
             await firebase.firestore()
-                .doc(window.currentCompanyId + '/bots/' + botId)
+                .collection('companies').doc(window.currentCompanyId).collection('bots').doc(botId)
                 .update({ connected: true, username: me.result.username });
         }
 
@@ -2814,7 +2814,7 @@ window.bpReinstallWebhook = async function(botId) {
 
         if (data.ok) {
             await firebase.firestore()
-                .doc(window.currentCompanyId + '/bots/' + botId)
+                .collection('companies').doc(window.currentCompanyId).collection('bots').doc(botId)
                 .update({ connected: true, webhookUrl, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
             if (result) result.innerHTML = `<div style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Webhook встановлено</div>`;
             if (typeof showToast === 'function') showToast(window.t('botsWebhookSet'), 'success');
@@ -2849,7 +2849,7 @@ window.bpReconnectBot = async function(botId) {
         const wh = await whRes.json();
 
         await firebase.firestore()
-            .doc(window.currentCompanyId + '/bots/' + botId)
+            .collection('companies').doc(window.currentCompanyId).collection('bots').doc(botId)
             .update({
                 token, username: me.result.username,
                 connected: wh.ok, webhookUrl,
