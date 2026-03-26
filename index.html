@@ -4398,13 +4398,16 @@ document.addEventListener('mousedown', function(e) {
         if (!window.currentCompany) return;
         try {
             const snap = await firebase.firestore().collection('companies').doc(window.currentCompany).get();
+            console.log('[loadCompanyProfile] exists:', snap.exists, 'niche:', snap.data()?.niche);
             if (!snap.exists) return;
             const d = snap.data();
             // Оновлюємо currentCompanyData щоб CRM бачив нішу
             window.currentCompanyData = window.currentCompanyData || {};
             if (d.niche) window.currentCompanyData.niche = d.niche;
             const el = (id) => document.getElementById(id);
+            console.log('[loadCompanyProfile] settingNiche el:', el('settingNiche'), 'setting to:', d.niche);
             if (el('settingNiche'))         el('settingNiche').value         = d.niche          || '';
+            console.log('[loadCompanyProfile] settingNiche value after set:', el('settingNiche')?.value);
             if (el('settingGoal'))          el('settingGoal').value          = d.companyGoal     || '';
             if (el('settingConcept'))       el('settingConcept').value       = d.companyConcept  || '';
             if (el('settingCKP'))           el('settingCKP').value           = d.companyCKP      || '';
