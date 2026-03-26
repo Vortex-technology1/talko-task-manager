@@ -136,8 +136,13 @@
                         // Merge всі поля з Firestore в currentCompanyData (включно з niche)
                         window.currentCompanyData = { id: window.currentCompanyId, ...cd, ...(window.currentCompanyData || {}) };
                         // Завжди оновлюємо niche та name з Firestore
-                        if (cd.niche) window.currentCompanyData.niche = cd.niche;
-                        if (cd.name)  window.currentCompanyData.name  = cd.name;
+                        if (cd.niche)   window.currentCompanyData.niche   = cd.niche;
+                        if (cd.name)    window.currentCompanyData.name    = cd.name;
+                        if (cd.modules) window.currentCompanyData.modules = cd.modules;
+                        // Заповнюємо UI налаштувань якщо вкладка вже відкрита
+                        requestAnimationFrame(() => {
+                            if (typeof window.loadCompanyProfile === 'function') window.loadCompanyProfile();
+                        });
                     }
                 } catch(e) { console.error('[07-data-loading]', e.message); }
 
