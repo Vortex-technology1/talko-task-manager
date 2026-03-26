@@ -854,6 +854,34 @@ async function obSave() {
 }
 
 // ─── HELPERS ───────────────────────────────────────────────
+
+// Overlay i18n translations onto a step object
+function getLocalizedStep(step) {
+    const lang = (typeof currentLang !== 'undefined' ? currentLang : null)
+               || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
+    if (lang === 'ua') return step; // UA is base language — no overlay needed
+    const i18n = window.OB_I18N && window.OB_I18N[lang] && window.OB_I18N[lang][step.id];
+    if (!i18n) return step; // no translation — show UA fallback
+    const localized = Object.assign({}, step);
+    if (i18n.title)       localized.title       = i18n.title;
+    if (i18n.subtitle)    localized.subtitle     = i18n.subtitle;
+    if (i18n.est)         localized.est          = i18n.est;
+    if (i18n.description) localized.description  = i18n.description;
+    if (i18n.tipText)     localized.tip          = i18n.tipText;
+    if (i18n.actionLabel) localized.action       = Object.assign({}, step.action || {}, { label: i18n.actionLabel });
+    if (i18n.tasks && i18n.tasks.length) {
+        localized.tasks = step.tasks.map(function(t, idx) {
+            const tr = i18n.tasks[idx];
+            if (!tr) return t;
+            return Object.assign({}, t, {
+                text:   tr.text   || t.text,
+                detail: tr.detail || t.detail,
+            });
+        });
+    }
+    return localized;
+}
+
 function stepDoneCount(step) {
     const p = ob.progress[step.id];
     if (!p) return 0;
@@ -1068,7 +1096,7 @@ function renderOnboarding() {
         </div>`;
       }).join('')}
     </div>
-    <div style="background:${step.color}08;border:1px solid ${step.color}25;border-radius:9px;padding:.7rem .9rem;margin-bottom:1rem;font-size:.81rem;color:#374151;line-height:1.6;">${step._tipText ? OB_STEPS[ob.activeStep].tip.replace(/<\/svg>\s*.+/, '</svg> '+step._tipText) : step.tip}</div>
+    <div style="background:${step.color}08;border:1px solid ${step.color}25;border-radius:9px;padding:.7rem .9rem;margin-bottom:1rem;font-size:.81rem;color:#374151;line-height:1.6;">${step.tip || ""}</div>
     <!-- nav buttons -->
     <div style="display:flex;gap:.5rem;justify-content:space-between;padding-bottom:.5rem;">
       <button onclick="obPrevStep()" ${ob.activeStep===0?'disabled':''} style="flex:1;padding:.6rem;background:white;color:#374151;border:1.5px solid #e8eaed;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600;opacity:${ob.activeStep===0?'0.4':'1'};">← ${(typeof getOBUI==='function'&&getOBUI('prev'))||'Попередній'}</button>
@@ -1167,7 +1195,7 @@ function renderOnboarding() {
           </div>`;
         }).join('')}
       </div>
-      <div style="background:${step.color}08;border:1px solid ${step.color}25;border-radius:9px;padding:.75rem 1rem;margin-bottom:1.25rem;font-size:.81rem;color:#374151;line-height:1.6;">${step._tipText ? OB_STEPS[ob.activeStep].tip.replace(/<\/svg>\s*.+/, '<\/svg> '+step._tipText) : step.tip}</div>
+      <div style="background:${step.color}08;border:1px solid ${step.color}25;border-radius:9px;padding:.75rem 1rem;margin-bottom:1.25rem;font-size:.81rem;color:#374151;line-height:1.6;">${step.tip || ""}</div>
       <div style="display:flex;gap:.65rem;justify-content:space-between;">
         <button onclick="obPrevStep()" ${ob.activeStep===0?'disabled':''} style="padding:.55rem 1.1rem;background:white;color:#374151;border:1.5px solid #e8eaed;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:600;opacity:${ob.activeStep===0?'0.4':'1'};">← ${(typeof getOBUI==='function'&&getOBUI('prev'))||'Попередній'}</button>
         ${stepComplete(step)&&ob.activeStep<OB_STEPS.length-1
@@ -1194,7 +1222,7 @@ window.obToggleTask = async function(stepId, taskId) {
     if (!ob.progress[stepId].tasks) ob.progress[stepId].tasks = {};
     ob.progress[stepId].tasks[taskId] = !ob.progress[stepId].tasks[taskId];
     const step = OB_STEPS.find(s => s.id===stepId);
-    if (step && stepComplete(step) && window.showToast) showToast('✓ Крок "'+step.title+'" виконано!','success');
+    if (step && stepComplete(step) && window.showToast) { const _doneMsg = (getOBUI('complete')||'Виконано') + ': ' + step.title; showToast('✓ ' + _doneMsg, 'success'); }
     renderOnboarding();
     await obSave();
 };
