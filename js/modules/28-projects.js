@@ -547,12 +547,12 @@
                         <div style="font-size:1.5rem;font-weight:700;color:var(--danger);">${s.overdue}</div>
                     </div>` : ''}
                     ${project.plannedRevenue ? `<div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
-                        <div style="font-size:0.75rem;color:var(--gray);">Бюджет</div>
+                        <div style="font-size:0.75rem;color:var(--gray);">${window.t('finBudgetLbl') || 'Бюджет'}</div>
                         <div style="font-size:1.1rem;font-weight:700;">${Number(project.plannedRevenue).toLocaleString()} ₴</div>
-                        ${project.plannedMaterialCost || project.plannedLaborCost ? `<div style="font-size:0.68rem;color:#9ca3af;">Мат: ${Number(project.plannedMaterialCost || 0).toLocaleString()} | Робота: ${Number(project.plannedLaborCost || 0).toLocaleString()}</div>` : ''}
+                        ${project.plannedMaterialCost || project.plannedLaborCost ? `<div style="font-size:0.68rem;color:#9ca3af;">${window.t('budgetMatShort') || 'Мат'}: ${Number(project.plannedMaterialCost || 0).toLocaleString()} | ${window.t('budgetLaborShort') || 'Робота'}: ${Number(project.plannedLaborCost || 0).toLocaleString()}</div>` : ''}
                     </div>` : ''}
                     ${project.clientName ? `<div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
-                        <div style="font-size:0.75rem;color:var(--gray);">Клієнт</div>
+                        <div style="font-size:0.75rem;color:var(--gray);">${window.t('clientWord') || 'Клієнт'}</div>
                         <div style="font-size:0.95rem;font-weight:600;">${esc(project.clientName)}</div>
                     </div>` : ''}
                 </div>
@@ -591,15 +591,15 @@
                     </button>
                     <button class="calendar-view-btn" onclick="switchProjectView('standards', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                        Стандарти
+                        ${window.t('standards') || 'Стандарти'}
                     </button>
                     <button class="calendar-view-btn" onclick="switchProjectView('finance', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        Фінанси
+                        ${window.t('finFinances') || 'Фінанси'}
                     </button>
                     <button class="calendar-view-btn" onclick="switchProjectView('estimate', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-                        Кошторис
+                        ${window.t('estimates') || 'Кошторис'}
                     </button>
                 </div>
                 

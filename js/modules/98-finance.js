@@ -4570,9 +4570,9 @@ window._renderProjectFinance = async function(projectId, el, opts) {
         <!-- Кнопки додати -->
         <div style="display:flex;gap:8px;margin-bottom:16px;">
           <button onclick="window._addEntityTx('${entityId}','${filterField}','income')"
-            style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Дохід</button>
+            style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">${window.t('finAddIncome') || '+ ' + window.t('finTransactionIncome')}</button>
           <button onclick="window._addEntityTx('${entityId}','${filterField}','expense')"
-            style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Витрата</button>
+            style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">${window.t('finAddExpense') || '+ ' + window.t('finTransactionExpense')}</button>
         </div>
 
         <!-- Список транзакцій -->
