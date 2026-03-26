@@ -4288,12 +4288,17 @@ document.addEventListener('mousedown', function(e) {
         }
         if (tab === 'company') {
             if (typeof loadCompanySettings === 'function') loadCompanySettings();
+            // Pre-fill niche from already-loaded currentCompanyData (instant, no fetch needed)
+            const _nicheEl = document.getElementById('settingNiche');
+            if (_nicheEl && window.currentCompanyData?.niche) {
+                _nicheEl.value = window.currentCompanyData.niche;
+            }
+            // Also fetch fresh data from Firestore
             if (typeof loadCompanyProfile === 'function') {
                 if (window.currentCompany) {
                     loadCompanyProfile();
                 } else {
-                    // Wait for auth to set currentCompany
-                    setTimeout(() => { if (typeof loadCompanyProfile === 'function') loadCompanyProfile(); }, 1000);
+                    setTimeout(() => { if (typeof loadCompanyProfile === 'function') loadCompanyProfile(); }, 800);
                 }
             }
         }
