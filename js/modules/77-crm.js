@@ -298,6 +298,9 @@ function _filteredDeals() {
     if (f.stage)    deals = deals.filter(d => d.stage === f.stage);
     if (f.tag)      deals = deals.filter(d => (d.tags||[]).includes(f.tag));
     if (f.source)   deals = deals.filter(d => d.source === f.source);
+    if (f.country)  deals = deals.filter(d => d.country === f.country);
+    if (f.city)     deals = deals.filter(d => (d.city||'').toLowerCase().includes(f.city.toLowerCase()));
+    if (f.niche)    deals = deals.filter(d => d.clientNiche === f.niche || d.niche === f.niche);
     if (f.amountMin) deals = deals.filter(d => (d.amount||0) >= parseFloat(f.amountMin));
     if (f.amountMax) deals = deals.filter(d => (d.amount||0) <= parseFloat(f.amountMax));
     return deals;
@@ -321,12 +324,18 @@ window.crmApplyFilters = function(fromKanbanBar, immediate) {
         const tagEl      = document.getElementById('crmKanbanFilterTag');
         const sourceEl   = document.getElementById('crmKanbanFilterSource');
         const minEl      = document.getElementById('crmKanbanFilterAmountMin');
-        const maxEl      = document.getElementById('crmKanbanFilterAmountMax');
+        const maxEl       = document.getElementById('crmKanbanFilterAmountMax');
+        const countryEl   = document.getElementById('crmKanbanFilterCountry');
+        const nicheEl     = document.getElementById('crmKanbanFilterNiche');
+        const cityEl      = document.getElementById('crmKanbanFilterCity');
         if (assigneeEl) crm.filters.assignee  = assigneeEl.value;
         if (tagEl)      crm.filters.tag       = tagEl.value;
         if (sourceEl)   crm.filters.source    = sourceEl.value;
         if (minEl)      crm.filters.amountMin = minEl.value;
         if (maxEl)      crm.filters.amountMax = maxEl.value;
+        if (countryEl)  crm.filters.country   = countryEl.value;
+        if (nicheEl)    crm.filters.niche     = nicheEl.value;
+        if (cityEl)     crm.filters.city      = cityEl.value;
         if (crm.viewMode === 'kanban') _renderKanban();
         else _renderListView();
     };
@@ -560,7 +569,9 @@ function _kanbanFilterBar() {
     const userList  = typeof users !== 'undefined' ? users : [];
     const sources   = [...new Set(crm.deals.map(d => d.source).filter(Boolean))];
     const tags      = [...new Set(crm.deals.flatMap(d => d.tags || []))].sort();
-    const hasFilter = f.assignee || f.tag || f.source || f.amountMin || f.amountMax || f.search;
+    const countries = [...new Set(crm.deals.map(d => d.country).filter(Boolean))].sort();
+    const niches    = [...new Set(crm.deals.map(d => d.clientNiche || d.niche).filter(Boolean))].sort();
+    const hasFilter = f.assignee || f.tag || f.source || f.amountMin || f.amountMax || f.search || f.country || f.city || f.niche;
     const sel = 'padding:0.25rem 0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;';
 
     const assigneeOpts = userList.map(u =>
@@ -585,6 +596,17 @@ function _kanbanFilterBar() {
             <option value="">${window.t('allSources')}</option>
             ${sourceOpts}
         </select>
+        ${countries.length > 1 ? `<select id="crmKanbanFilterCountry" onchange="crmApplyFilters(true)" style="${sel}">
+            <option value="">🌍 Всі країни</option>
+            ${countries.map(c => `<option value="${_esc(c)}" ${f.country===c?'selected':''}>${_esc(c)}</option>`).join('')}
+        </select>` : ''}
+        ${niches.length > 1 ? `<select id="crmKanbanFilterNiche" onchange="crmApplyFilters(true)" style="${sel}">
+            <option value="">🏢 Всі ніші</option>
+            ${niches.map(n => `<option value="${_esc(n)}" ${f.niche===n?'selected':''}>${_esc(n)}</option>`).join('')}
+        </select>` : ''}
+        <input id="crmKanbanFilterCity" type="text" placeholder="🏙️ Місто..." value="${f.city||''}"
+            oninput="crmApplyFilters()"
+            style="width:90px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
         <select id="crmKanbanFilterTag" onchange="crmApplyFilters(true)" style="${sel}">
             <option value="">${window.t('allTags')}</option>
             ${tagOpts}
