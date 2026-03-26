@@ -4328,8 +4328,8 @@ document.addEventListener('mousedown', function(e) {
 
     // ---- COMPANY SETTINGS ----
     function loadCompanySettings() {
-        if (!window.currentCompany || !window.db) return;
-        window.db.collection('companies').doc(window.currentCompany).get().then(function(doc) {
+        if (!window.currentCompany) return;
+        firebase.firestore().collection('companies').doc(window.currentCompany).get().then(function(doc) {
             if (!doc.exists) return;
             var data = doc.data();
             var nameEl = document.getElementById('settingCompanyName');
@@ -4342,14 +4342,14 @@ document.addEventListener('mousedown', function(e) {
     }
 
     window.saveCompanySetting = async function(key) {
-        if (!window.currentCompany || !window.db) return;
+        if (!window.currentCompany) return;
         var val;
         if (key === 'name') val = document.getElementById('settingCompanyName')?.value?.trim();
         else if (key === 'timezone') val = document.getElementById('settingTimezone')?.value;
         else if (key === 'weeklyReport') val = document.getElementById('settingWeeklyReport')?.checked;
         if (val === undefined || val === '') { if (typeof showToast === 'function') showToast('Введіть значення', 'error'); return; }
         try {
-            await window.db.collection('companies').doc(window.currentCompany).set({ [key]: val }, { merge: true });
+            await firebase.firestore().collection('companies').doc(window.currentCompany).set({ [key]: val }, { merge: true });
             if (typeof showToast === 'function') showToast('Збережено', 'success');
             if (key === 'name') {
                 var badge = document.getElementById('companyBadge');
@@ -4362,7 +4362,7 @@ document.addEventListener('mousedown', function(e) {
 
     // Зберігаємо профіль компанії (ніша + стратегічні поля)
     window.saveCompanyProfile = async function() {
-        if (!window.currentCompany || !window.db) return;
+        if (!window.currentCompany) return;
         const profile = {
             niche:          document.getElementById('settingNiche')?.value || '',
             companyGoal:    document.getElementById('settingGoal')?.value?.trim() || '',
@@ -4371,7 +4371,7 @@ document.addEventListener('mousedown', function(e) {
             companyIdeal:   document.getElementById('settingIdealPicture')?.value?.trim() || '',
         };
         try {
-            await window.db.collection('companies').doc(window.currentCompany).set(profile, { merge: true });
+            await firebase.firestore().collection('companies').doc(window.currentCompany).set(profile, { merge: true });
             // Оновлюємо currentCompanyData щоб CRM одразу бачив нову нішу
             window.currentCompanyData = window.currentCompanyData || {};
             Object.assign(window.currentCompanyData, profile);
@@ -4383,9 +4383,9 @@ document.addEventListener('mousedown', function(e) {
 
     // Завантажуємо профіль при відкритті вкладки Компанія
     window.loadCompanyProfile = async function() {
-        if (!window.currentCompany || !window.db) return;
+        if (!window.currentCompany) return;
         try {
-            const snap = await window.db.collection('companies').doc(window.currentCompany).get();
+            const snap = await firebase.firestore().collection('companies').doc(window.currentCompany).get();
             if (!snap.exists) return;
             const d = snap.data();
             // Оновлюємо currentCompanyData щоб CRM бачив нішу
@@ -4413,12 +4413,12 @@ document.addEventListener('mousedown', function(e) {
 
     // Modules: save
     window._saveModules = async function() {
-        if (!window.currentCompany || !window.db) return;
+        if (!window.currentCompany) return;
         const modKeys = ['scheduling','clientProfile','loyalty','subscriptions','reviews','winback','notifications','estimates','warehouse','booking','sales'];
         const modules = {};
         modKeys.forEach(k => { const cb = document.getElementById('mod-' + k); if (cb) modules[k] = cb.checked; });
         try {
-            await window.db.collection('companies').doc(window.currentCompany).set({ modules }, { merge: true });
+            await firebase.firestore().collection('companies').doc(window.currentCompany).set({ modules }, { merge: true });
             window.currentCompanyData = window.currentCompanyData || {};
             window.currentCompanyData.modules = modules;
             if (typeof showToast === 'function') showToast('Модулі збережено', 'success');
