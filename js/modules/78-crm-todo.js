@@ -327,10 +327,10 @@ function _renderRow(d, i) {
       <!-- Стадія — клікабельний дропдаун -->
       <select onclick="event.stopPropagation()"
         onchange="event.stopPropagation();_crmTodoChangeStage('${d.id}',this.value,this)"
-        style="font-size:0.72rem;font-weight:600;color:${stageClr};
-          background:${stageClr}18;border:1.5px solid ${stageClr}55;
+        style="font-size:0.72rem;font-weight:700;color:#374151;
+          background:${stageClr}22;border:1.5px solid ${stageClr}88;
           border-radius:6px;padding:3px 8px;cursor:pointer;outline:none;
-          white-space:nowrap;flex-shrink:0;min-width:90px;max-width:140px;
+          white-space:nowrap;flex-shrink:0;min-width:90px;max-width:150px;
           -webkit-appearance:auto;appearance:auto;">
         ${stages.filter(s=>s.id!=='lost'&&s.id!=='won').map(s=>`<option value="${s.id}"${s.id===d.stage?' selected':''}>${_esc(s.label)}</option>`).join('')}
         ${stages.find(s=>s.id==='won')?`<option value="won"${d.stage==='won'?' selected':''}>✅ ${_esc(stages.find(s=>s.id==='won').label)}</option>`:''}
