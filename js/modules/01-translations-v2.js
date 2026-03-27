@@ -20755,6 +20755,16 @@
                 updatePageTranslations();
             }
 
+            // Sync language to biz-structure iframe
+            (function() {
+                var bizIframe = document.getElementById('bizIframe');
+                if (bizIframe && bizIframe.contentWindow) {
+                    var mappedLang = lang === 'ua' ? 'uk' : lang;
+                    localStorage.setItem('biz_language', mappedLang);
+                    bizIframe.contentWindow.postMessage({ type: 'SET_LANGUAGE', language: mappedLang }, '*');
+                }
+            })();
+
             // FIX: на auth сторінці — НЕ робимо reload (Firebase не встиг відновити сесію)
             // FIX: auth сторінка = currentUser відсутній АБО authScreen видимий
             const _authEl = document.getElementById('authPage');

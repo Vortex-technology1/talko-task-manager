@@ -4713,13 +4713,13 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
-        <div class="loading-text" id="loadingText">Завантаження...</div>
+        <div class="loading-text" id="loadingText" data-text="loading.text">Завантаження...</div>
     </div>
 
     <!-- Connection Status Indicator -->
     <div class="connection-status" id="connectionStatus">
         <div class="connection-dot"></div>
-        <span id="connectionText">Онлайн</span>
+        <span id="connectionText" data-text="connection.online">Онлайн</span>
     </div>
 
     <!-- Language Selector -->
@@ -4773,33 +4773,33 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     <div class="app-container" id="appContainer" style="display: none;">
         <div class="toolbar" role="toolbar">
             <div class="toolbar-left">
-                <button class="tool-btn add-btn" id="addFunctionBtn" type="button" title="Додати нову функцію">
-                    <span>+ ДОДАТИ</span>
+                <button class="tool-btn add-btn" id="addFunctionBtn" type="button" title="Додати нову функцію" data-title="toolbar.add_function">
+                    <span data-text="toolbar.add">+ ДОДАТИ</span>
                 </button>
                 <button class="tool-btn active tool-select-btn" id="selectTool" type="button" aria-pressed="true">
-                    <span>ВИБІР</span>
+                    <span data-text="toolbar.select">ВИБІР</span>
                     <div class="tool-tooltip">
-                        <div class="tool-tooltip-title">Інструмент вибору</div>
-                        <div class="tool-tooltip-row"><kbd>Клік</kbd> Відкрити картку</div>
-                        <div class="tool-tooltip-row"><kbd>Тягни</kbd> Перемістити картку</div>
-                        <div class="tool-tooltip-row"><kbd>Рамка</kbd> Виділити кілька карток</div>
-                        <div class="tool-tooltip-row"><kbd>Shift</kbd>+<kbd>Клік</kbd> Додати до виділення</div>
-                        <div class="tool-tooltip-hint">Виділені картки перетягуються разом</div>
+                        <div class="tool-tooltip-title" data-text="toolbar.select_tooltip_title">Інструмент вибору</div>
+                        <div class="tool-tooltip-row"><kbd>Клік</kbd> <span data-text="toolbar.select_click">Відкрити картку</span></div>
+                        <div class="tool-tooltip-row"><kbd>Тягни</kbd> <span data-text="toolbar.select_drag">Перемістити картку</span></div>
+                        <div class="tool-tooltip-row"><kbd>Рамка</kbd> <span data-text="toolbar.select_frame">Виділити кілька карток</span></div>
+                        <div class="tool-tooltip-row"><kbd>Shift</kbd>+<kbd>Клік</kbd> <span data-text="toolbar.select_shift">Додати до виділення</span></div>
+                        <div class="tool-tooltip-hint" data-text="toolbar.select_hint">Виділені картки перетягуються разом</div>
                     </div>
                 </button>
-                <button class="tool-btn" id="handTool" type="button" title="Переміщення полотна" aria-pressed="false">
-                    <span>РУКА</span>
+                <button class="tool-btn" id="handTool" type="button" title="Переміщення полотна" data-title="toolbar.move" aria-pressed="false">
+                    <span data-text="toolbar.hand">РУКА</span>
                 </button>
-                <button class="tool-btn" id="connectTool" type="button" title="З'єднати картки стрілкою" aria-pressed="false">
-                    <span>З'ЄДНАТИ</span>
+                <button class="tool-btn" id="connectTool" type="button" title="З'єднати картки стрілкою" data-title="toolbar.connect_title" aria-pressed="false">
+                    <span data-text="toolbar.connect">З'ЄДНАТИ</span>
                 </button>
                 <div class="toolbar-divider"></div>
-                <button class="tool-btn undo-redo-btn disabled" id="undoBtn" type="button" title="Відмінити (Ctrl+Z)" disabled>
+                <button class="tool-btn undo-redo-btn disabled" id="undoBtn" type="button" title="Відмінити (Ctrl+Z)" data-title="toolbar.undo_title" disabled>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 2.5-6.5L3 9"/>
                     </svg>
                 </button>
-                <button class="tool-btn undo-redo-btn disabled" id="redoBtn" type="button" title="Повторити (Ctrl+Y)" disabled>
+                <button class="tool-btn undo-redo-btn disabled" id="redoBtn" type="button" title="Повторити (Ctrl+Y)" data-title="toolbar.redo_title" disabled>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 7v6h-6"/><path d="M21 13a9 9 0 1 1-2.5-6.5L21 9"/>
                     </svg>
@@ -4934,15 +4934,15 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                         <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" rel="noopener noreferrer" class="support-menu-item" role="menuitem">
                             <div class="support-icon ai"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/><circle cx="8" cy="14" r="2"/><circle cx="16" cy="14" r="2"/></svg></div>
                             <div class="support-item-content">
-                                <div class="support-item-title">AI Консультант</div>
-                                <div class="support-item-desc">Допомога з налаштуваннями</div>
+                                <div class="support-item-title" data-text="support.ai_title">AI Консультант</div>
+                                <div class="support-item-desc" data-text="support.ai_desc">Допомога з налаштуваннями</div>
                             </div>
                         </a>
                         <a href="https://t.me/AlexEduPro_bot?start=68f4ac956d0d3141970a83e8" target="_blank" rel="noopener noreferrer" class="support-menu-item" role="menuitem">
                             <div class="support-icon telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div>
                             <div class="support-item-content">
-                                <div class="support-item-title">Технічна підтримка</div>
-                                <div class="support-item-desc">Telegram бот</div>
+                                <div class="support-item-title" data-text="support.tech_title">Технічна підтримка</div>
+                                <div class="support-item-desc" data-text="support.tech_desc">Telegram бот</div>
                             </div>
                         </a>
                         <div class="support-menu-divider"></div>
@@ -4958,63 +4958,63 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
 
                 <!-- Tools Menu - об'єднує експорт, копіювання і т.д. -->
                 <div class="tools-dropdown">
-                    <button class="tool-btn" id="toolsMenuBtn" type="button" title="Інструменти" aria-haspopup="true" aria-expanded="false" onclick="event.stopPropagation(); var m=document.getElementById('toolsMenu'); if(!m) return; if(m.style.display==='block'){m.style.display='none';}else{var r=this.getBoundingClientRect(); m.style.top=(r.bottom+4)+'px'; m.style.right=(window.innerWidth-r.right)+'px'; m.style.display='block';}">
+                    <button class="tool-btn" id="toolsMenuBtn" type="button" title="Інструменти" data-title="toolbar.tools_title" aria-haspopup="true" aria-expanded="false" onclick="event.stopPropagation(); var m=document.getElementById('toolsMenu'); if(!m) return; if(m.style.display==='block'){m.style.display='none';}else{var r=this.getBoundingClientRect(); m.style.top=(r.bottom+4)+'px'; m.style.right=(window.innerWidth-r.right)+'px'; m.style.display='block';}">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
                         </svg>
-                        <span>МЕНЮ</span>
+                        <span data-text="toolbar.menu">МЕНЮ</span>
                     </button>
                     <div class="tools-menu" id="toolsMenu" role="menu">
                         <button class="tools-menu-item" id="showAllBtn" type="button">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
                             </svg>
-                            <span>Показати все</span>
+                            <span data-text="menu.show_all">Показати все</span>
                         </button>
                         <button class="tools-menu-item" id="statsBtn" type="button">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
                             </svg>
-                            <span>Статистика</span>
+                            <span data-text="menu.statistics">Статистика</span>
                         </button>
                         <div class="tools-menu-divider"></div>
                         <button class="tools-menu-item" id="copyBtn" type="button">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
-                            <span>Копіювати структуру</span>
+                            <span data-text="menu.copy_structure">Копіювати структуру</span>
                         </button>
                         <button class="tools-menu-item" id="pasteBtn" type="button">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
                             </svg>
-                            <span>Вставити структуру</span>
+                            <span data-text="menu.paste_structure">Вставити структуру</span>
                         </button>
                         <div class="tools-menu-divider"></div>
                         <button class="tools-menu-item" id="exportJpegBtn2" type="button">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
                             </svg>
-                            <span>Експорт JPEG</span>
+                            <span data-text="menu.export_jpeg">Експорт JPEG</span>
                         </button>
                         <button class="tools-menu-item" id="exportPdfBtn2" type="button">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
                             </svg>
-                            <span>Експорт PDF</span>
+                            <span data-text="menu.export_pdf">Експорт PDF</span>
                         </button>
                         <button class="tools-menu-item" id="exportExcelBtn2" type="button">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h2M14 13h2M8 17h2M14 17h2"/>
                             </svg>
-                            <span>Експорт Excel</span>
+                            <span data-text="menu.export_excel">Експорт Excel</span>
                         </button>
                         <div class="tools-menu-divider"></div>
                         <button class="tools-menu-item" id="themeToggleBtn2" type="button">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
                             </svg>
-                            <span id="themeToggleText">Темна тема</span>
+                            <span id="themeToggleText" data-text="menu.dark_theme">Темна тема</span>
                         </button>
                     </div>
                 </div>
@@ -5024,7 +5024,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                         <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
                         <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
                     </svg>
-                    <span>ГРУПУВАТИ</span>
+                    <span data-text="toolbar.group">ГРУПУВАТИ</span>
                     <span class="selected-count" id="selectedCount" style="display:none;">0</span>
                     <div class="group-tooltip">
                         <div style="margin-bottom:6px;">🔹 Як групувати картки:</div>
@@ -5045,7 +5045,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                                 <circle cx="16" cy="14" r="2"/>
                             </svg>
                         </span>
-                        <span>AI СТРУКТУРА</span>
+                        <span data-text="toolbar.ai_structure">AI СТРУКТУРА</span>
                 </a>
                 <div class="save-indicator-container">
                     <span class="save-indicator saved" id="saveIndicator">
@@ -5103,7 +5103,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9" stroke-dasharray="4 2"/>
                     </svg>
-                    <span class="mobile-nav-label">Екосистема</span>
+                    <span class="mobile-nav-label" data-text="mobile.ecosystem">Екосистема</span>
                 </button>
                 <button class="mobile-nav-btn nav-ai" id="mobileAiBtn" type="button">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -5121,13 +5121,13 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                     </svg>
-                    <span class="mobile-nav-label">Інструменти</span>
+                    <span class="mobile-nav-label" data-text="mobile.tools">Інструменти</span>
                 </button>
                 <button class="mobile-nav-btn nav-support" id="mobileSupportBtn" type="button">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
                     </svg>
-                    <span class="mobile-nav-label">Підтримка</span>
+                    <span class="mobile-nav-label" data-text="mobile.support">Підтримка</span>
                 </button>
             </div>
         </nav>
@@ -5312,7 +5312,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                     <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>F</kbd><span data-text="shortcuts.search">Пошук</span></div>
                     <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>+</kbd><span data-text="shortcuts.zoom_in">Збільшити</span></div>
                     <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>-</kbd><span data-text="shortcuts.zoom_out">Зменшити</span></div>
-                    <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>0</kbd><span data-text="shortcuts.fit">Показати все</span></div>
+                    <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>0</kbd><span data-text="shortcuts.fit" data-text="menu.show_all">Показати все</span></div>
                 </div>
                 <div class="shortcuts-section">
                     <h4 data-text="shortcuts.general">Загальне</h4>
@@ -5358,7 +5358,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             <div class="group-modal-body">
                 <div class="form-group">
                     <label class="form-label" for="groupName" data-text="group.name">Назва групи *</label>
-                    <input type="text" class="form-input" id="groupName" placeholder="Наприклад: Відділ продажів" maxlength="50">
+                    <input type="text" class="form-input" id="groupName" placeholder="Наприклад: Відділ продажів" data-placeholder="group.name_placeholder" maxlength="50">
                 </div>
                 <div class="form-group">
                     <label class="form-label" data-text="group.color">Колір групи</label>
@@ -5741,6 +5741,41 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             'lang.en': 'ENG',
             'lang.bg': 'БГ',
             'loading.data': 'Завантаження даних...',
+            'loading.text': 'Завантаження...',
+            'connection.online': 'Онлайн',
+            'toolbar.menu': 'МЕНЮ',
+            'toolbar.tools_title': 'Інструменти',
+            'toolbar.connect_title': "З'єднати картки стрілкою",
+            'toolbar.undo_title': 'Відмінити (Ctrl+Z)',
+            'toolbar.redo_title': 'Повторити (Ctrl+Y)',
+            'toolbar.group': 'ГРУПУВАТИ',
+            'toolbar.ai_structure': 'AI СТРУКТУРА',
+            'toolbar.select_tooltip_title': 'Інструмент вибору',
+            'toolbar.select_click': 'Відкрити картку',
+            'toolbar.select_drag': 'Перемістити картку',
+            'toolbar.select_frame': 'Виділити кілька карток',
+            'toolbar.select_shift': 'Додати до виділення',
+            'toolbar.select_hint': 'Виділені картки перетягуються разом',
+            'menu.show_all': 'Показати все',
+            'menu.statistics': 'Статистика',
+            'menu.copy_structure': 'Копіювати структуру',
+            'menu.paste_structure': 'Вставити структуру',
+            'menu.export_jpeg': 'Експорт JPEG',
+            'menu.export_pdf': 'Експорт PDF',
+            'menu.export_excel': 'Експорт Excel',
+            'menu.dark_theme': 'Темна тема',
+            'menu.light_theme': 'Світла тема',
+            'support.ai_title': 'AI Консультант',
+            'support.ai_desc': 'Допомога з налаштуваннями',
+            'support.tech_title': 'Технічна підтримка',
+            'support.tech_desc': 'Telegram бот',
+            'mobile.ecosystem': 'Екосистема',
+            'mobile.tools': 'Інструменти',
+            'mobile.support': 'Підтримка',
+            'stats.modal_title': 'Статистика структури',
+            'group.modal_title': 'Створити групу',
+            'group.name_placeholder': 'Наприклад: Відділ продажів',
+            'delete.warning': "Це також видалить всі зв'язки з цією функцією. Дію неможливо скасувати.",
             'loading.syncing': 'Синхронізація...'
         },
         
@@ -5967,6 +6002,47 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             'export.success_pdf': 'PDF сохранен!',
             'export.error': 'Ошибка экспорта',
             'export.links_section': 'Ссылки на описания',
+            'toolbar.add_function': 'Добавить новую функцию',
+            'toolbar.move': 'Перемещение',
+            'modal.function_name_placeholder': 'Например: Маркетинг',
+            'modal.kpi_placeholder': 'Например: Подписанные договоры',
+            'modal.responsible_placeholder': 'Фамилия Имя',
+            'modal.stats_hint': 'Перетаскивайте поля для изменения порядка',
+            'loading.text': 'Загрузка...',
+            'connection.online': 'Онлайн',
+            'toolbar.menu': 'МЕНЮ',
+            'toolbar.tools_title': 'Инструменты',
+            'toolbar.connect_title': 'Связать карточки стрелкой',
+            'toolbar.undo_title': 'Отменить (Ctrl+Z)',
+            'toolbar.redo_title': 'Повторить (Ctrl+Y)',
+            'toolbar.group': 'ГРУППИРОВАТЬ',
+            'toolbar.ai_structure': 'AI СТРУКТУРА',
+            'toolbar.select_tooltip_title': 'Инструмент выбора',
+            'toolbar.select_click': 'Открыть карточку',
+            'toolbar.select_drag': 'Переместить карточку',
+            'toolbar.select_frame': 'Выделить несколько карточек',
+            'toolbar.select_shift': 'Добавить к выделению',
+            'toolbar.select_hint': 'Выделенные карточки перетаскиваются вместе',
+            'menu.show_all': 'Показать все',
+            'menu.statistics': 'Статистика',
+            'menu.copy_structure': 'Копировать структуру',
+            'menu.paste_structure': 'Вставить структуру',
+            'menu.export_jpeg': 'Экспорт JPEG',
+            'menu.export_pdf': 'Экспорт PDF',
+            'menu.export_excel': 'Экспорт Excel',
+            'menu.dark_theme': 'Тёмная тема',
+            'menu.light_theme': 'Светлая тема',
+            'support.ai_title': 'AI Консультант',
+            'support.ai_desc': 'Помощь с настройками',
+            'support.tech_title': 'Техническая поддержка',
+            'support.tech_desc': 'Telegram бот',
+            'mobile.ecosystem': 'Экосистема',
+            'mobile.tools': 'Инструменты',
+            'mobile.support': 'Поддержка',
+            'stats.modal_title': 'Статистика структуры',
+            'group.modal_title': 'Создать группу',
+            'group.name_placeholder': 'Например: Отдел продаж',
+            'delete.warning': 'Это также удалит все связи с этой функцией. Действие нельзя отменить.',
             'export.active_links': 'Активные ссылки на описания функций'
         },
         
@@ -6684,9 +6760,13 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
 
     // === LANGUAGE SYSTEM ===
     function loadLanguage() {
-        const saved = localStorage.getItem('talko_language');
-        if (saved && translations[saved]) {
-            State.currentLanguage = saved;
+        // Check multiple sources: biz_language (set by parent TM), talko_language, parent window
+        const bizLang = localStorage.getItem('biz_language');
+        const saved = bizLang || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang');
+        // Map 'ua' → 'uk' for compatibility
+        const mapped = saved === 'ua' ? 'uk' : saved;
+        if (mapped && translations[mapped]) {
+            State.currentLanguage = mapped;
         }
         updateLanguageInterface();
     }
@@ -7060,6 +7140,28 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
         const msg = event.data;
         
         switch (msg.type) {
+            case 'SET_LANGUAGE':
+                // Parent TM sent language preference
+                if (msg.language && translations[msg.language]) {
+                    State.currentLanguage = msg.language;
+                    localStorage.setItem('biz_language', msg.language);
+                    if (typeof UI !== 'undefined' && UI.updateLanguage) {
+                        UI.updateLanguage();
+                    } else {
+                        // Fallback: update all data-text elements
+                        document.querySelectorAll('[data-text]').forEach(function(el) {
+                            var key = el.getAttribute('data-text');
+                            var val = translations[msg.language] && translations[msg.language][key];
+                            if (val) el.textContent = val;
+                        });
+                        document.querySelectorAll('[data-placeholder]').forEach(function(el) {
+                            var key = el.getAttribute('data-placeholder');
+                            var val = translations[msg.language] && translations[msg.language][key];
+                            if (val) el.placeholder = val;
+                        });
+                    }
+                }
+                break;
             case 'FUNCTIONS_UPDATE':
                 // Parent TM sent fresh functions data
                 if (State._parentTimeout) {

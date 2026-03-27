@@ -95,6 +95,14 @@ window.addEventListener('message', async function(event) {
             _bizIframeReady = true;
             dbg('[BIZ-BRIDGE] iframe ready! functions available:', functions.length);
             sendFunctionsToIframe();
+            // Send current language to iframe
+            (function() {
+                var lang = window.currentLang || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
+                var f2 = document.getElementById('bizIframe');
+                if (f2 && f2.contentWindow) {
+                    f2.contentWindow.postMessage({ type: 'SET_LANGUAGE', language: lang === 'ua' ? 'uk' : lang }, '*');
+                }
+            })();
             break;
             
         case 'CANVAS_POSITION_UPDATE':
