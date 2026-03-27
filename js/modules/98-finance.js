@@ -3176,76 +3176,127 @@ async function _loadAnalytics(mode, period) {
   }
 }
 
-// ── P&L звіт ─────────────────────────────────────────────
+// ── P&L звіт (повна структура з нарахувальним методом) ───
 function _renderPnl(el, txs, currency, from, to) {
   const incCats = _state.categories.income  || [];
   const expCats = _state.categories.expense || [];
 
-  const byIncCat = {}, byExpCat = {};
-  let totalInc = 0, totalExp = 0;
+  // Нарахувальний метод: accrualDate якщо є, інакше date
+  const getAccrualDate = (tx) => tx.accrualDate || tx.date;
+
+  const byIncCat = {}, byCogsCat = {}, byOpexCat = {};
+  let totalInc = 0, totalCogs = 0, totalOpex = 0;
 
   txs.forEach(tx => {
+    const txDate = getAccrualDate(tx);
+    if (txDate) {
+      const d = txDate.toDate ? txDate.toDate() : new Date(txDate);
+      if (d < from || d > to) return;
+    }
+    const amt = txAmt(tx);
     if (tx.type === 'income') {
-      byIncCat[tx.categoryId] = (byIncCat[tx.categoryId] || 0) + txAmt(tx);
-      totalInc += txAmt(tx);
-    } else {
-      byExpCat[tx.categoryId] = (byExpCat[tx.categoryId] || 0) + txAmt(tx);
-      totalExp += txAmt(tx);
+      byIncCat[tx.categoryId] = (byIncCat[tx.categoryId] || 0) + amt;
+      totalInc += amt;
+    } else if (tx.type === 'expense') {
+      const cat = expCats.find(c => c.id === tx.categoryId);
+      const isCogs = cat && cat.costType === 'cogs';
+      if (isCogs) {
+        byCogsCat[tx.categoryId] = (byCogsCat[tx.categoryId] || 0) + amt;
+        totalCogs += amt;
+      } else {
+        byOpexCat[tx.categoryId] = (byOpexCat[tx.categoryId] || 0) + amt;
+        totalOpex += amt;
+      }
     }
   });
 
-  const profit = totalInc - totalExp;
-  const margin = totalInc > 0 ? Math.round(profit / totalInc * 100) : 0;
-  const profitColor = profit >= 0 ? '#22c55e' : '#ef4444';
+  const grossProfit = totalInc - totalCogs;
+  const grossMargin = totalInc > 0 ? Math.round(grossProfit / totalInc * 100) : 0;
+  const netProfit   = grossProfit - totalOpex;
+  const netMargin   = totalInc > 0 ? Math.round(netProfit / totalInc * 100) : 0;
 
-  const catRow = (cat, amount, color) => {
-    const pct = totalInc > 0 ? Math.round(amount / totalInc * 100) : 0;
-    return `
-      <div style="display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid #f3f4f6;">
-        <div style="flex:1;font-size:0.82rem;color:#374151;">${escHtml(cat.name)}</div>
-        <div style="font-size:0.82rem;font-weight:600;color:${color};width:90px;text-align:right;">${fmt(amount, currency)}</div>
-        <div style="font-size:0.75rem;color:#9ca3af;width:40px;text-align:right;">${pct}%</div>
-      </div>`;
+  const pColor = (v) => v >= 0 ? '#22c55e' : '#ef4444';
+  const mColor = (v) => v >= 30 ? '#22c55e' : v >= 10 ? '#f59e0b' : '#ef4444';
+
+  const secHdr = (label, total, bg, tc) =>
+    `<div style="background:${bg};padding:8px 14px;font-size:0.75rem;font-weight:700;color:${tc};` +
+    `text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;align-items:center;">` +
+    `<span>${label}</span><span>${fmt(total, currency)}</span></div>`;
+
+  const catRow = (cat, amount, base) => {
+    const pct = base > 0 ? Math.round(amount / base * 100) : 0;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid #f3f4f6;">` +
+      `<div style="flex:1;font-size:0.82rem;color:#374151;">${escHtml(cat.name)}</div>` +
+      `<div style="font-size:0.82rem;font-weight:600;color:#ef4444;width:100px;text-align:right;">${fmt(amount, currency)}</div>` +
+      `<div style="font-size:0.75rem;color:#9ca3af;width:38px;text-align:right;">${pct}%</div>` +
+      `</div>`;
   };
 
-  el.innerHTML = `
-    <!-- KPI рядок -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
-      ${[
-        { label: window.t('finTransactionIncome'), val: fmt(totalInc, currency), color: '#22c55e' },
-        { label: window.t('finTabExpense'),  val: fmt(totalExp, currency),  color: '#ef4444' },
-        { label: window.t('finProfit'), val: fmt(profit, currency),    color: profitColor },
-        { label: window.t('finMargin'),    val: margin + '%',             color: profitColor },
-      ].map(k => `
-        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;text-align:center;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:4px;">${k.label}</div>
-          <div style="font-size:1.1rem;font-weight:700;color:${k.color};">${k.val}</div>
-        </div>`).join('')}
-    </div>
+  const incRow = (cat, amount) => {
+    const pct = totalInc > 0 ? Math.round(amount / totalInc * 100) : 0;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid #f3f4f6;">` +
+      `<div style="flex:1;font-size:0.82rem;color:#374151;">${escHtml(cat.name)}</div>` +
+      `<div style="font-size:0.82rem;font-weight:600;color:#22c55e;width:100px;text-align:right;">${fmt(amount, currency)}</div>` +
+      `<div style="font-size:0.75rem;color:#9ca3af;width:38px;text-align:right;">${pct}%</div>` +
+      `</div>`;
+  };
 
-    <!-- Таблиця P&L -->
-    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+  const subRow = (label, value, bg) => {
+    const pct = totalInc > 0 ? Math.round(value / totalInc * 100) : 0;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;` +
+      `padding:10px 14px;background:${bg};border-bottom:2px solid #e5e7eb;">` +
+      `<span style="font-size:0.85rem;font-weight:700;color:#1a1a1a;">${label}</span>` +
+      `<div style="display:flex;align-items:center;gap:12px;">` +
+      `<span style="font-size:0.78rem;color:${mColor(pct)};">${totalInc > 0 ? pct + '%' : ''}</span>` +
+      `<span style="font-size:0.95rem;font-weight:700;color:${pColor(value)};">${value >= 0 ? '+' : ''}${fmt(value, currency)}</span>` +
+      `</div></div>`;
+  };
 
-      <!-- Доходи -->
-      <div style="background:#f0fdf4;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;">
-        <span>${window.t('finIncome').toUpperCase()}</span><span>${fmt(totalInc, currency)}</span>
-      </div>
-      ${incCats.filter(c => byIncCat[c.id]).map(c => catRow(c, byIncCat[c.id] || 0, '#22c55e')).join('')}
-      ${!incCats.filter(c => byIncCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">' + window.t('finNoIncome2') + '</div>' : ''}
+  const noData = (msg) => `<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">${msg}</div>`;
 
-      <!-- Витрати -->
-      <div style="background:#fef2f2;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;margin-top:4px;">
-        <span>${window.t('finExpense').toUpperCase()}</span><span>${fmt(totalExp, currency)}</span>
-      </div>
-      ${expCats.filter(c => byExpCat[c.id]).map(c => catRow(c, byExpCat[c.id] || 0, '#ef4444')).join('')}
-      ${!expCats.filter(c => byExpCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">' + window.t('finNoExpenses3') + '</div>' : ''}
+  const accrualNote = `<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;` +
+    `margin-bottom:12px;font-size:0.75rem;color:#1e40af;display:flex;align-items:flex-start;gap:6px;">` +
+    `<span style="flex-shrink:0;">ℹ️</span>` +
+    `<span>P&L використовує <b>дату нарахування</b> (коли послуга надана/витрата виникла), а не дату оплати. ` +
+    `Cash Flow = дата оплати. Тому ці два звіти можуть відрізнятись.</span></div>`;
 
-      <!-- Підсумок -->
-      <div style="background:#1f2937;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:0.85rem;font-weight:700;">${window.t('finProfitLoss')}</span>
-        <span style="font-size:1rem;font-weight:700;color:${profitColor};">${profit >= 0 ? '+' : ''}${fmt(profit, currency)}</span>
-      </div>
-    </div>`;
+  el.innerHTML = accrualNote +
+    `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;">` +
+    [
+      { label:'Виручка',          val: fmt(totalInc, currency),    color:'#22c55e', sub:'' },
+      { label:'Валовий прибуток', val: fmt(grossProfit, currency), color:pColor(grossProfit), sub: grossMargin + '% маржа' },
+      { label:'Операційні витр.', val: fmt(totalOpex, currency),   color:'#f59e0b', sub:'' },
+      { label:'Чистий прибуток',  val: fmt(netProfit, currency),   color:pColor(netProfit),   sub: netMargin + '% маржа' },
+    ].map(k =>
+      `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px 14px;">` +
+      `<div style="font-size:0.7rem;color:#6b7280;margin-bottom:3px;">${k.label}</div>` +
+      `<div style="font-size:1rem;font-weight:700;color:${k.color};">${k.val}</div>` +
+      (k.sub ? `<div style="font-size:0.7rem;color:#9ca3af;margin-top:2px;">${k.sub}</div>` : '') +
+      `</div>`).join('') +
+    `</div>` +
+    `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">` +
+    secHdr('📈 Виручка (Revenue)', totalInc, '#f0fdf4', '#16a34a') +
+    (incCats.filter(c => byIncCat[c.id]).map(c => incRow(c, byIncCat[c.id]||0)).join('') ||
+      noData('Немає доходів за цей період')) +
+    secHdr('🏭 Собівартість (COGS)', totalCogs, '#fff7ed', '#c2410c') +
+    (expCats.filter(c => byCogsCat[c.id]).map(c => catRow(c, byCogsCat[c.id]||0, totalInc)).join('') ||
+      `<div style="padding:8px 14px;font-size:0.78rem;color:#9ca3af;">` +
+      `Немає витрат типу «Собівартість» — налаштуйте категорії витрат у Налаштуваннях</div>`) +
+    subRow('Валовий прибуток (Gross Profit)', grossProfit, '#f8fafc') +
+    secHdr('💼 Операційні витрати (OPEX)', totalOpex, '#fef2f2', '#dc2626') +
+    (expCats.filter(c => byOpexCat[c.id]).map(c => catRow(c, byOpexCat[c.id]||0, totalInc)).join('') ||
+      noData('Немає операційних витрат')) +
+    `<div style="background:#1f2937;color:#fff;padding:14px 14px;display:flex;justify-content:space-between;align-items:center;">` +
+    `<div><div style="font-size:0.85rem;font-weight:700;">Чистий прибуток (Net Profit)</div>` +
+    `<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">Маржинальність: ${netMargin}%</div></div>` +
+    `<span style="font-size:1.1rem;font-weight:700;color:${pColor(netProfit)};">` +
+    `${netProfit >= 0 ? '+' : ''}${fmt(netProfit, currency)}</span></div>` +
+    `</div>` +
+    (totalCogs === 0 ?
+      `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;` +
+      `margin-top:12px;font-size:0.78rem;color:#92400e;">` +
+      `💡 <b>Підказка:</b> Щоб бачити Собівартість окремо — в Налаштуваннях → Категорії витрат ` +
+      `встановіть тип <b>«Собівартість (COGS)»</b> для категорій прямих витрат.</div>` : '');
 }
 
 // ── Маржинальність по проектах ────────────────────────────
@@ -3459,18 +3510,26 @@ function renderSettings(el) {
         <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
           ${cats.length === 0
             ? `<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">${window.t('finNoCategories')}</div>`
-            : cats.map((cat, i) => `
+            : cats.map((cat, i) => {
+              const costBadge = type === 'expense' && cat.costType
+                ? `<span style="font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:10px;flex-shrink:0;` +
+                  (cat.costType === 'cogs'
+                    ? 'background:#fff7ed;color:#c2410c;">COGS'
+                    : 'background:#f0fdf4;color:#16a34a;">OPEX') + `</span>`
+                : '';
+              return `
               <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
                 background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
                 <div style="flex:1;font-size:0.85rem;color:#1a1a1a;">${escHtml(cat.name)}</div>
+                ${costBadge}
                 ${!cat.system ? `
                   <button onclick="window._financeDeleteCategory('${cat.id}','${type}')"
                     style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.2rem;">
                     ${I.trash}
                   </button>
                 ` : `<span style="font-size:0.7rem;color:#9ca3af;">${window.t('finSystem')}</span>`}
-              </div>
-            `).join('')
+              </div>`;
+            }).join('')
           }
         </div>
       </div>
@@ -3625,19 +3684,98 @@ window._fetchRates = async function() {
 };
 
 // Додавання категорії
-window._financeAddCategory = async function(type) {
-  const name = prompt(`Назва нової категорії (${type === 'income' ? window.t('incomeWordLc') : 'витрата'}):`);
-  if (!name || !name.trim()) return;
-  try {
-    const ref = await colRef('finance_categories').add({
-      name: name.trim(),
-      type,
-      system: false,
-      icon: 'tag',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+window._financeAddCategory = function(type) {
+  // Знімаємо старий модал
+  const old = document.getElementById('finCatModal');
+  if (old) old.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'finCatModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:99999;display:flex;align-items:center;justify-content:center;padding:1rem;';
+
+  const isExpense = type === 'expense';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:14px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="padding:1.1rem 1.25rem;border-bottom:1px solid #f3f4f6;font-size:0.95rem;font-weight:700;color:#1a1a1a;">
+        Нова категорія ${isExpense ? 'витрат' : 'доходів'}
+      </div>
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
+
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Назва *</label>
+          <input id="finCatName" type="text" placeholder="${isExpense ? 'Напр: Зарплата, Оренда, Матеріали' : 'Напр: Послуги, Продаж товарів'}"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;"
+            onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+
+        ${isExpense ? `
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.5rem;">
+            Тип витрати (для P&L)
+            <span title="COGS = прямі витрати на виробництво/надання послуги (матеріали, зарплата виробництва). OPEX = операційні витрати (оренда, маркетинг, адмін)." style="cursor:help;margin-left:3px;">ⓘ</span>
+          </label>
+          <div style="display:flex;gap:0.5rem;">
+            <label style="flex:1;display:flex;align-items:center;gap:0.5rem;padding:0.6rem 0.75rem;border:2px solid #e5e7eb;border-radius:8px;cursor:pointer;background:#fff;" id="finCatTypeCogs">
+              <input type="radio" name="finCatType" value="cogs" style="accent-color:#f97316;width:15px;height:15px;">
+              <div>
+                <div style="font-size:0.8rem;font-weight:600;color:#1a1a1a;">Собівартість</div>
+                <div style="font-size:0.68rem;color:#9ca3af;">COGS — прямі витрати</div>
+              </div>
+            </label>
+            <label style="flex:1;display:flex;align-items:center;gap:0.5rem;padding:0.6rem 0.75rem;border:2px solid #22c55e;border-radius:8px;cursor:pointer;background:#f0fdf4;" id="finCatTypeOpex">
+              <input type="radio" name="finCatType" value="opex" checked style="accent-color:#22c55e;width:15px;height:15px;">
+              <div>
+                <div style="font-size:0.8rem;font-weight:600;color:#1a1a1a;">Операційні</div>
+                <div style="font-size:0.68rem;color:#9ca3af;">OPEX — загальні витрати</div>
+              </div>
+            </label>
+          </div>
+        </div>` : ''}
+
+        <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
+          <button onclick="document.getElementById('finCatModal')?.remove()"
+            style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:0.85rem;color:#6b7280;font-weight:500;">
+            Скасувати
+          </button>
+          <button onclick="window._finCatSave('${type}')"
+            style="flex:2;padding:0.6rem;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.85rem;font-weight:700;">
+            Додати категорію
+          </button>
+        </div>
+
+      </div>
+    </div>`;
+
+  // Підсвічування активного radio
+  modal.querySelectorAll('input[name="finCatType"]').forEach(r => {
+    r.addEventListener('change', () => {
+      modal.querySelectorAll('label[id^="finCatType"]').forEach(l => {
+        l.style.borderColor = '#e5e7eb';
+        l.style.background = '#fff';
+      });
+      const active = modal.querySelector(`label[id="finCatType${r.value.charAt(0).toUpperCase()+r.value.slice(1)}"]`);
+      if (active) { active.style.borderColor = '#22c55e'; active.style.background = '#f0fdf4'; }
     });
-    _state.categories[type].push({ id: ref.id, name: name.trim(), type, system: false });
+  });
+
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
+  setTimeout(() => { const n = document.getElementById('finCatName'); if (n) n.focus(); }, 80);
+};
+
+window._finCatSave = async function(type) {
+  const name = document.getElementById('finCatName')?.value?.trim();
+  if (!name) { if (typeof showToast === 'function') showToast('Введіть назву категорії', 'warning'); return; }
+  const costTypeEl = document.querySelector('input[name="finCatType"]:checked');
+  const costType = costTypeEl ? costTypeEl.value : 'opex';
+  try {
+    const catData = { name, type, system: false, icon: 'tag', createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+    if (type === 'expense') catData.costType = costType;
+    const ref = await colRef('finance_categories').add(catData);
+    _state.categories[type].push({ id: ref.id, name, type, system: false, costType: costType });
+    document.getElementById('finCatModal')?.remove();
     renderSubTab('settings');
+    if (typeof showToast === 'function') showToast('Категорію додано', 'success');
   } catch(e) {
     if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
   }
@@ -4177,6 +4315,20 @@ function addTransaction(forceType) {
           </select>
         </div>
 
+        <!-- Дата нарахування (для P&L) -->
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">
+            Дата нарахування (для P&L)
+            <span title="Якщо відрізняється від дати оплати. Наприклад: послуга надана в лютому, але оплачена в березні — вкажіть лютий. Cash Flow = дата оплати, P&L = дата нарахування."
+              style="cursor:help;margin-left:4px;color:#9ca3af;">ⓘ</span>
+          </label>
+          <input id="fmAccrualDate" type="date" value=""
+            placeholder="Залиште порожнім якщо збігається з датою оплати"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;color:#6b7280;"
+            onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+          <div style="font-size:0.7rem;color:#9ca3af;margin-top:3px;">Залиште порожнім якщо збігається з датою оплати</div>
+        </div>
+
         <!-- Коментар -->
         <div>
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Коментар</label>
@@ -4252,6 +4404,7 @@ window._financeSaveTx = async function() {
     const desc   = document.getElementById('fmDescription')?.value?.trim() || '';
     const counter= document.getElementById('fmCounterparty')?.value?.trim() || '';
     const currency = document.getElementById('fmCurrency')?.value || _state.currency;
+    const accrualVal = document.getElementById('fmAccrualDate')?.value || '';
 
     const txData = {
       type,
@@ -4260,6 +4413,10 @@ window._financeSaveTx = async function() {
       amountBase: toBase(amount, currency), // сума в базовій валюті для аналітики
       categoryId:   catId,
       date,
+      // Дата нарахування для P&L (якщо вказана окремо — інакше = date)
+      accrualDate:  accrualVal
+        ? firebase.firestore.Timestamp.fromDate(new Date(accrualVal))
+        : date,
       accountId:    accId,
       functionId:   funcId,
       projectId:    projId,
