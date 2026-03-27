@@ -46,13 +46,18 @@
                 const batch = db.batch();
                 
                 // 1. Company doc
+                const trialEnd = new Date();
+                trialEnd.setDate(trialEnd.getDate() + 7);
                 batch.set(db.collection('companies').doc(companyId), {
                     name: companyName,
                     ownerName: ownerName,
                     ownerEmail: user.email.toLowerCase(),
                     ownerId: user.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    disabled: false
+                    disabled: false,
+                    subscriptionPlan: 'trial',
+                    subscriptionStatus: 'active',
+                    subscriptionEnd: firebase.firestore.Timestamp.fromDate(trialEnd),
                 });
                 
                 // 2. User in company
