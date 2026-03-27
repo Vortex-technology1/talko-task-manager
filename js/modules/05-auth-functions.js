@@ -147,18 +147,25 @@
         }
         
         function showLoginForm() {
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('noAccessCard').style.display = 'none';
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const noAccessCard = document.getElementById('noAccessCard');
+            if (loginForm) loginForm.style.display = 'block';
+            if (registerForm) registerForm.style.display = 'none';
+            if (noAccessCard) noAccessCard.style.display = 'none';
             hideAuthMessage();
             
             // Скидаємо поля реєстрації
             const emailField = document.getElementById('registerEmail');
-            emailField.value = '';
-            emailField.readOnly = false;
-            emailField.style.background = '';
-            document.getElementById('registerPassword').value = '';
-            document.getElementById('registerPasswordConfirm').value = '';
+            if (emailField) {
+                emailField.value = '';
+                emailField.readOnly = false;
+                emailField.style.background = '';
+            }
+            const regPass = document.getElementById('registerPassword');
+            if (regPass) regPass.value = '';
+            const regPassConfirm = document.getElementById('registerPasswordConfirm');
+            if (regPassConfirm) regPassConfirm.value = '';
         }
         
         function toggleAuthHelp() {
