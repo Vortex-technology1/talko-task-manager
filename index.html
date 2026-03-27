@@ -2039,7 +2039,7 @@ document.addEventListener('mousedown', function(e) {
     <!-- PROJECT MODAL -->
     <div id="projectModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
         <div class="modal-content" style="max-width:560px;">
-            <div class="modal-header"><button class="close" onclick="closeModal('projectModal')" aria-label="Закрити діалог">&times;</button><h2 id="projectModalTitle" data-i18n="newProject">Новий проєкт</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('projectModal')" aria-label="Закрыть диалог">&times;</button><h2 id="projectModalTitle" data-i18n="newProject">Новий проєкт</h2></div>
             <div class="modal-body">
                 <form id="projectForm" onsubmit="saveProject(event)">
                     <div class="form-group"><label class="form-label" data-i18n="projectNameLabel">Назва проєкту *</label><input type="text" id="projectName" class="form-input" required placeholder="Наприклад: Редизайн сайту" data-i18n-placeholder="projectNamePh" aria-required="true"></div>
@@ -2091,7 +2091,7 @@ document.addEventListener('mousedown', function(e) {
                 <button id="duplicateTaskBtn" onclick="if(window.currentEditingId||editingId){duplicateTask(window.currentEditingId||editingId);}" title="Копировать задачу" style="display:none;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:0.3rem 0.65rem;cursor:pointer;font-size:0.78rem;color:rgba(255,255,255,0.85);align-items:center;gap:0.3rem;flex-shrink:0;transition:background 0.15s;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копировать
                 </button>
-                <button class="close" onclick="closeModal('taskModal')" aria-label="Закрити діалог">
+                <button class="close" onclick="closeModal('taskModal')" aria-label="Закрыть диалог">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -2099,12 +2099,12 @@ document.addEventListener('mousedown', function(e) {
                 <form id="taskForm" onsubmit="saveTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="taskTitle" class="form-input" required aria-required="true"></div>
-                        <div class="form-group"><label class="form-label" data-i18n="function">Функція</label><select id="taskFunction" class="form-select" onchange="triggerSmartAssign(); filterTaskAssigneesByFunction()"><option value="" data-i18n="noFunction">Без функції</option></select></div>
+                        <div class="form-group"><label class="form-label">Функция</label><select id="taskFunction" class="form-select" onchange="triggerSmartAssign(); filterTaskAssigneesByFunction()"><option value="">Без функции</option></select></div>
                         <div id="smartAssignHint" style="display:none;margin-top:-0.5rem;margin-bottom:0.25rem;">
                           <div id="smartAssignResult"></div>
                         </div>
-                        <div class="form-group"><label class="form-label">Проєкт</label><select id="taskProject" class="form-select" onchange="onTaskProjectChange()"><option value="" data-i18n="noProject">Без проєкту</option></select></div>
-                        <div class="form-group"><label class="form-label">Етап</label><select id="taskStage" class="form-select"><option value="">Без етапу</option></select></div>
+                        <div class="form-group"><label class="form-label">Проект</label><select id="taskProject" class="form-select" onchange="onTaskProjectChange()"><option value="">Без проекта</option></select></div>
+                        <div class="form-group"><label class="form-label">Этап</label><select id="taskStage" class="form-select"><option value="">Без этапа</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець *</label><select id="taskAssignee" class="form-select" required onchange="autoFillFunctionFromAssignee()"><option value="" data-i18n="select">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="deadlineDate">Дедлайн (дата) *</label><input type="date" id="taskDeadlineDate" class="form-input" required aria-required="true"></div>
                         <div class="form-group"><label class="form-label" data-i18n="deadlineTime">Час виконання</label><input type="time" id="taskDeadlineTime" class="form-input"></div>
@@ -2112,7 +2112,7 @@ document.addEventListener('mousedown', function(e) {
                         <!-- ACCORDION: Розширені налаштування -->
                         <div class="form-group full-width" style="margin-bottom:0;">
                             <button type="button" id="taskAdvancedToggle" onclick="toggleTaskAdvanced()" style="display:flex;align-items:center;gap:0.5rem;background:#f9fafb;border:1px dashed #d1d5db;border-radius:10px;padding:0.5rem 1rem;cursor:pointer;font-size:0.85rem;color:#6b7280;width:100%;justify-content:space-between;">
-                                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> <span data-i18n="advancedSettings">Розширені налаштування</span></span>
+                                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> <span>Расширенные настройки</span></span>
                                 <span id="taskAdvancedArrow" style="font-size:0.7rem;transition:transform 0.2s;">▼</span>
                             </button>
                         </div>
@@ -2274,7 +2274,7 @@ document.addEventListener('mousedown', function(e) {
                         background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;cursor:pointer;
                         font-size:0.82rem;font-weight:600;color:#1d4ed8;width:100%;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        <span class="task-crm-name">Відкрити угоду CRM</span>
+                        <span class="task-crm-name">Открыть сделку CRM</span>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                     </button>
                     <div id="taskReviewActions" style="display:none;padding:0.75rem 1rem;margin:0.5rem 0;border-radius:12px;">
@@ -2370,7 +2370,7 @@ document.addEventListener('mousedown', function(e) {
 
     <div id="functionModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="functionModalTitle">
         <div class="modal-content">
-            <div class="modal-header"><button class="close" onclick="closeModal('functionModal')" aria-label="Закрити діалог">&times;</button><h2 id="functionModalTitle" data-i18n="newFunction">Нова функція</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('functionModal')" aria-label="Закрыть диалог">&times;</button><h2 id="functionModalTitle" data-i18n="newFunction">Нова функція</h2></div>
             <div class="modal-body">
                 <form id="functionForm" onsubmit="saveFunction(event)">
                     <div class="form-grid">
@@ -2405,7 +2405,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="mergeFunctionsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="mergeFunctionsModalTitle">
         <div class="modal-content" style="max-width:500px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('mergeFunctionsModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('mergeFunctionsModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2><i data-lucide="git-merge" class="icon"></i> <span data-i18n="mergeFunctions">Об'єднати функції</span></h2>
             </div>
             <div class="modal-body">
@@ -2448,7 +2448,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="processTemplatesModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="processTemplatesModalTitle">
         <div class="modal-content" style="max-width:700px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('processTemplatesModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('processTemplatesModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2><i data-lucide="file-cog" class="icon"></i> <span data-i18n="processTemplates">Шаблони процесів</span></h2>
             </div>
             <div class="modal-body">
@@ -2468,7 +2468,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="editProcessTemplateModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editProcessTemplateModalTitle">
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('editProcessTemplateModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('editProcessTemplateModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2 id="editTemplateTitle"><i data-lucide="file-cog" class="icon"></i> <span data-i18n="newTemplate">Новий шаблон</span></h2>
             </div>
             <div class="modal-body">
@@ -2504,7 +2504,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="startProcessModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="startProcessModalTitle">
         <div class="modal-content" style="max-width:500px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('startProcessModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('startProcessModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2><i data-lucide="play" class="icon"></i> <span data-i18n="startProcess">Запустити процес</span></h2>
             </div>
             <div class="modal-body">
@@ -2546,7 +2546,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="viewProcessModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="viewProcessModalTitle">
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('viewProcessModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('viewProcessModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2 id="viewProcessTitle"><i data-lucide="git-branch" class="icon"></i> Процес</h2>
             </div>
             <div class="modal-body">
@@ -2559,7 +2559,7 @@ document.addEventListener('mousedown', function(e) {
 
     <div id="regularTaskModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="regularTaskModalTitle">
         <div class="modal-content">
-            <div class="modal-header"><button class="close" onclick="closeModal('regularTaskModal')" aria-label="Закрити діалог">&times;</button><h2 data-i18n="regularTask">Регулярне завдання</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('regularTaskModal')" aria-label="Закрыть диалог">&times;</button><h2 data-i18n="regularTask">Регулярне завдання</h2></div>
             <div class="modal-body">
                 <form id="regularTaskForm" onsubmit="saveRegularTask(event)">
                     <div class="form-grid">
@@ -2664,7 +2664,7 @@ document.addEventListener('mousedown', function(e) {
 
     <div id="inviteModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="inviteModalTitle">
         <div class="modal-content">
-            <div class="modal-header"><button class="close" onclick="closeModal('inviteModal')" aria-label="Закрити діалог">&times;</button><h2 data-i18n="inviteTitle">Запрошення</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('inviteModal')" aria-label="Закрыть диалог">&times;</button><h2 data-i18n="inviteTitle">Запрошення</h2></div>
             <div class="modal-body">
                 <form id="inviteForm" onsubmit="sendInvite(event)">
                     <div class="form-group">
@@ -2688,7 +2688,7 @@ document.addEventListener('mousedown', function(e) {
 
     <div id="userModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><button class="close" onclick="closeModal('userModal')" aria-label="Закрити діалог">&times;</button><h2 id="userModalTitle" data-i18n="editEmployee">Редагувати співробітника</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('userModal')" aria-label="Закрыть диалог">&times;</button><h2 id="userModalTitle" data-i18n="editEmployee">Редагувати співробітника</h2></div>
             <div class="modal-body">
                 <form id="userForm" onsubmit="saveUser(event)">
                     <div class="form-grid">
@@ -3158,7 +3158,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="aiGeneratorModal" class="modal">
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('aiGeneratorModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('aiGeneratorModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2><i data-lucide="sparkles" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiStructureGenerator">AI Структура</span></h2>
             </div>
             <div class="modal-body">
@@ -3193,7 +3193,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="importStructureModal" class="modal">
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('importStructureModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('importStructureModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2><i data-lucide="upload" class="icon"></i> <span data-i18n="importStructure">Імпорт структури</span></h2>
             </div>
             <div class="modal-body">
@@ -3212,7 +3212,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="aiAssistantsModal" class="modal">
         <div class="modal-content" style="max-width:650px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('aiAssistantsModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('aiAssistantsModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2><i data-lucide="bot" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiAssistantsConfig">AI Асистенти</span></h2>
             </div>
             <div class="modal-body">
@@ -4123,7 +4123,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="quickInputModal" class="modal">
         <div class="modal-content" style="max-width:500px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('quickInputModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('quickInputModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2><i data-lucide="edit-3" class="icon" style="color:var(--primary);"></i> <span data-i18n="quickInput">Внести дані</span></h2>
             </div>
             <div id="quickInputDate" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;">
@@ -4140,7 +4140,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="aiAnalysisModal" class="modal">
         <div class="modal-content" style="max-width:700px;max-height:85vh;overflow-y:auto;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('aiAnalysisModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('aiAnalysisModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2><i data-lucide="sparkles" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiAnalysisTitle">AI Аналіз метрик</span></h2>
             </div>
             <div id="aiAnalysisContent">
@@ -4153,7 +4153,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="trendsChartModal" class="modal">
         <div class="modal-content" style="max-width:800px;max-height:85vh;overflow-y:auto;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('trendsChartModal')" aria-label="Закрити діалог">&times;</button>
+                <button class="close" onclick="closeModal('trendsChartModal')" aria-label="Закрыть диалог">&times;</button>
                 <h2 id="trendsChartTitle" style="display:flex;align-items:center;gap:0.5rem;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Графік трендів</h2>
             </div>
             <!-- Metric pills for multi-select -->
