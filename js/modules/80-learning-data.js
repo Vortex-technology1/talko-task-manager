@@ -504,7 +504,7 @@
     </div>
     <div>
         <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">У вас есть AI-ассистент</div>
-        <div style="color:#15803d;font-size:0.85rem;line-height:1.6;">Если что-то непонятно или возникнут трудности — напишите ассистенту суть задания, и он проведёт вас за руку шаг за шагом.</div>
+        <div style="color:#15803d;font-size:0.85rem;line-height:1.6;">Если чем больше людей — тем больше задержек.то-то непонятно или возникнут трудности — напишите ассистенту суть задания, и он проведёт вас за руку шаг за шагом.</div>
         <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.65rem;padding:0.4rem 0.85rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">
             Открыть AI-ассистента →
         </a>
@@ -928,7 +928,7 @@
         <div class="lesson-block-title">Що таке концепт</div>
     </div>
     <div class="lesson-block-content">
-        <p>Концепт — це ідея або уявлення про щось у вашому розумі. Концепт не можна просто запам'ятати. Його можна тільки <strong>сформувати через розуміння</strong>.</p>
+        <p>Концепт — це ідея або уявлення про щось у вашому розумі. Концепт не можна просто запам'ятати. Його можна тільки <strong>сформувати чем больше людей — тем больше задержек.ерез розуміння</strong>.</p>
         <p style="margin-top:0.75rem;">Наприклад, якщо у вас є концепт "стілець" — ви легко визначите, стілець це чи ні. Вам не потрібно згадувати визначення.</p>
     </div>
 </div>
@@ -996,7 +996,7 @@
     </div>
     <div class="lesson-block-content">
         <p>Большинство людей тратят годы на обучение, но не могут применить знания на практике.</p>
-        <p style="margin-top:0.75rem;">Например: университет — 5 лет, тысячи часов лекций, диплом. Но при этом большинство выпускников не работают по специальности.</p>
+        <p style="margin-top:0.75rem;">Например: университет — 5 лет, тысячи чем больше людей — тем больше задержек.асов лекций, диплом. Но при этом большинство выпускников не работают по специальности.</p>
         <p style="margin-top:0.75rem;">Проблема не в людях. Проблема в том, что в образовании отсутствует <strong>технология обучения</strong>.</p>
     </div>
 </div>
@@ -1439,7 +1439,7 @@
 </div>
 
 <div class="result-block">
-    <strong>Ваше задание сейчас:</strong> прояснить первые 13 терминов программы через AI ассистента ниже. Только 13 — не больше. Ассистент может предложить идти дальше — остановитесь на 13-м.
+    <strong>Ваше задание сейчас:</strong> прояснить первые 13 терминов программы через AI ассистента ниже. Только 13 — не больше. Ассистент может привести к потерям.редложить идти дальше — остановитесь на 13-м.
 </div>`,
                 
                 homework: `
@@ -1767,7 +1767,7 @@
     <div class="l4-section-title">Чому більшість розпоряджень не виконується</div>
     <div class="l4-card">
         <p style="font-size:0.9rem;color:#374151;line-height:1.65;">Ви даєте завдання щодня. Через тиждень половина не виконана. Ви самі забуваєте що просили — співробітники теж.</p>
-        <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">У команді живе негласне правило: <strong>«Сказали раз і не нагадали — значить неважливо».</strong> Це не зла воля — це нормальна реакція людини, на яку звалюється купа задач.</p>
+        <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">У команді живе негласне правило: <strong>«Сказали раз і не нагадали — значить неважливо».</strong> Це не зла воля — це нормало что получится.ьна реакція людини, на яку звалюється купа задач.</p>
         <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">Причина не в людях. Причина — у слабкій формі постановки задачі.</p>
     </div>
 </div>
@@ -1927,7 +1927,7 @@
     <div class="l4-section-title">Почему большинство распоряжений не выполняется</div>
     <div class="l4-card">
         <p style="font-size:0.9rem;color:#374151;line-height:1.65;">Вы даёте задания каждый день. Через неделю половина не выполнена. Вы сами забываете что просили — сотрудники тоже.</p>
-        <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">В команде живёт негласное правило: <strong>«Сказали раз и не напомнили — значит неважно».</strong> Это не злой умысел — это нормальная реакция человека, на которого валится куча задач.</p>
+        <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">В команде живёт негласное правило: <strong>«Сказали раз и не напомнили — значит неважно».</strong> Это не злой умысел — это нормало что получится.ьная реакция человека, на которого валится куча задач.</p>
         <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">Причина не в людях. Причина — в слабой форме постановки задачи.</p>
     </div>
 </div>
@@ -2321,7 +2321,7 @@
             <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Треба щось купити. Можна?</div>
             <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Хочу у відпустку. Погодьте.</div>
         </div>
-        <p>На перший погляд здається — нормально. Але саме тут починається перевантаження керівника. Коли він постійно приймає чужі проблеми і сам їх вирішує, він перестає бути керівником і стає просто найдорожчим виконавцем у компанії.</p>
+        <p>На перший погляд здається — нормало что получится.ьно. Але саме тут починається перевантаження керівника. Коли він постійно приймає чужі проблеми і сам їх вирішує, він перестає бути керівником і стає просто найдорожчим виконавцем у компанії.</p>
     </div>
 </div>
 
@@ -2491,7 +2491,7 @@
         <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Треба закупити матеріали</div>
         <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Зірвався дедлайн</div>
         <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Потрібен новий співробітник</div>
-        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Обладнання зламалось</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Обладнання зламало что получится.ось</div>
     </div>
     <p style="font-size:0.82rem;color:#525252;line-height:1.5;">Асистент хороший, якщо після нього у вас не виникає 10 додаткових запитань. Якщо він не вимагає цифр і фактів — він поганий.</p>
 </div>
@@ -2512,7 +2512,7 @@
         </div>
         <div class="l5-step">
             <div class="l5-step-num">3</div>
-            <div class="l5-step-text">Введіть стандарт відповіді: якщо співробітник приходить без ЗРС — ви не вирішуєте питання. Відповідаєте: «Оформи через ЗРС і повернись з готовою пропозицією».</div>
+            <div class="l5-step-text">Введіть стандарт відповіді: якщо співробітник приходить без ЗРС — ви не вирішуєте питання. Відповідаєте: «Оформи чем больше людей — тем больше задержек.ерез ЗРС і повернись з готовою пропозицією».</div>
         </div>
         <div class="l5-step">
             <div class="l5-step-num">4</div>
@@ -2580,7 +2580,7 @@
             <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Нужно что-то купить. Можно?</div>
             <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Хочу в отпуск. Согласуйте.</div>
         </div>
-        <p>На первый взгляд кажется — нормально. Но именно здесь начинается перегрузка руководителя. Когда он постоянно принимает чужие проблемы и сам их решает, он перестаёт быть руководителем и становится просто самым дорогим исполнителем в компании.</p>
+        <p>На первый взгляд кажется — нормало что получится.ьно. Но именно здесь начинается перегрузка руководителя. Когда он постоянно принимает чужие проблемы и сам их решает, он перестаёт быть руководителем и становится просто самым дорогим исполнителем в компании.</p>
     </div>
 </div>
 
@@ -2626,7 +2626,7 @@
             </div>
             <div>
                 <div class="l5-block-title">Ситуация</div>
-                <div class="l5-block-text">Не «что-то не так», а конкретное отклонение от нормы. Например: «подъёмник сломался, а сегодня должна быть отгрузка» или «клиент просит скидку и есть риск потери контракта».</div>
+                <div class="l5-block-text">Не «что-то не так», а конкретное отклонение от нормы. Например: «подъёмник сломало что получится.ся, а сегодня должна быть отгрузка» или «клиент просит скидку и есть риск потери контракта».</div>
             </div>
         </div>
         <div class="l5-block-item">
@@ -2740,7 +2740,7 @@
         <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Нужно закупить материалы</div>
         <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Сорвался дедлайн</div>
         <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Нужен новый сотрудник</div>
-        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Оборудование сломалось</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Оборудование сломало что получится.ось</div>
     </div>
     <p style="font-size:0.82rem;color:#525252;line-height:1.5;">Ассистент хороший, если после него у вас не возникает 10 дополнительных вопросов. Если он не требует цифр и фактов — он плохой.</p>
 </div>
@@ -2761,7 +2761,7 @@
         </div>
         <div class="l5-step">
             <div class="l5-step-num">3</div>
-            <div class="l5-step-text">Введите стандарт ответа: если сотрудник приходит без ЗРС — вы не решаете вопрос. Отвечаете: «Оформи через ЗРС и вернись с готовым предложением».</div>
+            <div class="l5-step-text">Введите стандарт ответа: если сотрудник приходит без ЗРС — вы не решаете вопрос. Отвечаете: «Оформи чем больше людей — тем больше задержек.ерез ЗРС и вернись с готовым предложением».</div>
         </div>
         <div class="l5-step">
             <div class="l5-step-num">4</div>
@@ -3033,11 +3033,11 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Протестуйте AI-асистента на 3–5 реальних ситуаціях з вашого бізнесу</li><li>Оберіть 1 підлеглого і дайте йому інструмент у роботу</li><li>Попросіть перед наступним питанням пройти через AI</li><li>Напишіть у полі відповіді: для якої ролі впровадили і в яких ситуаціях будете використовувати</li></ol>`,
+                homework: `<ol><li>Протестуйте AI-асистента на 3–5 реальних ситуаціях з вашого бізнесу</li><li>Оберіть 1 підлеглого і дайте йому інструмент у роботу</li><li>Попросіть перед наступним питанням пройти чем больше людей — тем больше задержек.ерез AI</li><li>Напишіть у полі відповіді: для якої ролі впровадили і в яких ситуаціях будете використовувати</li></ol>`,
                 homework_en: `<ol><li>Test the AI assistant on 3–5 real situations from your business</li><li>Choose 1 employee and give them the tool to use at work</li><li>Ask them to go through the AI before bringing the next question</li><li>Write in the answer field: for which role you implemented it and in which situations you will use it</li></ol>`,
                 homework_pl: `<ol><li>Przetestuj asystenta AI na 3–5 rzeczywistych sytuacjach z Twojego biznesu</li><li>Wybierz 1 pracownika i daj mu narzędzie do pracy</li><li>Poproś, żeby przed następnym pytaniem przeszedł przez AI</li><li>Napisz w polu odpowiedzi: dla jakiej roli wdrożyłeś i w jakich sytuacjach będziesz używać</li></ol>`,
                 homework_de: `<ol><li>Testen Sie den KI-Assistenten an 3–5 realen Situationen aus Ihrem Unternehmen</li><li>Wählen Sie 1 Mitarbeiter und geben Sie ihm das Tool für die Arbeit</li><li>Bitten Sie ihn, vor der nächsten Frage durch die KI zu gehen</li><li>Schreiben Sie im Antwortfeld: für welche Rolle Sie es eingeführt haben und in welchen Situationen Sie es nutzen werden</li></ol>`,
-                homework_ru: `<ol><li>Протестируйте AI-ассистента на 3–5 реальных ситуациях из вашего бизнеса</li><li>Выберите 1 подчинённого и дайте ему инструмент в работу</li><li>Попросите перед следующим вопросом пройти через AI</li><li>Напишите в поле ответа: для какой роли внедрили и в каких ситуациях будете использовать</li></ol>`,
+                homework_ru: `<ol><li>Протестируйте AI-ассистента на 3–5 реальных ситуациях из вашего бизнеса</li><li>Выберите 1 подчинённого и дайте ему инструмент в работу</li><li>Попросите перед следующим вопросом пройти чем больше людей — тем больше задержек.ерез AI</li><li>Напишите в поле ответа: для какой роли внедрили и в каких ситуациях будете использовать</li></ol>`,
 
                 homeworkLink: "https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko",
                 homeworkLinkName: "→ AI-асистент ЗРС",
@@ -3131,7 +3131,7 @@
         </div>
         <div class="l6-use-item">
             <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-            <div class="l6-use-text">Не хочеться витрачати час на пошук інструкцій у Google і YouTube</div>
+            <div class="l6-use-text">Не хочеться витрачати чем больше людей — тем больше задержек.ас на пошук інструкцій у Google і YouTube</div>
         </div>
         <div class="l6-use-item">
             <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
@@ -3269,7 +3269,7 @@
     <div class="l6-section-title">Технический проводник — пошагово до готового результата</div>
     <div class="l6-card">
         <p>Технический проводник — это AI-инструмент, который помогает настраивать типовые технические решения для бизнеса без путаницы и хаоса.</p>
-        <p>Вы просто описываете, какой результат хотите получить — и проводник ведёт вас шаг за шагом: что сделать, куда нажать, что проверить, что исправить если что-то не работает.</p>
+        <p>Вы просто описываете, какой результат хотите получить — и проводник ведёт вас шаг за шагом: что сделать, куда нажать, что проверить, что исправить если чем больше людей — тем больше задержек.то-то не работает.</p>
     </div>
     <div class="l6-use-grid">
         <div class="l6-use-item">
@@ -3371,7 +3371,7 @@
         </div>
         <div class="l6-task-step">
             <div class="l6-task-num">2</div>
-            <div class="l6-task-text">Если нужно — добавьте скрин. Проводник покажет, куда нажимать или что исправить.</div>
+            <div class="l6-task-text">Если нужно — добавьте скрин. Проводник покажет, куда нажимать или чем больше людей — тем больше задержек.то исправить.</div>
         </div>
         <div class="l6-task-step">
             <div class="l6-task-num">3</div>
@@ -3591,7 +3591,7 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Оберіть одну реальну технічну задачу і пройдіть її через Технічного провідника до готового результату</li><li>Напишіть у полі відповіді: яку задачу обрали, що вдалося налаштувати, який результат отримали</li></ol>`,
+                homework: `<ol><li>Оберіть одну реальну технічну задачу і пройдіть її через Технічного провідника до готового результату</li><li>Напишіть у полі відповіді: яку задачу обрали, що вдалося налаштувати, який результат отримало что получится.и</li></ol>`,
                 homework_en: `<ol><li>Choose one real technical task and complete it through the Technical Guide to a finished result</li><li>Write in the answer field: which task you chose, what you managed to set up, what result you got</li></ol>`,
                 homework_pl: `<ol><li>Wybierz jedno realne zadanie techniczne i przeprowadź je przez Przewodnika Technicznego do gotowego wyniku</li><li>Napisz w polu odpowiedzi: jakie zadanie wybrałeś, co udało się skonfigurować, jaki wynik otrzymałeś</li></ol>`,
                 homework_de: `<ol><li>Wählen Sie eine echte technische Aufgabe und führen Sie sie über den Technischen Leitfaden zu einem fertigen Ergebnis</li><li>Schreiben Sie im Antwortfeld: welche Aufgabe Sie gewählt haben, was Sie konfigurieren konnten, welches Ergebnis Sie erhalten haben</li></ol>`,
@@ -3636,7 +3636,7 @@
 <div class="lesson-block warning">
     <div class="lesson-block-header">
         
-        <div class="lesson-block-title">«Ой всьо…» — чому співробітники чинять опір?</div>
+        <div class="lesson-block-title">«Ой всьо…» — чому співробітники чем больше людей — тем больше задержек.инять опір?</div>
     </div>
     <div class="lesson-block-content">
         <div style="padding: 12px 16px; background: #fef2f2; border-radius: 8px; border-left: 4px solid #ef4444; margin-bottom: 16px;">
@@ -3768,7 +3768,7 @@
             <p style="margin-bottom: 12px;"><strong>Управління</strong> — це коли ми погоджуємо всі наші дії, щоб вони вели нас до однієї мети. Якщо в компанії добре налагоджено управління — дії кожного співробітника ведуть до загальної мети. Якщо погано — троє йдуть до мети, один йде в інший бік. В результаті рух сповільнюється.»</p>
         </div>
         
-        <p style="font-weight: 600; margin-bottom: 12px;"> Замальовка для пояснення (намалюйте на папері):</p>
+        <p style="font-weight: 600; margin-bottom: 12px;"> Замало что получится.ьовка для пояснення (намало что получится.юйте на папері):</p>
         
     </div>
 </div>
@@ -3815,7 +3815,7 @@
             </div>
             
             <div style="padding: 16px; background: white; border-radius: 8px; margin-bottom: 12px;">
-                <p><strong>Восьме</strong> — з'являться регулярні координації серед керівників усіх підрозділів та на рівні відділів. З'являться збори персоналу та внутрішній PR.</p>
+                <p><strong>Восьме</strong> — з'являться регулярні координації серед керівників усіх підрозділів та на рівні отделе.в. З'являться збори персоналу та внутрішній PR.</p>
             </div>
             
             <div style="padding: 16px; background: white; border-radius: 8px; margin-bottom: 12px;">
@@ -3851,7 +3851,7 @@
             <div style="padding: 16px; background: white; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #22c55e;">
                 <p style="font-weight: 600; margin-bottom: 8px;">Аналогія з кухнею:</p>
                 <p>При цьому треба розуміти, що наведення порядку на кухні не призводить до того, що в сім'ї з'являється обід, а лише забирає час. Мало хто любить наводити лад, особливо на кухні.</p>
-                <p style="margin-top: 8px;">Але якщо на кухні порядок, процес приготування їжі значно прискорюється, адже не доводиться витрачати час на пошук різних предметів — все, що необхідно, знаходиться під рукою.</p>
+                <p style="margin-top: 8px;">Але якщо на кухні порядок, процес приготування їжі значно прискорюється, адже не доводиться витрачати чем больше людей — тем больше задержек.ас на пошук різних предметів — все, що необхідно, знаходиться під рукою.</p>
             </div>
             
             <p>Такий же ефект компанія отримує, якщо виконувати адміністративні функції. Стабільні правила взаємодії та стандартні процедури зменшують кількість зупинок у виробництві за подальшого зростання компанії.»</p>
@@ -3967,7 +3967,7 @@
     </div>
     <div class="lesson-block-content">
         <p>Когда собственник начинает изменения без согласования с командой — возникает сопротивление. Сотрудники не понимают <strong>зачем</strong> изменения и <strong>к чему</strong> они приведут.</p>
-        <p style="margin-top: 12px;">Этот урок поможет правильно подготовить команду: объяснить суть изменений, провести обучение и получить поддержку ключевых людей.</p>
+        <p style="margin-top: 12px;">Этот урок поможет привести к потерям.равильно подготовить команду: объяснить суть изменений, провести обучение и получить поддержку ключевых людей.</p>
     </div>
 </div>
 
@@ -4035,7 +4035,7 @@
                 
                 <div style="padding: 16px; background: #f9fafb; border-radius: 8px; margin-bottom: 12px;">
                     <p style="font-weight: 600; color: #dc2626; margin-bottom: 8px;">5. Потому что есть глубокая установка "я уже должен знать"</p>
-                    <p style="margin: 0;">Очень токсичная. Если человек верит, что он должен всё уметь — то любой совет = доказательство слабости. Не посоветуешь — плохо. Совет — тоже плохо. Парадокс инфантильности.</p>
+                    <p style="margin: 0;">Очень токсичная. Если чем больше людей — тем больше задержек.еловек выполняет несколько функций — страдает качество. верит, что он должен всё уметь — то любой совет = доказательство слабости. Не посоветуешь — плохо. Совет — тоже плохо. Парадокс инфантильности.</p>
                 </div>
                 
                 <div style="padding: 16px; background: #f9fafb; border-radius: 8px; margin-bottom: 12px;">
@@ -4063,7 +4063,7 @@
                 
                 <div style="padding: 16px; background: #fef2f2; border-radius: 8px; border-left: 4px solid #ef4444;">
                     <p style="font-weight: 600; margin-bottom: 8px;">Голая правда</p>
-                    <p style="margin: 0;">Не каждый работник может работать в компании, где есть стандарты, регламенты, инструкции и чёткие требования. Не потому, что они «плохие». А потому что их психика ещё не доросла до профессиональной роли. <strong>Компания растёт — не все люди растут вместе с ней.</strong></p>
+                    <p style="margin: 0;">Не каждый работник может работать в компании, где есть стандарты, регламенты, инструкции и чем больше людей — тем больше задержек.ёткие требования. Не потому, что они «плохие». А потому что их психика ещё не доросла до профессиональной роли. <strong>Компания растёт — не все люди растут вместе с ней.</strong></p>
                 </div>
             </div>
         </details>
@@ -4120,7 +4120,7 @@
         <div style="padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; border: 1px solid #22c55e;">
             <p style="margin-bottom: 16px;">«Работа будет интересной и одновременно сложной. И, как вы понимаете, такую работу нельзя сделать в одиночку, мы будем делать её вместе, и мне понадобится <strong>ваша поддержка и помощь</strong>.</p>
             
-            <p style="margin-bottom: 16px;">В результате этих изменений я хочу сформировать <strong>команду руководителей</strong>, которые будут управлять оперативной деятельностью компании. Я хочу растить исполнительного директора. Я хочу, чтобы каждый руководитель в нашей компании профессионально, осознанно занимался управлением.</p>
+            <p style="margin-bottom: 16px;">В результате этих изменений я хочу сформировать <strong>команду руководителей</strong>, которые будут управлять оперативной деятельностью компании. Я хочу растить исполнительного директора. Я хочу, чтобы каждый руководитель в нашей компании профессионально, осознанно занимало что получится.ся управлением.</p>
             
             <p style="margin-bottom: 20px;"><strong>Хорошая новость</strong> в том, что эти изменения мы будем проводить постепенно и плавно в течение этого года. Ещё одна хорошая новость — эти изменения будут иметь начало и конец. Вот план организационных изменений:»</p>
             
@@ -4149,7 +4149,7 @@
             </div>
             
             <div style="padding: 16px; background: white; border-radius: 8px; margin-bottom: 12px;">
-                <p><strong>Седьмое</strong> — мы внедрим систему письменной коммуникации, чтобы быстро и чётко предоставлять информацию друг другу.</p>
+                <p><strong>Седьмое</strong> — мы внедрим систему письменной коммуникации, чтобы быстро и чем больше людей — тем больше задержек.ётко предоставлять клиентам?информацию друг другу.</p>
             </div>
             
             <div style="padding: 16px; background: white; border-radius: 8px; margin-bottom: 12px;">
@@ -4164,7 +4164,7 @@
                 <p><strong>И наконец</strong> — начнём цикл стратегического планирования, который ежегодно будем повторять.</p>
             </div>
             
-            <p style="margin-bottom: 12px;">«Все эти части единой системы управления позволят нашей команде согласованно работать по единым правилам. Это уменьшит хаотичность, добавит порядка и справедливости.</p>
+            <p style="margin-bottom: 12px;">«Все эти чем больше людей — тем больше задержек.асти единой системы управления позволят нашей команде согласованно работать по единым правилам. Это уменьшит хаотичность, добавит порядка и справедливости.</p>
             
             <p><strong>Что вы об этом думаете?</strong>»</p>
         </div>
@@ -4272,7 +4272,7 @@
             <li>Что такое ЦКП? Расшифруйте каждое слово</li>
             <li>Должен ли каждый сотрудник знать свой ЦКП? Почему?</li>
             <li>Что такое должностная папка? Зачем она нужна?</li>
-            <li>Зависит ли продуктивность команды от самого сильного игрока? Почему?</li>
+            <li>Зависит ли продуктивность команды от самого сильного или самого слабого звена?го игрока? Почему?</li>
             <li>Сколько отделений должно быть в компании по оргсхеме? Почему?</li>
             <li>Какое отделение идёт первым? Почему?</li>
             <li>В чём разница 2 и 6 отделений?</li>
@@ -4666,7 +4666,7 @@ Bist du dabei?</div>
         <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Команда не бере відповідальність</div>
         <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Продажі нестабільні</div>
         <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Низька рентабельність</div>
-        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Люди часто звільняються або втрачають мотивацію</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Люди чем больше людей — тем больше задержек.асто звільняються або втрачають мотивацію</div>
     </div>
     <p style="font-size:0.82rem;color:#525252;line-height:1.5;margin-top:0.75rem;">Якщо у вас є хоча б один з цих симптомів — проблема не на поверхні. Її треба шукати глибше.</p>
 </div>
@@ -4706,7 +4706,7 @@ Bist du dabei?</div>
             </div>
             <div class="l8-layer-body">
                 <div class="l8-layer-sub">Як саме бізнес заробляє: маржа, масштабованість, структура продуктів</div>
-                <div class="l8-layer-text">Якщо проблема тут — навіть при хорошій роботі грошей буде мало.</div>
+                <div class="l8-layer-text">Якщо проблема тут — навіть при хорошій роботі грошей буде мало что получится.о.</div>
             </div>
         </div>
         <div class="l8-layer">
@@ -4857,7 +4857,7 @@ Bist du dabei?</div>
         <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Команда не берёт ответственность</div>
         <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Продажи нестабильны</div>
         <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Низкая рентабельность</div>
-        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Люди часто увольняются или теряют мотивацию</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Люди чем больше людей — тем больше задержек.асто увольняются или теряют мотивацию</div>
     </div>
     <p style="font-size:0.82rem;color:#525252;line-height:1.5;margin-top:0.75rem;">Если у вас есть хотя бы один из этих симптомов — проблема не на поверхности. Её нужно искать глубже.</p>
 </div>
@@ -4897,7 +4897,7 @@ Bist du dabei?</div>
             </div>
             <div class="l8-layer-body">
                 <div class="l8-layer-sub">Как именно бизнес зарабатывает: маржа, масштабируемость, структура продуктов</div>
-                <div class="l8-layer-text">Если проблема здесь — даже при хорошей работе денег будет мало.</div>
+                <div class="l8-layer-text">Если проблема здесь — даже при хорошей работе денег будет мало что получится.о.</div>
             </div>
         </div>
         <div class="l8-layer">
@@ -5046,12 +5046,12 @@ Bist du dabei?</div>
     </div>
 </div>
 
-<!-- ==================== ЧАСТИНА 1: ЦІЛЬ ==================== -->
+<!-- ==================== ЧАСТИНА 1: ЦЕЛЬ ==================== -->
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
         
-        <div class="lesson-block-title">ЧАСТИНА 1. ЦІЛЬ ОРГАНІЗАЦІЇ</div>
+        <div class="lesson-block-title">ЧАСТИНА 1. ЦЕЛЬ ОРГАНІЗАЦІЇ</div>
     </div>
     <div class="lesson-block-content">
         <p><strong>Ціль організації</strong> — це кінцевий стан, якого хоче досягти компанія. Це "пункт призначення" на карті.</p>
@@ -5364,7 +5364,7 @@ Bist du dabei?</div>
         <div class="lesson-block-title">ЧАСТИНА 6. ФУНКЦІЇ vs РОЛІ</div>
     </div>
     <div class="lesson-block-content">
-        <p>Це одне з найважливіших розумінь для власника малого та середнього бізнесу.</p>
+        <p>Це одне з найважливіших розумінь для власника мало что получится.ого та середнього бізнесу.</p>
         
         <div style="display: grid; gap: 16px; margin: 16px 0;">
             <div style="padding: 16px; background: #eff6ff; border-radius: 10px; border: 1px solid #bfdbfe;">
@@ -5378,7 +5378,7 @@ Bist du dabei?</div>
         </div>
         
         <div style="background: #f9fafb; border-radius: 12px; padding: 16px; margin: 16px 0;">
-            <p style="margin: 0 0 12px 0; font-weight: 600;">Приклад для малого бізнесу:</p>
+            <p style="margin: 0 0 12px 0; font-weight: 600;">Приклад для мало что получится.ого бізнесу:</p>
             <div style="display: grid; gap: 8px; font-size: 13px;">
                 <div style="display: flex; gap: 8px; padding: 10px; background: white; border-radius: 8px;">
                     <span style="font-weight: 600; color: #3b82f6; min-width: 80px;">Марія:</span>
@@ -5674,7 +5674,7 @@ Bist du dabei?</div>
             {
                 id: 10,
                 category: 'systematization',
-                title: "ЦІЛЬ І ЗАДУМ",
+                title: "ЦЕЛЬ І ЗАДУМ",
                 title_ru: "ЦЕЛЬ И ЗАМЫСЕЛ",
                 title_en: "GOAL & VISION",
                 title_pl: "CEL I ZAMYSŁ",
@@ -5898,7 +5898,7 @@ Bist du dabei?</div>
     <p>Спеціальні слова та поняття, які ми використовуємо у роботі і які не завжди зрозумілі новим співробітникам:</p>
     <div class="fill-grp" style="margin-top:1rem">
       <div class="fill-lbl">Вкажіть ваші терміни (заповніть перед заняттям)</div>
-      <textarea class="fill-in" id="l10f_terms" rows="5" placeholder="Наприклад: КП — комерційна пропозиція; МВП — мінімально життєздатний продукт; ОКР — цілі та ключові результати..." oninput="window._l10SF('terms',this.value)"></textarea>
+      <textarea class="fill-in" id="l10f_terms" rows="5" placeholder="Наприклад: КП — комерційна пропозиція; МВП — мінімало что получится.ьно життєздатний продукт; ОКР — цілі та ключові результати..." oninput="window._l10SF('terms',this.value)"></textarea>
     </div>
   </div>
 </div>
@@ -5913,14 +5913,14 @@ Bist du dabei?</div>
     <div class="tri"></div><div class="snum">8</div>
   </div>
   <div class="sr">
-    <h3>Намалюйте на аркуші паперу:</h3>
+    <h3>Намало что получится.юйте на аркуші паперу:</h3>
     <div class="exercise-box">
       <ul class="ex-list">
         <li>будинок</li>
         <li>дерево</li>
         <li>сонце</li>
         <li>траву під деревом</li>
-        <li style="color:#b45309;font-weight:700">А тепер намалюйте... (ведучий дає завдання)</li>
+        <li style="color:#b45309;font-weight:700">А тепер намало что получится.юйте... (ведучий дає завдання)</li>
       </ul>
     </div>
     <p class="sm" style="margin-top:1rem">Ця вправа демонструє як спільна мета (картина в голові) впливає на дії всієї команди.</p>
@@ -5939,7 +5939,7 @@ Bist du dabei?</div>
   <div class="sr">
     <p>Кожна людина має свої особисті цілі.</p>
     <div class="q">Які особисті цілі є у вас?</div>
-    <div class="q" style="margin-top:1rem">У чому ви бачите відмінність особистих цілей від мети компанії, яку ви назвали раніше?</div>
+    <div class="q" style="margin-top:1rem">У чому ви бачите відмінність особистих цілей від мети компании, которую вы назвали раніше?</div>
   </div>
 </div>
 
@@ -5998,7 +5998,7 @@ Bist du dabei?</div>
     <div class="tri"></div><div class="snum">13</div>
   </div>
   <div class="sr">
-    <p style="font-size:clamp(.95rem,2vw,1.3rem);font-weight:700;margin-bottom:1.25rem">«…Ми працюємо, щоб допомогти людям та бізнесу по всьому світу реалізувати їх повний потенціал»</p>
+    <p style="font-size:clamp(.95rem,2vw,1.3rem);font-weight:700;margin-bottom:1.25rem">«…Мы работаем, чтобоб допомогти людям та бізнесу по всьому світу реалізувати їх повний потенціал»</p>
     <div class="green-card">
       <div class="gl">Як реалізується</div>
       <div class="gt">Компанія приносить користь, допомагаючи людям реалізовуватись</div>
@@ -6029,7 +6029,7 @@ Bist du dabei?</div>
     </div>
   </div>
   <div class="sr">
-    <p>Основна мета є у будь-якої компанії: і маленької, і великої.</p>
+    <p>Основна мета є у будь-якої компанії: і мало что получится.енької, і великої.</p>
     <div class="fill-grp" style="margin-top:1rem">
       <div class="fill-lbl">Відома компанія у вашому місті / країні (приклад для обговорення)</div>
       <textarea class="fill-in" id="l10f_local_company" rows="2" placeholder="Наприклад: АТБ, Нова Пошта, Rozetka..." oninput="window._l10SF('local_company',this.value)"></textarea>
@@ -6127,7 +6127,7 @@ Bist du dabei?</div>
   <div class="sr">
     <div class="blue-card" style="margin-bottom:1.25rem">
       <div class="bl">Основна мета IKEA</div>
-      <div class="bt">«Змінити на краще повсякденне життя багатьох людей»</div>
+      <div class="bt">«Изменить к лучшему повседневную жизнь многих людей»</div>
     </div>
     <div class="q">Який унікальний шлях обрала IKEA на відміну від інших компаній, щоб змінювати на краще повсякденне життя багатьох людей?</div>
   </div>
@@ -6145,11 +6145,11 @@ Bist du dabei?</div>
   <div class="sr">
     <div class="blue-card">
       <div class="bl">Основна мета</div>
-      <div class="bt">«Змінити на краще повсякденне життя багатьох людей»</div>
+      <div class="bt">«Изменить к лучшему повседневную жизнь многих людей»</div>
     </div>
     <div class="green-card" style="margin-top:.75rem">
       <div class="gl">ЗАДУМ</div>
-      <div class="gt">«Пропонувати широкий асортимент зручних та функціональних товарів для облаштування будинку за такими низькими цінами, щоб якнайбільше людей мали можливість їх купити»</div>
+      <div class="gt">«Пропонувати широкий асортимент зручних та функціональних товарів для облаштування будинку за такими низькими цінами, щоб якнайбільше людей мало что получится.и можливість їх купити»</div>
     </div>
   </div>
 </div>
@@ -6543,7 +6543,7 @@ Bist du dabei?</div>
     <h3 style="margin-bottom:1rem">Тепер я від вас чекаю:</h3>
     <ul class="ul-list">
       <li>що ми працюватимемо як <strong>одна команда</strong> над досягненням цілей, щоб наша компанія вийшла на новий рівень;</li>
-      <li>що кожен <strong>розвиватиметься</strong>, освоюватиме нові інструменти, підвищуватиме свою ефективність та компетентність.</li>
+      <li>що кожен <strong>розвиватиметься</strong>, освоюватиме нові інструменти, підвищуватиме свою ефективність та компетентности.ність.</li>
     </ul>
     <div class="resume-box" style="margin-top:1.5rem;text-align:center;font-size:clamp(1rem,2.5vw,1.3rem);font-weight:800">
       Дякую!<br>Зростати ми можемо тільки <strong>всі разом</strong>!
@@ -6575,6 +6575,893 @@ Bist du dabei?</div>
     <button class="nclose" onclick="window._l10Close()">✕ Закрити</button>
   </div>
   <button class="nbtn" id="l10Next" onclick="window._l10N()">Далі →</button>
+</div>
+</div><!-- /l10Ov -->`,
+                presOverlay_ru: `<style>
+/* ===== PRESENTATION STYLES ===== */
+.l10-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
+.l10-pres-trigger-info{color:white}
+.l10-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.l10-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
+.l10-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
+.l10-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
+/* ===== FULLSCREEN OVERLAY ===== */
+#l10Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l10Ov.on{display:flex}
+/* ===== SLIDE LAYOUT ===== */
+.l10s{display:none;width:100%;height:100%;overflow:hidden}
+.l10s.on{display:flex}
+/* Split layout: dark left + white right */
+.sl{width:36%;min-width:260px;background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 2rem 5rem;position:relative;flex-shrink:0}
+.sl h2{color:#fff;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
+.sl h2 u{text-decoration-color:rgba(255,255,255,.35)}
+.sl .sub{color:#94a3b8;font-size:.88rem;margin-top:.5rem;line-height:1.5}
+/* Triangle corner decoration */
+.tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:100px solid transparent;border-bottom:100px solid rgba(255,255,255,.06)}
+/* Slide number badge */
+.snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+/* Right white content panel */
+.sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
+/* Full dark slide (title/end) */
+.s-dark{background:linear-gradient(165deg,#09132b,#142040);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
+.s-dark h1{color:#fff;font-size:clamp(2rem,6vw,4rem);font-weight:900;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin:0 0 1rem}
+.s-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:560px;line-height:1.6}
+/* ===== TYPOGRAPHY ===== */
+.sr h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
+.sr p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
+.sr p.sm{font-size:clamp(.75rem,1.4vw,.92rem);color:#6b7280}
+.sr .q{font-size:clamp(.95rem,2vw,1.25rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
+.sr .ql{font-size:clamp(.88rem,1.8vw,1.1rem);font-weight:700;color:#09132b;margin:.9rem 0;line-height:1.6}
+/* ===== VISUAL ELEMENTS ===== */
+.rule-row{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
+.rule-row:last-child{border-bottom:none}
+.rule-dot{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
+.num-row{display:flex;align-items:flex-start;gap:1rem;padding:.75rem 0;border-bottom:1px solid #f0f4f8}
+.num-row:last-child{border-bottom:none}
+.nbox{width:36px;height:36px;background:#1a3068;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;flex-shrink:0}
+.ntext{font-size:clamp(.85rem,1.7vw,1.05rem);color:#222;line-height:1.7}
+.green-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.green-card .gl{font-size:.7rem;font-weight:800;color:#16a34a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.green-card .gt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#166534;line-height:1.65;font-style:italic}
+.blue-card{background:#eff6ff;border:1.5px solid #93c5fd;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.blue-card .bl{font-size:.7rem;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.blue-card .bt{font-size:clamp(.85rem,1.7vw,1.05rem);color:#1e3a8a;line-height:1.65;font-style:italic}
+.resume-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75}
+.exercise-box{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.exercise-box strong{color:#b45309}
+.ex-list{list-style:none;padding:0;margin:.5rem 0}
+.ex-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.3rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.ex-list li::before{content:"▶";color:#1a3068;font-size:.7rem;margin-top:.35rem;flex-shrink:0}
+.ul-list{list-style:none;padding:0;margin:.5rem 0}
+.ul-list li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.ul-list li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+/* ===== FILL INPUTS ===== */
+.fill-grp{margin:.65rem 0}
+.fill-lbl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.fill-in{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
+.fill-in:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
+/* ===== VISUAL DECORATIONS (SVG areas) ===== */
+.vis{position:absolute;right:2rem;bottom:5rem;opacity:.12;pointer-events:none}
+.vis-right{position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);opacity:.08;pointer-events:none}
+/* ===== CORNER DECORATIONS ON WHITE SLIDES ===== */
+.corner-tl{position:absolute;top:0;right:0;width:140px;height:140px;overflow:hidden;pointer-events:none}
+.corner-tl svg{position:absolute;top:0;right:0}
+.corner-br{position:absolute;bottom:5rem;right:0;width:120px;height:120px;overflow:hidden;pointer-events:none}
+/* ===== NAV BAR ===== */
+.l10-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
+.nbtn{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
+.nbtn:hover:not(:disabled){background:rgba(255,255,255,.25)}
+.nbtn:disabled{opacity:.25;cursor:default}
+.nctr{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
+.nclose{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
+.nsave{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+/* ===== LEFT PANEL SVG ICONS ===== */
+.lico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.85}
+</style>
+<div id="l10Ov" style="display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000">
+<div id="l10SW" style="flex:1;position:relative;overflow:hidden">
+
+<!-- S1: TITLE -->
+<div class="l10s on" id="l10_1">
+  <div class="s-dark">
+    <div style="margin-bottom:1.5rem">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="opacity:.6"><polygon points="40,4 75,70 5,70" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="4" x2="40" y2="40" stroke="white" stroke-width="2" opacity=".4"/></svg>
+    </div>
+    <h1>ЦЕЛИ, ЗАМЫСЕЛ<br>И БУДУЩЕЕ<br>КОМПАНИИ</h1>
+    <p>ЗАНЯТИЕ 1 · Из цикла семинаров по управлению</p>
+    <div class="snum" style="position:fixed;bottom:5.5rem;left:1.5rem">1</div>
+  </div>
+</div>
+
+<!-- S2: ЦЕЛИ q1 -->
+<div class="l10s" id="l10_2">
+  <div class="sl">
+    <h2>ЦЕЛИ</h2>
+    <!-- Blue triangles decoration -->
+    <svg width="60" height="60" viewBox="0 0 60 60" style="position:absolute;top:2rem;left:2rem;opacity:.3"><polygon points="0,60 60,0 60,60" fill="#3b82f6"/></svg>
+    <svg width="40" height="40" viewBox="0 0 40 40" style="position:absolute;top:6rem;right:1.5rem;opacity:.2"><polygon points="0,40 40,0 40,40" fill="#1a3068"/></svg>
+    <div class="tri"></div><div class="snum">2</div>
+  </div>
+  <div class="sr">
+    <div class="corner-tl"><svg width="140" height="140"><line x1="0" y1="0" x2="140" y2="140" stroke="#1a3068" stroke-width="1.5" opacity=".15"/><line x1="50" y1="0" x2="140" y2="90" stroke="#1a3068" stroke-width="1" opacity=".1"/></svg></div>
+    <p>Каждая компания имеет некую цель, на достижение которой <strong>работает весь коллектив</strong>.</p>
+    <div style="display:flex;align-items:flex-start;gap:1rem;margin:.75rem 0">
+      <svg width="30" height="30" viewBox="0 0 30 30" style="flex-shrink:0;margin-top:.25rem"><polygon points="0,30 30,0 30,30" fill="#3b82f6" opacity=".7"/></svg>
+      <div class="ql">Как вы думаете, какова цель нашей компании?</div>
+    </div>
+  </div>
+</div>
+
+<!-- S3: ЦЕЛИ q2 -->
+<div class="l10s" id="l10_3">
+  <div class="sl">
+    <h2>ЦЕЛИ</h2>
+    <svg width="60" height="60" viewBox="0 0 60 60" style="position:absolute;top:2rem;left:2rem;opacity:.3"><polygon points="0,60 60,0 60,60" fill="#3b82f6"/></svg>
+    <div class="tri"></div><div class="snum">3</div>
+  </div>
+  <div class="sr">
+    <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem">
+      <svg width="30" height="30" viewBox="0 0 30 30" style="flex-shrink:0;margin-top:.25rem"><polygon points="0,30 30,0 30,30" fill="#3b82f6" opacity=".7"/></svg>
+      <div class="ql">Если у разных сотрудников разные представления о цели, как это влияет на деятельность компании?</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:1rem;margin-left:3rem">
+      <svg width="30" height="30" viewBox="0 0 30 30" style="flex-shrink:0;margin-top:.25rem"><polygon points="0,30 30,0 30,30" fill="#1a3068" opacity=".8"/></svg>
+      <div class="ql">Що станеться, якщо так продовжуватиметься?</div>
+    </div>
+  </div>
+</div>
+
+<!-- S4: МЕТА ЗАНЯТТЯ -->
+<div class="l10s" id="l10_4">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="3"/><circle cx="50" cy="50" r="25" fill="none" stroke="white" stroke-width="2" opacity=".6"/><circle cx="50" cy="50" r="10" fill="white" opacity=".8"/><line x1="80" y1="20" x2="60" y2="38" stroke="#ef4444" stroke-width="3"/></svg>
+    </div>
+    <h2>МЕТА<br>ЗАНЯТТЯ</h2>
+    <div class="tri"></div><div class="snum">4</div>
+  </div>
+  <div class="sr">
+    <div class="num-row">
+      <div class="nbox">1</div>
+      <div class="ntext"><u>Цель занятия</u> — познакомить вас с основной целью нашей компании, с тем, как ми йдемо до неё и якою имеет стати наша компанія</div>
+    </div>
+    <div class="num-row">
+      <div class="nbox">2</div>
+      <div class="ntext">Результатом нашей встречи должно быть ваше понимание цели компании и того будучтого, которое ми створюватимемо с вами для её досягнення</div>
+    </div>
+  </div>
+</div>
+
+<!-- S5: ПРАВИЛА -->
+<div class="l10s" id="l10_5">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 90 110" width="70" height="85"><rect x="10" y="5" width="70" height="90" rx="6" fill="none" stroke="white" stroke-width="3"/><line x1="25" y1="30" x2="65" y2="30" stroke="white" stroke-width="2" opacity=".7"/><line x1="25" y1="45" x2="65" y2="45" stroke="white" stroke-width="2" opacity=".7"/><line x1="25" y1="60" x2="65" y2="60" stroke="white" stroke-width="2" opacity=".7"/><line x1="25" y1="75" x2="55" y2="75" stroke="white" stroke-width="2" opacity=".7"/></svg>
+    </div>
+    <h2>ПРАВИЛА</h2>
+    <div class="tri"></div><div class="snum">5</div>
+  </div>
+  <div class="sr">
+    <div class="rule-row"><div class="rule-dot"></div><span>Заняття триватиме близько <strong>1,5 год.</strong> без перерви.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>Переведите мобильные телефоны в <strong>беззвучний режим</strong>.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>Если получите срочный звонок — выйдите из аудитории и ответьте, затем вернитесь. поверніться.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>Вопросы можно задавать, <strong>поднимая руку</strong>.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>Если вопросов будет много — запишем и разберём после завершення.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>У каждого должны быть <strong>бумага и ручка</strong>. для записів.</span></div>
+    <div class="rule-row"><div class="rule-dot"></div><span>В конце — ответить на несколько вопросов и оставить відгуки.</span></div>
+  </div>
+</div>
+
+<!-- S6: ВАЖЛИВЕ ПРАВИЛО -->
+<div class="l10s" id="l10_6">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="35" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="45" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="56" r="4" fill="white"/></svg>
+    </div>
+    <h2>ВАЖЛИВЕ<br>ПРАВИЛО</h2>
+    <div class="tri"></div><div class="snum">6</div>
+  </div>
+  <div class="sr">
+    <h3>Поднимайте руку сразу!</h3>
+    <p>Если чем больше людей — тем больше задержек.то-то показалось вам <strong>непонятным, странным, запутанным</strong> — поднимайте руку. И отвазу ж, як це здалося.</p>
+    <div class="blue-card" style="margin-top:1.5rem">
+      <div class="bl">Чому це важливо</div>
+      <div class="bt">Нас приучают ещё в школе к поэтому, что стыдно чего-то не знать.<br><br>Но когда человек не понимает, она <strong>не може діяти</strong>, використовувати знание.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S7: НАШИ СЛОВА fill-in -->
+<div class="l10s" id="l10_7">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 70" width="80" height="70"><rect x="5" y="10" width="70" height="50" rx="8" fill="none" stroke="white" stroke-width="3"/><path d="M5 30 Q40 50 75 30" fill="none" stroke="white" stroke-width="2" opacity=".5"/><circle cx="25" cy="25" r="4" fill="white" opacity=".7"/><circle cx="40" cy="22" r="4" fill="white" opacity=".7"/><circle cx="55" cy="25" r="4" fill="white" opacity=".7"/></svg>
+    </div>
+    <h2>НАШИ<br>СЛОВА</h2>
+    <div class="tri"></div><div class="snum">7</div>
+  </div>
+  <div class="sr">
+    <h3>Термины нашей компании</h3>
+    <p>Специальные слова и понятия, которые мы используем в работе и которые не всегда понятны новым сотробітникам:</p>
+    <div class="fill-grp" style="margin-top:1rem">
+      <div class="fill-lbl">Укажите ваши термины (заполните перед занятием)</div>
+      <textarea class="fill-in" id="l10f_terms" rows="5" placeholder="Например: КП — коммерческое предложения; МВП — мінімало что получится.ьно життєздатний продукт; ОКР — цели та ключови результати..." oninput="window._l10SF('terms',this.value)"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S8: ВПРАВА -->
+<div class="l10s" id="l10_8">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="10" y="10" width="60" height="60" rx="4" fill="none" stroke="white" stroke-width="3"/><line x1="20" y1="55" x2="35" y2="35" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="35" cy="35" r="5" fill="none" stroke="white" stroke-width="2"/><path d="M40 55 Q50 40 60 55" fill="none" stroke="white" stroke-width="2"/><line x1="48" y1="25" x2="48" y2="35" stroke="white" stroke-width="2"/><line x1="43" y1="30" x2="53" y2="30" stroke="white" stroke-width="2"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="tri"></div><div class="snum">8</div>
+  </div>
+  <div class="sr">
+    <h3>Нарисуйте на листе бумаги:</h3>
+    <div class="exercise-box">
+      <ul class="ex-list">
+        <li>будинок</li>
+        <li>дерево</li>
+        <li>сонце</li>
+        <li>траву под деревом</li>
+        <li style="color:#b45309;font-weight:700">А теперь нарисуйте... (ведущий даёт задание)</li>
+      </ul>
+    </div>
+    <p class="sm" style="margin-top:1rem">Это упражнение демонстрирует как общая цель (картина в голове) влияеє на действия всей команди.</p>
+  </div>
+</div>
+
+<!-- S9: ЛИЧНЫЕ ЦЕЛИ -->
+<div class="l10s" id="l10_9">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="16" fill="none" stroke="white" stroke-width="3"/><path d="M15 70 Q15 50 40 50 Q65 50 65 70" fill="none" stroke="white" stroke-width="3"/></svg>
+    </div>
+    <h2>ЛИЧНЫЕ<br>ЦЕЛИ</h2>
+    <div class="tri"></div><div class="snum">9</div>
+  </div>
+  <div class="sr">
+    <p>Каждый человек имеет свои личные цели.</p>
+    <div class="q">Какие личные цели есть у вас?</div>
+    <div class="q" style="margin-top:1rem">В чём вы видите отличие личных целей от цели компаниї, якв ви назвали раніше?</div>
+  </div>
+</div>
+
+<!-- S10: РЕЗЮМЕ -->
+<div class="l10s" id="l10_10">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">10</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box" style="font-size:clamp(1rem,2.5vw,1.4rem);font-weight:700;text-align:center;padding:2rem">
+      Цели компании и личные цели любого члена коллектива — <strong>совершенно разные понятия</strong>.
+    </div>
+  </div>
+</div>
+
+<!-- S11: ЦЕЛЬ КОМПАНИИ -->
+<div class="l10s" id="l10_11">
+  <div class="sl" style="background:linear-gradient(165deg,#09132b,#142040)">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="90" height="90"><g fill="none" stroke="white"><ellipse cx="40" cy="55" rx="25" ry="8" opacity=".3"/><circle cx="30" cy="35" r="7" fill="white" opacity=".7"/><circle cx="50" cy="32" r="7" fill="white" opacity=".7"/><circle cx="40" cy="25" r="7" fill="white" opacity=".8"/><circle cx="22" cy="45" r="7" fill="white" opacity=".6"/><circle cx="58" cy="45" r="7" fill="white" opacity=".6"/></g></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <h3 style="font-size:clamp(1.3rem,3vw,2.2rem)">ЦЕЛЬ КОМПАНИИ —</h3>
+    <p style="font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:700;color:#166534;text-decoration:underline;text-underline-offset:4px;margin-top:.5rem">приносити користь якомога більшій кількости людей</p>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">11</div>
+  </div>
+</div>
+
+<!-- S12: GOOGLE -->
+<div class="l10s" id="l10_12">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 90 90" width="90" height="90"><circle cx="45" cy="45" r="35" fill="none" stroke="white" stroke-width="3" opacity=".4"/><text x="45" y="55" text-anchor="middle" font-size="28" font-weight="900" fill="white" font-family="Arial">G</text></svg>
+    </div>
+    <h2>GOOGLE</h2>
+    <div class="tri"></div><div class="snum">12</div>
+  </div>
+  <div class="sr">
+    <p style="font-size:clamp(.95rem,2vw,1.3rem);font-weight:700;margin-bottom:1.25rem">«Сделать мировую информацию универсально доступной и полезной»</p>
+    <div class="green-card">
+      <div class="gl">Как реализуется</div>
+      <div class="gt">Компания приносит пользу людям, делая доступной нужную информацию</div>
+    </div>
+  </div>
+</div>
+
+<!-- S13: MICROSOFT -->
+<div class="l10s" id="l10_13">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="5" y="5" width="33" height="33" fill="white" opacity=".8"/><rect x="42" y="5" width="33" height="33" fill="white" opacity=".5"/><rect x="5" y="42" width="33" height="33" fill="white" opacity=".5"/><rect x="42" y="42" width="33" height="33" fill="white" opacity=".8"/></svg>
+    </div>
+    <h2>MICROSOFT</h2>
+    <div class="tri"></div><div class="snum">13</div>
+  </div>
+  <div class="sr">
+    <p style="font-size:clamp(.95rem,2vw,1.3rem);font-weight:700;margin-bottom:1.25rem">«…Мы работаем, чтобоб допомогти людям та бізнесв по всьомв світв реалізувати их повний потенціал»</p>
+    <div class="green-card">
+      <div class="gl">Как реализуется</div>
+      <div class="gt">Компания приносит пользу, помогая людям реализовываться</div>
+    </div>
+  </div>
+</div>
+
+<!-- S14: РЕЗЮМЕ - Цель -->
+<div class="l10s" id="l10_14">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 60 80" width="50" height="70"><polygon points="30,5 55,65 5,65" fill="none" stroke="white" stroke-width="3"/><text x="30" y="52" text-anchor="middle" font-size="13" fill="white" font-weight="700">Цель</text></svg>
+    </div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">14</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div style="text-align:center;font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:900;color:#1a3068;margin-bottom:1.25rem">Цель</div>
+    <div class="resume-box">Именно основная цель наполняет деятельность любой компании <strong>смыслом</strong> и є дороговказом протягом усього её життя.</div>
+  </div>
+</div>
+
+<!-- S15: fill-in местная компания -->
+<div class="l10s" id="l10_15">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="30" width="50" height="40" rx="3" fill="none" stroke="white" stroke-width="2.5"/><polygon points="10,30 40,8 70,30" fill="none" stroke="white" stroke-width="2.5"/><rect x="30" y="50" width="20" height="20" fill="none" stroke="white" stroke-width="2"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <p>Основная цель есть у любой компании: и мало что получится.енькой, и большой.</p>
+    <div class="fill-grp" style="margin-top:1rem">
+      <div class="fill-lbl">Известная компания в вашем городе / стране (пример для обсуждения)</div>
+      <textarea class="fill-in" id="l10f_local_company" rows="2" placeholder="Наприклад: АТБ, Нова Пошта, Rozetka..." oninput="window._l10SF('local_company',this.value)"></textarea>
+    </div>
+    <div class="q" style="margin-top:.75rem">Как вы думаете, какова основная цель этой компании?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">15</div>
+  </div>
+</div>
+
+<!-- S16: РЕЗЮМЕ -->
+<div class="l10s" id="l10_16">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">16</div>
+  </div>
+  <div class="sr">
+    <div class="resume-box">Мы разобрали понятие <strong>«основная цель компании»</strong> — это бессрочнава мета, сенс життя компании.</div>
+    <p style="margin-top:1rem">Чуть позже я расскажу о том, какова основная цель нашей компании.</p>
+    <p>А зараз давайте розберемося ще з одним поняттям.</p>
+  </div>
+</div>
+
+<!-- S17: Google питання -->
+<div class="l10s" id="l10_17">
+  <div class="sl">
+    <div class="lico"><svg viewBox="0 0 90 90" width="90" height="90"><circle cx="45" cy="45" r="35" fill="none" stroke="white" stroke-width="3" opacity=".4"/><text x="45" y="55" text-anchor="middle" font-size="28" font-weight="900" fill="white" font-family="Arial">G</text></svg></div>
+    <h2>GOOGLE</h2>
+    <div class="tri"></div><div class="snum">17</div>
+  </div>
+  <div class="sr">
+    <div class="blue-card" style="margin-bottom:1.25rem">
+      <div class="bl">Основна мета Google</div>
+      <div class="bt">«Сделать мировую информацию универсально доступной и полезной»</div>
+    </div>
+    <div class="q">Могут быть и другие компании с той же целью — сделать доступной и полезной мировую информацию?</div>
+  </div>
+</div>
+
+<!-- S18: РЕЗЮМЕ -->
+<div class="l10s" id="l10_18">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">18</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box">Основная цель обычно <strong>не является уникальной</strong> и к одной цели могуть йти різни компании.<br><br>Але при этом они діятимуть <strong>по-різному</strong>.</div>
+  </div>
+</div>
+
+<!-- S19: ЗАМЫСЕЛ КОМПАНИИ -->
+<div class="l10s" id="l10_19">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="white" stroke-width="2.5" opacity=".5"/><path d="M40 70 Q15 55 15 35 Q15 15 40 15 Q65 15 65 35 Q65 55 40 70Z" fill="none" stroke="white" stroke-width="2" opacity=".3"/><circle cx="40" cy="18" r="6" fill="white" opacity=".9"/><path d="M30 55 Q40 45 50 55" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/></svg>
+    </div>
+    <h2>ЗАМЫСЕЛ<br>КОМПАНИИ</h2>
+    <div class="tri"></div><div class="snum">19</div>
+  </div>
+  <div class="sr">
+    <p class="sm">Не основная цель, а замысел компании делает компанию особенной. И именно в замысле заложенено відмінности та основний спосіб действия.</p>
+    <p style="margin-top:1rem;font-size:clamp(.95rem,2vw,1.2rem)">Особый способ, черес который компания рухається для досягнення своєї основної мети, називається <strong>ЗАДУМ компании</strong>.</p>
+    <div style="text-align:center;margin-top:1.5rem;opacity:.2">
+      <svg viewBox="0 0 200 60" width="200" height="60"><path d="M20 50 Q60 20 100 40 Q140 60 180 10" fill="none" stroke="#1a3068" stroke-width="4"/><polygon points="175,5 185,15 170,18" fill="#1a3068"/><polygon points="180,5 195,8 183,18" fill="#ef4444" opacity=".8"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- S20: РЕЗЮМЕ Цель+Замысел -->
+<div class="l10s" id="l10_20">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 70 90" width="60" height="80"><polygon points="35,8 58,75 12,75" fill="none" stroke="#f59e0b" stroke-width="3"/><text x="35" y="60" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="700">Цель</text><path d="M35 75 Q10 65 15 50 Q20 30 35 30" fill="none" stroke="white" stroke-width="2.5"/><path d="M35 75 Q60 65 55 50 Q50 30 35 30" fill="none" stroke="white" stroke-width="2.5" opacity=".5"/></svg>
+    </div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">20</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div style="text-align:center;font-size:clamp(1rem,2vw,1.3rem);font-weight:900;color:#1a3068">Цель</div>
+      <div style="text-align:center;font-size:clamp(1rem,2vw,1.3rem);font-weight:900;color:#166534">Задум</div>
+    </div>
+    <div class="resume-box">Если <strong>цель</strong> — это ориентир, то <strong>замысел</strong> — это путь плях, яким ми йдемо за ней.<br><br>Задум — це особливий унікальний для компании обрас действий.</div>
+  </div>
+</div>
+
+<!-- S21: IKEA питання -->
+<div class="l10s" id="l10_21">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 60" width="80" height="60"><rect x="5" y="10" width="70" height="40" rx="20" fill="#f59e0b" opacity=".8"/><text x="40" y="36" text-anchor="middle" font-size="18" font-weight="900" fill="#1a3068" font-family="Arial">IKEA</text></svg>
+    </div>
+    <h2>IKEA</h2>
+    <div class="tri"></div><div class="snum">21</div>
+  </div>
+  <div class="sr">
+    <div class="blue-card" style="margin-bottom:1.25rem">
+      <div class="bl">Основна мета IKEA</div>
+      <div class="bt">«Изменить к лучшему повседневную жизнь многих людей»</div>
+    </div>
+    <div class="q">Какой уникальный путь выбрала IKEA в отличие от других компаний, чтобы изменять к лучше повсякденне життя багатьох людей?</div>
+  </div>
+</div>
+
+<!-- S22: IKEA задум -->
+<div class="l10s" id="l10_22">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 60" width="80" height="60"><rect x="5" y="10" width="70" height="40" rx="20" fill="#f59e0b" opacity=".8"/><text x="40" y="36" text-anchor="middle" font-size="18" font-weight="900" fill="#1a3068" font-family="Arial">IKEA</text></svg>
+    </div>
+    <h2>IKEA</h2>
+    <div class="tri"></div><div class="snum">22</div>
+  </div>
+  <div class="sr">
+    <div class="blue-card">
+      <div class="bl">Основна мета</div>
+      <div class="bt">«Изменить к лучшему повседневную жизнь многих людей»</div>
+    </div>
+    <div class="green-card" style="margin-top:.75rem">
+      <div class="gl">ЗАДУМ</div>
+      <div class="gt">«Предлагать широкий ассортимент удобных и функциональных товаров для обустройства будинкв за такими низькими цінами, чтоб якнайбольше людей мало что получится.и можливість их купити»</div>
+    </div>
+  </div>
+</div>
+
+<!-- S23: fill-in местная компания замысел -->
+<div class="l10s" id="l10_23">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 60" width="80" height="60"><rect x="5" y="10" width="70" height="40" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="40" y1="10" x2="40" y2="50" stroke="white" stroke-width="1.5" opacity=".4"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <div class="fill-grp">
+      <div class="fill-lbl">Компания (с предыдущего слайда)</div>
+      <textarea class="fill-in" id="l10f_local2" rows="1" placeholder="Название компании..." oninput="window._l10SF('local2',this.value)"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.5rem">
+      <div class="fill-grp">
+        <div class="fill-lbl">Основна мета</div>
+        <textarea class="fill-in" id="l10f_local_goal" rows="3" placeholder="Яка мета..." oninput="window._l10SF('local_goal',this.value)"></textarea>
+      </div>
+      <div class="fill-grp">
+        <div class="fill-lbl">Задум</div>
+        <textarea class="fill-in" id="l10f_local_vision" rows="3" placeholder="Як досягають..." oninput="window._l10SF('local_vision',this.value)"></textarea>
+      </div>
+    </div>
+    <div class="ql" style="margin-top:.75rem;font-size:.9rem">Чем замысел отличает эту компанию от других аналогічних?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">23</div>
+  </div>
+</div>
+
+<!-- S24: РЕЗЮМЕ -->
+<div class="l10s" id="l10_24">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">24</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div style="text-align:center;font-size:clamp(1rem,2.5vw,1.5rem);font-weight:900;color:#1a3068;margin-bottom:1rem">Цель</div>
+    <div class="resume-box">Как вы видите, замысел определяет особенности деятельности и приводит компаниюю к основної мети.<br><br>І сейчас я розповім о те, якою є основна мета и задум <strong>нашей компании</strong>.</div>
+  </div>
+</div>
+
+<!-- S25: Цель нашей компании - вопрос -->
+<div class="l10s" id="l10_25">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 60 80" width="50" height="70"><polygon points="30,5 55,65 5,65" fill="none" stroke="#f59e0b" stroke-width="3"/><text x="30" y="52" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="700">Цель</text></svg>
+    </div>
+    <h2>ЦЕЛЬ<br>КОМПАНИИ</h2>
+    <div class="tri"></div><div class="snum">25</div>
+  </div>
+  <div class="sr">
+    <div class="q">Как вы думаете, как можно сформулировать основную цель нашей компании?</div>
+    <p style="margin-top:1.5rem">Одна ис моих обязанностей как владельца компании состоит в том, чтобы основнсновна мета та задум компании были визначени <strong>чітко</strong>.</p>
+  </div>
+</div>
+
+<!-- S26: ЦЕЛЬ НАШЕЙ КОМПАНИИ fill-in -->
+<div class="l10s" id="l10_26">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 60 80" width="50" height="70"><polygon points="30,5 55,65 5,65" fill="none" stroke="#f59e0b" stroke-width="3"/><text x="30" y="52" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="700">Цель</text></svg>
+    </div>
+    <h2>ЦЕЛЬ<br>НАШЕЙ<br>КОМПАНИИ</h2>
+    <div class="fill-grp" style="position:absolute;bottom:4.5rem;left:1rem;right:1rem">
+      <div class="fill-lbl" style="color:#94a3b8;font-size:.65rem">Название / логотип компании</div>
+      <textarea class="fill-in" id="l10f_logo" rows="1" style="font-size:.78rem;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:white" placeholder="Назва..." oninput="window._l10SF('logo',this.value)"></textarea>
+    </div>
+    <div class="tri"></div><div class="snum">26</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="40" height="40" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <div class="fill-grp">
+      <div class="fill-lbl">Цель нашей компании</div>
+      <textarea class="fill-in" id="l10f_company_goal" rows="4" placeholder="Впишите сформулированную цель вашей компании..." oninput="window._l10SF('company_goal',this.value)"></textarea>
+    </div>
+    <p class="sm" style="margin-top:.5rem">Приведите примеры, как мы реализуем в жизни основную цель нашей компании.</p>
+  </div>
+</div>
+
+<!-- S27: Що ми робимо fill-in -->
+<div class="l10s" id="l10_27">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M20 68 Q20 50 40 50 Q60 50 60 68" fill="none" stroke="white" stroke-width="2.5"/><circle cx="40" cy="28" r="5" fill="white" opacity=".8"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <p>Каждый из вас на своём рабочем месте прикладывает усилия для достижения цели компании.</p>
+    <div class="fill-grp" style="margin-top:1rem">
+      <div class="fill-lbl">Мета для питання</div>
+      <textarea class="fill-in" id="l10f_goal_q" rows="2" placeholder="Укажите цель компании..." oninput="window._l10SF('goal_q',this.value)"></textarea>
+    </div>
+    <div class="q" style="margin-top:.75rem">Що ви робите, щоб <span style="color:#22c55e;font-style:italic" id="l10q27">[ваша мета]</span>?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">27</div>
+  </div>
+</div>
+
+<!-- S28: Задум питання -->
+<div class="l10s" id="l10_28">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="white" stroke-width="2.5" opacity=".5"/><circle cx="40" cy="18" r="6" fill="white" opacity=".9"/></svg>
+    </div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="q" style="font-size:clamp(1rem,2.5vw,1.4rem)">А как вы думаете, в чём наш особый пут<strong>унікальність</strong> в досягненни основної мети?</div>
+    <div style="text-align:center;margin-top:2rem;opacity:.15">
+      <svg viewBox="0 0 200 80" width="200" height="80"><path d="M20 70 Q60 30 100 50 Q140 70 180 20" fill="none" stroke="#1a3068" stroke-width="5"/><polygon points="175,15 185,25 170,28" fill="#1a3068"/></svg>
+    </div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">28</div>
+  </div>
+</div>
+
+<!-- S29: ЗАМЫСЕЛ КОМПАНИИ fill-in -->
+<div class="l10s" id="l10_29">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="white" stroke-width="2.5" opacity=".5"/><circle cx="40" cy="18" r="6" fill="white" opacity=".9"/><path d="M20 55 Q40 45 60 55" fill="none" stroke="white" stroke-width="3" opacity=".6"/></svg>
+    </div>
+    <h2>ЗАМЫСЕЛ<br>КОМПАНИИ</h2>
+    <div class="tri"></div><div class="snum">29</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="36" height="36" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <div class="fill-grp">
+      <div class="fill-lbl">Замысел нашей компании</div>
+      <textarea class="fill-in" id="l10f_company_vision" rows="4" placeholder="Впишите сформулированный замым компании..." oninput="window._l10SF('company_vision',this.value)"></textarea>
+    </div>
+    <p class="sm" style="margin-top:.5rem">Примеры того, как действия соответствовали замыслу, и это давало хороший результат.</p>
+  </div>
+</div>
+
+<!-- S30: РЕЗЮМЕ -->
+<div class="l10s" id="l10_30">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">30</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box">Теперь вы знаете основную цель нашей компании и тот особый путь, который ведётёт кмпанію до неё.<br><br>Ясне розуміння нашей мети та задумв робить нас <strong>сильнішими як команду</strong>.<br><br>Це призведе до більшої узгоджености действий та вищих результатов.</div>
+  </div>
+</div>
+
+<!-- S31: ИДЕАЛЬНАЯ КАРТИНА -->
+<div class="l10s" id="l10_31">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="#f59e0b" stroke-width="3"/><path d="M30 75 Q15 55 15 35 Q20 75 35 80" fill="none" stroke="white" stroke-width="2" opacity=".4"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/><path d="M25 55 L40 65 L55 50" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/></svg>
+    </div>
+    <h2>ИДЕАЛЬНАЯ<br><u>Картина</u></h2>
+    <div class="tri"></div><div class="snum">31</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="36" height="36" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <h3><u>Идеальная картина</u></h3>
+    <p>— это то, как в идеале в реальном мире должна выглядеть деятельность компании.</p>
+    <p style="margin-top:.75rem">Это представление о компании, её материальных объектах: <strong>помещенийия, обладнання, продукцію, персонал</strong> і т.д.</p>
+  </div>
+</div>
+
+<!-- S32: ИДЕАЛЬНАЯ КАРТИНА fill-in -->
+<div class="l10s" id="l10_32">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="#f59e0b" stroke-width="3"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <h3>Идеальная картина компании</h3>
+    <div class="fill-grp">
+      <div class="fill-lbl">Наша компания через ____ лет (ключевые цифры и результаты)</div>
+      <textarea class="fill-in" id="l10f_ideal" rows="6" placeholder="Например: 3 филиала, 50 сотрудников, виручка 10 млн грн/міс, лідер ринкв в регіоні, нагороди, клієнти..." oninput="window._l10SF('ideal',this.value)"></textarea>
+    </div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">32</div>
+  </div>
+</div>
+
+<!-- S33: Питання про картину fill-in -->
+<div class="l10s" id="l10_33">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="#f59e0b" stroke-width="3"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <div class="fill-grp" style="margin-bottom:.5rem">
+      <div class="fill-lbl">Через сколько лет (укажите)</div>
+      <textarea class="fill-in" id="l10f_years" rows="1" placeholder="Наприклад: 3 роки" oninput="window._l10SF('years',this.value)"></textarea>
+    </div>
+    <div class="q">Кому нравится эта идеальная картина?</div>
+    <div class="q">Кто готов поработать над достижением этой картины?</div>
+    <div class="q">Какие у вас вопросы по этой идеальной картине?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">33</div>
+  </div>
+</div>
+
+<!-- S34: РЕЗЮМЕ -->
+<div class="l10s" id="l10_34">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">34</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box">Такую идеальную картину мы можем воплотить в жизнь, <strong>только работая как команда</strong>, ніхто поодинці не зможе це зробити.</div>
+  </div>
+</div>
+
+<!-- S35: Сомнения -->
+<div class="l10s" id="l10_35">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="#f59e0b" stroke-width="3"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/></svg>
+    </div>
+    <h2>ИДЕАЛЬНАЯ<br><u>Картина</u></h2>
+    <div class="tri"></div><div class="snum">35</div>
+  </div>
+  <div class="sr">
+    <div class="q">Может ли быть такое, что мы <strong>не сможем</strong> реализовать эту идеальную картину?</div>
+    <p style="margin-top:1.25rem">Возможно, у кого-то возникнут сомнения: <em>«А действительно ли возможно воплотить це в життя?"</em></p>
+    <p style="margin-top:.75rem">Поэтому я хочу рассказать вам об <strong>истории нашей компании</strong>.</p>
+  </div>
+</div>
+
+<!-- S36: ИСТОРИЯ fill-in -->
+<div class="l10s" id="l10_36">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><rect x="15" y="15" width="50" height="65" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="30" x2="55" y2="30" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="42" x2="55" y2="42" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="54" x2="45" y2="54" stroke="white" stroke-width="1.5" opacity=".6"/><path d="M35 8 Q40 2 45 8" fill="none" stroke="#f59e0b" stroke-width="2" opacity=".8"/><circle cx="40" cy="5" r="3" fill="#f59e0b" opacity=".9"/></svg>
+    </div>
+    <h2>ИСТОРИЯ<br>КОМПАНИИ</h2>
+    <div class="tri"></div><div class="snum">36</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="36" height="36" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <div class="fill-grp">
+      <div class="fill-lbl">Год основания и начало</div>
+      <textarea class="fill-in" id="l10f_history_year" rows="2" placeholder="Например: 2015 год — открыли перший офіс у гаражі, 2 людини..." oninput="window._l10SF('history_year',this.value)"></textarea>
+    </div>
+    <div class="fill-grp">
+      <div class="fill-lbl">Ключевые даты роста и развития</div>
+      <textarea class="fill-in" id="l10f_history_dates" rows="4" placeholder="2017 — первый офис&#10;2019 — команда 10 людей&#10;2022 — вийшли на 1 млн грн/міс&#10;2024 — відкрили другу філію..." oninput="window._l10SF('history_dates',this.value)"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S37: Ветерани -->
+<div class="l10s" id="l10_37">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><rect x="15" y="15" width="50" height="65" rx="4" fill="none" stroke="white" stroke-width="2.5"/><path d="M35 8 Q40 2 45 8" fill="none" stroke="#f59e0b" stroke-width="2"/><circle cx="40" cy="5" r="3" fill="#f59e0b" opacity=".9"/></svg>
+    </div>
+    <h2>ИСТОРИЯ<br>КОМПАНИИ</h2>
+    <div class="tri"></div><div class="snum">37</div>
+  </div>
+  <div class="sr">
+    <div class="q">Поднимите руки те, кто <strong>работает больше трёх лет</strong> в компании.</div>
+    <p style="margin-top:1.25rem">Расскажите, пожалуйста, что вы застали, когда пришли на работу, и чем больше людей — тем больше задержек.то изменилося в компании за роки вашей работы.</p>
+  </div>
+</div>
+
+<!-- S38: РЕЗЮМЕ -->
+<div class="l10s" id="l10_38">
+  <div class="sl">
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">38</div>
+  </div>
+  <div class="sr" style="justify-content:center">
+    <div class="resume-box">Мы прошли довольно большой путь.<br><br>Мы достигли многого и продолжаем рух до основної мети разом, <strong>втілюючи в життя идеальнв картину</strong>, якв я представив вам сьогодні.</div>
+  </div>
+</div>
+
+<!-- S39: ПРАВИЛА И ДИСЦИПЛИНА -->
+<div class="l10s" id="l10_39">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><path d="M28 40 L37 50 L55 30" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2>ПРАВИЛА<br>И<br>ДИСЦИПЛИНА</h2>
+    <div class="tri"></div><div class="snum">39</div>
+  </div>
+  <div class="sr">
+    <div class="q">Как вы относитесь к правилам и дисциплине?</div>
+    <div class="q" style="margin-top:1rem">Как вы думаете, зачем они нужны?</div>
+  </div>
+</div>
+
+<!-- S40: Спортивна команда -->
+<div class="l10s" id="l10_40">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="30" fill="none" stroke="white" stroke-width="2.5"/><path d="M25 25 Q40 35 55 25" fill="none" stroke="white" stroke-width="2"/><path d="M20 40 Q40 30 60 40" fill="none" stroke="white" stroke-width="2"/><path d="M25 55 Q40 45 55 55" fill="none" stroke="white" stroke-width="2"/><line x1="40" y1="10" x2="40" y2="70" stroke="white" stroke-width="1.5" opacity=".4"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <p>Работу компании можно сравнить с работой <strong>спортивной команды</strong>.</p>
+    <div class="q" style="margin-top:1.25rem">Что будет происходить, если в спортивной игре <strong>не будет правил</strong>?</div>
+    <div class="resume-box" style="margin-top:1.25rem">Резюме: чтобы спортивная игра состоялась, <strong>необходібні цілі та правила</strong>.</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">40</div>
+  </div>
+</div>
+
+<!-- S41: Правила бизнеса -->
+<div class="l10s" id="l10_41">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="10" y="20" width="60" height="45" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="10" y1="35" x2="70" y2="35" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="20" x2="25" y2="65" stroke="white" stroke-width="1.5" opacity=".5"/><circle cx="17" cy="27" r="3" fill="white" opacity=".6"/><circle cx="17" cy="42" r="3" fill="white" opacity=".6"/><circle cx="17" cy="54" r="3" fill="white" opacity=".6"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <p>Бизнес — это <strong>более сложная деятельность</strong> по сравнению со спортом. Поэтому в бизнесе правил ще більше.</p>
+    <div class="q" style="margin-top:1.25rem">Какие в нашем бизнесе есть правила, которые нам <strong>помогають</strong>?</div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">41</div>
+  </div>
+</div>
+
+<!-- S42: ОРГПОЛИТИКА -->
+<div class="l10s" id="l10_42">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><rect x="15" y="15" width="50" height="65" rx="4" fill="none" stroke="white" stroke-width="2.5"/><path d="M35 8 Q40 2 45 8" fill="none" stroke="#f59e0b" stroke-width="2"/><circle cx="40" cy="5" r="3" fill="#f59e0b" opacity=".9"/><line x1="25" y1="32" x2="55" y2="32" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="44" x2="55" y2="44" stroke="white" stroke-width="1.5" opacity=".5"/><line x1="25" y1="56" x2="45" y2="56" stroke="white" stroke-width="1.5" opacity=".5"/></svg>
+    </div>
+    <h2>Оргполитика</h2>
+    <div class="tri"></div><div class="snum">42</div>
+  </div>
+  <div class="sr">
+    <svg viewBox="0 0 40 40" width="36" height="36" style="margin-bottom:.75rem"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <div class="blue-card" style="margin-bottom:1rem">
+      <div class="bl">Визначення</div>
+      <div class="bt"><strong>Оргполитика</strong> (организационная политика) — правила, с помощью которых група досягає згоди чтодо действий та відповідно до которых она веде свої справи.</div>
+    </div>
+    <p>Первая наша оргполитика и самая главная — это <strong>описание нашей основной цели и замысла компании</strong>.</p>
+    <div class="q" style="margin-top:.75rem;font-size:.9rem">Какие в нас ещё есть оргполитики, о которых вы знаете?</div>
+  </div>
+</div>
+
+<!-- S43: РЕЗЮМЕ fill-in -->
+<div class="l10s" id="l10_43">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><path d="M40 80 Q10 60 10 35 Q10 10 40 10 Q70 10 70 35 Q70 60 40 80Z" fill="none" stroke="white" stroke-width="2" opacity=".4"/><path d="M25 60 Q20 45 20 35 Q25 75 40 78" fill="none" stroke="white" stroke-width="1.5" opacity=".3"/><circle cx="40" cy="14" r="5" fill="#f59e0b"/></svg>
+    </div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="tri"></div><div class="snum">43</div>
+  </div>
+  <div class="sr">
+    <div class="fill-grp">
+      <div class="fill-lbl">Путеводная звезда — наша цель</div>
+      <textarea class="fill-in" id="l10f_star_goal" rows="2" placeholder="Вставьте формулировкв цели компании..." oninput="window._l10SF('star_goal',this.value)"></textarea>
+    </div>
+    <div class="resume-box" style="margin-top:.75rem">
+      <strong>Задум</strong> — дорога, якою ми йдемо до мети<br><br>
+      <strong>Бордюры по краям — это наши правила</strong>, чтобы нас не снесло с пути!
+    </div>
+  </div>
+</div>
+
+<!-- S44: ЗАВЕРШЕННЯ -->
+<div class="l10s" id="l10_44">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><path d="M28 40 L37 50 L55 30" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <h3>ЗАВЕРШЕННЯ</h3>
+    <p><strong>На этом занятии мы рассмотрели:</strong></p>
+    <ul class="ul-list" style="margin-top:.5rem">
+      <li>Основную цель компании</li>
+      <li>Наш задум</li>
+      <li>Идеальную картину положения дел</li>
+      <li>Историю нашей компании</li>
+      <li>Главную оргполитику компании</li>
+    </ul>
+    <div class="q" style="margin-top:1.25rem">Чи залишились у вас питання?</div>
+    <svg viewBox="0 0 40 40" width="32" height="32" style="margin-top:.75rem;opacity:.4"><polygon points="20,2 37,38 3,38" fill="#1a3068"/></svg>
+    <p class="sm">Сейчас прошу вас ответить на несколько вопросов и оставить отзывы о проведённом заняття.</p>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">44</div>
+  </div>
+</div>
+
+<!-- S45: Ожидания -->
+<div class="l10s" id="l10_45">
+  <div class="sl">
+    <div class="lico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M20 68 Q20 50 40 50 Q60 50 60 68" fill="none" stroke="white" stroke-width="2.5"/><circle cx="40" cy="28" r="5" fill="white" opacity=".8"/></svg>
+    </div>
+  </div>
+  <div class="sr">
+    <h3 style="margin-bottom:1rem">Теперь я от вас жду:</h3>
+    <ul class="ul-list">
+      <li>что мы будем работать как <strong>одна команда</strong> над достижением целей, чтобы наша компанияйшла на новий рівень;</li>
+      <li>что каждый <strong>будет развиваться</strong>, осваивать новые инструменты, повышать свою эффективність та компетентности.ність.</li>
+    </ul>
+    <div class="resume-box" style="margin-top:1.5rem;text-align:center;font-size:clamp(1rem,2.5vw,1.3rem);font-weight:800">
+      Спасибо!<br>Расти мы можем только <strong>все вместе</strong>!
+    </div>
+    <div class="snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">45</div>
+  </div>
+</div>
+
+<!-- S46: КОНЕЦ -->
+<div class="l10s" id="l10_46">
+  <div class="s-dark">
+    <svg viewBox="0 0 80 80" width="70" height="70" style="margin-bottom:1.5rem;opacity:.5">
+      <polygon points="40,5 50,30 77,30 55,48 63,75 40,58 17,75 25,48 3,30 30,30" fill="none" stroke="white" stroke-width="2.5"/>
+    </svg>
+    <h1>КОНЕЦ<br>ЗАНЯТИЯ 1</h1>
+    <p>Спасибо за участие!</p>
+    <div class="snum" style="position:fixed;bottom:5.5rem;left:1.5rem">46</div>
+  </div>
+</div>
+
+</div><!-- /l10SW -->
+
+<!-- Navigation -->
+<div class="l10-nav">
+  <button class="nbtn" id="l10Prev" onclick="window._l10P()" disabled>← Назад</button>
+  <div style="display:flex;align-items:center;gap:.6rem">
+    <span class="nctr" id="l10Ctr">1 / 46</span>
+    <button class="nsave" onclick="window._l10SaveAll()">💾 Зберегти</button>
+    <button class="nclose" onclick="window._l10Close()">✕ Закрити</button>
+  </div>
+  <button class="nbtn" id="l10Next" onclick="window._l10N()">Далее →</button>
 </div>
 </div><!-- /l10Ov -->`,
 
@@ -6739,7 +7626,7 @@ Bist du dabei?</div>
     <div class="l10-section-label" style="margin-top:1rem;">Чому люди опираються — справжня причина</div>
     <div class="l10-card">
         <p>Більшість власників думають, що опір — це нелояльність або лінь. Насправді причина набагато простіша: <strong>ви впроваджуєте зміни, бо бачите проблему. Але чи бачать її ваші співробітники?</strong></p>
-        <p>Щоб змінити поведінку людини — потрібно дати їй більшу, значущу мету, яка переважить бажання зберегти статус-кво. Цілі повинні бути справді великими — такими, що викликають ентузіазм і бажання бути частиною чогось більшого.</p>
+        <p>Щоб змінити поведінку людини — потрібно дати їй більшу, значущу мету, яка переважить бажання зберегти статус-кво. Цілі повинні бути справді великими — такими, що викликають ентузіазм і бажання бути чем больше людей — тем больше задержек.астиною чогось більшого.</p>
     </div>
 </div>
 
@@ -6760,7 +7647,7 @@ Bist du dabei?</div>
     <div class="l10-examples">
         <div class="l10-example">
             <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div><div class="l10-example-label">Консалтингова компанія</div><div class="l10-example-text">Зробити малий бізнес розумнішим, ефективнішим і незалежним від власника</div></div>
+            <div><div class="l10-example-label">Консалтингова компанія</div><div class="l10-example-text">Зробити мало что получится.ий бізнес розумнішим, ефективнішим і незалежним від власника</div></div>
         </div>
         <div class="l10-example">
             <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -6833,7 +7720,7 @@ Bist du dabei?</div>
     <div class="l10-situations">
         <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо масштабувати.</strong> Хочете відкрити другу точку? Як ви передасте «як треба робити»? Ніяк — це тільки у вашій голові.</div></div>
         <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо навчати людей.</strong> Новий співробітник приходить, ви витрачаєте тижні на навчання, він звільняється — і все спочатку.</div></div>
-        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо контролювати якість.</strong> Як перевірити чи правильно зробили? Якщо немає стандарту — немає критерію.</div></div>
+        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо контролювати якість.</strong> Як перевірити чем больше людей — тем больше задержек.и правильно зробили? Якщо немає стандарту — немає критерію.</div></div>
         <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Ви стаєте заручником «незамінних».</strong> Є Петро, який «знає як». Без Петра — все зупиняється. Петро це знає. І користується цим.</div></div>
     </div>
 </div>
@@ -6926,7 +7813,7 @@ Bist du dabei?</div>
             <div class="l10-step-num">1</div>
             <div class="l10-step-body">
                 <div class="l10-step-title">Створіть офіційний письмовий документ</div>
-                <div class="l10-step-text">Не розмова, не «всі і так знають» — письмовий документ із підписом засновника. Три частини: мета компанії, задум і коротка історія. Підпис сигналізує команді: «Це серйозно. Це від першої особи».</div>
+                <div class="l10-step-text">Не розмова, не «всі і так знають» — письмовий документ із підписом засновника. Три чем больше людей — тем больше задержек.астини: мета компанії, задум і коротка історія. Підпис сигналізує команді: «Це серйозно. Це від першої особи».</div>
             </div>
         </div>
         <div class="l10-step">
@@ -6967,7 +7854,7 @@ Bist du dabei?</div>
         <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>«Ми — команда» — всі рухаються до спільної мети</div>
         <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Спільна мета — конкретна, з цифрами та ідеальною картиною</div>
         <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Навіщо вчитися — кожен розуміє, що це дасть особисто йому</div>
-        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Реальна підтримка змін — не формальна, а щира</div>
+        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Реальна підтримка змін — не формало что получится.ьна, а щира</div>
     </div>
     <div class="l10-section-label" style="margin-top:1rem;">7 кроків підготовки</div>
     <div class="l10-steps">
@@ -7105,7 +7992,7 @@ Bist du dabei?</div>
     <div class="l10-examples">
         <div class="l10-example">
             <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div><div class="l10-example-label">Консалтинговая компания</div><div class="l10-example-text">Сделать малый бизнес умнее, эффективнее и независимым от владельца</div></div>
+            <div><div class="l10-example-label">Консалтинговая компания</div><div class="l10-example-text">Сделать мало что получится.ый бизнес умнее, эффективнее и независимым от владельца</div></div>
         </div>
         <div class="l10-example">
             <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -7117,7 +8004,7 @@ Bist du dabei?</div>
         </div>
     </div>
     <div class="l10-card" style="margin-top:0.75rem;">
-        <p>Замысел — это ваш уникальный способ достигать цели. То, что вы делаете — и чего сознательно <strong>НЕ</strong> делаете. Замысел не придумывают с нуля — он отражает ваш реальный опыт и понимание рынка.</p>
+        <p>Замысел — это ваш уникальный способ достигать цели. То, что вы делаете — и чем больше людей — тем больше задержек.его сознательно <strong>НЕ</strong> делаете. Замысел не придумывают с нуля — он отражает ваш реальный опыт и понимание рынка.</p>
     </div>
 </div>
 
@@ -7242,7 +8129,7 @@ Bist du dabei?</div>
                 homework_en: `<ol><li>Complete the dialogue with the AI Goal Coach</li><li>Create a "Company Goal & Vision Policy" document in Google Docs and attach the link</li><li>Present to the team — share the goal and vision, record on video</li><li>Write in the answer field: what goal you formulated and what was the hardest part of the AI dialogue</li></ol>`,
                 homework_pl: `<ol><li>Przeprowadź dialog z AI Coachem Celów</li><li>Utwórz dokument «Polityka Celów i Zamysłu Firmy» w Google Docs i dołącz link</li><li>Przeprowadź prezentację dla zespołu — opowiedz o celu i zamyśle, nagraj na wideo</li><li>Napisz w polu odpowiedzi: jaki cel sformułowałeś(aś) i co było najtrudniejsze w dialogu z AI</li></ol>`,
                 homework_de: `<ol><li>Führen Sie den Dialog mit dem KI-Ziel-Coach</li><li>Erstellen Sie ein Dokument «Unternehmens-Ziel- & Visions-Richtlinie» in Google Docs und fügen Sie den Link ein</li><li>Präsentieren Sie dem Team — teilen Sie Ziel und Vision, nehmen Sie es auf Video auf</li><li>Schreiben Sie im Antwortfeld: welches Ziel Sie formuliert haben und was der schwierigste Teil des KI-Dialogs war</li></ol>`,
-                homework_ru: `<ol><li>Пройдите диалог с AI-коучем целей</li><li>Создайте документ «Политика целей и замысла компании» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — расскажите цель и замысел, запишите на видео</li><li>Напишите в поле ответа: какую цель вы сформулировали и что было сложнее всего в диалоге с AI</li></ol>`,
+                homework_ru: `<ol><li>Пройдите диалог с AI-коучем целей</li><li>Создайте документ «Политика целей и замысла компании» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — расскажите цель и замысел, запишите на видео</li><li>Напишите в поле ответа: какую цель вы сформулировали и чем больше людей — тем больше задержек.то было сложнее всего в диалоге с AI</li></ol>`,
 
                 homeworkLink: "https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b",
                 homeworkLinkName: "→ AI-коуч цілей",
@@ -7402,7 +8289,7 @@ Bist du dabei?</div>
   </div>
 </div>
 
-<!-- S4: ЦІЛЬ ЗАНЯТТЯ -->
+<!-- S4: ЦЕЛЬ ЗАНЯТТЯ -->
 <div class="l11s" id="l11_4">
   <div class="l11-sl">
     <div class="l11-ico">
@@ -7709,7 +8596,7 @@ Bist du dabei?</div>
     <div class="l11-tri"></div><div class="l11-snum">21</div>
   </div>
   <div class="l11-sr" style="justify-content:center">
-    <div class="l11-resume">Якщо компанія чи людина не розуміє, який ЦКП хоче отримувати клієнт — мало шансів зробити такий продукт і відповідно <strong>не буде комерційного успіху</strong>.</div>
+    <div class="l11-resume">Якщо компанія чи людина не розуміє, який ЦКП хоче отримувати клієнт — мало что получится.о шансів зробити такий продукт і відповідно <strong>не буде комерційного успіху</strong>.</div>
   </div>
 </div>
 
@@ -7770,7 +8657,7 @@ Bist du dabei?</div>
       <textarea class="l11-fi" id="l11f_values_why" rows="3" placeholder="Наприклад: 1. Швидкість обслуговування  2. Індивідуальний підхід  3. Гарантія результату..." oninput="window._l11SF('values_why',this.value)"></textarea>
     </div>
     <div class="l11-fg">
-      <div class="l11-fl">3-4 причини чому клієнти йдуть</div>
+      <div class="l11-fl">3-4 причини чем больше людей — тем больше задержек.ому клієнти йдуть</div>
       <textarea class="l11-fi" id="l11f_values_left" rows="3" placeholder="Наприклад: 1. Висока ціна  2. Довге очікування  3. Відсутність зворотного зв'язку..." oninput="window._l11SF('values_left',this.value)"></textarea>
     </div>
   </div>
@@ -7796,7 +8683,7 @@ Bist du dabei?</div>
     <div class="l11-wt-tri"></div>
     <div class="l11-wt-tri2"></div>
     <div style="position:relative;z-index:1;max-width:60%">
-      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦКП<br>компанії</h3>
+      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦКП<br>r>компанії</h3>
       <div style="height:4px;width:120px;background:#09132b;margin-bottom:1.5rem"></div>
       <div class="l11-fg">
         <div class="l11-fl">ЦКП вашої компанії (заповніть)</div>
@@ -7824,9 +8711,9 @@ Bist du dabei?</div>
     <div class="l11-ex" style="margin-top:.75rem">
       <strong>Вправа:</strong> Наведіть за одним прикладом дій співробітника, які можуть:
       <ul class="l11-ul" style="margin-top:.5rem">
-        <li>створювати чи руйнувати <strong>першу цінність</strong></li>
-        <li>створювати чи руйнувати <strong>другу цінність</strong></li>
-        <li>створювати чи руйнувати <strong>третю цінність</strong></li>
+        <li>створювати чем больше людей — тем больше задержек.и руйнувати <strong>першу цінність</strong></li>
+        <li>створювати чем больше людей — тем больше задержек.и руйнувати <strong>другу цінність</strong></li>
+        <li>створювати чем больше людей — тем больше задержек.и руйнувати <strong>третю цінність</strong></li>
       </ul>
     </div>
   </div>
@@ -7891,7 +8778,7 @@ Bist du dabei?</div>
   </div>
 </div>
 
-<!-- S32: Схема обміну -->
+<!-- S32: Схема обмена -->
 <div class="l11s" id="l11_32">
   <div class="l11-sl">
     <h2>ОБМІН</h2>
@@ -7949,7 +8836,7 @@ Bist du dabei?</div>
     <div class="l11-tri"></div><div class="l11-snum">34</div>
   </div>
   <div class="l11-sr" style="justify-content:center">
-    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Обмін якого виду потрібно надавати клієнтам, щоби <strong>компанія мала успіх</strong>?</div>
+    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Обмін якого виду потрібно надавати клієнтам, щоби <strong>компанія мало что получится.а успіх</strong>?</div>
     <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">34</div>
   </div>
 </div>
@@ -8005,13 +8892,13 @@ Bist du dabei?</div>
   </div>
 </div>
 
-<!-- S38: ЦІЛЬ КОМПАНІЇ fill-in (white + blue triangle) -->
+<!-- S38: ЦЕЛЬ КОМПАНІЇ fill-in (white + blue triangle) -->
 <div class="l11s" id="l11_38">
   <div class="l11-wt">
     <div class="l11-wt-tri"></div>
     <div class="l11-wt-tri2"></div>
     <div style="position:relative;z-index:1;max-width:60%">
-      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦІЛЬ КОМПАНІЇ</h3>
+      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦЕЛЬ КОМПАНІЇ</h3>
       <div style="height:4px;width:120px;background:#09132b;margin-bottom:1.5rem"></div>
       <div class="l11-fg">
         <div class="l11-fl">Впишіть ціль вашої компанії</div>
@@ -8045,7 +8932,7 @@ Bist du dabei?</div>
     <div class="l11-wt-tri"></div>
     <div class="l11-wt-tri2"></div>
     <div style="position:relative;z-index:1;max-width:60%">
-      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦКП<br>компанії</h3>
+      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦКП<br>r>компанії</h3>
       <div style="height:4px;width:120px;background:#09132b;margin-bottom:1.5rem"></div>
       <div class="l11-fg">
         <div class="l11-fl">ЦКП вашої компанії (фінальне формулювання)</div>
@@ -8121,6 +9008,858 @@ Bist du dabei?</div>
     <button class="l11-close" onclick="window._l11Close()">✕ Закрити</button>
   </div>
   <button class="l11-nb" id="l11Next" onclick="window._l11N()">Далі →</button>
+</div>
+</div><!-- /l11Ov -->`,
+                presOverlay_ru: `<style>
+/* === LESSON 11 PRES TRIGGER === */
+.l11-pres-trigger{background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.5rem 2rem;margin:2.5rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 24px rgba(15,28,63,.25)}
+.l11-pres-trigger-info{color:white}
+.l11-pres-trigger-title{font-size:1.05rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.l11-pres-trigger-sub{font-size:.82rem;color:#94a3b8}
+.l11-run-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.75rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 12px rgba(34,197,94,.35);transition:all .15s}
+.l11-run-btn:hover{background:#16a34a;transform:translateY(-1px)}
+/* === OVERLAY === */
+#l11Ov{position:fixed;inset:0;background:#000;z-index:99999;display:none;flex-direction:column}
+#l11Ov.on{display:flex}
+/* === SLIDE BASE === */
+.l11s{display:none;width:100%;height:100%;overflow:hidden}
+.l11s.on{display:flex}
+/* Dark full slide */
+.l11-dark{background:linear-gradient(165deg,#09132b 0%,#142040 50%,#1a3068 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem;width:100%}
+.l11-dark h1{color:#fff;font-size:clamp(2rem,6vw,3.8rem);font-weight:900;text-transform:uppercase;line-height:1.1;margin:0 0 1rem}
+.l11-dark p{color:#94a3b8;font-size:clamp(.9rem,2vw,1.2rem);max-width:600px;line-height:1.6}
+/* Split: dark left + white right */
+.l11-sl{width:34%;min-width:240px;background:linear-gradient(165deg,#09132b 0%,#142040 55%,#1a3068 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem 1.75rem 5rem;position:relative;flex-shrink:0}
+.l11-sl h2{color:#fff;font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;line-height:1.1;margin:0;text-transform:uppercase}
+.l11-sl h2 u{text-decoration-color:rgba(255,255,255,.4)}
+.l11-tri{position:absolute;bottom:0;right:0;width:0;height:0;border-left:90px solid transparent;border-bottom:90px solid rgba(255,255,255,.06)}
+.l11-snum{position:absolute;bottom:1.25rem;left:1.25rem;background:white;color:#09132b;font-weight:900;font-size:.9rem;width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:5px}
+/* White right */
+.l11-sr{flex:1;background:#fff;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;position:relative}
+/* White slide with blue triangle top-right (slides 27,38,40) */
+.l11-wt{width:100%;background:#fff;display:flex;flex-direction:column;justify-content:flex-start;padding:clamp(2rem,5vw,4rem) clamp(2rem,6vw,5rem);position:relative;overflow:hidden}
+.l11-wt-tri{position:absolute;top:0;right:0;width:0;height:0;border-top:280px solid #09132b;border-left:280px solid transparent;opacity:.85}
+.l11-wt-tri2{position:absolute;top:0;right:0;width:0;height:0;border-top:180px solid #3b82f6;border-left:180px solid transparent;opacity:.3}
+/* Typography */
+.l11-sr h3,.l11-wt h3{font-size:clamp(1.2rem,3vw,2rem);font-weight:900;color:#09132b;margin:0 0 1.25rem;line-height:1.15}
+.l11-sr p,.l11-wt p{font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.75;margin:.6rem 0}
+.l11-sr p.sm,.l11-wt p.sm{font-size:clamp(.75rem,1.4vw,.9rem);color:#6b7280}
+.l11-q{font-size:clamp(.95rem,2vw,1.2rem);font-weight:700;color:#09132b;background:#f0f6ff;border-left:4px solid #1a3068;padding:.9rem 1.1rem;border-radius:0 10px 10px 0;margin:1rem 0;line-height:1.6}
+/* Definition box */
+.l11-def{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;margin:.75rem 0}
+.l11-def .l11-dl{font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.l11-def .l11-dt{font-size:clamp(.9rem,1.9vw,1.15rem);color:#1e3a8a;line-height:1.65;font-weight:600}
+/* Highlight term */
+.l11-term{font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:900;color:#09132b;text-decoration:underline;text-underline-offset:4px}
+/* Green resume box */
+.l11-resume{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:1.25rem 1.5rem;font-size:clamp(.88rem,1.8vw,1.1rem);color:#166534;line-height:1.75;margin:.75rem 0}
+/* Exercise box */
+.l11-ex{background:#fff7ed;border:1.5px solid #fbbf24;border-radius:12px;padding:1.1rem 1.3rem;margin:.75rem 0}
+.l11-ex strong{color:#b45309}
+/* Bullet list */
+.l11-ul{list-style:none;padding:0;margin:.5rem 0}
+.l11-ul li{display:flex;align-items:flex-start;gap:.7rem;padding:.35rem 0;font-size:clamp(.85rem,1.7vw,1.05rem);color:#333;line-height:1.65}
+.l11-ul li::before{content:"●";color:#1a3068;flex-shrink:0;margin-top:.1rem}
+/* Rule list */
+.l11-rules .r{display:flex;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f0f4f8;font-size:clamp(.82rem,1.6vw,1rem);color:#333;line-height:1.65}
+.l11-rules .r:last-child{border-bottom:none}
+.l11-rd{width:9px;height:9px;border-radius:50%;background:#1a3068;flex-shrink:0;margin-top:.45rem}
+/* Fill inputs */
+.l11-fg{margin:.65rem 0}
+.l11-fl{font-size:.72rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.l11-fi{width:100%;border:2px dashed #3b82f6;border-radius:10px;padding:.7rem 1rem;font-size:clamp(.85rem,1.6vw,1rem);color:#111;background:#f8fbff;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.6}
+.l11-fi:focus{outline:none;border-color:#1d4ed8;border-style:solid;background:#fff}
+/* Icon badge */
+.l11-star{display:block;margin-bottom:.6rem}
+/* Nav */
+.l11-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem;background:rgba(9,19,43,.92);backdrop-filter:blur(6px);z-index:10}
+.l11-nb{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:.5rem 1.4rem;cursor:pointer;font-size:.85rem;font-weight:700;transition:background .15s}
+.l11-nb:hover:not(:disabled){background:rgba(255,255,255,.25)}
+.l11-nb:disabled{opacity:.25;cursor:default}
+.l11-nc{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.04em}
+.l11-close{background:#ef4444;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:800}
+.l11-save{background:#22c55e;color:white;border:none;border-radius:9px;padding:.5rem 1.1rem;cursor:pointer;font-size:.85rem;font-weight:700;margin-right:.5rem}
+/* Left panel icons */
+.l11-ico{position:absolute;bottom:4.5rem;left:50%;transform:translateX(-50%);opacity:.8}
+/* Exchange diagram */
+.l11-exch{display:flex;align-items:center;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
+.l11-person{text-align:center}
+.l11-person svg{display:block;margin:0 auto .3rem}
+.l11-person-label{font-size:.82rem;font-weight:700;color:#1a3068}
+.l11-arrow-wrap{display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.l11-arrow-text{font-size:.72rem;color:#6b7280;text-align:center;max-width:160px;line-height:1.4}
+/* CKP badge */
+.l11-ckp-badge{display:inline-flex;align-items:center;justify-content:center;background:#09132b;color:white;font-weight:900;font-size:clamp(1.2rem,3vw,2rem);padding:.5rem 1.5rem;border-radius:10px;letter-spacing:.05em;margin-bottom:.5rem}
+/* Two-col grid */
+.l11-2col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.75rem 0}
+.l11-card{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem 1.25rem}
+.l11-card .l11-cl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.l11-card .l11-ct{font-size:clamp(.82rem,1.6vw,1rem);line-height:1.6}
+</style>
+<div id="l11Ov" style="display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000">
+<div id="l11SW" style="flex:1;position:relative;overflow:hidden">
+
+<!-- S1: TITLE -->
+<div class="l11s on" id="l11_1">
+  <div class="l11-dark">
+    <div style="margin-bottom:1.5rem;opacity:.5">
+      <svg viewBox="0 0 80 80" width="70" height="70"><rect x="10" y="10" width="60" height="60" rx="6" fill="none" stroke="white" stroke-width="3"/><line x1="22" y1="30" x2="58" y2="30" stroke="white" stroke-width="2.5"/><line x1="22" y1="42" x2="58" y2="42" stroke="white" stroke-width="2.5"/><line x1="22" y1="54" x2="44" y2="54" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h1>ЦЕННЫЙ КОНЕЧНЫЙ<br>ПРОДУКТ КОМПАНИИ</h1>
+    <p>ЗАНЯТИЕ 2 · Из цикла семинаров по управлению</p>
+    <div class="l11-snum" style="position:fixed;bottom:5.5rem;left:1.5rem">1</div>
+  </div>
+</div>
+
+<!-- S2: ПИТАННЯ 1 -->
+<div class="l11s" id="l11_2">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg>
+    </div>
+    <h2>ПИТАННЯ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">2</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-q">Бывало, что вы ожидаете от коллеги результата, а получаете что-то, чтоо доводиться <strong>доробляти за нього</strong>?</div>
+    <div class="l11-q" style="margin-top:1rem">Вы заплатили за какую-то услугу, а вам предоставили лишь частичный результат?<strong>частину того, на що ви розраховували</strong> — які почуття виникають?</div>
+  </div>
+</div>
+
+<!-- S3: ПИТАННЯ 2 -->
+<div class="l11s" id="l11_3">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg>
+    </div>
+    <h2>ПИТАННЯ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">3</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-q">Бывало такое, что человек выполняет <strong>много действий</strong>, а результата нет? нетякого неимеет, но она считает, что "попрацювала" и цілком задоволена?</div>
+    <div class="l11-q" style="margin-top:1rem">Бывало, вам дали какой-то результат, но он уже <strong>не тот</strong>? ценный, оскільки наданий надто пізно</strong>?</div>
+  </div>
+</div>
+
+<!-- S4: ЦЕЛЬ ЗАНЯТИЯ -->
+<div class="l11s" id="l11_4">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><circle cx="40" cy="40" r="20" fill="none" stroke="white" stroke-width="2" opacity=".6"/><circle cx="40" cy="40" r="8" fill="white" opacity=".8"/><line x1="65" y1="15" x2="48" y2="32" stroke="#ef4444" stroke-width="3"/></svg>
+    </div>
+    <h2>ЦЕЛЬ<br>ЗАНЯТИЯ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">4</div>
+  </div>
+  <div class="l11-sr">
+    <div style="display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid #f0f4f8">
+      <div style="width:36px;height:36px;background:#09132b;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">1</div>
+      <div style="font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.7">Цель занятия — разобраться с понятием продукта и ценного конечного продукта.ися с тим, что <strong>цінно для наших клиентов</strong> и за что они готови платити компании гроші, як каждый ис нас влияет на виробництво этого продукту.</div>
+    </div>
+    <div style="display:flex;gap:1rem;padding:.75rem 0">
+      <div style="width:36px;height:36px;background:#09132b;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">2</div>
+      <div style="font-size:clamp(.88rem,1.8vw,1.1rem);color:#222;line-height:1.7">Результатом этого занятия будетт ваше понимание ЦКП компании.тя имеет быть ваше розуміння, который продукт производит наша компанія и як ви <strong>влияетте на його ценность</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S5: ПРАВИЛА -->
+<div class="l11s" id="l11_5">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 90" width="70" height="80"><rect x="15" y="12" width="50" height="68" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="28" x2="55" y2="28" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="40" x2="55" y2="40" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="52" x2="55" y2="52" stroke="white" stroke-width="1.5" opacity=".6"/><line x1="25" y1="64" x2="45" y2="64" stroke="white" stroke-width="1.5" opacity=".6"/></svg>
+    </div>
+    <h2>ПРАВИЛА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">5</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-rules">
+      <div class="r"><div class="l11-rd"></div><span>Заняття триватиме близько <strong>1 год. 40 хв.</strong> без перерви.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>Переведите мобильные телефоны в <strong>беззвучний режим</strong>.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>Если получите срочный звонок — выйдите из аудитории и ответьте, затем вернитесь. поверніться.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>Вопросы можно задавать, <strong>поднимая руку</strong>.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>Если вопросов будет много — запишем и разберём позже завершення.</span></div>
+      <div class="r"><div class="l11-rd"></div><span>У каждого должны быть <strong>бумага и ручка</strong>. для записів.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- S6: ВАЖЛИВЕ ПРАВИЛО -->
+<div class="l11s" id="l11_6">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="45" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="56" r="4" fill="white"/></svg>
+    </div>
+    <h2>ВАЖЛИВЕ<br>ПРАВИЛО</h2>
+    <div class="l11-tri"></div><div class="l11-snum">6</div>
+  </div>
+  <div class="l11-sr">
+    <p>Когда вы услышите <strong>непонятное слово</strong> — поднимите руку и спросите меня.</p>
+    <div class="l11-resume" style="margin-top:1.5rem">Никогда не делайте умный вид.елайте умный вид — это не принесёт никакой пользы. результатів.</div>
+  </div>
+</div>
+
+<!-- S7: Що таке ПРОДУКТ -->
+<div class="l11s" id="l11_7">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="25" width="50" height="40" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="20" x2="25" y2="30" stroke="white" stroke-width="2"/><line x1="55" y1="20" x2="55" y2="30" stroke="white" stroke-width="2"/><line x1="35" y1="25" x2="45" y2="25" stroke="white" stroke-width="2"/></svg>
+    </div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1.1rem,3vw,1.8rem);text-align:center">Как вы понимаете слово<br><strong>ПРОДУКТ?</strong></div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">7</div>
+  </div>
+</div>
+
+<!-- S8: ПРОДУКТ визначення -->
+<div class="l11s" id="l11_8">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="15" y="25" width="50" height="40" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="20" x2="25" y2="30" stroke="white" stroke-width="2"/><line x1="55" y1="20" x2="55" y2="30" stroke="white" stroke-width="2"/></svg>
+    </div>
+    <h2><u>ПРОДУКТ</u></h2>
+    <div class="l11-tri"></div><div class="l11-snum">8</div>
+  </div>
+  <div class="l11-sr">
+    <svg width="32" height="32" viewBox="0 0 32 32" style="margin-bottom:.75rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l11-def">
+      <div class="l11-dl">Визначення</div>
+      <div class="l11-dt">ПРОДУКТ — это <strong>предмет</strong>, который является результатом <strong>труда</strong>.да</strong>, придатний для обміну.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.75rem;margin-top:1.25rem;padding:1rem;background:#f0f6ff;border-radius:12px">
+      <svg viewBox="0 0 50 50" width="50" height="50" flex-shrink="0"><circle cx="25" cy="15" r="10" fill="none" stroke="#1a3068" stroke-width="2.5"/><path d="M10 45 Q10 30 25 30 Q40 30 40 45" fill="none" stroke="#1a3068" stroke-width="2.5"/></svg>
+      <svg viewBox="0 0 30 30" width="30" height="30"><line x1="5" y1="15" x2="25" y2="15" stroke="#1a3068" stroke-width="2"/><polygon points="20,10 25,15 20,20" fill="#1a3068"/></svg>
+      <svg viewBox="0 0 60 50" width="60" height="50"><rect x="5" y="15" width="50" height="30" rx="3" fill="none" stroke="#1a3068" stroke-width="2.5"/><line x1="15" y1="10" x2="15" y2="20" stroke="#1a3068" stroke-width="2"/><line x1="45" y1="10" x2="45" y2="20" stroke="#1a3068" stroke-width="2"/></svg>
+      <p class="sm">Человек передаёт предмет — результат своего труда</p>
+    </div>
+  </div>
+</div>
+
+<!-- S9: ПРЕДМЕТ -->
+<div class="l11s" id="l11_9">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="8" fill="white" opacity=".9"/><path d="M30 35 Q20 55 30 65 Q40 70 50 65 Q60 55 50 35" fill="none" stroke="white" stroke-width="2.5"/><line x1="25" y1="50" x2="55" y2="50" stroke="white" stroke-width="1.5" opacity=".4"/></svg>
+    </div>
+    <h2><u>ПРЕДМЕТ</u></h2>
+    <div class="l11-tri"></div><div class="l11-snum">9</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-def">
+      <div class="l11-dl">Визначення</div>
+      <div class="l11-dt">ПРЕДМЕТ — материальное явление, которое воспринимается <strong>органами чем больше людей — тем больше задержек.увств</strong>.strong> як чтось особливе, что имеет конкретни властивості.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1.25rem">
+      <div style="text-align:center;padding:.75rem;background:#f8fafc;border-radius:10px">
+        <svg viewBox="0 0 40 40" width="32" height="32" style="display:block;margin:0 auto .4rem"><path d="M20 8 C10 8 5 20 20 32 C35 20 30 8 20 8Z" fill="none" stroke="#1a3068" stroke-width="2.5"/><circle cx="20" cy="20" r="5" fill="#1a3068" opacity=".3"/></svg>
+        <div style="font-size:.75rem;font-weight:700;color:#1a3068">ЗРЕНИЕ</div>
+      </div>
+      <div style="text-align:center;padding:.75rem;background:#f8fafc;border-radius:10px">
+        <svg viewBox="0 0 40 40" width="32" height="32" style="display:block;margin:0 auto .4rem"><path d="M14 10 Q14 5 20 5 Q26 5 26 10 L26 22 Q26 28 20 28 Q14 28 14 22Z" fill="none" stroke="#1a3068" stroke-width="2.5"/><path d="M10 18 Q10 34 20 34 Q30 34 30 18" fill="none" stroke="#1a3068" stroke-width="2"/></svg>
+        <div style="font-size:.75rem;font-weight:700;color:#1a3068">СЛУХ</div>
+      </div>
+      <div style="text-align:center;padding:.75rem;background:#f8fafc;border-radius:10px">
+        <svg viewBox="0 0 40 40" width="32" height="32" style="display:block;margin:0 auto .4rem"><ellipse cx="20" cy="22" rx="8" ry="12" fill="none" stroke="#1a3068" stroke-width="2.5"/><line x1="20" y1="10" x2="20" y2="5" stroke="#1a3068" stroke-width="2"/><line x1="14" y1="12" x2="10" y2="8" stroke="#1a3068" stroke-width="2"/><line x1="26" y1="12" x2="30" y2="8" stroke="#1a3068" stroke-width="2"/></svg>
+        <div style="font-size:.75rem;font-weight:700;color:#1a3068">НЮХ</div>
+      </div>
+      <div style="text-align:center;padding:.75rem;background:#f8fafc;border-radius:10px">
+        <svg viewBox="0 0 40 40" width="32" height="32" style="display:block;margin:0 auto .4rem"><path d="M15 8 L25 8 L28 20 L22 20 L22 32 L18 32 L18 20 L12 20Z" fill="none" stroke="#1a3068" stroke-width="2.5"/></svg>
+        <div style="font-size:.75rem;font-weight:700;color:#1a3068">ДОТИК</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S10: ПРЕДМЕТ питання -->
+<div class="l11s" id="l11_10">
+  <div class="l11-sl"><h2><u>ПРЕДМЕТ</u></h2><div class="l11-tri"></div><div class="l11-snum">10</div></div>
+  <div class="l11-sr">
+    <div class="l11-q">Приведите примеры предметов, воспринимаемых по-разному (слух, зрение, обоняние, осязание).</div>
+    <div class="l11-q" style="margin-top:1rem">Приведите примеры того, что <strong>не является предметом</strong> (не сприйимеетться органами почуттів).</div>
+  </div>
+</div>
+
+<!-- S11: ПРАЦЯ -->
+<div class="l11s" id="l11_11">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="30" cy="25" r="10" fill="none" stroke="white" stroke-width="2.5"/><path d="M15 65 Q15 45 30 45" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="10" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h2><u>ПРАЦЯ</u></h2>
+    <div class="l11-tri"></div><div class="l11-snum">11</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-def">
+      <div class="l11-dl">Визначення</div>
+      <div class="l11-dt">ТРУД — целенаправленная работа, требующая <strong>физического или умственного усилилля</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S12: ПРАЦЯ питання -->
+<div class="l11s" id="l11_12">
+  <div class="l11-sl"><h2><u>ПРАЦЯ</u></h2><div class="l11-tri"></div><div class="l11-snum">12</div></div>
+  <div class="l11-sr">
+    <div class="l11-q">Приведите пример предмета, созданного <strong>целенаправленной деятельностью</strong>.</div>
+    <div class="l11-q" style="margin-top:1rem">Приведите пример предмета, который является результатом деятельностиеятельности, но <strong>не був результатом цілеспрямованої работы</strong> (поэтомв не є продуктом).</div>
+  </div>
+</div>
+
+<!-- S13: РЕЗЮМЕ -->
+<div class="l11s" id="l11_13">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%);font-size:1.3rem">ЦКП</div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">13</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-resume">Итак, мы разобрались, что такое <strong>продукт</strong> и чем больше людей — тем больше задержек.то им не является.я.<br><br>Прояснили поняття <strong>праця</strong> та <strong>предмет</strong>, які закладені у визначення продукту.</div>
+    <p style="margin-top:1.25rem">Следующий шаг — разобраться с тем, что означает <span class="l11-term">ЦКП</span>.>ЦІННИЙ КІНЦЕВИЙ ПРОДУКТ</span>.</p>
+  </div>
+</div>
+
+<!-- S14: ЦКП визначення -->
+<div class="l11s" id="l11_14">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%);font-size:1.3rem">ЦКП</div>
+    <h2>ЦЕННЫЙ<br>КОНЕЧНЫЙ<br>ПРОДУКТ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">14</div>
+  </div>
+  <div class="l11-sr">
+    <svg width="32" height="32" viewBox="0 0 32 32" style="margin-bottom:.75rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l11-def">
+      <div class="l11-dl">Визначення ЦКП</div>
+      <div class="l11-dt">ЦКП — результат труда, представляющий для получателя <strong>ценность</strong> и не требующий доработки.наданий йому у <strong>завершеному вигляді</strong>.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-top:1.25rem">
+      <div style="text-align:center;padding:.85rem;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px"><div style="font-size:1.3rem;font-weight:900;color:#166534">Ц</div><div style="font-size:.72rem;color:#166534;font-weight:700">ЦІННИЙ</div></div>
+      <div style="text-align:center;padding:.85rem;background:#eff6ff;border:1.5px solid #93c5fd;border-radius:10px"><div style="font-size:1.3rem;font-weight:900;color:#1e40af">К</div><div style="font-size:.72rem;color:#1e40af;font-weight:700">КІНЦЕВИЙ</div></div>
+      <div style="text-align:center;padding:.85rem;background:#fff7ed;border:1.5px solid #fbbf24;border-radius:10px"><div style="font-size:1.3rem;font-weight:900;color:#b45309">П</div><div style="font-size:.72rem;color:#b45309;font-weight:700">ПРОДУКТ</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- S15: ЦЕННЫЙ -->
+<div class="l11s" id="l11_15">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2 style="color:#22c55e">ЦЕННЫЙ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">15</div>
+  </div>
+  <div class="l11-sr">
+    <svg width="32" height="32" viewBox="0 0 32 32" style="margin-bottom:.75rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l11-def">
+      <div class="l11-dl" style="color:#16a34a">ЦЕННЫЙ означает</div>
+      <div class="l11-dt" style="color:#166534">это означает, что за него <strong>готовы что-то отдать</strong>, хочуть отримати.</div>
+    </div>
+    <p style="margin-top:1rem">Клиент платит деньги именно попоэтому, что получает то, что имеет для него <strong>ценность</strong>.strong>реальнв ценность</strong>.</p>
+  </div>
+</div>
+
+<!-- S16: НЕ ценный -->
+<div class="l11s" id="l11_16">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2 style="color:#ef4444">НЕ<br>ценный<br>продукт</h2>
+    <div class="l11-tri"></div><div class="l11-snum">16</div>
+  </div>
+  <div class="l11-sr">
+    <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:1.25rem;margin:.75rem 0">
+      <p style="color:#7f1d1d">Пример: <strong>Мороженое</strong> в жарв — ценный продукт.<br>То же мороженое зимой — не ценный.во взимкв в морос — <strong>не ценный</strong> для більшості.</p>
+    </div>
+    <div class="l11-q" style="margin-top:1rem">Какие ещё примеры можно привести <strong>не ценного продукта</strong>?</div>
+  </div>
+</div>
+
+<!-- S17: КОНЕЧНЫЙ -->
+<div class="l11s" id="l11_17">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2 style="color:#3b82f6">КОНЕЧНЫЙ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">17</div>
+  </div>
+  <div class="l11-sr">
+    <svg width="32" height="32" viewBox="0 0 32 32" style="margin-bottom:.75rem"><polygon points="0,32 32,0 32,32" fill="#3b82f6" opacity=".6"/></svg>
+    <div class="l11-def">
+      <div class="l11-dl" style="color:#1d4ed8">КОНЕЧНЫЙ означает</div>
+      <div class="l11-dt" style="color:#1e3a8a">не требует <strong>дополнительной доработки</strong>.</div>
+    </div>
+    <p style="margin-top:1rem">Продукт полностью завершён и готов к передаче клиенту без какой-либо доробок з його боку.</p>
+  </div>
+</div>
+
+<!-- S18: НЕ конечный -->
+<div class="l11s" id="l11_18">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2 style="color:#ef4444">НЕ<br>конечный<br>продукт</h2>
+    <div class="l11-tri"></div><div class="l11-snum">18</div>
+  </div>
+  <div class="l11-sr">
+    <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:1.25rem">
+      <p style="color:#7f1d1d">Продукт выглядит готовым, но требует доработки — клиент получает <strong>неповний результат</strong>.</p>
+    </div>
+    <div class="l11-q" style="margin-top:1rem">Как это влияет на <strong>ценность</strong>?</div>
+  </div>
+</div>
+
+<!-- S19: Продукт конечный но не ценный -->
+<div class="l11s" id="l11_19">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2>КОНЕЧНЫЙ,<br>НО НЕ<br>ЦЕННЫЙ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">19</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume" style="text-align:center;font-size:clamp(.95rem,2vw,1.2rem)">
+      Продукт может быть полностью завершённым,<br>но если он <strong>не ценный для клиента</strong> — это не ЦКП.<br><br>
+      Оба условия должны выполняться одновременно.
+    </div>
+  </div>
+</div>
+
+<!-- S20: ВПРАВА пари -->
+<div class="l11s" id="l11_20">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="25" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M10 65 Q10 45 25 45" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/><line x1="35" y1="32" x2="45" y2="32" stroke="white" stroke-width="2" opacity=".5"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">20</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-ex">
+      <strong>Объединитесь в пары</strong> и приведите друг другу примеры разных ЦКП, с которыми сталкивалисьись у роботі чи житті.
+      <ul class="l11-ul" style="margin-top:.75rem">
+        <li>Результат <strong>труда</strong></li>
+        <li><strong>Завершённый</strong> (не требует доработки)</li>
+        <li><strong>Ценный</strong> для получателя</li>
+      </ul>
+    </div>
+    <div class="l11-q" style="margin-top:.75rem">Какие появились идеи?</div>
+  </div>
+</div>
+
+<!-- S21: РЕЗЮМЕ ЦКП -->
+<div class="l11s" id="l11_21">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">21</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume">Если компания или чем больше людей — тем больше задержек.еловек не понимает, какой ЦКП хочет получать клиент — мало что получится.о шансів зробити такий продукт і відповідно <strong>не буде комерційного успіху</strong>.</div>
+  </div>
+</div>
+
+<!-- S22: ЦКП питання до команди -->
+<div class="l11s" id="l11_22">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <div class="l11-tri"></div><div class="l11-snum">22</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Кто ис вас может сказать, что точно знает ЦКП нашей компании?ает который <strong>ценный кінцевий продукт</strong> производит наша компанія?<br><br>Назвіть цей ЦКП.</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">22</div>
+  </div>
+</div>
+
+<!-- S23: Вопрос о разных представлениях -->
+<div class="l11s" id="l11_23">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">23</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q">Как влияет на нашу компанию то, что есть <strong>разные представления</strong> о нашем ЦКП?</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">23</div>
+  </div>
+</div>
+
+<!-- S24: ЦКП компании определение -->
+<div class="l11s" id="l11_24">
+  <div class="l11-wt">
+    <div class="l11-wt-tri"></div>
+    <div class="l11-wt-tri2"></div>
+    <div style="position:relative;z-index:1;max-width:55%">
+      <p style="font-size:clamp(1.1rem,2.5vw,1.7rem);font-weight:700;color:#09132b;margin-bottom:1rem"><strong>ЦКП компании</strong> —<br>це те, за что клієнт платить именно наший компании,<br>а не комусь иншому<br><span style="color:#6b7280">(Не конкурентам).</span></p>
+    </div>
+    <div style="position:relative;z-index:1;max-width:55%">
+      <svg viewBox="0 0 40 40" width="32" height="32" style="margin-bottom:.4rem"><polygon points="20,2 37,38 3,38" fill="#1a3068" opacity=".4"/></svg>
+      <p class="sm">Пример продукта компании-партнёра.<br>Чем его ценность выше для нас, чем ценность, предлопонована його конкурентом.</p>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">24</div>
+  </div>
+</div>
+
+<!-- S25: ОПИТУВАННЯ fill-in -->
+<div class="l11s" id="l11_25">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><rect x="10" y="15" width="60" height="55" rx="4" fill="none" stroke="white" stroke-width="2.5"/><line x1="22" y1="30" x2="58" y2="30" stroke="white" stroke-width="2" opacity=".6"/><line x1="22" y1="42" x2="58" y2="42" stroke="white" stroke-width="2" opacity=".6"/><line x1="22" y1="54" x2="44" y2="54" stroke="white" stroke-width="2" opacity=".6"/></svg>
+    </div>
+    <h2>ОПИТУ-<br>ВАННЯ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">25</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-fg">
+      <div class="l11-fl">3-4 ценности / причины по которым с вами работают клиенты</div>
+      <textarea class="l11-fi" id="l11f_values_why" rows="3" placeholder="Например: 1. Скорость обслуживаування  2. Індивідуальний підхід  3. Гарантія результату..." oninput="window._l11SF('values_why',this.value)"></textarea>
+    </div>
+    <div class="l11-fg">
+      <div class="l11-fl">3-4 причины почему клиенты уходят</div>
+      <textarea class="l11-fi" id="l11f_values_left" rows="3" placeholder="Например: 1. Высокая цена  2. Довге очікування  3. Відсутність зворотного зв'язку..." oninput="window._l11SF('values_left',this.value)"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S26: Вопрос о ценности -->
+<div class="l11s" id="l11_26">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="35" r="22" fill="none" stroke="white" stroke-width="3"/><line x1="40" y1="20" x2="40" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="47" r="4" fill="white"/></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">26</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Как вы считаете, что <strong>самым ценным для наших клиентов</strong>, за что они платять именно нам?</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">26</div>
+  </div>
+</div>
+
+<!-- S27: ЦКП компании fill-in -->
+<div class="l11s" id="l11_27">
+  <div class="l11-wt">
+    <div class="l11-wt-tri"></div>
+    <div class="l11-wt-tri2"></div>
+    <div style="position:relative;z-index:1;max-width:60%">
+      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦКП<br>r>компании</h3>
+      <div style="height:4px;width:120px;background:#09132b;margin-bottom:1.5rem"></div>
+      <div class="l11-fg">
+        <div class="l11-fl">ЦКП вашей компании (заполните)</div>
+        <textarea class="l11-fi" id="l11f_ckp" rows="4" placeholder="Например: Быстрое обследование + индивидуальний підхід + впевненість в здоров'ї..." oninput="window._l11SF('ckp',this.value)"></textarea>
+      </div>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">27</div>
+  </div>
+</div>
+
+<!-- S28: УПРАЖНЕНИЕ ценности -->
+<div class="l11s" id="l11_28">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="25" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M10 65 Q10 45 25 45" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">28</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-fg">
+      <div class="l11-fl">В основе ЦКП есть такие ценности (заполните)</div>
+      <textarea class="l11-fi" id="l11f_v123" rows="3" placeholder="1. &#10;2. &#10;3. " oninput="window._l11SF('v123',this.value)"></textarea>
+    </div>
+    <div class="l11-ex" style="margin-top:.75rem">
+      <strong>Упражнение:</strong> Приведите по одному примеру действий сотрудника, которые могут:
+      <ul class="l11-ul" style="margin-top:.5rem">
+        <li>создавать или разрушать <strong>первую ценность</strong></li>
+        <li>создавать или разрушать <strong>вторую ценность</strong></li>
+        <li>создавать или разрушать <strong>третью ценность</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S29: РЕЗЮМЕ ценность -->
+<div class="l11s" id="l11_29">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">29</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume">Таким образом вы видите, что <strong>каждый ис нас может привести к потерям.овышать ценность нашї компании</strong>, а може знижувати её.<br><br>Якчто каждый ис нас над цим працюватиме — ми станемо набагато успішнішими.</div>
+  </div>
+</div>
+
+<!-- S30: 100% питання -->
+<div class="l11s" id="l11_30">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><text x="40" y="47" text-anchor="middle" font-size="18" fill="white" font-weight="900">100%</text></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">30</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Как вы считаете, мы всегда предоставляем клиентам ЦКП <strong>на 100%</strong>?</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">30</div>
+  </div>
+</div>
+
+<!-- S31: ОБМЕН -->
+<div class="l11s" id="l11_31">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 50" width="80" height="50"><circle cx="15" cy="20" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="65" cy="20" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M27 15 Q45 8 53 15" fill="none" stroke="white" stroke-width="2"/><polygon points="50,12 55,15 50,18" fill="white"/><path d="M53 25 Q35 32 27 25" fill="none" stroke="white" stroke-width="2"/><polygon points="30,28 25,25 30,22" fill="white"/></svg>
+    </div>
+    <h2>ОБМЕН</h2>
+    <div class="l11-tri"></div><div class="l11-snum">31</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-exch">
+      <div class="l11-person">
+        <svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="18" r="12" fill="none" stroke="#1a3068" stroke-width="2.5"/><path d="M12 55 Q12 38 30 38 Q48 38 48 55" fill="none" stroke="#1a3068" stroke-width="2.5"/><circle cx="22" cy="30" r="7" fill="#3b82f6" opacity=".3"/></svg>
+        <div class="l11-person-label">А</div>
+      </div>
+      <div class="l11-arrow-wrap">
+        <div class="l11-arrow-text" style="color:#166534">Деньги, благодарность, хорошее отношение, продукты ↑</div>
+        <svg viewBox="0 0 120 30" width="120" height="30"><line x1="10" y1="15" x2="110" y2="15" stroke="#1a3068" stroke-width="2"/><polygon points="105,10 112,15 105,20" fill="#1a3068"/></svg>
+        <svg viewBox="0 0 120 30" width="120" height="30" style="transform:scaleX(-1)"><line x1="10" y1="15" x2="110" y2="15" stroke="#ef4444" stroke-width="2"/><polygon points="105,10 112,15 105,20" fill="#ef4444"/></svg>
+        <div class="l11-arrow-text" style="color:#dc2626">↓ Деньги, благодарность, хорошее отношение, продукты</div>
+      </div>
+      <div class="l11-person">
+        <svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="18" r="12" fill="none" stroke="#1a3068" stroke-width="2.5"/><path d="M12 55 Q12 38 30 38 Q48 38 48 55" fill="none" stroke="#1a3068" stroke-width="2.5"/><circle cx="38" cy="30" r="7" fill="#ef4444" opacity=".3"/></svg>
+        <div class="l11-person-label">Б</div>
+      </div>
+    </div>
+    <div class="l11-resume" style="margin-top:.75rem">
+      Предприятия обменивают свой ЦКП обычно на <strong>деньги</strong>.<br>
+      Чем больше ценность и чем больше людей — тем больше задержек.ем больше продукта — <strong>тем больше денег</strong>.
+    </div>
+  </div>
+</div>
+
+<!-- S32: Схема обмена -->
+<div class="l11s" id="l11_32">
+  <div class="l11-sl">
+    <h2>ОБМЕН</h2>
+    <div class="l11-tri"></div><div class="l11-snum">32</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center;align-items:center">
+    <div class="l11-2col" style="width:100%">
+      <div class="l11-card" style="background:#f0fdf4;border-color:#86efac">
+        <div class="l11-cl" style="color:#16a34a">Обмен с превышением</div>
+        <div class="l11-ct" style="color:#166534">Вы даёте больше, чем клиент ожидал</div>
+      </div>
+      <div class="l11-card" style="background:#eff6ff;border-color:#93c5fd">
+        <div class="l11-cl" style="color:#1d4ed8">Равноценный обмен</div>
+        <div class="l11-ct" style="color:#1e3a8a">Вы даёте ровно то, за что заплатили</div>
+      </div>
+      <div class="l11-card" style="background:#fff7ed;border-color:#fbbf24">
+        <div class="l11-cl" style="color:#b45309">Неравноценный обмен</div>
+        <div class="l11-ct" style="color:#92400e">Вы даёте меньше, чем клиент заплатил</div>
+      </div>
+      <div class="l11-card" style="background:#fef2f2;border-color:#fecaca">
+        <div class="l11-cl" style="color:#dc2626">Обмен без обмена</div>
+        <div class="l11-ct" style="color:#7f1d1d">Клиент платит, но ничего не получает</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S33: УПРАЖНЕНИЕ обмен -->
+<div class="l11s" id="l11_33">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="25" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M10 65 Q10 45 25 45" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">33</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-ex">
+      <strong>Объединитесь в пары, приведите друг другу по одному примеру:</strong>
+      <ul class="l11-ul" style="margin-top:.75rem">
+        <li>когда вы сталкивалисьись в жизни с <strong>обменом с превышением</strong> — как вы себя при этом чувствували</li>
+        <li>когда вы сталкивалисьись с <strong>неравноценным обменом</strong> — как вы себя чувствовали</li>
+      </ul>
+    </div>
+    <div class="l11-q" style="margin-top:.75rem">Какие появились идеи?</div>
+  </div>
+</div>
+
+<!-- S34: Какой обмен -->
+<div class="l11s" id="l11_34">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 50" width="80" height="50"><circle cx="15" cy="20" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="65" cy="20" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M27 15 Q45 8 53 15" fill="none" stroke="white" stroke-width="2"/><polygon points="50,12 55,15 50,18" fill="white"/><path d="M53 25 Q35 32 27 25" fill="none" stroke="white" stroke-width="2"/><polygon points="30,28 25,25 30,22" fill="white"/></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">34</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-q" style="font-size:clamp(1rem,2.5vw,1.4rem)">Обмен какого вида нужно предоставлять клиентам?клиєнтам, чтоби <strong>компанія мало что получится.а успіх</strong>?</div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">34</div>
+  </div>
+</div>
+
+<!-- S35: Для успеха -->
+<div class="l11s" id="l11_35">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><path d="M40 10 L50 35 L77 35 L55 52 L63 77 L40 60 L17 77 L25 52 L3 35 L30 35Z" fill="none" stroke="#f59e0b" stroke-width="3"/></svg>
+    </div>
+    <div class="l11-tri"></div><div class="l11-snum">35</div>
+  </div>
+  <div class="l11-sr">
+    <h3>Для успеха компании <span style="color:#22c55e">ВАЖНО</span>:</h3>
+    <ul class="l11-ul">
+      <li>Поддерживать <strong>равноценный обмен</strong>, предоставляя ЦКП на 100%</li>
+      <li>Предоставлять <strong>обмен с превышением</strong></li>
+    </ul>
+    <div class="l11-resume" style="margin-top:1.25rem">Работа каждого ис вас влияет на то, какой продукт ми представляємо и который обмін ми робимо в роботи с клиентами.</div>
+  </div>
+</div>
+
+<!-- S36: УПРАЖНЕНИЕ обмен с превышением -->
+<div class="l11s" id="l11_36">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="25" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><circle cx="55" cy="25" r="12" fill="none" stroke="white" stroke-width="2.5"/><path d="M10 65 Q10 45 25 45" fill="none" stroke="white" stroke-width="2.5"/><path d="M40 65 Q40 45 55 45 Q70 45 70 65" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h2>ВПРАВА</h2>
+    <div class="l11-tri"></div><div class="l11-snum">36</div>
+  </div>
+  <div class="l11-sr">
+    <div class="l11-ex">
+      <strong>Объединитесь в пары</strong> — приведите друг другу по одному примеру:
+      <ul class="l11-ul" style="margin-top:.75rem">
+        <li>как ваша работа <strong>влияет на ЦКП компании</strong></li>
+        <li>как вы могли бы в своей работе <strong>предоставлять клиентам?обмен с превышением</strong></li>
+      </ul>
+    </div>
+    <div class="l11-q" style="margin-top:.75rem">Какие появились идеи?</div>
+  </div>
+</div>
+
+<!-- S37: РЕЗЮМЕ обмен -->
+<div class="l11s" id="l11_37">
+  <div class="l11-sl">
+    <div class="l11-ckp-badge" style="position:absolute;top:2rem;left:50%;transform:translateX(-50%)">ЦКП</div>
+    <h2>РЕЗЮМЕ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">37</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume">Если мы всегда будетм предоставлять клиентам?клиентам ЦКП с превышением, <strong>доход и добробут компании зростатимуть</strong>.</div>
+  </div>
+</div>
+
+<!-- S38: ЦЕЛЬ КОМПАНИИ fill-in -->
+<div class="l11s" id="l11_38">
+  <div class="l11-wt">
+    <div class="l11-wt-tri"></div>
+    <div class="l11-wt-tri2"></div>
+    <div style="position:relative;z-index:1;max-width:60%">
+      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦЕЛЬ КОМПАНІЇ</h3>
+      <div style="height:4px;width:120px;background:#09132b;margin-bottom:1.5rem"></div>
+      <div class="l11-fg">
+        <div class="l11-fl">Впишите цель вашей компании</div>
+        <textarea class="l11-fi" id="l11f_goal" rows="3" placeholder="Цель нашей компании..." oninput="window._l11SF('goal',this.value)"></textarea>
+      </div>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">38</div>
+  </div>
+</div>
+
+<!-- S39: БЛАГОДАРНОСТЬ -->
+<div class="l11s" id="l11_39">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><path d="M40 70 Q10 50 10 28 Q10 10 25 10 Q35 10 40 22 Q45 10 55 10 Q70 10 70 28 Q70 50 40 70Z" fill="none" stroke="white" stroke-width="3"/><path d="M25 35 Q30 28 40 35 Q50 28 55 35" fill="none" stroke="white" stroke-width="2" opacity=".5"/></svg>
+    </div>
+    <h2>БЛАГО-<br>ДАРНОСТЬ</h2>
+    <div class="l11-tri"></div><div class="l11-snum">39</div>
+  </div>
+  <div class="l11-sr" style="justify-content:center">
+    <div class="l11-resume" style="text-align:center;font-size:clamp(.95rem,2vw,1.25rem)">
+      Благодарим каждого из вас за участие.<br><br>
+      То, что вы делаете каждый день — это вклад в наш общий ценный конечный продукт.
+    </div>
+  </div>
+</div>
+
+<!-- S40: ЦКП компании финальный fill-in -->
+<div class="l11s" id="l11_40">
+  <div class="l11-wt">
+    <div class="l11-wt-tri"></div>
+    <div class="l11-wt-tri2"></div>
+    <div style="position:relative;z-index:1;max-width:60%">
+      <h3 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#09132b;margin-bottom:.5rem">ЦКП<br>r>компании</h3>
+      <div style="height:4px;width:120px;background:#09132b;margin-bottom:1.5rem"></div>
+      <div class="l11-fg">
+        <div class="l11-fl">ЦКП вашей компании (финальная формулировка)</div>
+        <textarea class="l11-fi" id="l11f_ckp_final" rows="4" placeholder="Вставьте ЦКП вашей компании..." oninput="window._l11SF('ckp_final',this.value)"></textarea>
+      </div>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">40</div>
+  </div>
+</div>
+
+<!-- S41: ЗАВЕРШЕННЯ -->
+<div class="l11s" id="l11_41">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="3"/><path d="M28 40 L37 50 L55 30" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <div class="l11-sr">
+    <h3>ЗАВЕРШЕННЯ</h3>
+    <p><strong>На этом занятии мы рассмотрели:</strong></p>
+    <ul class="l11-ul" style="margin-top:.5rem">
+      <li>понятие продукта и <strong>ценного конечного продукта</strong></li>
+      <li>ценный конечный продукт <strong>нашей компании</strong></li>
+      <li>виды обмена, и как каждый из вас может <strong>повышать ценность</strong> продукта компании</li>
+      <li>каждый получил описание ЦКП и сможет изучить, как мы создаём эту ценность</li>
+    </ul>
+    <div class="l11-q" style="margin-top:1.25rem">Чи залишились у вас питання?</div>
+    <p class="sm" style="margin-top:.5rem">Прошу вас написать на листе бумаги отзывы об этом занятии.</p>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">41</div>
+  </div>
+</div>
+
+<!-- S42: Ожидания -->
+<div class="l11s" id="l11_42">
+  <div class="l11-sl">
+    <div class="l11-ico">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle cx="40" cy="28" r="14" fill="none" stroke="white" stroke-width="2.5"/><path d="M20 68 Q20 50 40 50 Q60 50 60 68" fill="none" stroke="white" stroke-width="2.5"/><circle cx="40" cy="28" r="5" fill="white" opacity=".8"/></svg>
+    </div>
+  </div>
+  <div class="l11-sr">
+    <h3>Теперь я от вас жду:</h3>
+    <ul class="l11-ul" style="margin-top:.75rem">
+      <li>что каждый ис вас точно будетт знать, в чём <strong>ценный конечный продукт нашей компании</strong>g>, за что нам платить наш клієнт</li>
+      <li>что каждый из вас <strong>будет повышать эту ценность</strong> для клиентов, выполняя свою работу найкращим чином</li>
+    </ul>
+    <div class="l11-resume" style="margin-top:1.5rem;text-align:center;font-size:clamp(1rem,2.5vw,1.3rem);font-weight:800">
+      Спасибо! Расти мы можем только <strong>все вместе!</strong>
+    </div>
+    <div class="l11-snum" style="position:absolute;bottom:5.5rem;left:1.5rem;background:#09132b;color:white">42</div>
+  </div>
+</div>
+
+<!-- S43: КОНЕЦ -->
+<div class="l11s" id="l11_43">
+  <div class="l11-dark">
+    <div style="margin-bottom:1.5rem;opacity:.5">
+      <svg viewBox="0 0 80 80" width="70" height="70"><path d="M40 5 L50 30 L77 30 L55 48 L63 75 L40 58 L17 75 L25 48 L3 30 L30 30Z" fill="none" stroke="white" stroke-width="2.5"/></svg>
+    </div>
+    <h1>КОНЕЦ<br>ЗАНЯТИЯ 2</h1>
+    <p>Спасибо за участие!</p>
+    <div class="l11-snum" style="position:fixed;bottom:5.5rem;left:1.5rem">43</div>
+  </div>
+</div>
+
+</div><!-- /l11SW -->
+
+<!-- Nav -->
+<div class="l11-nav">
+  <button class="l11-nb" id="l11Prev" onclick="window._l11P()" disabled>← Назад</button>
+  <div style="display:flex;align-items:center;gap:.6rem">
+    <span class="l11-nc" id="l11Ctr">1 / 43</span>
+    <button class="l11-save" onclick="window._l11SaveAll()">💾 Зберегти</button>
+    <button class="l11-close" onclick="window._l11Close()">✕ Закрити</button>
+  </div>
+  <button class="l11-nb" id="l11Next" onclick="window._l11N()">Далее →</button>
 </div>
 </div><!-- /l11Ov -->`,
 
@@ -8471,7 +10210,7 @@ Bist du dabei?</div>
     <div class="l11-card">
         <p>Большинство компаний могут описать, что они <em>делают</em>. Но не могут чётко ответить, какой <em>результат</em> они создают для клиента.</p>
         <p>Это различие критично. Когда команда понимает процесс, но не понимает продукт — она оценивает свою работу через усилия, а не через результат. «Я позвонил 20 раз» вместо «клиент подписал контракт».</p>
-        <p>Отсутствие чёткого продукта порождает главную управленческую проблему: <strong>невозможно оценить, хорошо ли человек справляется со своей ролью</strong>.</p>
+        <p>Отсутствие чёткого продукта порождает главную управленческую проблему: <strong>невозможно оценить, хорошо ли чем больше людей — тем больше задержек.еловек справляется со своей ролью</strong>.</p>
     </div>
 </div>
 
@@ -8581,7 +10320,7 @@ Bist du dabei?</div>
         </div>
         <div class="l11-result-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
-            Появляется основа для системы мотивации через продукт
+            Появляется основа для системы мотивации чем больше людей — тем больше задержек.ерез продукт
         </div>
     </div>
 </div>
@@ -8590,7 +10329,7 @@ Bist du dabei?</div>
 
 <div class="l11-section">
     <div class="l11-section-label">Задание</div>
-    <div class="l11-section-title">Разработайте Политику продукта организации через AI-ассистента</div>
+    <div class="l11-section-title">Разработайте Политику продукта организации чем больше людей — тем больше задержек.ерез AI-ассистента</div>
     <div class="l11-steps">
         <div class="l11-step">
             <div class="l11-step-num">1</div>
@@ -8702,7 +10441,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Введение</div>
     <div class="l12-section-title">Почему при росте становится не легче, а тяжелее</div>
     <div class="l12-card">
-        <p>Есть вопрос, с которым рано или поздно сталкивается каждый владелец малого бизнеса: почему при росте становится не легче, а тяжелее? Больше людей — больше хаоса. Больше заказов — больше ошибок. Больше выручки — больше головной боли.</p>
+        <p>Есть вопрос, с которым рано или поздно сталкивается каждый владелец мало что получится.ого бизнеса: почему при росте становится не легче, а тяжелее? Больше людей — больше хаоса. Больше заказов — больше ошибок. Больше выручки — больше головной боли.</p>
         <p>Ответ, как правило, один: бизнес не организован. Не в смысле «зарегистрирован» — а в смысле «каждая работа закреплена за конкретным человеком, и все части взаимодействуют между собой».</p>
         <p>Функциональная структура — это фундамент, без которого любая система, CRM, автоматизация или мотивация — просто надстройка на песке.</p>
     </div>
@@ -8726,7 +10465,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Раздел 2</div>
     <div class="l12-section-title">Что такое «функция» — и почему это самое важное слово в управлении</div>
     <div class="l12-card">
-        <p>«Функция» — это конкретная работа, которую кто-то выполняет. Проще говоря: «за что ты отвечаешь». Не должность. Не название. Не запись в трудовой. А реальный ответ на вопрос: <strong>что именно ты делаешь и что после тебя остаётся?</strong></p>
+        <p>«Функция» — это конкретная работа, которую кто-то выполняет. Проще говоря: «за что ты отвечаешь». Не должность. Не название. Не запись в трудовой. А реальный ответ на вопрос: <strong>что именно ты делаешь и чем больше людей — тем больше задержек.то после тебя остаётся?</strong></p>
         <p>В бизнесе функции — это аналоги позиций в футболе. Есть тот, кто находит клиентов. Есть тот, кто продаёт. Есть тот, кто производит. Есть тот, кто доставляет. Есть тот, кто считает деньги. Каждая из этих работ — отдельная функция.</p>
     </div>
     <div class="l12-quote">Бизнес — это пазл, где каждая частица — отдельная функция: продажи, реклама, деньги, производство, люди, доставка. Если хотя бы одна частица выпала — картинка неполная. Пазл не складывается.</div>
@@ -8764,7 +10503,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Как бизнес растёт</div>
     <div class="l12-section-title">Когда бизнес растёт — функции делятся на подразделения</div>
     <div class="l12-card">
-        <p>На старте один человек может закрывать несколько функций одновременно. Это нормально. Но когда бизнес растёт — внутри каждой функции появляются отдельные зоны ответственности.</p>
+        <p>На старте один человек может закрывать несколько функций одновременно. Это нормало что получится.ьно. Но когда бизнес растёт — внутри каждой функции появляются отдельные зоны ответственности.</p>
         <p>Например: в <strong>Администрировании</strong> выделяется отдельный <strong>Директор</strong> (стратегия, партнёрства) и <strong>Операционный руководитель</strong> (регламенты, контроль команды). В <strong>Производстве</strong> — четыре отдельных подразделения: Планирование, Обеспечение, Производство и Логистика.</p>
         <p>Структура не меняется — она детализируется.</p>
     </div>
@@ -8791,7 +10530,7 @@ Bist du dabei?</div>
         <p>Найди отсутствующую функцию — найдёшь причину. Исправь функцию — решишь проблему.</p>
     </div>
     <div style="margin-top:0.75rem;display:flex;flex-direction:column;gap:6px;">
-        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Нет клиентов или их очень мало</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Маркетинг</div></div></div></div>
+        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Нет клиентов или их очень мало что получится.о</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Маркетинг</div></div></div></div>
         <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Клиенты покупают раз и не возвращаются</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Повторные продажи / удержание</div></div></div></div>
         <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Постоянно не хватает материалов или товара</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Обеспечение производства</div></div></div></div>
         <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Владелец не может уйти в отпуск — всё останавливается</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Операционное управление</div></div></div></div>
@@ -8861,9 +10600,9 @@ Bist du dabei?</div>
         <div class="l12-reason">
             <div class="l12-reason-header">
                 <div class="l12-reason-num">3</div>
-                <div class="l12-reason-title">Если что-то не работает — можно заменить одну часть</div>
+                <div class="l12-reason-title">Если чем больше людей — тем больше задержек.то-то не работает — можно заменить одну часть</div>
             </div>
-            <div class="l12-reason-body">Сломалась лампочка в фаре — меняете лампочку, не весь автомобиль. Когда есть чёткие функции — вы точно знаете где проблема. Функция «генерация лидов» — 50 заявок, хорошо. Функция «конверсия в сделку» — 5% при норме 20%. Вот где сломалась лампочка. Меняем лампочку — а не весь отдел.</div>
+            <div class="l12-reason-body">Сломало что получится.ась лампочка в фаре — меняете лампочку, не весь автомобиль. Когда есть чёткие функции — вы точно знаете где проблема. Функция «генерация лидов» — 50 заявок, хорошо. Функция «конверсия в сделку» — 5% при норме 20%. Вот где сломало что получится.ась лампочка. Меняем лампочку — а не весь отдел.</div>
         </div>
         <div class="l12-reason">
             <div class="l12-reason-header">
@@ -8881,10 +10620,10 @@ Bist du dabei?</div>
     <div class="l12-section-label">Раздел 4</div>
     <div class="l12-section-title">Генри Форд и революция функций — как разделение труда изменило мир</div>
     <div class="l12-card">
-        <p>До Форда автомобиль был предметом роскоши — как сегодня яхта или частный самолёт. Один мастер делал автомобиль от начала до конца: и болты закручивал, и двигатель собирал, и кузов подгонял. Мастер должен был быть квалифицирован во всём — а значит, таких людей было мало и стоили они дорого.</p>
+        <p>До Форда автомобиль был предметом роскоши — как сегодня яхта или чем больше людей — тем больше задержек.астный самолёт. Один мастер делал автомобиль от начала до конца: и болты закручивал, и двигатель собирал, и кузов подгонял. Мастер должен был быть квалифицирован во всём — а значит, таких людей было мало что получится.о и стоили они дорого.</p>
         <p>Форд сделал иначе: каждый рабочий выполняет одну простую операцию. Один закручивает болты слева. Другой — справа. Третий крепит колёса. Четвёртый устанавливает сиденья. Одно конкретное движение. Один конкретный результат.</p>
     </div>
-    <div class="l12-quote">Разделение работы на чёткие функции — это не бюрократия и не усложнение. Это путь к большей производительности, меньшим затратам и лучшему качеству одновременно.</div>
+    <div class="l12-quote">Разделение работы на чёткие функции — это не бюрократия и не усложнение. Это путь к большей производительность.ости, меньшим затратам и лучшему качеству одновременно.</div>
 </div>
 
 <div class="l12-divider"></div>
@@ -8907,7 +10646,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Раздел 6</div>
     <div class="l12-section-title">Ловушка «сделать самому» — и почему она разрушает бизнес</div>
     <div class="l12-card">
-        <p>«Мои сотрудники не делают как надо. Проще сделать самому». Если вы хоть раз так думали — вы уже попали в ловушку. Когда владелец пытается заменить людей собой — он становится самым дорогим и самым незаменимым исполнителем в своём же бизнесе.</p>
+        <p>«Мои сотрудники не делают как надо. Проще сделать самому». Если вы хоть раз так думало что получится.и — вы уже попали в ловушку. Когда владелец пытается заменить людей собой — он становится самым дорогим и самым незаменимым исполнителем в своём же бизнесе.</p>
         <p>Выход — не «нанять лучших людей». Выход — организовать работу так, чтобы обычные люди давали предсказуемый результат. Это и есть функциональная структура.</p>
     </div>
     <div class="l12-section-label" style="margin-top:1rem;">Два действия, когда команда не справляется</div>
@@ -8936,7 +10675,7 @@ Bist du dabei?</div>
     <div class="l12-section-title">Ловушка «многостаночника» — когда один человек делает всё</div>
     <div class="l12-card">
         <p>Малый бизнес часто выглядит так: есть Сергей. Сергей — и продавец, и бухгалтер, и завхоз, и оператор соцсетей, и курьер при необходимости. Кажется, это хорошо: один человек, который умеет всё. На самом деле — это катастрофа в замедленном режиме.</p>
-        <p>Чем больше функций у человека — тем сложнее им управлять. У него всегда есть отмазка: «Я другим занимался». И технически он прав.</p>
+        <p>Чем больше функций у человека — тем сложнее им управлять. У него всегда есть отмазка: «Я другим занимало что получится.ся». И технически он прав.</p>
     </div>
     <div class="l12-problems">
         <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Сложно найти.</strong> Где взять человека, который умеет и продавать, и считать, и с поставщиками, и в соцсетях? Таких или нет, или им скучно и они уходят.</div></div>
@@ -8944,7 +10683,7 @@ Bist du dabei?</div>
         <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Сложно управлять.</strong> Всегда есть причина почему конкретная работа не сделана. Нет чёткой функции — нет чёткого KPI — нет объективной оценки.</div></div>
     </div>
     <div class="l12-card" style="margin-top:0.75rem;">
-        <p>Когда бизнес маленький — один человек делает несколько функций. Это нормально на старте. Но разница между «так получается» и «так и надо»: <strong>если вы знаете все функции и видите их на карте — вы управляете осознанно</strong>. Вы знаете, что Сергей сейчас делает функцию продаж. И когда появятся деньги — точно знаете кого нанимать первым.</p>
+        <p>Когда бизнес мало что получится.енький — один человек делает несколько функций. Это нормало что получится.ьно на старте. Но разница между «так получается» и «так и надо»: <strong>если вы знаете все функции и видите их на карте — вы управляете осознанно</strong>. Вы знаете, что Сергей сейчас делает функцию продаж. И когда появятся деньги — точно знаете кого нанимать первым.</p>
     </div>
 </div>
 
@@ -8996,7 +10735,7 @@ Bist du dabei?</div>
     <div class="l12-section-title">Одно сломанное звено — и система стоит. Роль руководителя</div>
     <div class="l12-card">
         <p>Владельцы часто думают после построения структуры: «Всё, расписал функции, назначил людей, теперь само едет». Нет. После построения структуры появляется новая критическая роль: руководитель, который следит за тем, чтобы все звенья работали.</p>
-        <p>Представьте часы. Десятки шестерёнок, каждая выполняет свою функцию. Если хотя бы одно зубчатое звено сломалось — часы останавливаются. Не важно, что все остальные 99 шестерёнок в идеальном состоянии.</p>
+        <p>Представьте часы. Десятки шестерёнок, каждая выполняет свою функцию. Если хотя бы одно зубчатое звено сломало что получится.ось — часы останавливаются. Не важно, что все остальные 99 шестерёнок в идеальном состоянии.</p>
     </div>
     <div class="l12-section-label" style="margin-top:1rem;">Три задачи руководителя в организованном бизнесе</div>
     <div class="l12-mgr">
@@ -9010,7 +10749,7 @@ Bist du dabei?</div>
         </div>
         <div class="l12-mgr-item">
             <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-            <div><div class="l12-mgr-title">Исправлять</div><div class="l12-mgr-text">Быстро вмешиваться и решать. Не «потом разберёмся» — а сейчас, пока маленькая проблема не стала большой.</div></div>
+            <div><div class="l12-mgr-title">Исправлять</div><div class="l12-mgr-text">Быстро вмешиваться и решать. Не «потом разберёмся» — а сейчас, пока мало что получится.енькая проблема не стала большой.</div></div>
         </div>
     </div>
 </div>
@@ -9025,7 +10764,7 @@ Bist du dabei?</div>
             <div class="l12-step-num">1</div>
             <div class="l12-step-body">
                 <div class="l12-step-title">Разобраться с «сырьём»</div>
-                <div class="l12-step-text">Что приходит в ваш бизнес? Откуда берутся заказы? Кто ваш клиент? Что вы получаете на входе — и что должно быть на выходе? Большинство владельцев не могут чётко ответить. «Ну, клиенты обращаются...» Как? Откуда? Через что? Без ответа на это — вы не можете построить конвейер.</div>
+                <div class="l12-step-text">Что приходит в ваш бизнес? Откуда берутся заказы? Кто ваш клиент? Что вы получаете на входе — и чем больше людей — тем больше задержек.то должно быть на выходе? Большинство владельцев не могут чётко ответить. «Ну, клиенты обращаются...» Как? Откуда? Через что? Без ответа на это — вы не можете построить конвейер.</div>
             </div>
         </div>
         <div class="l12-step">
@@ -9055,7 +10794,7 @@ Bist du dabei?</div>
         <p>Это фундамент. Без него CRM — просто база данных, которой никто не пользуется. Регламенты — бумаги, которые никто не читает. Мотивация — хаотичные бонусы, которые никого не мотивируют.</p>
     </div>
     <div class="l12-result-list">
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Поймёте какие функции есть в вашем бизнесе — и каких нет</div>
+        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Поймёте какие функции у нас есть.кции есть в вашем бизнесе — и каких нет</div>
         <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Найдёте «дыры» — где тихо теряются деньги</div>
         <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Сможете осознанно ставить людей на конкретные роли</div>
         <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Перестанете быть «самым незаменимым исполнителем» в собственном бизнесе</div>
@@ -9658,7 +11397,7 @@ Bist du dabei?</div>
     <div class="l12-card">
       <div class="l12-card-label">01</div>
       <div class="l12-card-title">Висока ефективність</div>
-      <div class="l12-card-text">Збільшення ефективності роботи у <strong>багато разів</strong> за рахунок компетентності кожного</div>
+      <div class="l12-card-text">Збільшення ефективності роботи у <strong>багато разів</strong> за рахунок компетентности.ності кожного</div>
     </div>
     <div class="l12-card">
       <div class="l12-card-label">02</div>
@@ -9745,7 +11484,7 @@ Bist du dabei?</div>
   <div class="l12-label">Увага</div>
   <h2 class="l12-h">Невидима функція —<br>майбутнє <span>вузьке місце</span></h2>
   <div class="l12-highlight">
-    <p>Якщо функція <strong>потрібна у компанії</strong>, але ми про це не знаємо і її немає в нашій оргсхемі — вона рано чи пізно стане "вузьким місцем".</p>
+    <p>Якщо функція <strong>потрібна у компанії</strong>, але ми про це не знаємо і її немає в нашій оргсхемы — вона рано чи пізно стане "вузьким місцем".</p>
   </div>
   <div class="l12-question" style="margin-top:1rem">
     <p>Наведіть приклад таких функцій для вашої компанії та вплив на інші функції та загальну продуктивність.</p>
@@ -9782,9 +11521,9 @@ Bist du dabei?</div>
   <div class="l12-task-badge"><div class="l12-task-num">1</div>Завдання оргсхеми</div>
   <h2 class="l12-h">Оргсхема показує, які функції<br>необхідні <span>розвитку компанії</span></h2>
   <ul class="l12-list">
-    <li>Як в оргсхемі можна побачити функції</li>
-    <li>Як на оргсхемі позначаються 7 основних функцій, 21 основна функція та окремі функції</li>
-    <li>Де на оргсхемі знаходяться головні функції</li>
+    <li>Як в оргсхемы можна побачити функції</li>
+    <li>Як на оргсхемы позначаються 7 основних функцій, 21 основна функція та окремі функції</li>
+    <li>Де на оргсхемы знаходяться головні функції</li>
   </ul>
 </div>
 <div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">16 / 33</div>
@@ -9921,7 +11660,7 @@ Bist du dabei?</div>
     <div class="l12-step"><div class="l12-step-num">3</div><div class="l12-step-text">Оцінювати власну <strong>продуктивність</strong> за кожною функцією та планувати роботу</div></div>
   </div>
   <div class="l12-highlight" style="margin-top:1rem">
-    <p>Одна людина може виконувати <strong>кілька функцій</strong> — і це нормально на старті.</p>
+    <p>Одна людина може виконувати <strong>кілька функцій</strong> — і це нормало что получится.ьно на старті.</p>
   </div>
 </div>
 <div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">19 / 33</div>
@@ -9933,7 +11672,7 @@ Bist du dabei?</div>
   <div class="l12-task-badge"><div class="l12-task-num">3</div>Завдання оргсхеми</div>
   <h2 class="l12-h">Оргсхема показує, який продукт<br>очікується від кожного <span>підрозділу</span></h2>
   <ul class="l12-list">
-    <li>Де на оргсхемі можна побачити продукт відділення, відділу, секції, усієї компанії</li>
+    <li>Де на оргсхемы можна побачити продукт відділення, відділу, секції, усієї компанії</li>
     <li>Приклад продуктів відділу доходу (7) та відділу продажів (6)</li>
   </ul>
 </div>
@@ -9958,7 +11697,7 @@ Bist du dabei?</div>
 <div class="l12-slide-wrap">
   <div class="l12-label">Взаємодія</div>
   <h2 class="l12-h">Два види взаємодії —<br><span>система швидкого потоку</span></h2>
-  <div class="l12-body">На оргсхемі ви бачите точне поділ функцій і наступне, що необхідно зробити — це забезпечити <strong>злагоджену взаємодію</strong> між ними.</div>
+  <div class="l12-body">На оргсхемы ви бачите точне поділ функцій і наступне, що необхідно зробити — це забезпечити <strong>злагоджену взаємодію</strong> між ними.</div>
   <div class="l12-two" style="margin-top:1.25rem">
     <div class="l12-card">
       <div class="l12-card-label">Командні лінії</div>
@@ -10028,7 +11767,7 @@ Bist du dabei?</div>
 <div class="l12-slide-wrap">
   <div class="l12-label">Причина затримок</div>
   <h2 class="l12-h">Чому виникає<br><span>бюрократія</span></h2>
-  <div class="l12-body">Співробітники з різних відділів часом не знають, що відбувається у сусідньому відділі.</div>
+  <div class="l12-body">Співробітники з різних отделе.в часом не знають, що відбувається у сусідньому отделе..</div>
   <div class="l12-highlight" style="margin-top:1rem">
     <p>Їм простіше надсилати запити своєму керівнику, використовуючи <strong>командну лінію замість комунікаційної</strong> та завалювати його дурною роботою.</p>
     <p style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(0,229,255,.1)">Тому вирішення питань затягується, і ми отримуємо <strong>бюрократію</strong>.</p>
@@ -10043,7 +11782,7 @@ Bist du dabei?</div>
   <div class="l12-label">Визначення</div>
   <div class="l12-buro">
     <div class="l12-buro-label">Бюрократія</div>
-    <div class="l12-buro-text">це коли всі питання вирішуються по <strong>командних лініях</strong>, і чекають на вирішення найпростіших питань, які стопорять виробництво всередині відділу, і при цьому ці питання можна було б вирішити безпосередньо <strong>в сусідньому відділі</strong>.</div>
+    <div class="l12-buro-text">це коли всі питання вирішуються по <strong>командних лініях</strong>, і чекають на вирішення найпростіших питань, які стопорять виробництво всередині відділу, і при цьому ці питання можна було б вирішити безпосередньо <strong>в сусідньому отделе.</strong>.</div>
   </div>
 </div>
 <div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">27 / 33</div>
@@ -10081,11 +11820,11 @@ Bist du dabei?</div>
 <div class="l12-slide-wrap">
   <div class="l12-label">Резюме</div>
   <h2 class="l12-h">У кожного з нас —<br><span>конкретна функція</span></h2>
-  <div class="l12-body">І коли ми чітко закриваємо свої задачі та відповідаємо за ЦКП:</div>
+  <div class="l12-body">І коли ми чем больше людей — тем больше задержек.ітко закриваємо свої задачі та відповідаємо за ЦКП:</div>
   <div class="l12-grid l12-grid-3" style="margin-top:1rem;max-width:760px">
-    <div class="l12-card"><div class="l12-card-text">🔹 система <strong>працює</strong></div></div>
-    <div class="l12-card"><div class="l12-card-text">🔹 команда не <strong>буксує</strong></div></div>
-    <div class="l12-card"><div class="l12-card-text">🔹 клієнт отримує <strong>якісний результат</strong></div></div>
+    <div class="l12-card"><div class="l12-card-text">🔹 система <strong>работает</strong></div></div>
+    <div class="l12-card"><div class="l12-card-text">🔹 команда не <strong>буксует</strong></div></div>
+    <div class="l12-card"><div class="l12-card-text">🔹 клиент получает <strong>качественный результат</strong></div></div>
   </div>
   <div class="l12-highlight" style="margin-top:1rem">
     <p>Ми — медична клініка. І наша робота <strong>впливає на життя людей</strong>. Ми не просто лікуємо — ми створюємо довіру до сучасної української стоматології. Ми будуємо бренд, якому хочеться довіряти.</p>
@@ -10108,7 +11847,7 @@ Bist du dabei?</div>
     <li>як працює наша оргструктура в реальності, а не "на папері"</li>
   </ul>
   <div class="l12-highlight" style="margin-top:1rem">
-    <p>Це як мати карту — ви знаєте, <strong>куди йти, до кого звернутись</strong>, і як не втратити час на зайве.</p>
+    <p>Це як мати карту — ви знаєте, <strong>куди йти, до кого звернутись</strong>, і як не втратити чем больше людей — тем больше задержек.ас на зайве.</p>
   </div>
 </div>
 <div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">30 / 33</div>
@@ -10172,6 +11911,1039 @@ Bist du dabei?</div>
 </div>
 </div>
 `,
+                presOverlay_ru: `<style>
+.l12-section { margin-bottom:1.75rem; }
+.l12-section:last-child { margin-bottom:0; }
+.l12-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l12-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l12-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l12-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l12-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l12-card p+p { margin-top:0.7rem; }
+.l12-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.875rem; color:#166534; font-style:italic; line-height:1.6; }
+.l12-reasons { display:grid; gap:0.6rem; margin-top:0.75rem; }
+.l12-reason { border-radius:11px; overflow:hidden; border:1px solid #e2e8f0; }
+.l12-reason-header { display:flex; align-items:center; gap:0.7rem; padding:0.75rem 0.95rem; background:#f8fafc; }
+.l12-reason-num { width:28px; height:28px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; flex-shrink:0; }
+.l12-reason-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l12-reason-body { padding:0.65rem 0.95rem 0.8rem; background:white; border-top:1px solid #f1f5f9; font-size:0.85rem; color:#525252; line-height:1.55; }
+.l12-problems { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l12-problem { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
+.l12-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l12-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l12-step-body { flex:1; }
+.l12-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l12-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-functions { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-fn { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l12-fn-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem; }
+.l12-fn-num { font-size:0.7rem; font-weight:700; color:#9ca3af; }
+.l12-fn-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l12-fn-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-fn-stat { display:inline-block; margin-top:0.4rem; padding:0.2rem 0.55rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:5px; font-size:0.72rem; font-weight:600; color:#16a34a; }
+.l12-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l12-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l12-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l12-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l12-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l12-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l12-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l12-mgr { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-mgr-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; }
+.l12-mgr-icon { width:32px; height:32px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l12-mgr-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l12-mgr-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+</style>
+<style>
+/* fonts loaded externally */
+
+#l12Ov{
+  position:fixed;inset:0;z-index:99999;display:none;flex-direction:column;
+  background:#08090d;
+  font-family:'Onest','Helvetica Neue',sans-serif;
+}
+#l12Ov.on{display:flex}
+#l12Ov *{box-sizing:border-box}
+
+/* Noise texture overlay */
+#l12Ov::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* Grid bg lines */
+#l12Ov::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,.03) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+.l12-slides{flex:1;position:relative;overflow:hidden;z-index:1}
+.l12s{display:none;width:100%;height:100%;padding:0;position:relative;overflow:hidden}
+.l12s.on{display:flex;flex-direction:column}
+
+/* CSS vars */
+#l12Ov{
+  --cyan:#00e5ff;
+  --cyan2:#00b4cc;
+  --green:#39ff87;
+  --amber:#ffb800;
+  --red:#ff4757;
+  --bg:#08090d;
+  --bg2:#0d0f16;
+  --bg3:#12151f;
+  --border:rgba(0,229,255,.12);
+  --border2:rgba(255,255,255,.06);
+  --text:#e8eaf0;
+  --muted:#6b7280;
+  --muted2:#9ca3af;
+}
+
+/* ── TITLE SLIDE ── */
+.l12-title-slide{
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  padding:5rem 7vw;
+  background:radial-gradient(ellipse 80% 60% at 70% 50%, rgba(0,229,255,.07) 0%, transparent 70%),
+             radial-gradient(ellipse 40% 40% at 10% 80%, rgba(57,255,135,.05) 0%, transparent 60%),
+             var(--bg);
+  position:relative;overflow:hidden;
+}
+.l12-title-slide .l12-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  border:1px solid var(--border);background:rgba(0,229,255,.06);
+  color:var(--cyan);font-size:.72rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;padding:.4rem 1rem;border-radius:100px;
+  margin-bottom:2rem;
+}
+.l12-title-slide h1{
+  font-family:'Unbounded','Arial Black',sans-serif;
+  font-size:clamp(2.5rem,8vw,6rem);font-weight:900;
+  line-height:1;margin:0 0 .5rem;color:#fff;
+  text-transform:uppercase;letter-spacing:-.02em;
+}
+.l12-title-slide h1 span{color:var(--cyan)}
+.l12-title-slide .l12-subtitle{
+  font-size:clamp(.9rem,2vw,1.2rem);color:var(--muted2);
+  margin-top:1rem;font-weight:400;
+}
+/* Decorative circle */
+.l12-title-slide .deco{
+  position:absolute;right:-5vw;top:50%;transform:translateY(-50%);
+  width:clamp(200px,40vw,500px);height:clamp(200px,40vw,500px);
+  border-radius:50%;
+  border:1px solid rgba(0,229,255,.1);
+  box-shadow:inset 0 0 100px rgba(0,229,255,.05),0 0 100px rgba(0,229,255,.03);
+}
+.l12-title-slide .deco::before{
+  content:'';position:absolute;inset:20%;border-radius:50%;
+  border:1px solid rgba(0,229,255,.08);
+}
+.l12-title-slide .deco::after{
+  content:'';position:absolute;inset:40%;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,229,255,.12),transparent);
+}
+/* Slide number */
+.l12-num-tag{
+  position:absolute;bottom:2rem;left:7vw;
+  font-family:'Unbounded','Arial Black',sans-serif;
+  font-size:.65rem;font-weight:700;letter-spacing:.15em;
+  color:var(--muted);text-transform:uppercase;
+  display:flex;align-items:center;gap:.75rem;
+}
+.l12-num-tag::before{content:'';display:block;width:2rem;height:1px;background:var(--muted)}
+
+/* ── STANDARD SLIDE LAYOUT ── */
+.l12-slide-wrap{
+  display:flex;flex-direction:column;
+  padding:3.5rem 7vw 6rem;
+  height:100%;
+  background:radial-gradient(ellipse 60% 50% at 100% 0%, rgba(0,229,255,.04) 0%, transparent 60%),var(--bg);
+  position:relative;
+}
+.l12-label{
+  font-size:.68rem;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--cyan);
+  display:flex;align-items:center;gap:.6rem;margin-bottom:1.25rem;
+}
+.l12-label::before{content:'';display:inline-block;width:1.5rem;height:2px;background:var(--cyan);border-radius:2px}
+.l12-h{
+  font-family:'Unbounded','Arial Black',sans-serif;
+  font-size:clamp(1.2rem,3.5vw,2.4rem);font-weight:700;
+  color:#fff;line-height:1.15;margin:0 0 1.75rem;
+  max-width:900px;
+}
+.l12-h span{color:var(--cyan)}
+.l12-body{font-size:clamp(.88rem,1.6vw,1.05rem);color:var(--text);line-height:1.8;max-width:780px}
+.l12-body strong{color:#fff;font-weight:600}
+
+/* Cards grid */
+.l12-grid{display:grid;gap:1px;margin-top:1.5rem}
+.l12-grid-2{grid-template-columns:1fr 1fr}
+.l12-grid-3{grid-template-columns:1fr 1fr 1fr}
+
+.l12-card{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:1.5rem;
+  position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.l12-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.l12-card:hover{border-color:rgba(0,229,255,.25)}
+.l12-card:hover::before{opacity:.6}
+.l12-card .l12-card-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:.85rem;
+}
+.l12-card-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:.4rem}
+.l12-card-title{font-size:clamp(.9rem,1.5vw,1.05rem);font-weight:600;color:#fff;margin-bottom:.5rem;line-height:1.3}
+.l12-card-text{font-size:clamp(.78rem,1.3vw,.92rem);color:var(--muted2);line-height:1.65}
+.l12-card-text strong{color:var(--text)}
+
+/* Highlight box */
+.l12-highlight{
+  background:rgba(0,229,255,.05);
+  border:1px solid rgba(0,229,255,.15);
+  border-radius:16px;padding:1.25rem 1.5rem;
+  margin-top:1.25rem;max-width:780px;
+}
+.l12-highlight p{font-size:clamp(.85rem,1.5vw,1rem);color:var(--text);line-height:1.75;margin:0}
+.l12-highlight strong{color:var(--cyan);font-weight:600}
+
+/* Definition style */
+.l12-def-block{
+  border-left:2px solid var(--cyan);padding-left:1.5rem;margin-top:1.25rem;max-width:780px;
+}
+.l12-def-block .l12-def-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.l12-def-block .l12-def-text{font-size:clamp(.9rem,1.6vw,1.1rem);color:#fff;line-height:1.7;font-weight:500}
+.l12-def-block .l12-def-text u{text-decoration-color:var(--cyan);text-underline-offset:3px}
+
+/* Question style */
+.l12-question{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:1.5rem;
+  background:rgba(255,255,255,.02);
+  margin-top:1rem;max-width:780px;
+  position:relative;
+}
+.l12-question::before{
+  content:'?';
+  position:absolute;top:-12px;left:1.5rem;
+  background:var(--bg);color:var(--cyan);
+  font-family:'Unbounded','Arial Black',sans-serif;font-weight:900;font-size:.75rem;
+  padding:0 .5rem;
+}
+.l12-question p{font-size:clamp(.9rem,1.7vw,1.1rem);color:var(--text);line-height:1.7;margin:.5rem 0;font-weight:500}
+.l12-question p+p{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border2)}
+
+/* List */
+.l12-list{list-style:none;padding:0;margin:.75rem 0;max-width:780px}
+.l12-list li{
+  display:flex;align-items:flex-start;gap:.85rem;
+  padding:.6rem 0;border-bottom:1px solid var(--border2);
+  font-size:clamp(.85rem,1.5vw,.98rem);color:var(--text);line-height:1.65;
+}
+.l12-list li:last-child{border-bottom:none}
+.l12-list li::before{
+  content:'';display:block;width:5px;height:5px;border-radius:50%;
+  background:var(--cyan);flex-shrink:0;margin-top:.55rem;
+}
+.l12-list li strong{color:#fff}
+
+/* Task badge */
+.l12-task-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);
+  color:var(--cyan);font-size:.72rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:.4rem .9rem;border-radius:8px;margin-bottom:1rem;
+}
+.l12-task-num{
+  width:20px;height:20px;border-radius:4px;
+  background:var(--cyan);color:#000;
+  font-size:.65rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Resume / outro */
+.l12-resume{
+  background:linear-gradient(135deg,rgba(0,229,255,.06),rgba(57,255,135,.04));
+  border:1px solid rgba(0,229,255,.15);
+  border-radius:16px;padding:1.5rem 2rem;
+  margin-top:1.25rem;max-width:860px;
+}
+.l12-resume p{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--text);line-height:1.8;margin:.3rem 0}
+.l12-resume strong{color:#fff}
+.l12-resume .l12-r-accent{color:var(--cyan);font-weight:600}
+
+/* Outro full slide */
+.l12-outro{
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  padding:5rem 7vw;height:100%;
+  background:radial-gradient(ellipse 70% 60% at 30% 50%,rgba(0,229,255,.06),transparent 70%),var(--bg);
+  position:relative;
+}
+.l12-outro h2{
+  font-family:'Unbounded','Arial Black',sans-serif;
+  font-size:clamp(1.8rem,5vw,3.5rem);font-weight:900;
+  color:#fff;line-height:1.1;margin:0 0 1rem;
+}
+.l12-outro h2 span{color:var(--cyan)}
+.l12-outro p{font-size:clamp(.9rem,1.8vw,1.15rem);color:var(--muted2);max-width:560px;line-height:1.7;margin:.5rem 0}
+
+/* Two-col layout */
+.l12-two{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:1.25rem;max-width:860px}
+
+/* Comparison row */
+.l12-compare{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;gap:1rem;margin-top:1.25rem;max-width:860px;
+}
+.l12-compare-box{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:14px;padding:1.1rem 1.25rem;
+}
+.l12-compare-box .l12-c-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem}
+.l12-compare-box .l12-c-text{font-size:.9rem;color:var(--text);line-height:1.6}
+.l12-compare-arrow{color:var(--muted);font-size:.8rem;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+
+/* Org chart */
+.l12-org-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:16px;
+  padding:1.5rem;overflow:auto;margin-top:1.25rem;
+}
+
+/* NAV */
+.l12-nav{
+  position:relative;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 7vw;
+  background:rgba(8,9,13,.9);backdrop-filter:blur(16px);
+  border-top:1px solid var(--border2);
+}
+.l12-nav-btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:transparent;border:1px solid var(--border2);
+  color:var(--muted2);border-radius:10px;padding:.5rem 1.25rem;
+  cursor:pointer;font-size:.82rem;font-weight:600;
+  font-family:'Onest','Helvetica Neue',sans-serif;
+  transition:all .15s;
+}
+.l12-nav-btn:hover:not(:disabled){border-color:var(--cyan);color:var(--cyan)}
+.l12-nav-btn:disabled{opacity:.25;cursor:default}
+.l12-nav-center{display:flex;align-items:center;gap:1rem}
+.l12-nav-counter{
+  font-family:'Unbounded','Arial Black',sans-serif;
+  font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.08em;
+}
+.l12-nav-progress{
+  width:120px;height:2px;background:var(--border2);border-radius:2px;overflow:hidden;
+}
+.l12-nav-progress-fill{
+  height:100%;background:var(--cyan);border-radius:2px;transition:width .3s ease;
+}
+.l12-close-btn{
+  background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.25);
+  color:#ff4757;border-radius:10px;padding:.5rem 1.1rem;
+  cursor:pointer;font-size:.82rem;font-weight:700;
+  font-family:'Onest','Helvetica Neue',sans-serif;
+  transition:all .15s;
+}
+.l12-close-btn:hover{background:rgba(255,71,87,.2)}
+
+/* Animations */
+.l12s.on .l12-slide-wrap > *,
+.l12s.on .l12-title-slide > *,
+.l12s.on .l12-outro > *{
+  animation:l12fadein .4s ease both;
+}
+.l12s.on .l12-slide-wrap > *:nth-child(1){animation-delay:.05s}
+.l12s.on .l12-slide-wrap > *:nth-child(2){animation-delay:.1s}
+.l12s.on .l12-slide-wrap > *:nth-child(3){animation-delay:.15s}
+.l12s.on .l12-slide-wrap > *:nth-child(4){animation-delay:.2s}
+.l12s.on .l12-slide-wrap > *:nth-child(5){animation-delay:.25s}
+@keyframes l12fadein{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* Fullscreen orgchart slide */
+.l12-fs-org{
+  display:flex;flex-direction:column;
+  padding:2.5rem 5vw;height:100%;
+  background:var(--bg2);position:relative;overflow:hidden;
+}
+.l12-fs-org::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.l12-fs-org h3{
+  font-family:'Unbounded','Arial Black',sans-serif;
+  font-size:clamp(1rem,2.5vw,1.5rem);font-weight:700;
+  color:#fff;margin:0 0 1.25rem;position:relative;z-index:1;
+}
+.l12-org-svg{flex:1;width:100%;position:relative;z-index:1}
+
+/* Steps numbered */
+.l12-steps{display:flex;flex-direction:column;gap:.75rem;margin-top:1rem;max-width:780px}
+.l12-step{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.25rem;background:var(--bg3);border:1px solid var(--border2);border-radius:14px}
+.l12-step-num{width:28px;height:28px;border-radius:8px;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2);color:var(--cyan);font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Unbounded',sans-serif}
+.l12-step-text{font-size:clamp(.85rem,1.5vw,.98rem);color:var(--text);line-height:1.65}
+.l12-step-text strong{color:#fff}
+
+/* Buro box */
+.l12-buro{
+  background:rgba(255,71,87,.05);border:1px solid rgba(255,71,87,.15);
+  border-radius:16px;padding:1.25rem 1.5rem;margin-top:1.25rem;max-width:780px;
+}
+.l12-buro .l12-buro-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#ff4757;margin-bottom:.4rem}
+.l12-buro .l12-buro-text{font-size:clamp(.88rem,1.5vw,1rem);color:var(--text);line-height:1.7}
+.l12-buro strong{color:#fff}
+</style>
+
+<div id="l12Ov" style="display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000">
+<div class="l12-slides" id="l12SW">
+
+<!-- S1: TITLE -->
+<div class="l12s on" id="l12_1">
+<div class="l12-title-slide">
+  <div class="l12-badge">
+    <svg viewBox="0 0 16 16" width="12" height="12" fill="none"><rect x="1" y="4" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 13v2M11 13v2M3 15h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    Заняття 3 · Оргсхема нарада
+  </div>
+  <h1>ОРГСХЕМА<br><span>компании</span></h1>
+  <p class="l12-subtitle">От хаоса к структуре — как построить<br>организацию, которая работает без вас</p>
+  <div class="deco"></div>
+  <div class="l12-num-tag">01 / 33</div>
+</div>
+</div>
+
+<!-- S2: МЕТА НАРАДИ -->
+<div class="l12s" id="l12_2">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Мета наради</div>
+  <h2 class="l12-h">Что мы хотим<br>получить сегодня</h2>
+  <div class="l12-two">
+    <div class="l12-card">
+      <div class="l12-card-label">Мета 1</div>
+      <div class="l12-card-title">Разобраться в функциях оргсхемы</div>
+      <div class="l12-card-text">Прояснить все вопросы и сомнения, всё, что непонятно хоть одному з вас.</div>
+    </div>
+    <div class="l12-card">
+      <div class="l12-card-label">Мета 2</div>
+      <div class="l12-card-title">Доработать и утвердить функции</div>
+      <div class="l12-card-text">Определить полный набор функций, необходимый нашей компании для развития.</div>
+    </div>
+  </div>
+  <div class="l12-highlight">
+    <p>Результатом совещания станет <strong>черновик организующей схемы</strong>.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">02 / 33</div>
+</div>
+
+<!-- S3: ПРАВИЛА -->
+<div class="l12s" id="l12_3">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Правила наради</div>
+  <h2 class="l12-h">Как мы проводим<br>эту встречу</h2>
+  <ul class="l12-list">
+    <li>Совещание продлится <strong>4–5 часов</strong>. Будет один или два перерыва в зависимости от того, как быстро рухатимемося.</li>
+    <li>Переведите мобильные телефоны в <strong>беззвучний режим</strong>, планшети та комп'ютери теж.</li>
+    <li>Если получите срочный и важный звонок — выйдите из аудитории, чтобы ответить, и вернится назад.</li>
+    <li>Я буду вести протокол, записывать вопросы, на которые мы не нашли ответа.</li>
+    <li>Я буду вносить ваши <strong>коррективы в оргсхему</strong> во время совещания.</li>
+    <li>В разговоре участвуем все, высказываем все идеи, <strong>идеи не критикуем</strong>.</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">03 / 33</div>
+</div>
+
+<!-- S4: ВАЖЛИВЕ ПРАВИЛО -->
+<div class="l12s" id="l12_4">
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Важливе правило</div>
+  <h2 class="l12-h" style="font-size:clamp(1.5rem,4vw,3rem)">Когда вы услышите непонятное слово — <strong>поднимите руку!</strong>pan>підніміть руку</span></h2>
+  <div class="l12-highlight">
+    <p>Запитайте мене про це одразу.</p>
+    <p style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(0,229,255,.1)">Никогда не делайте умный вид.ебіть розумний вигляд — <strong>це не принесе нам результатів.</strong></p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">04 / 33</div>
+</div>
+
+<!-- S5: ОРГАНИЗАЦИЯ — вопрос -->
+<div class="l12s" id="l12_5">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Организация</div>
+  <h2 class="l12-h">Зачем нужна<br><span>организация?</span></h2>
+  <div class="l12-question">
+    <p>Как вы думаете, что вообще представляет собой организация?</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">05 / 33</div>
+</div>
+
+<!-- S6: ОРГАНИЗАЦИЯ — определение -->
+<div class="l12s" id="l12_6">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Организация · Определение</div>
+  <div class="l12-def-block">
+    <div class="l12-def-label">Организация</div>
+    <div class="l12-def-text">— это определённый набор <u>специализированных функций</u>, которые выполняют отдельные сотрудники.яют отдельные сотрвробітники або цели підрозділи, здействийснюючи <u>узгодженв взаємодействие</u>.</div>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">06 / 33</div>
+</div>
+
+<!-- S7: ОРГАНИЗАЦИЯ — знание функций -->
+<div class="l12s" id="l12_7">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Организация</div>
+  <h2 class="l12-h">С чего начинается<br>организация</h2>
+  <div class="l12-highlight">
+    <p>Организация начинается с того, что каждый сотрудник имеет <strong>точно установленные и хорошо понятые функции.нятміли йомв функции</strong>, а также знает функции та продукти инших співробітників та подразделений.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">07 / 33</div>
+</div>
+
+<!-- S8: ПРЕИМУЩЕСТВА РАЗДЕЛЕНИЯ -->
+<div class="l12s" id="l12_8">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Организация · Преимущества</div>
+  <h2 class="l12-h">Что даёт специализированное<br>разделение функций</h2>
+  <div class="l12-grid l12-grid-3" style="margin-top:1.25rem;max-width:900px">
+    <div class="l12-card">
+      <div class="l12-card-label">01</div>
+      <div class="l12-card-title">Высокая эффективность</div>
+      <div class="l12-card-text">Увеличение эффективности работы в <strong>разы</strong> за счёт компетентности.ності кожного</div>
+    </div>
+    <div class="l12-card">
+      <div class="l12-card-label">02</div>
+      <div class="l12-card-title">100% ЦКП</div>
+      <div class="l12-card-text">Компания предоставляет клиенту <strong>ценный конечный продукт</strong> в полном объёме. обсязі</div>
+    </div>
+    <div class="l12-card">
+      <div class="l12-card-label">03</div>
+      <div class="l12-card-title">Успешный обмен</div>
+      <div class="l12-card-text">Успешное осуществление <strong>обмена с клиентами</strong> на равноценной основе.ові</div>
+    </div>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">08 / 33</div>
+</div>
+
+<!-- S9: ПРИКЛАД -->
+<div class="l12s" id="l12_9">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Приклад</div>
+  <h2 class="l12-h">Обговорення</h2>
+  <div class="l12-question">
+    <p>Приведите примеры, как <strong>разделение функций</strong> может значительно увеличить эффективность.сть работы. Вкажіть у прикладах за рахунок чого.</p>
+    <p>Приведите примеры, как <strong>переключение сотрудника</strong> с одной функции на другую может привести к потерям.ривевести до втрат ефективності.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">09 / 33</div>
+</div>
+
+<!-- S10: РЕЗЮМЕ -->
+<div class="l12s" id="l12_10">
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Резюме</div>
+  <div class="l12-resume">
+    <p>Если сотрудник <strong>переключается</strong> с одной функции на другую — он теряет время и эффективность.тивність работы падает.</p>
+    <p style="margin-top:.85rem;padding-top:.85rem;border-top:1px solid rgba(0,229,255,.1)">Если чем больше людей — тем больше задержек.еловек выполняет несколько функций — страдает качество. выполняет <strong>конкретнв функцию</strong> — повышается узгодженість в діях та эффективность повышается.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">10 / 33</div>
+</div>
+
+<!-- S11: ПИТАННЯ про слабку ланку -->
+<div class="l12s" id="l12_11">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Питання</div>
+  <h2 class="l12-h">Сильна чи<br><span>слабка ланка?</span></h2>
+  <div class="l12-question">
+    <p>Как вы считаете, при разделении функций, объём производства компании будетт зависеть от <strong>самого сильного или самого слабого звена?ї функции</strong> чи <strong>самой слабой</strong>?</p>
+    <p>Почему? Аргументируйте свой ответ.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">11 / 33</div>
+</div>
+
+<!-- S12: Слабая функция -->
+<div class="l12s" id="l12_12">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Висновок</div>
+  <h2 class="l12-h">Общая производительность.ость<br>зависит от <span>слабой функции</span></h2>
+  <div class="l12-body" style="margin-top:.5rem">Пример как самая слабая функция в компании влияет на другие.ші підрозділи і організацію загалом.</div>
+  <div style="display:flex;align-items:center;gap:.75rem;margin-top:1.5rem;flex-wrap:wrap">
+    <div class="l12-card" style="flex:1;min-width:160px;border-color:rgba(57,255,135,.2);background:rgba(57,255,135,.04)">
+      <div class="l12-card-label" style="color:#39ff87">Сильная функция</div>
+      <div class="l12-card-text">Высокая производительность.ость, выполняет ЦКП</div>
+    </div>
+    <div style="color:var(--muted);font-size:1.5rem">→</div>
+    <div class="l12-card" style="flex:1;min-width:160px;border-color:rgba(255,71,87,.25);background:rgba(255,71,87,.05)">
+      <div class="l12-card-label" style="color:#ff4757">Узкое место</div>
+      <div class="l12-card-text">Сдерживает всю систему, блокирует результат</div>
+    </div>
+    <div style="color:var(--muted);font-size:1.5rem">→</div>
+    <div class="l12-card" style="flex:1;min-width:160px;border-color:rgba(255,184,0,.2);background:rgba(255,184,0,.04)">
+      <div class="l12-card-label" style="color:#ffb800">Загальний результат</div>
+      <div class="l12-card-text">Обмежений найслабшою ланкою</div>
+    </div>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">12 / 33</div>
+</div>
+
+<!-- S13: Функция без оргсхемы -->
+<div class="l12s" id="l12_13">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Увага</div>
+  <h2 class="l12-h">Невидимая функция —<br>будущее <span>узкое место</span></h2>
+  <div class="l12-highlight">
+    <p>Если функция <strong>нужна в компании</strong>, но мы об этом не знаем и её нет в нашей оргсхемы — вона рано чи пізно стане "вузьким місцем".</p>
+  </div>
+  <div class="l12-question" style="margin-top:1rem">
+    <p>Приведите пример таких функций для вашей компании и влияние на другие функции и общую производительность.ість.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">13 / 33</div>
+</div>
+
+<!-- S14: РЕЗЮМЕ -->
+<div class="l12s" id="l12_14">
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Резюме</div>
+  <div class="l12-resume">
+    <p>Чтобы компания продуктивно работала, необходимо <strong>очень хорошо понятые функции.нимать</strong>, какие функции в нас есть.кции в ній имеют быть та их виконувати.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">14 / 33</div>
+</div>
+
+<!-- S15: ОРГСХЕМА — зачем -->
+<div class="l12s" id="l12_15">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Оргсхема</div>
+  <h2 class="l12-h">Зачем нужна<br><span>оргсхема?</span></h2>
+  <div class="l12-body">Оргсхема решает несколько важных задач, чтобы компания могла <strong>процветати та розширюватися</strong>.</div>
+  <div class="l12-body" style="margin-top:.5rem">Давайте розберемося.</div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">15 / 33</div>
+</div>
+
+<!-- S16: ЗАВДАННЯ 1 -->
+<div class="l12s" id="l12_16">
+<div class="l12-slide-wrap">
+  <div class="l12-task-badge"><div class="l12-task-num">1</div>Завдання оргсхеми</div>
+  <h2 class="l12-h">Оргсхема показывает, какие функции у нас есть.кции<br>необходимы <span>развитию компании</span></h2>
+  <ul class="l12-list">
+    <li>Как в оргсхеме можно увидеть функции</li>
+    <li>Как на оргсхеме обозначаются 7 основных функций, 21 основная функция и отдельные функции</li>
+    <li>Где на оргсхеме находятся главные функции</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">16 / 33</div>
+</div>
+
+<!-- S17: НАША СТРУКТУРА -->
+<div class="l12s" id="l12_17">
+<div class="l12-fs-org">
+  <div class="l12-label">Наша структура</div>
+  <div class="l12-org-svg">
+    <svg viewBox="0 0 920 480" width="100%" height="100%" style="max-height:400px">
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="rgba(0,229,255,.4)"/></marker>
+      </defs>
+      <!-- Owner -->
+      <rect x="20" y="20" width="100" height="44" rx="8" fill="rgba(255,71,87,.15)" stroke="rgba(255,71,87,.5)" stroke-width="1.5"/>
+      <text x="70" y="46" text-anchor="middle" font-family="Onest,sans-serif" font-size="11" font-weight="700" fill="#ff4757">Власник</text>
+      <!-- Arrow to Oper dir -->
+      <line x1="120" y1="42" x2="720" y2="42" stroke="rgba(0,229,255,.3)" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- Oper Director -->
+      <rect x="720" y="20" width="130" height="44" rx="8" fill="rgba(107,114,128,.15)" stroke="rgba(107,114,128,.3)" stroke-width="1.5"/>
+      <text x="785" y="38" text-anchor="middle" font-family="Onest,sans-serif" font-size="10" fill="#9ca3af">Операційний</text>
+      <text x="785" y="52" text-anchor="middle" font-family="Onest,sans-serif" font-size="10" fill="#9ca3af">директор</text>
+      <!-- Vertical from oper dir -->
+      <line x1="785" y1="64" x2="785" y2="90" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <!-- Horizontal connector -->
+      <line x1="100" y1="90" x2="785" y2="90" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <!-- 5 dept verticals -->
+      <line x1="100" y1="90" x2="100" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <line x1="270" y1="90" x2="270" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <line x1="440" y1="90" x2="440" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <line x1="610" y1="90" x2="610" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <line x1="785" y1="90" x2="785" y2="110" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <!-- Dept 1 -->
+      <rect x="40" y="110" width="120" height="50" rx="8" fill="rgba(255,184,0,.1)" stroke="rgba(255,184,0,.3)" stroke-width="1.5"/>
+      <text x="100" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#ffb800">1. Адмін</text>
+      <text x="100" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(255,184,0,.7)">відділення</text>
+      <!-- Dept 2 -->
+      <rect x="210" y="110" width="120" height="50" rx="8" fill="rgba(0,229,255,.07)" stroke="rgba(0,229,255,.25)" stroke-width="1.5"/>
+      <text x="270" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#00e5ff">2. Досягнення</text>
+      <text x="270" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(0,229,255,.6)">цілей клієнтів</text>
+      <!-- Dept 3 -->
+      <rect x="380" y="110" width="120" height="50" rx="8" fill="rgba(139,92,246,.1)" stroke="rgba(139,92,246,.3)" stroke-width="1.5"/>
+      <text x="440" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#a78bfa">3. Відділ</text>
+      <text x="440" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(167,139,250,.7)">кадрів</text>
+      <!-- Dept 4 -->
+      <rect x="550" y="110" width="120" height="50" rx="8" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.3)" stroke-width="1.5"/>
+      <text x="610" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#f472b6">4. Маркетинг</text>
+      <text x="610" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(244,114,182,.7)">і продажі</text>
+      <!-- Dept 5 -->
+      <rect x="720" y="110" width="130" height="50" rx="8" fill="rgba(57,255,135,.07)" stroke="rgba(57,255,135,.2)" stroke-width="1.5"/>
+      <text x="785" y="131" text-anchor="middle" font-family="Onest,sans-serif" font-size="9" font-weight="700" fill="#39ff87">5. Якість</text>
+      <text x="785" y="148" text-anchor="middle" font-family="Onest,sans-serif" font-size="8" fill="rgba(57,255,135,.6)">і контроль</text>
+      <!-- Sub-items row 2 -->
+      <line x1="100" y1="160" x2="100" y2="185" stroke="rgba(255,184,0,.2)" stroke-width="1"/>
+      <rect x="45" y="185" width="110" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(255,184,0,.15)" stroke-width="1"/>
+      <text x="100" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(255,184,0,.6)">Адмін. секції</text>
+      <line x1="100" y1="221" x2="100" y2="246" stroke="rgba(255,184,0,.2)" stroke-width="1"/>
+      <rect x="45" y="246" width="110" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(255,184,0,.15)" stroke-width="1"/>
+      <text x="100" y="269" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(255,184,0,.6)">Якість сервісу</text>
+      <line x1="100" y1="282" x2="100" y2="307" stroke="rgba(255,184,0,.2)" stroke-width="1"/>
+      <rect x="45" y="307" width="110" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(255,184,0,.15)" stroke-width="1"/>
+      <text x="100" y="330" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(255,184,0,.6)">Статистика</text>
+
+      <line x1="270" y1="160" x2="270" y2="185" stroke="rgba(0,229,255,.2)" stroke-width="1"/>
+      <rect x="210" y="185" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(0,229,255,.15)" stroke-width="1"/>
+      <text x="270" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(0,229,255,.6)">ЦКП клієнтів</text>
+      <line x1="270" y1="221" x2="270" y2="246" stroke="rgba(0,229,255,.2)" stroke-width="1"/>
+      <rect x="210" y="246" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(0,229,255,.15)" stroke-width="1"/>
+      <text x="270" y="269" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(0,229,255,.6)">Фінанси</text>
+      <line x1="270" y1="282" x2="270" y2="307" stroke="rgba(0,229,255,.2)" stroke-width="1"/>
+      <rect x="210" y="307" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(0,229,255,.15)" stroke-width="1"/>
+      <text x="270" y="330" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(0,229,255,.6)">Виробництво</text>
+      <line x1="270" y1="343" x2="270" y2="368" stroke="rgba(0,229,255,.2)" stroke-width="1"/>
+      <rect x="210" y="368" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(0,229,255,.15)" stroke-width="1"/>
+      <text x="270" y="391" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(0,229,255,.6)">Логістика</text>
+
+      <line x1="440" y1="160" x2="440" y2="185" stroke="rgba(139,92,246,.2)" stroke-width="1"/>
+      <rect x="380" y="185" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(139,92,246,.15)" stroke-width="1"/>
+      <text x="440" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(167,139,250,.6)">Навчання</text>
+      <line x1="440" y1="221" x2="440" y2="246" stroke="rgba(139,92,246,.2)" stroke-width="1"/>
+      <rect x="380" y="246" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(139,92,246,.15)" stroke-width="1"/>
+      <text x="440" y="269" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(167,139,250,.6)">Набір кадрів</text>
+
+      <line x1="610" y1="160" x2="610" y2="185" stroke="rgba(236,72,153,.2)" stroke-width="1"/>
+      <rect x="550" y="185" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(236,72,153,.15)" stroke-width="1"/>
+      <text x="610" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(244,114,182,.6)">Реклама</text>
+      <line x1="610" y1="221" x2="610" y2="246" stroke="rgba(236,72,153,.2)" stroke-width="1"/>
+      <rect x="550" y="246" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(236,72,153,.15)" stroke-width="1"/>
+      <text x="610" y="269" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(244,114,182,.6)">Продажі</text>
+      <line x1="610" y1="282" x2="610" y2="307" stroke="rgba(236,72,153,.2)" stroke-width="1"/>
+      <rect x="550" y="307" width="120" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(236,72,153,.15)" stroke-width="1"/>
+      <text x="610" y="330" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(244,114,182,.6)">Сервіс клієнтів</text>
+
+      <line x1="785" y1="160" x2="785" y2="185" stroke="rgba(57,255,135,.15)" stroke-width="1"/>
+      <rect x="720" y="185" width="130" height="36" rx="6" fill="rgba(18,21,31,.8)" stroke="rgba(57,255,135,.12)" stroke-width="1"/>
+      <text x="785" y="208" text-anchor="middle" font-family="Onest,sans-serif" font-size="8.5" fill="rgba(57,255,135,.5)">KPI / аналітика</text>
+    </svg>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:5vw">17 / 33</div>
+</div>
+
+<!-- S18: ЗАВДАННЯ 2 -->
+<div class="l12s" id="l12_18">
+<div class="l12-slide-wrap">
+  <div class="l12-task-badge"><div class="l12-task-num">2</div>Завдання оргсхеми</div>
+  <h2 class="l12-h">Оргсхема позволяет точно определить,<br>кто за что <span>отвечает</span></h2>
+  <div class="l12-highlight">
+    <p>Почему мы обращаемся не к «Сергею», а к «Администратору секции»? В системе мы строим <strong>структуру, а не "клуб добрих знайомств"</strong>.</p>
+  </div>
+  <div class="l12-two" style="margin-top:1rem">
+    <div class="l12-card" style="border-color:rgba(255,71,87,.2);background:rgba(255,71,87,.04)">
+      <div class="l12-card-label" style="color:#ff4757">❌ Неправильно</div>
+      <div class="l12-card-text">«Сергей, посмотри, пожалуйста...»</div>
+    </div>
+    <div class="l12-card" style="border-color:rgba(57,255,135,.2);background:rgba(57,255,135,.04)">
+      <div class="l12-card-label" style="color:#39ff87">✓ Правильно</div>
+      <div class="l12-card-text">«Администратор секции графиков, нужно согласовать изменения на среду»</div>
+    </div>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">18 / 33</div>
+</div>
+
+<!-- S19: РАЗДЕЛЕНИЕ ПО ФУНКЦИЯМ -->
+<div class="l12s" id="l12_19">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Организационная культура</div>
+  <h2 class="l12-h">Что даёт разделение<br>по функциям</h2>
+  <div class="l12-steps">
+    <div class="l12-step"><div class="l12-step-num">1</div><div class="l12-step-text">Понимать, какова его функция.го <strong>роль в організації</strong></div></div>
+    <div class="l12-step"><div class="l12-step-num">2</div><div class="l12-step-text">Понимать, с кем взаимодействовать.аємодіяти <strong>с різних вопросов</strong></div></div>
+    <div class="l12-step"><div class="l12-step-num">3</div><div class="l12-step-text">Оценивать собственную эффективность.ну<strong>продуктивність</strong> за кожною функэтой та планувати работу</div></div>
+  </div>
+  <div class="l12-highlight" style="margin-top:1rem">
+    <p>Один человек может выполнять <strong>несколько функций</strong> — и это нормало что получится.ьно на старте.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">19 / 33</div>
+</div>
+
+<!-- S20: ЗАВДАННЯ 3 -->
+<div class="l12s" id="l12_20">
+<div class="l12-slide-wrap">
+  <div class="l12-task-badge"><div class="l12-task-num">3</div>Завдання оргсхеми</div>
+  <h2 class="l12-h">Оргсхема показывает, какой продукт<br>ожидается от каждого <span>подразделения</span></h2>
+  <ul class="l12-list">
+    <li>Где на оргсхеме можно увидеть продукт отделения, отдела, секции, всей компании</li>
+    <li>Пример продуктов отдела дохода (7) и отдела продаж (6)</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">20 / 33</div>
+</div>
+
+<!-- S21: ЗАВДАННЯ 4 -->
+<div class="l12s" id="l12_21">
+<div class="l12-slide-wrap">
+  <div class="l12-task-badge"><div class="l12-task-num">4</div>Завдання оргсхеми</div>
+  <h2 class="l12-h">Оргсхема даёт возможность<br>решать вопросы <span>напрямую</span></h2>
+  <ul class="l12-list">
+    <li>Известно кто за какие вопросы отвечает</li>
+    <li>Позволяет добиваться, чтобы смежные подразделения делали свою работв и давали вам то, что необходимо.димо для вашей работы</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">21 / 33</div>
+</div>
+
+<!-- S22: ВИДЫ ВЗАИМОДЕЙСТВИЯ -->
+<div class="l12s" id="l12_22">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Взаимодействие</div>
+  <h2 class="l12-h">Два вида взаимодействия —<br><span>система быстрого потока</span></h2>
+  <div class="l12-body">На оргсхеме вы видите точное разделение функций и следующее, что необходимо сделать.елать — эе забезпечити <strong>злагодженв взаємодействие</strong> междв ними.</div>
+  <div class="l12-two" style="margin-top:1.25rem">
+    <div class="l12-card">
+      <div class="l12-card-label">Командные линии</div>
+      <div class="l12-card-title">Вертикальная коммуникация</div>
+      <div class="l12-card-text">Сверхв вниз: <strong>инструкции, распоряжения</strong><br>Снизв вверх: <strong>предложения, отчёты</strong>trong>пропозиції, звіти, плани</strong></div>
+    </div>
+    <div class="l12-card" style="border-color:rgba(57,255,135,.15);background:rgba(57,255,135,.03)">
+      <div class="l12-card-label" style="color:#39ff87">Коммуникационные линии</div>
+      <div class="l12-card-title">Горизонтальная коммуникация</div>
+      <div class="l12-card-text">Передача <strong>сообщений, уведомлений, ответов, информации, запросов</strong>.trong> між підрозділами</div>
+    </div>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">22 / 33</div>
+</div>
+
+<!-- S23: КОМАНДНЫЕ ЛИНИИ -->
+<div class="l12s" id="l12_23">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Командные линии</div>
+  <h2 class="l12-h">От высшего руководителя —<br>через подразделения вниз</h2>
+  <div class="l12-body">Командные линии идут от <strong>высшего руководителя</strong> через руководителей подразделений.лей подрозділів до пересічних співробітників. По цих лініях:</div>
+  <div class="l12-two" style="margin-top:1.25rem">
+    <div class="l12-card">
+      <div class="l12-card-label">Зверху вниз ↓</div>
+      <div class="l12-card-text">Инструкции, распоряжения и т.д.</div>
+    </div>
+    <div class="l12-card">
+      <div class="l12-card-label">Знизу вгору ↑</div>
+      <div class="l12-card-text">Предложения, планы и отчёты о выполнении, требующие одобрения</div>
+    </div>
+  </div>
+  <div class="l12-body" style="margin-top:1rem;color:var(--muted2)">Примеры вопросов, движущихся по командным линиям.мандным линиям.ндними лініями.</div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">23 / 33</div>
+</div>
+
+<!-- S24: КОММУНИКАЦИОННЫЕ ЛИНИИ -->
+<div class="l12s" id="l12_24">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Коммуникационные линии</div>
+  <h2 class="l12-h">Горизонтальное<br><span>взаимодействие подразделений</span></h2>
+  <div class="l12-highlight">
+    <p>Линии, по которым передаются сообщения, уведомления, ответы, информация, запросы и т.д.</p>
+  </div>
+  <div class="l12-question" style="margin-top:1rem">
+    <p>Примеры ситуаций, когда руководитель не мог получить то, что емв нужно от смежного подразделения.и звертався безпосередньо до директора. Як он міг би вчинити, якби знав ПІБ спеціаліста, который за це відповідає?</p>
+    <p>Примеры вопросов (не менее пяти), которые необходимо решать по коммуникационным линиям.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">24 / 33</div>
+</div>
+
+<!-- S25: ЗАТРИМКИ -->
+<div class="l12s" id="l12_25">
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Питання</div>
+  <div class="l12-question">
+    <p>Как вы считаете, почему решение некоторых вопросов часто <strong>затягивается</strong>?</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">25 / 33</div>
+</div>
+
+<!-- S26: ПРИЧИНА -->
+<div class="l12s" id="l12_26">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Причина затримок</div>
+  <h2 class="l12-h">Почему возникает<br><span>бюрократия</span></h2>
+  <div class="l12-body">Сотрудники из разных отделов порой не знают, что происходит в соседнем отделе..</div>
+  <div class="l12-highlight" style="margin-top:1rem">
+    <p>Им проще отправлять запросы своемв руководителю, используя <strong>командную линию вместо коммуникационную линию.каційної</strong> та завалювати його дурною роботою.</p>
+    <p style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(0,229,255,.1)">Поэпоэтомв решение вопросов затягивается.ння вопросов затягується, и ми получаетмо <strong>бюрократію</strong>.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">26 / 33</div>
+</div>
+
+<!-- S27: БЮРОКРАТИЯ -->
+<div class="l12s" id="l12_27">
+<div class="l12-slide-wrap" style="justify-content:center">
+  <div class="l12-label">Визначення</div>
+  <div class="l12-buro">
+    <div class="l12-buro-label">Бюрократия</div>
+    <div class="l12-buro-text">это когда все вопросы решаются по <strong>командным линиям</strong>, и чем больше людей — тем больше задержек.екають на вирішення найпростіших питань, які стопорять виробництво всередині відділу, і при цьому ці питання можна було б вирішити безпосередньо <strong>в сусідньому отделе.</strong>.</div>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">27 / 33</div>
+</div>
+
+<!-- S28: ПОНИМАНИЕ -->
+<div class="l12s" id="l12_28">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Осознание</div>
+  <h2 class="l12-h">Теперь вы понимаете<br>необходимость <span>оргсхемы</span>?</h2>
+  <div class="l12-two" style="margin-top:1.25rem">
+    <div class="l12-card" style="border-color:rgba(255,71,87,.15);background:rgba(255,71,87,.03)">
+      <div class="l12-card-label" style="color:#ff4757">Без оргсхеми</div>
+      <ul class="l12-list" style="margin:0">
+        <li style="font-size:.85rem">«Меня постоянно дёргают не по моей теме»</li>
+        <li style="font-size:.85rem">"Я не знаю, до кого перекинути питання"</li>
+        <li style="font-size:.85rem">«Не вижу всей картины — есть тревожность»</li>
+      </ul>
+    </div>
+    <div class="l12-card" style="border-color:rgba(57,255,135,.15);background:rgba(57,255,135,.03)">
+      <div class="l12-card-label" style="color:#39ff87">З оргсхемою</div>
+      <ul class="l12-list" style="margin:0">
+        <li style="font-size:.85rem">✔ Тепер я знаю, хто за що</li>
+        <li style="font-size:.85rem">✔ Можу звернутись напряму</li>
+        <li style="font-size:.85rem">✔ Есть порядок — легче дышать</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">28 / 33</div>
+</div>
+
+<!-- S29: РЕЗЮМЕ -->
+<div class="l12s" id="l12_29">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Резюме</div>
+  <h2 class="l12-h">У каждого из нас —<br><span>конкретная функция</span></h2>
+  <div class="l12-body">И когда мы чётко закрываем свои задачи и отвечаем за ЦКП:</div>
+  <div class="l12-grid l12-grid-3" style="margin-top:1rem;max-width:760px">
+    <div class="l12-card"><div class="l12-card-text">🔹 система <strong>работает</strong></div></div>
+    <div class="l12-card"><div class="l12-card-text">🔹 команда не <strong>буксует</strong></div></div>
+    <div class="l12-card"><div class="l12-card-text">🔹 клиент получает <strong>качественный результат</strong></div></div>
+  </div>
+  <div class="l12-highlight" style="margin-top:1rem">
+    <p>Мы — медицинская клиника. И наша работа <strong>влияет на жизнь людей</strong>. Мы не просто лечим — мы меняем жизни.м — ми створюємо довірв до сучасної української стоматології. Ми будуємо бренд, якомв хочеться довіряти.</p>
+    <p style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(0,229,255,.1)"><strong>Только вместе</strong> мы можем создавать результат.ки так ми зможемо масштабуватись, не втрачаючи якості, не вигораючи — и нести ценность далі.</strong></p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">29 / 33</div>
+</div>
+
+<!-- S30: РЕГЛАМЕНТ -->
+<div class="l12s" id="l12_30">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Регламент</div>
+  <h2 class="l12-h">Инструкция ко<br><span>всей организации</span></h2>
+  <div class="l12-body">Регламент — это не «ещё один документ для галочки». Это инструкция ко всей нашей организации.ей організації, которая:</div>
+  <ul class="l12-list">
+    <li>объясняет кто за что отвечает</li>
+    <li>что означают все эти новые функции, роли, ЦКП</li>
+    <li>какие понятия мы используем (чтобы не было путаницы)</li>
+    <li>как работает наша оргструктура в реальности, а не «на бумаге»</li>
+  </ul>
+  <div class="l12-highlight" style="margin-top:1rem">
+    <p>Это как иметь карту — вы знаете, <strong>куда идти, к кому обратиться</strong>, и как не потерять время на зайве.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">30 / 33</div>
+</div>
+
+<!-- S31: ТЕСТИ -->
+<div class="l12s" id="l12_31">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Наступний крок</div>
+  <h2 class="l12-h">Тесты для<br><span>закрепления</span></h2>
+  <div class="l12-body">Чтобы уверенно двигаться дальше, важно убедиться, что каждый:</div>
+  <div class="l12-steps" style="margin-top:1rem">
+    <div class="l12-step"><div class="l12-step-num">1</div><div class="l12-step-text">Понимает свою <strong>функцию</strong>.ong>роль у структурі</strong></div></div>
+    <div class="l12-step"><div class="l12-step-num">2</div><div class="l12-step-text">Знает, что именно входит в его ЦКП.входить до його <strong>функции</strong></div></div>
+    <div class="l12-step"><div class="l12-step-num">3</div><div class="l12-step-text">Осознаёт, как это влияет на общий результат.влияет на <strong>загальний результат клініки</strong></div></div>
+  </div>
+  <div class="l12-highlight" style="margin-top:1rem">
+    <p>Мы не проверяем — мы <strong>настраиваем команду на единую волну</strong>.</p>
+  </div>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">31 / 33</div>
+</div>
+
+<!-- S32: ЧТО ВАЖНО ДАЛЬШЕ -->
+<div class="l12s" id="l12_32">
+<div class="l12-slide-wrap">
+  <div class="l12-label">Что важно от каждого дальше</div>
+  <ul class="l12-list">
+    <li>Когда возникает вопрос — <strong>смотрим в оргсхему</strong>. Там уже есть ответ: кто, за что и куди звертатись.</li>
+    <li>Ищем взаимопонимание через <strong>структуру</strong>, а не через конфликты. Оргсхема — это наш «арбитр».«арбитр».«арбітр".</li>
+    <li>Если заметили функцию «в воздухе» — <strong>дайте знать</strong>. Это шанс сделать систему ещё сильнее.ильнішою.</li>
+    <li>Объясняйте коллегам, как <strong>пользоваться оргсхемой</strong>. Когда понимаешь структурв — знаешь куда идти.икає плутанина и хаос.</li>
+  </ul>
+</div>
+<div class="l12-num-tag" style="position:absolute;bottom:5rem;left:7vw">32 / 33</div>
+</div>
+
+<!-- S33: КОНЕЦ -->
+<div class="l12s" id="l12_33">
+<div class="l12-outro">
+  <div class="l12-badge">Оргсхема нарада · Завершення</div>
+  <h2>Спасибо!<br><span>Мы сегодня сделали</span><br>сильный шаг</h2>
+  <p>к понятной, слаженной и <strong style="color:var(--text)">профессиональной работе</strong>.</p>
+  <p style="margin-top:.5rem">И именно на этом строится компания, которая <strong style="color:var(--text)">росте</strong>.</p>
+  <div class="deco" style="opacity:.4"></div>
+  <div class="l12-num-tag">33 / 33</div>
+</div>
+</div>
+
+</div><!-- /l12SW -->
+
+<!-- NAV -->
+<div class="l12-nav">
+  <button class="l12-nav-btn" id="l12Prev" onclick="window._l12P()" disabled>← Назад</button>
+  <div class="l12-nav-center">
+    <span class="l12-nav-counter" id="l12Ctr">1 / 33</span>
+    <div class="l12-nav-progress"><div class="l12-nav-progress-fill" id="l12PF" style="width:3%"></div></div>
+  </div>
+  <button class="l12-close-btn" onclick="window._l12Close()">✕ Закрити</button>
+  <button class="l12-nav-btn" id="l12Next" onclick="window._l12N()">Далее →</button>
+</div>
+</div>
+`,
 
                 lessonContent: `
 <style>
@@ -10224,7 +12996,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Вступ</div>
     <div class="l12-section-title">Чому при зростанні стає не легше, а важче</div>
     <div class="l12-card">
-        <p>Є питання, з яким рано чи пізно стикається кожен власник малого бізнесу: чому при зростанні стає не легше, а важче? Більше людей — більше хаосу. Більше замовлень — більше помилок. Більше виручки — більше головного болю.</p>
+        <p>Є питання, з яким рано чи пізно стикається кожен власник мало что получится.ого бізнесу: чому при зростанні стає не легше, а важче? Більше людей — більше хаосу. Більше замовлень — більше помилок. Більше виручки — більше головного болю.</p>
         <p>Відповідь, як правило, одна: бізнес не організований. Не в сенсі «зареєстрований» — а в сенсі «кожна робота закріплена за конкретною людиною, і всі частини взаємодіють між собою».</p>
         <p>Функціональна структура — це фундамент, без якого будь-яка система, CRM, автоматизація чи мотивація — просто надбудова на піску.</p>
     </div>
@@ -10343,7 +13115,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Як бізнес росте</div>
     <div class="l12-section-title">Коли бізнес зростає — функції діляться на підрозділи</div>
     <div class="l12-card">
-        <p>На старті одна людина може закривати кілька функцій одночасно. Це нормально. Але коли бізнес росте — всередині кожної функції з'являються окремі зони відповідальності.</p>
+        <p>На старті одна людина може закривати кілька функцій одночасно. Це нормало что получится.ьно. Але коли бізнес росте — всередині кожної функції з'являються окремі зони відповідальності.</p>
         <p>Наприклад: в <strong>Адмініструванні</strong> виділяється окремий <strong>Директор</strong> (стратегія, партнерства) і <strong>Операційний керівник</strong> (регламенти, контроль команди). У <strong>Виробництві</strong> — чотири окремих підрозділи: Планування, Забезпечення, Виробництво і Логістика.</p>
         <p>Структура не змінюється — вона деталізується.</p>
     </div>
@@ -10481,7 +13253,7 @@ Bist du dabei?</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;">
             <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Немає клієнтів або їх дуже мало</span></div>
+                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Немає клієнтів або їх дуже мало что получится.о</span></div>
                 <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
                 <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Маркетинг</div></div></div>
             </div>
@@ -10535,7 +13307,7 @@ Bist du dabei?</div>
             <div class="l12-step-num" style="background:#f59e0b;">2</div>
             <div class="l12-step-body">
                 <div class="l12-step-title">Визнач відсутню функцію</div>
-                <div class="l12-step-text">Запитай: яка робота мала б виконуватись щоб цієї проблеми не існувало? Це і є відсутня функція. Назви її конкретно.</div>
+                <div class="l12-step-text">Запитай: яка робота мало что получится.а б виконуватись щоб цієї проблеми не існувало? Це і є відсутня функція. Назви її конкретно.</div>
             </div>
         </div>
         <div class="l12-step">
@@ -10577,7 +13349,7 @@ Bist du dabei?</div>
                 <div class="l12-reason-num">3</div>
                 <div class="l12-reason-title">Якщо щось не працює — можна замінити одну частину</div>
             </div>
-            <div class="l12-reason-body">Зламалась лампочка в фарі — міняєте лампочку, не весь автомобіль. Коли є чіткі функції — ви точно знаєте де проблема. Функція «генерація лідів» — 50 заявок, добре. Функція «конверсія в угоду» — 5% при нормі 20%. Ось де зламалась лампочка. Міняємо лампочку — а не увесь відділ.</div>
+            <div class="l12-reason-body">Зламало что получится.ась лампочка в фарі — міняєте лампочку, не весь автомобіль. Коли є чіткі функції — ви точно знаєте де проблема. Функція «генерація лідів» — 50 заявок, добре. Функція «конверсія в угоду» — 5% при нормі 20%. Ось де зламало что получится.ась лампочка. Міняємо лампочку — а не увесь відділ.</div>
         </div>
         <div class="l12-reason">
             <div class="l12-reason-header">
@@ -10595,7 +13367,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Розділ 4</div>
     <div class="l12-section-title">Генрі Форд і революція функцій — як поділ роботи змінив світ</div>
     <div class="l12-card">
-        <p>До Форда автомобіль був предметом розкоші — як сьогодні яхта або приватний літак. Один майстер робив автомобіль від початку до кінця: і болти закручував, і двигун збирав, і кузов підганяв. Майстер мав бути кваліфікованим у всьому — а значить, таких людей було мало і коштували вони дорого.</p>
+        <p>До Форда автомобіль був предметом розкоші — як сьогодні яхта або приватний літак. Один майстер робив автомобіль від початку до кінця: і болти закручував, і двигун збирав, і кузов підганяв. Майстер мав бути кваліфікованим у всьому — а значить, таких людей було мало что получится.о і коштували вони дорого.</p>
         <p>Форд зробив інакше: кожен робітник виконує одну просту операцію. Один закручує болти зліва. Інший — справа. Третій кріпить колеса. Четвертий встановлює сидіння. Один конкретний рух. Один конкретний результат.</p>
     </div>
     <div class="l12-quote">Поділ роботи на чіткі функції — це не бюрократія і не ускладнення. Це шлях до більшої продуктивності, нижчих витрат і кращої якості одночасно.</div>
@@ -10621,7 +13393,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Розділ 6</div>
     <div class="l12-section-title">Пастка «зробити самому» — і чому вона руйнує бізнес</div>
     <div class="l12-card">
-        <p>«Мої працівники не роблять як треба. Простіше зробити самому». Якщо ви хоч раз так думали — ви вже потрапили в пастку. Коли власник намагається замінити людей собою — він стає найдорожчим і найнезамінимішим виконавцем у своєму ж бізнесі.</p>
+        <p>«Мої працівники не роблять як треба. Простіше зробити самому». Якщо ви хоч раз так думало что получится.и — ви вже потрапили в пастку. Коли власник намагається замінити людей собою — він стає найдорожчим і найнезамінимішим виконавцем у своєму ж бізнесі.</p>
         <p>Вихід — не «найняти кращих людей». Вихід — організувати роботу так, щоб звичайні люди давали передбачуваний результат. Це і є функціональна структура.</p>
     </div>
     <div class="l12-section-label" style="margin-top:1rem;">Дві дії, коли команда не справляється</div>
@@ -10658,7 +13430,7 @@ Bist du dabei?</div>
         <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко керувати.</strong> Завжди є причина чому конкретна робота не зроблена. Немає чіткої функції — немає чіткого KPI — немає об'єктивної оцінки.</div></div>
     </div>
     <div class="l12-card" style="margin-top:0.75rem;">
-        <p>Коли бізнес маленький — одна людина робить кілька функцій. Це нормально на старті. Але різниця між «так виходить» і «так і треба»: <strong>якщо ви знаєте всі функції і бачите їх на карті — ви керуєте усвідомлено</strong>. Ви знаєте, що Сергій зараз робить функцію продажів. І коли з'являться гроші — точно знаєте кого наймати першим.</p>
+        <p>Коли бізнес мало что получится.енький — одна людина робить кілька функцій. Це нормало что получится.ьно на старті. Але різниця між «так виходить» і «так і треба»: <strong>якщо ви знаєте всі функції і бачите їх на карті — ви керуєте усвідомлено</strong>. Ви знаєте, що Сергій зараз робить функцію продажів. І коли з'являться гроші — точно знаєте кого наймати першим.</p>
     </div>
 </div>
 
@@ -10709,8 +13481,8 @@ Bist du dabei?</div>
     <div class="l12-section-label">Розділ 9</div>
     <div class="l12-section-title">Одна зламана ланка — і система стоїть. Роль керівника</div>
     <div class="l12-card">
-        <p>Власники часто думають після побудови структури: «Все, розписав функції, призначив людей, тепер воно само їде». Ні. Після побудови структури з'являється нова критична роль: керівник, який стежить за тим, щоб всі ланки працювали.</p>
-        <p>Уявіть годинник. Десятки шестерень, кожна виконує свою функцію. Якщо хоча б одна зубчаста ланка зламалась — годинник зупиняється. Не важливо, що всі інші 99 шестерень в ідеальному стані.</p>
+        <p>Власники чем больше людей — тем больше задержек.асто думають після побудови структури: «Все, розписав функції, призначив людей, тепер воно само їде». Ні. Після побудови структури з'являється нова критична роль: керівник, який стежить за тим, щоб всі ланки працювали.</p>
+        <p>Уявіть годинник. Десятки шестерень, кожна виконує свою функцію. Якщо хоча б одна зубчаста ланка зламало что получится.ась — годинник зупиняється. Не важливо, що всі інші 99 шестерень в ідеальному стані.</p>
     </div>
     <div class="l12-section-label" style="margin-top:1rem;">Три завдання керівника в організованому бізнесі</div>
     <div class="l12-mgr">
@@ -10724,7 +13496,7 @@ Bist du dabei?</div>
         </div>
         <div class="l12-mgr-item">
             <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-            <div><div class="l12-mgr-title">Виправляти</div><div class="l12-mgr-text">Швидко втручатися і вирішувати. Не «потім розберемось» — а зараз, поки мала проблема не стала великою.</div></div>
+            <div><div class="l12-mgr-title">Виправляти</div><div class="l12-mgr-text">Швидко втручатися і вирішувати. Не «потім розберемось» — а зараз, поки мало что получится.а проблема не стала великою.</div></div>
         </div>
     </div>
 </div>
@@ -10882,7 +13654,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Введение</div>
     <div class="l12-section-title">Почему при росте становится не легче, а тяжелее</div>
     <div class="l12-card">
-        <p>Есть вопрос, с которым рано или поздно сталкивается каждый владелец малого бизнеса: почему при росте становится не легче, а тяжелее? Больше людей — больше хаоса. Больше заказов — больше ошибок. Больше выручки — больше головной боли.</p>
+        <p>Есть вопрос, с которым рано или поздно сталкивается каждый владелец мало что получится.ого бизнеса: почему при росте становится не легче, а тяжелее? Больше людей — больше хаоса. Больше заказов — больше ошибок. Больше выручки — больше головной боли.</p>
         <p>Ответ, как правило, один: бизнес не организован. Не в смысле «зарегистрирован» — а в смысле «каждая работа закреплена за конкретным человеком, и все части взаимодействуют между собой».</p>
         <p>Функциональная структура — это фундамент, без которого любая система, CRM, автоматизация или мотивация — просто надстройка на песке.</p>
     </div>
@@ -10906,7 +13678,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Раздел 2</div>
     <div class="l12-section-title">Что такое «функция» — и почему это самое важное слово в управлении</div>
     <div class="l12-card">
-        <p>«Функция» — это конкретная работа, которую кто-то выполняет. Проще говоря: «за что ты отвечаешь». Не должность. Не название. Не запись в трудовой. А реальный ответ на вопрос: <strong>что именно ты делаешь и что после тебя остаётся?</strong></p>
+        <p>«Функция» — это конкретная работа, которую кто-то выполняет. Проще говоря: «за что ты отвечаешь». Не должность. Не название. Не запись в трудовой. А реальный ответ на вопрос: <strong>что именно ты делаешь и чем больше людей — тем больше задержек.то после тебя остаётся?</strong></p>
         <p>В бизнесе функции — это аналоги позиций в футболе. Есть тот, кто находит клиентов. Есть тот, кто продаёт. Есть тот, кто производит. Есть тот, кто доставляет. Есть тот, кто считает деньги. Каждая из этих работ — отдельная функция.</p>
     </div>
     <div class="l12-quote">Бизнес — это пазл, где каждая частица — отдельная функция: продажи, реклама, деньги, производство, люди, доставка. Если хотя бы одна частица выпала — картинка неполная. Пазл не складывается.</div>
@@ -10944,7 +13716,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Как бизнес растёт</div>
     <div class="l12-section-title">Когда бизнес растёт — функции делятся на подразделения</div>
     <div class="l12-card">
-        <p>На старте один человек может закрывать несколько функций одновременно. Это нормально. Но когда бизнес растёт — внутри каждой функции появляются отдельные зоны ответственности.</p>
+        <p>На старте один человек может закрывать несколько функций одновременно. Это нормало что получится.ьно. Но когда бизнес растёт — внутри каждой функции появляются отдельные зоны ответственности.</p>
         <p>Например: в <strong>Администрировании</strong> выделяется отдельный <strong>Директор</strong> (стратегия, партнёрства) и <strong>Операционный руководитель</strong> (регламенты, контроль команды). В <strong>Производстве</strong> — четыре отдельных подразделения: Планирование, Обеспечение, Производство и Логистика.</p>
         <p>Структура не меняется — она детализируется.</p>
     </div>
@@ -10971,7 +13743,7 @@ Bist du dabei?</div>
         <p>Найди отсутствующую функцию — найдёшь причину. Исправь функцию — решишь проблему.</p>
     </div>
     <div style="margin-top:0.75rem;display:flex;flex-direction:column;gap:6px;">
-        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Нет клиентов или их очень мало</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Маркетинг</div></div></div></div>
+        <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Нет клиентов или их очень мало что получится.о</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Маркетинг</div></div></div></div>
         <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Клиенты покупают раз и не возвращаются</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Повторные продажи / удержание</div></div></div></div>
         <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Постоянно не хватает материалов или товара</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Обеспечение производства</div></div></div></div>
         <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;"><div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;">Владелец не может уйти в отпуск — всё останавливается</span></div><div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Отсутствующая функция</div><div style="font-size:12px;font-weight:700;color:#04342C;">Операционное управление</div></div></div></div>
@@ -11041,9 +13813,9 @@ Bist du dabei?</div>
         <div class="l12-reason">
             <div class="l12-reason-header">
                 <div class="l12-reason-num">3</div>
-                <div class="l12-reason-title">Если что-то не работает — можно заменить одну часть</div>
+                <div class="l12-reason-title">Если чем больше людей — тем больше задержек.то-то не работает — можно заменить одну часть</div>
             </div>
-            <div class="l12-reason-body">Сломалась лампочка в фаре — меняете лампочку, не весь автомобиль. Когда есть чёткие функции — вы точно знаете где проблема. Функция «генерация лидов» — 50 заявок, хорошо. Функция «конверсия в сделку» — 5% при норме 20%. Вот где сломалась лампочка. Меняем лампочку — а не весь отдел.</div>
+            <div class="l12-reason-body">Сломало что получится.ась лампочка в фаре — меняете лампочку, не весь автомобиль. Когда есть чёткие функции — вы точно знаете где проблема. Функция «генерация лидов» — 50 заявок, хорошо. Функция «конверсия в сделку» — 5% при норме 20%. Вот где сломало что получится.ась лампочка. Меняем лампочку — а не весь отдел.</div>
         </div>
         <div class="l12-reason">
             <div class="l12-reason-header">
@@ -11061,10 +13833,10 @@ Bist du dabei?</div>
     <div class="l12-section-label">Раздел 4</div>
     <div class="l12-section-title">Генри Форд и революция функций — как разделение труда изменило мир</div>
     <div class="l12-card">
-        <p>До Форда автомобиль был предметом роскоши — как сегодня яхта или частный самолёт. Один мастер делал автомобиль от начала до конца: и болты закручивал, и двигатель собирал, и кузов подгонял. Мастер должен был быть квалифицирован во всём — а значит, таких людей было мало и стоили они дорого.</p>
+        <p>До Форда автомобиль был предметом роскоши — как сегодня яхта или чем больше людей — тем больше задержек.астный самолёт. Один мастер делал автомобиль от начала до конца: и болты закручивал, и двигатель собирал, и кузов подгонял. Мастер должен был быть квалифицирован во всём — а значит, таких людей было мало что получится.о и стоили они дорого.</p>
         <p>Форд сделал иначе: каждый рабочий выполняет одну простую операцию. Один закручивает болты слева. Другой — справа. Третий крепит колёса. Четвёртый устанавливает сиденья. Одно конкретное движение. Один конкретный результат.</p>
     </div>
-    <div class="l12-quote">Разделение работы на чёткие функции — это не бюрократия и не усложнение. Это путь к большей производительности, меньшим затратам и лучшему качеству одновременно.</div>
+    <div class="l12-quote">Разделение работы на чёткие функции — это не бюрократия и не усложнение. Это путь к большей производительность.ости, меньшим затратам и лучшему качеству одновременно.</div>
 </div>
 
 <div class="l12-divider"></div>
@@ -11087,7 +13859,7 @@ Bist du dabei?</div>
     <div class="l12-section-label">Раздел 6</div>
     <div class="l12-section-title">Ловушка «сделать самому» — и почему она разрушает бизнес</div>
     <div class="l12-card">
-        <p>«Мои сотрудники не делают как надо. Проще сделать самому». Если вы хоть раз так думали — вы уже попали в ловушку. Когда владелец пытается заменить людей собой — он становится самым дорогим и самым незаменимым исполнителем в своём же бизнесе.</p>
+        <p>«Мои сотрудники не делают как надо. Проще сделать самому». Если вы хоть раз так думало что получится.и — вы уже попали в ловушку. Когда владелец пытается заменить людей собой — он становится самым дорогим и самым незаменимым исполнителем в своём же бизнесе.</p>
         <p>Выход — не «нанять лучших людей». Выход — организовать работу так, чтобы обычные люди давали предсказуемый результат. Это и есть функциональная структура.</p>
     </div>
     <div class="l12-section-label" style="margin-top:1rem;">Два действия, когда команда не справляется</div>
@@ -11116,7 +13888,7 @@ Bist du dabei?</div>
     <div class="l12-section-title">Ловушка «многостаночника» — когда один человек делает всё</div>
     <div class="l12-card">
         <p>Малый бизнес часто выглядит так: есть Сергей. Сергей — и продавец, и бухгалтер, и завхоз, и оператор соцсетей, и курьер при необходимости. Кажется, это хорошо: один человек, который умеет всё. На самом деле — это катастрофа в замедленном режиме.</p>
-        <p>Чем больше функций у человека — тем сложнее им управлять. У него всегда есть отмазка: «Я другим занимался». И технически он прав.</p>
+        <p>Чем больше функций у человека — тем сложнее им управлять. У него всегда есть отмазка: «Я другим занимало что получится.ся». И технически он прав.</p>
     </div>
     <div class="l12-problems">
         <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Сложно найти.</strong> Где взять человека, который умеет и продавать, и считать, и с поставщиками, и в соцсетях? Таких или нет, или им скучно и они уходят.</div></div>
@@ -11124,7 +13896,7 @@ Bist du dabei?</div>
         <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Сложно управлять.</strong> Всегда есть причина почему конкретная работа не сделана. Нет чёткой функции — нет чёткого KPI — нет объективной оценки.</div></div>
     </div>
     <div class="l12-card" style="margin-top:0.75rem;">
-        <p>Когда бизнес маленький — один человек делает несколько функций. Это нормально на старте. Но разница между «так получается» и «так и надо»: <strong>если вы знаете все функции и видите их на карте — вы управляете осознанно</strong>. Вы знаете, что Сергей сейчас делает функцию продаж. И когда появятся деньги — точно знаете кого нанимать первым.</p>
+        <p>Когда бизнес мало что получится.енький — один человек делает несколько функций. Это нормало что получится.ьно на старте. Но разница между «так получается» и «так и надо»: <strong>если вы знаете все функции и видите их на карте — вы управляете осознанно</strong>. Вы знаете, что Сергей сейчас делает функцию продаж. И когда появятся деньги — точно знаете кого нанимать первым.</p>
     </div>
 </div>
 
@@ -11176,7 +13948,7 @@ Bist du dabei?</div>
     <div class="l12-section-title">Одно сломанное звено — и система стоит. Роль руководителя</div>
     <div class="l12-card">
         <p>Владельцы часто думают после построения структуры: «Всё, расписал функции, назначил людей, теперь само едет». Нет. После построения структуры появляется новая критическая роль: руководитель, который следит за тем, чтобы все звенья работали.</p>
-        <p>Представьте часы. Десятки шестерёнок, каждая выполняет свою функцию. Если хотя бы одно зубчатое звено сломалось — часы останавливаются. Не важно, что все остальные 99 шестерёнок в идеальном состоянии.</p>
+        <p>Представьте часы. Десятки шестерёнок, каждая выполняет свою функцию. Если хотя бы одно зубчатое звено сломало что получится.ось — часы останавливаются. Не важно, что все остальные 99 шестерёнок в идеальном состоянии.</p>
     </div>
     <div class="l12-section-label" style="margin-top:1rem;">Три задачи руководителя в организованном бизнесе</div>
     <div class="l12-mgr">
@@ -11190,7 +13962,7 @@ Bist du dabei?</div>
         </div>
         <div class="l12-mgr-item">
             <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-            <div><div class="l12-mgr-title">Исправлять</div><div class="l12-mgr-text">Быстро вмешиваться и решать. Не «потом разберёмся» — а сейчас, пока маленькая проблема не стала большой.</div></div>
+            <div><div class="l12-mgr-title">Исправлять</div><div class="l12-mgr-text">Быстро вмешиваться и решать. Не «потом разберёмся» — а сейчас, пока мало что получится.енькая проблема не стала большой.</div></div>
         </div>
     </div>
 </div>
@@ -11205,7 +13977,7 @@ Bist du dabei?</div>
             <div class="l12-step-num">1</div>
             <div class="l12-step-body">
                 <div class="l12-step-title">Разобраться с «сырьём»</div>
-                <div class="l12-step-text">Что приходит в ваш бизнес? Откуда берутся заказы? Кто ваш клиент? Что вы получаете на входе — и что должно быть на выходе? Большинство владельцев не могут чётко ответить. «Ну, клиенты обращаются...» Как? Откуда? Через что? Без ответа на это — вы не можете построить конвейер.</div>
+                <div class="l12-step-text">Что приходит в ваш бизнес? Откуда берутся заказы? Кто ваш клиент? Что вы получаете на входе — и чем больше людей — тем больше задержек.то должно быть на выходе? Большинство владельцев не могут чётко ответить. «Ну, клиенты обращаются...» Как? Откуда? Через что? Без ответа на это — вы не можете построить конвейер.</div>
             </div>
         </div>
         <div class="l12-step">
@@ -11235,7 +14007,7 @@ Bist du dabei?</div>
         <p>Это фундамент. Без него CRM — просто база данных, которой никто не пользуется. Регламенты — бумаги, которые никто не читает. Мотивация — хаотичные бонусы, которые никого не мотивируют.</p>
     </div>
     <div class="l12-result-list">
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Поймёте какие функции есть в вашем бизнесе — и каких нет</div>
+        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Поймёте какие функции у нас есть.кции есть в вашем бизнесе — и каких нет</div>
         <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Найдёте «дыры» — где тихо теряются деньги</div>
         <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Сможете осознанно ставить людей на конкретные роли</div>
         <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Перестанете быть «самым незаменимым исполнителем» в собственном бизнесе</div>
@@ -11365,7 +14137,7 @@ Bist du dabei?</div>
     <div class="l13-lbl">Головна проблема</div>
     <div class="l13-title">Без цифр ви бачите не реальність, а свою інтерпретацію</div>
     <div class="l13-card">
-        <p>Більшість власників вважають, що добре розуміють свій бізнес. «Якщо записів багато — все добре. Якщо мало — треба рекламу». Здається логічним. Але якщо все так зрозуміло — чому щотижня є пожежі? Чому раптом падають продажі і незрозуміло чому? Чому в маркетинг вклали гроші, а результат «то є, то нема»?</p>
+        <p>Більшість власників вважають, що добре розуміють свій бізнес. «Якщо записів багато — все добре. Якщо мало что получится.о — треба рекламу». Здається логічним. Але якщо все так зрозуміло — чому щотижня є пожежі? Чому раптом падають продажі і незрозуміло чому? Чому в маркетинг вклали гроші, а результат «то є, то нема»?</p>
         <p>Проблеми в бізнесі майже ніколи не виникають раптово. Вони накопичуються тижнями — повільно, непомітно. Людина бачить невелике погіршення, пояснює це «сезоном» або «особливим місяцем». Поки проблема не стала величезною — на неї не звертають уваги. Тоді вже важко щось виправити.</p>
     </div>
     <div class="l13-quote">Статистики вирішують саме це: роблять невидиме — видимим.</div>
@@ -11494,7 +14266,7 @@ Bist du dabei?</div>
     <div class="l13-lbl">Главная проблема</div>
     <div class="l13-title">Без цифр вы видите не реальность, а свою интерпретацию</div>
     <div class="l13-card">
-        <p>Большинство владельцев считают, что хорошо понимают свой бизнес. «Если записей много — всё хорошо. Если мало — нужна реклама». Кажется логичным. Но если всё так понятно — почему каждую неделю пожары? Почему вдруг падают продажи и непонятно почему?</p>
+        <p>Большинство владельцев считают, что хорошо понятые функции.нимают свой бизнес. «Если записей много — всё хорошо. Если мало что получится.о — нужна реклама». Кажется логичным. Но если всё так понятно — почему каждую неделю пожары? Почему вдруг падают продажи и непонятно почему?</p>
         <p>Проблемы в бизнесе почти никогда не возникают внезапно. Они накапливаются неделями — медленно, незаметно. Человек видит небольшое ухудшение, объясняет «сезоном». Пока проблема не стала огромной — на неё не обращают внимания.</p>
     </div>
     <div class="l13-quote">Статистики решают именно это: делают невидимое — видимым.</div>
@@ -11504,7 +14276,7 @@ Bist du dabei?</div>
 
 <div class="l13-s">
     <div class="l13-lbl">Раздел 1</div>
-    <div class="l13-title">Что такое статистика — и чем она отличается от «показателя»</div>
+    <div class="l13-title">Что такое статистика — и чем больше людей — тем больше задержек.ем она отличается от «показателя»</div>
     <div class="l13-card">
         <p>Статистика — это <strong>количественное измерение результата конкретной функции, которое проводится еженедельно и сравнивается с предыдущей неделей</strong>. Не раз в месяц. Не «примерно». Каждую неделю, в цифрах, на графике.</p>
         <p>Вас интересует не то, что продажи этой недели составили 80 000 грн, а то, что на прошлой было 95 000. <strong>Тренд важнее точки.</strong></p>
@@ -11631,10 +14403,10 @@ Bist du dabei?</div>
 
 <div class="l14c-block">
 <div class="l14c-title">Чому цей урок важливий для кожного підприємця</div>
-<p>Є одна помилка яка коштує малому бізнесу більше ніж поганий маркетинг і слабкі продажі разом. Це коли люди в одній команді працюють проти одне одного — і навіть не знають про це.</p>
+<p>Є одна помилка яка коштує мало что получится.ому бізнесу більше ніж поганий маркетинг і слабкі продажі разом. Це коли люди в одній команді працюють проти одне одного — і навіть не знають про це.</p>
 <div class="l14c-warn"><p><strong>Реальна ситуація:</strong> Власник стоматологічної клініки запустив акцію на відбілювання зубів — розмістив рекламу, адміністратор почав записувати клієнтів. Але лікарі про акцію не знали, потрібних матеріалів не було, розклад не підготовлений. Клієнти дзвонили, записувалися — і отримували відмову. Частина пішла до конкурентів. Гроші на рекламу витрачені, клієнти втрачені, лікарі роздратовані.</p></div>
 <p>Це відбувається щодня в різних масштабах. Менеджер обіцяє доставку про яку не попередив склад. Бухгалтер змінює умови оплати не сказавши відділу продажів. Майстер обіцяє час який вже зайнятий.</p>
-<div class="l14c-green"><p><strong>Результат завжди один:</strong> багато руху, мало результату. Як футболіст який забиває м'яч у власні ворота. Інструмент який це виправляє — координація.</p></div>
+<div class="l14c-green"><p><strong>Результат завжди один:</strong> багато руху, мало что получится.о результату. Як футболіст який забиває м'яч у власні ворота. Інструмент який це виправляє — координація.</p></div>
 </div>
 
 <div class="l14c-block">
@@ -11647,7 +14419,7 @@ Bist du dabei?</div>
 <tr><td>Виникає коли щось пішло не так</td><td>Відбувається регулярно за розкладом</td></tr>
 <tr><td>Немає чіткого результату</td><td>Результат — узгоджений план дій</td></tr>
 </table>
-<div class="l14c-warn"><p><strong>Головне правило:</strong> якщо учасники приходять без готових планів — координацію проводити безглуздо. Немає що узгоджувати. Саме через це більшість нарад у малому бізнесі — марна трата часу.</p></div>
+<div class="l14c-warn"><p><strong>Головне правило:</strong> якщо учасники приходять без готових планів — координацію проводити безглуздо. Немає що узгоджувати. Саме через це більшість нарад у мало что получится.ому бізнесі — марна трата часу.</p></div>
 </div>
 
 <div class="l14c-block">
@@ -11655,7 +14427,7 @@ Bist du dabei?</div>
 <p>Якщо у тебе є хоча б 2-3 людини в команді — координація вже потрібна. Не "колись потім", не "коли виросту". Прямо зараз.</p>
 <div class="l14c-num">
 <div class="l14c-num-badge" style="background:#3b82f6">1</div>
-<div class="l14c-num-text"><p><strong>У тебе немає великого штату менеджерів</strong> які відстежують що відбувається в кожному відділі. Інформація передається через тебе — і ти стаєш вузьким місцем. Координація вирішує це автоматично.</p></div>
+<div class="l14c-num-text"><p><strong>У тебе немає великого штату менеджерів</strong> які відстежують що відбувається в кожному отделе.. Інформація передається через тебе — і ти стаєш вузьким місцем. Координація вирішує це автоматично.</p></div>
 </div>
 <div class="l14c-num">
 <div class="l14c-num-badge" style="background:#8b5cf6">2</div>
@@ -11663,24 +14435,24 @@ Bist du dabei?</div>
 </div>
 <div class="l14c-num">
 <div class="l14c-num-badge" style="background:#ef4444">3</div>
-<div class="l14c-num-text"><p><strong>Помилки через неузгодженість коштують непропорційно дорого</strong> — один зірваний замовлення або втрачений клієнт через "ліва рука не знає що робить права" може коштувати тижневого прибутку.</p></div>
+<div class="l14c-num-text"><p><strong>Помилки чем больше людей — тем больше задержек.ерез неузгодженість коштують непропорційно дорого</strong> — один зірваний замовлення або втрачений клієнт через "ліва рука не знає що робить права" може коштувати тижневого прибутку.</p></div>
 </div>
 </div>
 
 <div class="l14c-block">
 <div class="l14c-title">Коли бізнес виростає — з'являються різні типи координацій</div>
-<p>Поки команда маленька — достатньо однієї спільної координації раз на тиждень. Коли з'являються відділи і рівні управління — координація ділиться на типи.</p>
+<p>Поки команда мало что получится.енька — достатньо однієї спільної координації раз на тиждень. Коли з'являються відділи і рівні управління — координація ділиться на типи.</p>
 <div class="l14c-num">
 <div class="l14c-num-badge" style="background:#22c55e">1</div>
 <div class="l14c-num-text"><p><strong>Рада з управління</strong> — керівник зі своїми підлеглими. Щотижня. Ставить цілі, перевіряє виконання, вирішує проблеми, узгоджує дії.</p></div>
 </div>
 <div class="l14c-num">
 <div class="l14c-num-badge" style="background:#f59e0b">2</div>
-<div class="l14c-num-text"><p><strong>Координаційна рада</strong> — люди з різних відділів які не підпорядковані одне одному але чиї дії мають бути узгоджені. Постійні (щотижня) або разові (під конкретне завдання).</p></div>
+<div class="l14c-num-text"><p><strong>Координаційна рада</strong> — люди з різних отделе.в які не підпорядковані одне одному але чиї дії мають бути узгоджені. Постійні (щотижня) або разові (під конкретне завдання).</p></div>
 </div>
 <div class="l14c-num">
 <div class="l14c-num-badge" style="background:#6366f1">3</div>
-<div class="l14c-num-text"><p><strong>Рекомендаційна рада</strong> — всі керівники відділів. Виробляє загальний план дій компанії на тиждень який затверджує власник або директор.</p></div>
+<div class="l14c-num-text"><p><strong>Рекомендаційна рада</strong> — всі керівники отделе.в. Виробляє загальний план дій компанії на тиждень який затверджує власник або директор.</p></div>
 </div>
 </div>
 
@@ -11743,14 +14515,14 @@ Bist du dabei?</div>
 
 <div class="l14c-block">
 <div class="l14c-title">Почему этот урок важен для каждого предпринимателя</div>
-<p>Есть одна ошибка которая стоит малому бизнесу больше чем плохой маркетинг и слабые продажи вместе. Это когда люди в одной команде работают против друг друга — и даже не знают об этом.</p>
+<p>Есть одна ошибка которая стоит мало что получится.ому бизнесу больше чем плохой маркетинг и слабые продажи вместе. Это когда люди в одной команде работают против друг друга — и даже не знают об этом.</p>
 <div class="l14c-warn"><p><strong>Реальная ситуация:</strong> Владелец стоматологической клиники запустил акцию на отбеливание зубов — разместил рекламу, администратор начал записывать клиентов. Но врачи про акцию не знали, нужных материалов не было, расписание не подготовлено. Клиенты звонили, записывались — и получали отказ. Часть ушла к конкурентам. Деньги на рекламу потрачены, клиенты потеряны, врачи раздражены.</p></div>
-<div class="l14c-green"><p><strong>Результат всегда один:</strong> много движения, мало результата. Как футболист который забивает мяч в собственные ворота. Инструмент который это исправляет — координация.</p></div>
+<div class="l14c-green"><p><strong>Результат всегда один:</strong> много движения, мало что получится.о результата. Как футболист который забивает мяч в собственные ворота. Инструмент который это исправляет — координация.</p></div>
 </div>
 
 <div class="l14c-block">
-<div class="l14c-title">Что такое координация — просто и честно</div>
-<p>Координация — это регулярное согласование действий людей в команде чтобы каждый понимал что делают другие и все двигались в одном направлении.</p>
+<div class="l14c-title">Что такое координация — просто и чем больше людей — тем больше задержек.естно</div>
+<p>Координация — это регулярное согласование действий людей в команде чтобы каждый понимало что получится. что делают другие и все двигались в одном направлении.</p>
 <table class="l14c-table">
 <tr><th>Обычное совещание</th><th>Координация</th></tr>
 <tr><td>Руководитель говорит, все слушают</td><td>Каждый участник говорит о своём плане</td></tr>
@@ -11758,7 +14530,7 @@ Bist du dabei?</div>
 <tr><td>Возникает когда что-то пошло не так</td><td>Проходит регулярно по расписанию</td></tr>
 <tr><td>Нет чёткого результата</td><td>Результат — согласованный план действий</td></tr>
 </table>
-<div class="l14c-warn"><p><strong>Главное правило:</strong> если участники приходят без готовых планов — проводить координацию бессмысленно. Нечего согласовывать. Именно поэтому большинство совещаний в малом бизнесе — пустая трата времени.</p></div>
+<div class="l14c-warn"><p><strong>Главное правило:</strong> если участники приходят без готовых планов — проводить координацию бессмысленно. Нечего согласовывать. Именно поэтому большинство совещаний в мало что получится.ом бизнесе — пустая трата времени.</p></div>
 </div>
 
 <div class="l14c-block">
@@ -11770,7 +14542,7 @@ Bist du dabei?</div>
 </div>
 <div class="l14c-num">
 <div class="l14c-num-badge" style="background:#8b5cf6">2</div>
-<div class="l14c-num-text"><p><strong>Твои сотрудники совмещают функции</strong> — без координации они не знают что является приоритетом этой недели и что делают коллеги.</p></div>
+<div class="l14c-num-text"><p><strong>Твои сотрудники совмещают функции</strong> — без координации они не знают что является приоритетом этой недели и чем больше людей — тем больше задержек.то делают коллеги.</p></div>
 </div>
 <div class="l14c-num">
 <div class="l14c-num-badge" style="background:#ef4444">3</div>
@@ -12167,7 +14939,7 @@ Bist du dabei?</div>
 <div class="l15-tool">
     <div class="l15-th">
         <div class="l15-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-        <div><div class="l15-tt">TALKO Task Manager Support</div><div class="l15-td">AI-ассистент подскажет как пользоваться платформой и что делать дальше.</div></div>
+        <div><div class="l15-tt">TALKO Task Manager Support</div><div class="l15-td">AI-ассистент подскажет как пользоваться платформой и чем больше людей — тем больше задержек.то делать дальше.</div></div>
     </div>
     <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="l15-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Спросить AI-ассистента</a>
 </div>`,
@@ -12246,7 +15018,7 @@ Bist du dabei?</div>
 <div class="lesson-block intro">
     <div class="lesson-block-header"><div class="lesson-block-title">Чому більшість витрачає гроші на маркетинг без результату</div></div>
     <div class="lesson-block-content">
-        <p>Більшість власників бізнесу, коли чують "маркетинг", думають про одне з двох: <strong>реклама</strong> (таргет, Google, банери) або <strong>просування</strong> (пости, контент, SEO).</p>
+        <p>Більшість власників бізнесу, коли чем больше людей — тем больше задержек.ують "маркетинг", думають про одне з двох: <strong>реклама</strong> (таргет, Google, банери) або <strong>просування</strong> (пости, контент, SEO).</p>
         <p>Обидві відповіді правильні. Але вони описують <em>інструменти</em>, а не суть. Саме тому підприємець запускає рекламу, витрачає час і гроші — а клієнтів більше не стає.</p>
         <div class="m101-quote">Причина не в поганій рекламі. Причина в тому, що <strong>маркетинг розуміється неправильно з самого початку</strong>.</div>
     </div>
@@ -12659,7 +15431,7 @@ Bist du dabei?</div>
             homework: `<ol>
 <li><strong>Оффер:</strong> Переписати своє поточне рекламне повідомлення за формулою сильного офферу — не "що ми робимо", а "який результат отримає клієнт і в який термін"</li>
 <li><strong>Аудит воронки:</strong> Пройти своїм шляхом клієнта — від реклами до першого контакту. Знайти де є "дірки" де люди йдуть</li>
-<li><strong>Швидкість реакції:</strong> Перевірити скільки часу займає відповідь на перше звернення. Якщо більше 15 хвилин — це проблема яку треба вирішити зараз</li>
+<li><strong>Швидкість реакції:</strong> Перевірити скільки чем больше людей — тем больше задержек.асу займає відповідь на перше звернення. Якщо більше 15 хвилин — це проблема яку треба вирішити зараз</li>
 </ol>`,
             homework_ru: `<ol>
 <li><strong>Оффер:</strong> Переписать текущее рекламное сообщение по формуле сильного оффера — не "что мы делаем", а "какой результат получит клиент и в какие сроки"</li>
@@ -12677,7 +15449,7 @@ Bist du dabei?</div>
             title_ru: 'КТО ВАШ КЛИЕНТ И В ЧЁМ ВАША ЭКСПЕРТИЗА',
             title_en: 'WHO IS YOUR CLIENT AND WHAT IS YOUR EXPERTISE',
             subtitle: 'Фундамент оффера — точний клієнт і чіткий результат',
-            subtitle_ru: 'Фундамент оффера — точный клиент и чёткий результат',
+            subtitle_ru: 'Фундамент оффера — точный клиент и чем больше людей — тем больше задержек.ёткий результат',
             subtitle_en: 'The foundation of your offer — precise client and clear result',
             duration: 20,
             videoLink: null,
@@ -12803,7 +15575,7 @@ Bist du dabei?</div>
 <div class="m103-type">
     <div class="m103-type-title"><span class="m103-type-num">9</span> "Розчарований конкурентом"</div>
     <div class="m103-type-desc">Вже мав поганий досвід з іншим бізнесом. Шукає альтернативу з недовірою. Якщо розумієте його біль — він ваш.</div>
-    <div class="m103-type-ex">"Мені зробили погано там, шукаю нормального майстра"</div>
+    <div class="m103-type-ex">"Мені зробили погано там, шукаю нормало что получится.ьного майстра"</div>
 </div>
 <div class="m103-type">
     <div class="m103-type-title"><span class="m103-type-num">10</span> "Постійний в пошуку кращого"</div>
@@ -12821,8 +15593,8 @@ Bist du dabei?</div>
 
 <table class="m103-table">
     <tr><th>Як зазвичай</th><th>Як треба</th></tr>
-    <tr><td>«Ми робимо масаж»</td><td>«Після 3 сеансів пацієнти з болями в спині повертаються до нормального сну»</td></tr>
-    <tr><td>«Ми ведемо соцмережі»</td><td>«За 60 днів малий бізнес отримує перших клієнтів з Instagram»</td></tr>
+    <tr><td>«Ми робимо масаж»</td><td>«Після 3 сеансів пацієнти з болями в спині повертаються до нормало что получится.ьного сну»</td></tr>
+    <tr><td>«Ми ведемо соцмережі»</td><td>«За 60 днів мало что получится.ий бізнес отримує перших клієнтів з Instagram»</td></tr>
     <tr><td>«Ми робимо ремонт»</td><td>«Здаємо квартири під ключ — клієнт заїжджає в обумовлений день»</td></tr>
     <tr><td>«Ми навчаємо англійській»</td><td>«За 3 місяці людина починає розуміти фільми без субтитрів»</td></tr>
 </table>
@@ -12899,7 +15671,7 @@ Bist du dabei?</div>
 <div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">6</span> "Статус и образ"</div><div class="m103-type-desc">Важно как выглядит в глазах других. Покупает ощущение, а не услугу.</div><div class="m103-type-ex">Премиум б'юти, бизнес-атрибуты</div></div>
 <div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">7</span> "Занятой и делегирует"</div><div class="m103-type-desc">Дефицит времени. Нужно чтобы сделали вместо него, хорошо и без лишних вопросов.</div><div class="m103-type-ex">Уборка, доставка, бухгалтерия, организация мероприятий</div></div>
 <div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">8</span> "Первый раз"</div><div class="m103-type-desc">Никогда раньше не пользовался. Есть страх ошибиться. Нужен простой первый шаг.</div><div class="m103-type-ex">Первый визит к специалисту, первый курс</div></div>
-<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">9</span> "Разочарован конкурентом"</div><div class="m103-type-desc">Уже имел плохой опыт с другим бизнесом. Если покажете понимание его боли — он ваш.</div><div class="m103-type-ex">"Мне сделали плохо там, ищу нормального мастера"</div></div>
+<div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">9</span> "Разочарован конкурентом"</div><div class="m103-type-desc">Уже имел плохой опыт с другим бизнесом. Если покажете понимание его боли — он ваш.</div><div class="m103-type-ex">"Мне сделали плохо там, ищу нормало что получится.ьного мастера"</div></div>
 <div class="m103-type"><div class="m103-type-title"><span class="m103-type-num">10</span> "Постоянный в поиске лучшего"</div><div class="m103-type-desc">Уже пользуется похожей услугой, но не полностью доволен. Покажите конкретную разницу.</div><div class="m103-type-ex">Клиент конкурента, который видит вашу рекламу</div></div>
 
 <div class="m103-divider"></div>
@@ -12908,8 +15680,8 @@ Bist du dabei?</div>
 
 <table class="m103-table">
     <tr><th>Как обычно</th><th>Как надо</th></tr>
-    <tr><td>«Мы делаем массаж»</td><td>«После 3 сеансов пациенты с болями в спине возвращаются к нормальному сну»</td></tr>
-    <tr><td>«Мы ведём соцсети»</td><td>«За 60 дней малый бизнес получает первых клиентов из Instagram»</td></tr>
+    <tr><td>«Мы делаем массаж»</td><td>«После 3 сеансов пациенты с болями в спине возвращаются к нормало что получится.ьному сну»</td></tr>
+    <tr><td>«Мы ведём соцсети»</td><td>«За 60 дней мало что получится.ый бизнес получает первых клиентов из Instagram»</td></tr>
     <tr><td>«Мы делаем ремонт»</td><td>«Сдаём квартиры под ключ — клиент въезжает в оговорённый день»</td></tr>
 </table>
 
@@ -13445,7 +16217,7 @@ Bist du dabei?</div>
     <p>Провести переговори і закрити угоду за 50 000 грн і за 500 000 грн — <strong>однаково складно</strong>. Та сама зустріч, та сама презентація. Але виручка відрізняється в 10 разів.</p>
     <p>Питання не "як продати більше одиниць", а <strong>"як збільшити цінність одного контракту"</strong>.</p>
 </div>
-<div class="s301-quote">Напиши: що ще ти міг би включити в свій продукт щоб збільшити чек у 3–5 разів? Яку повну версію свого рішення ти міг би запропонувати?</div>
+<div class="s301-quote">Напиши: що ще ти міг би включити в свій продукт щоб збільшити чем больше людей — тем больше задержек.ек у 3–5 разів? Яку повну версію свого рішення ти міг би запропонувати?</div>
 
 <div class="s301-divider"></div>
 
@@ -13503,7 +16275,7 @@ Bist du dabei?</div>
 </div>
 <div class="s301-msg">
     <div class="s301-msg-label">Повідомлення 3 — Конкретний крок</div>
-    <p><em>"Я беру білет і приїжджаю до тебе особисто. 45 хвилин — і ти побачиш конкретний план. Коли тобі зручно наступного тижня — вівторок чи четвер?"</em></p>
+    <p><em>"Я беру білет і приїжджаю до тебе особисто. 45 хвилин — і ти побачиш конкретний план. Коли тобі зручно наступного тижня — вівторок чи чем больше людей — тем больше задержек.етвер?"</em></p>
     <div class="s301-msg-why">✓ Ти не просиш зустрічі — ти повідомляєш що приїдеш. Купити білет і показати це — сигнал серйозності якого немає у жодного конкурента.</div>
 </div>
 
@@ -13587,7 +16359,7 @@ Bist du dabei?</div>
 </div>`,
 
             homework: `<ol>
-<li><strong>Аудит (30 хв):</strong> Напиши чесні відповіді — що ти продаєш зараз? Яку реальну зміну отримує клієнт? Скільки коштує середній чек?</li>
+<li><strong>Аудит (30 хв):</strong> Напиши чем больше людей — тем больше задержек.есні відповіді — що ти продаєш зараз? Яку реальну зміну отримує клієнт? Скільки коштує середній чек?</li>
 <li><strong>Нове позиціонування:</strong> Сформулюй за формулою — <em>"Ми допомагаємо [тип клієнта] отримати [конкретний результат в цифрах] через [твій підхід]"</em></li>
 <li><strong>5 одиничок:</strong> Заповни — один тип клієнта, один біль, одна пропозиція, один канал, один спосіб закрити угоду</li>
 <li><strong>Скрипт:</strong> Напиши 3 повідомлення під конкретну людину з твого ринку. Надішли — сьогодні, до кінця дня.</li>
@@ -13595,7 +16367,7 @@ Bist du dabei?</div>
 <p style="margin-top:.75rem;font-size:.82rem;color:#6b7280;"><strong>Дедлайн: 48 годин.</strong> Різниця між підприємцем який заробляє і тим який планує — швидкість між думкою і дією.</p>`,
 
             homework_ru: `<ol>
-<li><strong>Аудит (30 мин):</strong> Напиши честные ответы — что ты продаёшь сейчас? Какое реальное изменение получает клиент? Сколько стоит средний чек?</li>
+<li><strong>Аудит (30 мин):</strong> Напиши чем больше людей — тем больше задержек.естные ответы — что ты продаёшь сейчас? Какое реальное изменение получает клиент? Сколько стоит средний чек?</li>
 <li><strong>Новое позиционирование:</strong> Сформулируй по формуле — <em>"Мы помогаем [тип клиента] получить [конкретный результат в цифрах] через [твой подход]"</em></li>
 <li><strong>5 единичек:</strong> Заполни — один тип клиента, одна боль, одно предложение, один канал, один способ закрытия</li>
 <li><strong>Скрипт:</strong> Напиши 3 сообщения под конкретного человека. Отправь — сегодня, до конца дня.</li>

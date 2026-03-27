@@ -5417,7 +5417,9 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         _cleanPresOverlays();
         if (module.presOverlay) {
             var _ovDiv = document.createElement('div');
-            _ovDiv.innerHTML = module.presOverlay;
+            var _presLang = getLearningLang();
+            var _presContent = (_presLang === 'ru' && module.presOverlay_ru) ? module.presOverlay_ru : module.presOverlay;
+            _ovDiv.innerHTML = _presContent;
             while (_ovDiv.firstChild) document.body.appendChild(_ovDiv.firstChild);
             // Force hide immediately regardless of CSS state
             ['l10Ov','l11Ov','l12Ov'].forEach(function(id) {
