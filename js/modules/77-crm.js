@@ -92,14 +92,14 @@ window.initCRMModule = async function () {
         const c = document.getElementById('crmViewKanban') || document.getElementById('crmContainer');
         if (c) c.innerHTML = `<div style="padding:3rem 2rem;text-align:center;">
             <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-            <div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.4rem;">CRM не завантажилась</div>
+            <div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.4rem;">CRM не загрузилась</div>
             <div style="font-size:0.8rem;color:#6b7280;margin-bottom:1.25rem;line-height:1.5;">
                 ${window.htmlEsc ? window.htmlEsc(e.message) : e.message}
             </div>
             <button onclick="crm._initializingFor=null;window.initCRMModule()"
                 style="padding:0.55rem 1.5rem;background:#22c55e;color:white;border:none;
                 border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Спробувати ще раз
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Попробовать ещё раз
             </button>
         </div>`;
         crm.loading = false;
@@ -599,20 +599,20 @@ function _kanbanFilterBar() {
         ${countries.length > 1 ? `<div style="display:flex;align-items:center;gap:3px;border:1px solid #e8eaed;border-radius:6px;background:white;padding:0 0.4rem;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             <select id="crmKanbanFilterCountry" onchange="crmApplyFilters(true)" style="border:none;background:none;outline:none;font-size:0.75rem;cursor:pointer;padding:0.25rem 0;">
-                <option value="">Всі країни</option>
+                <option value="">Все страны</option>
                 ${countries.map(c => `<option value="${_esc(c)}" ${f.country===c?'selected':''}>${_esc(c)}</option>`).join('')}
             </select>
         </div>` : ''}
         ${niches.length > 1 ? `<div style="display:flex;align-items:center;gap:3px;border:1px solid #e8eaed;border-radius:6px;background:white;padding:0 0.4rem;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
             <select id="crmKanbanFilterNiche" onchange="crmApplyFilters(true)" style="border:none;background:none;outline:none;font-size:0.75rem;cursor:pointer;padding:0.25rem 0;">
-                <option value="">Всі ніші</option>
+                <option value="">Все ниши</option>
                 ${niches.map(n => `<option value="${_esc(n)}" ${f.niche===n?'selected':''}>${_esc(n)}</option>`).join('')}
             </select>
         </div>` : ''}
         <div style="display:flex;align-items:center;gap:3px;border:1px solid #e8eaed;border-radius:6px;background:white;padding:0 0.4rem;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <input id="crmKanbanFilterCity" type="text" placeholder="Місто..." value="${f.city||''}"
+            <input id="crmKanbanFilterCity" type="text" placeholder="Город..." value="${f.city||''}"
                 oninput="crmApplyFilters()"
                 style="border:none;background:none;outline:none;font-size:0.75rem;width:75px;padding:0.25rem 0;">
         </div>
@@ -630,14 +630,14 @@ function _kanbanFilterBar() {
                 oninput="crmApplyFilters()"
                 style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
         </div>
-        <button onclick="crmExportCSV()" title="Експорт в CSV"
+        <button onclick="crmExportCSV()" title="Экспорт в CSV"
             style="padding:0.25rem 0.6rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;font-size:0.73rem;cursor:pointer;font-weight:600;margin-left:auto;">
             ↓ CSV
         </button>
         ${hasFilter ? `
         <button onclick="crmResetFilters()"
             style="padding:0.25rem 0.6rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;border-radius:6px;font-size:0.73rem;cursor:pointer;font-weight:600;">
-            × Скинути фільтри
+            × Сбросить фильтры
         </button>
         <span style="font-size:0.72rem;color:#6b7280;font-weight:600;">${_filteredDeals().length} / ${crm.deals.length}</span>
         ` : `<span style="font-size:0.72rem;color:#9ca3af;">${crm.deals.length} ${window.t('crmDealsWord')||'угод'}</span>`}
@@ -652,7 +652,7 @@ function _renderKanban() {
     if (window.innerWidth < 768 && crm.viewMode !== 'kanban') { crm.viewMode = 'list'; _renderListView(); return; }
 
     if (crm.loading) {
-        c.innerHTML = '<div style="text-align:center;padding:4rem;color:#9ca3af;font-size:0.85rem;">Завантаження...</div>';
+        c.innerHTML = '<div style="text-align:center;padding:4rem;color:#9ca3af;font-size:0.85rem;">Загрузка...</div>';
         return;
     }
 
@@ -660,11 +660,11 @@ function _renderKanban() {
     const limitBanner = crm._dealsLimitReached
         ? `<div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:0.4rem 1rem;font-size:0.72rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            Показано перші 500 угод.
+            Показано первые 500 сделок.
             <button onclick="crmLoadMore()" style="padding:2px 10px;background:#f59e0b;color:white;border:none;border-radius:5px;cursor:pointer;font-size:0.72rem;font-weight:600;">
                 Завантажити ще 500
             </button>
-            <span style="color:#b45309;">Для кращої продуктивності архівуйте закриті угоди.</span>
+            <span style="color:#b45309;">Для лучшей производительности архивируйте закрытые сделки.</span>
            </div>` : '';
 
     const stages    = (crm.pipeline?.stages || []).slice().sort((a,b) => a.order - b.order);
@@ -718,7 +718,7 @@ function _renderKanban() {
     ${crm.selectedIds.size > 0 ? `
     <div id="crmKanbanBulkBar" style="display:flex;align-items:center;gap:0.5rem;
         padding:0.4rem 0.75rem;background:#1f2937;color:white;flex-wrap:wrap;flex-shrink:0;">
-        <span id="crmBulkCount" style="font-size:0.78rem;font-weight:600;">${crm.selectedIds.size} вибрано</span>
+        <span id="crmBulkCount" style="font-size:0.78rem;font-weight:600;">${crm.selectedIds.size} выбрано</span>
         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
             <select onchange="crmBulkReassign(this.value);this.value=''"
                 style="padding:0.25rem 0.5rem;border-radius:6px;border:1px solid #4b5563;background:#374151;color:white;font-size:0.75rem;cursor:pointer;">
@@ -732,7 +732,7 @@ function _renderKanban() {
             </select>
             <button onclick="crmBulkSetHot(true)"
                 style="padding:0.25rem 0.6rem;background:#ea580c;color:white;border:none;border-radius:6px;font-size:0.74rem;cursor:pointer;font-weight:600;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg> Гарячі
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg> Горячие
             </button>
             <button onclick="crmBulkDelete()"
                 style="padding:0.25rem 0.6rem;background:#ef4444;color:white;border:none;border-radius:6px;font-size:0.74rem;cursor:pointer;font-weight:600;">
@@ -741,7 +741,7 @@ function _renderKanban() {
         </div>
         <button onclick="crm.selectedIds.clear();_renderKanban()"
             style="margin-left:auto;padding:0.25rem 0.6rem;background:none;color:#9ca3af;border:1px solid #4b5563;border-radius:6px;font-size:0.74rem;cursor:pointer;">
-            Скасувати
+            Отменить
         </button>
     </div>` : ''}
 
@@ -871,7 +871,7 @@ function _renderListView() {
     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;
         background:#1f2937;border-radius:8px;margin-bottom:0.5rem;flex-wrap:wrap;">
         <span style="font-size:0.8rem;font-weight:600;color:white;">
-            Обрано: ${crm.selectedIds.size}
+            Выбрано: ${crm.selectedIds.size}
         </span>
         <div style="display:flex;gap:0.35rem;margin-left:0.5rem;flex-wrap:wrap;">
             <button onclick="crmBulkStage()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
@@ -889,7 +889,7 @@ function _renderListView() {
         </div>
         <button onclick="crm.selectedIds=new Set();crm._bulkMode=false;crmSetViewMode('list')"
             style="margin-left:auto;padding:0.3rem 0.6rem;background:none;color:#9ca3af;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.72rem;">
-            Скасувати
+            Отменить
         </button>
     </div>` : '';
 
@@ -916,7 +916,7 @@ function _renderListView() {
             </select>
             ${crm.filters.stage||crm.filters.assignee||crm.filters.search?`
             <button onclick="crm.filters={assignee:'',stage:'',tag:'',search:''};document.getElementById('crmSearchInput').value='';crmSetViewMode('list')"
-                style="padding:.3rem .55rem;border:1px solid #e8eaed;border-radius:6px;font-size:.73rem;background:white;cursor:pointer;color:#6b7280;flex-shrink:0;">× Скинути</button>`:''}
+                style="padding:.3rem .55rem;border:1px solid #e8eaed;border-radius:6px;font-size:.73rem;background:white;cursor:pointer;color:#6b7280;flex-shrink:0;">× Сбросить</button>`:''}
             <span style="margin-left:auto;font-size:.72rem;color:#9ca3af;white-space:nowrap;align-self:center;">${deals.length} ${window.t('crmDealsWord')||'угод'}</span>
         </div>
 
@@ -1062,7 +1062,7 @@ function _renderListView() {
                                     <button onclick="crmOpenDeal('${d.id}')" title=${window.t('openWord')}
                                         style="padding:3px 6px;border:1px solid #e8eaed;border-radius:5px;background:white;cursor:pointer;
                                         font-size:0.68rem;color:#6b7280;display:flex;align-items:center;">${I.edit}</button>
-                                    <button onclick="crmDuplicateDeal('${d.id}')" title="Дублювати"
+                                    <button onclick="crmDuplicateDeal('${d.id}')" title="Дублировать"
                                         style="padding:3px 6px;border:1px solid #e8eaed;border-radius:5px;background:white;cursor:pointer;
                                         font-size:0.68rem;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
                                 </div>
@@ -1274,8 +1274,8 @@ window.crmBulkDelete = async function() {
     if (crm.selectedIds.size === 0) return;
     const count = crm.selectedIds.size;
     const confirmed = await (window.showConfirmModal
-        ? showConfirmModal('Видалити ' + count + ' угод? Цю дію не можна скасувати.', { danger: true })
-        : showConfirmModal('Видалити ' + count + ' угод?', {danger:true}));
+        ? showConfirmModal('Удалить ' + count + ' сделок? Это действие нельзя отменить.', { danger: true })
+        : showConfirmModal('Удалить ' + count + ' сделок?', {danger:true}));
     if (!confirmed) return;
     const ids = Array.from(crm.selectedIds);
     // Паралельне видалення chunks по 10 (не флудимо Firestore всіма одразу)
@@ -1456,7 +1456,7 @@ function _dealCard(deal) {
         ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < _crmToday() ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < _crmToday() ? '#ef4444' : '#3b82f6'};"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${deal.nextContactDate}</div>` : ''}
         ${(deal.tags||[]).length ? `<div style="margin-top:0.3rem;display:flex;flex-wrap:wrap;gap:2px;">${(deal.tags||[]).map(tag=>`<span style="font-size:0.6rem;padding:1px 5px;background:#f3f4f6;color:#6b7280;border-radius:3px;">${_esc(tag)}</span>`).join('')}</div>` : ''}
         ${deal.isHot ? `<div style="position:absolute;top:6px;right:6px;color:#f97316;">${I.hot}</div>` : ''}
-        ${isStale ? `<div style="position:absolute;top:6px;right:${deal.isHot?'22px':'6px'};color:#9ca3af;" title="${staleDays} днів без активності">${I.clock}</div>` : ''}
+        ${isStale ? `<div style="position:absolute;top:6px;right:${deal.isHot?'22px':'6px'};color:#9ca3af;" title="${staleDays} дней без активности">${I.clock}</div>` : ''}
 
         <!-- Quick stage bar -->
         <div style="margin-top:0.4rem;display:flex;gap:2px;align-items:center;" onclick="event.stopPropagation()">
@@ -1606,7 +1606,7 @@ window.crmQuickStage = function(e, dealId) {
     menu.style.left = Math.min(rect.left, window.innerWidth - 200) + 'px';
     menu.style.top = (rect.bottom + 4) + 'px';
 
-    menu.innerHTML = '<div style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;padding:4px 8px 2px;">Змінити стадію</div>' +
+    menu.innerHTML = '<div style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;padding:4px 8px 2px;">Изменить стадию</div>' +
         stages.map(function(s) {
             const isActive = s.id === deal.stage;
             return '<button data-did="' + dealId + '" data-sid="' + s.id + '" ' +
@@ -1687,7 +1687,7 @@ function _showLostReasonModal(dealId, newStage, oldStage) {
             '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">' +
                 '<div style="width:32px;height:32px;background:#fef2f2;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#ef4444;flex-shrink:0;">' + I.trash + '</div>' +
                 '<div>' +
-                    '<div style="font-weight:700;font-size:0.92rem;color:#111827;">Причина програшу</div>' +
+                    '<div style="font-weight:700;font-size:0.92rem;color:#111827;">Причина проигрыша</div>' +
                     '<div style="font-size:0.72rem;color:#9ca3af;">' + _esc(deal.clientName || deal.title || '') + '</div>' +
                 '</div>' +
             '</div>' +
@@ -1701,7 +1701,7 @@ function _showLostReasonModal(dealId, newStage, oldStage) {
                 }).join('') +
             '</div>' +
             '<div style="margin-bottom:0.75rem;">' +
-                '<input id="lostReasonNote" placeholder="Коментар (необов\'язково)..." ' +
+                '<input id="lostReasonNote" placeholder="Комментарий (необязательно)..." ' +
                 'style="width:100%;padding:0.45rem 0.55rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.8rem;box-sizing:border-box;">' +
             '</div>' +
             '<div style="display:flex;gap:0.5rem;justify-content:flex-end;">' +
@@ -1801,7 +1801,7 @@ window.crmConfirmLost = async function(dealId, newStage, oldStage) {
                 dealId: deal.id,
                 clientName: deal.clientName || deal.title || '',
                 from: oldStage, to: newStage,
-                fromLabel: _stageLabel(oldStage), toLabel: 'Програно',
+                fromLabel: _stageLabel(oldStage), toLabel: 'Проиграно',
                 lostReason: reasonLabel || '',
             });
         }
@@ -1923,14 +1923,14 @@ window.crmOpenDeal = function(dealId) {
                 <button onclick="crmCreateTaskFromDeal('${deal.id}')"
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
-                    title="Створити задачу в Task Manager">
+                    title="Создать задачу в Task Manager">
                     ${I.check} Задача
                 </button>
                 <button onclick="window.crmCreateInvoiceForDeal('${deal.id}')"
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
-                    title="Виставити рахунок для угоди">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Рахунок
+                    title="Выставить счёт для сделки">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Счёт
                 </button>
                 <button onclick="crmSaveDeal('${deal.id}')"
                     style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;
@@ -1995,29 +1995,29 @@ function _renderDealDetails(deal) {
 
     content.innerHTML = `
     <div style="${row}">
-        <label style="${lbl}">Назва угоди</label>
+        <label style="${lbl}">Название сделки</label>
         <input id="dd_title" value="${_esc(deal.title||deal.clientName||'')}" style="${inp}">
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
         <div>
-            <label style="${lbl}">Стадія</label>
+            <label style="${lbl}">Стадия</label>
             <select id="dd_stage" style="${inp}background:white;cursor:pointer;">
                 ${stages.map(s => `<option value="${s.id}" ${s.id===deal.stage?'selected':''}>${_esc(s.label)}</option>`).join('')}
             </select>
         </div>
         <div>
-            <label style="${lbl}">Сума</label>
+            <label style="${lbl}">Сумма</label>
             <input id="dd_amount" type="number" value="${deal.amount||''}" placeholder="0" style="${inp}"
                 oninput="(function(){var prep=parseFloat(document.getElementById('dd_prepayment')?.value)||0;var amt=parseFloat(this.value)||0;var el=document.getElementById('dd_balance_display');if(el)el.textContent=Math.max(0,amt-prep).toFixed(2)+' €';}).call(this)">
         </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
         <div>
-            <label style="${lbl}">Клієнт</label>
+            <label style="${lbl}">Клиент</label>
             <input id="dd_client" value="${_esc(deal.clientName||'')}" style="${inp}">
         </div>
         <div>
-            <label style="${lbl}">Ніша</label>
+            <label style="${lbl}">Ниша</label>
             <input id="dd_niche" value="${_esc(deal.clientNiche||'')}"
                 list="dd_nicheList"
                 autocomplete="off"
@@ -2030,13 +2030,13 @@ function _renderDealDetails(deal) {
     <!-- Омніканал — швидкі дії по контакту -->
     ${(deal.phone||deal.email||deal.telegram||deal.instagram) ? `
     <div style="margin-bottom:0.75rem;">
-        <label style="${lbl}">Зв'язатись</label>
+        <label style="${lbl}">Связаться</label>
         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.3rem;">
             ${deal.phone ? `
             <button onclick="crmStartCall('${deal.id}','${_esc(deal.phone)}','${_esc(deal.clientName||'')}')"
                 style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#f0fdf4;
                 border:1px solid #bbf7d0;border-radius:7px;color:#16a34a;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid #bbf7d0;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Дзвінок
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Звонок
             </button>
             <a href="https://wa.me/${(deal.phone||'').replace(/[^0-9]/g,'')}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;color:#16a34a;font-size:0.78rem;font-weight:600;text-decoration:none;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.306A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 11.999 2zm.001 18a7.96 7.96 0 0 1-4.073-1.114l-.292-.174-3.012.79.803-2.927-.19-.3A7.96 7.96 0 0 1 4 12c0-4.411 3.588-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
@@ -2106,11 +2106,11 @@ function _renderDealDetails(deal) {
     </div>` : ''}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
         <div>
-            <label style="${lbl}">Дата закриття</label>
+            <label style="${lbl}">Дата закрытия</label>
             <input id="dd_close" type="date" value="${deal.expectedClose||''}" style="${inp}">
         </div>
         <div>
-            <label style="${lbl}">Наступний контакт</label>
+            <label style="${lbl}">Следующий контакт</label>
             <div style="display:flex;gap:0.35rem;">
                 <input id="dd_nextContact" type="date" value="${deal.nextContactDate||''}" style="${inp}${deal.nextContactDate && deal.nextContactDate < _crmToday() ? 'border-color:#ef4444;' : ''}flex:1;min-width:0;">
                 <input id="dd_nextContactTime" type="time" value="${deal.nextContactTime||''}" style="padding:0.45rem 0.4rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;width:82px;">
@@ -2118,21 +2118,21 @@ function _renderDealDetails(deal) {
         </div>
     </div>
     <div style="${row}">
-        <label style="${lbl}">Відповідальний</label>
+        <label style="${lbl}">Ответственный</label>
         <select id="dd_assignee" style="${inp}background:white;cursor:pointer;">
-            <option value="">— не призначено —</option>
+            <option value="">— не назначен —</option>
             ${(typeof users !== 'undefined' ? users : []).map(u => '<option value="' + u.id + '" ' + (deal.assigneeId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>').join('')}
         </select>
     </div>
     <div style="${row}">
-        <label style="${lbl}">Нотатка</label>
+        <label style="${lbl}">Заметка</label>
         <textarea id="dd_note" rows="3" style="${inp}resize:vertical;">${_esc(deal.note||'')}</textarea>
     </div>
 
     <!-- Доставка / Оплата — тільки для ніш з доставкою -->
     ${['furniture','construction','cleaning','logistics','retail',''].includes(window.currentCompanyData?.niche||'') || !window.currentCompanyData?.niche ? `
     <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
-        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Доставка та оплата</div>
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Доставка и оплата</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
                 <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">ТТН Нова Пошта</label>
@@ -2147,20 +2147,20 @@ function _renderDealDetails(deal) {
                 </div>
             </div>
             <div>
-                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">Статус оплати</label>
+                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">Статус оплаты</label>
                 <select id="dd_payStatus" style="${inp}background:white;cursor:pointer;font-size:0.78rem;">
-                    <option value="" ${!deal.payStatus?'selected':''}>— не встановлено —</option>
-                    <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>⏳ Очікує оплати</option>
+                    <option value="" ${!deal.payStatus?'selected':''}>— не установлен —</option>
+                    <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>⏳ Ожидает оплаты</option>
                     <option value="paid"     ${deal.payStatus==='paid'    ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Оплачено</option>
-                    <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none"><polygon points="12,2 22,12 12,22 2,12"/></svg> Частково</option>
-                    <option value="refunded" ${deal.payStatus==='refunded'?'selected':''}>↩️ Повернено</option>
+                    <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none"><polygon points="12,2 22,12 12,22 2,12"/></svg> Частично</option>
+                    <option value="refunded" ${deal.payStatus==='refunded'?'selected':''}>↩️ Возвращено</option>
                 </select>
             </div>
         </div>
         ${deal.amount ? `
         <button onclick="crmMonoPayLink(${deal.amount||0},'${_esc(deal.title||deal.clientName||'')}','${deal.id}')"
             style="padding:0.3rem 0.75rem;background:#1f3950;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Monobank — посилання на оплату ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Monobank — ссылка на оплату ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
         </button>` : ''}
     </div>
 
@@ -2176,16 +2176,16 @@ function _renderDealDetails(deal) {
         <!-- Рядок 1: Філіал + Адреса об'єкту -->
         <div style="display:grid;grid-template-columns:1fr 2fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
-                <label style="${lbl}">Філіал</label>
+                <label style="${lbl}">Филиал</label>
                 <select id="dd_branch" style="${inp}background:white;cursor:pointer;">
-                    <option value="" ${!deal.branch?'selected':''}>— не вказано —</option>
+                    <option value="" ${!deal.branch?'selected':''}>— не указан —</option>
                     <option value="prague"    ${deal.branch==='prague'    ?'selected':''}> Прага</option>
                     <option value="brno"      ${deal.branch==='brno'      ?'selected':''}> Брно</option>
                     <option value="bratislava"${deal.branch==='bratislava'?'selected':''}>🌆 Братислава</option>
                 </select>
             </div>
             <div>
-                <label style="${lbl}">Адреса об'єкту</label>
+                <label style="${lbl}">Адрес объекта</label>
                 <input id="dd_objectAddress" value="${_esc(deal.objectAddress||'')}" placeholder="вул. Náměstí Míru 12, Praha 2" style="${inp}">
             </div>
         </div>
@@ -2193,16 +2193,16 @@ function _renderDealDetails(deal) {
         <!-- Рядок 2: Замірник + Дата заміру -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
-                <label style="${lbl}">Замірник</label>
+                <label style="${lbl}">Замерщик</label>
                 <select id="dd_measurer" style="${inp}background:white;cursor:pointer;">
-                    <option value="" ${!deal.measurerId?'selected':''}>— не призначено —</option>
+                    <option value="" ${!deal.measurerId?'selected':''}>— не назначен —</option>
                     ${(typeof users !== 'undefined' ? users : []).map(u =>
                         '<option value="' + u.id + '" ' + (deal.measurerId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>'
                     ).join('')}
                 </select>
             </div>
             <div>
-                <label style="${lbl}">Дата і час заміру</label>
+                <label style="${lbl}">Дата и время замера</label>
                 <input id="dd_measurementDate" type="datetime-local" value="${deal.measurementDate||''}" style="${inp}">
             </div>
         </div>
@@ -2212,14 +2212,14 @@ function _renderDealDetails(deal) {
             <div>
                 <label style="${lbl}">Монтажник</label>
                 <select id="dd_installer" style="${inp}background:white;cursor:pointer;">
-                    <option value="" ${!deal.installerId?'selected':''}>— не призначено —</option>
+                    <option value="" ${!deal.installerId?'selected':''}>— не назначен —</option>
                     ${(typeof users !== 'undefined' ? users : []).map(u =>
                         '<option value="' + u.id + '" ' + (deal.installerId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>'
                     ).join('')}
                 </select>
             </div>
             <div>
-                <label style="${lbl}">Дата і час монтажу</label>
+                <label style="${lbl}">Дата и время монтажа</label>
                 <input id="dd_installationDate" type="datetime-local" value="${deal.installationDate||''}" style="${inp}">
             </div>
         </div>
@@ -2227,7 +2227,7 @@ function _renderDealDetails(deal) {
         <!-- Рядок 4: Передоплата + Залишок (авто) -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
-                <label style="${lbl}">Передоплата (€)</label>
+                <label style="${lbl}">Предоплата (€)</label>
                 <input id="dd_prepayment" type="number" min="0" step="0.01"
                     value="${deal.prepayment||''}" placeholder="0"
                     oninput="(function(){
@@ -2239,7 +2239,7 @@ function _renderDealDetails(deal) {
                     })()" style="${inp}">
             </div>
             <div>
-                <label style="${lbl}">Залишок до оплати</label>
+                <label style="${lbl}">Остаток к оплате</label>
                 <div id="dd_balance_display" style="${inp}background:#f9fafb;color:#374151;font-weight:600;display:flex;align-items:center;">
                     ${deal.amount && deal.prepayment != null
                         ? (Math.max(0, (deal.amount||0) - (deal.prepayment||0))).toFixed(2) + ' €'
@@ -2253,7 +2253,7 @@ function _renderDealDetails(deal) {
 
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
     <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;margin-bottom:0.9rem;">
-        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">Дані з боту</div>
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">Данные из бота</div>
         ${[[window.t('crmRole'),'role'],[window.t('crmProblem'),'mainProblem'],[window.t('crmGoal'),'mainGoal']].map(([l,k]) =>
             deal.leadData[k] ? `<div style="font-size:0.78rem;margin-bottom:0.25rem;"><span style="color:#9ca3af;">${l}: </span>${_esc(deal.leadData[k])}</div>` : ''
         ).join('')}
@@ -2271,7 +2271,7 @@ function _renderDealDetails(deal) {
             </span>`).join('')}
         </div>
         <div style="display:flex;gap:0.3rem;">
-            <input id="dd_tagInput" placeholder="Новий тег..." onkeydown="if(event.key==='Enter'){event.preventDefault();crmAddTag('${deal.id}')}"
+            <input id="dd_tagInput" placeholder="Новый тег..." onkeydown="if(event.key==='Enter'){event.preventDefault();crmAddTag('${deal.id}')}"
                 style="${inp}flex:1;">
             <button onclick="crmAddTag('${deal.id}')"
                 style="padding:0.45rem 0.7rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;">+ Тег</button>
@@ -2281,7 +2281,7 @@ function _renderDealDetails(deal) {
     <!-- Товари зі складу -->
     ${typeof window.whGetItems === 'function' && window.whGetItems().length > 0 ? `
     <div style="margin-bottom:0.9rem;">
-        <label style="${lbl}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> Товари зі складу</label>
+        <label style="${lbl}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> Товары со склада</label>
         <div id="dealWhItems" style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.4rem;">
             ${(deal.warehouseItems||[]).map((wi,idx) => {
                 const it = window.whGetItems().find(i=>i.id===wi.itemId);
@@ -2295,7 +2295,7 @@ function _renderDealDetails(deal) {
             }).join('')}
         </div>
         <select id="dd_wh_select" onchange="window._crmWhAddItem('${deal.id}',this)" style="${inp}background:white;font-size:0.8rem;">
-            <option value="">+ Додати товар зі складу...</option>
+            <option value="">+ Добавить товар со склада...</option>
             ${window.whGetItems().map(i => {
                 const s = window.whGetStock ? window.whGetStock(i.id) : {qty:0};
                 return `<option value="${i.id}">${i.name} (${s.qty} ${i.unit||'шт'})</option>`;
@@ -2451,15 +2451,15 @@ window.crmToggleDealChat = async function (dealId) {
             chatPane.style.display = 'flex';
             const msgsEl = document.getElementById('chatMsgs_crmdeal');
             const headerEl = document.getElementById('chatMsgHeader_crmdeal');
-            if (headerEl) headerEl.innerHTML = '<div style="font-size:0.8rem;color:#6b7280;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Чат з клієнтом</div>';
+            if (headerEl) headerEl.innerHTML = '<div style="font-size:0.8rem;color:#6b7280;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Чат с клиентом</div>';
             if (msgsEl) msgsEl.innerHTML = `
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
                     height:100%;text-align:center;padding:2rem;color:#9ca3af;">
                     <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                    <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Чат не підключено</div>
+                    <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Чат не подключён</div>
                     <div style="font-size:0.75rem;line-height:1.5;">
-                        Клієнт ще не писав через бота.<br>
-                        Коли він напише — переписка з'явиться тут автоматично.
+                        Клиент ещё не писал через бота.<br>
+                        Когда он напишет — переписка появится здесь автоматически.
                     </div>
                     ${deal.phone ? `
                     <div style="margin-top:1rem;display:flex;flex-direction:column;gap:0.4rem;width:100%;">
@@ -2471,12 +2471,12 @@ window.crmToggleDealChat = async function (dealId) {
                         <a href="https://wa.me/${String(deal.phone).replace(/\D/g,'')}" target="_blank"
                             style="padding:0.45rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
                             border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Написати в WhatsApp
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Написать в WhatsApp
                         </a>
                         <a href="viber://chat?number=${String(deal.phone).replace(/\D/g,'')}" 
                             style="padding:0.45rem;background:#f5f0ff;color:#7c3aed;border:1px solid #ddd6fe;
                             border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Написати в Viber
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Написать в Viber
                         </a>
                     </div>` : ''}
                 </div>`;
@@ -2772,7 +2772,7 @@ window.crmToggleHot = async function(dealId) {
 async function _loadTasksTab(deal) {
     const cnt = document.getElementById('crmDealContent');
     if (!cnt) return;
-    cnt.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
+    cnt.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Загрузка...</div>';
     try {
         let dealTasks = [];
         try {
@@ -2884,7 +2884,7 @@ window.crmMarkTaskDone = async function(taskId) {
 async function _loadActivityTab(deal) {
     const content = document.getElementById('crmDealContent');
     if (!content) return;
-    content.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
+    content.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Загрузка...</div>';
     try {
         const snap = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id).collection('history')
             .orderBy('at','desc').limit(30).get();
@@ -2897,9 +2897,9 @@ async function _loadActivityTab(deal) {
         <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;margin-bottom:1rem;border:1px solid #e8eaed;">
             <div style="display:flex;gap:0.4rem;">
                 <select id="actType" style="padding:0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;background:white;">
-                    <option value="note">Нотатка</option>
-                    <option value="call">Дзвінок</option>
-                    <option value="meeting">Зустріч</option>
+                    <option value="note">Заметка</option>
+                    <option value="call">Звонок</option>
+                    <option value="meeting">Встреча</option>
                     <option value="email">Email</option>
                 </select>
                 <input id="actText" placeholder="${window.t('crmActivityDescPh')}"
@@ -2976,7 +2976,7 @@ async function _loadAITab(deal) {
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.65rem;">
                 <div style="display:flex;align-items:center;gap:0.4rem;">
                     <div style="width:28px;height:28px;background:#f0fdf4;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#22c55e;">${I.ai}</div>
-                    <div style="font-weight:700;font-size:0.88rem;color:#111827;">AI Аналіз</div>
+                    <div style="font-weight:700;font-size:0.88rem;color:#111827;">AI Анализ</div>
                 </div>
                 ${analyzedAt ? `<div style="font-size:0.68rem;color:#9ca3af;">${analyzedAt}</div>` : ''}
             </div>
@@ -2985,7 +2985,7 @@ async function _loadAITab(deal) {
         <button onclick="crmRunAI('${deal.id}')"
             style="width:100%;padding:0.5rem;background:#f0fdf4;color:#16a34a;
             border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:0.35rem;">
-            ${I.refresh} Оновити аналіз
+            ${I.refresh} Обновить анализ
         </button>`;
         return;
     }
@@ -2993,7 +2993,7 @@ async function _loadAITab(deal) {
     // Збираємо контекст угоди для preview
     const ctx = [
         deal.clientName ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${_esc(deal.clientName)}` : null,
-        deal.amount ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${Number(deal.amount).toLocaleString('uk-UA')} грн` : null,
+        deal.amount ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${Number(deal.amount).toLocaleString('ru-RU')} грн` : null,
         deal.note ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> ${_esc(deal.note.slice(0,60))}${deal.note.length>60?'...':''}` : null,
     ].filter(Boolean);
 
@@ -3003,9 +3003,9 @@ async function _loadAITab(deal) {
             margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;color:#22c55e;font-size:1.4rem;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
         </div>
-        <div style="font-weight:700;font-size:0.92rem;margin-bottom:0.35rem;color:#111827;">AI Аналіз угоди</div>
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:0.35rem;color:#111827;">AI Анализ сделки</div>
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;line-height:1.5;">
-            Ймовірність закриття • Ризики • Наступний крок • Текст повідомлення
+            Вероятность закрытия • Риски • Следующий шаг • Текст сообщения
         </div>
         ${ctx.length ? `<div style="background:#f8fafc;border-radius:8px;padding:0.65rem;margin-bottom:1rem;text-align:left;">
             ${ctx.map(c=>`<div style="font-size:0.75rem;color:#6b7280;margin-bottom:3px;">${_esc(c)}</div>`).join('')}
@@ -3013,7 +3013,7 @@ async function _loadAITab(deal) {
         <button onclick="crmRunAI('${deal.id}')"
             style="padding:0.65rem 1.75rem;background:#22c55e;color:white;border:none;
             border-radius:8px;cursor:pointer;font-weight:600;font-size:0.84rem;display:inline-flex;align-items:center;gap:0.4rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg> Запустити аналіз
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg> Запустить анализ
         </button>
         <div style="font-size:0.68rem;color:#d1d5db;margin-top:0.5rem;">~5 секунд</div>
     </div>`;
@@ -3152,18 +3152,18 @@ window.crmOpenCreateDeal = function(defaultStage) {
         <div style="background:white;border-radius:10px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
             <div style="padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;
                 display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-weight:700;font-size:0.9rem;color:#111827;">Нова угода</span>
+                <span style="font-weight:700;font-size:0.9rem;color:#111827;">Новая сделка</span>
                 <button onclick="document.getElementById('crmCreateDealOverlay').remove()"
                     style="background:none;border:none;cursor:pointer;color:#9ca3af;
                     display:flex;align-items:center;">${I.close}</button>
             </div>
             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                 <div>
-                    <label style="${lbl}">Назва угоди</label>
+                    <label style="${lbl}">Название сделки</label>
                     <input id="nd_title" placeholder="${window.t('crmDealTitlePh')}" style="${inp}" autofocus>
                 </div>
                 <div>
-                    <label style="${lbl}">Клієнт</label>
+                    <label style="${lbl}">Клиент</label>
                     <div style="position:relative;">
                         <input id="nd_client" placeholder="${window.t('crmClientNamePh')}" style="${inp}"
                             autocomplete="off"
@@ -3179,18 +3179,18 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                     <div>
-                        <label style="${lbl}">Стадія</label>
+                        <label style="${lbl}">Стадия</label>
                         <select id="nd_stage" style="${inp}background:white;cursor:pointer;">
                             ${stages.map(s => `<option value="${s.id}" ${(defaultStage||'new')===s.id?'selected':''}>${_esc(s.label)}</option>`).join('')}
                         </select>
                     </div>
                     <div>
-                        <label style="${lbl}">Сума</label>
+                        <label style="${lbl}">Сумма</label>
                         <input id="nd_amount" type="number" placeholder="0" style="${inp}">
                     </div>
                 </div>
                 <div>
-                    <label style="${lbl}">Ніша</label>
+                    <label style="${lbl}">Ниша</label>
                     <div style="position:relative;">
                         <input id="nd_niche" placeholder="Меблі UA, Клініка, Ремонт..."
                             list="nd_nicheList"
@@ -3236,7 +3236,7 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 <button onclick="document.getElementById('crmCreateDealOverlay').remove()"
                     style="padding:0.45rem 1rem;background:white;border:1px solid #e8eaed;
                     border-radius:6px;cursor:pointer;font-size:0.82rem;color:#374151;">
-                    Скасувати
+                    Отменить
                 </button>
                 <button onclick="crmCreateDeal()"
                     style="padding:0.45rem 1.25rem;background:#22c55e;color:white;border:none;
@@ -3628,7 +3628,7 @@ window.crmOpenCreateClient = function() {
             </button>
             <button onclick="document.getElementById('crmCreateClientOverlay').remove()"
                 style="padding:0.55rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">
-                Скасувати
+                Отменить
             </button>
         </div>
     </div>`;
@@ -3690,7 +3690,7 @@ async function _renderActivitiesTab(forceRefresh = false) {
         return;
     }
 
-    c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
+    c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">Загрузка...</div>';
 
     // Беремо тільки активні угоди (не won/lost) для history — зменшує кількість reads
     let allActivities = [];
@@ -5160,7 +5160,7 @@ async function _checkRequiredFields(deal, newStage) {
         <div style="display:flex;gap:0.6rem;margin-top:1rem;">
             <button onclick="document.getElementById('crmRequiredFieldsModal').remove()"
                 style="flex:1;padding:0.5rem;background:#f3f4f6;color:#374151;border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                Скасувати
+                Отменить
             </button>
             <button id="crmReqFieldsConfirm"
                 style="flex:2;padding:0.5rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
@@ -5378,7 +5378,7 @@ window.crmCreateTaskFromDeal = function(dealId) {
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
             <button onclick="document.getElementById('crmTaskModal').remove()"
                 style="padding:0.5rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">
-                Скасувати
+                Отменить
             </button>
             <button onclick="crmSaveTaskFromDeal('${deal.id}')"
                 style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">

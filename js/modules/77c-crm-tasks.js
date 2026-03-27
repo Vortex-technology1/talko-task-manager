@@ -74,7 +74,7 @@ function _calcDueDate(days) {
 window.crmRenderDealTasks = async function (dealId) {
     const c = document.getElementById('crmDealTasksList');
     if (!c) return;
-    c.innerHTML = '<div style="text-align:center;padding:1rem;color:#9ca3af;font-size:0.8rem;">Завантаження...</div>';
+    c.innerHTML = '<div style="text-align:center;padding:1rem;color:#9ca3af;font-size:0.8rem;">Загрузка...</div>';
 
     try {
         const snap = await window.companyRef()
@@ -85,7 +85,7 @@ window.crmRenderDealTasks = async function (dealId) {
         const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         _crmRenderTasksList(c, tasks, dealId);
     } catch (e) {
-        c.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;padding:0.5rem;">Помилка: ${e.message}</div>`;
+        c.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;padding:0.5rem;">Ошибка: ${e.message}</div>`;
     }
 };
 
@@ -121,14 +121,14 @@ function _crmRenderTasksList(container, tasks, dealId) {
             </div>
             <button onclick="crmDeleteDealTask('${dealId}','${t.id}')"
                 style="background:none;border:none;cursor:pointer;color:#d1d5db;font-size:0.8rem;
-                flex-shrink:0;padding:2px;" title="Видалити"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                flex-shrink:0;padding:2px;" title="Удалить"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>`;
     };
 
     container.innerHTML = `
     <!-- Додати задачу -->
     <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
-        <input id="crmNewTaskInput_${dealId}" placeholder="Нова задача..."
+        <input id="crmNewTaskInput_${dealId}" placeholder="Новая задача..."
             onkeydown="if(event.key==='Enter')crmAddDealTask('${dealId}')"
             style="flex:1;padding:0.4rem 0.6rem;border:1px solid #e8eaed;border-radius:7px;
             font-size:0.8rem;outline:none;">
@@ -140,13 +140,13 @@ function _crmRenderTasksList(container, tasks, dealId) {
     </div>
 
     <!-- Відкриті задачі -->
-    ${open.length ? open.map(taskHtml).join('') : '<div style="font-size:0.78rem;color:#9ca3af;padding:0.25rem;">Задач немає</div>'}
+    ${open.length ? open.map(taskHtml).join('') : '<div style="font-size:0.78rem;color:#9ca3af;padding:0.25rem;">Задач нет</div>'}
 
     <!-- Виконані -->
     ${done.length ? `
     <div style="margin-top:0.75rem;">
         <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.4rem;font-weight:600;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Виконані (${done.length})
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Выполненные (${done.length})
         </div>
         ${done.map(taskHtml).join('')}
     </div>` : ''}`;
@@ -213,10 +213,10 @@ window.crmRenderTaskTemplatesSettings = function () {
     return `
     <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
         <div style="font-weight:700;font-size:0.82rem;color:#111827;margin-bottom:0.3rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Авто-задачі при переході стадії
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Авто-задачи при переходе стадии
         </div>
         <div style="font-size:0.71rem;color:#9ca3af;margin-bottom:0.85rem;">
-            При переході угоди в стадію — задачі створюються автоматично
+            При переходе сделки в стадию — задачи создаются автоматически
         </div>
 
         <div id="crmTaskTemplatesList" style="display:flex;flex-direction:column;gap:0.4rem;">
@@ -226,7 +226,7 @@ window.crmRenderTaskTemplatesSettings = function () {
         <button onclick="crmAddTaskTemplate()"
             style="margin-top:0.6rem;width:100%;padding:0.4rem;background:#f0fdf4;color:#16a34a;
             border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            + Додати шаблон задачі
+            + Добавить шаблон задачи
         </button>
     </div>`;
 };

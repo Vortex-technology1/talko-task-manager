@@ -93,7 +93,7 @@ function _fmtDate(dateStr) {
     if (dateStr < today) {
         const days = Math.round((new Date(today)-new Date(dateStr))/86400000);
         // Показуємо кількість днів прострочення для оцінки терміновості
-        const label = days === 1 ? 'Вчора' : '+' + days + ' дн.';
+        const label = days === 1 ? 'Вчера' : '+' + days + ' дн.';
         return { label, days, overdue:true, today:false };
     }
     if (dateStr === today) return { label:window.t('todayWord'), overdue:false, today:true };
@@ -124,7 +124,7 @@ window.renderCrmTodo = function() {
     // Якщо дані ще завантажуються — показуємо spinner і чекаємо
     if (window.crm && window.crm.loading) {
         el.innerHTML = `<div style="padding:3rem;text-align:center;color:#9ca3af;">
-            <div style="font-size:0.85rem;">Завантаження лідів...</div></div>`;
+            <div style="font-size:0.85rem;">Загрузка лидов...</div></div>`;
         if (_crmTodoRetryTimer) clearTimeout(_crmTodoRetryTimer);
         _crmTodoRetryTimer = setTimeout(() => { if (document.getElementById('crmViewTodo')) renderCrmTodo(); }, 400);
         return;
@@ -133,7 +133,7 @@ window.renderCrmTodo = function() {
     // Якщо crm взагалі не ініціалізовано — чекаємо
     if (!window.crm || !window.crm.deals) {
         el.innerHTML = `<div style="padding:3rem;text-align:center;color:#9ca3af;">
-            <div style="font-size:0.85rem;">Ініціалізація CRM...</div></div>`;
+            <div style="font-size:0.85rem;">Инициализация CRM...</div></div>`;
         if (_crmTodoRetryTimer) clearTimeout(_crmTodoRetryTimer);
         _crmTodoRetryTimer = setTimeout(() => { if (document.getElementById('crmViewTodo')) renderCrmTodo(); }, 600);
         return;
@@ -157,29 +157,29 @@ window.renderCrmTodo = function() {
       <!-- Хедер -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
         <div style="display:flex;align-items:center;gap:0.75rem;">
-          <span style="font-size:1rem;font-weight:700;color:#111827;">Що робити зараз</span>
+          <span style="font-size:1rem;font-weight:700;color:#111827;">Что делать сейчас</span>
           <span style="background:#374151;color:#fff;border-radius:10px;padding:2px 9px;font-size:0.72rem;font-weight:700;">${all.length}</span>
         </div>
         <div style="display:flex;gap:0.5rem;">
           <button onclick="renderCrmTodo()" style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:5px 8px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${TI.refresh}</button>
           ${window.isSuperAdmin ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v11l3.5 6H5.5L9 14V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg> Тест</button>' : ''}
-          <button onclick="crmOpenCreateDeal()" style="background:#22c55e;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem;">${TI.plus} Новий лід</button>
+          <button onclick="crmOpenCreateDeal()" style="background:#22c55e;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem;">${TI.plus} Новый лид</button>
         </div>
       </div>
 
       <!-- Лічильники -->
       <div style="display:flex;gap:0.4rem;margin-bottom:0.85rem;flex-wrap:wrap;">
-        ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} прострочено</div>`:''}
-        ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} на сьогодні</div>`:''}
-        ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} нових</div>`:''}
-        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${sla.length} забутих лідів</div>`:''})()}
+        ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} просрочено</div>`:''}
+        ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} на сегодня</div>`:''}
+        ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} новых</div>`:''}
+        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${sla.length} забытых лидов</div>`:''})()}
       </div>
 
       <!-- Пошук -->
       <div style="position:relative;margin-bottom:0.65rem;">
         <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="crm-todo-search"
-          placeholder="Пошук по імені, телефону, email..."
+          placeholder="Поиск по имени, телефону, email..."
           value="${search}"
           oninput="window._crmTodoSearch=this.value;renderCrmTodo()"
           style="width:100%;padding:7px 32px 7px 32px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.83rem;outline:none;box-sizing:border-box;transition:border-color .15s;"
@@ -192,7 +192,7 @@ window.renderCrmTodo = function() {
         <button onclick="window._crmTodoFilter='';renderCrmTodo()"
           style="padding:4px 12px;border-radius:20px;border:1px solid ${!filter?'#22c55e':'#e5e7eb'};
           background:${!filter?'#f0fdf4':'white'};color:${!filter?'#16a34a':'#6b7280'};
-          font-size:0.75rem;font-weight:${!filter?'700':'500'};cursor:pointer;white-space:nowrap;">Всі ${all.length}</button>
+          font-size:0.75rem;font-weight:${!filter?'700':'500'};cursor:pointer;white-space:nowrap;">Все ${all.length}</button>
         ${stages.filter(s=>s.id!=='lost'&&s.id!=='won').map(s=>{
             const cnt=all.filter(d=>d.stage===s.id).length;
             if(!cnt)return'';
@@ -210,9 +210,9 @@ window.renderCrmTodo = function() {
         ${deals.length===0
             ?`<div style="padding:3rem;text-align:center;color:#9ca3af;">
                 <div style="font-size:2rem;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-                <div style="font-weight:600;color:#374151;">Все зроблено!</div>
-                <div style="font-size:0.82rem;margin-top:0.25rem;">Лідів немає або всі у статусі "Виграно/Програно"</div>
-                <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">Всього в CRM: ${window.crm&&window.crm.deals?window.crm.deals.length:0} лідів</div>
+                <div style="font-weight:600;color:#374151;">Всё сделано!</div>
+                <div style="font-size:0.82rem;margin-top:0.25rem;">Лидов нет или все в статусе «Выиграно/Проиграно»</div>
+                <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">Всего в CRM: ${window.crm&&window.crm.deals?window.crm.deals.length:0} лидов</div>
                 <button onclick="crmOpenCreateDeal()" style="margin-top:0.75rem;background:#22c55e;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Додати лід</button>
                 ${['owner','admin'].includes(window.currentUserData?.role) ? '<button onclick="_crmTodoAddTestDeals()" style="margin-top:0.5rem;margin-left:0.5rem;background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:8px 16px;font-size:0.82rem;cursor:pointer;">+ Тестові ліди</button>' : ''}
               </div>`
@@ -267,7 +267,7 @@ function _renderRow(d, i) {
             ? `<span onclick="event.stopPropagation()"
                 style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
                 background:#f0fdf4;border:1px solid #86efac;color:#16a34a;font-size:0.72rem;font-weight:600;white-space:nowrap;flex-shrink:0;">
-                ${TI.confirm} Підтверджено</span>
+                ${TI.confirm} Подтверждено</span>
                <button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
@@ -275,7 +275,7 @@ function _renderRow(d, i) {
             : `<button onclick="event.stopPropagation();_crmTodoConfirmConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
                 background:#fffbeb;border:1px solid #fde68a;color:#b45309;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-                ${TI.cal} ${d.consultationDate} ${d.consultationTime||''} — Підтвердити</button>
+                ${TI.cal} ${d.consultationDate} ${d.consultationTime||''} — Подтвердить</button>
                <button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
@@ -283,7 +283,7 @@ function _renderRow(d, i) {
         : `<button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
             style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
             background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-            ${TI.cal} Консультація</button>`;
+            ${TI.cal} Консультация</button>`;
 
     return `
     <div onclick="crmTodoOpenCard('${d.id}')"
@@ -298,7 +298,7 @@ function _renderRow(d, i) {
       <div style="min-width:70px;text-align:center;flex-shrink:0;">
         <div style="background:${dateBg};border-radius:6px;padding:3px 6px;display:inline-block;">
           <div style="font-size:0.72rem;font-weight:700;color:${dateClr};white-space:nowrap;">
-            ${fmt?fmt.label:'Нова'}
+            ${fmt?fmt.label:'Новая'}
           </div>
           ${timeTag}
         </div>
