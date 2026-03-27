@@ -389,6 +389,10 @@
                 return null;
             } catch (error) {
                 console.error('[findUserCompany] Error:', error);
+                // Якщо offline/network помилка — повертаємо спеціальний маркер
+                if (error.code === 'unavailable' || (error.message && error.message.includes('offline'))) {
+                    return '__offline__';
+                }
                 return null;
             }
         }

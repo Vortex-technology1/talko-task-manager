@@ -22,9 +22,23 @@
                     if (adminBtn) adminBtn.style.display = 'block';
                 }
                 
-                const companyId = await findUserCompany(user.uid, user.email);
-                
+                let companyId = await findUserCompany(user.uid, user.email);
+
+                // Якщо offline — показуємо retry екран замість чорного екрану
                 if (!companyId && !isSuperAdmin) {
+                    if (!navigator.onLine || companyId === '__offline__') { companyId = null;
+                        const lp = document.getElementById('loadingPage');
+                        if (lp) {
+                            lp.style.display = 'flex';
+                            lp.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#0f172a;color:white;text-align:center;padding:2rem;gap:1.25rem;">' +
+                                '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5"><path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>' +
+                                '<div style="font-size:1.1rem;font-weight:700;">Немає з\'єднання з інтернетом</div>' +
+                                '<div style="font-size:.85rem;color:#94a3b8;max-width:280px;line-height:1.6;">Перевірте підключення і спробуйте ще раз</div>' +
+                                '<button onclick="location.reload()" style="margin-top:.5rem;padding:.65rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;">Оновити сторінку</button>' +
+                                '</div>';
+                        }
+                        return;
+                    }
                     document.getElementById('loadingPage').style.display = 'none';
                     document.getElementById('authPage').style.display = 'flex'; document.getElementById('mainHeader') && (document.getElementById('mainHeader').style.display = 'none');
                     document.getElementById('mainInterface').style.display = 'none';
