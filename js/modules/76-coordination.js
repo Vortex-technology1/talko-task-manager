@@ -86,7 +86,7 @@
             howBlock7:'Результати через місяць',
             howErr1:"Нарада без протоколу → через тиждень ніхто нічого не пам'ятає",
             howErr2:'Рішення без виконавця → ніхто не відповідальний',
-            howErr3:"Ескалація без адресата → питання підвисає",
+            howErr3:"Эскалация без адресата → питання підвисає",
             howStep1:'Відкрити координацію → натиснути Запустити',
             howStep2:'Статистики: учасники озвучують свої показники',
             howStep3:'Виконання: перевіряємо задачі з минулого тижня',
@@ -407,7 +407,7 @@
         if (isSA()) return true;
         const roleEl = document.getElementById('currentUserRole');
         const rt = roleEl ? roleEl.textContent : '';
-        if (rt.includes('Власник')||rt.includes('owner')||rt.includes('admin')||rt.includes('Менеджер')||rt.includes('manager')) return true;
+        if (rt.includes('Власник')||rt.includes('Владелец')||rt.includes('owner')||rt.includes('admin')||rt.includes('Менеджер')||rt.includes('manager')) return true;
         const u = coordUsers.find(x => x.id === uid());
         return u && ['owner','admin','manager'].includes(u.role);
     };
@@ -519,7 +519,7 @@
           <div class="page-toolbar-right">
             <a href="https://chatgpt.com/g/g-695e001cf1c48191a9c08cb8184ff767-ai-coordination-module"
               target="_blank" rel="noopener noreferrer" class="btn-ai hide-mobile">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg> AI Асистент
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg> AI Ассистент
             </a>
             <button id="coordHowBtn" onclick="toggleCoordHowItWorks()" class="btn-howto hide-mobile">
               <i data-lucide="help-circle" style="width:14px;height:14px;"></i> ${ct('howItWorks')}
@@ -599,11 +599,11 @@
   <div style="${b}">
     <div style="${t}"><i data-lucide="git-branch" style="width:15px;height:15px;color:#06b6d4;"></i>${ct('howBlock4')}</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.5rem;font-size:.73rem;">
-      <div style="background:#f0fdf4;border-radius:8px;padding:.55rem;border:1px solid #d1fae5;"><b style="color:#16a34a;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> ${ct('decisionsLbl')} → ${ct('tasksAgLbl')}</b><br>+ Проект · Процес · CRM угода</div>
-      <div style="background:#eff6ff;border-radius:8px;padding:.55rem;border:1px solid #bfdbfe;"><b style="color:#1d4ed8;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Статистики → Метрики</b><br>Аналітика / Статистики</div>
-      <div style="background:#fef3c7;border-radius:8px;padding:.55rem;border:1px solid #fde68a;"><b style="color:#92400e;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span> Виконання → Задачі</b><br>Живі дані учасників</div>
-      <div style="background:#f5f3ff;border-radius:8px;padding:.55rem;border:1px solid #ddd6fe;"><b style="color:#6d28d9;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Протокол → PDF</b><br>Telegram автоматично</div>
-      <div style="background:#fef2f2;border-radius:8px;padding:.55rem;border:1px solid #fecaca;"><b style="color:#991b1b;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span> Ескалація</b><br>→ Вища координація</div>
+      <div style="background:#f0fdf4;border-radius:8px;padding:.55rem;border:1px solid #d1fae5;"><b style="color:#16a34a;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> ${ct('decisionsLbl')} → ${ct('tasksAgLbl')}</b><br>+ Проект · Процесс · CRM сделка</div>
+      <div style="background:#eff6ff;border-radius:8px;padding:.55rem;border:1px solid #bfdbfe;"><b style="color:#1d4ed8;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Статистики → Метрики</b><br>Аналитика / Статистики</div>
+      <div style="background:#fef3c7;border-radius:8px;padding:.55rem;border:1px solid #fde68a;"><b style="color:#92400e;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span> Выполнение → Задачи</b><br>Живые данные участников</div>
+      <div style="background:#f5f3ff;border-radius:8px;padding:.55rem;border:1px solid #ddd6fe;"><b style="color:#6d28d9;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Протокол → PDF</b><br>Telegram автоматически</div>
+      <div style="background:#fef2f2;border-radius:8px;padding:.55rem;border:1px solid #fecaca;"><b style="color:#991b1b;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span> Эскалация</b><br>→ Выше по цепочке</div>
     </div>
   </div>
   <div style="${b}">
@@ -621,7 +621,7 @@
   <div style="background:linear-gradient(135deg,#16a34a,#22c55e);border-radius:14px;padding:1rem;">
     <div style="font-weight:700;font-size:.88rem;color:#fff;margin-bottom:.55rem;display:flex;align-items:center;gap:.4rem;"><i data-lucide="trending-up" style="width:15px;height:15px;color:#fff;"></i>${ct('howBlock7')}</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.45rem;">
-      ${[['95%','рішень виконуються'],['-40%','часу на де результат'],['×2','швидкість реакції'],['100%','рішень зафіксовані']].map(([v,l]) => `<div style="background:rgba(255,255,255,.15);border-radius:10px;padding:.5rem;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#fff;">${v}</div><div style="font-size:.7rem;color:rgba(255,255,255,.85);">${l}</div></div>`).join('')}
+      ${[['95%','решений выполняются'],['-40%','времени на отслеживание'],['×2','скорость реакции'],['100%','решений зафиксированы']].map(([v,l]) => `<div style="background:rgba(255,255,255,.15);border-radius:10px;padding:.5rem;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#fff;">${v}</div><div style="font-size:.7rem;color:rgba(255,255,255,.85);">${l}</div></div>`).join('')}
     </div>
   </div>
   <!-- AI Assistant CTA -->
@@ -631,13 +631,13 @@
         <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>
         AI Coordination Assistant
       </div>
-      <div style="font-size:.78rem;color:#6b7280;">Запитайте AI — які координації потрібні вашому бізнесу, як їх налаштувати та з чого почати</div>
+      <div style="font-size:.78rem;color:#6b7280;">Спросите AI — какие координации нужны вашему бизнесу, как их настроить и с чего начать</div>
     </div>
     <a href="https://chatgpt.com/g/g-695e001cf1c48191a9c08cb8184ff767-ai-coordination-module"
        target="_blank" rel="noopener noreferrer"
        style="padding:.5rem 1.2rem;font-size:.83rem;border-radius:10px;border:none;background:#6d28d9;color:#fff;cursor:pointer;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:.4rem;white-space:nowrap;flex-shrink:0;">
       <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-      Запитати AI
+      Спросить AI
     </a>
   </div>
 </div>`;
@@ -699,7 +699,7 @@
               <div style="display:flex;align-items:center;gap:.2rem;flex-shrink:0;">
                 <span style="display:flex;align-items:center;gap:3px;font-size:.68rem;color:${active?'#16a34a':'#b45309'};background:${active?'#f0fdf4':'#fef3c7'};padding:2px 7px;border-radius:10px;font-weight:600;">
                   <span style="width:5px;height:5px;border-radius:50%;background:${active?'#22c55e':'#f59e0b'};display:inline-block;"></span>
-                  ${active?'Активна':'Пауза'}
+                  ${active?ct('statusActive'):ct('statusPaused')}
                 </span>
                 ${isManager()?`<button onclick="openCoordModal('${c.id}')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:3px;border-radius:6px;" onmouseenter="this.style.color='#374151'" onmouseleave="this.style.color='#9ca3af'"><i data-lucide="pencil" style="width:13px;height:13px;"></i></button>
                 <button onclick="deleteCoord('${c.id}')" style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:3px;border-radius:6px;" onmouseenter="this.style.color='#ef4444'" onmouseleave="this.style.color='#fca5a5'"><i data-lucide="trash-2" style="width:13px;height:13px;"></i></button>`:''}
@@ -718,11 +718,11 @@
               </div>`:''}
               <div style="display:flex;align-items:center;gap:4px;background:#f3f4f6;border-radius:8px;padding:3px 9px;font-size:.72rem;color:#6b7280;">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                ~${type.duration} хв
+                ~${type.duration} мин
               </div>
               ${dynCnt?`<div style="display:flex;align-items:center;gap:4px;background:#fef3c7;border-radius:8px;padding:3px 9px;font-size:.72rem;color:#b45309;font-weight:600;">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                ${dynCnt} питань
+                ${dynCnt} вопросов
               </div>`:''}
               ${hasEscalated?`<div style="background:#fdf4ff;border-radius:8px;padding:3px 9px;font-size:.68rem;color:#7c3aed;">↑ ${window.t('escalationArrow2')||'ескалація'}</div>`:''}
             </div>
@@ -744,12 +744,12 @@
           <!-- Кнопки дій -->
           <div style="padding:.5rem .75rem .65rem;border-top:1px solid #f3f4f6;display:flex;gap:.4rem;">
             <button onclick="startCoordSession('${c.id}')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:.45rem;border-radius:10px;border:none;background:#22c55e;color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;transition:background .15s;" onmouseenter="this.style.background='#16a34a'" onmouseleave="this.style.background='#22c55e'">
-              <i data-lucide="play" style="width:13px;height:13px;"></i> Розпочати
+              <i data-lucide="play" style="width:13px;height:13px;"></i> Запустить
             </button>
-            <button onclick="openDynAgenda('${c.id}')" style="display:flex;align-items:center;justify-content:center;padding:.45rem .65rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;transition:all .15s;" onmouseenter="this.style.borderColor='#22c55e';this.style.color='#16a34a'" onmouseleave="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'" title="Порядок денний">
+            <button onclick="openDynAgenda('${c.id}')" style="display:flex;align-items:center;justify-content:center;padding:.45rem .65rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;transition:all .15s;" onmouseenter="this.style.borderColor='#22c55e';this.style.color='#16a34a'" onmouseleave="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'" title="Повестка дня">
               <i data-lucide="list" style="width:14px;height:14px;"></i>
             </button>
-            <button onclick="viewCoordHistory('${c.id}')" style="display:flex;align-items:center;justify-content:center;padding:.45rem .65rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;transition:all .15s;" onmouseenter="this.style.borderColor='#6366f1';this.style.color='#6366f1'" onmouseleave="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'" title="Протоколи">
+            <button onclick="viewCoordHistory('${c.id}')" style="display:flex;align-items:center;justify-content:center;padding:.45rem .65rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;transition:all .15s;" onmouseenter="this.style.borderColor='#6366f1';this.style.color='#6366f1'" onmouseleave="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'" title="Протоколы">
               ${si('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>')}
             </button>
           </div>
@@ -795,8 +795,8 @@
                   ${[['filterFunctions',ct('filterFunctions')],['filterProjects',ct('filterProjects')],['filterAssignees',ct('filterAssignees')],['filterOverdue',ct('filterOverdue')],['filterReview',ct('filterReview')]].map(([id,l]) => `<label style="display:flex;align-items:center;gap:.4rem;padding:.4rem .75rem;background:#f0fdf4;border-radius:10px;cursor:pointer;font-size:.85rem;border:1.5px solid #d1fae5;"><input type="checkbox" id="coord_${id}" style="width:15px;height:15px;accent-color:#22c55e;">${l}</label>`).join('')}
                 </div>
                 <div style="background:#f9fafb;border-radius:12px;padding:.75rem;border:1px solid #e5e7eb;display:flex;flex-direction:column;gap:.55rem;">
-                  <div style="font-size:.75rem;font-weight:700;color:#6b7280;">Розширені фільтри</div>
-                  ${prOpts ? `<div><label style="${ls}margin-bottom:.25rem;">${ct('filterProjectsLabel')}</label><select id="coord_filterProjectIds" multiple style="${ms}"><option value="">${ct('selectNone')}</option>${prOpts}</select><div style="font-size:.68rem;color:#9ca3af;margin-top:.2rem;">Ctrl/Cmd+click для вибору кількох</div></div>` : ''}
+                  <div style="font-size:.75rem;font-weight:700;color:#6b7280;">Расширенные фильтры</div>
+                  ${prOpts ? `<div><label style="${ls}margin-bottom:.25rem;">${ct('filterProjectsLabel')}</label><select id="coord_filterProjectIds" multiple style="${ms}"><option value="">${ct('selectNone')}</option>${prOpts}</select><div style="font-size:.68rem;color:#9ca3af;margin-top:.2rem;">Ctrl/Cmd+click для выбора нескольких</div></div>` : ''}
                   ${ptOpts ? `<div><label style="${ls}margin-bottom:.25rem;">${ct('filterProcessesLabel')}</label><select id="coord_filterProcessIds" multiple style="${ms}"><option value="">${ct('selectNone')}</option>${ptOpts}</select></div>` : ''}
                   ${crmStageOpts ? `<div><label style="${ls}margin-bottom:.25rem;">${ct('filterCrmStageLabel')}</label><select id="coord_filterCrmStage" style="${fs}cursor:pointer;"><option value="">${ct('selectNone')}</option>${crmStageOpts}</select></div>` : ''}
                 </div>
@@ -822,8 +822,8 @@
             <div style="font-size:.78rem;color:#6b7280;margin-bottom:.6rem;padding:.5rem .65rem;background:#f9fafb;border-radius:8px;">${ct('agendaHint')}</div>
             <div id="dynAgendaList" style="display:flex;flex-direction:column;gap:.3rem;margin-bottom:.6rem;min-height:40px;"></div>
             <div style="display:flex;gap:.4rem;">
-              <input id="dynAgendaInput" type="text" class="form-control" placeholder="Ваше питання..." style="flex:1;font-size:.85rem;" onkeydown="if(event.key==='Enter')addDynAgendaItem()">
-              <button onclick="addDynAgendaItem()" class="btn btn-success" style="white-space:nowrap;">Додати</button>
+              <input id="dynAgendaInput" type="text" class="form-control" placeholder="Ваш вопрос..." style="flex:1;font-size:.85rem;" onkeydown="if(event.key==='Enter')addDynAgendaItem()">
+              <button onclick="addDynAgendaItem()" class="btn btn-success" style="white-space:nowrap;">Добавить</button>
             </div>
           </div>
         </div>`;
@@ -853,7 +853,7 @@
               </div>
               <div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">
-                  <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;"><i data-lucide="check-square" style="width:12px;height:12px;margin-right:4px;"></i>Завдання</div>
+                  <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;"><i data-lucide="check-square" style="width:12px;height:12px;margin-right:4px;"></i>Задачи</div>
                   <button onclick="openAddTaskFromCoord()" style="background:#f0fdf4;border:1.5px solid #22c55e;color:#16a34a;border-radius:7px;padding:.18rem .5rem;font-size:.72rem;cursor:pointer;">+ Завдання</button>
                 </div>
                 <div id="coordTaskList" style="display:flex;flex-direction:column;gap:.28rem;max-height:230px;overflow-y:auto;margin-bottom:.9rem;"></div>
