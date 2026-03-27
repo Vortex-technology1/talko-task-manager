@@ -148,7 +148,7 @@
                             reviewActions.style.border = '2px solid #22c55e';
                             const label = document.getElementById('taskActionsLabel');
                             const btns = document.getElementById('taskActionsButtons');
-                            label.innerHTML = '<i data-lucide="shield-check" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання на перевірці</span>';
+                            label.innerHTML = `<i data-lucide="shield-check" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">${window.t('taskInReview2')}</span>`;
                             btns.innerHTML = `
                                 <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
                                     <i data-lucide="check-circle" class="icon"></i> ${window.t('acceptTask')}
@@ -165,7 +165,7 @@
                             const label = document.getElementById('taskActionsLabel');
                             const btns = document.getElementById('taskActionsButtons');
                             const statusLabel = task.status === 'new' ? window.t('statusNewTask') : window.t('statusInWork');
-                            label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Статус: ' + statusLabel + '</span>';
+                            label.innerHTML = `<i data-lucide="info" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">${window.t('statusWord')}: ${statusLabel}</span>`;
                             
                             const manageButtons = canManage ? `
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.85rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
@@ -186,7 +186,7 @@
                             const label = document.getElementById('taskActionsLabel');
                             const btns = document.getElementById('taskActionsButtons');
                             const statusLabel = task.status === 'new' ? window.t('statusNewTask') : window.t('statusInWork');
-                            label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#0284c7;"></i> <span style="color:#0284c7;">Статус: ' + statusLabel + '</span>';
+                            label.innerHTML = `<i data-lucide="info" class="icon icon-sm" style="color:#0284c7;"></i> <span style="color:#0284c7;">${window.t('statusWord')}: ${statusLabel}</span>`;
                             btns.innerHTML = `
                                 <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
                                     <i data-lucide="check-circle" class="icon"></i> ${window.t('acceptWork')}
@@ -202,7 +202,7 @@
                             reviewActions.style.border = '2px solid #f59e0b';
                             const label = document.getElementById('taskActionsLabel');
                             const btns = document.getElementById('taskActionsButtons');
-                            label.innerHTML = '<i data-lucide="clock" class="icon icon-sm" style="color:#d97706;"></i> <span style="color:#d97706;">Завдання на перевірці у керівника</span>';
+                            label.innerHTML = `<i data-lucide="clock" class="icon icon-sm" style="color:#d97706;"></i> <span style="color:#d97706;">${window.t('taskInReviewMgr')}</span>`;
                             btns.innerHTML = '<p style="font-size:0.85rem;color:#92400e;margin:0;">' + window.t('awaitConfirmNote') + '</p>';
                             if (typeof window.refreshIcons === 'function') window.refreshIcons();
                         } else if (canManage && task.status === 'done') {
@@ -211,7 +211,7 @@
                             reviewActions.style.border = '2px solid #86efac';
                             const label = document.getElementById('taskActionsLabel');
                             const btns = document.getElementById('taskActionsButtons');
-                            label.innerHTML = '<i data-lucide="check-circle-2" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання виконано</span>';
+                            label.innerHTML = `<i data-lucide="check-circle-2" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">${window.t('taskCompleted')}</span>`;
                             btns.innerHTML = `
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="reopenTaskFromModal()">
                                     <i data-lucide="rotate-ccw" class="icon"></i> ${window.t('returnToWork')}
@@ -229,7 +229,7 @@
                             crmBtn.style.display = 'flex';
                             crmBtn.dataset.dealId = task.crmDealId;
                             crmBtn.querySelector('.task-crm-name').textContent =
-                                task.crmClientName ? '👤 ' + task.crmClientName : 'Відкрити угоду CRM';
+                                task.crmClientName ? '👤 ' + task.crmClientName : window.t('openCrmDeal');
                         } else {
                             crmBtn.style.display = 'none';
                         }
@@ -462,12 +462,12 @@
             // Функція є — фільтруємо: спершу виконавці функції, потім інші (сірим)
             let opts = `<option value="">${window.t ? window.t('select') : 'Оберіть'}</option>`;
             if (funcUsers.length) {
-                opts += `<optgroup label="Виконавці функції">` +
+                opts += `<optgroup label="${window.t('functionExecutors')}">` +
                     funcUsers.map(u => `<option value="${esc(u.id)}" ${u.id === currentAssignee ? 'selected' : ''}>${esc(u.name || u.email)}</option>`).join('') +
                     `</optgroup>`;
             }
             if (otherUsers.length) {
-                opts += `<optgroup label="— Інші співробітники">` +
+                opts += `<optgroup label="${window.t('otherEmployees')}">` +
                     otherUsers.map(u => `<option value="${esc(u.id)}" ${u.id === currentAssignee ? 'selected' : ''}>${esc(u.name || u.email)}</option>`).join('') +
                     `</optgroup>`;
             }

@@ -27,12 +27,11 @@
             
             // Форматуємо дату
             const dayNames = getDayNames();
-            const monthGenitive = { ua: [window.t('janGen'), 'лютого', 'березня', window.t('aprilGen'), 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'],
-                ru: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
-                pl: ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia'],
-                en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'] };
-            const monthNames = monthGenitive[window.currentLang || window.currentLanguage || 'ua'] || monthGenitive['ua'];
+            const monthNames = [
+                window.t('janGen'), window.t('febGen'), window.t('marGen'), window.t('aprilGen'),
+                window.t('mayGen'), window.t('junGen'), window.t('julGen'), window.t('augGen'),
+                window.t('sepGen'), window.t('octGen'), window.t('novGen'), window.t('decGen')
+            ];
             
             const dateText = `${dayNames[todayDay]}, ${today.getDate()} ${monthNames[today.getMonth()]}`;
             document.getElementById('mydayDateText').textContent = dateText;
@@ -332,7 +331,7 @@
             
             return `
                 <div class="myday-item ${itemClass}" onclick="openMyDayTask('${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}')">
-                    <div class="myday-checkbox ${checkClass}" ${!task.review ? `onclick="event.stopPropagation(); toggleMyDayTask(event, '${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}', ${task.done || task.review})"` : 'onclick="event.stopPropagation();"'} ${task.review ? 'style="background:#8b5cf6;border-color:#8b5cf6;cursor:not-allowed;" title="На перевірці — очікуйте рішення постановника"' : ''}>
+                    <div class="myday-checkbox ${checkClass}" ${!task.review ? `onclick="event.stopPropagation(); toggleMyDayTask(event, '${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}', ${task.done || task.review})"` : 'onclick="event.stopPropagation();"'} ${task.review ? `style="background:#8b5cf6;border-color:#8b5cf6;cursor:not-allowed;" title="${window.t('inReviewAwait')}"` : ''}>
                         ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
                         ${task.review ? '<i data-lucide="eye" class="icon icon-sm" style="color:white;"></i>' : ''}
                     </div>
