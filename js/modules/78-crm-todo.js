@@ -324,12 +324,17 @@ function _renderRow(d, i) {
           white-space:nowrap;flex-shrink:0;">
           ${TI.phone} ${_esc(phone.replace(/(\+38|38)/,''))}</a>`:''}
 
-      <!-- Стадія -->
-      <div style="font-size:0.7rem;font-weight:600;color:${stageClr};
-        background:${stageClr}18;border-radius:4px;padding:3px 8px;
-        white-space:nowrap;flex-shrink:0;border:1px solid ${stageClr}33;">
-        ${_esc(stageLbl)}
-      </div>
+      <!-- Стадія — клікабельний дропдаун -->
+      <select onclick="event.stopPropagation()"
+        onchange="event.stopPropagation();_crmTodoChangeStage('${d.id}',this.value,this)"
+        style="font-size:0.72rem;font-weight:600;color:${stageClr};
+          background:${stageClr}18;border:1px solid ${stageClr}33;
+          border-radius:6px;padding:3px 6px;cursor:pointer;outline:none;
+          white-space:nowrap;flex-shrink:0;max-width:130px;">
+        ${stages.filter(s=>s.id!=='lost'&&s.id!=='won').map(s=>`<option value="${s.id}"${s.id===d.stage?' selected':''}>${_esc(s.label)}</option>`).join('')}
+        ${stages.find(s=>s.id==='won')?`<option value="won"${d.stage==='won'?' selected':''}>✅ ${_esc(stages.find(s=>s.id==='won').label)}</option>`:''}
+        ${stages.find(s=>s.id==='lost')?`<option value="lost"${d.stage==='lost'?' selected':''}>❌ ${_esc(stages.find(s=>s.id==='lost').label)}</option>`:''}
+      </select>
 
       ${daysInStage?`<div style="font-size:0.68rem;color:#9ca3af;flex-shrink:0;white-space:nowrap;">${daysInStage}</div>`:''}
       ${slaTag}
@@ -877,6 +882,35 @@ window._crmTodoSaveConsultation = async function(dealId) {
 };
 
 // ── Підтвердити консультацію ─────────────────────────────
+window._crmTodoChangeStage = async function(dealId, newStage, selectEl) {
+    const stages = (window.crm&&window.crm.pipeline&&window.crm.pipeline.stages)||[];
+    const stageObj = stages.find(s=>s.id===newStage);
+    const stageClr = stageObj?.color || '#6b7280';
+
+    // Оновлюємо колір select одразу
+    if (selectEl) {
+        selectEl.style.color = stageClr;
+        selectEl.style.background = stageClr + '18';
+        selectEl.style.borderColor = stageClr + '33';
+    }
+
+    try {
+        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).update({
+            stage: newStage,
+            stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        // Оновлюємо локальний стан
+        const deal = window.crm?.deals?.find(d=>d.id===dealId);
+        if (deal) deal.stage = newStage;
+        if (typeof showToast === 'function') showToast('Стадію змінено ✓', 'success');
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        // Відкочуємо select
+        if (selectEl) selectEl.value = window.crm?.deals?.find(d=>d.id===dealId)?.stage || newStage;
+    }
+};
+
 window._crmTodoConfirmConsultation = async function(dealId) {
     // Захист від подвійного кліку
     const deal = window.crm?.deals?.find(x => x.id === dealId);
