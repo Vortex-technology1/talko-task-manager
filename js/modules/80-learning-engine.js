@@ -5330,26 +5330,26 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;padding:1rem;margin-bottom:0.75rem;">
                         <div style="font-size:0.72rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:0.75rem;display:flex;align-items:center;gap:6px;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                            Профіль компанії — зберігається автоматично при збереженні
+                            ${isRu ? "Профиль компании — сохраняется автоматически при сохранении" : "Профіль компанії — зберігається автоматично при збереженні"}
                         </div>
                         <div style="display:flex;flex-direction:column;gap:0.6rem;">
                             <div>
-                                <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">Ціль компанії <span style="color:#ef4444;">*</span></label>
+                                <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">${isRu ? "Цель компании" : "Ціль компанії"} <span style="color:#ef4444;">*</span></label>
                                 <input id="learningCompanyGoal" type="text"
-                                    placeholder="напр. Стати лідером ринку медичних послуг у регіоні до 2027 року"
+                                    placeholder="${isRu ? 'напр. Стать лидером рынка медицинских услуг в регионе к 2027 году' : 'напр. Стати лідером ринку медичних послуг у регіоні до 2027 року'}"
                                     value="${(window._cachedCompanyProfile?.companyGoal||'').replace(/"/g,'&quot;')}"
                                     style="width:100%;padding:0.45rem 0.6rem;border:1px solid #86efac;border-radius:7px;font-size:0.85rem;box-sizing:border-box;background:#fff;">
                             </div>
                             <div>
-                                <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">Задум компанії</label>
+                                <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">${isRu ? "Замысел компании" : "Задум компанії"}</label>
                                 <textarea id="learningCompanyConcept" rows="2"
-                                    placeholder="Чому ви створили цей бізнес? Яка ваша місія?"
+                                    placeholder="${isRu ? 'Почему вы создали этот бизнес? Какова ваша миссия?' : 'Чому ви створили цей бізнес? Яка ваша місія?'}"
                                     style="width:100%;padding:0.45rem 0.6rem;border:1px solid #86efac;border-radius:7px;font-size:0.85rem;box-sizing:border-box;resize:vertical;background:#fff;">${(window._cachedCompanyProfile?.companyConcept||'')}</textarea>
                             </div>
                             <div>
-                                <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">Ідеальна картина компанії</label>
+                                <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">${isRu ? "Идеальная картина компании" : "Ідеальна картина компанії"}</label>
                                 <textarea id="learningCompanyIdeal" rows="2"
-                                    placeholder="Опишіть як виглядає ваш бізнес через 3-5 років у деталях..."
+                                    placeholder="${isRu ? 'Опишите как выглядит ваш бизнес через 3-5 лет в деталях...' : 'Опишіть як виглядає ваш бізнес через 3-5 років у деталях...'}"
                                     style="width:100%;padding:0.45rem 0.6rem;border:1px solid #86efac;border-radius:7px;font-size:0.85rem;box-sizing:border-box;resize:vertical;background:#fff;">${(window._cachedCompanyProfile?.companyIdeal||'')}</textarea>
                             </div>
                         </div>
@@ -5359,17 +5359,17 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     <div style="background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:10px;padding:1rem;margin-bottom:0.75rem;">
                         <div style="font-size:0.72rem;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.05em;margin-bottom:0.75rem;display:flex;align-items:center;gap:6px;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                            ЦКП — Цінний Кінцевий Продукт
+                            ${isRu ? "ЦКП — Ценный Конечный Продукт" : "ЦКП — Цінний Кінцевий Продукт"}
                         </div>
                         <div>
                             <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">
-                                Головний ЦКП вашої компанії <span style="color:#ef4444;">*</span>
+                                ${isRu ? "Главный ЦКП вашей компании" : "Головний ЦКП вашої компанії"} <span style="color:#ef4444;">*</span>
                             </label>
                             <textarea id="learningCompanyCKP" rows="3"
                                 placeholder="Приклад: «Власник бізнесу виходить з операційки за 65 днів»&#10;або: «Готовий об'єкт у встановлені терміни, з гарантією якості, без додаткових витрат понад кошторис»"
                                 style="width:100%;padding:0.45rem 0.6rem;border:1px solid #7dd3fc;border-radius:7px;font-size:0.85rem;box-sizing:border-box;resize:vertical;background:#fff;">${(window._cachedCompanyProfile?.companyCKP||'')}</textarea>
                             <div style="font-size:0.72rem;color:#6b7280;margin-top:0.3rem;">
-                                Формула: конкретна зміна + умови + без чого (якщо є)
+                                ${isRu ? 'Формула: конкретное изменение + условия + без чего (если есть)' : 'Формула: конкретна зміна + умови + без чого (якщо є)'}
                             </div>
                         </div>
                     </div>` : ''}
@@ -5386,13 +5386,24 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
                 <!-- Presentation launch button (lessons 10 and 11) -->
                 ${module.presOverlay ? (function(){
-                    var pLabels = {10:'Заняття 1 \u2014 \u0426\u0456\u043b\u0456, \u0437\u0430\u0434\u0443\u043c\u0438 \u0456 \u043c\u0430\u0439\u0431\u0443\u0442\u043d\u0454 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457', 11:'\u0417\u0430\u043d\u044f\u0442\u0442\u044f 2 \u2014 \u0426\u0456\u043d\u043d\u0438\u0439 \u043a\u0456\u043d\u0446\u0435\u0432\u0438\u0439 \u043f\u0440\u043e\u0434\u0443\u043a\u0442 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457', 12:'\u041d\u0430\u0440\u0430\u0434\u0430 \u2014 \u041e\u0440\u0433\u0441\u0445\u0435\u043c\u0430 \u043a\u043e\u043c\u043f\u0430\u043d\u0456\u0457'};
-                    var pSlides = {10:'46 \u0441\u043b\u0430\u0439\u0434\u0456\u0432', 11:'43 \u0441\u043b\u0430\u0439\u0434\u0438', 12:'33 \u0441\u043b\u0430\u0439\u0434\u0438'};
+                    var _isRu = getLearningLang() === 'ru';
+                    var pLabels = {
+                        10: _isRu ? 'Занятие 1 — Цели, замысел и будущее компании' : 'Заняття 1 — Цілі, задуми і майбутнє компанії',
+                        11: _isRu ? 'Занятие 2 — Ценный конечный продукт компании' : 'Заняття 2 — Цінний кінцевий продукт компанії',
+                        12: _isRu ? 'Совещание — Оргсхема компании' : 'Нарада — Оргсхема компанії'
+                    };
+                    var pSlides = {
+                        10: _isRu ? '46 слайдов' : '46 слайдів',
+                        11: _isRu ? '43 слайда' : '43 слайди',
+                        12: _isRu ? '33 слайда' : '33 слайди'
+                    };
                     var pFns = {10:'_l10Launch', 11:'_l11Launch', 12:'_l12Launch'};
-                    var pLabel = pLabels[moduleId] || '\u041f\u0440\u0435\u0437\u0435\u043d\u0442\u0430\u0446\u0456\u044f';
+                    var pLabel = pLabels[moduleId] || (_isRu ? 'Презентация' : 'Презентація');
                     var pSlide = pSlides[moduleId] || '';
                     var pFn = pFns[moduleId] || '_l10Launch';
-                    return '<div style="margin:0 1.25rem 1.25rem"><div style="background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 20px rgba(15,28,63,.2)"><div style="color:white"><div style="font-size:.9rem;font-weight:800;margin-bottom:.25rem">' + pLabel + '</div><div style="font-size:.76rem;color:#94a3b8">' + pSlide + ' \xb7 \u041f\u0440\u043e\u0432\u0435\u0434\u0456\u0442\u044c \u0456\u0437 \u043a\u043e\u043c\u0430\u043d\u0434\u043e\u044e \u043f\u0456\u0441\u043b\u044f \u0432\u0438\u0432\u0447\u0435\u043d\u043d\u044f \u0443\u0440\u043e\u043a\u0443</div></div><button onclick="window.' + pFn + '()" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(34,197,94,.35)">\u25b6 \u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0438 \u043f\u0440\u0435\u0437\u0435\u043d\u0442\u0430\u0446\u0456\u044e</button></div></div>';
+                    var pSubtitle = _isRu ? 'Провести с командой после изучения урока' : 'Провести із командою після вивчення уроку';
+                    var pBtn = _isRu ? '▶ Запустить презентацию' : '▶ Запустити презентацію';
+                    return '<div style="margin:0 1.25rem 1.25rem"><div style="background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 20px rgba(15,28,63,.2)"><div style="color:white"><div style="font-size:.9rem;font-weight:800;margin-bottom:.25rem">' + pLabel + '</div><div style="font-size:.76rem;color:#94a3b8">' + pSlide + ' · ' + pSubtitle + '</div></div><button onclick="window.' + pFn + '()" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(34,197,94,.35)">' + pBtn + '</button></div></div>';
                 })() : ''}
 
                 <!-- Complete button -->
