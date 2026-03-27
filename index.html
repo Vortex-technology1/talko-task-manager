@@ -1799,6 +1799,11 @@ document.addEventListener('mousedown', function(e) {
                                     <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.4rem;">
                                         Сохраняется автоматически при изменении галочки
                                     </div>
+
+                                    <!-- Зв'язки між модулями -->
+                                    <div id="moduleLinksContainer" style="margin-top:1rem;">
+                                        <!-- Рендериться через window.renderModuleLinksSettings('moduleLinksContainer') -->
+                                    </div>
                                 </div>
 
                                 <!-- Мета -->
@@ -2881,6 +2886,7 @@ document.addEventListener('mousedown', function(e) {
     <!-- Scripts (modular) -->
     <script src="js/modules/01-translations-v2.js?v=20260326v2" defer></script>
     <script src="js/modules/02-firebase-config.js?v=20260326v1" defer></script>
+    <script src="js/modules/00-module-links.js?v=20260327v1" defer></script>
     <script src="js/modules/03-app-state.js?v=20260314v2" defer></script>
     <script src="js/modules/04-google-calendar-config.js?v=20260316v2" defer></script>
     <script src="js/modules/05-auth-functions.js?v=20260327v1" defer></script>
@@ -4421,6 +4427,10 @@ document.addEventListener('mousedown', function(e) {
             });
             window.currentCompanyData = window.currentCompanyData || {};
             window.currentCompanyData.modules = mods;
+            // Рендер зв'язків між модулями
+            if (typeof window.renderModuleLinksSettings === 'function') {
+                window.renderModuleLinksSettings('moduleLinksContainer');
+            }
         } catch(e) { console.warn('loadCompanyProfile:', e.message); }
     };
 
