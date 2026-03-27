@@ -137,7 +137,7 @@
         };
         
         async function clearAllCompanyData() {
-            if (!isSuperAdmin) return;
+            if (!isSuperAdmin && !window.isDemoUser) return;
             if (!currentCompany) return;
             
             const confirmText = window.t('deleteAllConfirmText');
@@ -1106,7 +1106,7 @@
         // =====================
         
         function openDemoDataModal() {
-            if (!isSuperAdmin) {
+            if (!isSuperAdmin && !window.isDemoUser) {
                 showToast(window.t('superAdminOnly'), 'error');
                 return;
             }
