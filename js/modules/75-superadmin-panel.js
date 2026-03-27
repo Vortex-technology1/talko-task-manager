@@ -4,19 +4,30 @@
 // =============================================
 'use strict';
 const FEATURES = [
-    { key: 'statistics',       label: 'Статистика / Метрики' },
-    { key: 'processes',        label: 'Бізнес-процеси' },
-    { key: 'projects',         label: 'Проєкти' },
-    { key: 'bizStructure',     label: 'Структура бізнесу' },
-    { key: 'aiAssistants',     label: 'AI Асистенти' },
-    { key: 'fileAttachments',  label: 'Файлові вкладення' },
-    { key: 'timeTracking',     label: 'Трекер часу' },
-    { key: 'regularTasks',     label: 'Регулярні задачі' },
-    { key: 'kanban',           label: 'Kanban дошка' },
-    { key: 'controlDashboard', label: 'Дашборд контролю' },
-    { key: 'ownerDashboard',   label: 'Дашборд власника' },
-    { key: 'eveningDigest',    label: 'Вечірній дайджест (Telegram)' },
-    { key: 'weeklyReport',     label: 'Тижневий звіт (Telegram)' },
+    // ── Основні вкладки ──────────────────────────────────
+    { key: 'crm',              label: '🎯 CRM (Бізнес → CRM)',         group: 'tabs' },
+    { key: 'warehouse',        label: '📦 Склад',                       group: 'tabs' },
+    { key: 'booking',          label: '📅 Бронювання',                  group: 'tabs' },
+    { key: 'finance',          label: '💰 Фінанси',                     group: 'tabs' },
+    { key: 'marketing',        label: '📣 Маркетинг',                   group: 'tabs' },
+    { key: 'bots',             label: '🤖 Боти',                        group: 'tabs' },
+    { key: 'sites',            label: '🌐 Сайти',                       group: 'tabs' },
+    { key: 'coordination',     label: '🔗 Координація',                 group: 'tabs' },
+    { key: 'incidents',        label: '⚠️ Інциденти/Контроль',          group: 'tabs' },
+    // ── Додаткові модулі ─────────────────────────────────
+    { key: 'statistics',       label: '📊 Статистика / Метрики',        group: 'modules' },
+    { key: 'processes',        label: '⚙️ Бізнес-процеси',              group: 'modules' },
+    { key: 'projects',         label: '📁 Проєкти',                     group: 'modules' },
+    { key: 'bizStructure',     label: '🏗 Структура бізнесу',           group: 'modules' },
+    { key: 'aiAssistants',     label: '🧠 AI Асистенти',                group: 'modules' },
+    { key: 'regularTasks',     label: '🔄 Регулярні задачі',            group: 'modules' },
+    { key: 'kanban',           label: '📋 Kanban дошка',                group: 'modules' },
+    { key: 'controlDashboard', label: '🎛 Дашборд контролю',            group: 'modules' },
+    { key: 'ownerDashboard',   label: '👑 Дашборд власника',            group: 'modules' },
+    { key: 'fileAttachments',  label: '📎 Файлові вкладення',           group: 'modules' },
+    { key: 'timeTracking',     label: '⏱ Трекер часу',                 group: 'modules' },
+    { key: 'eveningDigest',    label: '🌙 Вечірній дайджест (TG)',      group: 'modules' },
+    { key: 'weeklyReport',     label: '📬 Тижневий звіт (TG)',          group: 'modules' },
 ];
 
 window.deleteEmptyCompanies = async function() {
@@ -1369,12 +1380,53 @@ window.openFeatureFlags = async function(companyId, companyName) {
     try {
         const doc = await firebase.firestore().collection('companies').doc(companyId).get();
         const features = doc.data()?.features || {};
-        const checks = FEATURES.map(f => `
-            <label style="display:flex;align-items:center;gap:0.75rem;padding:0.55rem 0;border-bottom:1px solid #f3f4f6;cursor:pointer;">
+
+        const renderGroup = (groupKey, groupLabel) => {
+            const items = FEATURES.filter(f => f.group === groupKey);
+            const checks = items.map(f => `
+            <label style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.6rem;border-radius:8px;cursor:pointer;transition:background .1s;"
+                onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background=''">
                 <input type="checkbox" ${features[f.key] !== false ? 'checked' : ''}
-                    data-feature="${f.key}" style="width:16px;height:16px;accent-color:#22c55e;cursor:pointer;">
-                <span style="font-size:0.88rem;">${f.label}</span>
+                    data-feature="${f.key}" style="width:16px;height:16px;accent-color:#22c55e;cursor:pointer;flex-shrink:0;">
+                <span style="font-size:0.85rem;">${f.label}</span>
             </label>`).join('');
+            return `
+            <div style="margin-bottom:1rem;">
+                <div style="font-size:0.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.35rem;padding:0 0.6rem;">${groupLabel}</div>
+                <div style="background:#f8fafc;border-radius:10px;padding:0.25rem 0.25rem;">${checks}</div>
+            </div>`;
+        };
+
+        document.getElementById('featureFlagsOverlay')?.remove();
+        const overlay = document.createElement('div');
+        overlay.id = 'featureFlagsOverlay';
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10030;display:flex;align-items:center;justify-content:center;padding:1rem;';
+        overlay.innerHTML = `
+            <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                    <div>
+                        <div style="font-size:1rem;font-weight:800;color:#111;">⚙️ Доступний функціонал</div>
+                        <div style="font-size:0.78rem;color:#6b7280;margin-top:2px;">${_saEsc(companyName)}</div>
+                    </div>
+                    <button onclick="document.getElementById('featureFlagsOverlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#9ca3af;">✕</button>
+                </div>
+                <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+                    <button onclick="toggleAllFeatures(true)" style="padding:0.3rem 0.8rem;background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">✓ Всі</button>
+                    <button onclick="toggleAllFeatures(false)" style="padding:0.3rem 0.8rem;background:#fef2f2;border:1px solid #fecaca;color:#ef4444;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">✕ Жодного</button>
+                </div>
+                <div id="featureChecksList">
+                    ${renderGroup('tabs', 'Основні вкладки')}
+                    ${renderGroup('modules', 'Додаткові модулі')}
+                </div>
+                <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+                    <button onclick="document.getElementById('featureFlagsOverlay').remove()" style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;">Скасувати</button>
+                    <button onclick="saveFeatureFlags('${companyId}')" style="flex:2;padding:0.6rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:700;">✓ Зберегти</button>
+                </div>
+            </div>`;
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+};
 
         document.getElementById('featureFlagsOverlay')?.remove();
         const overlay = document.createElement('div');

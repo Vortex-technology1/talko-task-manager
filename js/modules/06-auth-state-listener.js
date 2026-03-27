@@ -236,26 +236,57 @@
                         if (crmBtn) crmBtn.style.display = '';
                         if (typeof initCRMModule === 'function') initCRMModule();
                         hasBizFeature = true;
+                    } else {
+                        const crmBtn = document.getElementById('crmNavBtn');
+                        if (crmBtn) crmBtn.style.display = 'none';
                     }
                     if (window.isFeatureEnabled && window.isFeatureEnabled('marketing')) {
                         const mktBtn = document.getElementById('marketingNavBtn');
                         if (mktBtn) mktBtn.style.display = '';
                         hasBizFeature = true;
+                    } else {
+                        const mktBtn = document.getElementById('marketingNavBtn');
+                        if (mktBtn) mktBtn.style.display = 'none';
                     }
                     if (window.isFeatureEnabled && window.isFeatureEnabled('bots')) {
                         const botsBtn = document.getElementById('botsNavBtn');
                         if (botsBtn) botsBtn.style.display = '';
                         if (typeof initBotsModule === 'function') initBotsModule();
                         hasBizFeature = true;
+                    } else {
+                        const botsBtn = document.getElementById('botsNavBtn');
+                        if (botsBtn) botsBtn.style.display = 'none';
                     }
                     if (window.isFeatureEnabled && window.isFeatureEnabled('sites')) {
                         const sitesBtn = document.getElementById('sitesNavBtn');
                         if (sitesBtn) sitesBtn.style.display = '';
                         hasBizFeature = true;
+                    } else {
+                        const sitesBtn = document.getElementById('sitesNavBtn');
+                        if (sitesBtn) sitesBtn.style.display = 'none';
                     }
-                    // Склад — завжди доступний (display:none прибрано в HTML)
+
+                    // Склад — керується feature flag
+                    const fe = window.isFeatureEnabled;
+                    const _hideTabIfDisabled = (featureKey, navBtnId, tabBtnSelector) => {
+                        if (fe && fe(featureKey) === false) {
+                            const btn = navBtnId ? document.getElementById(navBtnId) : null;
+                            if (btn) btn.style.display = 'none';
+                            if (tabBtnSelector) {
+                                document.querySelectorAll(tabBtnSelector).forEach(b => b.style.display = 'none');
+                            }
+                        }
+                    };
+                    _hideTabIfDisabled('warehouse',    'warehouseNavBtn',    '[onclick*="switchTab(\'warehouse\')"]');
+                    _hideTabIfDisabled('finance',      'financeNavBtn',      '[onclick*="switchTab(\'finance\')"]');
+                    _hideTabIfDisabled('booking',      'bookingNavBtn',      '[onclick*="switchTab(\'booking\')"]');
+                    _hideTabIfDisabled('coordination', 'coordinationNavBtn', '[onclick*="switchTab(\'coordination\')"]');
+                    _hideTabIfDisabled('incidents',    'incidentsNavBtn',    '[onclick*="switchTab(\'incidents\')"]');
+                    _hideTabIfDisabled('projects',     'projectsNavBtn',     '[onclick*="switchTab(\'projects\')"]');
+                    _hideTabIfDisabled('processes',    'processesNavBtn',    '[onclick*="switchTab(\'processes\')"]');
+                    _hideTabIfDisabled('statistics',   'statisticsNavBtn',   '[onclick*="switchTab(\'statistics\')"]');
+
                     hasBizFeature = true;
-                    // bizNavBtn та всі biz кнопки видимі за замовчуванням (display:none прибрано в HTML)
 
                     // Відновлюємо останній активний таб після F5
                     try {
