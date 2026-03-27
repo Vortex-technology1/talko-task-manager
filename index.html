@@ -545,9 +545,7 @@ document.addEventListener('mousedown', function(e) {
                 <div class="auth-body">
                     <div id="authMessage" class="auth-message" style="display:none;"></div>
                     
-                    <!-- NO ACCESS -->
-                    <div id="noAccessCard" class="no-access-card" style="display:none;">
-                        <h3><i data-lucide="building-2" class="icon"></i> Створити компанію</h3>
+                    <!-- NO ACCESS -->\n                    <div id=\"noAccessCard\" class=\"no-access-card\" style=\"display:none;\">\n                        <h3><i data-lucide=\"building-2\" class=\"icon\"></i> <span data-i18n=\"createCompany\">Створити компанію</span></h3>
                         <p data-i18n="noCompanyAccess" style="font-size:0.9rem;color:#525252;margin-bottom:1rem;">Ваш email не прив'язаний до жодної компанії. Створіть нову або зверніться до адміністратора.</p>
                         <div id="selfRegForm">
                             <div class="auth-input-group">
@@ -563,8 +561,8 @@ document.addEventListener('mousedown', function(e) {
                             </button>
                         </div>
                         <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
-                            <a href="https://alextalko.com" target="_blank" class="btn" style="flex:1;text-align:center;font-size:0.85rem;"><i data-lucide="phone" class="icon icon-sm"></i> Підтримка</a>
-                            <button onclick="logout()" class="btn" style="flex:1;font-size:0.85rem;"><i data-lucide="refresh-cw" class="icon icon-sm"></i> Інший email</button>
+                            <a href="https://alextalko.com" target="_blank" class="btn" style="flex:1;text-align:center;font-size:0.85rem;"><i data-lucide="phone" class="icon icon-sm"></i> <span data-i18n="supportWord">Підтримка</span></a>
+                            <button onclick="logout()" class="btn" style="flex:1;font-size:0.85rem;"><i data-lucide="refresh-cw" class="icon icon-sm"></i> <span data-i18n="otherEmail">Інший email</span></button>
                         </div>
                     </div>
                     
@@ -2061,22 +2059,22 @@ document.addEventListener('mousedown', function(e) {
                     <div class="form-group"><label class="form-label" data-i18n="description">Опис</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту" data-i18n-placeholder="projectDescPh"></textarea></div>
                     <!-- Функції проекту -->
                     <div class="form-group">
-                        <label class="form-label"><i data-lucide="settings" class="icon icon-sm"></i> Функції задіяні в проекті</label>
+                        <label class="form-label"><i data-lucide="settings" class="icon icon-sm"></i> <span data-i18n="projectFunctionsLabel">Функції задіяні в проекті</span></label>
                         <div id="projectFunctionIds" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.6rem;background:#f8f9fa;border-radius:8px;max-height:140px;overflow-y:auto;"></div>
                     </div>
                     <div style="border-top:1px solid #e5e7eb;margin-top:0.75rem;padding-top:0.75rem;">
-                        <label class="form-label" style="font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;">Бюджет (план)</label>
+                        <label class="form-label" style="font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;" data-i18n="budgetPlan">Бюджет (план)</label>
                         <div class="form-grid">
-                            <div class="form-group"><label class="form-label" style="font-size:0.75rem;">Виручка (план)</label><input type="number" id="projectPlannedRevenue" class="form-input" placeholder="0"></div>
-                            <div class="form-group"><label class="form-label" style="font-size:0.75rem;">Матеріали (план)</label><input type="number" id="projectPlannedMaterialCost" class="form-input" placeholder="0"></div>
-                            <div class="form-group"><label class="form-label" style="font-size:0.75rem;">Робота (план)</label><input type="number" id="projectPlannedLaborCost" class="form-input" placeholder="0"></div>
+                            <div class="form-group"><label class="form-label" style="font-size:0.75rem;" data-i18n="revenuePlan">Виручка (план)</label><input type="number" id="projectPlannedRevenue" class="form-input" placeholder="0"></div>
+                            <div class="form-group"><label class="form-label" style="font-size:0.75rem;" data-i18n="materialsPlan">Матеріали (план)</label><input type="number" id="projectPlannedMaterialCost" class="form-input" placeholder="0"></div>
+                            <div class="form-group"><label class="form-label" style="font-size:0.75rem;" data-i18n="laborPlan">Робота (план)</label><input type="number" id="projectPlannedLaborCost" class="form-input" placeholder="0"></div>
                         </div>
-                        <div class="form-group"><label class="form-label" style="font-size:0.75rem;">Клієнт</label><input type="text" id="projectClientName" class="form-input" placeholder="Ім'я клієнта"></div>
+                        <div class="form-group"><label class="form-label" style="font-size:0.75rem;" data-i18n="clientWord">Клієнт</label><input type="text" id="projectClientName" class="form-input" placeholder="Ім'я клієнта" data-i18n-placeholder="clientNamePh"></div>
                     </div>
                     <input type="hidden" id="projectEditId" value="">
                     <div class="form-actions" style="margin-top:1rem;">
                         <button type="button" class="btn" onclick="closeModal('projectModal')" data-i18n="cancel">Скасувати</button>
-                        <button type="submit" class="btn btn-success"><i data-lucide="check" class="icon"></i> Зберегти</button>
+                        <button type="submit" class="btn btn-success"><i data-lucide="check" class="icon"></i> <span data-i18n="saveWord">Зберегти</span></button>
                     </div>
                 </form>
             </div>
