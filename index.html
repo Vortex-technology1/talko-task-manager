@@ -1679,17 +1679,17 @@ document.addEventListener('mousedown', function(e) {
                                 <div>
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.4rem;">
                                         <span data-i18n="companyNicheLabel">Ніша / Галузь бізнесу</span>
-                                        <span title="AI порівнює вашу маржу з бенчмарками ніші"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                        <span title="AI сравнивает вашу маржу с бенчмарками ниши"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                                     </label>
                                     <div style="display:flex;gap:0.5rem;">
                                         <select id="settingNiche"
                                             style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;background:#fff;">
-                                            <option value="">Оберіть нішу...</option>
-                                            <optgroup label="── Сервіс ──────────────">
-                                            <option value="beauty_salon">Б'юті / Салон краси / Косметологія</option>
-                                            <option value="medical">Медичний бізнес / Клініка</option>
-                                            <option value="dental">Стоматологія</option>
-                                            <option value="cleaning">Клінінг / Прибирання</option>
+                                            <option value="">Выберите нишу...</option>
+                                            <optgroup label="── Сервис ──────────────">
+                                            <option value="beauty_salon">Бьюти / Салон красоты / Косметология</option>
+                                            <option value="medical">Медицинский бизнес / Клиника</option>
+                                            <option value="dental">Стоматология</option>
+                                            <option value="cleaning">Клининг / Уборка</option>
                                             <option value="consulting">Консалтинг / Навчання / Коучинг</option>
                                             </optgroup>
                                             <optgroup label="── Виробництво / Будівництво ──">
@@ -1720,22 +1720,22 @@ document.addEventListener('mousedown', function(e) {
                                 <!-- Модулі системи -->
                                 <div>
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.5rem;">
-                                        Модулі системи
-                                        <span title="Вмикайте тільки ті модулі, які потрібні вашому бізнесу. Вимкнені модулі не відображаються в інтерфейсі."><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                        Модули системы
+                                        <span title="Включайте только те модули, которые нужны вашему бизнесу. Отключённые модули не отображаются в интерфейсе."><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                                     </label>
 
                                     <!-- Пресети -->
                                     <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem;">
-                                        <button onclick="window._applyModulePreset('service')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fdf2f8;color:#be185d;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#be185d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>Сервіс</button>
-                                        <button onclick="window._applyModulePreset('cleaning')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0fdf4;color:#166534;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M3 12h1m16 0h1M4.92 19.07l.7-.7M18.36 5.64l.7-.7"/><circle cx="12" cy="12" r="4"/></svg>Клінінг</button>
-                                        <button onclick="window._applyModulePreset('production')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#eff6ff;color:#1e40af;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a8 8 0 0 1 16 0v3"/></svg>Виробництво / Будівництво / Меблі</button>
+                                        <button onclick="window._applyModulePreset('service')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fdf2f8;color:#be185d;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#be185d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>Сервис</button>
+                                        <button onclick="window._applyModulePreset('cleaning')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0fdf4;color:#166534;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M3 12h1m16 0h1M4.92 19.07l.7-.7M18.36 5.64l.7-.7"/><circle cx="12" cy="12" r="4"/></svg>Клининг</button>
+                                        <button onclick="window._applyModulePreset('production')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#eff6ff;color:#1e40af;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a8 8 0 0 1 16 0v3"/></svg>Производство / Строительство / Мебель</button>
                                         <button onclick="window._applyModulePreset('consulting')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#faf5ff;color:#7c3aed;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Консалтинг</button>
                                         <button onclick="window._applyModulePreset('horeca')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fefce8;color:#a16207;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>HoReCa</button>
-                                        <button onclick="window._applyModulePreset('autoservice')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fff7ed;color:#c2410c;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Автосервіс</button>
-                                        <button onclick="window._applyModulePreset('logistics')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0f9ff;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Логістика</button>
-                                        <button onclick="window._applyModulePreset('retail')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fef9ee;color:#b45309;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Роздріб</button>
-                                        <button onclick="window._applyModulePreset('it')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0fdf4;color:#065f46;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#065f46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polyline points="9 10 12 13 15 10"/></svg>IT / Агенція</button>
-                                        <button onclick="window._applyModulePreset('food_production')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fff1f2;color:#be123c;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#be123c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v6a6 6 0 0 0 12 0V2"/><line x1="12" y1="14" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>Харч. виробництво</button>
+                                        <button onclick="window._applyModulePreset('autoservice')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fff7ed;color:#c2410c;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Автосервис</button>
+                                        <button onclick="window._applyModulePreset('logistics')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0f9ff;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Логистика</button>
+                                        <button onclick="window._applyModulePreset('retail')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fef9ee;color:#b45309;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Розница</button>
+                                        <button onclick="window._applyModulePreset('it')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#f0fdf4;color:#065f46;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#065f46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polyline points="9 10 12 13 15 10"/></svg>IT / Агентство</button>
+                                        <button onclick="window._applyModulePreset('food_production')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid #e2e8f0;border-radius:20px;background:#fff1f2;color:#be123c;font-size:0.72rem;font-weight:600;cursor:pointer;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#be123c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v6a6 6 0 0 0 12 0V2"/><line x1="12" y1="14" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>Пищ. производство</button>
                                     </div>
 
                                     <!-- Галочки модулів -->
@@ -1743,27 +1743,27 @@ document.addEventListener('mousedown', function(e) {
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-scheduling" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                            <span>Розклад співробітників</span>
+                                            <span>Расписание сотрудников</span>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-clientProfile" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                            <span>Розширений профіль клієнта</span>
+                                            <span>Расширенный профиль клиента</span>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-loyalty" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-                                            <span>Програма лояльності</span>
+                                            <span>Программа лояльности</span>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-subscriptions" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
-                                            <span>Абонементи / Сертифікати</span>
+                                            <span>Абонементы / Сертификаты</span>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-reviews" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                                            <span>Рейтинги та відгуки</span>
+                                            <span>Рейтинги и отзывы</span>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-winback" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
@@ -1773,12 +1773,12 @@ document.addEventListener('mousedown', function(e) {
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-notifications" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                                            <span>Нагадування клієнтам</span>
+                                            <span>Напоминания клиентам</span>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-estimates" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                                            <span>Кошторис / Норми</span>
+                                            <span>Смета / Нормы</span>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-warehouse" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
@@ -1788,16 +1788,16 @@ document.addEventListener('mousedown', function(e) {
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:0.8rem;background:#fafafa;">
                                             <input type="checkbox" id="mod-booking" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                                            <span>Онлайн-запис (Booking)</span>
+                                            <span>Онлайн-запись (Booking)</span>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;cursor:pointer;">
                                             <input type="checkbox" id="mod-sales" onchange="window._saveModules()" style="accent-color:#6366f1;width:14px;height:14px;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 0M4 4v16M4 20l16 0M20 4v16M9 4v16M4 9l16 0M4 14l11 0"/></svg>
-                                            <span style="font-size:0.8rem;">Реалізація / Каса</span>
+                                            <span style="font-size:0.8rem;">Реализация / Касса</span>
                                         </label>
                                     </div>
                                     <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.4rem;">
-                                        Зберігається автоматично при зміні галочки
+                                        Сохраняется автоматически при изменении галочки
                                     </div>
                                 </div>
 
@@ -1812,7 +1812,7 @@ document.addEventListener('mousedown', function(e) {
                                         </span>
                                     </label>
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
-                                        Приклад: «Допомагати власникам бізнесу вибудовувати систему управління, яка працює без їхньої постійної участі»
+                                        Пример: «Помогать владельцам бизнеса выстраивать систему управления, которая работает без их постоянного участия»
                                     </div>
                                     <textarea id="settingGoal" rows="2" placeholder="Мета вашої компанії..." data-i18n-placeholder="companyGoalPh"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
@@ -1825,7 +1825,7 @@ document.addEventListener('mousedown', function(e) {
                                         <span title="Що продаєте, як виробляєте, чому клієнт обирає саме вас. 1-4 речення"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                                     </label>
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
-                                        Приклад: «Будівельна компанія, що спеціалізується на зведенні житлових будинків "під ключ". Власна бригада без субпідряду, гарантія 5 років»
+                                        Пример: «Строительная компания, специализирующаяся на возведении жилых домов «под ключ». Собственная бригада без субподряда, гарантия 5 лет»
                                     </div>
                                     <textarea id="settingConcept" rows="3" placeholder="Задум вашої компанії..." data-i18n-placeholder="companyConceptPh"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
@@ -1842,7 +1842,7 @@ document.addEventListener('mousedown', function(e) {
                                         </span>
                                     </label>
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
-                                        Приклад: «Готовий об'єкт у встановлені терміни, з гарантією якості, без додаткових витрат понад кошторис»
+                                        Пример: «Готовый объект в установленные сроки, с гарантией качества, без дополнительных затрат сверх сметы»
                                     </div>
                                     <textarea id="settingCKP" rows="2" placeholder="ЦКП вашої компанії..." data-i18n-placeholder="companyVVPPh"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
@@ -1855,7 +1855,7 @@ document.addEventListener('mousedown', function(e) {
                                         <span title="Конкретні KPI: виручка, кількість клієнтів, маржа, команда. Реалістично на 1-3 роки"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                                     </label>
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
-                                        Приклад: «До кінця 2026: виручка 500к EUR/міс, 3 об'єкти паралельно, команда 25 осіб, маржа 20%+»
+                                        Пример: «К концу 2026: выручка 500к EUR/мес, 3 объекта параллельно, команда 25 человек, маржа 20%+»
                                     </div>
                                     <textarea id="settingIdealPicture" rows="3" placeholder="Ідеальна картина вашого бізнесу..." data-i18n-placeholder="companyIdealPh"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>

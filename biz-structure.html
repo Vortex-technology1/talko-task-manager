@@ -4823,7 +4823,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                     <div class="filter-menu" id="filterMenu">
                         <div class="filter-menu-header" data-text="filter.responsible">Відповідальний</div>
                         <div class="filter-list" id="filterList">
-                            <!-- Заповнюється динамічно -->
+                            <!-- Filled dynamically -->
                         </div>
                     </div>
                 </div>
@@ -4956,7 +4956,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                     </div>
                 </div>
 
-                <!-- Tools Menu - об'єднує експорт, копіювання і т.д. -->
+                <!-- Tools Menu - export, copy etc. -->
                 <div class="tools-dropdown">
                     <button class="tool-btn" id="toolsMenuBtn" type="button" title="Інструменти" data-title="toolbar.tools_title" aria-haspopup="true" aria-expanded="false" onclick="event.stopPropagation(); var m=document.getElementById('toolsMenu'); if(!m) return; if(m.style.display==='block'){m.style.display='none';}else{var r=this.getBoundingClientRect(); m.style.top=(r.bottom+4)+'px'; m.style.right=(window.innerWidth-r.right)+'px'; m.style.display='block';}">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -5139,7 +5139,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             <div class="mobile-panel-handle"></div>
             <div class="mobile-panel-header" data-text="ecosystem.header">Системи TALKO</div>
             <div class="mobile-panel-body" id="mobileEcosystemPanelBody">
-                <!-- Заповнюється динамічно з ecosystem-menu -->
+                <!-- Filled dynamically from ecosystem-menu -->
             </div>
         </div>
 
@@ -5147,7 +5147,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             <div class="mobile-panel-handle"></div>
             <div class="mobile-panel-header">AI Асистенти</div>
             <div class="mobile-panel-body" id="mobileAiPanelBody">
-                <!-- Заповнюється динамічно з ai-menu -->
+                <!-- Filled dynamically from ai-menu -->
             </div>
         </div>
 
@@ -5155,7 +5155,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             <div class="mobile-panel-handle"></div>
             <div class="mobile-panel-header" data-text="toolbar.support">Підтримка 24/7</div>
             <div class="mobile-panel-body" id="mobileSupportPanelBody">
-                <!-- Заповнюється динамічно з support-menu -->
+                <!-- Filled dynamically from support-menu -->
             </div>
         </div>
 
@@ -5163,7 +5163,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             <div class="mobile-panel-handle"></div>
             <div class="mobile-panel-header">Інструменти</div>
             <div class="mobile-panel-body" id="mobileToolsPanelBody">
-                <!-- Заповнюється динамічно -->
+                <!-- Filled dynamically -->
             </div>
         </div>
 
@@ -5198,7 +5198,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
 
                     <div class="form-group">
                         <label class="form-label" data-text="modal.card_color">Колір карточки</label>
-                        <div class="color-picker" id="colorPicker" role="radiogroup" aria-label="Вибір кольору">
+                        <div class="color-picker" id="colorPicker" role="radiogroup" aria-label="Выбор цвета">
                             <div class="color-option default selected" data-color="default" role="radio" aria-checked="true" tabindex="0"></div>
                             <div class="color-option blue" data-color="blue" role="radio" aria-checked="false" tabindex="-1"></div>
                             <div class="color-option green" data-color="green" role="radio" aria-checked="false" tabindex="-1"></div>
@@ -5236,7 +5236,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                     <div class="form-group">
                         <label class="form-label" data-text="modal.tags">Теги</label>
                         <div class="tags-input" id="tagsInput" role="list">
-                            <!-- Теги будуть додані тут динамічно -->
+                            <!-- Tags added dynamically -->
                         </div>
                         <div class="quick-tags" id="quickTags">
                             <span class="quick-tag" data-tag="urgent" data-text="tag.urgent"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> Терміново</span>
@@ -5250,7 +5250,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                     <div class="stats-form-group">
                         <label class="form-label" data-text="modal.statistics">Статистика</label>
                         <div id="statsContainer" role="list">
-                            <!-- Статистичні поля будуть додані тут динамічно -->
+                            <!-- Statistics fields added dynamically -->
                         </div>
                         <button type="button" class="add-stat-btn" id="addStatBtn" data-text="modal.add_metric">+ Додати метрику</button>
                         <small style="color: var(--gray-500); font-size: 12px; margin-top: 5px; display: block;" data-text="modal.stats_hint">
@@ -5261,7 +5261,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                     <div class="form-group">
                         <label class="form-label" data-text="modal.employees">Співробітники</label>
                         <div class="employees-input" id="employeesInput" role="list">
-                            <!-- Співробітники будуть додані тут динамічно -->
+                            <!-- Employees added dynamically -->
                         </div>
                     </div>
                 </form>
@@ -5273,7 +5273,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
         </div>
     </div>
 
-    <!-- Modal підтвердження видалення -->
+    <!-- Delete confirmation modal -->
     <div id="confirmModal" class="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmDesc">
         <div class="confirm-content">
             <div class="confirm-header">
@@ -5373,7 +5373,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                         <div class="group-color-option" data-color="yellow" style="background: rgba(236, 201, 75, 0.2); border-color: #ecc94b;"></div>
                     </div>
                 </div>
-                <p class="group-info" id="groupInfo">Виділено функцій: <strong>0</strong></p>
+                <p class="group-info" id="groupInfo" data-text-prefix="group.selected_prefix">Виділено функцій: <strong id="groupCount">0</strong></p>
             </div>
             <div class="group-modal-footer">
                 <button class="btn btn-secondary" id="groupCancelBtn" type="button" data-text="modal.cancel">Скасувати</button>
@@ -5382,7 +5382,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
         </div>
     </div>
 
-    <!-- Modal відновлення з backup -->
+    <!-- Restore from backup modal -->
     <div id="backupModal" class="modal backup-modal" role="dialog" aria-modal="true" aria-labelledby="backupModalTitle">
         <div class="modal-content backup-modal-content">
             <div class="modal-header">
@@ -5390,7 +5390,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             </div>
             <div class="modal-body">
                 <p class="backup-warning" data-text="backup.warning">
-                    ⚠️ Увага: відновлення замінить поточну структуру на обрану версію!
+                    ⚠️ Внимание: восстановление заменит текущую структуру выбранной версией!
                 </p>
                 <div class="backup-list-container">
                     <div id="backupList" class="backup-list">
@@ -5562,7 +5562,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             'backup.restore': 'Відновити з backup',
             'backup.restore_desc': 'Попередні версії структури',
             'backup.modal_title': '🔄 Відновлення з backup',
-            'backup.warning': '⚠️ Увага: відновлення замінить поточну структуру на обрану версію!',
+            'backup.warning': '⚠️ Внимание: восстановление заменит текущую структуру выбранной версией!',
             'backup.loading': 'Завантаження списку backup...',
             'ecosystem.header': 'Системи TALKO',
             'ecosystem.architecture.title': 'Архітектура бізнесу',
@@ -6842,7 +6842,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     // === LOADING OVERLAY ===
     let loadingTimeout = null;
     
-    function showLoading(message = 'Завантаження...') {
+    function showLoading(message = 'Загрузка...') {
         const overlay = Utils.getElement('loadingOverlay');
         const text = Utils.getElement('loadingText');
         if (overlay) {
@@ -8854,7 +8854,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                          style="background: ${getStatColorValue(stat.color)}"
                          tabindex="0"
                          role="button"
-                         aria-label="Вибрати колір"></div>
+                         aria-label="Выбрать цвет"></div>
                     <div class="stat-color-options" id="colorOptions${Utils.escapeHtml(stat.id)}">
                         ${STAT_COLORS.map(color => `
                             <div class="stat-color-option ${color}" 
@@ -8868,21 +8868,21 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                 <input type="text" 
                        class="stat-name-input" 
                        value="${Utils.escapeHtml(stat.name)}" 
-                       placeholder="Назва"
+                       placeholder="Название"
                        data-stat-id="${Utils.escapeHtml(stat.id)}" 
                        data-field="name"
                        maxlength="50">
                 <input type="text" 
                        class="stat-value-input" 
                        value="${Utils.escapeHtml(stat.value)}" 
-                       placeholder="Значення"
+                       placeholder="Значение"
                        data-stat-id="${Utils.escapeHtml(stat.id)}" 
                        data-field="value"
                        maxlength="20">
                 <button type="button" 
                         class="remove-stat-btn" 
                         data-stat-id="${Utils.escapeHtml(stat.id)}"
-                        aria-label="Видалити метрику"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                        aria-label="Удалить метрику"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             `;
             
             setupStatDragAndDrop(row, stat);
@@ -8970,7 +8970,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             tag.className = 'employee-input-tag';
             tag.innerHTML = `
                 ${Utils.escapeHtml(employee)}
-                <button type="button" class="remove-employee" data-index="${index}" aria-label="Видалити ${Utils.escapeHtml(employee)}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                <button type="button" class="remove-employee" data-index="${index}" aria-label="Удалить ${Utils.escapeHtml(employee)}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             `;
             container.appendChild(tag);
         });
@@ -9447,7 +9447,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             // Оновлюємо текст кнопки
             const themeText = Utils.getElement('themeToggleText');
             if (themeText) {
-                themeText.textContent = State.darkMode ? 'Світла тема' : 'Темна тема';
+                themeText.textContent = State.darkMode ? (translations[State.currentLanguage]?.['menu.light_theme'] || 'Светлая тема') : (translations[State.currentLanguage]?.['menu.dark_theme'] || 'Тёмная тема');
             }
         });
         
