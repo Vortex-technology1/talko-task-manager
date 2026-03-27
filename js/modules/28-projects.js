@@ -24,7 +24,7 @@
                 const selectedIds = project?.functionIds || [];
                 funcContainer.innerHTML = activeFuncs.length
                     ? activeFuncs.map(f => `<label class="assignee-checkbox"><input type="checkbox" value="${esc(f.id)}" ${selectedIds.includes(f.id) ? 'checked' : ''}> ${esc(f.name)}</label>`).join('')
-                    : `<span style="color:#9ca3af;font-size:0.82rem;">Немає функцій — спочатку створіть функції</span>`;
+                    : `<span style="color:#9ca3af;font-size:0.82rem;">Нет функций — сначала создайте функции</span>`;
             }
             
             const color = project?.color || '#22c55e';
@@ -269,9 +269,9 @@
                 if (projects.length > 0 && statusFilter) {
                     emptyState.innerHTML = `<div style="text-align:center;padding:2rem;">
                         <div style="margin-bottom:0.5rem;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-                        <div style="font-weight:600;">Немає проєктів зі статусом "${statusFilter === 'active' ? 'Активний' : statusFilter === 'completed' ? 'Завершений' : 'Пауза'}"</div>
-                        <div style="color:#9ca3af;font-size:0.85rem;margin:0.5rem 0;">Всього проєктів: ${projects.length}</div>
-                        <button class="btn btn-small" onclick="document.getElementById('projectStatusFilter').value='';renderProjects();" style="margin-top:0.5rem;">Показати всі</button>
+                        <div style="font-weight:600;">Нет проектов со статусом "${statusFilter === 'active' ? 'Активный' : statusFilter === 'completed' ? 'Завершённый' : 'Пауза'}"</div>
+                        <div style="color:#9ca3af;font-size:0.85rem;margin:0.5rem 0;">Всего проектов: ${projects.length}</div>
+                        <button class="btn btn-small" onclick="document.getElementById('projectStatusFilter').value='';renderProjects();" style="margin-top:0.5rem;">Показать все</button>
                     </div>`;
                 }
                 return;
@@ -402,7 +402,7 @@
             container.innerHTML = `
                 <div class="project-timeline" style="overflow-x:auto;">
                     <div style="min-width:800px;">
-                        <div class="hide-desktop" style="text-align:center;font-size:0.7rem;color:#9ca3af;padding:4px;">← Прокрутіть вправо →</div>
+                        <div class="hide-desktop" style="text-align:center;font-size:0.7rem;color:#9ca3af;padding:4px;">← Прокрутите вправо →</div>
                         <div class="timeline-header">${headerHTML}</div>
                         <div style="position:relative;">
                             <div style="position:absolute;left:calc(180px + (100% - 180px) * ${todayPctNum / 100});top:0;bottom:0;width:2px;background:#ef4444;opacity:0.5;z-index:1;"></div>
@@ -570,7 +570,7 @@
                         </div>
                         <div style="font-size:0.8rem;color:#9a3412;">
                             ${s.deadlineConflicts.slice(0, 3).map(t => `• ${esc(t.title)} — ${formatDateShort(t.deadlineDate)}`).join('<br>')}
-                            ${s.deadlineConflicts.length > 3 ? `<br>...та ще ${s.deadlineConflicts.length - 3}` : ''}
+                            ${s.deadlineConflicts.length > 3 ? `<br>...и ещё ${s.deadlineConflicts.length - 3}` : ''}
                         </div>
                     </div>
                 </div>` : ''}
@@ -583,7 +583,7 @@
                     </button>
                     <button class="calendar-view-btn" onclick="switchProjectView('stages', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                        Етапи
+                        Этапы
                     </button>
                     <button class="calendar-view-btn" onclick="switchProjectView('gantt', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="4" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
@@ -607,7 +607,7 @@
                 <div id="projectStagesView" style="display:none;">${typeof renderStagesList === 'function' ? renderStagesList(projectId) : '<div>Loading stages...</div>'}</div>
                 <div id="projectGanttView" style="display:none;">${renderProjectGantt(s.tasks, project)}</div>
                 <div id="projectStandardsView" style="display:none;"><div id="standardsListContainer"></div></div>
-                <div id="projectFinanceView" style="display:none;"><div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження фінансів...</div></div>
+                <div id="projectFinanceView" style="display:none;"><div style="text-align:center;color:#9ca3af;padding:2rem;">Загрузка финансов...</div></div>
                 <div id="projectEstimateView" style="display:none;"><div id="projectEstimateContent"></div></div>
             `;
             
@@ -638,7 +638,7 @@
                             window._renderProjectFinance(pid, finView);
                         } else {
                             // 98-finance.js ще не завантажений — завантажуємо і рендеримо
-                            finView.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading') || 'Завантаження фінансів...'}</div>`;
+                            finView.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading') || 'Загрузка финансов...'}</div>`;
                             if (typeof lazyLoad === 'function') {
                                 lazyLoad('finance', function() {
                                     // Перевіряємо що вкладка ще активна після lazy load
@@ -675,7 +675,7 @@
                 .filter(t => t.deadlineDate)
                 .map(t => new Date(t.deadlineDate));
             
-            if (dates.length === 0) return '<div style="text-align:center;color:#999;padding:2rem;">Завдання без дат — Gantt неможливий</div>';
+            if (dates.length === 0) return '<div style="text-align:center;color:#999;padding:2rem;">Задачи без дат — Gantt невозможен</div>';
             
             // Add today to range
             dates.push(today);
@@ -738,7 +738,7 @@
                 if (!task.deadlineDate) {
                     return `<div style="display:flex;align-items:center;height:36px;border-bottom:1px solid #f3f4f6;">
                         <div style="width:100%;padding:0 8px;font-size:0.75rem;color:#d1d5db;font-style:italic;">
-                            ${esc(task.title)} — без дати
+                            ${esc(task.title)} — без даты
                         </div>
                     </div>`;
                 }
@@ -783,7 +783,7 @@
                     <div style="display:flex;">
                         <!-- Labels column -->
                         <div style="width:200px;min-width:200px;border-right:1px solid #e5e7eb;flex-shrink:0;">
-                            <div style="height:54px;display:flex;align-items:center;padding:0 8px;font-size:0.75rem;font-weight:600;color:#6b7280;border-bottom:1px solid #e5e7eb;">Завдання</div>
+                            <div style="height:54px;display:flex;align-items:center;padding:0 8px;font-size:0.75rem;font-weight:600;color:#6b7280;border-bottom:1px solid #e5e7eb;">Задачи</div>
                             ${labelsHTML}
                         </div>
                         <!-- Chart area -->
@@ -834,7 +834,7 @@
             if (currentProject && !showProjects.find(p => p.id === currentProject.id)) {
                 showProjects.push(currentProject);
             }
-            sel.innerHTML = '<option value="" data-i18n="noProject">Без проєкту</option>' + 
+            sel.innerHTML = '<option value="">Без проекта</option>' + 
                 showProjects.map(p => {
                     const suffix = p.status !== 'active' ? ` (${p.status === 'completed' ? window.t('completedProjectStatus') : window.t('pausedProjectStatus')})` : '';
                     return `<option value="${esc(p.id)}">${esc(p.name)}${suffix}</option>`;
@@ -847,7 +847,7 @@
             const sel = document.getElementById('taskStage');
             if (!sel) return;
             if (!projectId) {
-                sel.innerHTML = '<option value="">Без етапу</option>';
+                sel.innerHTML = '<option value="">Без этапа</option>';
                 sel.disabled = true;
                 return;
             }
@@ -855,7 +855,7 @@
             // Load stages async
             if (typeof window.loadProjectStages === 'function') {
                 window.loadProjectStages(projectId).then(stages => {
-                    sel.innerHTML = '<option value="">Без етапу</option>' +
+                    sel.innerHTML = '<option value="">Без этапа</option>' +
                         stages.sort((a,b) => (a.order||0)-(b.order||0)).map(s => {
                             const statusIcon = s.status === 'done' ? '&check;' : s.status === 'blocked' ? '!' : s.status === 'in_progress' ? '&rsaquo;' : '&circ;';
                             return `<option value="${s.id}" ${s.id === selectedStageId ? 'selected' : ''}>${statusIcon} ${s.order}. ${esc(s.name)}</option>`;
@@ -1485,7 +1485,7 @@ function _renderProjectEstimateTab(projectId) {
     if (typeof window.initEstimateModule === 'undefined') {
         container.innerHTML = `<div style="text-align:center;padding:2rem;color:#9ca3af;">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin-bottom:0.75rem;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-            <div>Завантаження модуля кошторису...</div>
+            <div>Загрузка модуля сметы...</div>
         </div>`;
         lazyLoad('estimate', function() {
             window.initEstimateModule?.();
@@ -1495,7 +1495,7 @@ function _renderProjectEstimateTab(projectId) {
     }
 
     const estimates = (window._projectEstimates || []).filter(e => e.projectId === projectId);
-    const statusLabel = { draft:'Чернетка', approved:'Затверджено', in_progress:'В роботі', done:'Виконано' };
+    const statusLabel = { draft:'Черновик', approved:'Утверждено', in_progress:'В работе', done:'Выполнено' };
     const statusColor = { draft:'#f59e0b', approved:'#3b82f6', in_progress:'#8b5cf6', done:'#10b981' };
 
     const icoClipboard = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>`;
@@ -1509,11 +1509,11 @@ function _renderProjectEstimateTab(projectId) {
         <div style="padding:1.5rem;">
             <div style="text-align:center;padding:2.5rem 1rem;border:2px dashed #e5e7eb;border-radius:12px;">
                 <div style="display:flex;justify-content:center;margin-bottom:0.75rem;opacity:0.3;">${icoClipboard.replace('16','40')}</div>
-                <div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Кошторис не прив'язаний</div>
-                <div style="font-size:0.83rem;color:#9ca3af;margin-bottom:1.25rem;">Створіть кошторис і прив'яжіть до цього проекту</div>
+                <div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Смета не привязана</div>
+                <div style="font-size:0.83rem;color:#9ca3af;margin-bottom:1.25rem;">Создайте смету и привяжите к этому проекту</div>
                 <button onclick="window._openEstimateForProject('${projectId}')"
                     style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.25rem;background:#3b82f6;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">
-                    ${icoPlus} Створити кошторис
+                    ${icoPlus} Создать смету
                 </button>
             </div>
         </div>`;
@@ -1531,16 +1531,16 @@ function _renderProjectEstimateTab(projectId) {
             style="background:white;border:1px solid #e5e7eb;border-radius:10px;padding:1rem 1.25rem;cursor:pointer;margin-bottom:0.6rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;"
             onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
             <div style="flex:1;min-width:160px;">
-                <div style="font-weight:600;font-size:0.92rem;color:#111827;">${e.title||'Без назви'}</div>
-                <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.15rem;">${e.sections?.length||0} типів робіт</div>
+                <div style="font-weight:600;font-size:0.92rem;color:#111827;">${e.title||'Без названия'}</div>
+                <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.15rem;">${e.sections?.length||0} типов работ</div>
             </div>
             <span style="padding:0.2rem 0.6rem;border-radius:20px;font-size:0.73rem;font-weight:600;background:${color}18;color:${color};">${status}</span>
             <div style="text-align:right;">
-                <div style="font-size:0.75rem;color:#6b7280;">Бюджет матеріалів</div>
+                <div style="font-size:0.75rem;color:#6b7280;">Бюджет материалов</div>
                 <div style="font-weight:700;color:#111827;font-size:0.95rem;">${fmt(budget)}</div>
                 ${deficit>0
-                    ? `<div style="font-size:0.73rem;color:#ef4444;display:flex;align-items:center;gap:0.2rem;justify-content:flex-end;">${icoWarning} докупити: ${fmt(deficit)}</div>`
-                    : `<div style="font-size:0.73rem;color:#10b981;display:flex;align-items:center;gap:0.2rem;justify-content:flex-end;">${icoCheck} матеріалів достатньо</div>`}
+                    ? `<div style="font-size:0.73rem;color:#ef4444;display:flex;align-items:center;gap:0.2rem;justify-content:flex-end;">${icoWarning} докупить: ${fmt(deficit)}</div>`
+                    : `<div style="font-size:0.73rem;color:#10b981;display:flex;align-items:center;gap:0.2rem;justify-content:flex-end;">${icoCheck} материалов достаточно</div>`}
             </div>
         </div>`;
     }).join('');
@@ -1548,10 +1548,10 @@ function _renderProjectEstimateTab(projectId) {
     container.innerHTML = `
     <div style="padding:1.5rem;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-            <div style="font-weight:600;font-size:0.95rem;color:#374151;display:flex;align-items:center;gap:0.4rem;">${icoClipboard} Кошториси проекту (${estimates.length})</div>
+            <div style="font-weight:600;font-size:0.95rem;color:#374151;display:flex;align-items:center;gap:0.4rem;">${icoClipboard} Сметы проекта (${estimates.length})</div>
             <button onclick="window._openEstimateForProject('${projectId}')"
                 style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;background:#3b82f6;color:white;border:none;border-radius:7px;font-size:0.82rem;font-weight:600;cursor:pointer;">
-                ${icoPlus} Новий кошторис
+                ${icoPlus} Новая смета
             </button>
         </div>
         ${cards.replace(/onclick="openEstimateModal/g, `onclick="event.stopPropagation();return false;" data-eid="`).replace(/'\)"\s+style=/g, `'" style=`)}
@@ -1559,18 +1559,18 @@ function _renderProjectEstimateTab(projectId) {
         <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;">
             <button onclick="openEstimateModal('${e.id}')" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;border:1px solid #e5e7eb;border-radius:7px;background:white;font-size:0.8rem;cursor:pointer;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                ${e.title||'Кошторис'}
+                ${e.title||'Смета'}
             </button>
             <button onclick="exportEstimatePDF('${e.id}')" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;border:1px solid #e5e7eb;border-radius:7px;background:white;font-size:0.8rem;cursor:pointer;">
                 ${icoPDF} PDF
             </button>
             <button onclick="syncEstimateWithWarehouse('${e.id}')" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;border:1px solid #e5e7eb;border-radius:7px;background:white;font-size:0.8rem;cursor:pointer;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                Оновити склад
+                Обновить склад
             </button>
             ${e.status === 'approved' ? `<button onclick="writeOffEstimateMaterials('${e.id}')" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;border:1px solid #fecaca;border-radius:7px;background:#fef2f2;color:#dc2626;font-size:0.8rem;cursor:pointer;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 8.5V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.5"/><path d="M22 8.5H2"/><path d="M10 12h4"/><rect x="2" y="2" width="20" height="6.5" rx="1"/></svg>
-                Списати матеріали
+                Списать материалы
             </button>` : ''}
         </div>`).join('')}
     </div>`;
@@ -1620,32 +1620,32 @@ function _buildProcessHowto() {
       <div style="display:flex;justify-content:flex-end;">
         <button onclick="toggleProcessHowto()"
           style="padding:0.35rem 0.85rem;border:1px solid #e5e7eb;border-radius:7px;background:white;font-size:0.82rem;cursor:pointer;color:#6b7280;">
-          &times; Закрити
+          &times; Закрыть
         </button>
       </div>
 
       <!-- ЗАГОЛОВОК -->
       <div style="background:linear-gradient(135deg,#1a1f3c,#4f46e5);border-radius:14px;padding:1.5rem;color:white;">
-        <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">Модуль Процеси — що це і навіщо</div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">Модуль Процессы — что это и зачем</div>
         <div style="font-size:0.85rem;line-height:1.7;opacity:0.92;">
-          Процеси вирішують одну головну проблему: <b>власник пояснює одне і те ж "з нуля" кожного разу.</b>
-          Новий клієнт — знову пояснюєш кожному хто що робить. Новий співробітник — знову показуєш кожен крок.
-          Регулярна задача — знову хтось щось забуває. Процеси — це шаблони послідовності дій.
-          Одного разу налаштував → запускаєш кліком → всі задачі створюються автоматично з виконавцями і дедлайнами.
+          Процессы решают одну главную проблему: <b>владелец объясняет одно и то же «с нуля» каждый раз.</b>
+          Новый клиент — снова объясняешь каждому кто что делает. Новый сотрудник — снова показываешь каждый шаг.
+          Регулярная задача — снова кто-то что-то забывает. Процессы — это шаблоны последовательности действий.
+          Один раз настроил → запускаешь кликом → все задачи создаются автоматически с исполнителями и дедлайнами.
         </div>
       </div>
 
       <!-- ПРОБЛЕМИ -->
       <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
-        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Які проблеми вирішує</div>
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Какие проблемы решает</div>
         <div style="display:flex;flex-direction:column;gap:0.5rem;">
           ${[
-            ['Кожного разу пояснюєш "з нуля"', 'Час власника витрачається на пояснення замість розвитку', 'Шаблон процесу описує кожен крок один раз — далі система сама розподіляє задачі'],
-            ['Менеджер щось забув або переплутав порядок', 'Клієнт отримав неповну послугу, помилка в процесі', 'Система не дає перейти на наступний крок поки попередній не виконано'],
-            ['Не знають хто зараз що робить по кожному клієнту', 'Власник питає всіх по черзі — втрачає час', 'Dashboard процесів — бачиш статус кожного клієнта в одному екрані'],
-            ['Регулярні процеси виконуються по-різному різними людьми', 'Якість непередбачувана, клієнт отримує різний сервіс', 'Один шаблон для всіх — однаковий результат незалежно від виконавця'],
-            ['Не знають скільки часу займає кожен крок', 'Не можна планувати завантаження команди', 'SLA на кожен крок — система рахує дедлайни автоматично'],
-            ['При звільненні співробітника процеси "зникають"', 'Новий не знає як правильно — починаємо з нуля', 'Шаблон залишається в системі — новий бере і виконує за інструкцією'],
+            ['Каждый раз объясняешь «с нуля»', 'Время владельца тратится на объяснения вместо развития', 'Шаблон процесса описывает каждый шаг один раз — дальше система сама распределяет задачи'],
+            ['Менеджер что-то забыл или перепутал порядок', 'Клиент получил неполную услугу, ошибка в процессе', 'Система не даёт перейти на следующий шаг пока предыдущий не выполнен'],
+            ['Не знают кто сейчас что делает по каждому клиенту', 'Владелец спрашивает всех по очереди — теряет время', 'Dashboard процессов — видишь статус каждого клиента на одном экране'],
+            ['Регулярные процессы выполняются по-разному разными людьми', 'Качество непредсказуемо, клиент получает разный сервис', 'Один шаблон для всех — одинаковый результат независимо от исполнителя'],
+            ['Не знают сколько времени занимает каждый шаг', 'Нельзя планировать загрузку команды', 'SLA на каждый шаг — система считает дедлайны автоматически'],
+            ['При увольнении сотрудника процессы «исчезают»', 'Новый не знает как правильно — начинаем с нуля', 'Шаблон остаётся в системе — новый берёт и выполняет по инструкции'],
           ].map(([pain, impact, fix]) => `
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid #f3f4f6;border-radius:10px;overflow:hidden;font-size:0.8rem;">
             <div style="padding:0.65rem 0.85rem;background:#fef2f2;border-right:1px solid #f3f4f6;">
@@ -1653,11 +1653,11 @@ function _buildProcessHowto() {
               <div style="color:#7f1d1d;line-height:1.5;">${pain}</div>
             </div>
             <div style="padding:0.65rem 0.85rem;background:#fff7ed;border-right:1px solid #f3f4f6;">
-              <div style="font-size:0.68rem;font-weight:700;color:#ea580c;margin-bottom:2px;">НАСЛІДОК</div>
+              <div style="font-size:0.68rem;font-weight:700;color:#ea580c;margin-bottom:2px;">ПОСЛЕДСТВИЕ</div>
               <div style="color:#7c2d12;line-height:1.5;">${impact}</div>
             </div>
             <div style="padding:0.65rem 0.85rem;background:#f0fdf4;">
-              <div style="font-size:0.68rem;font-weight:700;color:#16a34a;margin-bottom:2px;">РІШЕННЯ</div>
+              <div style="font-size:0.68rem;font-weight:700;color:#16a34a;margin-bottom:2px;">РЕШЕНИЕ</div>
               <div style="color:#14532d;line-height:1.5;">${fix}</div>
             </div>
           </div>`).join('')}
@@ -1666,43 +1666,43 @@ function _buildProcessHowto() {
 
       <!-- ОСНОВНА ЛОГІКА -->
       <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
-        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Основна логіка — як це працює</div>
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Основная логика — как это работает</div>
         <div style="background:#f8fafc;border-radius:10px;padding:1rem;margin-bottom:1rem;font-family:monospace;font-size:0.8rem;line-height:2;color:#1e293b;">
-          ШАБЛОН (один раз) → ЗАПУСК (кожен клієнт) → АВТОМАТИЧНЕ ВИКОНАННЯ<br>
+          ШАБЛОН (один раз) → ЗАПУСК (каждый клиент) → АВТОМАТИЧЕСКОЕ ВЫПОЛНЕНИЕ<br>
           ─────────────────────────────────────────────────────────────<br>
-          Шаблон: Прийом нового клієнта<br>
-          Крок 1: Менеджер → Первинний дзвінок (SLA: 2 год)<br>
-          Крок 2: Юрист → Підписання договору (SLA: 1 день)<br>
-          Крок 3: Бухгалтер → Виставлення рахунку (SLA: 4 год)<br>
-          Крок 4: Технічний відділ → Налаштування доступу (SLA: 8 год)<br>
+          Шаблон: Приём нового клиента<br>
+          Шаг 1: Менеджер → Первичный звонок (SLA: 2 часа)<br>
+          Шаг 2: Юрист → Подписание договора (SLA: 1 день)<br>
+          Шаг 3: Бухгалтер → Выставление счёта (SLA: 4 часа)<br>
+          Шаг 4: Технический отдел → Настройка доступа (SLA: 8 часов)<br>
           ─────────────────────────────────────────────────────────────<br>
-          Натиснув "Запустити" → Крок 1 → задача Менеджеру автоматично<br>
-          Менеджер позначив "Виконано" → Крок 2 → задача Юристу автоматично<br>
-          Юрист виконав → Крок 3 → задача Бухгалтеру автоматично<br>
-          і так далі...
+          Нажал «Запустить» → Шаг 1 → задача Менеджеру автоматически<br>
+          Менеджер отметил «Выполнено» → Шаг 2 → задача Юристу автоматически<br>
+          Юрист выполнил → Шаг 3 → задача Бухгалтеру автоматически<br>
+          и так далее...
         </div>
         <div style="font-size:0.82rem;color:#374151;line-height:1.7;">
-          <b>Ключова ідея:</b> ти не створюєш задачі вручну. Ти один раз описуєш послідовність — і система сама розподіляє роботу по потрібних людях у потрібний час.
+          <b>Ключевая идея:</b> ты не создаёшь задачи вручную. Ты один раз описываешь последовательность — и система сама распределяет работу по нужным людям в нужное время.
         </div>
       </div>
 
       <!-- ШАБЛОН ДЕТАЛЬНО -->
       <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
-        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Шаблон процесу — що можна налаштувати</div>
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Шаблон процесса — что можно настроить</div>
         <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
-          ${path('Процеси → Шаблони → Новий шаблон')}
+          ${path('Процессы → Шаблоны → Новый шаблон')}
         </div>
-        <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Кожен крок шаблону містить:</div>
+        <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Каждый шаг шаблона содержит:</div>
         <div style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;">
           ${[
-            ['Функція','Хто виконує цей крок — вибираєш з функціональної структури компанії (Менеджер, Юрист, Бухгалтер тощо). Система сама знає хто закріплений за цією функцією'],
-            ['Назва кроку','Що конкретно треба зробити: "Підписати договір", "Виставити рахунок", "Налаштувати доступ"'],
-            ['SLA (час на виконання)','30 хв / 1 год / 2 год / 4 год / 8 год / 1 день / 2 дні / 3 дні. Система автоматично рахує дедлайн кожного кроку'],
-            ['Очікуваний результат','Що має бути зроблено по факту: "Договір підписаний і відсканований", "Рахунок виставлений в 1С". Виконавець бачить це в задачі'],
-            ['Контрольне питання','Питання для самоперевірки виконавця перед закриттям кроку: "Чи підтвердив клієнт отримання?"'],
-            ['Інструкція','Детальний опис як виконати крок. Нова людина може виконати без додаткових пояснень'],
-            ['Checkpoint (перевірочний пункт)','Якщо увімкнено — задача спочатку іде на перевірку керівнику і тільки після його підтвердження переходить далі'],
-            ['Smart Assign','Якщо в функції кілька виконавців — система автоматично вибирає найменш завантаженого. Рахує активні задачі + прострочені × 2'],
+            ['Функция','Кто выполняет этот шаг — выбираешь из функциональной структуры компании (Менеджер, Юрист, Бухгалтер и т.д.). Система сама знает кто закреплён за этой функцией'],
+            ['Название шага','Что конкретно нужно сделать: «Подписать договор», «Выставить счёт», «Настроить доступ»'],
+            ['SLA (время на выполнение)','30 мин / 1 час / 2 часа / 4 часа / 8 часов / 1 день / 2 дня / 3 дня. Система автоматически считает дедлайн каждого шага'],
+            ['Ожидаемый результат','Что должно быть сделано по факту: «Договор подписан и отсканирован», «Счёт выставлен в 1С». Исполнитель видит это в задаче'],
+            ['Контрольный вопрос','Вопрос для самопроверки исполнителя перед закрытием шага: «Подтвердил ли клиент получение?»'],
+            ['Инструкция','Подробное описание как выполнить шаг. Новый человек может выполнить без дополнительных объяснений'],
+            ['Checkpoint (контрольная точка)','Если включено — задача сначала идёт на проверку руководителю и только после его подтверждения переходит дальше'],
+            ['Smart Assign','Если в функции несколько исполнителей — система автоматически выбирает наименее загруженного. Считает активные задачи + просроченные × 2'],
           ].map(([field, desc]) => `
           <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:0.5rem 0.75rem;background:#f9fafb;border-radius:7px;font-size:0.8rem;">
             <div style="font-weight:700;color:#111827;min-width:180px;flex-shrink:0;">${field}</div>
@@ -1710,15 +1710,15 @@ function _buildProcessHowto() {
           </div>`).join('')}
         </div>
 
-        <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Приклади шаблонів:</div>
+        <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Примеры шаблонов:</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
           ${[
-            ['Прийом нового клієнта','Дзвінок → Договір → Рахунок → Доступ → Вітання'],
-            ['Обробка замовлення','Прийом → Підтвердження → Виробництво → Контроль → Доставка'],
-            ['Onboarding співробітника','Документи → Обладнання → Доступи → Навчання → Перший тиждень'],
-            ['Закриття місяця','Звіт продажів → Звіт витрат → Звірка → Нарахування → Виплата'],
-            ['Рекламна кампанія','Бриф → Дизайн → Погодження → Запуск → Звіт'],
-            ['Претензія клієнта','Реєстрація → Розслідування → Рішення → Відповідь клієнту → Закриття'],
+            ['Приём нового клиента','Звонок → Договор → Счёт → Доступ → Приветствие'],
+            ['Обработка заказа','Приём → Подтверждение → Производство → Контроль → Доставка'],
+            ['Onboarding сотрудника','Документы → Оборудование → Доступы → Обучение → Первая неделя'],
+            ['Закрытие месяца','Отчёт продаж → Отчёт расходов → Сверка → Начисление → Выплата'],
+            ['Рекламная кампания','Бриф → Дизайн → Согласование → Запуск → Отчёт'],
+            ['Претензия клиента','Регистрация → Расследование → Решение → Ответ клиенту → Закрытие'],
           ].map(([name, steps]) => `
           <div style="padding:0.6rem 0.85rem;background:#f0f4ff;border-radius:8px;font-size:0.8rem;">
             <div style="font-weight:700;color:#3730a3;margin-bottom:0.2rem;">${name}</div>
@@ -1729,17 +1729,17 @@ function _buildProcessHowto() {
 
       <!-- ЗАПУСК ПРОЦЕСУ -->
       <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
-        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Запуск процесу — що відбувається</div>
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Запуск процесса — что происходит</div>
         <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
-          ${path('Процеси → Запустити')} → вибираєш шаблон → вводиш назву (наприклад "Клієнт Іваненко") → об'єкт (адреса, артикул тощо) → дедлайн процесу.
+          ${path('Процессы → Запустить')} → выбираешь шаблон → вводишь название (например «Клиент Иваненко») → объект (адрес, артикул и т.д.) → дедлайн процесса.
         </div>
         <div style="display:flex;flex-direction:column;gap:0.4rem;">
           ${[
-            ['Автоматично створюється задача для першого кроку','Виконавець першого кроку отримує задачу в Моєму Дні і сповіщення в Telegram'],
-            ['Smart Deadline','Якщо вказав кінцевий дедлайн — система рахує дедлайн кожного кроку від кінця: кінець − SLA останнього − SLA передостаннього − ... Кожен отримує реалістичний дедлайн'],
-            ['Контекст об\'єкту','Якщо вказав "об\'єкт" (наприклад "Кв. Шевченка 15, кв 24") — він буде відображатись в кожній задачі і в dashboard процесів'],
-            ['Виконавець обирається автоматично','Smart Assign вибирає найменш завантаженого з функції. Ніхто не перевантажений'],
-            ['Процес з\'являється в Dashboard','Горизонтальна шкала прогресу — видно на якому кроці кожен процес прямо зараз'],
+            ['Автоматически создаётся задача для первого шага','Исполнитель первого шага получает задачу в Моём Дне и уведомление в Telegram'],
+            ['Smart Deadline','Если указал конечный дедлайн — система считает дедлайн каждого шага от конца: конец − SLA последнего − SLA предпоследнего − ... Каждый получает реалистичный дедлайн'],
+            ['Контекст объекта','Если указал «объект» (например «Кв. Шевченко 15, кв 24») — он будет отображаться в каждой задаче и в dashboard процессов'],
+            ['Исполнитель выбирается автоматически','Smart Assign выбирает наименее загруженного из функции. Никто не перегружен'],
+            ['Процесс появляется в Dashboard','Горизонтальная шкала прогресса — видно на каком шаге каждый процесс прямо сейчас'],
           ].map(([title, desc]) => `
           <div style="border-left:3px solid #4f46e5;padding:0.6rem 0.85rem;background:#f9fafb;border-radius:0 8px 8px 0;font-size:0.82rem;">
             <div style="font-weight:700;color:#111827;margin-bottom:0.2rem;">${title}</div>
@@ -1904,7 +1904,7 @@ function _buildProcessHowto() {
             ['2','#3b82f6','Визнач процес для автоматизації','',
               'Обери один повторюваний процес який виконується найчастіше або де найбільше помилок. Наприклад: "Обробка замовлення" або "Прийом нового клієнта". Починай з одного — не намагайся автоматизувати все одразу.',
               'Критерії вибору: виконується мінімум 2-3 рази на тиждень, має чіткі кроки, страждає від помилок або забування.'],
-            ['3','#8b5cf6','Створи шаблон',`${path('Процеси → Шаблони → Новий шаблон')}`,
+            ['3','#8b5cf6','Створи шаблон',`${path('Процессы → Шаблоны → Новый шаблон')}`,
               'Назви шаблон. Додай мінімум 2 кроки (система вимагає від 2). Для кожного кроку: вибери функцію, напиши назву кроку, встанови SLA, додай інструкцію і очікуваний результат. Для критичних кроків увімкни Checkpoint.',
               'Починай просто — 3-5 кроків. Потім розширюй. Краще запустити простий шаблон сьогодні ніж ідеальний через місяць.'],
             ['4','#10b981','Запусти перший процес',`${path('Процеси → Запустити')}`,
