@@ -20,55 +20,55 @@ async function renderBackupTab() {
 
     const companyId = window.currentCompanyId || window.companyId;
     if (!companyId) {
-        el.innerHTML = '<div style="padding:2rem;color:#9ca3af;">Компанія не визначена</div>';
+        el.innerHTML = '<div style="padding:2rem;color:#9ca3af;">Компания не определена</div>';
         return;
     }
 
     el.innerHTML = `
     <div style="max-width:700px;margin:0 auto;padding:1.5rem 1rem;">
 
-        <!-- Заголовок -->
+        <!-- Header -->
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
             <div style="width:42px;height:42px;background:#eff6ff;border-radius:12px;
                 display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <i data-lucide="database" style="width:22px;height:22px;color:#3b82f6;"></i>
             </div>
             <div>
-                <div style="font-size:1.1rem;font-weight:700;color:#111827;">Бекап даних</div>
-                <div style="font-size:0.78rem;color:#9ca3af;">Автоматично щодня о 02:00 · Зберігається 90 днів</div>
+                <div style="font-size:1.1rem;font-weight:700;color:#111827;">Резервное копирование</div>
+                <div style="font-size:0.78rem;color:#9ca3af;">Автоматически ежедневно в 02:00 · Хранится 90 дней</div>
             </div>
         </div>
 
-        <!-- Ручний бекап -->
+        <!-- Manual backup -->
         <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;margin-bottom:1rem;">
             <div style="font-size:0.85rem;font-weight:600;color:#374151;margin-bottom:0.5rem;">
-                Створити бекап зараз
+                Создать резервную копию сейчас
             </div>
             <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;">
-                Збереже всі дані компанії у хмарне сховище. Займає 10–30 секунд.
+                Сохранит все данные компании в облачное хранилище. Занимает 10–30 секунд.
             </div>
             <button id="backupNowBtn" onclick="runManualBackup()"
                 style="padding:0.55rem 1.25rem;background:#3b82f6;color:white;border:none;
                 border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;
                 display:flex;align-items:center;gap:0.5rem;">
                 <i data-lucide="save" style="width:15px;height:15px;"></i>
-                Створити бекап
+                Создать бекап
             </button>
             <div id="backupStatus" style="margin-top:0.75rem;font-size:0.78rem;display:none;"></div>
         </div>
 
-        <!-- Список бекапів -->
+        <!-- Backup list -->
         <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-                <div style="font-size:0.85rem;font-weight:600;color:#374151;">Доступні бекапи</div>
+                <div style="font-size:0.85rem;font-weight:600;color:#374151;">Доступные резервные копии</div>
                 <button onclick="loadBackupList()" style="background:none;border:none;cursor:pointer;
                     color:#6b7280;font-size:0.75rem;display:flex;align-items:center;gap:4px;">
-                    <i data-lucide="refresh-cw" style="width:13px;height:13px;"></i> Оновити
+                    <i data-lucide="refresh-cw" style="width:13px;height:13px;"></i> Обновить
                 </button>
             </div>
             <div id="backupList">
                 <div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1.5rem 0;">
-                    Завантаження...
+                    Загрузка...
                 </div>
             </div>
         </div>
@@ -97,8 +97,8 @@ async function loadBackupList() {
         if (snap.empty) {
             listEl.innerHTML = `
                 <div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1.5rem 0;">
-                    Бекапів ще немає. Перший автоматичний бекап буде сьогодні о 02:00,
-                    або натисніть "Створити бекап зараз".
+                    Резервных копий ещё нет. Первая автоматическая копия будет сегодня в 02:00,
+                    или нажмите «Создать бекап сейчас».
                 </div>`;
             return;
         }
@@ -107,7 +107,7 @@ async function loadBackupList() {
             const d = doc.data();
             const date = d.date || doc.id;
             const sizeKb = d.sizeKb ? `${d.sizeKb} KB` : '—';
-            const type = d.type === 'auto' ? '🕐 Авто' : '👤 Ручний';
+            const type = d.type === 'auto' ? '🕐 Авто' : '👤 Ручной';
             const createdAt = d.createdAt?.toDate
                 ? d.createdAt.toDate().toLocaleString('uk-UA')
                 : date;
@@ -123,13 +123,13 @@ async function loadBackupList() {
                     style="padding:0.35rem 0.75rem;background:#f0fdf4;color:#16a34a;
                     border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;
                     font-size:0.75rem;font-weight:600;white-space:nowrap;">
-                    Відновити
+                    Восстановить
                 </button>
             </div>`;
         }).join('');
 
     } catch(e) {
-        listEl.innerHTML = `<div style="color:#ef4444;font-size:0.82rem;">Помилка завантаження: ${e.message}</div>`;
+        listEl.innerHTML = `<div style="color:#ef4444;font-size:0.82rem;">Ошибка загрузки: ${e.message}</div>`;
     }
 }
 
@@ -140,7 +140,7 @@ async function runManualBackup() {
     const companyId = window.currentCompanyId || window.companyId;
 
     btn.disabled = true;
-    btn.innerHTML = '<i data-lucide="loader" style="width:15px;height:15px;animation:spin 1s linear infinite;"></i> Створюємо бекап...';
+    btn.innerHTML = '<i data-lucide="loader" style="width:15px;height:15px;animation:spin 1s linear infinite;"></i> Создаём бекап...';
     status.style.display = 'none';
 
     try {
@@ -167,18 +167,18 @@ async function runManualBackup() {
 
             status.style.display = 'block';
             status.style.color = '#16a34a';
-            status.innerHTML = `✅ Бекап створено: ${data.date} · ${data.sizeKb} KB`;
+            status.innerHTML = `✅ Резервная копия создана: ${data.date} · ${data.sizeKb} KB`;
             await loadBackupList();
         } else {
-            throw new Error(data.error || 'Невідома помилка');
+            throw new Error(data.error || 'Неизвестная ошибка');
         }
     } catch(e) {
         status.style.display = 'block';
         status.style.color = '#dc2626';
-        status.innerHTML = `❌ Помилка: ${e.message}`;
+        status.innerHTML = `❌ Ошибка: ${e.message}`;
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="save" style="width:15px;height:15px;"></i> Створити бекап';
+        btn.innerHTML = '<i data-lucide="save" style="width:15px;height:15px;"></i> Создать бекап';
         if (typeof window.refreshIcons === 'function') window.refreshIcons();
     }
 }
@@ -186,7 +186,7 @@ async function runManualBackup() {
 // ── Підтвердження відновлення ─────────────────────────────────
 function confirmRestore(date, companyId) {
     const ok = confirm(
-        `⚠️ УВАГА!\n\nВідновлення перезапише ПОТОЧНІ дані даними з бекапу ${date}.\n\nЦю дію не можна скасувати.\n\nПродовжити?`
+        `⚠️ ВНИМАНИЕ!\n\nВосстановление перезапишет ТЕКУЩИЕ данные данными из бекапа ${date}.\n\nЭто действие нельзя отменить.\n\nПродолжить?`
     );
     if (!ok) return;
     restoreBackup(date, companyId);
@@ -214,14 +214,14 @@ async function restoreBackup(date, companyId) {
 
         if (data.ok) {
             if (typeof showToast === 'function') {
-                showToast(`✅ Відновлено з бекапу ${date}. Перезавантажте сторінку.`, 'success', 10000);
+                showToast(`✅ Восстановлено из бекапа ${date}. Перезагрузите страницу.`, 'success', 10000);
             }
         } else {
-            throw new Error(data.error || 'Помилка відновлення');
+            throw new Error(data.error || 'Ошибка восстановления');
         }
     } catch(e) {
         if (typeof showToast === 'function') {
-            showToast(`❌ Помилка відновлення: ${e.message}`, 'error', 8000);
+            showToast(`❌ Ошибка восстановления: ${e.message}`, 'error', 8000);
         }
     }
 }
