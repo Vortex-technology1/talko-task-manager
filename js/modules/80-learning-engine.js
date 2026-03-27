@@ -219,9 +219,9 @@
         <div class="learning-wrap" style="padding:0 0 4rem;">
             <div style="display:flex;align-items:center;gap:0.75rem;padding:1rem 1.5rem 0.5rem;position:sticky;top:0;background:white;z-index:10;border-bottom:1px solid #e5e7eb;">
                 <button class="l-back-btn" onclick="window._openLearningModule(0)" style="display:flex;align-items:center;gap:0.4rem;background:none;border:none;color:#6b7280;font-size:0.875rem;cursor:pointer;">
-                    ← Назад до модуля
+                    ← Назад к модулю
                 </button>
-                <span style="font-weight:700;color:#1a1a1a;">Маршрут програми</span>
+                <span style="font-weight:700;color:#1a1a1a;">Маршрут программы</span>
             </div>
             <style>
         :root {
@@ -847,8 +847,8 @@
         <!-- Progress -->
         <div class="progress-section">
             <div class="progress-header">
-                <span class="progress-label">Загальний прогрес</span>
-                <span class="progress-value">0 з 100 кроків (0%)</span>
+                <span class="progress-label">Общий прогресс</span>
+                <span class="progress-value">0 из 100 шагов (0%)</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 0%"></div>
@@ -863,7 +863,7 @@
                 </div>
                 <div class="stat-content">
                     <h4>0</h4>
-                    <p>Виконано</p>
+                    <p>Выполнено</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -872,7 +872,7 @@
                 </div>
                 <div class="stat-content">
                     <h4>0</h4>
-                    <p>В процесі</p>
+                    <p>В процессе</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -881,7 +881,7 @@
                 </div>
                 <div class="stat-content">
                     <h4>100</h4>
-                    <p>Очікує</p>
+                    <p>Ожидает</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -890,7 +890,7 @@
                 </div>
                 <div class="stat-content">
                     <h4>0</h4>
-                    <p>Заблоковано</p>
+                    <p>Заблокировано</p>
                 </div>
             </div>
         </div>
@@ -900,12 +900,12 @@
             <div class="table-header-bar">
                 <div class="table-title">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    План впровадження
+                    План внедрения
                 </div>
                 <div class="table-actions">
                     <button class="btn btn-outline-light" style="display:none">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Експорт в Excel
+                        Экспорт в Excel
                     </button>
                 </div>
             </div>
@@ -914,41 +914,41 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 280px;">Крок</th>
+                            <th style="width: 280px;">Шаг</th>
                             <th style="width: 130px;">Статус</th>
-                            <th style="width: 180px;">Інструмент</th>
-                            <th style="width: 300px;">Що потрібно зробити</th>
-                            <th style="width: 120px;">Планова дата</th>
-                            <th style="width: 90px;">Час</th>
-                            <th>Коментар</th>
+                            <th style="width: 180px;">Инструмент</th>
+                            <th style="width: 300px;">Что нужно сделать</th>
+                            <th style="width: 120px;">Плановая дата</th>
+                            <th style="width: 90px;">Время</th>
+                            <th>Комментарий</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- ФАЗА 1: АРХІТЕКТУРА БІЗНЕСУ -->
+                        <!-- ФАЗА 1: АРХИТЕКТУРА БИЗНЕСА -->
                         <tr class="phase-row">
                             <td colspan="7">
                                 <div class="phase-label">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                                    Фаза 1: Архітектура бізнесу
+                                    Фаза 1: Архитектура бизнеса
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Крок 1 -->
+                        <!-- Шаг 1 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">1</div>
                                     <div class="step-info">
-                                        <h4>Словник термінів</h4>
-                                        <p>Основи системи</p>
+                                        <h4>Словарь терминов</h4>
+                                        <p>Основы системы</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -956,37 +956,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати словник термінів та понять з AI-асистентом</td>
+                            <td class="task-text">Разобрать словарь терминов и понятий с AI-ассистентом</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 2 -->
+                        <!-- Шаг 2 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">2</div>
                                     <div class="step-info">
-                                        <h4>Завдання та розпорядження</h4>
-                                        <p>Як ставити правильно</p>
+                                        <h4>Задачи и распоряжения</h4>
+                                        <p>Как ставить правильно</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -994,37 +994,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати як ставити завдання та розпорядження</td>
+                            <td class="task-text">Разобрать как ставить задачи и распоряжения</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 3 -->
+                        <!-- Шаг 3 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">3</div>
                                     <div class="step-info">
                                         <h4>Система Радар</h4>
-                                        <p>Попередження проблем</p>
+                                        <p>Предупреждение проблем</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1035,34 +1035,34 @@
                                     <span class="tool-name">AI Радар</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібратися з системою Радар — щоб люди не приходили з проблемою</td>
+                            <td class="task-text">Разобраться с системой Радар — чтобы люди не приходили с проблемой</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 4 -->
+                        <!-- Шаг 4 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">4</div>
                                     <div class="step-info">
-                                        <h4>Впровадження Радар</h4>
-                                        <p>Для команди</p>
+                                        <h4>Внедрение Радар</h4>
+                                        <p>Для команды</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1073,34 +1073,34 @@
                                     <span class="tool-name">Команда</span>
                                 </div>
                             </td>
-                            <td class="task-text">Дати людям систему і пояснити як використовувати AI Радар</td>
+                            <td class="task-text">Дать людям систему и объяснить как использовать AI Радар</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 5 -->
+                        <!-- Шаг 5 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">5</div>
                                     <div class="step-info">
                                         <h4>Система Компас</h4>
-                                        <p>Напрямок руху</p>
+                                        <p>Направление движения</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1111,26 +1111,26 @@
                                     <span class="tool-name">AI Компас</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати систему Компас з AI-асистентом</td>
+                            <td class="task-text">Разобрать систему Компас с AI-ассистентом</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 6 -->
+                        <!-- Шаг 6 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">6</div>
                                     <div class="step-info">
-                                        <h4>Технічний провідник</h4>
+                                        <h4>Технический наставник</h4>
                                         <p>Налаштування систем</p>
                                     </div>
                                 </div>
@@ -1138,7 +1138,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1146,37 +1146,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">Техн. провідник</span>
+                                    <span class="tool-name">Техн. наставник</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-інструмент для покрокового налаштування CRM, таблиць, ботів</td>
+                            <td class="task-text">Разобрать AI-инструмент для пошаговой настройки CRM, таблиц, ботов</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 7 -->
+                        <!-- Шаг 7 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">7</div>
                                     <div class="step-info">
                                         <h4>Папка на Google Drive</h4>
-                                        <p>Систематизація TALKO</p>
+                                        <p>Систематизация TALKO</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1187,26 +1187,26 @@
                                     <span class="tool-name">Google Drive</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити папку "Систематизація TALKO" на Google Drive</td>
+                            <td class="task-text">Создать папку «Систематизация TALKO» на Google Drive</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    15 хв
+                                    15 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 8 -->
+                        <!-- Шаг 8 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">8</div>
                                     <div class="step-info">
-                                        <h4>Техн. провідник команді</h4>
+                                        <h4>Техн. наставник команде</h4>
                                         <p>Впровадження</p>
                                     </div>
                                 </div>
@@ -1214,7 +1214,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1225,34 +1225,34 @@
                                     <span class="tool-name">Команда</span>
                                 </div>
                             </td>
-                            <td class="task-text">Дати співробітникам Технічний провідник для використання</td>
+                            <td class="task-text">Дать сотрудникам Технический наставник для использования</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 9 -->
+                        <!-- Шаг 9 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">9</div>
                                     <div class="step-info">
                                         <h4>Асистент розвитку</h4>
-                                        <p>Самоаналіз та мислення</p>
+                                        <p>Самоанализ и мышление</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1260,37 +1260,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI Розвиток</span>
+                                    <span class="tool-name">AI Развитие</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати асистента для самоаналізу: інструменти, бізнес-модель, цілі, переконання</td>
+                            <td class="task-text">Разобрать ассистента для самоанализа: инструменты, бизнес-модель, цели, убеждения</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 10 -->
+                        <!-- Шаг 10 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">10</div>
                                     <div class="step-info">
                                         <h4>Розмова з командою</h4>
-                                        <p>Плани систематизації</p>
+                                        <p>Планы систематизации</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1301,39 +1301,39 @@
                                     <span class="tool-name">Команда</span>
                                 </div>
                             </td>
-                            <td class="task-text">Провести розмову зі співробітниками щодо планів систематизації та наступних кроків</td>
+                            <td class="task-text">Провести разговор с сотрудниками о планах систематизации и следующих шагах</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Ціль та ідеальна картина -->
+                        <!-- Подфаза: Цель и идеальная картина -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Ціль, задум та ідеальна картина</td>
+                            <td colspan="7">Блок: Цель, замысел и идеальная картина</td>
                         </tr>
 
-                        <!-- Крок 10 -->
+                        <!-- Шаг 10 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">11</div>
                                     <div class="step-info">
-                                        <h4>Ціль та ідеальна картина</h4>
-                                        <p>Формування політики</p>
+                                        <h4>Цель и идеальная картина</h4>
+                                        <p>Формирование политики</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1341,29 +1341,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Пройти асистента "Ціль, задум та ідеальна картина" та сформувати політику</td>
+                            <td class="task-text">Пройти ассистента «Цель, замысел и идеальная картина» и сформировать политику</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    90 хв
+                                    90 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 11 -->
+                        <!-- Шаг 11 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">12</div>
                                     <div class="step-info">
-                                        <h4>Презентація цілі</h4>
+                                        <h4>Презентация цели</h4>
                                         <p>Тезиси для команди</p>
                                     </div>
                                 </div>
@@ -1371,7 +1371,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1379,37 +1379,37 @@
                                     <div class="tool-icon present">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                                     </div>
-                                    <span class="tool-name">Презентація</span>
+                                    <span class="tool-name">Презентация</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити презентацію та тезиси до цілі та ідеальної картини</td>
+                            <td class="task-text">Создать презентацию и тезисы к цели и идеальной картине</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 12 -->
+                        <!-- Шаг 12 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">13</div>
                                     <div class="step-info">
-                                        <h4>Впровадження цілі</h4>
-                                        <p>Донесення команді</p>
+                                        <h4>Внедрение цели</h4>
+                                        <p>Донесение команде</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1417,42 +1417,42 @@
                                     <div class="tool-icon team">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                                     </div>
-                                    <span class="tool-name">Впровадження</span>
+                                    <span class="tool-name">Внедрение</span>
                                 </div>
                             </td>
-                            <td class="task-text">Провести впровадження цілі та ідеальної картини для команди</td>
+                            <td class="task-text">Провести внедрение цели и идеальной картины для команды</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Продукт організації -->
+                        <!-- Подфаза: Продукт организации -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Продукт організації</td>
+                            <td colspan="7">Блок: Продукт организации</td>
                         </tr>
 
-                        <!-- Крок 13 -->
+                        <!-- Шаг 13 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">14</div>
                                     <div class="step-info">
-                                        <h4>Продукт організації</h4>
-                                        <p>Політика продукту</p>
+                                        <h4>Продукт организации</h4>
+                                        <p>Политика продукта</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1460,37 +1460,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Пройти асистента "Продукт організації" та створити політику</td>
+                            <td class="task-text">Пройти ассистента «Продукт организации» и создать политику</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    90 хв
+                                    90 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 14 -->
+                        <!-- Шаг 14 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">15</div>
                                     <div class="step-info">
-                                        <h4>Презентація продукту</h4>
-                                        <p>Підготовка матеріалів</p>
+                                        <h4>Презентация продукта</h4>
+                                        <p>Подготовка материалов</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1498,37 +1498,37 @@
                                     <div class="tool-icon present">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                                     </div>
-                                    <span class="tool-name">Презентація</span>
+                                    <span class="tool-name">Презентация</span>
                                 </div>
                             </td>
-                            <td class="task-text">Підготувати презентацію продукту організації</td>
+                            <td class="task-text">Подготовить презентацию продукта организации</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 15 -->
+                        <!-- Шаг 15 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">16</div>
                                     <div class="step-info">
                                         <h4>Впровадження продукту</h4>
-                                        <p>Донесення команді</p>
+                                        <p>Донесение команде</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1536,7 +1536,7 @@
                                     <div class="tool-icon team">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                                     </div>
-                                    <span class="tool-name">Впровадження</span>
+                                    <span class="tool-name">Внедрение</span>
                                 </div>
                             </td>
                             <td class="task-text">Провести впровадження продукту для команди</td>
@@ -1546,18 +1546,18 @@
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Структура -->
+                        <!-- Подфаза: Структура -->
                         <tr class="subphase-row">
                             <td colspan="7">Блок: Структура</td>
                         </tr>
 
-                        <!-- Крок 16 -->
+                        <!-- Шаг 16 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -1571,7 +1571,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1589,27 +1589,27 @@
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    90 хв
+                                    90 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 17 -->
+                        <!-- Шаг 17 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">18</div>
                                     <div class="step-info">
-                                        <h4>Презентація структури</h4>
-                                        <p>Підготовка</p>
+                                        <h4>Презентация структуры</h4>
+                                        <p>Подготовка</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1617,37 +1617,37 @@
                                     <div class="tool-icon present">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                                     </div>
-                                    <span class="tool-name">Презентація</span>
+                                    <span class="tool-name">Презентация</span>
                                 </div>
                             </td>
-                            <td class="task-text">Провести презентацію структури</td>
+                            <td class="task-text">Провести презентацию структуры</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 18 -->
+                        <!-- Шаг 18 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">19</div>
                                     <div class="step-info">
                                         <h4>Впровадження структури</h4>
-                                        <p>Донесення команді</p>
+                                        <p>Донесение команде</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1655,7 +1655,7 @@
                                     <div class="tool-icon team">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                                     </div>
-                                    <span class="tool-name">Впровадження</span>
+                                    <span class="tool-name">Внедрение</span>
                                 </div>
                             </td>
                             <td class="task-text">Провести впровадження структури для команди</td>
@@ -1665,32 +1665,32 @@
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Статистики та платформа -->
+                        <!-- Подфаза: Статистики та платформа -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Статистики та платформа</td>
+                            <td colspan="7">Блок: Статистики и платформа</td>
                         </tr>
 
-                        <!-- Крок 19 -->
+                        <!-- Шаг 19 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">20</div>
                                     <div class="step-info">
                                         <h4>Статистики</h4>
-                                        <p>Довідник метрик</p>
+                                        <p>Справочник метрик</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1701,34 +1701,34 @@
                                     <span class="tool-name">AI Статистики</span>
                                 </div>
                             </td>
-                            <td class="task-text">Пройти асистента "Статистики" та створити довідник</td>
+                            <td class="task-text">Пройти ассистента «Статистики» и создать справочник</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 20 -->
+                        <!-- Шаг 20 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">21</div>
                                     <div class="step-info">
                                         <h4>Платформа: Структура</h4>
-                                        <p>Освоєння модуля</p>
+                                        <p>Освоение модуля</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1739,34 +1739,34 @@
                                     <span class="tool-name">TALKO Структура</span>
                                 </div>
                             </td>
-                            <td class="task-text">Освоїти платформу "Структура"</td>
+                            <td class="task-text">Освоить платформу «Структура»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 21 -->
+                        <!-- Шаг 21 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">22</div>
                                     <div class="step-info">
                                         <h4>Платформа: Статистики</h4>
-                                        <p>Освоєння модуля</p>
+                                        <p>Освоение модуля</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1777,34 +1777,34 @@
                                     <span class="tool-name">TALKO Статистики</span>
                                 </div>
                             </td>
-                            <td class="task-text">Освоїти платформу "Статистики"</td>
+                            <td class="task-text">Освоить платформу «Статистики»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 22 -->
+                        <!-- Шаг 22 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">23</div>
                                     <div class="step-info">
                                         <h4>Платформа: Таск-трекер</h4>
-                                        <p>Освоєння модуля</p>
+                                        <p>Освоение модуля</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1812,34 +1812,34 @@
                                     <div class="tool-icon platform">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                     </div>
-                                    <span class="tool-name">TALKO Таски</span>
+                                    <span class="tool-name">TALKO Задачи</span>
                                 </div>
                             </td>
-                            <td class="task-text">Освоїти платформу "Таск-трекер"</td>
+                            <td class="task-text">Освоить платформу «Таск-трекер»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Вузьке місце та таски -->
+                        <!-- Подфаза: Узкое место и таски -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Вузьке місце та практика</td>
+                            <td colspan="7">Блок: Узкое место и практика</td>
                         </tr>
 
-                        <!-- Крок 23 -->
+                        <!-- Шаг 23 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">24</div>
                                     <div class="step-info">
-                                        <h4>Аналіз вузького місця</h4>
+                                        <h4>Анализ узкого места</h4>
                                         <p>Знаходження проблеми</p>
                                     </div>
                                 </div>
@@ -1847,7 +1847,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1855,29 +1855,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                                     </div>
-                                    <span class="tool-name">Аналіз</span>
+                                    <span class="tool-name">Анализ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Провести аналіз вузького місця бізнесу</td>
+                            <td class="task-text">Провести анализ узкого места бизнеса</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 24 -->
+                        <!-- Шаг 24 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">25</div>
                                     <div class="step-info">
-                                        <h4>План вузького місця</h4>
+                                        <h4>План узкого места</h4>
                                         <p>Розпорядження</p>
                                     </div>
                                 </div>
@@ -1885,7 +1885,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1896,20 +1896,20 @@
                                     <span class="tool-name">План</span>
                                 </div>
                             </td>
-                            <td class="task-text">Скласти план вузького місця та розбити на розпорядження</td>
+                            <td class="task-text">Составить план узкого места и разбить на распоряжения</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 25 -->
+                        <!-- Шаг 25 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -1923,7 +1923,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1931,7 +1931,7 @@
                                     <div class="tool-icon platform">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                     </div>
-                                    <span class="tool-name">TALKO Таски</span>
+                                    <span class="tool-name">TALKO Задачи</span>
                                 </div>
                             </td>
                             <td class="task-text">Внести розпорядження в таск-трекер</td>
@@ -1941,19 +1941,19 @@
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 26 -->
+                        <!-- Шаг 26 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">27</div>
                                     <div class="step-info">
-                                        <h4>Додати співробітника</h4>
+                                        <h4>Добавить сотрудника</h4>
                                         <p>В таск-трекер</p>
                                     </div>
                                 </div>
@@ -1961,7 +1961,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -1969,37 +1969,37 @@
                                     <div class="tool-icon platform">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
                                     </div>
-                                    <span class="tool-name">TALKO Таски</span>
+                                    <span class="tool-name">TALKO Задачи</span>
                                 </div>
                             </td>
-                            <td class="task-text">Додати співробітника в таск-трекер</td>
+                            <td class="task-text">Добавить сотрудника в таск-трекер</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    15 хв
+                                    15 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 27 -->
+                        <!-- Шаг 27 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">28</div>
                                     <div class="step-info">
-                                        <h4>Створити 4 функції</h4>
-                                        <p>В таск-трекері</p>
+                                        <h4>Создать 4 функции</h4>
+                                        <p>В таск-трекере</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2007,29 +2007,29 @@
                                     <div class="tool-icon platform">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                                     </div>
-                                    <span class="tool-name">TALKO Таски</span>
+                                    <span class="tool-name">TALKO Задачи</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити 4 функції в таск-трекері</td>
+                            <td class="task-text">Создать 4 функции в таск-трекере</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 28 -->
+                        <!-- Шаг 28 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">29</div>
                                     <div class="step-info">
-                                        <h4>Регулярні завдання</h4>
+                                        <h4>Регулярные задачи</h4>
                                         <p>Додати в таск-трекер</p>
                                     </div>
                                 </div>
@@ -2037,7 +2037,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2045,42 +2045,42 @@
                                     <div class="tool-icon platform">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                     </div>
-                                    <span class="tool-name">TALKO Таски</span>
+                                    <span class="tool-name">TALKO Задачи</span>
                                 </div>
                             </td>
-                            <td class="task-text">Додати кілька регулярних завдань до таск-трекера</td>
+                            <td class="task-text">Добавить несколько регулярных задач в таск-трекер</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Журнал управлінських збоїв -->
+                        <!-- Подфаза: Журнал управленческих сбоев -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Журнал управлінських збоїв</td>
+                            <td colspan="7">Блок: Журнал управленческих сбоев</td>
                         </tr>
 
-                        <!-- Крок 29 -->
+                        <!-- Шаг 29 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">30</div>
                                     <div class="step-info">
-                                        <h4>AI: Журнал збоїв</h4>
-                                        <p>Розбір системи</p>
+                                        <h4>AI: Журнал сбоев</h4>
+                                        <p>Разбор системы</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2088,37 +2088,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Журнал управлінських збоїв"</td>
+                            <td class="task-text">Разобрать AI-ассистента «Журнал управленческих сбоев»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 30 -->
+                        <!-- Шаг 30 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">31</div>
                                     <div class="step-info">
-                                        <h4>Excel: Журнал збоїв</h4>
-                                        <p>Створення таблиці</p>
+                                        <h4>Excel: Журнал сбоев</h4>
+                                        <p>Создание таблицы</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2129,20 +2129,20 @@
                                     <span class="tool-name">Excel</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити Excel-таблицю журналу збоїв (дати в рядках, параметри в колонках)</td>
+                            <td class="task-text">Создать Excel-таблицу журнала сбоев (даты в строках, параметры в колонках)</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 31 -->
+                        <!-- Шаг 31 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -2156,7 +2156,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2164,17 +2164,17 @@
                                     <div class="tool-icon team">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                                     </div>
-                                    <span class="tool-name">Впровадження</span>
+                                    <span class="tool-name">Внедрение</span>
                                 </div>
                             </td>
-                            <td class="task-text">Впровадити щоденне ведення журналу управлінських збоїв</td>
+                            <td class="task-text">Внедрить ежедневное ведение журнала управленческих сбоев</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
@@ -2191,26 +2191,26 @@
                             </td>
                         </tr>
 
-                        <!-- Підфаза: Створення пропозицій -->
+                        <!-- Подфаза: Создание предложений -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Створення пропозицій — оффери, від яких не відмовляються</td>
+                            <td colspan="7">Блок: Создание предложений — офферы, от которых не отказываются</td>
                         </tr>
 
-                        <!-- Крок 29 -->
+                        <!-- Шаг 29 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">33</div>
                                     <div class="step-info">
-                                        <h4>AI: Створення пропозицій</h4>
-                                        <p>Розбір асистента</p>
+                                        <h4>AI: Создание предложений</h4>
+                                        <p>Разбор ассистента</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2218,37 +2218,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Створення пропозицій"</td>
+                            <td class="task-text">Разобрать AI-ассистента «Создание предложений»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 30 -->
+                        <!-- Шаг 30 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">34</div>
                                     <div class="step-info">
-                                        <h4>Документ: Пропозиції</h4>
-                                        <p>Створення офферів</p>
+                                        <h4>Документ: Предложения</h4>
+                                        <p>Создание офферов</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2259,39 +2259,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити документ з пропозиціями/офферами</td>
+                            <td class="task-text">Создать документ с предложениями/офферами</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Формування заявки -->
+                        <!-- Подфаза: Формування заявки -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Формування заявки — правильне формулювання потреби</td>
+                            <td colspan="7">Блок: Формирование заявки — правильная формулировка потребности</td>
                         </tr>
 
-                        <!-- Крок 32 -->
+                        <!-- Шаг 32 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">35</div>
                                     <div class="step-info">
                                         <h4>AI: Формування заявки</h4>
-                                        <p>Розбір асистента</p>
+                                        <p>Разбор ассистента</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2299,23 +2299,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Формування заявки"</td>
+                            <td class="task-text">Разобрать AI-ассистента «Формирование заявки»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 33 -->
+                        <!-- Шаг 33 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -2329,7 +2329,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2347,32 +2347,32 @@
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Опис функції -->
+                        <!-- Подфаза: Описание функции -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Опис функції — що саме робитиме людина</td>
+                            <td colspan="7">Блок: Описание функции — что именно будет делать человек</td>
                         </tr>
 
-                        <!-- Крок 35 -->
+                        <!-- Шаг 35 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">37</div>
                                     <div class="step-info">
-                                        <h4>AI: Опис функції</h4>
-                                        <p>Розбір асистента</p>
+                                        <h4>AI: Описание функции</h4>
+                                        <p>Разбор ассистента</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2380,37 +2380,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Опис функції"</td>
+                            <td class="task-text">Разобрать AI-ассистента «Описание функции»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 36 -->
+                        <!-- Шаг 36 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">38</div>
                                     <div class="step-info">
-                                        <h4>Документ: Опис функції</h4>
-                                        <p>Посадові інструкції</p>
+                                        <h4>Документ: Описание функции</h4>
+                                        <p>Должностные инструкции</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2421,39 +2421,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити документи з описом функцій/посад</td>
+                            <td class="task-text">Создать документы с описанием функций/должностей</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Утримання співробітників -->
+                        <!-- Подфаза: Удержание сотрудников -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Утримання співробітників — як зробити, щоб не звільнялися</td>
+                            <td colspan="7">Блок: Удержание сотрудников — как сделать чтобы не уходили</td>
                         </tr>
 
-                        <!-- Крок 38 -->
+                        <!-- Шаг 38 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">39</div>
                                     <div class="step-info">
                                         <h4>AI: Утримання</h4>
-                                        <p>Розбір асистента</p>
+                                        <p>Разбор ассистента</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2461,37 +2461,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Утримання співробітників"</td>
+                            <td class="task-text">Разобрать AI-ассистента «Удержание сотрудников»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 39 -->
+                        <!-- Шаг 39 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">40</div>
                                     <div class="step-info">
                                         <h4>Документ: Утримання</h4>
-                                        <p>Політика утримання</p>
+                                        <p>Политика удержания</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2502,39 +2502,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити документ з політикою утримання</td>
+                            <td class="task-text">Создать документ с политикой удержания</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Співбесіда та випробування -->
+                        <!-- Подфаза: Собеседование и испытание -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Співбесіда та випробування — структурований відбір та тестування</td>
+                            <td colspan="7">Блок: Собеседование и испытание — структурированный отбор и тестирование</td>
                         </tr>
 
-                        <!-- Крок 41 -->
+                        <!-- Шаг 41 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">41</div>
                                     <div class="step-info">
-                                        <h4>AI: Співбесіда</h4>
-                                        <p>Розбір асистента</p>
+                                        <h4>AI: Собеседование</h4>
+                                        <p>Разбор ассистента</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2542,29 +2542,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Співбесіда та випробування"</td>
+                            <td class="task-text">Разобрать AI-ассистента «Собеседование и испытание»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 42 -->
+                        <!-- Шаг 42 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">42</div>
                                     <div class="step-info">
-                                        <h4>Документ: Співбесіда</h4>
+                                        <h4>Документ: Собеседование</h4>
                                         <p>Чек-лист та тести</p>
                                     </div>
                                 </div>
@@ -2572,7 +2572,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2583,39 +2583,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити чек-лист співбесіди та тестові завдання</td>
+                            <td class="task-text">Создать чек-лист собеседования и тестовые задания</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Система наставництва -->
+                        <!-- Подфаза: Система наставництва -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Система наставництва — підтримка нового співробітника</td>
+                            <td colspan="7">Блок: Система наставничества — поддержка нового сотрудника</td>
                         </tr>
 
-                        <!-- Крок 44 -->
+                        <!-- Шаг 44 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">43</div>
                                     <div class="step-info">
                                         <h4>AI: Наставництво</h4>
-                                        <p>Розбір асистента</p>
+                                        <p>Разбор ассистента</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2623,23 +2623,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Система наставництва"</td>
+                            <td class="task-text">Разобрать AI-ассистента «Система наставничества»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 45 -->
+                        <!-- Шаг 45 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -2653,7 +2653,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2671,32 +2671,32 @@
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Онбордінг + AI -->
+                        <!-- Подфаза: Онбординг + AI -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок: Онбордінг + AI-асистент — автоматизація введення в посаду</td>
+                            <td colspan="7">Блок: Онбординг + AI-ассистент — автоматизация введения в должность</td>
                         </tr>
 
-                        <!-- Крок 47 -->
+                        <!-- Шаг 47 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">45</div>
                                     <div class="step-info">
-                                        <h4>AI: Онбордінг</h4>
-                                        <p>Розбір асистента</p>
+                                        <h4>AI: Онбординг</h4>
+                                        <p>Разбор ассистента</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2704,29 +2704,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI Онбордінг</span>
+                                    <span class="tool-name">AI Онбординг</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Онбордінг"</td>
+                            <td class="task-text">Разобрать AI-ассистента «Онбординг»</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 48 -->
+                        <!-- Шаг 48 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">46</div>
                                     <div class="step-info">
-                                        <h4>Документ: Онбордінг</h4>
+                                        <h4>Документ: Онбординг</h4>
                                         <p>Програма введення</p>
                                     </div>
                                 </div>
@@ -2734,7 +2734,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2745,46 +2745,46 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити документ з програмою онбордінгу</td>
+                            <td class="task-text">Создать документ с программой онбординга</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
                         <!-- ========================================== -->
-                        <!-- ФАЗА 3: ФІНАНСИ -->
+                        <!-- ФАЗА 3: ФИНАНСЫ -->
                         <!-- ========================================== -->
                         <tr class="phase-row">
                             <td colspan="7">
                                 <div class="phase-label">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                                    Фаза 3: Фінанси
+                                    Фаза 3: Финансы
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Крок 50 -->
+                        <!-- Шаг 50 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">47</div>
                                     <div class="step-info">
-                                        <h4>Бізнес-калькулятор</h4>
-                                        <p>Перевірка фін. цілі</p>
+                                        <h4>Бизнес-калькулятор</h4>
+                                        <p>Проверка фин. цели</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2795,34 +2795,34 @@
                                     <span class="tool-name">AI Калькулятор</span>
                                 </div>
                             </td>
-                            <td class="task-text">Перевірка реальності твоєї фінансової цілі</td>
+                            <td class="task-text">Проверка реальности своей финансовой цели</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 51 -->
+                        <!-- Шаг 51 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">48</div>
                                     <div class="step-info">
-                                        <h4>Аналіз ніші</h4>
-                                        <p>Перевірка потенціалу</p>
+                                        <h4>Анализ ниши</h4>
+                                        <p>Проверка потенциала</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2830,23 +2830,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Проаналізувати чи можна на цій ніші заробити заплановану суму грошей</td>
+                            <td class="task-text">Проанализировать можно ли на этой нише заработать запланированную сумму</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 52 -->
+                        <!-- Шаг 52 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -2860,7 +2860,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2868,29 +2868,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">P&L, Cash Flow, Баланс — основа фінансової грамотності</td>
+                            <td class="task-text">P&L, Cash Flow, Баланс — основа финансовой грамотности</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 53 -->
+                        <!-- Шаг 53 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">50</div>
                                     <div class="step-info">
-                                        <h4>7 департаментів</h4>
+                                        <h4>7 департаментов</h4>
                                         <p>Контроль витрат</p>
                                     </div>
                                 </div>
@@ -2898,7 +2898,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2906,37 +2906,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Прив'язати витрати до департаментів та функцій бізнесу</td>
+                            <td class="task-text">Привязать расходы к департаментам и функциям бизнеса</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 54 -->
+                        <!-- Шаг 54 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">51</div>
                                     <div class="step-info">
                                         <h4>Excel: Витрати</h4>
-                                        <p>Файл департаментів</p>
+                                        <p>Файл департаментов</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2947,34 +2947,34 @@
                                     <span class="tool-name">Excel</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити файл Excel з витратами, департаментами та функціями</td>
+                            <td class="task-text">Создать файл Excel с расходами, департаментами и функциями</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 55 -->
+                        <!-- Шаг 55 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">52</div>
                                     <div class="step-info">
-                                        <h4>Бенчмарки по нішах</h4>
-                                        <p>Еталонні % витрат</p>
+                                        <h4>Бенчмарки по нишам</h4>
+                                        <p>Эталонные % расходов</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -2982,37 +2982,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Еталонні % витрат для різних типів бізнесу</td>
+                            <td class="task-text">Эталонные % расходов для разных типов бизнеса</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    15 хв
+                                    15 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 56 -->
+                        <!-- Шаг 56 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">53</div>
                                     <div class="step-info">
                                         <h4>Тренажер витрат</h4>
-                                        <p>Заповнення таблиці</p>
+                                        <p>Заполнение таблицы</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3023,14 +3023,14 @@
                                     <span class="tool-name">Тренажер</span>
                                 </div>
                             </td>
-                            <td class="task-text">Заповни таблицю витрат для свого бізнесу</td>
+                            <td class="task-text">Заполни таблицу расходов для своего бизнеса</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
@@ -3043,31 +3043,31 @@
                             <td colspan="7">
                                 <div class="phase-label">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                                    Фаза 4: Маркетинг (Реклама → Сайт → Бот → Фільтрація → Діалог → Консультація → Продаж → Аналітика)
+                                    Фаза 4: Маркетинг (Реклама → Сайт → Бот → Фильтрация → Диалог → Консультация → Продажа → Аналитика)
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Підфаза: Основа і контроль -->
+                        <!-- Подфаза: Основа и контроль -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 1: Основа і контроль — чітка ціль, метрики, де зливаються гроші</td>
+                            <td colspan="7">Блок 1: Основа и контроль — чёткая цель, метрики, где сливаются деньги</td>
                         </tr>
 
-                        <!-- Крок 53 -->
+                        <!-- Шаг 53 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">54</div>
                                     <div class="step-info">
                                         <h4>AI: Основа маркетингу</h4>
-                                        <p>Ціль та метрики</p>
+                                        <p>Цель и метрики</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3075,29 +3075,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: чітка ціль маркетингу, правильні метрики, де зливаються гроші</td>
+                            <td class="task-text">Разобрать: чёткая цель маркетинга, правильные метрики, где сливаются деньги</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 54 -->
+                        <!-- Шаг 54 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">55</div>
                                     <div class="step-info">
-                                        <h4>Документ: Ціль маркетингу</h4>
+                                        <h4>Документ: Цель маркетинга</h4>
                                         <p>Метрики та контроль</p>
                                     </div>
                                 </div>
@@ -3105,7 +3105,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3116,39 +3116,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити документ: ціль маркетингу, ключові метрики, точки контролю</td>
+                            <td class="task-text">Создать документ: цель маркетинга, ключевые метрики, точки контроля</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Офер і тексти -->
+                        <!-- Подфаза: Оффер и тексты -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 2: Офер і тексти, які продають — сильний офер, фільтрація нецільових</td>
+                            <td colspan="7">Блок 2: Оффер и тексты, которые продают — сильный оффер, фильтрация нецелевых</td>
                         </tr>
 
-                        <!-- Крок 55 -->
+                        <!-- Шаг 55 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">56</div>
                                     <div class="step-info">
                                         <h4>AI: Офер та тексти</h4>
-                                        <p>Що продає</p>
+                                        <p>Что продаёт</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3156,23 +3156,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: сильний офер під нішу, тексти що фільтрують, AI як інструмент</td>
+                            <td class="task-text">Разобрать: сильный оффер под нишу, тексты которые фильтруют, AI как инструмент</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 56 -->
+                        <!-- Шаг 56 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -3186,7 +3186,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3197,39 +3197,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити офер та рекламні тексти, які фільтрують нецільових</td>
+                            <td class="task-text">Создать оффер и рекламные тексты, которые фильтруют нецелевых</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Сайт -->
+                        <!-- Подфаза: Сайт -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 3: Сайт, який не зливає трафік — лендінг, логіка дії, інтеграція</td>
+                            <td colspan="7">Блок 3: Сайт, который не сливает трафик — лендинг, логика действий, интеграция</td>
                         </tr>
 
-                        <!-- Крок 57 -->
+                        <!-- Шаг 57 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">58</div>
                                     <div class="step-info">
                                         <h4>AI: Структура сайту</h4>
-                                        <p>Лендінг що конвертує</p>
+                                        <p>Лендинг который конвертирует</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3237,37 +3237,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: простий лендінг, логіка що веде до дії, інтеграція з ботом</td>
+                            <td class="task-text">Разобрать: простой лендинг, логика ведущая к действию, интеграция с ботом</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 58 -->
+                        <!-- Шаг 58 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">59</div>
                                     <div class="step-info">
                                         <h4>Документ: ТЗ на сайт</h4>
-                                        <p>Структура лендінгу</p>
+                                        <p>Структура лендинга</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3278,39 +3278,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити ТЗ на лендінг: структура, тексти, інтеграції</td>
+                            <td class="task-text">Создать ТЗ на лендинг: структура, тексты, интеграции</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Telegram-воронка -->
+                        <!-- Подфаза: Telegram-воронка -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 4: Telegram-воронка і бот — автовідбір, кваліфікація, мінус 80% рутини</td>
+                            <td colspan="7">Блок 4: Telegram-воронка и бот — автоотбор, квалификация, минус 80% рутины</td>
                         </tr>
 
-                        <!-- Крок 59 -->
+                        <!-- Шаг 59 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">60</div>
                                     <div class="step-info">
                                         <h4>AI: Telegram-воронка</h4>
-                                        <p>Бот та кваліфікація</p>
+                                        <p>Бот и квалификация</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3318,37 +3318,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: автовідбір клієнтів, кваліфікаційні питання, прогрів</td>
+                            <td class="task-text">Разобрать: автоотбор клиентов, квалификационные вопросы, прогрев</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 60 -->
+                        <!-- Шаг 60 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">61</div>
                                     <div class="step-info">
                                         <h4>Документ: ТЗ на бот</h4>
-                                        <p>Логіка воронки</p>
+                                        <p>Логика воронки</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3359,39 +3359,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити ТЗ на Telegram-бот: логіка воронки, питання, повідомлення</td>
+                            <td class="task-text">Создать ТЗ на Telegram-бот: логика воронки, вопросы, сообщения</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Реклама -->
+                        <!-- Подфаза: Реклама -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 5: Реклама без хаосу — схема запуску, контроль бюджету, стабільні заявки</td>
+                            <td colspan="7">Блок 5: Реклама без хаоса — схема запуска, контроль бюджета, стабильные заявки</td>
                         </tr>
 
-                        <!-- Крок 61 -->
+                        <!-- Шаг 61 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">62</div>
                                     <div class="step-info">
                                         <h4>AI: Запуск реклами</h4>
-                                        <p>Схема без зливів</p>
+                                        <p>Схема без сливов</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3399,23 +3399,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: схема запуску реклами, контроль бюджету, відмова від зливів</td>
+                            <td class="task-text">Разобрать: схема запуска рекламы, контроль бюджета, отказ от сливов</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 62 -->
+                        <!-- Шаг 62 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -3429,7 +3429,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3447,24 +3447,24 @@
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Продажі в переписці -->
+                        <!-- Подфаза: Продажи в переписке -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 6: Продажі в переписці — шаблони, структура консультації, даунсел</td>
+                            <td colspan="7">Блок 6: Продажи в переписке — шаблоны, структура консультации, даунсел</td>
                         </tr>
 
-                        <!-- Крок 63 -->
+                        <!-- Шаг 63 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">64</div>
                                     <div class="step-info">
-                                        <h4>AI: Продажі в переписці</h4>
+                                        <h4>AI: Продажи в переписке</h4>
                                         <p>Шаблони та скрипти</p>
                                     </div>
                                 </div>
@@ -3472,7 +3472,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3480,29 +3480,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: шаблони переписок, структура консультації, даунсел</td>
+                            <td class="task-text">Разобрать: шаблоны переписок, структура консультации, даунсел</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 64 -->
+                        <!-- Шаг 64 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">65</div>
                                     <div class="step-info">
-                                        <h4>Документ: Скрипти продажів</h4>
+                                        <h4>Документ: Скрипты продаж</h4>
                                         <p>Шаблони переписок</p>
                                     </div>
                                 </div>
@@ -3510,7 +3510,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3521,39 +3521,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити скрипти продажів в переписці та структуру консультації</td>
+                            <td class="task-text">Создать скрипты продаж в переписке и структуру консультации</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Аналітика -->
+                        <!-- Подфаза: Аналитика -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 7: Аналітика і масштабування — ключові цифри, звіти, точки росту</td>
+                            <td colspan="7">Блок 7: Аналитика и масштабирование — ключевые цифры, отчёты, точки роста</td>
                         </tr>
 
-                        <!-- Крок 65 -->
+                        <!-- Шаг 65 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">66</div>
                                     <div class="step-info">
-                                        <h4>AI: Аналітика</h4>
-                                        <p>Ключові цифри</p>
+                                        <h4>AI: Аналитика</h4>
+                                        <p>Ключевые цифры</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3561,37 +3561,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: ключові цифри, аналіз воронки, точки росту без збільшення бюджету</td>
+                            <td class="task-text">Разобрать: ключевые цифры, анализ воронки, точки роста без увеличения бюджета</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 66 -->
+                        <!-- Шаг 66 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">67</div>
                                     <div class="step-info">
-                                        <h4>Excel: Звіти маркетингу</h4>
-                                        <p>Шаблони аналітики</p>
+                                        <h4>Excel: Отчёты маркетинга</h4>
+                                        <p>Шаблоны аналитики</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3602,14 +3602,14 @@
                                     <span class="tool-name">Excel</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити Excel-шаблони звітів маркетингу та аналізу воронки</td>
+                            <td class="task-text">Создать Excel-шаблоны отчётов маркетинга и анализа воронки</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
@@ -3622,31 +3622,31 @@
                             <td colspan="7">
                                 <div class="phase-label">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
-                                    Фаза 5: Делегування
+                                    Фаза 5: Делегирование
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Підфаза: Етапи делегування -->
+                        <!-- Подфаза: Етапи делегування -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 1: Етапи делегування — розуміння процесу передачі функцій</td>
+                            <td colspan="7">Блок 1: Этапы делегирования — понимание процесса передачи функций</td>
                         </tr>
 
-                        <!-- Крок 68 -->
+                        <!-- Шаг 68 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">68</div>
                                     <div class="step-info">
                                         <h4>AI: Етапи делегування</h4>
-                                        <p>Послідовність кроків</p>
+                                        <p>Последовательность шагов</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3654,23 +3654,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати етапи делегування: від підготовки до повної передачі функції</td>
+                            <td class="task-text">Разобрать этапы делегирования: от подготовки до полной передачи функции</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 69 -->
+                        <!-- Шаг 69 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -3684,7 +3684,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3695,39 +3695,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити чек-лист етапів делегування для використання</td>
+                            <td class="task-text">Создать чек-лист этапов делегирования для использования</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Опис функції -->
+                        <!-- Подфаза: Описание функции -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 2: Опис функції — що робить людина на посаді</td>
+                            <td colspan="7">Блок 2: Описание функции — что делает человек на должности</td>
                         </tr>
 
-                        <!-- Крок 70 -->
+                        <!-- Шаг 70 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">70</div>
                                     <div class="step-info">
-                                        <h4>AI: Опис функції</h4>
-                                        <p>Структура та зміст</p>
+                                        <h4>AI: Описание функции</h4>
+                                        <p>Структура и содержание</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3735,34 +3735,34 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: що таке опис функції, з чого складається, як писати</td>
+                            <td class="task-text">Разобрать: что такое описание функции, из чего состоит, как писать</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Бізнес-процес та направляюча форма -->
+                        <!-- Подфаза: Бизнес-процесс и направляющая форма -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 3: Бізнес-процес та направляюча форма — алгоритми роботи</td>
+                            <td colspan="7">Блок 3: Бизнес-процесс и направляющая форма — алгоритмы работы</td>
                         </tr>
 
-                        <!-- Крок 71 -->
+                        <!-- Шаг 71 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">71</div>
                                     <div class="step-info">
-                                        <h4>AI: Бізнес-процес</h4>
+                                        <h4>AI: Бизнес-процесс</h4>
                                         <p>Направляюча форма</p>
                                     </div>
                                 </div>
@@ -3770,7 +3770,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3778,34 +3778,34 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: що таке опис бізнес-процесу, направляюча форма, етапи з продуктами</td>
+                            <td class="task-text">Разобрать: что такое описание бизнес-процесса, направляющая форма, этапы с продуктами</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Інструкції -->
+                        <!-- Подфаза: Инструкции -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 4: Інструкції — детальні покрокові алгоритми</td>
+                            <td colspan="7">Блок 4: Инструкции — детальные пошаговые алгоритмы</td>
                         </tr>
 
-                        <!-- Крок 72 -->
+                        <!-- Шаг 72 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">72</div>
                                     <div class="step-info">
-                                        <h4>AI: Інструкції</h4>
+                                        <h4>AI: Инструкции</h4>
                                         <p>Як писати та структурувати</p>
                                     </div>
                                 </div>
@@ -3813,7 +3813,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3821,42 +3821,42 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: що таке інструкція, як правильно писати, рівень деталізації</td>
+                            <td class="task-text">Разобрать: что такое инструкция, как правильно писать, уровень детализации</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Передача функції -->
+                        <!-- Подфаза: Передача функции -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 5: Передача функції — як правильно передати роботу</td>
+                            <td colspan="7">Блок 5: Передача функции — как правильно передать работу</td>
                         </tr>
 
-                        <!-- Крок 73 -->
+                        <!-- Шаг 73 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">73</div>
                                     <div class="step-info">
-                                        <h4>AI: Передача функції</h4>
-                                        <p>Алгоритм передачі</p>
+                                        <h4>AI: Передача функции</h4>
+                                        <p>Алгоритм передачи</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3864,42 +3864,42 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: як правильно передавати функцію, що підготувати, як контролювати</td>
+                            <td class="task-text">Разобрать: как правильно передавать функцию, что подготовить, как контролировать</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Папки співробітника -->
+                        <!-- Подфаза: Папки сотрудника -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 6: Папка штатного співробітника vs Посадова папка</td>
+                            <td colspan="7">Блок 6: Папка штатного сотрудника vs Должностная папка</td>
                         </tr>
 
-                        <!-- Крок 74 -->
+                        <!-- Шаг 74 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">74</div>
                                     <div class="step-info">
-                                        <h4>AI: Папка співробітника</h4>
-                                        <p>Що містить</p>
+                                        <h4>AI: Папка сотрудника</h4>
+                                        <p>Что содержит</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3907,37 +3907,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: папка штатного співробітника — що містить, для чого потрібна</td>
+                            <td class="task-text">Разобрать: папка штатного сотрудника — что содержит, для чего нужна</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 75 -->
+                        <!-- Шаг 75 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">75</div>
                                     <div class="step-info">
                                         <h4>AI: Посадова папка</h4>
-                                        <p>Різниця та зміст</p>
+                                        <p>Разница и содержание</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3945,23 +3945,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: посадова папка — що містить, різниця від папки співробітника</td>
+                            <td class="task-text">Разобрать: должностная папка — что содержит, отличие от папки сотрудника</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 76 -->
+                        <!-- Шаг 76 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -3975,7 +3975,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -3986,25 +3986,25 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити шаблони папки штатного співробітника та посадової папки</td>
+                            <td class="task-text">Создать шаблоны папки штатного сотрудника и должностной папки</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Проведення делегування -->
+                        <!-- Подфаза: Проведення делегування -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 7: Як провести делегування — практична передача</td>
+                            <td colspan="7">Блок 7: Как провести делегирование — практическая передача</td>
                         </tr>
 
-                        <!-- Крок 77 -->
+                        <!-- Шаг 77 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -4018,7 +4018,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4026,42 +4026,42 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: як провести делегування крок за кроком, що говорити</td>
+                            <td class="task-text">Разобрать: как провести делегирование шаг за шагом, что говорить</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Форма ППФ -->
+                        <!-- Подфаза: Форма ППФ -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 8: Форма ППФ — документ передачі функції</td>
+                            <td colspan="7">Блок 8: Форма ППФ — документ передачи функции</td>
                         </tr>
 
-                        <!-- Крок 78 -->
+                        <!-- Шаг 78 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">78</div>
                                     <div class="step-info">
                                         <h4>AI: Форма ППФ</h4>
-                                        <p>Протокол передачі</p>
+                                        <p>Протокол передачи</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4069,23 +4069,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: форма ППФ (протокол передачі функції), як заповнювати</td>
+                            <td class="task-text">Разобрать: форма ППФ (протокол передачи функции), как заполнять</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 79 -->
+                        <!-- Шаг 79 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -4099,7 +4099,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4110,39 +4110,39 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити шаблон форми ППФ для використання при делегуванні</td>
+                            <td class="task-text">Создать шаблон формы ППФ для использования при делегировании</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Місяць координації -->
+                        <!-- Подфаза: Месяц координации -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 9: Місяць координації — супровід нової людини на посаді</td>
+                            <td colspan="7">Блок 9: Месяц координации — сопровождение нового человека на должности</td>
                         </tr>
 
-                        <!-- Крок 80 -->
+                        <!-- Шаг 80 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">80</div>
                                     <div class="step-info">
-                                        <h4>AI: Місяць координації</h4>
-                                        <p>Навіщо та як</p>
+                                        <h4>AI: Месяц координации</h4>
+                                        <p>Зачем и как</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4150,37 +4150,37 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: для чого місяць координувати нову людину, що робити, як контролювати</td>
+                            <td class="task-text">Разобрать: зачем месяц координировать нового человека, что делать, как контролировать</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 81 -->
+                        <!-- Шаг 81 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">81</div>
                                     <div class="step-info">
-                                        <h4>Документ: План координації</h4>
-                                        <p>Чек-лист на місяць</p>
+                                        <h4>Документ: План координации</h4>
+                                        <p>Чек-лист на месяц</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4191,51 +4191,51 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити план координації на місяць: щоденні/тижневі точки контролю</td>
+                            <td class="task-text">Создать план координации на месяц: ежедневные/еженедельные точки контроля</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
                         <!-- ========================================== -->
-                        <!-- ФАЗА 6: СИСТЕМА ПЛАНУВАННЯ ТА КОМУНІКАЦІЇ -->
+                        <!-- ФАЗА 6: СИСТЕМА ПЛАНИРОВАНИЯ И КОММУНИКАЦИИ -->
                         <!-- ========================================== -->
                         <tr class="phase-row">
                             <td colspan="7">
                                 <div class="phase-label">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                    Фаза 6: Система планування та комунікації
+                                    Фаза 6: Система планирования и коммуникации
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Підфаза: Основи планування -->
+                        <!-- Подфаза: Основи планування -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 1: Основи планування — навіщо і як планувати</td>
+                            <td colspan="7">Блок 1: Основы планирования — зачем и как планировать</td>
                         </tr>
 
-                        <!-- Крок 82 -->
+                        <!-- Шаг 82 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">82</div>
                                     <div class="step-info">
                                         <h4>AI: Основи планування</h4>
-                                        <p>Принципи та підходи</p>
+                                        <p>Принципы и подходы</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4243,34 +4243,34 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: основи планування, рівні планів, зв'язок з цілями</td>
+                            <td class="task-text">Разобрать: основы планирования, уровни планов, связь с целями</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Система комунікації -->
+                        <!-- Подфаза: Система коммуникации -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 2: Система комунікації — як спілкуватися в команді</td>
+                            <td colspan="7">Блок 2: Система коммуникации — как общаться в команде</td>
                         </tr>
 
-                        <!-- Крок 83 -->
+                        <!-- Шаг 83 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">83</div>
                                     <div class="step-info">
-                                        <h4>AI: Система комунікації</h4>
+                                        <h4>AI: Система коммуникации</h4>
                                         <p>Канали та правила</p>
                                     </div>
                                 </div>
@@ -4278,7 +4278,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4286,29 +4286,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: канали комунікації, правила спілкування, ескалація проблем</td>
+                            <td class="task-text">Разобрать: каналы коммуникации, правила общения, эскалация проблем</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 84 -->
+                        <!-- Шаг 84 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">84</div>
                                     <div class="step-info">
-                                        <h4>Документ: Політика комунікації</h4>
+                                        <h4>Документ: Политика коммуникации</h4>
                                         <p>Правила для команди</p>
                                     </div>
                                 </div>
@@ -4316,7 +4316,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4327,31 +4327,31 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити політику комунікації: канали, час відповіді, формати</td>
+                            <td class="task-text">Создать политику коммуникации: каналы, время ответа, форматы</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Наради та зустрічі -->
+                        <!-- Подфаза: Совещания и встречи -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 3: Наради та зустрічі — ефективні комунікації</td>
+                            <td colspan="7">Блок 3: Совещания и встречи — эффективные коммуникации</td>
                         </tr>
 
-                        <!-- Крок 85 -->
+                        <!-- Шаг 85 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">85</div>
                                     <div class="step-info">
-                                        <h4>AI: Наради та зустрічі</h4>
+                                        <h4>AI: Совещания и встречи</h4>
                                         <p>Як проводити ефективно</p>
                                     </div>
                                 </div>
@@ -4359,7 +4359,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4367,23 +4367,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: типи нарад, структура зустрічі, протоколювання рішень</td>
+                            <td class="task-text">Разобрать: типы совещаний, структура встречи, протоколирование решений</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 86 -->
+                        <!-- Шаг 86 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -4397,7 +4397,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4415,44 +4415,44 @@
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
                         <!-- ========================================== -->
-                        <!-- ФАЗА 7: СИСТЕМА КООРДИНАЦІЙ -->
+                        <!-- ФАЗА 7: СИСТЕМА КООРДИНАЦИЙ -->
                         <!-- ========================================== -->
                         <tr class="phase-row">
                             <td colspan="7">
                                 <div class="phase-label">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                                    Фаза 7: Система координацій
+                                    Фаза 7: Система координаций
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Підфаза: Що таке координація -->
+                        <!-- Подфаза: Что такое координация -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 1: Що таке координація — синхронізація роботи команди</td>
+                            <td colspan="7">Блок 1: Что такое координация — синхронизация работы команды</td>
                         </tr>
 
-                        <!-- Крок 87 -->
+                        <!-- Шаг 87 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">87</div>
                                     <div class="step-info">
-                                        <h4>AI: Основи координації</h4>
-                                        <p>Навіщо та як</p>
+                                        <h4>AI: Основы координации</h4>
+                                        <p>Зачем и как</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4460,34 +4460,34 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: що таке координація, відмінність від контролю, роль керівника</td>
+                            <td class="task-text">Разобрать: что такое координация, отличие от контроля, роль руководителя</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Щоденна координація -->
+                        <!-- Подфаза: Ежедневная координация -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 2: Щоденна координація — daily standup</td>
+                            <td colspan="7">Блок 2: Ежедневная координация — daily standup</td>
                         </tr>
 
-                        <!-- Крок 88 -->
+                        <!-- Шаг 88 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">88</div>
                                     <div class="step-info">
-                                        <h4>AI: Щоденна координація</h4>
+                                        <h4>AI: Ежедневная координация</h4>
                                         <p>Daily standup</p>
                                     </div>
                                 </div>
@@ -4495,7 +4495,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4503,34 +4503,34 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: щоденна координація, формат, питання, тривалість</td>
+                            <td class="task-text">Разобрать: ежедневная координация, формат, вопросы, длительность</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    30 хв
+                                    30 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Тижнева координація -->
+                        <!-- Подфаза: Еженедельная координация -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 3: Тижнева координація — weekly review</td>
+                            <td colspan="7">Блок 3: Еженедельная координация — weekly review</td>
                         </tr>
 
-                        <!-- Крок 89 -->
+                        <!-- Шаг 89 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">89</div>
                                     <div class="step-info">
-                                        <h4>AI: Тижнева координація</h4>
+                                        <h4>AI: Еженедельная координация</h4>
                                         <p>Weekly review</p>
                                     </div>
                                 </div>
@@ -4538,7 +4538,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4546,29 +4546,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: тижнева координація, аналіз результатів, планування тижня</td>
+                            <td class="task-text">Разобрать: еженедельная координация, анализ результатов, планирование недели</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 90 -->
+                        <!-- Шаг 90 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">90</div>
                                     <div class="step-info">
-                                        <h4>Документ: Система координацій</h4>
+                                        <h4>Документ: Система координаций</h4>
                                         <p>Регламент та шаблони</p>
                                     </div>
                                 </div>
@@ -4576,7 +4576,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4587,14 +4587,14 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити систему координацій: щоденна, тижнева, місячна</td>
+                            <td class="task-text">Создать систему координаций: ежедневная, еженедельная, месячная</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
@@ -4607,31 +4607,31 @@
                             <td colspan="7">
                                 <div class="phase-label">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                    Фаза 8: Система тактичного планування
+                                    Фаза 8: Система тактического планирования
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Підфаза: Тактичне планування -->
+                        <!-- Подфаза: Тактичне планування -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 1: Основи тактичного планування — місяць/квартал</td>
+                            <td colspan="7">Блок 1: Основы тактического планирования — месяц/квартал</td>
                         </tr>
 
-                        <!-- Крок 91 -->
+                        <!-- Шаг 91 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">91</div>
                                     <div class="step-info">
                                         <h4>AI: Тактичне планування</h4>
-                                        <p>Місяць та квартал</p>
+                                        <p>Месяц и квартал</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4639,42 +4639,42 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: тактичне планування, горизонт місяць/квартал, декомпозиція цілей</td>
+                            <td class="task-text">Разобрать: тактическое планирование, горизонт месяц/квартал, декомпозиция целей</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: OKR та KPI -->
+                        <!-- Подфаза: OKR та KPI -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 2: OKR та KPI — метрики досягнення</td>
+                            <td colspan="7">Блок 2: OKR и KPI — метрики достижения</td>
                         </tr>
 
-                        <!-- Крок 92 -->
+                        <!-- Шаг 92 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">92</div>
                                     <div class="step-info">
                                         <h4>AI: OKR та KPI</h4>
-                                        <p>Метрики результатів</p>
+                                        <p>Метрики результатов</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4682,23 +4682,23 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: OKR та KPI, як ставити, як відстежувати, каскадування</td>
+                            <td class="task-text">Разобрать: OKR и KPI, как ставить, как отслеживать, каскадирование</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 93 -->
+                        <!-- Шаг 93 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
@@ -4712,7 +4712,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4730,44 +4730,44 @@
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
                         <!-- ========================================== -->
-                        <!-- ФАЗА 9: СТРАТЕГІЧНЕ ПЛАНУВАННЯ -->
+                        <!-- ФАЗА 9: СТРАТЕГИЧЕСКОЕ ПЛАНИРОВАНИЕ -->
                         <!-- ========================================== -->
                         <tr class="phase-row">
                             <td colspan="7">
                                 <div class="phase-label">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                                    Фаза 9: Стратегічне планування
+                                    Фаза 9: Стратегическое планирование
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Підфаза: Стратегія -->
+                        <!-- Подфаза: Стратегия -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 1: Основи стратегії — бачення на 1-3-5 років</td>
+                            <td colspan="7">Блок 1: Основы стратегии — видение на 1-3-5 лет</td>
                         </tr>
 
-                        <!-- Крок 94 -->
+                        <!-- Шаг 94 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">94</div>
                                     <div class="step-info">
-                                        <h4>AI: Основи стратегії</h4>
-                                        <p>Бачення та місія</p>
+                                        <h4>AI: Основы стратегии</h4>
+                                        <p>Видение и миссия</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4775,34 +4775,34 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: стратегічне планування, бачення, місія, горизонт 1-3-5 років</td>
+                            <td class="task-text">Разобрать: стратегическое планирование, видение, миссия, горизонт 1-3-5 лет</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Стратегічний аналіз -->
+                        <!-- Подфаза: Стратегический анализ -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 2: Стратегічний аналіз — SWOT, конкуренти, ринок</td>
+                            <td colspan="7">Блок 2: Стратегический анализ — SWOT, конкуренты, рынок</td>
                         </tr>
 
-                        <!-- Крок 95 -->
+                        <!-- Шаг 95 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">95</div>
                                     <div class="step-info">
-                                        <h4>AI: Стратегічний аналіз</h4>
+                                        <h4>AI: Стратегический анализ</h4>
                                         <p>SWOT та ринок</p>
                                     </div>
                                 </div>
@@ -4810,7 +4810,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4818,29 +4818,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: SWOT-аналіз, аналіз конкурентів, позиціонування</td>
+                            <td class="task-text">Разобрать: SWOT-анализ, анализ конкурентов, позиционирование</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 96 -->
+                        <!-- Шаг 96 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">96</div>
                                     <div class="step-info">
-                                        <h4>Документ: Стратегічний план</h4>
+                                        <h4>Документ: Стратегический план</h4>
                                         <p>План на 1-3 роки</p>
                                     </div>
                                 </div>
@@ -4848,7 +4848,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4859,43 +4859,43 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити стратегічний план: бачення, цілі, ключові ініціативи</td>
+                            <td class="task-text">Создать стратегический план: видение, цели, ключевые инициативы</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    90 хв
+                                    90 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
                         <!-- ========================================== -->
-                        <!-- ФАЗА 10: АВТОМАТИЗАЦІЯ -->
+                        <!-- ФАЗА 10: АВТОМАТИЗАЦИЯ -->
                         <!-- ========================================== -->
                         <tr class="phase-row">
                             <td colspan="7">
                                 <div class="phase-label">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
-                                    Фаза 10: Автоматизація
+                                    Фаза 10: Автоматизация
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Підфаза: Основи автоматизації -->
+                        <!-- Подфаза: Основы автоматизации -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 1: Основи автоматизації — що і навіщо автоматизувати</td>
+                            <td colspan="7">Блок 1: Основы автоматизации — что и зачем автоматизировать</td>
                         </tr>
 
-                        <!-- Крок 97 -->
+                        <!-- Шаг 97 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">97</div>
                                     <div class="step-info">
-                                        <h4>AI: Основи автоматизації</h4>
+                                        <h4>AI: Основы автоматизации</h4>
                                         <p>Що автоматизувати</p>
                                     </div>
                                 </div>
@@ -4903,7 +4903,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4911,42 +4911,42 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: що варто автоматизувати, пріоритети, ROI автоматизації</td>
+                            <td class="task-text">Разобрать: что стоит автоматизировать, приоритеты, ROI автоматизации</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: AI в бізнесі -->
+                        <!-- Подфаза: AI в бизнесе -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 2: AI в бізнесі — практичне застосування</td>
+                            <td colspan="7">Блок 2: AI в бизнесе — практическое применение</td>
                         </tr>
 
-                        <!-- Крок 98 -->
+                        <!-- Шаг 98 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">98</div>
                                     <div class="step-info">
-                                        <h4>AI: AI в бізнесі</h4>
-                                        <p>Практичні кейси</p>
+                                        <h4>AI: AI в бизнесе</h4>
+                                        <p>Практические кейсы</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4954,42 +4954,42 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: AI для бізнесу, чат-боти, асистенти, генерація контенту</td>
+                            <td class="task-text">Разобрать: AI для бизнеса, чат-боты, ассистенты, генерация контента</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Підфаза: Інтеграції та автоматизації -->
+                        <!-- Подфаза: Интеграции и автоматизация -->
                         <tr class="subphase-row">
-                            <td colspan="7">Блок 3: Інтеграції — з'єднання систем</td>
+                            <td colspan="7">Блок 3: Интеграции — соединение систем</td>
                         </tr>
 
-                        <!-- Крок 99 -->
+                        <!-- Шаг 99 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">99</div>
                                     <div class="step-info">
-                                        <h4>AI: Інтеграції</h4>
-                                        <p>З'єднання систем</p>
+                                        <h4>AI: Интеграции</h4>
+                                        <p>Соединение систем</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -4997,29 +4997,29 @@
                                     <div class="tool-icon ai">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
                                     </div>
-                                    <span class="tool-name">AI-асистент</span>
+                                    <span class="tool-name">AI-ассистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати: інтеграції між системами, Zapier, Make, API</td>
+                            <td class="task-text">Разобрать: интеграции между системами, Zapier, Make, API</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    45 хв
+                                    45 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>
                         </tr>
 
-                        <!-- Крок 100 -->
+                        <!-- Шаг 100 -->
                         <tr>
                             <td>
                                 <div class="step-cell">
                                     <div class="step-number">100</div>
                                     <div class="step-info">
-                                        <h4>Документ: План автоматизації</h4>
+                                        <h4>Документ: План автоматизации</h4>
                                         <p>Roadmap впровадження</p>
                                     </div>
                                 </div>
@@ -5027,7 +5027,7 @@
                             <td>
                                 <span class="status-badge status-waiting">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Очікує
+                                    Ожидает
                                 </span>
                             </td>
                             <td>
@@ -5038,14 +5038,14 @@
                                     <span class="tool-name">Документ</span>
                                 </div>
                             </td>
-                            <td class="task-text">Створити план автоматизації: пріоритети, інструменти, терміни</td>
+                            <td class="task-text">Создать план автоматизации: приоритеты, инструменты, сроки</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
                             <td>
                                 <div class="time-cell">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    60 хв
+                                    60 мин
                                 </div>
                             </td>
                             <td class="comment-cell empty">—</td>

@@ -6147,7 +6147,7 @@
             <div class="l-module-info">
                 <div class="l-module-title">${title}</div>
                 ${subtitle ? `<div class="l-module-subtitle">${subtitle}</div>` : ''}
-                ${module.time ? `<div class="l-module-time"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} хв</div>` : ''}
+                ${module.time ? `<div class="l-module-time"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} мин</div>` : ''}
             </div>
             <div class="l-module-arrow">
                 <i data-lucide="${isCompleted ? 'check' : 'chevron-right'}" class="icon" style="width:18px;height:18px;color:${isCompleted ? '#22c55e' : '#9ca3af'};"></i>
@@ -6164,9 +6164,9 @@
         <div class="learning-wrap" style="padding:0 0 4rem;">
             <div style="display:flex;align-items:center;gap:0.75rem;padding:1rem 1.5rem 0.5rem;position:sticky;top:0;background:white;z-index:10;border-bottom:1px solid #e5e7eb;">
                 <button class="l-back-btn" onclick="window._openLearningModule(0)" style="display:flex;align-items:center;gap:0.4rem;background:none;border:none;color:#6b7280;font-size:0.875rem;cursor:pointer;">
-                    ← Назад до модуля
+                    ← Назад к модулю
                 </button>
-                <span style="font-weight:700;color:#1a1a1a;">Маршрут програми</span>
+                <span style="font-weight:700;color:#1a1a1a;">Маршрут программы</span>
             </div>
             <style>
         :root {
@@ -6808,7 +6808,7 @@
                 </div>
                 <div class="stat-content">
                     <h4>0</h4>
-                    <p>Виконано</p>
+                    <p>Выполнено</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -7666,7 +7666,7 @@
                                     <div class="step-number">21</div>
                                     <div class="step-info">
                                         <h4>Платформа: Структура</h4>
-                                        <p>Освоєння модуля</p>
+                                        <p>Освоение модуля</p>
                                     </div>
                                 </div>
                             </td>
@@ -7704,7 +7704,7 @@
                                     <div class="step-number">22</div>
                                     <div class="step-info">
                                         <h4>Платформа: Статистики</h4>
-                                        <p>Освоєння модуля</p>
+                                        <p>Освоение модуля</p>
                                     </div>
                                 </div>
                             </td>
@@ -7742,7 +7742,7 @@
                                     <div class="step-number">23</div>
                                     <div class="step-info">
                                         <h4>Платформа: Таск-трекер</h4>
-                                        <p>Освоєння модуля</p>
+                                        <p>Освоение модуля</p>
                                     </div>
                                 </div>
                             </td>
@@ -11056,16 +11056,16 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         const prompt = isRu
             ? `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`
             : `У мене завдання з програми навчання TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнє завдання: ' + hw + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
-        const btnText = isRu ? 'Запитати AI асистента' : 'Запитати AI асистента';
+        const btnText = isRu ? 'Спросить AI ассистента' : 'Запитати AI асистента';
         const descText = isRu
-            ? 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.'
+            ? 'Зайдите в AI ассистента, нажмите кнопку ниже — промпт скопируется автоматически. Вставьте его в чат и ассистент проведёт вас через выполнение.'
             : 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.';
         return `
         <div class="l-ai-block">
             <div class="l-ai-block-header">
                 <div class="l-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="26" height="26"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg></div>
                 <div>
-                    <div class="l-ai-title">AI Технічний провідник</div>
+                    <div class="l-ai-title">AI Технический наставник</div>
                     <div class="l-ai-desc">${descText}</div>
                 </div>
             </div>
@@ -11108,7 +11108,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     <div>
                         <div class="l-detail-title">${title}</div>
                         ${subtitle ? `<div class="l-detail-subtitle">${subtitle}</div>` : ''}
-                        ${module.time ? `<div class="l-module-time" style="margin-top:4px;"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} хв</div>` : ''}
+                        ${module.time ? `<div class="l-module-time" style="margin-top:4px;"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} мин</div>` : ''}
                     </div>
                 </div>
 
