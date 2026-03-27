@@ -141,7 +141,10 @@ window.renderCrmTodo = function() {
 
     const all    = _getActiveDeals();
     const filter = window._crmTodoFilter || '';
-    const deals  = filter ? all.filter(d => d.stage === filter) : all;
+    const search = (window._crmTodoSearch || '').toLowerCase().trim();
+    const deals  = (filter ? all.filter(d => d.stage === filter) : all)
+        .filter(d => !search || [d.name, d.clientName, d.phone, d.email, d.notes]
+            .some(v => v && String(v).toLowerCase().includes(search)));
     const today  = _todayStr();
     const overdue   = all.filter(d => d.nextContactDate && d.nextContactDate < today);
     const todayList = all.filter(d => d.nextContactDate === today);
@@ -170,6 +173,18 @@ window.renderCrmTodo = function() {
         ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} на сьогодні</div>`:''}
         ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} нових</div>`:''}
         ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${sla.length} забутих лідів</div>`:''})()}
+      </div>
+
+      <!-- Пошук -->
+      <div style="position:relative;margin-bottom:0.65rem;">
+        <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="crm-todo-search"
+          placeholder="Пошук по імені, телефону, email..."
+          value="${search}"
+          oninput="window._crmTodoSearch=this.value;renderCrmTodo()"
+          style="width:100%;padding:7px 32px 7px 32px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.83rem;outline:none;box-sizing:border-box;transition:border-color .15s;"
+          onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+        ${search ? `<button onclick="window._crmTodoSearch='';renderCrmTodo()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1rem;line-height:1;padding:2px;">✕</button>` : ''}
       </div>
 
       <!-- Фільтр по стадіях -->
