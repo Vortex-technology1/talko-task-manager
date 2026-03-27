@@ -144,15 +144,15 @@
                 <div style="background:white;border-radius:8px;overflow:hidden;border:1px solid #f3f4f6;">
                     <div style="padding:0.75rem 1rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;">
                         <span style="font-weight:600;font-size:0.95rem;">${title}</span>
-                        <span style="font-size:0.82rem;color:#9ca3af;">${filtered.length} завдань</span>
+                        <span style="font-size:0.82rem;color:#9ca3af;">${filtered.length} задач</span>
                     </div>
                     <table style="width:100%;border-collapse:collapse;">
                         <thead>
                             <tr style="background:#fafafa;font-size:0.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:0.04em;">
-                                <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;">Завдання</th>
-                                <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;">Виконавець</th>
+                                <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;">Задача</th>
+                                <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;">Исполнитель</th>
                                 <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;">Дедлайн</th>
-                                <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;">Функція</th>
+                                <th style="padding:0.5rem 0.75rem;text-align:left;font-weight:600;">Функция</th>
                             </tr>
                         </thead>
                         <tbody style="divide-y:#f9fafb;">
@@ -363,11 +363,11 @@
 
                 content.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.4rem;">
-                        <h3 style="margin:0;">По людях</h3>
+                        <h3 style="margin:0;">По людям</h3>
                         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-                            <span style="background:#eff6ff;color:#3b82f6;padding:3px 10px;border-radius:10px;font-size:0.74rem;font-weight:600;">${totalActive} активних</span>
-                            ${totalOverdue > 0 ? `<span style="background:#fef2f2;color:#ef4444;padding:3px 10px;border-radius:10px;font-size:0.74rem;font-weight:600;">⚠ ${totalOverdue} прострочено</span>` : ''}
-                            ${totalReturned > 0 ? `<span style="background:#fffbeb;color:#b45309;padding:3px 10px;border-radius:10px;font-size:0.74rem;font-weight:600;">↩ ${totalReturned} повернуто</span>` : ''}
+                            <span style="background:#eff6ff;color:#3b82f6;padding:3px 10px;border-radius:10px;font-size:0.74rem;font-weight:600;">${totalActive} активных</span>
+                            ${totalOverdue > 0 ? `<span style="background:#fef2f2;color:#ef4444;padding:3px 10px;border-radius:10px;font-size:0.74rem;font-weight:600;">⚠ ${totalOverdue} просрочено</span>` : ''}
+                            ${totalReturned > 0 ? `<span style="background:#fffbeb;color:#b45309;padding:3px 10px;border-radius:10px;font-size:0.74rem;font-weight:600;">↩ ${totalReturned} возвращено</span>` : ''}
                         </div>
                     </div>
                     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:1rem;text-align:center;">
@@ -400,10 +400,10 @@
                                 <div class="control-row-header" style="flex-wrap:wrap;gap:0.35rem;">
                                     <span style="font-weight:600;"><i data-lucide="user" class="icon icon-sm"></i> ${esc(data.name)}</span>
                                     <div style="display:flex;gap:0.35rem;align-items:center;flex-wrap:wrap;margin-left:auto;">
-                                        <span style="font-size:0.72rem;color:#6b7280;">${active} активних</span>
+                                        <span style="font-size:0.72rem;color:#6b7280;">${active} активных</span>
                                         ${overdue > 0 ? `<span style="background:#fef2f2;color:#ef4444;padding:1px 7px;border-radius:8px;font-size:0.7rem;font-weight:600;">⚠ ${overdue}</span>` : ''}
                                         ${returned > 0 ? `<span style="background:#fffbeb;color:#b45309;padding:1px 7px;border-radius:8px;font-size:0.7rem;">↩ ${returned}</span>` : ''}
-                                        ${autonomy !== null ? `<span style="font-weight:700;color:${autoColor};font-size:0.78rem;" title="% виконаних без повернення">${autonomy}% авт.</span>` : ''}
+                                        ${autonomy !== null ? `<span style="font-weight:700;color:${autoColor};font-size:0.78rem;" title="% выполненных без возврата">${autonomy}% авт.</span>` : ''}
                                         <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i>
                                     </div>
                                 </div>
@@ -420,17 +420,17 @@
                                                 const isOv = tk.deadlineDate && tk.deadlineDate < todayStr && s.key !== 'done';
                                                 const _tkMins = (tk.timeLog || []).reduce((s, e) => s + (e.minutes || 0), 0);
                                                 const _tkPlan = tk.estimatedTime ? parseInt(tk.estimatedTime) : 0;
-                                                const _tkFmt = _tkMins >= 60 ? Math.floor(_tkMins/60)+'г'+((_tkMins%60)?(_tkMins%60)+'хв':'') : (_tkMins > 0 ? _tkMins+'хв' : '');
+                                                const _tkFmt = _tkMins >= 60 ? Math.floor(_tkMins/60)+'ч'+((_tkMins%60)?(_tkMins%60)+'мин':'') : (_tkMins > 0 ? _tkMins+'мин' : '');
                                                 const _tkColor = _tkMins === 0 ? '#d1d5db' : (_tkPlan > 0 && _tkMins > _tkPlan * 1.1) ? '#ef4444' : '#22c55e';
                                                 return `<div class="control-task-item ${isOv ? 'overdue' : ''}" onclick="event.stopPropagation();openTaskModal('${escId(tk.id)}')" style="display:flex;align-items:center;gap:0.3rem;">
                                                     ${tk.reviewRejectedAt ? '<span style="color:#f59e0b;font-size:0.7rem;">↩</span>' : ''}
                                                     <span class="task-title" style="flex:1;">${esc(tk.title)}</span>
                                                     ${tk.function ? `<span style="font-size:0.65rem;color:#9ca3af;background:#f3f4f6;padding:1px 5px;border-radius:3px;">${esc(tk.function)}</span>` : ''}
                                                     <span style="font-size:0.68rem;color:${isOv?'#ef4444':'#9ca3af'};">${tk.deadlineDate || ''}</span>
-                                                    <span style="font-size:0.68rem;font-weight:600;color:${_tkColor};white-space:nowrap;" title="Витрачено часу${_tkPlan>0?' / план: '+(_tkPlan>=60?Math.floor(_tkPlan/60)+'г'+((_tkPlan%60)?(_tkPlan%60)+'хв':''):_tkPlan+'хв'):''}">⏱ ${_tkFmt || '—'}</span>
+                                                    <span style="font-size:0.68rem;font-weight:600;color:${_tkColor};white-space:nowrap;" title="Затрачено времени${_tkPlan>0?' / план: '+(_tkPlan>=60?Math.floor(_tkPlan/60)+'ч'+((_tkPlan%60)?(_tkPlan%60)+'мин':''):_tkPlan+'мин'):''}">⏱ ${_tkFmt || '—'}</span>
                                                 </div>`;
                                             }).join('')}
-                                            ${data[s.key].length > 10 ? `<div style="font-size:0.7rem;color:#9ca3af;padding:0.2rem;">+${data[s.key].length - 10} ще...</div>` : ''}
+                                            ${data[s.key].length > 10 ? `<div style="font-size:0.7rem;color:#9ca3af;padding:0.2rem;">+${data[s.key].length - 10} ещё...</div>` : ''}
                                         </div>
                                     `).join('')}
                                 </div>
@@ -554,7 +554,7 @@
                         ${active.sort((a,b) => (b.severity||1)-(a.severity||1)).map(mi => {
                             const cat = catConfig[mi.category] || catConfig.other;
                             const sev = mi.severity || 1;
-                            const sevLabel = sev === 3 ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Критично' : sev === 2 ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span> Важливо' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Норма';
+                            const sevLabel = sev === 3 ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Критично' : sev === 2 ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span> Важно' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Норма';
                             return `
                             <div style="background:${cat.bg};border-radius:10px;border-left:4px solid ${cat.color};padding:0.75rem;margin-bottom:0.4rem;">
                                 <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;">
@@ -623,7 +623,7 @@
                     content.innerHTML = '';
                     renderOwnerDashboard(content);
                 } else {
-                    content.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Завантаження...</div>';
+                    content.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Загрузка...</div>';
                 }
             }
             

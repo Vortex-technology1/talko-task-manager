@@ -11,7 +11,7 @@
             if (!isSuperAdmin) return;
             
             const container = document.getElementById('adminCompaniesList');
-            container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;" data-i18n="uploading">Завантаження...</p>';
+            container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;" >Загрузка...</p>';
             
             try {
                 const companiesSnap = await db.collection('companies').orderBy('createdAt', 'desc').get();
@@ -89,7 +89,7 @@
                 
             } catch (error) {
                 console.error('Error loading companies:', error);
-                container.innerHTML = '<p style="color:var(--danger);text-align:center;padding:1rem;">Помилка завантаження: ' + (window.htmlEsc ? window.htmlEsc(error.message) : error.message) + '</p>';
+                container.innerHTML = '<p style="color:var(--danger);text-align:center;padding:1rem;">Ошибка загрузки: ' + (window.htmlEsc ? window.htmlEsc(error.message) : error.message) + '</p>';
             }
         }
         
@@ -120,7 +120,7 @@
             // Друге підтвердження для безпеки
             const confirmMsg2 = window.t('deleteCompanyConfirm2').replace('{name}', companyName);
             
-            const userInput = await (window.showInputModal ? showInputModal(confirmMsg2, '', {placeholder: 'Введіть текст підтвердження'}) : (async()=>prompt(confirmMsg2))());
+            const userInput = await (window.showInputModal ? showInputModal(confirmMsg2, '', {placeholder: 'Введите текст подтверждения'}) : (async()=>prompt(confirmMsg2))());
             const yesVariants = ['ua','ru','en','de','pl'].map(l => (translations[l]?.confirmYes || '').toLowerCase()).filter(Boolean); if (!yesVariants.includes(userInput?.toLowerCase())) {
                 return;
             }
