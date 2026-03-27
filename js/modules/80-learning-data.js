@@ -11461,6 +11461,118 @@ Bist du dabei?</div>
         </a>
     </div>
 </div>`,
+                lessonContent_ru: `
+<style>
+.l13-s{margin-bottom:1.75rem}.l13-s:last-child{margin-bottom:0}
+.l13-div{height:1px;background:#e2e8f0;margin:1.75rem 0}
+.l13-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}
+.l13-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l13-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}
+.l13-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.l13-card p+p{margin-top:.7rem}
+.l13-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:3px solid #22c55e;border-radius:0 10px 10px 0;font-size:.875rem;color:#166534;font-style:italic;line-height:1.6}
+.l13-err{display:grid;gap:.5rem;margin-top:.75rem}
+.l13-err-item{padding:.8rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}
+.l13-err-title{font-weight:700;color:#dc2626;font-size:.875rem;margin-bottom:.3rem}
+.l13-err-text{font-size:.82rem;color:#7f1d1d;line-height:1.5}
+.l13-tw{overflow-x:auto;margin-top:.75rem}
+.l13-t{width:100%;border-collapse:collapse;font-size:.82rem}
+.l13-t th{background:#f0fdf4;color:#166534;font-weight:700;padding:.55rem .75rem;text-align:left;border:1px solid #bbf7d0;font-size:.75rem}
+.l13-t td{padding:.55rem .75rem;border:1px solid #e2e8f0;color:#374151;line-height:1.4}
+.l13-t tr:nth-child(even) td{background:#f8fafc}
+.l13-res{display:grid;gap:.45rem;margin-top:.75rem}
+.l13-res-item{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.875rem;color:#166534;font-weight:500}
+.l13-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.l13-th{display:flex;align-items:flex-start;gap:.85rem}
+.l13-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l13-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l13-td{font-size:.82rem;color:#525252;line-height:1.5}
+.l13-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+</style>
+
+<div class="l13-s">
+    <div class="l13-lbl">Главная проблема</div>
+    <div class="l13-title">Без цифр вы видите не реальность, а свою интерпретацию</div>
+    <div class="l13-card">
+        <p>Большинство владельцев считают, что хорошо понимают свой бизнес. «Если записей много — всё хорошо. Если мало — нужна реклама». Кажется логичным. Но если всё так понятно — почему каждую неделю пожары? Почему вдруг падают продажи и непонятно почему?</p>
+        <p>Проблемы в бизнесе почти никогда не возникают внезапно. Они накапливаются неделями — медленно, незаметно. Человек видит небольшое ухудшение, объясняет «сезоном». Пока проблема не стала огромной — на неё не обращают внимания.</p>
+    </div>
+    <div class="l13-quote">Статистики решают именно это: делают невидимое — видимым.</div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Раздел 1</div>
+    <div class="l13-title">Что такое статистика — и чем она отличается от «показателя»</div>
+    <div class="l13-card">
+        <p>Статистика — это <strong>количественное измерение результата конкретной функции, которое проводится еженедельно и сравнивается с предыдущей неделей</strong>. Не раз в месяц. Не «примерно». Каждую неделю, в цифрах, на графике.</p>
+        <p>Вас интересует не то, что продажи этой недели составили 80 000 грн, а то, что на прошлой было 95 000. <strong>Тренд важнее точки.</strong></p>
+    </div>
+    <div class="l13-quote">Месяц — слишком большой горизонт для управления. Если утром взяли неправильное направление — к вечеру вы в нескольких километрах от маршрута. Еженедельные статистики — это сверка с компасом каждые несколько часов.</div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Раздел 2</div>
+    <div class="l13-title">Статистика и ЦКП — что и как измерять</div>
+    <div class="l13-tw">
+        <table class="l13-t">
+            <thead><tr><th>Функция</th><th>ЦКП</th><th>Статистика</th></tr></thead>
+            <tbody>
+                <tr><td>Секретарь</td><td>Правильно направленные звонки</td><td>Количество правильно направленных звонков</td></tr>
+                <tr><td>Продажи</td><td>Подписанные договоры</td><td>Сумма заказов по договорам (грн)</td></tr>
+                <tr><td>Финансы</td><td>Полученные оплаты</td><td>Сумма полученных оплат (грн)</td></tr>
+                <tr><td>Дизайн</td><td>Утверждённые макеты</td><td>Количество макетов, одобренных клиентом</td></tr>
+                <tr><td>Доставка</td><td>Вовремя доставленная продукция</td><td>Стоимость доставленной продукции (грн)</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="l13-quote">Главная статистика компании — не деньги. Деньги — результат. Например, главная статистика TALKO — количество компаний, в которых внедрена система управления.</div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Три ошибки</div>
+    <div class="l13-title">Как не надо выбирать статистику</div>
+    <div class="l13-err">
+        <div class="l13-err-item">
+            <div class="l13-err-title">Ошибка 1: проценты вместо количества</div>
+            <div class="l13-err-text">«Секретарь направил 100% звонков правильно» — если поступило 2 звонка вместо 40, статистика 100% ничего не покажет. ЦКП не выполнен, но выглядит идеально.</div>
+        </div>
+        <div class="l13-err-item">
+            <div class="l13-err-title">Ошибка 2: обратные статистики как главные</div>
+            <div class="l13-err-text">«Количество несорванных заказов» — если заказов вообще не было, статистика идеальная. Обратные показатели могут быть вспомогательными, но главная — всегда об объёме произведённого продукта.</div>
+        </div>
+        <div class="l13-err-item">
+            <div class="l13-err-title">Ошибка 3: статистика «готовности», а не результата</div>
+            <div class="l13-err-text">«Я был доступен всю неделю» — это не ЦКП. Статистика измеряет реальный продукт, а не намерения.</div>
+        </div>
+    </div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Инструмент</div>
+    <div class="l13-tool">
+        <div class="l13-th">
+            <div class="l13-ti">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+                <div class="l13-tt">AI-ассистент системы статистик</div>
+                <div class="l13-td">Проведёт вас через определение ЦКП каждой функции и поможет сформулировать правильные статистики. На выходе — готовый перечень метрик для внедрения на платформе.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics" target="_blank" class="l13-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Разработать систему статистик
+        </a>
+    </div>
+</div>`,
 
                 homework: `<ol><li>Пройдіть діалог з AI-асистентом статистик</li><li>Для кожної функції визначте ЦКП і відповідну статистику</li><li>Напишіть у полі відповіді: яка головна статистика вашої компанії і чому саме вона</li></ol>`,
                 homework_en: `<ol><li>Complete the dialogue with the AI Statistics Assistant</li><li>For each function, define the FKP and corresponding statistic</li><li>Write in the answer field: what is the main statistic of your company and why</li></ol>`,
