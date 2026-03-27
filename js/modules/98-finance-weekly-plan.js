@@ -1,19 +1,17 @@
 // ============================================================
-// 98-finance-weekly-plan.js — Weekly Plan 6M v1.0
-// Тижневе планування доходів і витрат на 6-8 місяців
-// Комбо: таблиця зверху (план/факт) + Ганта знизу
+// 98-finance-weekly-plan.js — Weekly Plan 6M v2.0
+// Тижневий план: Timeline + Стовпчиковий графік + Cashflow
 // ============================================================
 (function () {
 'use strict';
 
-// ── Стан ──────────────────────────────────────────────────
 const WP = {
-  weeks:    [],      // [{key:'2026-W01', label:'1-7 січ', from:Date, to:Date}]
-  plan:     {},      // { weekKey: { income: N, expense: N } }
-  actual:   {},      // { weekKey: { income: N, expense: N } } — з транзакцій
-  horizon:  26,      // кількість тижнів (26 = 6M, 32 = 8M)
+  weeks:    [],
+  plan:     {},   // { weekKey: { income:N, expense:N } }
+  actual:   {},   // { weekKey: { income:N, expense:N } }
+  horizon:  26,
   currency: 'UAH',
-  loaded:   false,
+  startBalance: 0,
   saving:   false,
 };
 
@@ -22,293 +20,474 @@ window.renderWeeklyPlan = async function(containerId) {
   const root = document.getElementById(containerId);
   if (!root) return;
   root.innerHTML = _skeleton();
-
   WP.currency = _getCurrency();
   WP.weeks    = _buildWeeks(WP.horizon);
-
   await Promise.all([_loadPlan(), _loadActual()]);
-  WP.loaded = true;
-
   _render(root);
 };
 
 // ── Головний рендер ────────────────────────────────────────
 function _render(root) {
-  const currency = WP.currency;
-  const weeks    = WP.weeks;
+  const now   = new Date();
+  const weeks = WP.weeks;
+  const cur   = _getCurrency();
 
-  // Підрахунки
-  const totals = weeks.map(w => {
-    const p = WP.plan[w.key]   || { income:0, expense:0 };
-    const a = WP.actual[w.key] || { income:0, expense:0 };
+  // Збагачуємо тижні даними
+  const enriched = weeks.map(w => {
+    const p = WP.plan[w.key]   || {income:0, expense:0};
+    const a = WP.actual[w.key] || {income:0, expense:0};
     return {
       ...w,
-      planInc:  p.income,  planExp:  p.expense,
-      actInc:   a.income,  actExp:   a.expense,
-      planProfit: p.income - p.expense,
-      actProfit:  a.income - a.expense,
-      isPast: w.to < new Date(),
-      isCurrent: w.from <= new Date() && w.to >= new Date(),
+      pInc: p.income,  pExp: p.expense,
+      aInc: a.income,  aExp: a.expense,
+      pProfit: p.income - p.expense,
+      aProfit: a.income - a.expense,
+      isPast:    w.to   < now,
+      isCurrent: w.from <= now && w.to >= now,
+      isFuture:  w.from > now,
     };
   });
 
-  const totalPlanInc = totals.reduce((s,w) => s + w.planInc, 0);
-  const totalPlanExp = totals.reduce((s,w) => s + w.planExp, 0);
-  const totalActInc  = totals.reduce((s,w) => s + w.actInc,  0);
-  const totalActExp  = totals.reduce((s,w) => s + w.actExp,  0);
-  const maxVal = Math.max(...totals.map(w => Math.max(w.planInc, w.planExp, w.actInc, w.actExp, 1)));
+  // Cashflow з накопиченням (залишок рахується наростаючим підсумком)
+  let cfBal = WP.startBalance;
+  enriched.forEach(w => {
+    w.cfStart = cfBal;
+    const inc = w.isPast || w.isCurrent ? w.aInc : w.pInc;
+    const exp = w.isPast || w.isCurrent ? w.aExp : w.pExp;
+    cfBal = cfBal + inc - exp;
+    w.cfEnd   = cfBal;
+    w.cfInc   = inc;
+    w.cfExp   = exp;
+    w.cfIsNeg = cfBal < 0;
+  });
 
-  // ── KPI рядок ──
-  const kpiHtml = `
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
+  // Максимуми для масштабування
+  const maxBar = Math.max(...enriched.map(w => Math.max(w.pInc, w.pExp, w.aInc, w.aExp, 1)));
+  const maxCf  = Math.max(...enriched.map(w => Math.abs(w.cfEnd)), 1);
+  const minCf  = Math.min(...enriched.map(w => w.cfEnd), 0);
+
+  // KPI
+  const tPlanInc = enriched.reduce((s,w)=>s+w.pInc,0);
+  const tPlanExp = enriched.reduce((s,w)=>s+w.pExp,0);
+  const tActInc  = enriched.reduce((s,w)=>s+w.aInc,0);
+  const tActExp  = enriched.reduce((s,w)=>s+w.aExp,0);
+  const cfFinal  = cfBal;
+  const hasNeg   = enriched.some(w=>w.cfIsNeg);
+
+  const kpi = `
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px;">
       ${[
-        {l:'Плановий дохід (6M)',   v:_fmt(totalPlanInc,currency), c:'#22c55e'},
-        {l:'Планові витрати (6M)',  v:_fmt(totalPlanExp,currency), c:'#ef4444'},
-        {l:'Плановий прибуток',     v:_fmt(totalPlanInc-totalPlanExp,currency), c:(totalPlanInc>=totalPlanExp?'#22c55e':'#ef4444')},
-        {l:'Факт доходів (минулі)', v:_fmt(totalActInc,currency),  c:'#3b82f6'},
+        {l:'Дохід план',   v:_fmt(tPlanInc,cur), c:'#22c55e', sub:'за горизонт'},
+        {l:'Витрати план', v:_fmt(tPlanExp,cur), c:'#ef4444', sub:'за горизонт'},
+        {l:'Плановий прибуток', v:_fmt(tPlanInc-tPlanExp,cur), c:tPlanInc>=tPlanExp?'#22c55e':'#ef4444', sub:''},
+        {l:'Факт доходів', v:_fmt(tActInc,cur),  c:'#3b82f6', sub:'минулі тижні'},
+        {l:'Залишок наприкінці', v:_fmt(cfFinal,cur), c:cfFinal>=0?'#22c55e':'#ef4444',
+          sub: hasNeg ? '⚠️ є касовий розрив' : 'очікуваний'},
       ].map(k=>`
-        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 14px;">
-          <div style="font-size:0.68rem;color:#6b7280;">${k.l}</div>
-          <div style="font-size:0.95rem;font-weight:700;color:${k.c};margin-top:2px;">${k.v}</div>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;">
+          <div style="font-size:0.67rem;color:#6b7280;margin-bottom:2px;">${k.l}</div>
+          <div style="font-size:0.88rem;font-weight:700;color:${k.c};">${k.v}</div>
+          ${k.sub?`<div style="font-size:0.65rem;color:#9ca3af;margin-top:1px;">${k.sub}</div>`:''}
         </div>`).join('')}
     </div>`;
 
-  // ── Таблиця зверху ──
-  const colW = 88;
-  const tableHtml = `
-    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:16px;">
-      <div style="overflow-x:auto;">
-        <table style="width:100%;border-collapse:collapse;min-width:${120 + weeks.length * colW}px;">
-          <thead>
-            <tr style="background:#1f2937;color:#fff;">
-              <th style="text-align:left;padding:8px 12px;font-size:0.72rem;font-weight:600;position:sticky;left:0;background:#1f2937;min-width:120px;z-index:2;">Показник</th>
-              ${weeks.map(w=>`
-                <th style="text-align:center;padding:6px 4px;font-size:0.65rem;font-weight:600;min-width:${colW}px;
-                  ${w.isCurrent?'background:#22c55e;':''}${w.isPast&&!w.isCurrent?'opacity:0.7;':''}"
-                  title="${w.label}">
-                  ${w.shortLabel}
-                </th>`).join('')}
-            </tr>
-          </thead>
-          <tbody>
-            ${_tableRow('📈 Дохід план', totals, 'planInc', '#22c55e', currency, true)}
-            ${_tableRow('✅ Дохід факт', totals, 'actInc',  '#16a34a', currency, false)}
-            ${_tableRow('📉 Витрати план', totals, 'planExp', '#ef4444', currency, true)}
-            ${_tableRow('❌ Витрати факт', totals, 'actExp',  '#dc2626', currency, false)}
-            ${_profitRow(totals, currency)}
-          </tbody>
-        </table>
-      </div>
-      <div style="padding:8px 12px;background:#f9fafb;font-size:0.72rem;color:#9ca3af;display:flex;align-items:center;gap:16px;">
-        <span>💡 Клікніть на планову суму щоб відредагувати</span>
-        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;"></span> Поточний тиждень</span>
-      </div>
-    </div>`;
-
-  // ── Ганта знизу ──
-  const ganttHtml = `
-    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:16px;">
-      <div style="padding:10px 14px;background:#f9fafb;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">
-        <div style="font-size:0.85rem;font-weight:700;color:#1a1a1a;">📊 Діаграма Ганта — доходи / витрати по тижнях</div>
-        <div style="display:flex;gap:10px;font-size:0.72rem;">
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:8px;border-radius:2px;background:#22c55e;display:inline-block;"></span> Дохід план</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:8px;border-radius:2px;background:#86efac;display:inline-block;"></span> Дохід факт</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:8px;border-radius:2px;background:#ef4444;display:inline-block;"></span> Витрати план</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:8px;border-radius:2px;background:#fca5a5;display:inline-block;"></span> Витрати факт</span>
-        </div>
-      </div>
-      <div style="overflow-x:auto;padding:12px;">
-        <div style="min-width:${120 + weeks.length * colW}px;">
-          ${_ganttRows(totals, maxVal, colW)}
-        </div>
-      </div>
-    </div>`;
-
-  // ── Кнопки дій ──
-  const actionsHtml = `
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:16px;">
-      <button onclick="window._wpSave()"
-        style="padding:0.5rem 1.2rem;background:#22c55e;color:#fff;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  // Панель управління
+  const controls = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+      <button onclick="window._wpSave()" id="wpSaveBtn"
+        style="padding:0.45rem 1rem;background:#22c55e;color:#fff;border:none;border-radius:8px;
+          font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         Зберегти план
       </button>
       <select id="wpHorizonSel" onchange="window._wpChangeHorizon(this.value)"
-        style="padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.83rem;background:#fff;cursor:pointer;">
+        style="padding:0.45rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
+        <option value="20" ${WP.horizon===20?'selected':''}>5 місяців (20 тижнів)</option>
         <option value="26" ${WP.horizon===26?'selected':''}>6 місяців (26 тижнів)</option>
         <option value="32" ${WP.horizon===32?'selected':''}>8 місяців (32 тижні)</option>
-        <option value="20" ${WP.horizon===20?'selected':''}>5 місяців (20 тижнів)</option>
       </select>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span style="font-size:0.78rem;color:#6b7280;">Початковий залишок:</span>
+        <input id="wpStartBal" type="number" value="${WP.startBalance}" min="0" step="100"
+          onchange="window._wpStartBalChange(this.value)"
+          style="width:110px;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;
+            font-size:0.8rem;outline:none;"
+          onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+      </div>
       <button onclick="window._wpFillFromAvg()"
-        style="padding:0.5rem 1rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;font-size:0.83rem;color:#374151;cursor:pointer;">
-        🤖 Заповнити з середнього за 3M
+        style="padding:0.45rem 0.9rem;border:1px solid #e5e7eb;border-radius:8px;
+          background:#fff;font-size:0.8rem;color:#374151;cursor:pointer;">
+        🤖 Заповнити з середнього 3M
       </button>
       <button onclick="window._wpClearAll()"
-        style="padding:0.5rem 1rem;border:1px solid #fecaca;border-radius:8px;background:#fff;font-size:0.83rem;color:#ef4444;cursor:pointer;">
-        Очистити план
-      </button>
+        style="padding:0.45rem 0.8rem;border:1px solid #fecaca;border-radius:8px;
+          background:#fff;font-size:0.8rem;color:#ef4444;cursor:pointer;">Очистити</button>
     </div>`;
 
-  root.innerHTML = kpiHtml + actionsHtml + tableHtml + ganttHtml;
+  // Основний графік — стовпчиковий з cashflow лінією
+  const chart = _renderChart(enriched, maxBar, maxCf, minCf, cur);
+
+  // Деталізована таблиця
+  const table = _renderTable(enriched, cur);
+
+  root.innerHTML = kpi + controls + chart + table;
 }
 
-// ── Рядок таблиці ──────────────────────────────────────────
-function _tableRow(label, totals, field, color, currency, editable) {
-  return `
-    <tr>
-      <td style="padding:7px 12px;font-size:0.78rem;color:#374151;font-weight:600;
-        position:sticky;left:0;background:#fff;border-bottom:1px solid #f3f4f6;z-index:1;">${label}</td>
-      ${totals.map(w => {
-        const val = w[field] || 0;
-        const key = w.key;
-        const fld = field.startsWith('plan') ? (field==='planInc'?'income':'expense') : null;
-        if (editable && fld) {
-          return `<td style="padding:4px;border-bottom:1px solid #f3f4f6;${w.isCurrent?'background:#f0fdf4;':''}">
-            <input type="number" value="${val||''}" min="0" step="100"
-              data-wp-key="${key}" data-wp-field="${fld}"
-              onchange="window._wpCellChange(this)"
-              style="width:100%;padding:3px 5px;border:1px solid #e5e7eb;border-radius:5px;
-                font-size:0.75rem;text-align:right;outline:none;background:transparent;box-sizing:border-box;"
-              onfocus="this.style.borderColor='#22c55e';this.style.background='#fff';"
-              onblur="this.style.borderColor='#e5e7eb';this.style.background='transparent';">
-          </td>`;
-        }
-        return `<td style="padding:5px 4px;text-align:right;font-size:0.72rem;color:${val>0?color:'#d1d5db'};
-          border-bottom:1px solid #f3f4f6;${w.isCurrent?'background:#f0fdf4;':''}">
-          ${val > 0 ? _fmtShort(val) : '—'}
-        </td>`;
-      }).join('')}
-    </tr>`;
-}
+// ── Стовпчиковий графік + Cashflow лінія ──────────────────
+function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
+  const COL_W   = 38;   // ширина колонки тижня
+  const LABEL_W = 90;   // ширина лівої колонки
+  const BAR_H   = 110;  // висота зони барів
+  const CF_H    = 60;   // висота зони cashflow
+  const TOTAL_W = LABEL_W + weeks.length * COL_W;
+  const TOTAL_H = BAR_H + CF_H + 48; // +48 для підписів
 
-function _profitRow(totals, currency) {
-  return `
-    <tr style="background:#f8fafc;">
-      <td style="padding:7px 12px;font-size:0.78rem;color:#1a1a1a;font-weight:700;
-        position:sticky;left:0;background:#f8fafc;border-top:2px solid #e5e7eb;z-index:1;">💰 Прибуток план</td>
-      ${totals.map(w => {
-        const v = w.planProfit;
-        const c = v >= 0 ? '#22c55e' : '#ef4444';
-        return `<td style="padding:5px 4px;text-align:right;font-size:0.72rem;font-weight:700;color:${v!==0?c:'#d1d5db'};
-          border-top:2px solid #e5e7eb;${w.isCurrent?'background:#f0fdf4;':''}">
-          ${v !== 0 ? (v>0?'+':'')+_fmtShort(v) : '—'}
-        </td>`;
-      }).join('')}
-    </tr>`;
-}
-
-// ── Ганта ──────────────────────────────────────────────────
-function _ganttRows(totals, maxVal, colW) {
-  const BAR_H = 18;
-
-  // Місячні групи для заголовків
+  // Місячні групи для заголовка
   const months = {};
-  totals.forEach((w,i) => {
-    const mo = w.from.toLocaleDateString(_getLocale(), {month:'short',year:'numeric'});
-    if (!months[mo]) months[mo] = { start:i, count:0 };
+  weeks.forEach((w,i) => {
+    const mo = w.from.toLocaleDateString(_getLocale(),{month:'short',year:'2-digit'});
+    if (!months[mo]) months[mo] = {start:i, count:0};
     months[mo].count++;
   });
 
-  const monthHeader = Object.entries(months).map(([mo, {start, count}]) =>
-    `<div style="position:absolute;left:${120+start*colW}px;width:${count*colW}px;
-      font-size:0.68rem;font-weight:600;color:#6b7280;text-align:center;padding:2px 0;
-      border-right:1px solid #e5e7eb;">${mo}</div>`
+  const monthLabels = Object.entries(months).map(([mo,{start,count}]) =>
+    `<div style="position:absolute;left:${LABEL_W+start*COL_W}px;width:${count*COL_W}px;
+      top:0;height:18px;font-size:0.65rem;font-weight:600;color:#6b7280;
+      text-align:center;border-right:1px dashed #f0f0f0;overflow:hidden;">${mo}</div>`
   ).join('');
 
-  const bars = totals.map((w, i) => {
-    const x = 120 + i * colW;
-    const pInc = maxVal > 0 ? (w.planInc / maxVal * 120) : 0;
-    const aInc = maxVal > 0 ? (w.actInc  / maxVal * 120) : 0;
-    const pExp = maxVal > 0 ? (w.planExp / maxVal * 120) : 0;
-    const aExp = maxVal > 0 ? (w.actExp  / maxVal * 120) : 0;
+  // Бари та cashflow лінія
+  const cfRange = maxCf - minCf || 1;
+  const cfZeroY = minCf < 0
+    ? CF_H - Math.round((-minCf / cfRange) * CF_H)
+    : CF_H; // Y де нуль в зоні cashflow (від верху CF зони)
 
-    const barW = colW - 4;
-    const halfW = Math.floor(barW / 2) - 1;
+  let cfPolyline = '';
+  const cfPoints = [];
+
+  const bars = weeks.map((w, i) => {
+    const x     = LABEL_W + i * COL_W;
+    const halfW = Math.floor(COL_W / 2) - 2;
+    const bw    = halfW - 1;
+
+    // Бари доходів (ліва половина)
+    const pIncH = Math.round((w.pInc / maxBar) * (BAR_H - 8));
+    const aIncH = Math.round((w.aInc / maxBar) * (BAR_H - 8));
+    // Бари витрат (права половина)
+    const pExpH = Math.round((w.pExp / maxBar) * (BAR_H - 8));
+    const aExpH = Math.round((w.aExp / maxBar) * (BAR_H - 8));
+
+    // Cashflow точка (центр колонки)
+    const cfY = CF_H - Math.round(((w.cfEnd - minCf) / cfRange) * CF_H);
+    cfPoints.push({x: x + COL_W/2, y: cfY + BAR_H + 20});
+
+    const bgColor = w.isCurrent ? 'rgba(34,197,94,0.06)' : 'transparent';
+    const borderL = w.isCurrent ? `border-left:2px solid #22c55e;` : '';
+
+    const showFact = !w.isFuture;
 
     return `
-      <!-- Тиждень ${w.shortLabel} -->
-      <!-- Дохід план -->
-      <div style="position:absolute;left:${x+1}px;bottom:${BAR_H*2+4}px;width:${halfW}px;height:${Math.max(1,pInc)}px;
-        background:#22c55e;border-radius:2px 2px 0 0;opacity:0.9;"
-        title="Дохід план: ${_fmt(w.planInc,WP.currency)}"></div>
-      <!-- Дохід факт -->
-      ${w.isPast || w.isCurrent ? `<div style="position:absolute;left:${x+1}px;bottom:${BAR_H*2+4}px;width:${halfW}px;height:${Math.max(1,aInc)}px;
-        background:#86efac;border-radius:2px 2px 0 0;border:1.5px solid #22c55e;"
-        title="Дохід факт: ${_fmt(w.actInc,WP.currency)}"></div>` : ''}
-      <!-- Витрати план -->
-      <div style="position:absolute;left:${x+halfW+3}px;bottom:${BAR_H*2+4}px;width:${halfW}px;height:${Math.max(1,pExp)}px;
-        background:#ef4444;border-radius:2px 2px 0 0;opacity:0.9;"
-        title="Витрати план: ${_fmt(w.planExp,WP.currency)}"></div>
-      <!-- Витрати факт -->
-      ${w.isPast || w.isCurrent ? `<div style="position:absolute;left:${x+halfW+3}px;bottom:${BAR_H*2+4}px;width:${halfW}px;height:${Math.max(1,aExp)}px;
-        background:#fca5a5;border-radius:2px 2px 0 0;border:1.5px solid #ef4444;"
-        title="Витрати факт: ${_fmt(w.actExp,WP.currency)}"></div>` : ''}
-      <!-- Поточний тиждень маркер -->
-      ${w.isCurrent ? `<div style="position:absolute;left:${x}px;top:0;bottom:0;width:${colW}px;
-        background:rgba(34,197,94,0.06);border-left:2px solid #22c55e;pointer-events:none;"></div>` : ''}`;
+      <div style="position:absolute;left:${x}px;top:20px;width:${COL_W}px;height:${TOTAL_H-20}px;
+        background:${bgColor};${borderL}">
+
+        <!-- Бари (від низу BAR_H зони) -->
+        <!-- Дохід план -->
+        <div style="position:absolute;bottom:${CF_H+28}px;left:2px;width:${bw}px;height:${Math.max(1,pIncH)}px;
+          background:#22c55e;border-radius:2px 2px 0 0;opacity:0.85;"
+          title="Дохід план: ${_fmt(w.pInc,currency)}"></div>
+
+        ${showFact && w.aInc > 0 ? `
+        <!-- Дохід факт (накладений) -->
+        <div style="position:absolute;bottom:${CF_H+28}px;left:2px;width:${bw}px;height:${Math.max(1,aIncH)}px;
+          background:#86efac;border-radius:2px 2px 0 0;border:1.5px solid #22c55e;box-sizing:border-box;"
+          title="Дохід факт: ${_fmt(w.aInc,currency)}"></div>` : ''}
+
+        <!-- Витрати план -->
+        <div style="position:absolute;bottom:${CF_H+28}px;left:${halfW+2}px;width:${bw}px;height:${Math.max(1,pExpH)}px;
+          background:#ef4444;border-radius:2px 2px 0 0;opacity:0.85;"
+          title="Витрати план: ${_fmt(w.pExp,currency)}"></div>
+
+        ${showFact && w.aExp > 0 ? `
+        <!-- Витрати факт -->
+        <div style="position:absolute;bottom:${CF_H+28}px;left:${halfW+2}px;width:${bw}px;height:${Math.max(1,aExpH)}px;
+          background:#fca5a5;border-radius:2px 2px 0 0;border:1.5px solid #ef4444;box-sizing:border-box;"
+          title="Витрати факт: ${_fmt(w.aExp,currency)}"></div>` : ''}
+
+        <!-- Розділювач між зонами -->
+        <div style="position:absolute;bottom:${CF_H+26}px;left:0;right:0;height:2px;background:#f3f4f6;"></div>
+
+        <!-- Cashflow крапка -->
+        <div style="position:absolute;bottom:${26 + cfZeroY - cfY - 4}px;left:50%;transform:translateX(-50%);
+          width:8px;height:8px;border-radius:50%;background:${w.cfEnd<0?'#ef4444':'#3b82f6'};
+          border:2px solid white;box-shadow:0 0 0 1px ${w.cfEnd<0?'#ef4444':'#3b82f6'};z-index:3;"
+          title="Залишок: ${_fmt(w.cfEnd,currency)}"></div>
+
+        <!-- Нульова лінія CF якщо є мінус -->
+        ${minCf < 0 ? `<div style="position:absolute;bottom:${26 + cfZeroY}px;left:0;right:0;height:1px;
+          background:#fca5a5;opacity:0.5;"></div>` : ''}
+
+        <!-- Тижень підпис -->
+        <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;
+          font-size:0.58rem;color:${w.isCurrent?'#22c55e':'#9ca3af'};overflow:hidden;">
+          ${w.shortLabel}
+        </div>
+
+        <!-- Поточний тиждень мітка -->
+        ${w.isCurrent ? `<div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+          background:#22c55e;color:white;font-size:0.55rem;font-weight:700;padding:1px 5px;
+          border-radius:8px;white-space:nowrap;">Зараз</div>` : ''}
+      </div>`;
   }).join('');
 
-  const totalH = 160; // висота діаграми
-  const labelH = 24;
+  // SVG лінія cashflow
+  if (cfPoints.length > 1) {
+    const pts = cfPoints.map(p=>`${p.x},${p.y}`).join(' ');
+    cfPolyline = `
+      <svg style="position:absolute;top:20px;left:0;width:${TOTAL_W}px;height:${TOTAL_H-20}px;pointer-events:none;overflow:visible;">
+        <polyline points="${pts}"
+          fill="none" stroke="#3b82f6" stroke-width="2" stroke-linejoin="round"
+          stroke-dasharray="${cfPoints.some((_,i)=>i>0 && weeks[i]?.isFuture)?'4,3':'none'}"/>
+        <!-- Заливка під лінією -->
+        <polygon points="${cfPoints[0].x},${cfPoints[0].y} ${pts} ${cfPoints[cfPoints.length-1].x},${cfPoints[cfPoints.length-1].y}"
+          fill="rgba(59,130,246,0.07)"/>
+      </svg>`;
+  }
 
-  const weekLabels = totals.map((w,i) => `
-    <div style="position:absolute;left:${120+i*colW}px;bottom:0;width:${colW}px;
-      font-size:0.6rem;color:${w.isCurrent?'#22c55e':'#9ca3af'};text-align:center;
-      overflow:hidden;white-space:nowrap;padding:0 2px;">
-      ${w.shortLabel}
-    </div>`).join('');
+  // Ліва вісь підписи
+  const yLabels = [0, 25, 50, 75, 100].map(pct => `
+    <div style="position:absolute;right:4px;bottom:${CF_H+28+Math.round(pct*(BAR_H-8)/100)}px;
+      font-size:0.6rem;color:#d1d5db;text-align:right;">${_fmtShort(maxBar*pct/100)}</div>`).join('');
 
-  // Y-axis мітки
-  const yLabels = [0,25,50,75,100].map(pct => `
-    <div style="position:absolute;left:0;width:115px;bottom:${labelH + BAR_H*2 + 4 + pct*1.2}px;
-      font-size:0.62rem;color:#d1d5db;text-align:right;padding-right:4px;">
-      ${pct > 0 ? _fmtShort(maxVal * pct/100) : '0'}
-    </div>`).join('');
+  const cfLabels = [0, 50, 100].map(pct => {
+    const val = minCf + (maxCf-minCf)*pct/100;
+    return `<div style="position:absolute;right:4px;bottom:${28+Math.round(pct*CF_H/100)}px;
+      font-size:0.6rem;color:#bfdbfe;text-align:right;">${_fmtShort(val)}</div>`;
+  }).join('');
 
   return `
-    <div style="position:relative;height:${totalH}px;width:100%;">
-      <!-- Місяці заголовок -->
-      <div style="position:absolute;top:0;left:0;right:0;height:18px;">${monthHeader}</div>
-      <!-- Базова лінія -->
-      <div style="position:absolute;left:120px;right:0;bottom:${labelH + BAR_H*2 + 4}px;height:1px;background:#e5e7eb;"></div>
-      <!-- Y labels -->
-      ${yLabels}
-      <!-- Bars -->
-      ${bars}
-      <!-- Week labels -->
-      <div style="position:absolute;left:0;right:0;bottom:0;height:${labelH}px;">${weekLabels}</div>
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:14px;">
+      <!-- Легенда -->
+      <div style="padding:8px 14px;background:#f9fafb;border-bottom:1px solid #e5e7eb;
+        display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;">
+          📊 Тижневий план — доходи, витрати, cashflow
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          ${[
+            {c:'#22c55e', l:'Дохід план'},
+            {c:'#86efac', l:'Дохід факт', border:'#22c55e'},
+            {c:'#ef4444', l:'Витрати план'},
+            {c:'#fca5a5', l:'Витрати факт', border:'#ef4444'},
+            {c:'#3b82f6', l:'Залишок CF', round:true},
+          ].map(i=>`
+            <div style="display:flex;align-items:center;gap:4px;font-size:0.71rem;color:#374151;">
+              <div style="width:${i.round?8:12}px;height:${i.round?8:7}px;
+                ${i.round?'border-radius:50%;':'border-radius:2px;'}
+                background:${i.c};${i.border?`border:1.5px solid ${i.border};`:''}
+                flex-shrink:0;"></div>
+              ${i.l}
+            </div>`).join('')}
+        </div>
+      </div>
+      <!-- Графік -->
+      <div style="overflow-x:auto;padding:8px 0 0 0;">
+        <div style="position:relative;height:${TOTAL_H+20}px;min-width:${TOTAL_W}px;">
+          <!-- Зона барів підпис -->
+          <div style="position:absolute;left:2px;top:20px;width:${LABEL_W-8}px;
+            font-size:0.62rem;color:#9ca3af;font-weight:600;text-align:right;padding-right:6px;">
+            Доходи / Витрати
+          </div>
+          <!-- Зона CF підпис -->
+          <div style="position:absolute;left:2px;top:${BAR_H+28}px;width:${LABEL_W-8}px;
+            font-size:0.62rem;color:#3b82f6;font-weight:600;text-align:right;padding-right:6px;">
+            Cashflow
+          </div>
+          <!-- Y вісь бари -->
+          <div style="position:absolute;left:0;top:20px;width:${LABEL_W}px;height:${BAR_H}px;">
+            ${yLabels}
+          </div>
+          <!-- Y вісь CF -->
+          <div style="position:absolute;left:0;top:${BAR_H+28}px;width:${LABEL_W}px;height:${CF_H}px;">
+            ${cfLabels}
+          </div>
+          <!-- Базова лінія барів -->
+          <div style="position:absolute;left:${LABEL_W}px;right:0;bottom:${CF_H+28}px;
+            height:2px;background:#e5e7eb;z-index:1;"></div>
+          <!-- Місячні підписи -->
+          <div style="position:absolute;left:0;top:0;right:0;height:20px;">${monthLabels}</div>
+          <!-- Бари -->
+          ${bars}
+          <!-- CF лінія SVG -->
+          ${cfPolyline}
+        </div>
+      </div>
+      <!-- Попередження про касовий розрив -->
+      ${weeks.some(w=>w.cfIsNeg) ? `
+      <div style="margin:8px 14px;padding:8px 12px;background:#fef2f2;border:1px solid #fecaca;
+        border-radius:8px;font-size:0.75rem;color:#dc2626;display:flex;align-items:center;gap:6px;">
+        ⚠️ <b>Касовий розрив</b> — у деяких тижнях прогнозується від'ємний залишок.
+        Перевірте план витрат або скоригуйте продажі.
+      </div>` : ''}
+      <div style="padding:6px 14px 10px;font-size:0.7rem;color:#9ca3af;">
+        💡 Відредагуйте планові суми в таблиці нижче — графік оновиться після збереження
+      </div>
+    </div>`;
+}
+
+// ── Деталізована таблиця ───────────────────────────────────
+function _renderTable(weeks, currency) {
+  const visibleMonths = {};
+  weeks.forEach(w => {
+    const mo = w.from.toLocaleDateString(_getLocale(), {month:'long', year:'numeric'});
+    if (!visibleMonths[mo]) visibleMonths[mo] = [];
+    visibleMonths[mo].push(w);
+  });
+
+  const monthBlocks = Object.entries(visibleMonths).map(([mo, mWeeks]) => {
+    const rows = mWeeks.map(w => {
+      const showFact = !w.isFuture;
+      const varInc = showFact ? w.aInc - w.pInc : null;
+      const varExp = showFact ? w.aExp - w.pExp : null;
+      const cfColor = w.cfEnd < 0 ? '#ef4444' : w.cfEnd < w.cfStart * 0.7 ? '#f59e0b' : '#22c55e';
+
+      return `
+        <tr style="${w.isCurrent?'background:#f0fdf4;font-weight:600;':''}${w.isPast&&!w.isCurrent?'opacity:0.75;':''}">
+          <td style="padding:6px 10px;font-size:0.78rem;color:#374151;white-space:nowrap;border-bottom:1px solid #f3f4f6;">
+            ${w.isCurrent?'<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#22c55e;margin-right:4px;vertical-align:middle;"></span>':''}
+            ${w.label}
+          </td>
+          <!-- Дохід план (редагується) -->
+          <td style="padding:4px 6px;border-bottom:1px solid #f3f4f6;">
+            <input type="number" value="${w.pInc||''}" min="0" step="100"
+              data-wp-key="${w.key}" data-wp-field="income"
+              onchange="window._wpCellChange(this)"
+              placeholder="0"
+              style="width:90px;padding:3px 6px;border:1px solid #e5e7eb;border-radius:5px;
+                font-size:0.78rem;text-align:right;outline:none;box-sizing:border-box;
+                background:${w.isFuture?'#fafffe':'#fff'};"
+              onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+          </td>
+          <!-- Дохід факт -->
+          <td style="padding:6px;text-align:right;font-size:0.78rem;color:${showFact&&w.aInc>0?'#16a34a':'#d1d5db'};border-bottom:1px solid #f3f4f6;">
+            ${showFact ? (w.aInc > 0 ? _fmt(w.aInc,currency) : '—') : ''}
+          </td>
+          <!-- Відхилення доходу -->
+          <td style="padding:6px;text-align:right;font-size:0.75rem;border-bottom:1px solid #f3f4f6;
+            color:${varInc===null?'transparent':varInc>=0?'#22c55e':'#ef4444'};">
+            ${varInc !== null && w.pInc > 0 ? (varInc>=0?'+':'')+_fmtShort(varInc) : ''}
+          </td>
+          <!-- Витрати план (редагується) -->
+          <td style="padding:4px 6px;border-bottom:1px solid #f3f4f6;">
+            <input type="number" value="${w.pExp||''}" min="0" step="100"
+              data-wp-key="${w.key}" data-wp-field="expense"
+              onchange="window._wpCellChange(this)"
+              placeholder="0"
+              style="width:90px;padding:3px 6px;border:1px solid #e5e7eb;border-radius:5px;
+                font-size:0.78rem;text-align:right;outline:none;box-sizing:border-box;
+                background:${w.isFuture?'#fff9f9':'#fff'};"
+              onfocus="this.style.borderColor='#ef4444'" onblur="this.style.borderColor='#e5e7eb'">
+          </td>
+          <!-- Витрати факт -->
+          <td style="padding:6px;text-align:right;font-size:0.78rem;color:${showFact&&w.aExp>0?'#dc2626':'#d1d5db'};border-bottom:1px solid #f3f4f6;">
+            ${showFact ? (w.aExp > 0 ? _fmt(w.aExp,currency) : '—') : ''}
+          </td>
+          <!-- Відхилення витрат -->
+          <td style="padding:6px;text-align:right;font-size:0.75rem;border-bottom:1px solid #f3f4f6;
+            color:${varExp===null?'transparent':varExp<=0?'#22c55e':'#ef4444'};">
+            ${varExp !== null && w.pExp > 0 ? (varExp>0?'+':'')+_fmtShort(varExp) : ''}
+          </td>
+          <!-- Залишок CF -->
+          <td style="padding:6px;text-align:right;font-size:0.78rem;font-weight:600;
+            color:${cfColor};border-bottom:1px solid #f3f4f6;white-space:nowrap;">
+            ${_fmt(w.cfEnd, currency)}
+            ${w.cfIsNeg?'<span style="font-size:0.65rem;margin-left:2px;">⚠️</span>':''}
+          </td>
+        </tr>`;
+    }).join('');
+
+    // Місячний підсумок
+    const mPlanInc = mWeeks.reduce((s,w)=>s+w.pInc,0);
+    const mPlanExp = mWeeks.reduce((s,w)=>s+w.pExp,0);
+    const mActInc  = mWeeks.reduce((s,w)=>s+w.aInc,0);
+    const mActExp  = mWeeks.reduce((s,w)=>s+w.aExp,0);
+    const mProfit  = mPlanInc - mPlanExp;
+
+    return `
+      <tbody>
+        <tr style="background:#1f2937;color:#fff;">
+          <td colspan="8" style="padding:6px 10px;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">
+            📅 ${mo}
+            <span style="float:right;font-weight:400;opacity:0.7;">
+              план: +${_fmtShort(mPlanInc)} / −${_fmtShort(mPlanExp)} = ${mProfit>=0?'+':''}${_fmtShort(mProfit)}
+            </span>
+          </td>
+        </tr>
+        ${rows}
+      </tbody>`;
+  }).join('');
+
+  return `
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;min-width:650px;">
+          <thead>
+            <tr style="background:#374151;color:#fff;">
+              <th style="padding:8px 10px;text-align:left;font-size:0.72rem;font-weight:600;min-width:130px;">Тиждень</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#14532d;">Дохід план</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#14532d;">Факт</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#14532d;">Δ</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#7f1d1d;">Витрати план</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#7f1d1d;">Факт</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#7f1d1d;">Δ</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#1e3a5f;">Залишок CF</th>
+            </tr>
+          </thead>
+          ${monthBlocks}
+        </table>
+      </div>
     </div>`;
 }
 
 // ── Інтерактивні дії ───────────────────────────────────────
 window._wpCellChange = function(input) {
   const key   = input.dataset.wpKey;
-  const field = input.dataset.wpField; // 'income' | 'expense'
-  const val   = parseFloat(input.value) || 0;
-  if (!WP.plan[key]) WP.plan[key] = { income:0, expense:0 };
-  WP.plan[key][field] = val;
+  const field = input.dataset.wpField;
+  if (!WP.plan[key]) WP.plan[key] = {income:0, expense:0};
+  WP.plan[key][field] = parseFloat(input.value) || 0;
+};
 
-  // Оновлюємо лише підсумкові KPI без повного перерендеру
-  _refreshKpi();
+window._wpStartBalChange = function(val) {
+  WP.startBalance = parseFloat(val) || 0;
+  const root = document.getElementById('weeklyPlanRoot');
+  if (root) _render(root);
 };
 
 window._wpSave = async function() {
   if (WP.saving) return;
   WP.saving = true;
-  const btn = document.querySelector('[onclick="_wpSave()"]') ||
-    [...document.querySelectorAll('button')].find(b => b.textContent.includes('Зберегти план'));
+  const btn = document.getElementById('wpSaveBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
   try {
     const db = window.db || (window.firebase && firebase.firestore());
     if (!db || !window.currentCompanyId) throw new Error('DB не готова');
     await db.collection('companies').doc(window.currentCompanyId)
       .collection('finance_settings').doc('weekly_plan')
-      .set({ plan: WP.plan, horizon: WP.horizon, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+      .set({
+        plan: WP.plan,
+        horizon: WP.horizon,
+        startBalance: WP.startBalance,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true });
     if (typeof showToast === 'function') showToast('✅ Тижневий план збережено', 'success');
+    // Перерендер з оновленими даними
+    const root = document.getElementById('weeklyPlanRoot');
+    if (root) _render(root);
   } catch(e) {
     if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
   } finally {
     WP.saving = false;
-    if (btn) { btn.disabled = false; btn.textContent = '✓ Зберегти план'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Зберегти план'; }
   }
 };
 
@@ -320,48 +499,43 @@ window._wpChangeHorizon = function(val) {
 };
 
 window._wpFillFromAvg = async function() {
-  // Рахуємо середній тиждень за останні 3 місяці
   try {
     const db = window.db || (window.firebase && firebase.firestore());
     if (!db || !window.currentCompanyId) return;
-    const from3M = new Date(); from3M.setMonth(from3M.getMonth()-3);
+    const from3M = new Date(); from3M.setMonth(from3M.getMonth() - 3);
     const snap = await db.collection('companies').doc(window.currentCompanyId)
       .collection('finance_transactions')
       .where('date', '>=', firebase.firestore.Timestamp.fromDate(from3M)).get();
     const txs = snap.docs.map(d => d.data());
-    const weeks3 = _buildWeeks(13, from3M); // 13 тижнів = 3M
-    let totalInc = 0, totalExp = 0, count = 0;
-    weeks3.forEach(w => {
-      const wInc = txs.filter(t => t.type==='income' && _txInWeek(t, w)).reduce((s,t) => s+_txAmt(t),0);
-      const wExp = txs.filter(t => t.type==='expense' && _txInWeek(t, w)).reduce((s,t) => s+_txAmt(t),0);
-      if (wInc > 0 || wExp > 0) { totalInc += wInc; totalExp += wExp; count++; }
+    const past = _buildWeeks(13, from3M);
+    let sumInc=0, sumExp=0, cnt=0;
+    past.forEach(w => {
+      const inc = txs.filter(t=>t.type==='income'  && _txInWeek(t,w)).reduce((s,t)=>s+_txAmt(t),0);
+      const exp = txs.filter(t=>t.type==='expense' && _txInWeek(t,w)).reduce((s,t)=>s+_txAmt(t),0);
+      if (inc>0||exp>0){sumInc+=inc;sumExp+=exp;cnt++;}
     });
-    const avgInc = count > 0 ? Math.round(totalInc / count / 100) * 100 : 0;
-    const avgExp = count > 0 ? Math.round(totalExp / count / 100) * 100 : 0;
-    if (avgInc === 0 && avgExp === 0) {
-      if (typeof showToast === 'function') showToast('Недостатньо даних за 3 місяці', 'warning');
-      return;
-    }
-    // Заповнюємо тільки майбутні тижні
+    if (!cnt) { if (typeof showToast==='function') showToast('Недостатньо даних за 3 місяці','warning'); return; }
+    const avgInc = Math.round(sumInc/cnt/100)*100;
+    const avgExp = Math.round(sumExp/cnt/100)*100;
     const now = new Date();
     WP.weeks.forEach(w => {
       if (w.from >= now) {
-        if (!WP.plan[w.key]) WP.plan[w.key] = { income:0, expense:0 };
-        if (WP.plan[w.key].income === 0) WP.plan[w.key].income = avgInc;
-        if (WP.plan[w.key].expense === 0) WP.plan[w.key].expense = avgExp;
+        if (!WP.plan[w.key]) WP.plan[w.key] = {income:0,expense:0};
+        if (!WP.plan[w.key].income)  WP.plan[w.key].income  = avgInc;
+        if (!WP.plan[w.key].expense) WP.plan[w.key].expense = avgExp;
       }
     });
     const root = document.getElementById('weeklyPlanRoot');
     if (root) _render(root);
-    if (typeof showToast === 'function') showToast(`Заповнено: дохід ~${_fmt(avgInc,WP.currency)}/тиж, витрати ~${_fmt(avgExp,WP.currency)}/тиж`, 'success');
+    if (typeof showToast==='function') showToast(`Заповнено: ~${_fmt(avgInc,WP.currency)}/тиж доходу, ~${_fmt(avgExp,WP.currency)}/тиж витрат`,'success');
   } catch(e) {
-    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    if (typeof showToast==='function') showToast('Помилка: '+e.message,'error');
   }
 };
 
 window._wpClearAll = async function() {
-  const ok = typeof showConfirmModal === 'function'
-    ? await showConfirmModal('Очистити весь тижневий план?', { danger:true })
+  const ok = typeof showConfirmModal==='function'
+    ? await showConfirmModal('Очистити весь тижневий план?',{danger:true})
     : confirm('Очистити весь тижневий план?');
   if (!ok) return;
   WP.plan = {};
@@ -369,23 +543,7 @@ window._wpClearAll = async function() {
   if (root) _render(root);
 };
 
-// ── KPI оновлення (без повного перерендеру) ───────────────
-function _refreshKpi() {
-  const weeks = WP.weeks;
-  const totalPlanInc = weeks.reduce((s,w) => s + (WP.plan[w.key]?.income||0), 0);
-  const totalPlanExp = weeks.reduce((s,w) => s + (WP.plan[w.key]?.expense||0), 0);
-  // Знаходимо KPI картки і оновлюємо
-  const cards = document.querySelectorAll('#weeklyPlanRoot [style*="border-radius:10px"]');
-  if (cards[0]) cards[0].querySelector('[style*="font-weight:700"]').textContent = _fmt(totalPlanInc,WP.currency);
-  if (cards[1]) cards[1].querySelector('[style*="font-weight:700"]').textContent = _fmt(totalPlanExp,WP.currency);
-  if (cards[2]) {
-    const prof = totalPlanInc - totalPlanExp;
-    const el = cards[2].querySelector('[style*="font-weight:700"]');
-    if (el) { el.textContent = _fmt(prof,WP.currency); el.style.color = prof>=0?'#22c55e':'#ef4444'; }
-  }
-}
-
-// ── Завантаження даних ─────────────────────────────────────
+// ── Дані ──────────────────────────────────────────────────
 async function _loadPlan() {
   try {
     const db = window.db || (window.firebase && firebase.firestore());
@@ -394,115 +552,104 @@ async function _loadPlan() {
       .collection('finance_settings').doc('weekly_plan').get();
     if (snap.exists) {
       const d = snap.data();
-      WP.plan    = d.plan    || {};
-      WP.horizon = d.horizon || WP.horizon;
-      WP.weeks   = _buildWeeks(WP.horizon);
+      WP.plan         = d.plan         || {};
+      WP.horizon      = d.horizon      || WP.horizon;
+      WP.startBalance = d.startBalance || 0;
+      WP.weeks        = _buildWeeks(WP.horizon);
     }
-  } catch(e) { console.warn('[weeklyPlan] loadPlan:', e.message); }
+  } catch(e) { console.warn('[weeklyPlan] load:', e.message); }
 }
 
 async function _loadActual() {
   try {
     const db = window.db || (window.firebase && firebase.firestore());
     if (!db || !window.currentCompanyId) return;
-    // Беремо транзакції за горизонт (минулі + поточний тиждень)
     const now  = new Date();
     const from = WP.weeks[0]?.from || now;
+    if (from >= now) return; // все майбутнє — факту немає
     const snap = await db.collection('companies').doc(window.currentCompanyId)
       .collection('finance_transactions')
-      .where('date','>=', firebase.firestore.Timestamp.fromDate(from))
-      .where('date','<=', firebase.firestore.Timestamp.fromDate(now))
-      .get();
-    const txs = snap.docs.map(d => d.data());
+      .where('date','>=',firebase.firestore.Timestamp.fromDate(from))
+      .where('date','<=',firebase.firestore.Timestamp.fromDate(now)).get();
+    const txs = snap.docs.map(d=>d.data());
     WP.actual = {};
     WP.weeks.forEach(w => {
-      const wTxs = txs.filter(t => _txInWeek(t, w));
+      if (w.isFuture) return;
+      const wt = txs.filter(t=>_txInWeek(t,w));
       WP.actual[w.key] = {
-        income:  wTxs.filter(t=>t.type==='income').reduce((s,t)=>s+_txAmt(t),0),
-        expense: wTxs.filter(t=>t.type==='expense').reduce((s,t)=>s+_txAmt(t),0),
+        income:  wt.filter(t=>t.type==='income').reduce((s,t)=>s+_txAmt(t),0),
+        expense: wt.filter(t=>t.type==='expense').reduce((s,t)=>s+_txAmt(t),0),
       };
     });
-  } catch(e) { console.warn('[weeklyPlan] loadActual:', e.message); }
+  } catch(e) { console.warn('[weeklyPlan] actual:', e.message); }
 }
 
-// ── Хелпери ────────────────────────────────────────────────
+// ── Утиліти ────────────────────────────────────────────────
 function _buildWeeks(count, startFrom) {
   const weeks = [];
-  const now   = startFrom || new Date();
-  // Починаємо з поточного/стартового понеділка
-  const start = new Date(now);
-  const day   = start.getDay();
-  const diff  = day === 0 ? -6 : 1 - day;
-  start.setDate(start.getDate() + diff);
-  start.setHours(0,0,0,0);
-
-  for (let i = 0; i < count; i++) {
-    const from = new Date(start);
-    from.setDate(from.getDate() + i*7);
-    const to = new Date(from);
-    to.setDate(to.getDate() + 6);
-    to.setHours(23,59,59,999);
-
-    const yr  = from.getFullYear();
-    const wn  = _weekNum(from);
+  const base  = new Date(startFrom || new Date());
+  const day   = base.getDay();
+  const diff  = day===0 ? -6 : 1-day;
+  base.setDate(base.getDate()+diff);
+  base.setHours(0,0,0,0);
+  for (let i=0;i<count;i++) {
+    const from = new Date(base); from.setDate(from.getDate()+i*7);
+    const to   = new Date(from); to.setDate(to.getDate()+6); to.setHours(23,59,59,999);
+    const yr = from.getFullYear();
+    const wn = _weekNum(from);
     const key = `${yr}-W${String(wn).padStart(2,'0')}`;
-
-    const locale = _getLocale();
-    const label  = from.toLocaleDateString(locale,{day:'numeric',month:'short'}) + '–' +
-                   to.toLocaleDateString(locale,{day:'numeric',month:'short'});
-    const shortLabel = from.toLocaleDateString(locale,{day:'numeric',month:'numeric'});
-
-    weeks.push({ key, label, shortLabel, from, to });
+    const loc = _getLocale();
+    const label = from.toLocaleDateString(loc,{day:'numeric',month:'short'})+
+                  '–'+to.toLocaleDateString(loc,{day:'numeric',month:'short'});
+    const shortLabel = from.toLocaleDateString(loc,{day:'numeric',month:'numeric'});
+    weeks.push({key,label,shortLabel,from,to});
   }
   return weeks;
 }
 
 function _weekNum(d) {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay()||7));
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
-  return Math.ceil((((date - yearStart) / 86400000) + 1)/7);
+  const dt = new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  dt.setUTCDate(dt.getUTCDate()+4-(dt.getUTCDay()||7));
+  const y1 = new Date(Date.UTC(dt.getUTCFullYear(),0,1));
+  return Math.ceil((((dt-y1)/86400000)+1)/7);
 }
 
-function _txInWeek(tx, w) {
-  const d = tx.date?.toDate ? tx.date.toDate() : (tx.date ? new Date(tx.date) : null);
-  if (!d) return false;
-  return d >= w.from && d <= w.to;
+function _txInWeek(tx,w) {
+  const d = tx.date?.toDate ? tx.date.toDate() : (tx.date?new Date(tx.date):null);
+  return d && d>=w.from && d<=w.to;
 }
 
-function _txAmt(tx) {
-  return tx.amountBase || tx.amount || 0;
-}
+function _txAmt(tx) { return tx.amountBase||tx.amount||0; }
 
 function _getCurrency() {
-  return window.currentCompanyData?.currency || window.financeState?.currency || 'UAH';
+  return window.currentCompanyData?.currency||window.financeState?.currency||'UAH';
 }
 
-function _getLocale() {
-  return window.getLocale ? window.getLocale() : 'uk-UA';
-}
+function _getLocale() { return window.getLocale?window.getLocale():'uk-UA'; }
 
-function _fmt(n, currency) {
+function _fmt(n,currency) {
   try {
-    return new Intl.NumberFormat(_getLocale(), {style:'currency',currency:currency||'UAH',maximumFractionDigits:0}).format(n||0);
-  } catch(e) { return (n||0).toLocaleString(); }
+    return new Intl.NumberFormat(_getLocale(),{style:'currency',currency:currency||'UAH',maximumFractionDigits:0}).format(n||0);
+  } catch(e){return (n||0).toLocaleString();}
 }
 
 function _fmtShort(n) {
-  if (Math.abs(n) >= 1000000) return (n/1000000).toFixed(1)+'M';
-  if (Math.abs(n) >= 1000) return (n/1000).toFixed(0)+'K';
+  const abs = Math.abs(n);
+  if (abs>=1000000) return (n/1000000).toFixed(1)+'M';
+  if (abs>=1000)    return (n/1000).toFixed(0)+'K';
   return String(Math.round(n));
 }
 
 function _skeleton() {
-  return `<div style="display:flex;align-items:center;justify-content:center;padding:3rem;color:#9ca3af;">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;margin-right:8px;">
+  return `<div style="display:flex;align-items:center;justify-content:center;padding:3rem;color:#9ca3af;gap:8px;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round" class="spin">
       <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
     </svg>
     Завантаження тижневого плану...
   </div>`;
 }
 
-console.log('[weeklyPlan] Module loaded v1.0');
+console.log('[weeklyPlan] v2.0 loaded');
 
 })();
