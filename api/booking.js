@@ -578,13 +578,13 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1e
           <input type="text" id="bk-name" placeholder="Ваше ім'я" required>
         </div>
         <div class="bk-field">
-          <label>Email <span class="bk-req">*</span></label>
-          <input type="email" id="bk-email" placeholder="email@example.com" required>
+          <label>Email${cal.emailRequired !== false ? ' <span class="bk-req">*</span>' : ''}</label>
+          <input type="email" id="bk-email" placeholder="email@example.com"${cal.emailRequired !== false ? ' required' : ''}>
         </div>
-        <div class="bk-field">
-          <label>Телефон${cal.phoneRequired !== false ? ' <span class="bk-req">*</span>' : ''}</label>
-          <input type="tel" id="bk-phone" placeholder="+380..."${cal.phoneRequired !== false ? ' required' : ''}>
-        </div>
+        ${cal.phoneShow !== false ? `<div class="bk-field">
+          <label>Телефон${cal.phoneRequired ? ' <span class="bk-req">*</span>' : ''}</label>
+          <input type="tel" id="bk-phone" placeholder="+380..."${cal.phoneRequired ? ' required' : ''}>
+        </div>` : ''}
         ${questionsHtml}
         <button class="bk-submit" id="bk-submit-btn" onclick="bk.submit()">
           Підтвердити запис

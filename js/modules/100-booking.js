@@ -358,10 +358,20 @@ function renderCalendarForm(cal) {
         <input type="text" id="bk-f-location" placeholder="Zoom, Google Meet..." value="${esc(d.location||'')}">
       </div>
     </div>
+    <div class="bk-field" style="display:flex;gap:1.25rem;flex-wrap:wrap;align-items:center">
+      <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+        <input type="checkbox" id="bk-f-phone-show" ${d.phoneShow!==false?'checked':''} onchange="window._bkTogglePhoneRequired(this)">
+        Показувати телефон
+      </label>
+      <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer" id="bk-f-phone-req-wrap" ${d.phoneShow===false?'style=\"opacity:.4;pointer-events:none\"':''}>
+        <input type="checkbox" id="bk-f-phone-required" ${d.phoneRequired!==false?'checked':''}>
+        Обов'язковий
+      </label>
+    </div>
     <div class="bk-field">
       <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
-        <input type="checkbox" id="bk-f-phone-required" ${d.phoneRequired!==false?'checked':''}>
-        ${t('phoneRequiredLabel')||'Телефон обов\'язковий'}
+        <input type="checkbox" id="bk-f-email-required" ${d.emailRequired!==false?'checked':''}>
+        Email обов'язковий
       </label>
     </div>
     <div class="bk-field">
@@ -401,11 +411,14 @@ function renderCalendarForm(cal) {
     <div style="font-size:.78rem;color:#94a3b8;margin-top:.5rem">${t('questionsHint')||'Ім\'я та Email — завжди обов\'язкові'}</div>
   </div>
 </div>
-<div style="margin-top:.75rem;padding:.75rem 1rem;background:#f0f9ff;border-radius:10px;font-size:.82rem;color:#0369a1">
-  ${I.link} ${t('bookingLinkLabel')||'Посилання'}:
-  <b id="bk-preview-url">${isEdit && cal.slug
-    ? window.location.origin + '/book/' + window.currentCompanyId + '/' + cal.slug
-    : window.location.origin + '/api/booking?action=page&companyId=' + window.currentCompanyId + '&calendarId=' + (isEdit?cal.id:(t('idAfterSave')||'<id>'))}</b>
+<div style="margin-top:.75rem;padding:.85rem 1rem;background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;">
+  <div>
+    <div style="font-size:.72rem;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;">🔗 Посилання для клієнта</div>
+    <div id="bk-preview-url" style="font-size:.82rem;color:#0c4a6e;word-break:break-all;">${isEdit && cal.slug
+      ? window.location.origin + '/book/' + window.currentCompanyId + '/' + cal.slug
+      : '⏳ Збережіть, щоб отримати посилання'}</div>
+  </div>
+  ${isEdit && cal.slug ? `<button onclick="window._bkCopyLink(window.location.origin+'/book/'+window.currentCompanyId+'/${cal.slug}')" style="padding:.45rem .9rem;background:#0369a1;color:white;border:none;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">Копіювати</button>` : ''}
 </div>`;
 
     document.getElementById('bk-f-name').addEventListener('input', function() {
@@ -898,6 +911,18 @@ window._bkToggleRequirePayment = function(cb) {
     if (wrap) wrap.style.display = cb.checked ? '' : 'none';
 };
 
+window._bkTogglePhoneRequired = function(cb) {
+    const reqWrap = document.getElementById('bk-f-phone-req-wrap');
+    if (reqWrap) {
+        reqWrap.style.opacity = cb.checked ? '1' : '.4';
+        reqWrap.style.pointerEvents = cb.checked ? 'auto' : 'none';
+        if (!cb.checked) {
+            const reqCb = document.getElementById('bk-f-phone-required');
+            if (reqCb) reqCb.checked = false;
+        }
+    }
+};
+
 window._bkSaveCalendar = async function() {
     const nameEl = document.getElementById('bk-f-name');
     const slugEl = document.getElementById('bk-f-slug');
@@ -942,7 +967,9 @@ window._bkSaveCalendar = async function() {
         color:            document.getElementById('bk-f-color')?.value||'#3b82f6',
         location:         document.getElementById('bk-f-location')?.value?.trim()||'',
         isActive:         document.getElementById('bk-f-active')?.checked!==false,
-        phoneRequired:    document.getElementById('bk-f-phone-required')?.checked!==false,
+        phoneShow:        document.getElementById('bk-f-phone-show')?.checked!==false,
+        phoneRequired:    document.getElementById('bk-f-phone-required')?.checked===true,
+        emailRequired:    document.getElementById('bk-f-email-required')?.checked!==false,
         questions:        window._bkCollectQuestions(),
         maxBookingsPerSlot: 1,
         requirePayment: document.getElementById('bk-f-require-payment')?.checked || false,
