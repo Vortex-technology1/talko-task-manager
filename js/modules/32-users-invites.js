@@ -228,26 +228,26 @@
             return `<div style="padding-top:1rem;display:flex;flex-direction:column;gap:1rem;">
 
             <div style="background:linear-gradient(135deg,#1e3a5f,#0f2040);border-radius:14px;padding:1.25rem 1.5rem;color:white;">
-                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Картка співробітника</div>
-                <div style="color:#93c5fd;font-size:0.88rem;line-height:1.5;">Це не просто контакт. Це повний зріз: що людина робить, як завантажена і наскільки самостійна.</div>
+                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Карточка сотрудника</div>
+                <div style="color:#93c5fd;font-size:0.88rem;line-height:1.5;">Это не просто контакт. Это полный срез: что человек делает, как загружен и насколько самостоятелен.</div>
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Яку проблему вирішує</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Какую проблему решает</div>
                 <div style="overflow-x:auto;">
                 <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
                     <thead><tr style="background:#f9fafb;">
                         <th style="padding:0.5rem;text-align:left;color:#ef4444;border-bottom:2px solid #fecaca;">ПРОБЛЕМА</th>
-                        <th style="padding:0.5rem;text-align:left;color:#f59e0b;border-bottom:2px solid #fde68a;">НАСЛІДОК</th>
-                        <th style="padding:0.5rem;text-align:left;color:#16a34a;border-bottom:2px solid #bbf7d0;">РІШЕННЯ</th>
+                        <th style="padding:0.5rem;text-align:left;color:#f59e0b;border-bottom:2px solid #fde68a;">СЛЕДСТВИЕ</th>
+                        <th style="padding:0.5rem;text-align:left;color:#16a34a;border-bottom:2px solid #bbf7d0;">РЕШЕНИЕ</th>
                     </tr></thead>
                     <tbody>
                         ${[
-                            ['Не знають реальне навантаження','Хтось перевантажений, хтось пустує','Система рахує год/тижд і активні задачі по кожному'],
-                            ['Не видно якість роботи людини','Хтось "виконує" але постійно повертають','Індекс автономності: % задач без повернення'],
-                            ['Не знають кому делегувати','Власник усе тримає у себе','Дашборд навантаження — видно хто вільний прямо зараз'],
-                            ['Людина не знає свої пріоритети','Робить другорядне, важливе відкладає','Мій день: всі задачі відсортовані за пріоритетом'],
-                            ['При наймі не знають скільки часу є','Беруть людину без розуміння завантаження','Система показує вільні години/тиждень до перевантаження'],
+                            ['Не знают реальную нагрузку','Кто-то перегружен, кто-то пустует','Система считает час/нед и активные задачи по каждому'],
+                            ['Не видно качество работы человека','Кто-то «выполняет» но постоянно возвращают','Индекс автономности: % задач без возврата'],
+                            ['Не знают кому делегировать','Владелец всё держит у себя','Дашборд нагрузки — видно кто свободен прямо сейчас'],
+                            ['Человек не знает свои приоритеты','Делает второстепенное, важное откладывает','Мой день: все задачи отсортированы по приоритету'],
+                            ['При найме не знают сколько времени есть','Берут человека без понимания нагрузки','Система показывает свободные часы/неделю до перегрузки'],
                         ].map(([p,n,r]) => `<tr style="border-bottom:1px solid #f3f4f6;">
                             <td style="padding:0.5rem;color:#374151;">${p}</td>
                             <td style="padding:0.5rem;color:#6b7280;">${n}</td>
@@ -259,14 +259,14 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Що показує картка</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Что показывает карточка</div>
                 ${[
-                    ['<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#16a34a;vertical-align:-1px;margin-right:4px;"></span>Функції', 'Ролі в компанії де людина є виконавцем. Звідси приходять регулярні завдання і кроки процесів.'],
-                    ['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Pipeline', 'Нових / В роботі / На перевірці / Виконано — стан задач прямо зараз.'],
-                    ['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Індекс автономності', '% задач виконаних без повернення керівником. 80%+ = можна делегувати складне. <50% = більше контролю.'],
-                    ['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Годин/тиждень', 'Скільки годин займають регулярні завдання. >35 = перевантажений, не давати нового.'],
-                    ['<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;vertical-align:-1px;margin-right:4px;"></span>Прострочені', 'Задачі де минув дедлайн. Сигнал: або завдань забагато, або людина не справляється.'],
-                    ['<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f59e0b;vertical-align:-1px;margin-right:4px;"></span>Повернені', 'Скільки задач повернули на доопрацювання. Багато — проблема з якістю або розумінням завдань.'],
+                    ['<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#16a34a;vertical-align:-1px;margin-right:4px;"></span>Функции', 'Роли в компании где человек является исполнителем. Отсюда приходят регулярные задачи и шаги процессов.'],
+                    ['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Pipeline', 'Новых / В работе / На проверке / Выполнено — состояние задач прямо сейчас.'],
+                    ['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Индекс автономности', '% задач выполненных без возврата руководителем. 80%+ = можно делегировать сложное. <50% = больше контроля.'],
+                    ['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Часов/неделю', 'Сколько часов занимают регулярные задачи. >35 = перегружен, не давать нового.'],
+                    ['<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;vertical-align:-1px;margin-right:4px;"></span>Просроченные', 'Задачи где прошёл дедлайн. Сигнал: либо задач слишком много, либо человек не справляется.'],
+                    ['<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f59e0b;vertical-align:-1px;margin-right:4px;"></span>Возвращённые', 'Сколько задач вернули на доработку. Много — проблема с качеством или пониманием задач.'],
                 ].map(([k,v]) => `<div style="display:flex;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
                     <div style="min-width:160px;font-weight:500;font-size:0.82rem;">${k}</div>
                     <div style="font-size:0.82rem;color:#6b7280;">${v}</div>
@@ -274,52 +274,52 @@
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Індекс автономності — як читати</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Индекс автономности — как читать</div>
                 <div style="display:flex;flex-direction:column;gap:0.5rem;">
                     <div style="background:#f0fdf4;border-radius:8px;padding:0.75rem;border-left:4px solid #16a34a;">
                         <div style="font-weight:600;color:#16a34a;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#16a34a;vertical-align:-1px;margin-right:4px;"></span>≥ 80% — Норма</div>
-                        <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Людина працює самостійно. Можна делегувати складні завдання без детального контролю.</div>
+                        <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Человек работает самостоятельно. Можно делегировать сложные задачи без детального контроля.</div>
                     </div>
                     <div style="background:#fffbeb;border-radius:8px;padding:0.75rem;border-left:4px solid #f59e0b;">
-                        <div style="font-weight:600;color:#b45309;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f59e0b;vertical-align:-1px;margin-right:4px;"></span>50–79% — Увага</div>
-                        <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Перевіряй виконання, уточнюй очікуваний результат. Є зони покращення.</div>
+                        <div style="font-weight:600;color:#b45309;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f59e0b;vertical-align:-1px;margin-right:4px;"></span>50–79% — Внимание</div>
+                        <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Проверяй выполнение, уточняй ожидаемый результат. Есть зоны улучшения.</div>
                     </div>
                     <div style="background:#fef2f2;border-radius:8px;padding:0.75rem;border-left:4px solid #ef4444;">
-                        <div style="font-weight:600;color:#dc2626;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;vertical-align:-1px;margin-right:4px;"></span>&lt; 50% — Системні проблеми</div>
-                        <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Або завдання ставляться нечітко, або людина не розуміє стандарт якості, або потрібне навчання.</div>
+                        <div style="font-weight:600;color:#dc2626;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;vertical-align:-1px;margin-right:4px;"></span>&lt; 50% — Системные проблемы</div>
+                        <div style="font-size:0.8rem;color:#374151;margin-top:0.25rem;">Либо задачи ставятся нечётко, либо человек не понимает стандарт качества, либо нужно обучение.</div>
                     </div>
                 </div>
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Дашборд навантаження</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Дашборд нагрузки</div>
                 <div style="background:#f0f9ff;border-radius:8px;padding:0.75rem;font-size:0.82rem;color:#374151;line-height:1.5;">
-                    Вкладка <strong>"Навантаження"</strong> — загальна картина команди. Таблиця де видно кожну людину: скільки годин регулярної роботи, скільки активних задач, індекс автономності, статус (Норма / Увага / Перевантажений). Відразу видно де проблема — без нарад і дзвінків.
+                    Вкладка <strong>«Нагрузка»</strong> — общая картина команды. Таблица где видно каждого человека: сколько часов регулярной работы, сколько активных задач, индекс автономности, статус (Норма / Внимание / Перегружен). Сразу видно где проблема — без совещаний и звонков.
                 </div>
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Взаємозв'язки</div>
-                <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">СПІВРОБІТНИК
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Взаимосвязи</div>
+                <pre style="background:#f9fafb;border-radius:8px;padding:0.75rem;font-size:0.75rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;">СОТРУДНИК
 │
-├──→ ФУНКЦІЇ — ролі в компанії, звідси регулярні завдання і кроки процесів
-├──→ МІЙ ДЕНЬ — задачі на сьогодні: регулярні + поточні + прострочені
-├──→ ЗАВДАННЯ — всі задачі де assigneeId = ця людина
-├──→ TELEGRAM — нова задача → сповіщення, крок процесу → кнопки
-├──→ КООРДИНАЦІЇ — фільтр задач по учасниках
-├──→ ОСОБИСТА АНАЛІТИКА — динаміка продуктивності, виконані/прострочені
-└──→ ПРАВА ДОСТУПУ — роль (Власник/Менеджер/Співробітник) = набір дозволів</pre>
+├──→ ФУНКЦИИ — роли в компании, отсюда регулярные задачи и шаги процессов
+├──→ МОЙ ДЕНЬ — задачи на сегодня: регулярные + текущие + просроченные
+├──→ ЗАДАЧИ — все задачи где assigneeId = этот человек
+├──→ TELEGRAM — новая задача → уведомление, шаг процесса → кнопки
+├──→ КООРДИНАЦИИ — фильтр задач по участникам
+├──→ ЛИЧНАЯ АНАЛИТИКА — динамика производительности, выполненные/просроченные
+└──→ ПРАВА ДОСТУПА — роль (Владелец/Менеджер/Сотрудник) = набор разрешений</pre>
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);padding:1rem;">
-                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Як правильно налаштувати команду</div>
+                <div style="font-weight:600;margin-bottom:0.75rem;color:#374151;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Как правильно настроить команду</div>
                 ${[
-                    ['1','Система → Функції','Створи всі ролі компанії ПЕРЕД додаванням людей'],
-                    ['2','Система → Співробітники → Запросити','Відправ запрошення на email'],
-                    ['3','Після прийняття → картка людини','Відкрий → редагуй → вибери функції'],
-                    ['4','Система → Функції','Для кожної функції додай регулярні завдання (кнопка repeat+ на картці)'],
-                    ['5','Вкладка "Навантаження"','У всіх має бути статус "Норма"'],
-                    ['6','Система → Інтеграції → Telegram','Скопіюй код → відправ боту /connect КОД'],
+                    ['1','Система → Функции','Создай все роли компании ДО добавления людей'],
+                    ['2','Система → Сотрудники → Пригласить','Отправь приглашение на email'],
+                    ['3','После принятия → карточка человека','Открой → редактируй → выбери функции'],
+                    ['4','Система → Функции','Для каждой функции добавь регулярные задачи (кнопка repeat+ на карточке)'],
+                    ['5','Вкладка «Нагрузка»','У всех должен быть статус «Норма»'],
+                    ['6','Система → Интеграции → Telegram','Скопируй код → отправь боту /connect КОД'],
                 ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
                     <div style="min-width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">${n}</div>
                     <div>
@@ -329,7 +329,7 @@
                 </div>`).join('')}
                 <div style="margin-top:1rem;">
                     <button class="btn btn-success" onclick="switchUsersSubTab('invite')">
-                        <i data-lucide="user-plus" class="icon icon-sm"></i> Запросити співробітника
+                        <i data-lucide="user-plus" class="icon icon-sm"></i> Пригласить сотрудника
                     </button>
                 </div>
             </div>
@@ -447,8 +447,8 @@
                 }
             } catch (e) {
                 console.error('[deleteUser] cascade failed:', e);
-                showToast('Помилка при очищенні задач: ' + e.message, 'error');
-                return; // cascade впала — НЕ видаляємо юзера, дані цілі
+                showToast('Ошибка при очистке задач: ' + e.message, 'error');
+                return; // cascade failed — NOT deleting user, data intact
             }
             
             // Видаляємо юзера тільки після успішного cascade
@@ -666,7 +666,7 @@
                             ${returned.length > 0 ? `<span style="color:#f59e0b;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>${returned.length}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.25rem;align-items:center;" onclick="event.stopPropagation();">
-                            ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserPermissionsModal('${u.id}')" title="Дозволи" style="background:#f0f9ff;color:#0369a1;"><i data-lucide="key" class="icon icon-sm"></i></button>` : ''}
+                            ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserPermissionsModal('${u.id}')" title="Разрешения" style="background:#f0f9ff;color:#0369a1;"><i data-lucide="key" class="icon icon-sm"></i></button>` : ''}
                             ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${window.t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
                             ${canEdit && !isOwner ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')" title="${window.t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>` : ''}
                             <i data-lucide="chevron-down" class="icon icon-sm" style="color:#d1d5db;" id="userToggle_${u.id}"></i>
@@ -712,18 +712,18 @@
 
             // Заповнюємо чекбокси allowedTabs
             const ALL_MODULES = [
-                { key: 'myday',       label: '📅 Мій день' },
-                { key: 'tasks',       label: '✅ Завдання' },
-                { key: 'projects',    label: '📁 Проєкти' },
-                { key: 'processes',   label: '⚙️ Процеси' },
+                { key: 'myday',       label: '📅 Мой день' },
+                { key: 'tasks',       label: '✅ Задачи' },
+                { key: 'projects',    label: '📁 Проекты' },
+                { key: 'processes',   label: '⚙️ Процессы' },
                 { key: 'warehouse',   label: '📦 Склад' },
                 { key: 'crm',         label: '🤝 CRM' },
-                { key: 'finance',     label: '💰 Фінанси' },
+                { key: 'finance',     label: '💰 Финансы' },
                 { key: 'control',     label: '🎯 Контроль' },
-                { key: 'regular',     label: '🔁 Регулярні' },
-                { key: 'booking',     label: '📆 Запис' },
-                { key: 'sales',       label: '🚗 Продажі' },
-                { key: 'estimate',    label: '📋 Кошторис' },
+                { key: 'regular',     label: '🔁 Регулярные' },
+                { key: 'booking',     label: '📆 Запись' },
+                { key: 'sales',       label: '🚗 Продажи' },
+                { key: 'estimate',    label: '📋 Смета' },
                 { key: 'learning',    label: '🎓 Навчання' },
             ];
             const tabsContainer = document.getElementById('allowedTabsCheckboxes');
@@ -770,7 +770,7 @@
                 document.getElementById('userForm').reset();
                 document.getElementById('userModalTitle').textContent = window.t('addEmployee');
                 _refreshPrimaryFunctionSelect([], '');
-                document.getElementById('userFunctionRoles').textContent = 'Вибери функції вище, щоб налаштувати ролі';
+                document.getElementById('userFunctionRoles').textContent = 'Выбери функции выше, щоб налаштувати ролі';
                 if (tabsGroup) tabsGroup.style.display = 'none';
             }
 
@@ -800,7 +800,7 @@
             const container = document.getElementById('userFunctionRoles');
             if (!container) return;
             if (selectedFuncIds.length === 0) {
-                container.textContent = 'Вибери функції вище, щоб налаштувати ролі';
+                container.textContent = 'Выбери функции выше, щоб налаштувати ролі';
                 return;
             }
             container.innerHTML = selectedFuncIds.map(fId => {
@@ -962,7 +962,7 @@
 
             let html = `<div style="max-height:70vh;overflow-y:auto;padding:0.25rem;">
                 <p style="font-size:0.82rem;color:#6b7280;margin:0 0 1rem;">
-                    Базові права від ролі <strong>${u.role}</strong>. Перемикачі нижче — індивідуальні override.
+                    Базовые права от роли <strong>${u.role}</strong>. Переключатели ниже — индивидуальні override.
                 </p>`;
 
             PERMISSION_GROUPS.forEach(group => {
