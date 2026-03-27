@@ -121,7 +121,7 @@ async function _showFinanceConfirmModal(deal) {
           </button>
           <button id="cfbSaveBtn" onclick="window._cfbSave('${_esc(deal.id)}')"
             style="flex:2;padding:0.6rem;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.85rem;font-weight:700;">
-            ✓ Записати дохід у фінанси
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Записати дохід у фінанси
           </button>
         </div>
 
@@ -207,13 +207,13 @@ window._cfbSave = async function(dealId) {
     } catch(e2) { /* не критично */ }
 
     document.getElementById('crmFinBridgeModal')?.remove();
-    if (typeof showToast === 'function') showToast('✅ Дохід записано у фінанси', 'success');
+    if (typeof showToast === 'function') showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Дохід записано у фінанси', 'success');
     console.log('[crmFinBridge] Saved transaction:', txRef.id);
 
   } catch(e) {
     console.error('[crmFinBridge] Save error:', e);
     if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error');
-    if (btn) { btn.disabled = false; btn.textContent = '✓ Записати дохід у фінанси'; }
+    if (btn) { btn.disabled = false; btn.textContent = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Записати дохід у фінанси'; }
   }
 };
 

@@ -184,7 +184,7 @@ async function _showFinanceModal(appt, amount) {
           </button>
           <button id="bkfbSaveBtn" onclick="window._bkfbSave('${_esc(appt.id)}')"
             style="flex:2;padding:0.55rem;border:none;border-radius:7px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.82rem;font-weight:700;">
-            ✓ Зафіксувати оплату
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Зафіксувати оплату
           </button>
         </div>
       </div>
@@ -246,11 +246,11 @@ window._bkfbSave = async function(apptId) {
     await batch.commit();
 
     document.getElementById('bkFinBridgeModal')?.remove();
-    if (typeof showToast==='function') showToast('✅ Оплату зафіксовано у фінансах', 'success');
+    if (typeof showToast==='function') showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Оплату зафіксовано у фінансах', 'success');
   } catch(e) {
     console.error('[bookingBridge] save error:', e);
     if (typeof showToast==='function') showToast('Помилка: ' + e.message, 'error');
-    if (btn) { btn.disabled = false; btn.textContent = '✓ Зафіксувати оплату'; }
+    if (btn) { btn.disabled = false; btn.textContent = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Зафіксувати оплату'; }
   }
 };
 

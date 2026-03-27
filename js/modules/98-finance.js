@@ -1180,7 +1180,7 @@ async function _getTxForExport(type) {
   // Попередження якщо досягли ліміту — дані можуть бути обрізані
   if (!_txFilter.month && snap.docs.length >= EXPORT_LIMIT) {
     if (typeof showToast === 'function')
-      showToast(`⚠ ${window.t('finExportLimit').replace('{n}', EXPORT_LIMIT)}`, 'warn', 6000);
+      showToast(`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${window.t('finExportLimit').replace('{n}', EXPORT_LIMIT)}`, 'warn', 6000);
   }
 
   const catMap = {};
@@ -1325,7 +1325,7 @@ window._financeTransfer = function() {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
         <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTransferTitle')}</div>
         <button onclick="document.getElementById('transferModal')?.remove()"
-          style="background:none;border:none;font-size:1.2rem;color:#9ca3af;cursor:pointer;padding:2px;">✕</button>
+          style="background:none;border:none;font-size:1.2rem;color:#9ca3af;cursor:pointer;padding:2px;">×</button>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
@@ -3073,7 +3073,7 @@ async function _renderCashflowForecast() {
     el.innerHTML = `
       ${hasNegative ? `
         <div style="padding:10px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;margin-bottom:16px;font-size:0.82rem;font-weight:600;color:#dc2626;">
-          ⚠️ Прогнозується від'ємний залишок: ${fmt(minBalance, currency)}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Прогнозується від'ємний залишок: ${fmt(minBalance, currency)}
         </div>` : ''}
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
@@ -3320,15 +3320,15 @@ function _renderPnl(el, txs, currency, from, to) {
       `</div>`).join('') +
     `</div>` +
     `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">` +
-    secHdr('📈 Виручка (Revenue)', totalInc, '#f0fdf4', '#16a34a') +
+    secHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Виручка (Revenue)', totalInc, '#f0fdf4', '#16a34a') +
     (incCats.filter(c => byIncCat[c.id]).map(c => incRow(c, byIncCat[c.id]||0)).join('') ||
       noData('Немає доходів за цей період')) +
-    secHdr('🏭 Собівартість (COGS)', totalCogs, '#fff7ed', '#c2410c') +
+    secHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg> Собівартість (COGS)', totalCogs, '#fff7ed', '#c2410c') +
     (expCats.filter(c => byCogsCat[c.id]).map(c => catRow(c, byCogsCat[c.id]||0, totalInc)).join('') ||
       `<div style="padding:8px 14px;font-size:0.78rem;color:#9ca3af;">` +
       `Немає витрат типу «Собівартість» — налаштуйте категорії витрат у Налаштуваннях</div>`) +
     subRow('Валовий прибуток (Gross Profit)', grossProfit, '#f8fafc') +
-    secHdr('💼 Операційні витрати (OPEX)', totalOpex, '#fef2f2', '#dc2626') +
+    secHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Операційні витрати (OPEX)', totalOpex, '#fef2f2', '#dc2626') +
     (expCats.filter(c => byOpexCat[c.id]).map(c => catRow(c, byOpexCat[c.id]||0, totalInc)).join('') ||
       noData('Немає операційних витрат')) +
     `<div style="background:#1f2937;color:#fff;padding:14px 14px;display:flex;justify-content:space-between;align-items:center;">` +
@@ -3340,7 +3340,7 @@ function _renderPnl(el, txs, currency, from, to) {
     (totalCogs === 0 ?
       `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;` +
       `margin-top:12px;font-size:0.78rem;color:#92400e;">` +
-      `💡 <b>Підказка:</b> Щоб бачити Собівартість окремо — в Налаштуваннях → Категорії витрат ` +
+      `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> <b>Підказка:</b> Щоб бачити Собівартість окремо — в Налаштуваннях → Категорії витрат ` +
       `встановіть тип <b>«Собівартість (COGS)»</b> для категорій прямих витрат.</div>` : '');
 }
 
@@ -4009,7 +4009,7 @@ ${context}
 - Якщо маржа вище норми — поясни чому і як утримати
 - Давай числові прогнози (+/- скільки грошей від конкретної дії)
 - Відповідай українською, коротко і по суті
-- Формат: емодзі-маркери для кожного блоку (📊 Діагноз, 🔍 Причина, ⚠️ Наслідок, ✅ Дія)
+- Формат: емодзі-маркери для кожного блоку (📊 Діагноз, 🔍 Причина, <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Наслідок, <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Дія)
 - Максимум 4-5 речень на блок`;
 
     // Читаємо OpenAI ключ з settings/ai
@@ -4689,7 +4689,7 @@ window._updateCurrencyHint = function() {
   const converted = toBase(amt, cur);
   const rates = _state.rates || {};
   if (!rates[cur]) {
-    hint.innerHTML = `<span style="color:#f59e0b;">⚠ ${window.t('finRateNotSet').replace('{cur}', cur)}</span>`;
+    hint.innerHTML = `<span style="color:#f59e0b;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${window.t('finRateNotSet').replace('{cur}', cur)}</span>`;
   } else {
     hint.textContent = `≈ ${converted.toFixed(2)} ${base} (курс: 1 ${cur} = ${rates[cur]} ${base})`;
   }
@@ -4893,7 +4893,7 @@ window._addEntityTx = function(entityId, field, type) {
         }
 
         if (typeof showToast === 'function') {
-          showToast(`💰 Авто-транзакція: +${tx.amount} ${tx.currency} (${p.clientName || 'CRM'})`, 'success');
+          showToast(`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Авто-транзакція: +${tx.amount} ${tx.currency} (${p.clientName || 'CRM'})`, 'success');
         }
         console.log('[Finance] CRM auto-tx created:', tx.amount, tx.currency, p.clientName);
       } catch(e) {
@@ -5022,7 +5022,7 @@ function _buildFinHowPanel() {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           Фінанси — з чого почати і як це працює
         </div>
-        <button onclick="window._finHowToggle()" style="padding:3px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:0.75rem;cursor:pointer;color:#6b7280;">Закрити ✕</button>
+        <button onclick="window._finHowToggle()" style="padding:3px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:0.75rem;cursor:pointer;color:#6b7280;">Закрити ×</button>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
@@ -5035,15 +5035,15 @@ function _buildFinHowPanel() {
           </div>
           <div style="display:grid;gap:6px;">
             <div style="background:#eff6ff;border-radius:8px;padding:8px 10px;">
-              <div style="font-size:0.75rem;font-weight:700;color:#1e40af;">📊 Cash Flow (Дашборд)</div>
+              <div style="font-size:0.75rem;font-weight:700;color:#1e40af;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Cash Flow (Дашборд)</div>
               <div style="${sub}">Реальний рух грошей по рахунках. Коли гроші прийшли і пішли. Актуально в реальному часі.</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;">
-              <div style="font-size:0.75rem;font-weight:700;color:#16a34a;">📈 P&L — Прибутки і збитки (Аналітика)</div>
+              <div style="font-size:0.75rem;font-weight:700;color:#16a34a;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> P&L — Прибутки і збитки (Аналітика)</div>
               <div style="${sub}">Реальний прибуток: Виручка → Собівартість → Валовий прибуток → OPEX → Чистий прибуток. По даті нарахування послуги.</div>
             </div>
             <div style="background:#fff7ed;border-radius:8px;padding:8px 10px;">
-              <div style="font-size:0.75rem;font-weight:700;color:#c2410c;">⚖️ Баланс (Аналітика → кнопка «Баланс»)</div>
+              <div style="font-size:0.75rem;font-weight:700;color:#c2410c;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v19"/><path d="M5 10l7-7 7 7"/><path d="M3 17l4-8 4 8"/><path d="M13 17l4-8 4 8"/><path d="M3 21h18"/></svg> Баланс (Аналітика → кнопка «Баланс»)</div>
               <div style="${sub}">Активи = Пасиви + Капітал. Що є у бізнесу, за чий рахунок, скільки власний капітал.</div>
             </div>
           </div>
@@ -5088,11 +5088,11 @@ function _buildFinHowPanel() {
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
             <div style="background:#fff7ed;border-radius:8px;padding:7px 9px;border:1px solid #fed7aa;">
-              <div style="font-size:0.7rem;font-weight:700;color:#c2410c;margin-bottom:3px;">🏭 COGS</div>
+              <div style="font-size:0.7rem;font-weight:700;color:#c2410c;margin-bottom:3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg> COGS</div>
               <div style="${sub}">Прямі витрати на послугу. Зростають разом з кількістю клієнтів.<br>Матеріали, зарплата майстрів, підрядники.</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:7px 9px;border:1px solid #bbf7d0;">
-              <div style="font-size:0.7rem;font-weight:700;color:#16a34a;margin-bottom:3px;">💼 OPEX</div>
+              <div style="font-size:0.7rem;font-weight:700;color:#16a34a;margin-bottom:3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> OPEX</div>
               <div style="${sub}">Постійні витрати. Не залежать від кількості клієнтів.<br>Оренда, маркетинг, бухгалтер, програми.</div>
             </div>
           </div>
@@ -5139,11 +5139,11 @@ function _buildFinHowPanel() {
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;">
             <div style="background:#ecfeff;border-radius:8px;padding:7px 10px;border:1px solid #a5f3fc;">
-              <div style="font-size:0.72rem;font-weight:700;color:#0e7490;">📅 Тижневий план 6M (Планування → «Тижневий план 6M»)</div>
+              <div style="font-size:0.72rem;font-weight:700;color:#0e7490;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Тижневий план 6M (Планування → «Тижневий план 6M»)</div>
               <div style="${sub}">Планування доходів і витрат по тижнях. Графік + Cashflow лінія. Видно касові розриви заздалегідь.</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:7px 10px;border:1px solid #bbf7d0;">
-              <div style="font-size:0.72rem;font-weight:700;color:#166534;">📊 Бюджет місяця (Планування → «Бюджет по категоріях»)</div>
+              <div style="font-size:0.72rem;font-weight:700;color:#166534;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Бюджет місяця (Планування → «Бюджет по категоріях»)</div>
               <div style="${sub}">План vs Факт по кожній категорії. Сповіщення при 80% і 100% витраченого бюджету.</div>
             </div>
           </div>
@@ -5156,7 +5156,7 @@ function _buildFinHowPanel() {
 
       <!-- Підсумок: де що знайти -->
       <div style="margin-top:12px;background:#1f2937;border-radius:12px;padding:12px 16px;">
-        <div style="font-size:0.75rem;font-weight:700;color:#fff;margin-bottom:8px;">🗺️ Де що знаходиться:</div>
+        <div style="font-size:0.75rem;font-weight:700;color:#fff;margin-bottom:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg> Де що знаходиться:</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
           ${[
             {tab:'Дашборд',   desc:'Cash Flow, рахунки, баланс рахунків'},

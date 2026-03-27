@@ -82,7 +82,7 @@ function _render(root) {
         {l:'Плановий прибуток', v:_fmt(tPlanInc-tPlanExp,cur), c:tPlanInc>=tPlanExp?'#22c55e':'#ef4444', sub:''},
         {l:'Факт доходів', v:_fmt(tActInc,cur),  c:'#3b82f6', sub:'минулі тижні'},
         {l:'Залишок наприкінці', v:_fmt(cfFinal,cur), c:cfFinal>=0?'#22c55e':'#ef4444',
-          sub: hasNeg ? '⚠️ є касовий розрив' : 'очікуваний'},
+          sub: hasNeg ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> є касовий розрив' : 'очікуваний'},
       ].map(k=>`
         <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;">
           <div style="font-size:0.67rem;color:#6b7280;margin-bottom:2px;">${k.l}</div>
@@ -118,7 +118,7 @@ function _render(root) {
       <button onclick="window._wpFillFromAvg()"
         style="padding:0.45rem 0.9rem;border:1px solid #e5e7eb;border-radius:8px;
           background:#fff;font-size:0.8rem;color:#374151;cursor:pointer;">
-        🤖 Заповнити з середнього 3M
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg> Заповнити з середнього 3M
       </button>
       <button onclick="window._wpClearAll()"
         style="padding:0.45rem 0.8rem;border:1px solid #fecaca;border-radius:8px;
@@ -326,11 +326,11 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
       ${weeks.some(w=>w.cfIsNeg) ? `
       <div style="margin:8px 14px;padding:8px 12px;background:#fef2f2;border:1px solid #fecaca;
         border-radius:8px;font-size:0.75rem;color:#dc2626;display:flex;align-items:center;gap:6px;">
-        ⚠️ <b>Касовий розрив</b> — у деяких тижнях прогнозується від'ємний залишок.
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> <b>Касовий розрив</b> — у деяких тижнях прогнозується від'ємний залишок.
         Перевірте план витрат або скоригуйте продажі.
       </div>` : ''}
       <div style="padding:6px 14px 10px;font-size:0.7rem;color:#9ca3af;">
-        💡 Відредагуйте планові суми в таблиці нижче — графік оновиться після збереження
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Відредагуйте планові суми в таблиці нижче — графік оновиться після збереження
       </div>
     </div>`;
 }
@@ -401,7 +401,7 @@ function _renderTable(weeks, currency) {
           <td style="padding:6px;text-align:right;font-size:0.78rem;font-weight:600;
             color:${cfColor};border-bottom:1px solid #f3f4f6;white-space:nowrap;">
             ${_fmt(w.cfEnd, currency)}
-            ${w.cfIsNeg?'<span style="font-size:0.65rem;margin-left:2px;">⚠️</span>':''}
+            ${w.cfIsNeg?'<span style="font-size:0.65rem;margin-left:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>':''}
           </td>
         </tr>`;
     }).join('');
@@ -417,7 +417,7 @@ function _renderTable(weeks, currency) {
       <tbody>
         <tr style="background:#1f2937;color:#fff;">
           <td colspan="8" style="padding:6px 10px;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">
-            📅 ${mo}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${mo}
             <span style="float:right;font-weight:400;opacity:0.7;">
               план: +${_fmtShort(mPlanInc)} / −${_fmtShort(mPlanExp)} = ${mProfit>=0?'+':''}${_fmtShort(mProfit)}
             </span>
@@ -479,7 +479,7 @@ window._wpSave = async function() {
         startBalance: WP.startBalance,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       }, { merge: true });
-    if (typeof showToast === 'function') showToast('✅ Тижневий план збережено', 'success');
+    if (typeof showToast === 'function') showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Тижневий план збережено', 'success');
     // Перерендер з оновленими даними
     const root = document.getElementById('weeklyPlanRoot');
     if (root) _render(root);

@@ -153,7 +153,7 @@ function _render(el, d) {
         </span>
         <span style="padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;
           background:${balanceOk?'#f0fdf4':'#fef2f2'};color:${balanceOk?'#16a34a':'#dc2626'};">
-          ${balanceOk ? '✓ Баланс зведений' : '⚠️ Перевірте дані'}
+          ${balanceOk ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Баланс зведений' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Перевірте дані'}
         </span>
         <button onclick="window.renderBalanceSheet(this.closest('[id]'))"
           style="padding:4px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;
@@ -163,7 +163,7 @@ function _render(el, d) {
         <button onclick="window._showBalanceSettings()"
           style="padding:4px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;
             font-size:0.75rem;cursor:pointer;color:#374151;">
-          ⚙️ Налаштування
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2M12 2v2M12 20v2"/></svg> Налаштування
         </button>
       </div>
     </div>`;
@@ -218,7 +218,7 @@ function _render(el, d) {
   // АКТИВИ
   const assetsHtml = `
     <div style="${colStyle}">
-      ${sectionHdr('📦','АКТИВИ', d.assets.total, '#16a34a', '#f0fdf4')}
+      ${sectionHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>','АКТИВИ', d.assets.total, '#16a34a', '#f0fdf4')}
 
       ${subHdr('Грошові кошти (рахунки)', d.assets.cash.total)}
       ${d.assets.cash.items.length
@@ -258,7 +258,7 @@ function _render(el, d) {
     <div style="display:flex;flex-direction:column;gap:12px;">
       <!-- Пасиви -->
       <div style="${colStyle}">
-        ${sectionHdr('📋','ПАСИВИ', d.liabilities.total, '#dc2626', '#fef2f2')}
+        ${sectionHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>','ПАСИВИ', d.liabilities.total, '#dc2626', '#fef2f2')}
 
         ${subHdr('Поточні зобов\'язання', d.liabilities.current.total + d.liabilities.creditors.total)}
         ${d.liabilities.creditors.total > 0
@@ -284,7 +284,7 @@ function _render(el, d) {
 
       <!-- Капітал -->
       <div style="${colStyle}">
-        ${sectionHdr('💰','ВЛАСНИЙ КАПІТАЛ', d.capital.total, '#2563eb', '#eff6ff')}
+        ${sectionHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>','ВЛАСНИЙ КАПІТАЛ', d.capital.total, '#2563eb', '#eff6ff')}
 
         ${row('Статутний капітал', d.capital.registered, 'налаштування балансу', 0)}
         ${row('Накопичений прибуток', d.capital.retained,
@@ -310,7 +310,7 @@ function _render(el, d) {
       </div>
       <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;font-size:0.75rem;color:#c2410c;">
         <b>Необоротні активи і зобов\'язання</b> вводяться вручну.
-        Натисніть ⚙️ Налаштування щоб додати авто, обладнання, кредити.
+        Натисніть <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2M12 2v2M12 20v2"/></svg> Налаштування щоб додати авто, обладнання, кредити.
       </div>
     </div>`;
 
@@ -340,7 +340,7 @@ window._showBalanceSettings = function() {
       <input type="number" value="${it.value||''}" placeholder="Сума" min="0"
         id="${prefix}_val_${i}"
         style="flex:1;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.8rem;">
-      <button onclick="this.closest('div').remove()" style="padding:4px 8px;border:none;background:#fef2f2;color:#ef4444;border-radius:5px;cursor:pointer;font-size:0.75rem;">✕</button>
+      <button onclick="this.closest('div').remove()" style="padding:4px 8px;border:none;background:#fef2f2;color:#ef4444;border-radius:5px;cursor:pointer;font-size:0.75rem;">×</button>
     </div>`).join('');
 
   const modal = document.createElement('div');
@@ -350,8 +350,8 @@ window._showBalanceSettings = function() {
   modal.innerHTML = `
     <div style="background:#fff;border-radius:14px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
       <div style="padding:1rem 1.25rem;border-bottom:1px solid #f3f4f6;font-size:0.95rem;font-weight:700;color:#1a1a1a;display:flex;justify-content:space-between;">
-        ⚙️ Налаштування Балансу
-        <button onclick="document.getElementById('balanceSettingsModal')?.remove()" style="border:none;background:none;cursor:pointer;color:#9ca3af;font-size:1.1rem;">✕</button>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2M12 2v2M12 20v2"/></svg> Налаштування Балансу
+        <button onclick="document.getElementById('balanceSettingsModal')?.remove()" style="border:none;background:none;cursor:pointer;color:#9ca3af;font-size:1.1rem;">×</button>
       </div>
       <div style="padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:1rem;">
 
@@ -409,7 +409,7 @@ window._bsAddRow = function(prefix) {
       style="flex:2;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.8rem;">
     <input type="number" placeholder="Сума" min="0" id="${prefix}_val_${i}"
       style="flex:1;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.8rem;">
-    <button onclick="this.closest('div').remove()" style="padding:4px 8px;border:none;background:#fef2f2;color:#ef4444;border-radius:5px;cursor:pointer;font-size:0.75rem;">✕</button>`;
+    <button onclick="this.closest('div').remove()" style="padding:4px 8px;border:none;background:#fef2f2;color:#ef4444;border-radius:5px;cursor:pointer;font-size:0.75rem;">×</button>`;
   list.appendChild(div);
 };
 
@@ -442,7 +442,7 @@ window._bsSave = async function() {
       .doc('balance_settings').set(data, { merge:true });
     window._balanceSettingsCache = data;
     document.getElementById('balanceSettingsModal')?.remove();
-    if (typeof showToast==='function') showToast('✅ Налаштування балансу збережено','success');
+    if (typeof showToast==='function') showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Налаштування балансу збережено','success');
     // Оновлюємо баланс
     const inner = document.getElementById('financeContentInner');
     if (inner) window.renderBalanceSheet(inner);
