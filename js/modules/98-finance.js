@@ -3125,6 +3125,11 @@ function renderAnalytics(el) {
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
           ${window.t('finExpenseTrend')}
         </button>
+        <button onclick="window._analyticsMode('balance')" id="anlBtn_balance"
+          style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h16v4"/><circle cx="18" cy="12" r="2"/></svg>
+          Баланс
+        </button>
       </div>
 
       <div id="analyticsContent">
@@ -3137,7 +3142,7 @@ function renderAnalytics(el) {
 
 window._analyticsMode = function(mode) {
   _analyticsMode = mode;
-  ['pnl','projects','trends'].forEach(m => {
+  ['pnl','projects','trends','balance'].forEach(m => {
     const btn = document.getElementById('anlBtn_' + m);
     if (!btn) return;
     const active = m === mode;
@@ -3185,6 +3190,15 @@ async function _loadAnalytics(mode, period) {
     if (mode === 'pnl')      _renderPnl(el, txs, currency, from, to);
     if (mode === 'projects')  _renderProjectsMargin(el, txs, currency);
     if (mode === 'trends')    _renderTrends(el, txs, currency, from, to, period);
+    if (mode === 'balance') {
+      // Баланс не залежить від вибраного періоду — показуємо повний
+      if (typeof window.renderBalanceSheet === 'function') {
+        window.renderBalanceSheet(el);
+      } else {
+        el.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Модуль балансу не завантажено</div>';
+      }
+      return; // не потрібно читати txs для балансу — renderBalanceSheet сам завантажить
+    }
 
   } catch(e) {
     el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${escHtml(e.message)}</div>`;
