@@ -209,6 +209,13 @@
                 document.getElementById('aiStructureBtnDesktop').style.display = 'none'; // temporarily disabled
                 
                 showMainInterface();
+
+                // ── SUBSCRIPTION CHECK ───────────────────────────
+                currentCompanyData = companyData || {};
+                window.currentCompanyData = currentCompanyData;
+                _checkAndApplySubscription(companyData, currentUserData, isSuperAdmin);
+                // ── END SUBSCRIPTION CHECK ──────────────────────
+
                 if (typeof initCalendar === 'function') initCalendar();
                 if (typeof initRegularView === 'function') initRegularView();
                 if (typeof initGoogleCalendar === 'function') initGoogleCalendar();
@@ -413,3 +420,86 @@
             const roleKeys = { owner: 'roleOwner', manager: 'roleManager', employee: 'roleEmployee', superadmin: 'adminRole' };
             return roleKeys[role] ? window.t(roleKeys[role]) : role;
         }
+
+// ── SUBSCRIPTION ─────────────────────────────────────────────
+function _checkAndApplySubscription(companyData, userData, isSuperadmin) {
+    try {
+        const badge = document.getElementById('subscriptionBadge');
+
+        // SuperAdmin — без обмежень
+        if (isSuperadmin) {
+            if (badge) badge.style.display = 'none';
+            return;
+        }
+
+        const subEnd = companyData?.subscriptionEnd?.toDate ? companyData.subscriptionEnd.toDate() : null;
+        const plan   = companyData?.subscriptionPlan || 'trial';
+        const status = companyData?.subscriptionStatus || 'active';
+        const isOwner = userData?.role === 'owner';
+
+        const now = new Date();
+
+        // Якщо немає дати або статус expired або дата прострочена — paywall
+        const isExpired = !subEnd || status === 'expired' || subEnd < now;
+
+        if (isExpired) {
+            _showPaywall();
+            return;
+        }
+
+        // Бейдж — тільки для owner
+        if (isOwner && badge && subEnd) {
+            const daysLeft = Math.ceil((subEnd - now) / (1000 * 60 * 60 * 24));
+            const dd = String(subEnd.getDate()).padStart(2,'0');
+            const mm = String(subEnd.getMonth()+1).padStart(2,'0');
+            const label = `до ${dd}.${mm}`;
+
+            let bg, color;
+            if (daysLeft > 30)     { bg = 'rgba(34,197,94,0.25)';  color = '#16a34a'; }
+            else if (daysLeft > 7) { bg = 'rgba(245,158,11,0.25)'; color = '#b45309'; }
+            else                   { bg = 'rgba(239,68,68,0.25)';  color = '#dc2626'; }
+
+            badge.textContent = label;
+            badge.style.cssText = `display:inline-block;margin-left:6px;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:${bg};color:${color};border:1px solid ${color}33;cursor:default;`;
+            badge.title = `Підписка: ${plan} | Залишилось днів: ${daysLeft}`;
+        }
+    } catch(e) {
+        console.warn('[Subscription] check error:', e.message);
+    }
+}
+window._checkAndApplySubscription = _checkAndApplySubscription;
+
+function _showPaywall() {
+    // Ховаємо інтерфейс — залишаємо тільки header
+    const main = document.getElementById('mainInterface');
+    if (!main) return;
+
+    // Видаляємо попередній paywall якщо є
+    const existing = document.getElementById('talkoPaywall');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'talkoPaywall';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.92);backdrop-filter:blur(4px);';
+    overlay.innerHTML = `
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:20px;padding:2.5rem 2rem;max-width:380px;width:90%;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+        <div style="width:64px;height:64px;background:rgba(239,68,68,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <div style="font-size:1.3rem;font-weight:800;color:white;margin-bottom:0.5rem;">Підписка закінчилась</div>
+        <div style="font-size:0.88rem;color:#94a3b8;line-height:1.6;margin-bottom:1.75rem;">
+            Для продовження роботи з TALKO System<br>зверніться до підтримки
+        </div>
+        <a href="https://t.me/alex_talko" target="_blank"
+            style="display:inline-flex;align-items:center;gap:8px;background:#22c55e;color:white;padding:0.75rem 1.75rem;border-radius:12px;font-size:0.95rem;font-weight:700;text-decoration:none;transition:opacity .15s;"
+            onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.932z"/></svg>
+            Звернутись до підтримки
+        </a>
+        <div style="margin-top:1rem;font-size:0.75rem;color:#475569;">@alex_talko</div>
+    </div>`;
+
+    document.body.appendChild(overlay);
+}
+window._showPaywall = _showPaywall;
+

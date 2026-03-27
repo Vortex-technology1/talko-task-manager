@@ -273,6 +273,7 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
         {id:'alerts',     label:`Алерти${alertCount>0?` <span style="background:#ef4444;color:white;border-radius:9px;padding:0 5px;font-size:0.65rem;">${alertCount}</span>`:''}`, icon:'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'},
         {id:'system',     label:'Система',    icon:'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'},
         {id:'firestore',  label:'Firestore',  icon:'M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM4 4h16M4 20h16'},
+        {id:'subscriptions', label:'Підписки', icon:'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'},
     ];
 
     const svgIcon = (path, size=13) =>
@@ -317,11 +318,12 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
 <div id="saTabContent_alerts"    style="display:none;">${_saRenderAlerts(pc)}</div>
 <div id="saTabContent_system"    style="display:none;">${_saRenderSystem()}</div>
 <div id="saTabContent_firestore" style="display:none;">${_saRenderFirestore(pc)}</div>
+<div id="saTabContent_subscriptions" style="display:none;">${_saRenderSubscriptions(pc)}</div>
 `;
 }
 
 window.saSwitchTab = function(tab) {
-    const tabs = ['overview','companies','users','activity','ai','health','alerts','system','firestore'];
+    const tabs = ['overview','companies','users','activity','ai','health','alerts','system','firestore','subscriptions'];
     tabs.forEach(t => {
         const btn   = document.getElementById(`saTab_${t}`);
         const panel = document.getElementById(`saTabContent_${t}`);
@@ -1935,4 +1937,250 @@ window.clearPlatformKey = async function() {
         showToast && showToast('Ключ видалено', 'success');
         document.getElementById('globalAIOverlay')?.remove();
     } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+};
+
+// ── TAB: ПІДПИСКИ ────────────────────────────────────────────
+function _saRenderSubscriptions(pc) {
+    const now = new Date();
+
+    const rows = pc.map(c => {
+        const data   = c.data || {};
+        const subEnd = data.subscriptionEnd?.toDate ? data.subscriptionEnd.toDate() : null;
+        const plan   = data.subscriptionPlan || '—';
+
+        // Дата реєстрації компанії
+        let regStr = '—';
+        if (c.createdAt) {
+            const reg = new Date(c.createdAt);
+            regStr = `${String(reg.getDate()).padStart(2,'0')}.${String(reg.getMonth()+1).padStart(2,'0')}.${reg.getFullYear()}`;
+        } else if (data.createdAt?.toDate) {
+            const reg = data.createdAt.toDate();
+            regStr = `${String(reg.getDate()).padStart(2,'0')}.${String(reg.getMonth()+1).padStart(2,'0')}.${reg.getFullYear()}`;
+        }
+
+        // Owner — з масиву users
+        const ownerUser     = (c.users || []).find(u => u.role === 'owner');
+        const ownerEmail    = ownerUser?.email || '';
+        const ownerPhone    = ownerUser?.phone || '';
+        const ownerName     = ownerUser?.name  || ownerUser?.email || '';
+
+        const ownerEmailSafe = _saEsc(ownerEmail);
+        const ownerNameSafe  = _saEsc(ownerName);
+        const ownerPhoneSafe = _saEsc(ownerPhone);
+        const ownerTgSafe    = _saEsc(ownerUser?.telegram || ownerUser?.telegramUsername || '');
+
+        // Контакти власника в таблиці
+        const contactCell = `
+            ${ownerEmail ? `<div style="font-size:0.78rem;color:#111;">${ownerEmailSafe}</div>` : '<div style="font-size:0.75rem;color:#9ca3af;">—</div>'}
+            ${ownerPhone ? `<div style="font-size:0.73rem;color:#6b7280;margin-top:1px;">${ownerPhoneSafe}</div>` : ''}`;
+
+        // Статус підписки
+        let statusBadge = `<span style="background:#f3f4f6;color:#6b7280;padding:2px 7px;border-radius:10px;font-size:0.71rem;">без підписки</span>`;
+        let dateStr = '<span style="color:#9ca3af;font-size:0.75rem;">—</span>';
+
+        if (subEnd) {
+            const daysLeft = Math.ceil((subEnd - now) / (1000 * 60 * 60 * 24));
+            dateStr = `${String(subEnd.getDate()).padStart(2,'0')}.${String(subEnd.getMonth()+1).padStart(2,'0')}.${subEnd.getFullYear()}`;
+            if (daysLeft > 30)     statusBadge = `<span style="background:#dcfce7;color:#16a34a;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;">✓ активна</span>`;
+            else if (daysLeft > 7) statusBadge = `<span style="background:#fef9c3;color:#b45309;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;">⚠ ${daysLeft}д</span>`;
+            else if (daysLeft > 0) statusBadge = `<span style="background:#fee2e2;color:#dc2626;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;">🔴 ${daysLeft}д</span>`;
+            else                   statusBadge = `<span style="background:#fee2e2;color:#dc2626;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;">✗ прострочена</span>`;
+        }
+
+        return `<tr onclick="saOpenSubModal('${_saEsc(c.id)}','${_saEsc(data.name||c.id)}','${ownerEmailSafe}','${ownerNameSafe}','${ownerPhoneSafe}','${ownerTgSafe}')"
+            style="cursor:pointer;border-bottom:1px solid #f3f4f6;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+            <td style="padding:0.6rem 0.75rem;">
+                <div style="font-size:0.82rem;font-weight:600;color:#111;">${_saEsc(data.name||c.id)}</div>
+                <div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;">${plan}</div>
+            </td>
+            <td style="padding:0.6rem 0.75rem;font-size:0.78rem;color:#6b7280;white-space:nowrap;">${regStr}</td>
+            <td style="padding:0.6rem 0.75rem;">${contactCell}</td>
+            <td style="padding:0.6rem 0.75rem;font-size:0.78rem;color:#374151;white-space:nowrap;">${dateStr}</td>
+            <td style="padding:0.6rem 0.75rem;">${statusBadge}</td>
+        </tr>`;
+    }).join('');
+
+    return `
+<div style="overflow-x:auto;">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+    <div style="font-size:0.85rem;font-weight:700;color:#374151;">Управління підписками (${pc.length} компаній)</div>
+    <div style="font-size:0.75rem;color:#9ca3af;">Клікни на рядок → редагувати</div>
+</div>
+<table style="width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+    <thead>
+        <tr style="background:#f8fafc;border-bottom:1px solid #e5e7eb;">
+            <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.71rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;">Компанія / план</th>
+            <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.71rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap;">Дата реєстрації</th>
+            <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.71rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;">Власник (email / тел)</th>
+            <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.71rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap;">До дати</th>
+            <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.71rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;">Статус</th>
+        </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+</table>
+</div>`;
+}
+
+// ── МОДАЛКА ПІДПИСКИ ─────────────────────────────────────────
+window.saOpenSubModal = async function(companyId, companyName, ownerEmail, ownerName, ownerPhone, ownerTg) {
+    let subEnd = null, plan = 'basic';
+
+    // Показуємо модалку одразу зі скелетоном, потім підвантажуємо
+    document.getElementById('saSubModal')?.remove();
+    const modal = document.createElement('div');
+    modal.id = 'saSubModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:10010;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(2px);';
+
+    const renderModal = (subEnd, plan, ownerEmail, ownerName, ownerPhone, ownerTg) => {
+        const toInputDate = (dt) => {
+            if (!dt) return '';
+            return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+        };
+
+        // Блок контактів власника
+        const contactItems = [];
+        if (ownerEmail) contactItems.push(`
+            <div style="display:flex;align-items:center;gap:8px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a href="mailto:${ownerEmail}" style="font-size:0.82rem;color:#2563eb;text-decoration:none;">${ownerEmail}</a>
+            </div>`);
+        if (ownerPhone) contactItems.push(`
+            <div style="display:flex;align-items:center;gap:8px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.18 1.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.06 6.06l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                <a href="tel:${ownerPhone}" style="font-size:0.82rem;color:#2563eb;text-decoration:none;">${ownerPhone}</a>
+            </div>`);
+        if (ownerTg) contactItems.push(`
+            <div style="display:flex;align-items:center;gap:8px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#6b7280"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.932z"/></svg>
+                <a href="https://t.me/${ownerTg.replace('@','')}" target="_blank" style="font-size:0.82rem;color:#2563eb;text-decoration:none;">${ownerTg.startsWith('@')?ownerTg:'@'+ownerTg}</a>
+            </div>`);
+
+        const ownerBlock = (ownerName || ownerEmail) ? `
+        <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;">
+            <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;">Власник</div>
+            ${ownerName ? `<div style="font-size:0.88rem;font-weight:700;color:#111;margin-bottom:0.4rem;">${ownerName}</div>` : ''}
+            <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                ${contactItems.join('') || '<span style="font-size:0.78rem;color:#9ca3af;">контакти не вказані</span>'}
+            </div>
+        </div>` : '';
+
+        return `
+        <div style="background:white;border-radius:16px;padding:1.75rem;width:90%;max-width:420px;box-shadow:0 20px 50px rgba(0,0,0,0.3);max-height:90vh;overflow-y:auto;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+                <div>
+                    <div style="font-size:1rem;font-weight:800;color:#111;">Підписка</div>
+                    <div style="font-size:0.78rem;color:#6b7280;margin-top:2px;">${_saEsc(companyName)}</div>
+                </div>
+                <button onclick="document.getElementById('saSubModal').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;line-height:1;padding:4px;">✕</button>
+            </div>
+
+            ${ownerBlock}
+
+            <div style="display:grid;gap:0.75rem;margin-bottom:1rem;">
+                <div>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">План</label>
+                    <select id="saSubPlan" style="width:100%;padding:0.5rem 0.75rem;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.85rem;outline:none;">
+                        <option value="trial" ${plan==='trial'?'selected':''}>Trial</option>
+                        <option value="basic" ${plan==='basic'?'selected':''}>Basic</option>
+                        <option value="pro"   ${plan==='pro'?'selected':''}>Pro</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Дата закінчення</label>
+                    <input id="saSubEndDate" type="date" value="${toInputDate(subEnd)}"
+                        style="width:100%;padding:0.5rem 0.75rem;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.85rem;outline:none;box-sizing:border-box;">
+                </div>
+            </div>
+
+            <div style="display:flex;gap:0.4rem;margin-bottom:1rem;flex-wrap:wrap;">
+                <button onclick="saSubAddDays('${companyId}',30)"  style="flex:1;min-width:60px;padding:0.5rem;background:#eff6ff;color:#1d4ed8;border:1.5px solid #bfdbfe;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;">+30д</button>
+                <button onclick="saSubAddDays('${companyId}',90)"  style="flex:1;min-width:60px;padding:0.5rem;background:#f0fdf4;color:#15803d;border:1.5px solid #bbf7d0;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;">+90д</button>
+                <button onclick="saSubAddDays('${companyId}',365)" style="flex:1;min-width:60px;padding:0.5rem;background:#faf5ff;color:#7c3aed;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;">+365д</button>
+                <button onclick="saSubSetForever('${companyId}')"  style="flex:1;min-width:60px;padding:0.5rem;background:#fefce8;color:#a16207;border:1.5px solid #fde68a;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;">∞ Вічна</button>
+            </div>
+
+            <button onclick="saSubSave('${companyId}')"
+                style="width:100%;padding:0.7rem;background:#111;color:white;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;">
+                Зберегти
+            </button>
+        </div>`;
+    };
+
+    // Показуємо з даними що вже є (з таблиці), потім підтягуємо свіжі з Firestore
+    modal.innerHTML = renderModal(null, 'basic', ownerEmail, ownerName, ownerPhone, ownerTg);
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+
+    // Підвантажуємо актуальні дані підписки
+    try {
+        const doc = await window.db.collection('companies').doc(companyId).get();
+        const d = doc.data() || {};
+        subEnd = d.subscriptionEnd?.toDate ? d.subscriptionEnd.toDate() : null;
+        plan   = d.subscriptionPlan || 'basic';
+
+        // Якщо власник не знайдений через pc (дані могли бути неповні) — підтягуємо з Firestore
+        let fOwnerEmail = ownerEmail, fOwnerName = ownerName, fOwnerPhone = ownerPhone, fOwnerTg = ownerTg;
+        if (!fOwnerEmail && d.ownerId) {
+            try {
+                const ownerDoc = await window.db.collection('companies').doc(companyId).collection('users').doc(d.ownerId).get();
+                if (ownerDoc.exists) {
+                    const od = ownerDoc.data();
+                    fOwnerEmail = od.email || '';
+                    fOwnerName  = od.name  || od.email || '';
+                    fOwnerPhone = od.phone || '';
+                    fOwnerTg    = od.telegram || od.telegramUsername || '';
+                }
+            } catch(e2) {}
+        }
+
+        // Перерендерюємо модалку зі свіжими даними
+        const inner = modal.querySelector('div');
+        if (inner) inner.outerHTML = renderModal(subEnd, plan, fOwnerEmail, fOwnerName, fOwnerPhone, fOwnerTg);
+    } catch(e) { console.warn('[SA Sub]', e.message); }
+};
+
+window.saSubAddDays = function(companyId, days) {
+    const input = document.getElementById('saSubEndDate');
+    if (!input) return;
+    const current = input.value ? new Date(input.value + 'T00:00:00') : new Date();
+    current.setDate(current.getDate() + days);
+    const y = current.getFullYear();
+    const m = String(current.getMonth()+1).padStart(2,'0');
+    const d = String(current.getDate()).padStart(2,'0');
+    input.value = `${y}-${m}-${d}`;
+};
+
+window.saSubSetForever = function(companyId) {
+    const input = document.getElementById('saSubEndDate');
+    if (!input) return;
+    input.value = '2099-12-31';
+};
+
+window.saSubSave = async function(companyId) {
+    const plan    = document.getElementById('saSubPlan')?.value || 'basic';
+    const dateVal = document.getElementById('saSubEndDate')?.value;
+
+    if (!dateVal) {
+        if (typeof showToast === 'function') showToast('Вкажіть дату закінчення', 'error');
+        return;
+    }
+
+    try {
+        const endDate = new Date(dateVal + 'T23:59:59');
+        const now = new Date();
+        const isActive = endDate > now;
+
+        await window.db.collection('companies').doc(companyId).update({
+            subscriptionEnd:    firebase.firestore.Timestamp.fromDate(endDate),
+            subscriptionPlan:   plan,
+            subscriptionStatus: isActive ? 'active' : 'expired',
+        });
+
+        document.getElementById('saSubModal')?.remove();
+        if (typeof showToast === 'function') showToast('Підписку збережено ✓', 'success');
+        // Оновлюємо панель
+        if (typeof loadSuperadminData === 'function') loadSuperadminData();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
 };
