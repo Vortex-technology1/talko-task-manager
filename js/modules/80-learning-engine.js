@@ -190,12 +190,11 @@
         <div class="l-module-card ${isCompleted ? 'completed' : ''} ${!isAvailable ? 'locked' : ''}" 
              onclick="window._openLearningModule(${module.id})"
              style="cursor:pointer;">
-            <div class="l-module-icon ${isCompleted ? 'completed' : isAvailable ? 'available' : 'locked'}" style="position:relative;">
+            <div class="l-module-icon ${isCompleted ? 'completed' : isAvailable ? 'available' : 'locked'}">
                 ${!isAvailable
                     ? '<i data-lucide="lock" class="icon" style="width:20px;height:20px;"></i>'
-                    : `<span style="font-weight:700;font-size:0.9rem;">${moduleIndex + 1}</span>`
+                    : `<span style="font-weight:700;font-size:0.9rem;">${moduleIndex + 1}${isCompleted ? '<svg style=\"display:inline;vertical-align:middle;margin-left:1px;\" width=\"10\" height=\"10\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#16a34a\" stroke-width=\"3\"><polyline points=\"20 6 9 17 4 12\"/></svg>' : ''}</span>`
                 }
-                ${isCompleted ? '<i data-lucide="check" class="icon" style="position:absolute;bottom:-4px;right:-4px;width:13px;height:13px;color:#22c55e;background:white;border-radius:50%;"></i>' : ''}
             </div>
             <div class="l-module-info">
                 <div class="l-module-title">${title}</div>
