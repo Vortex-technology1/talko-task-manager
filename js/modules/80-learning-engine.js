@@ -5262,6 +5262,11 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         const isCompleted = module.completed;
         const hwText = (learningProgress[moduleId] || {}).homeworkText || '';
         const hwDone = (learningProgress[moduleId] || {}).homeworkDone || false;
+        // Display number = position in filtered list + 1 (same as card list)
+        const _activeCat = window._learningActiveCategory || 'systematization';
+        const _filteredList = learningCourseData.filter(m => (m.category || 'systematization') === _activeCat);
+        const _moduleIndex = _filteredList.findIndex(m => m.id === moduleId);
+        const _displayNum = _moduleIndex >= 0 ? _moduleIndex + 1 : moduleId;
 
         const root = document.getElementById('learningTab');
         root.innerHTML = `
@@ -5276,7 +5281,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
             <div class="l-module-detail">
                 <div class="l-detail-header">
-                    <div class="l-detail-num">${moduleId}</div>
+                    <div class="l-detail-num">${_displayNum}</div>
                     <div>
                         <div class="l-detail-title">${title}</div>
                         ${subtitle ? `<div class="l-detail-subtitle">${subtitle}</div>` : ''}

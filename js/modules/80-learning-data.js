@@ -11334,658 +11334,130 @@ Bist du dabei?</div>
 
                 lessonContent: `
 <style>
-.l12-section { margin-bottom:1.75rem; }
-.l12-section:last-child { margin-bottom:0; }
-.l12-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
-.l12-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
-.l12-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
-.l12-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
-.l12-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
-.l12-card p+p { margin-top:0.7rem; }
-.l12-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.875rem; color:#166534; font-style:italic; line-height:1.6; }
-.l12-reasons { display:grid; gap:0.6rem; margin-top:0.75rem; }
-.l12-reason { border-radius:11px; overflow:hidden; border:1px solid #e2e8f0; }
-.l12-reason-header { display:flex; align-items:center; gap:0.7rem; padding:0.75rem 0.95rem; background:#f8fafc; }
-.l12-reason-num { width:28px; height:28px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; flex-shrink:0; }
-.l12-reason-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
-.l12-reason-body { padding:0.65rem 0.95rem 0.8rem; background:white; border-top:1px solid #f1f5f9; font-size:0.85rem; color:#525252; line-height:1.55; }
-.l12-problems { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l12-problem { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
-.l12-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l12-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
-.l12-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
-.l12-step-body { flex:1; }
-.l12-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l12-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l12-functions { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l12-fn { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
-.l12-fn-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem; }
-.l12-fn-num { font-size:0.7rem; font-weight:700; color:#9ca3af; }
-.l12-fn-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
-.l12-fn-text { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l12-fn-stat { display:inline-block; margin-top:0.4rem; padding:0.2rem 0.55rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:5px; font-size:0.72rem; font-weight:600; color:#16a34a; }
-.l12-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
-.l12-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
-.l12-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
-.l12-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
-.l12-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l12-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
-.l12-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
-.l12-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
-.l12-mgr { display:grid; gap:0.5rem; margin-top:0.75rem; }
-.l12-mgr-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; }
-.l12-mgr-icon { width:32px; height:32px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.l12-mgr-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
-.l12-mgr-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l13-s{margin-bottom:1.75rem}.l13-s:last-child{margin-bottom:0}
+.l13-div{height:1px;background:#e2e8f0;margin:1.75rem 0}
+.l13-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}
+.l13-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l13-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}
+.l13-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.l13-card p+p{margin-top:.7rem}
+.l13-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:3px solid #22c55e;border-radius:0 10px 10px 0;font-size:.875rem;color:#166534;font-style:italic;line-height:1.6}
+.l13-err{display:grid;gap:.5rem;margin-top:.75rem}
+.l13-err-item{padding:.8rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}
+.l13-err-title{font-weight:700;color:#dc2626;font-size:.875rem;margin-bottom:.3rem}
+.l13-err-text{font-size:.82rem;color:#7f1d1d;line-height:1.5}
+.l13-tw{overflow-x:auto;margin-top:.75rem}
+.l13-t{width:100%;border-collapse:collapse;font-size:.82rem}
+.l13-t th{background:#f0fdf4;color:#166534;font-weight:700;padding:.55rem .75rem;text-align:left;border:1px solid #bbf7d0;font-size:.75rem}
+.l13-t td{padding:.55rem .75rem;border:1px solid #e2e8f0;color:#374151;line-height:1.4}
+.l13-t tr:nth-child(even) td{background:#f8fafc}
+.l13-res{display:grid;gap:.45rem;margin-top:.75rem}
+.l13-res-item{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.875rem;color:#166534;font-weight:500}
+.l13-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.l13-th{display:flex;align-items:flex-start;gap:.85rem}
+.l13-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l13-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l13-td{font-size:.82rem;color:#525252;line-height:1.5}
+.l13-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
 </style>
 
-<div class="l12-section">
-    <div class="l12-section-label">Вступ</div>
-    <div class="l12-section-title">Чому при зростанні стає не легше, а важче</div>
-    <div class="l12-card">
-        <p>Є питання, з яким рано чи пізно стикається кожен власник малого бізнесу: чому при зростанні стає не легше, а важче? Більше людей — більше хаосу. Більше замовлень — більше помилок. Більше виручки — більше головного болю.</p>
-        <p>Відповідь, як правило, одна: бізнес не організований. Не в сенсі «зареєстрований» — а в сенсі «кожна робота закріплена за конкретною людиною, і всі частини взаємодіють між собою».</p>
-        <p>Функціональна структура — це фундамент, без якого будь-яка система, CRM, автоматизація чи мотивація — просто надбудова на піску.</p>
+<div class="l13-s">
+    <div class="l13-lbl">Головна проблема</div>
+    <div class="l13-title">Без цифр ви бачите не реальність, а свою інтерпретацію</div>
+    <div class="l13-card">
+        <p>Більшість власників вважають, що добре розуміють свій бізнес. «Якщо записів багато — все добре. Якщо мало — треба рекламу». Здається логічним. Але якщо все так зрозуміло — чому щотижня є пожежі? Чому раптом падають продажі і незрозуміло чому? Чому в маркетинг вклали гроші, а результат «то є, то нема»?</p>
+        <p>Проблеми в бізнесі майже ніколи не виникають раптово. Вони накопичуються тижнями — повільно, непомітно. Людина бачить невелике погіршення, пояснює це «сезоном» або «особливим місяцем». Поки проблема не стала величезною — на неї не звертають уваги. Тоді вже важко щось виправити.</p>
     </div>
+    <div class="l13-quote">Статистики вирішують саме це: роблять невидиме — видимим.</div>
 </div>
 
-<div class="l12-divider"></div>
+<div class="l13-div"></div>
 
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 1</div>
-    <div class="l12-section-title">Що означає «організувати бізнес» — і чому більшість це розуміє неправильно</div>
-    <div class="l12-card">
-        <p>Організувати — це розкласти все по поличках і налагодити роботу так, щоб досягти того, чого хочеш. Як прибрати в кімнаті: кожна річ має своє місце. Не тому що так красиво, а тому що коли річ лежить на своєму місці — ти знаєш де вона і можеш нею скористатись.</p>
-        <p>Але більшість власників під «організувати» розуміють щось інше: «найняти більше людей», «купити CRM», «провести нараду», «написати регламент». Це все — інструменти. А організація — це принцип, який стоїть за ними.</p>
-        <p>У бізнесі те саме що з кімнатою: кожна категорія роботи — у своєму «відсіку». Кожна функція має своє місце, і всі знають де вона знаходиться.</p>
+<div class="l13-s">
+    <div class="l13-lbl">Розділ 1</div>
+    <div class="l13-title">Що таке статистика — і чим вона відрізняється від «показника»</div>
+    <div class="l13-card">
+        <p>Статистика — це <strong>кількісний вимір результату конкретної функції, який проводиться щотижня і порівнюється з попереднім тижнем</strong>. Не раз на місяць. Не «приблизно». Щотижня, у цифрах, на графіку.</p>
+        <p>Різниця між статистикою і «показником» — у способі застосування. Показник — це просто число. Статистика — це число в динаміці. Вас цікавить не те, що продажі цього тижня склали 80 000 грн, а те, що минулого було 95 000. <strong>Тренд важливіший за точку.</strong></p>
     </div>
+    <div class="l13-card" style="margin-top:.6rem">
+        <p><strong>Метафора — приладова дошка автомобіля.</strong> Ви не можете вести автомобіль із закритими очима, лише зрідка підглядаючи на дорогу. Але саме так керує бізнесом власник без статистик. Приладова дошка потрібна не щоб «відслідковувати», а щоб вчасно помітити: температура двигуна росте, пальне закінчується, тиск у шинах падає.</p>
+    </div>
+    <div class="l13-quote">Місяць — надто великий горизонт для управління. Якщо вранці взяли неправильний напрям — до вечора ви за кілька кілометрів від маршруту. Щотижневі статистики — це звіряння з компасом кожні кілька годин.</div>
 </div>
 
-<div class="l12-divider"></div>
+<div class="l13-div"></div>
 
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 2</div>
-    <div class="l12-section-title">Що таке «функція» — і чому це найважливіше слово в управлінні</div>
-    <div class="l12-card">
-        <p>«Функція» — це конкретна робота, яку хтось виконує. Простіше кажучи: «за що ти відповідаєш». Не посада. Не назва. Не запис у трудовій. А реальна відповідь на питання: <strong>що саме ти робиш і що після тебе залишається?</strong></p>
-        <p>У бізнесі функції — це аналоги позицій у футболі. Є той, хто знаходить клієнтів. Є той, хто продає. Є той, хто виробляє. Є той, хто доставляє. Є той, хто рахує гроші. Кожна з цих робіт — окрема функція.</p>
+<div class="l13-s">
+    <div class="l13-lbl">Розділ 2</div>
+    <div class="l13-title">Статистика і ЦКП — що і як вимірювати</div>
+    <div class="l13-card">
+        <p>Кожна функція має свій Цінний Кінцевий Продукт (ЦКП) — конкретний результат, який вона виробляє. Статистика — це кількісний вимір цього продукту.</p>
     </div>
-    <div class="l12-quote">Бізнес — це пазл, де кожна частинка — окрема функція: продажі, реклама, гроші, виробництво, люди, доставка. Якщо хоча б одна частинка випала — картинка неповна. Пазл не складається.</div>
+    <div class="l13-tw">
+        <table class="l13-t">
+            <thead><tr><th>Функція</th><th>ЦКП</th><th>Статистика</th></tr></thead>
+            <tbody>
+                <tr><td>Секретар</td><td>Правильно спрямовані дзвінки</td><td>Кількість правильно спрямованих дзвінків</td></tr>
+                <tr><td>(window.currentLang==='ru'?'Продажи':(getLearningLang()==='ru'?'Продажи':'Продажі'))</td><td>Підписані договори</td><td>Сума замовлень за договорами (грн)</td></tr>
+                <tr><td>Фінанси</td><td>Отримані оплати</td><td>Сума отриманих оплат (грн)</td></tr>
+                <tr><td>Дизайн</td><td>Затверджені макети</td><td>Кількість макетів, схвалених клієнтом</td></tr>
+                <tr><td>Доставка</td><td>Вчасно доставлена продукція</td><td>Вартість доставленої продукції (грн)</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="l13-quote">Головна статистика компанії — не гроші. Гроші — результат. Наприклад, головна статистика TALKO — кількість компаній, у яких впроваджено систему управління.</div>
 </div>
 
-<div class="l12-divider"></div>
+<div class="l13-div"></div>
 
-<div class="l12-section">
-    <div class="l12-section-label">Візуалізація</div>
-    <div class="l12-section-title">Ось як це виглядає на практиці</div>
-    <div class="l12-card" style="margin-bottom:1rem;">
-        <p>Нижче — приклад того, як виглядає функціональна структура реального бізнесу. Кожна колонка — це окрема функція. Під кожною функцією — підфункції: конкретні роботи, які виконуються всередині цієї зони відповідальності.</p>
-        <p>Поки що просто подивіться і зрозумійте логіку. Свою структуру ви будуватимете пізніше — у розділі <strong>«Система: Структура»</strong>.</p>
-    </div>
-    <div style="overflow-x:auto;">
-    <div style="display:flex;gap:8px;min-width:700px;">
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Адміністру-вання</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Стратегічне планування</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Регламенти та технології</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Наради та контроль</div>
+<div class="l13-s">
+    <div class="l13-lbl">Три помилки</div>
+    <div class="l13-title">Як не треба вибирати статистику</div>
+    <div class="l13-err">
+        <div class="l13-err-item">
+            <div class="l13-err-title">Помилка 1: відсотки замість кількості</div>
+            <div class="l13-err-text">«Секретар правильно спрямував 100% дзвінків» — якщо надійшло 2 дзвінки замість 40, статистика 100% нічого не покаже. ЦКП не виконано, але виглядає ідеально.</div>
         </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Найм та управління персоналом</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Пошук і відбір</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Введення в посаду</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Навчання</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Мотивація і KPI</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Розвиток команди</div>
+        <div class="l13-err-item">
+            <div class="l13-err-title">Помилка 2: зворотні статистики як головні</div>
+            <div class="l13-err-text">«Кількість незірваних замовлень» — якщо замовлень взагалі не було, статистика ідеальна. Зворотні показники можуть бути допоміжними, але головна — завжди про обсяг виробленого продукту.</div>
         </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Маркетинг</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Розробка офера</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Розробка продукту</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Воронка залучення</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Сайт і посадкові</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Запуск реклами</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Продажі</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Обробка звернень</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Продажі</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Повторні продажі</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">CRM</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Фінанси</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Доходи</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Витрати</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Облік</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Виробництво / надання послуги</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Планування</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Забезпечення</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Виробництво</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Логістика</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px;padding:10px 6px;text-align:center;font-size:12px;font-weight:700;color:#26215C;line-height:1.35;min-height:52px;display:flex;align-items:center;justify-content:center;">Контроль якості</div>
-            <div style="text-align:center;font-size:12px;color:#888780;">↓</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Показники якості</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Перевірки</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Відгуки клієнтів</div>
-            <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:8px;padding:7px 5px;text-align:center;font-size:11px;color:#04342C;">Виправлення помилок</div>
-        </div>
-
-    </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;display:flex;align-items:center;gap:0.75rem;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <div style="font-size:0.82rem;color:#166534;line-height:1.5;">Свою структуру ви побудуєте у розділі <strong>«Система: Структура»</strong> — там є покроковий AI-інструмент, який допоможе визначити функції саме вашого бізнесу та знайти «діри».</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Як бізнес росте</div>
-    <div class="l12-section-title">Коли бізнес зростає — функції діляться на підрозділи</div>
-    <div class="l12-card">
-        <p>На старті одна людина може закривати кілька функцій одночасно. Це нормально. Але коли бізнес росте — всередині кожної функції з'являються окремі зони відповідальності.</p>
-        <p>Наприклад: в <strong>Адмініструванні</strong> виділяється окремий <strong>Директор</strong> (стратегія, партнерства) і <strong>Операційний керівник</strong> (регламенти, контроль команди). У <strong>Виробництві</strong> — чотири окремих підрозділи: Планування, Забезпечення, Виробництво і Логістика.</p>
-        <p>Структура не змінюється — вона деталізується.</p>
-    </div>
-    <div style="overflow-x:auto;margin-top:1rem;">
-    <div style="display:flex;gap:6px;min-width:780px;">
-        <div style="display:flex;flex-direction:column;gap:0;flex:2;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Адміністрування</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ДИРЕКТОР</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Стратегія</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Ключові рішення</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Зовн. партнерства</div>
-                </div>
-                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ОПЕРАЦІЙНИЙ</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Регламенти</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Наради і звіти</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Контроль команди</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Найм та управління</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Пошук і відбір</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Навчання</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Мотивація і KPI</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Маркетинг</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Розробка офера</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Воронка</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Реклама</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Продажі</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Обробка звернень</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Продажі</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">CRM</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Фінанси</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Доходи</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Витрати</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Облік</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:4;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Виробництво / надання послуги</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ПЛАНУВАННЯ</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Графік робіт</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Розподіл ресурсів</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Пріоритети</div>
-                </div>
-                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ЗАБЕЗПЕЧЕННЯ</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Закупівля</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Склад</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Постачальники</div>
-                </div>
-                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ВИРОБНИЦТВО</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Надання послуги</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Стандарти</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Виконавці</div>
-                </div>
-                <div style="width:1px;background:#C4C1F0;flex-shrink:0;"></div>
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:9px;font-weight:700;color:#534AB7;margin-bottom:2px;">ЛОГІСТИКА</div>
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Доставка</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Передача клієнту</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Документи</div>
-                </div>
-            </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex:1;">
-            <div style="background:#EEEDFE;border:1.5px solid #7F77DD;border-radius:10px 10px 0 0;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:#26215C;line-height:1.3;min-height:44px;display:flex;align-items:center;justify-content:center;">Контроль якості</div>
-            <div style="display:flex;gap:4px;border:1px solid #7F77DD;border-top:none;border-radius:0 0 10px 10px;padding:6px;background:#faf9ff;">
-                <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
-                    <div style="text-align:center;font-size:11px;color:#888780;">↓</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Показники</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Перевірки</div>
-                    <div style="background:#E1F5EE;border:1px solid #1D9E75;border-radius:6px;padding:5px 4px;text-align:center;font-size:10px;color:#04342C;">Відгуки</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Проблема = відсутня функція</div>
-    <div class="l12-section-title">Будь-яка проблема в бізнесі — це відсутня або зламана функція</div>
-    <div class="l12-card">
-        <p>Власники шукають причину проблем у людях: «поганий менеджер», «ліниві працівники», «не той клієнт». Насправді причина майже завжди одна — у бізнесі є функція, яку <strong>ніхто не виконує</strong>.</p>
-        <p>Знайди відсутню функцію — знайдеш причину. Виправ функцію — вирішиш проблему.</p>
-    </div>
-    <div style="margin-top:0.75rem;">
-        <div style="display:flex;gap:0;margin-bottom:8px;padding:0 4px;">
-            <div style="flex:1.2;font-size:9px;font-weight:700;color:#A32D2D;text-transform:uppercase;letter-spacing:0.06em;">Симптом (що болить)</div>
-            <div style="width:32px;flex-shrink:0;"></div>
-            <div style="flex:1;font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.06em;">Відсутня функція</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Немає клієнтів або їх дуже мало</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Маркетинг</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Клієнти купують раз і не повертаються</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Повторні продажі / утримання</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Постійно не вистачає матеріалів або товару</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Забезпечення виробництва</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Власник не може піти у відпустку — все зупиняється</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Операційне управління</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Нові люди місяцями не виходять на результат</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Адаптація та навчання персоналу</div></div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;border-radius:10px;overflow:hidden;border:1px solid #fecaca;">
-                <div style="background:#fef2f2;padding:10px 12px;flex:1.2;display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12px;color:#7f1d1d;font-weight:500;line-height:1.4;">Гроші є, але їх постійно не вистачає</span></div>
-                <div style="background:#fff0f0;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-                <div style="background:#E1F5EE;padding:10px 12px;flex:1;display:flex;align-items:center;gap:6px;border-left:2px solid #1D9E75;"><div><div style="font-size:9px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1px;">Відсутня функція</div><div style="font-size:12px;font-weight:700;color:#04342C;">Фінансове планування</div></div></div>
-            </div>
+        <div class="l13-err-item">
+            <div class="l13-err-title">Помилка 3: статистика «готовності», а не результату</div>
+            <div class="l13-err-text">«Я був доступний весь тиждень» — це не ЦКП. Статистика вимірює реальний продукт, а не наміри.</div>
         </div>
     </div>
 </div>
 
-<div class="l12-divider"></div>
+<div class="l13-div"></div>
 
-<div class="l12-section">
-    <div class="l12-section-label">Що робити</div>
-    <div class="l12-section-title">Знайшов проблему — додай функцію в структуру</div>
-    <div class="l12-card">
-        <p>Коли ви знаходите проблему — не шукайте винного. Запитайте себе: <strong>яка функція у нас відсутня або не виконується?</strong></p>
-        <p>Відповідь на це питання — і є рішення. Не штраф, не звільнення, не нова CRM. А конкретна функція, яку потрібно додати в структуру і призначити відповідального.</p>
-    </div>
-    <div class="l12-steps" style="margin-top:0.75rem;">
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#ef4444;">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Знайди симптом</div>
-                <div class="l12-step-text">Що конкретно не працює? Опиши це як факт, без емоцій: «клієнти не повертаються», «матеріалів постійно не вистачає», «нові люди довго не виходять на результат».</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#f59e0b;">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Визнач відсутню функцію</div>
-                <div class="l12-step-text">Запитай: яка робота мала б виконуватись щоб цієї проблеми не існувало? Це і є відсутня функція. Назви її конкретно.</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#22c55e;">3</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Додай у структуру і признач відповідального</div>
-                <div class="l12-step-text">Внеси функцію в карту бізнесу. Призначте людину, яка буде за неї відповідати. Тепер ця «діра» закрита — і проблема вирішена системно, а не вручну.</div>
-            </div>
-        </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:#EEEDFE;border:1px solid #7F77DD;border-radius:12px;">
-        <div style="font-size:0.82rem;color:#26215C;line-height:1.6;"><strong>Запам'ятайте:</strong> структура — це не папір на стіні. Це живий документ, який оновлюється кожного разу, коли ви знаходите нову «діру» в бізнесі.</div>
+<div class="l13-s">
+    <div class="l13-lbl">Результат уроку</div>
+    <div class="l13-res">
+        <div class="l13-res-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Розумієте різницю між статистикою і показником — тренд vs точка</div>
+        <div class="l13-res-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Вмієте пов'язати кожну функцію з її ЦКП і правильною статистикою</div>
+        <div class="l13-res-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Уникаєте трьох типових помилок при виборі метрики</div>
     </div>
 </div>
 
-<div class="l12-divider"></div>
+<div class="l13-div"></div>
 
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 3</div>
-    <div class="l12-section-title">Чотири причини, чому треба ділити роботу на функції</div>
-    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">«Навіщо все це ускладнювати? Просто найму людей і скажу: робіть що треба». Це найпоширеніша думка власника, який застряг. «Роби що треба» — це найдорожча команда, яку ви можете дати.</p>
-    <div class="l12-reasons">
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">1</div>
-                <div class="l12-reason-title">Маленьке завдання легше пояснити і передати</div>
-            </div>
-            <div class="l12-reason-body">Коли робота не поділена — ви передаєте людині щось величезне і розмите. «Займися маркетингом». «Контролюй виробництво». Що це означає? З чого починати? Для більшості людей — це стрес і параліч. Вони або роблять що завгодно (не те, що потрібно), або не роблять нічого і чекають конкретики.</div>
-        </div>
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">2</div>
-                <div class="l12-reason-title">Легше побачити, що зроблено, а що ні</div>
-            </div>
-            <div class="l12-reason-body">Як список покупок: хліб — є, молоко — є, яйця — немає. Одразу видно чого не вистачає. Коли роботи не поділені — ви не можете зробити такий список. «Маркетинг» — він є чи немає? Щось робиться. А що саме? Достатньо? Правильно? Незрозуміло. І вам доводиться або довіряти наосліп, або контролювати кожен крок вручну.</div>
-        </div>
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">3</div>
-                <div class="l12-reason-title">Якщо щось не працює — можна замінити одну частину</div>
-            </div>
-            <div class="l12-reason-body">Зламалась лампочка в фарі — міняєте лампочку, не весь автомобіль. Коли є чіткі функції — ви точно знаєте де проблема. Функція «генерація лідів» — 50 заявок, добре. Функція «конверсія в угоду» — 5% при нормі 20%. Ось де зламалась лампочка. Міняємо лампочку — а не увесь відділ.</div>
-        </div>
-        <div class="l12-reason">
-            <div class="l12-reason-header">
-                <div class="l12-reason-num">4</div>
-                <div class="l12-reason-title">Люди стають майстрами</div>
-            </div>
-            <div class="l12-reason-body">Коли людина довго робить одну справу — вона в ній росте. Стає експертом. Робить швидше, краще, з меншою кількістю помилок. Хірург-кардіолог, який робить лише операції на серці — оперує набагато краще, ніж хірург-загальнопрактик, який робить все підряд. Спеціалізація — це не обмеження. Це шлях до майстерності.</div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 4</div>
-    <div class="l12-section-title">Генрі Форд і революція функцій — як поділ роботи змінив світ</div>
-    <div class="l12-card">
-        <p>До Форда автомобіль був предметом розкоші — як сьогодні яхта або приватний літак. Один майстер робив автомобіль від початку до кінця: і болти закручував, і двигун збирав, і кузов підганяв. Майстер мав бути кваліфікованим у всьому — а значить, таких людей було мало і коштували вони дорого.</p>
-        <p>Форд зробив інакше: кожен робітник виконує одну просту операцію. Один закручує болти зліва. Інший — справа. Третій кріпить колеса. Четвертий встановлює сидіння. Один конкретний рух. Один конкретний результат.</p>
-    </div>
-    <div class="l12-quote">Поділ роботи на чіткі функції — це не бюрократія і не ускладнення. Це шлях до більшої продуктивності, нижчих витрат і кращої якості одночасно.</div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 5</div>
-    <div class="l12-section-title">Бізнес — це конвеєр. Як рухається робота від початку до кінця</div>
-    <div class="l12-card">
-        <p>Є одна ідея, яка повністю змінює погляд на бізнес: <strong>бізнес — це конвеєр</strong>. У будь-якому бізнесі є потік: щось приходить (замовлення, клієнт, запит) → з цим щось роблять (обробляють, перетворюють) → щось виходить (задоволений клієнт, оплачений рахунок). Між «приходить» і «виходить» — ланцюжок функцій. Кожна функція приймає щось від попередньої, робить свою частину і передає наступній.</p>
-    </div>
-    <div class="l12-card" style="margin-top:0.6rem;">
-        <p><strong>Реальний кейс:</strong> компанія відправила товар клієнту без документів. Клієнт сказав: «Терміново потрібно, оплачу завтра». Товар отримав — і відмовився платити. «Де документи? Нема документів — нема оплати». Одна пропущена ланка — не було функції контролю документів, ніхто за це не відповідав — обійшлась компанії в піврічний бюджет.</p>
-    </div>
-    <div class="l12-quote">Мало просто поділити роботу. Функції мають передавати роботу одна одній. Якщо між ними немає передачі — кожна функція живе у своєму «підводному човні».</div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 6</div>
-    <div class="l12-section-title">Пастка «зробити самому» — і чому вона руйнує бізнес</div>
-    <div class="l12-card">
-        <p>«Мої працівники не роблять як треба. Простіше зробити самому». Якщо ви хоч раз так думали — ви вже потрапили в пастку. Коли власник намагається замінити людей собою — він стає найдорожчим і найнезамінимішим виконавцем у своєму ж бізнесі.</p>
-        <p>Вихід — не «найняти кращих людей». Вихід — організувати роботу так, щоб звичайні люди давали передбачуваний результат. Це і є функціональна структура.</p>
-    </div>
-    <div class="l12-section-label" style="margin-top:1rem;">Дві дії, коли команда не справляється</div>
-    <div class="l12-steps">
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#ef4444;">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Погасити пожежу</div>
-                <div class="l12-step-text">Вирішити проблему, яка горить прямо зараз. Це вимушено, але необхідно. Але якщо зупинитись тут — пожежа спалахне знову.</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num" style="background:#22c55e;">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Побудувати систему</div>
-                <div class="l12-step-text">Організувати роботу так, щоб такі пожежі більше не виникали. Визначити функції. Описати як вони взаємодіють. Поставити людей на свої місця. Перша дія — витрати. Друга — інвестиція.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 7</div>
-    <div class="l12-section-title">Пастка «багатоверстатника» — коли одна людина робить все</div>
-    <div class="l12-card">
-        <p>Малий бізнес часто виглядає так: є Сергій. Сергій — і продавець, і бухгалтер, і завгосп, і оператор соцмереж, і кур'єр при необхідності. Здається, це добре: одна людина, яка вміє все. Насправді — це катастрофа в уповільненому режимі.</p>
-        <p>Чим більше функцій у людини — тим складніше нею керувати. У неї завжди є відмазка: «Я іншим займався». І технічно вона права.</p>
-    </div>
-    <div class="l12-problems">
-        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко знайти.</strong> Де взяти людину, яка вміє і продавати, і рахувати, і з постачальниками, і в соцмережах? Таких або немає, або їм нудно і вони йдуть.</div></div>
-        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко навчити.</strong> Навчити людину 5 різним справам — у 5 разів довше і дорожче. І при цьому жодній вона не буде навчена добре.</div></div>
-        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко керувати.</strong> Завжди є причина чому конкретна робота не зроблена. Немає чіткої функції — немає чіткого KPI — немає об'єктивної оцінки.</div></div>
-    </div>
-    <div class="l12-card" style="margin-top:0.75rem;">
-        <p>Коли бізнес маленький — одна людина робить кілька функцій. Це нормально на старті. Але різниця між «так виходить» і «так і треба»: <strong>якщо ви знаєте всі функції і бачите їх на карті — ви керуєте усвідомлено</strong>. Ви знаєте, що Сергій зараз робить функцію продажів. І коли з'являться гроші — точно знаєте кого наймати першим.</p>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 8</div>
-    <div class="l12-section-title">Карта бізнесу — як побачити всі функції і знайти «діри»</div>
-    <div class="l12-card">
-        <p>Найнебезпечніший тип проблеми в бізнесі — та, яку ви не бачите. Не та, де горить і болить. А та, де тихо втрачаються гроші, і ви навіть не розумієте чому.</p>
-        <p>Власник добре знає своє ремесло: лікар чудово лікує, кравець чудово шиє. Але у бізнесу є десятки функцій, які ніяк не пов'язані з основним ремеслом — і власник просто не знає, що вони існують.</p>
-    </div>
-    <div class="l12-section-label" style="margin-top:1rem;">Приклад: звичайний роздрібний магазин — мінімум 6 функцій</div>
-    <div class="l12-functions">
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 1</span><span class="l12-fn-title">Визначити що продаємо і кому</span></div>
-            <div class="l12-fn-text">Який товар? Хто покупець? Яка цінова категорія? Яка ніша? Це не разове рішення при відкритті — це регулярна робота. Ринок змінюється. Покупці змінюються.</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 2</span><span class="l12-fn-title">Як люди дізнаються про нас</span></div>
-            <div class="l12-fn-text">Реклама, вивіска, соцмережі, сарафанне радіо, партнерства. Якщо цього немає або це відбувається само собою — у вас немає функції маркетингу. Є лише удача.</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 3</span><span class="l12-fn-title">Як виглядає магазин</span></div>
-            <div class="l12-fn-text">Вітрина, оформлення, навігація, атмосфера.</div>
-            <div class="l12-fn-stat">+30–40% трафіку від привабливого зовнішнього вигляду</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 4</span><span class="l12-fn-title">Як розкладений товар</span></div>
-            <div class="l12-fn-text">Мерчандайзинг — це ціла наука. Де стоїть товар, як він підсвічений, що знаходиться поряд — все це впливає на середній чек.</div>
-            <div class="l12-fn-stat">+20–25% продажів при правильному мерчандайзингу</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 5</span><span class="l12-fn-title">Як продаємо</span></div>
-            <div class="l12-fn-text">Скрипти консультантів, робота на касі, як відповідаємо на питання, як пропонуємо супутні товари. Без цієї функції магазин — просто склад, з якого люди беруть те, за чим прийшли, і йдуть.</div>
-        </div>
-        <div class="l12-fn">
-            <div class="l12-fn-header"><span class="l12-fn-num">Функція 6</span><span class="l12-fn-title">Як повертаємо покупців</span></div>
-            <div class="l12-fn-text">Програми лояльності, розсилки, акції для постійних клієнтів, робота з відгуками.</div>
-            <div class="l12-fn-stat">Утримання клієнта в 5–7 разів дешевше ніж залучення нового</div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 9</div>
-    <div class="l12-section-title">Одна зламана ланка — і система стоїть. Роль керівника</div>
-    <div class="l12-card">
-        <p>Власники часто думають після побудови структури: «Все, розписав функції, призначив людей, тепер воно само їде». Ні. Після побудови структури з'являється нова критична роль: керівник, який стежить за тим, щоб всі ланки працювали.</p>
-        <p>Уявіть годинник. Десятки шестерень, кожна виконує свою функцію. Якщо хоча б одна зубчаста ланка зламалась — годинник зупиняється. Не важливо, що всі інші 99 шестерень в ідеальному стані.</p>
-    </div>
-    <div class="l12-section-label" style="margin-top:1rem;">Три завдання керівника в організованому бізнесі</div>
-    <div class="l12-mgr">
-        <div class="l12-mgr-item">
-            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-            <div><div class="l12-mgr-title">Бачити</div><div class="l12-mgr-text">Мати інформацію про те, що відбувається в кожній функції — не через наради раз на тиждень, а через систему показників, яка дає сигнал в реальному часі.</div></div>
-        </div>
-        <div class="l12-mgr-item">
-            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-            <div><div class="l12-mgr-title">Помічати</div><div class="l12-mgr-text">Бачити проблеми до того, як вони стали катастрофою. Якщо менеджер продав вдвічі менше цього тижня — це сигнал. Ранній сигнал коштує значно дешевше, ніж пізня реакція.</div></div>
-        </div>
-        <div class="l12-mgr-item">
-            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-            <div><div class="l12-mgr-title">Виправляти</div><div class="l12-mgr-text">Швидко втручатися і вирішувати. Не «потім розберемось» — а зараз, поки мала проблема не стала великою.</div></div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Розділ 10</div>
-    <div class="l12-section-title">Три кроки побудови функціональної структури — з чого починати</div>
-    <div class="l12-steps">
-        <div class="l12-step">
-            <div class="l12-step-num">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Розібратись із «сировиною»</div>
-                <div class="l12-step-text">Що приходить у ваш бізнес? Звідки беруться замовлення? Хто ваш клієнт? Що ви отримуєте на вході — і що має бути на виході? Більшість власників не можуть чітко відповісти. «Ну, клієнти звертаються...» Як? Звідки? Через що? Без відповіді на це — ви не можете побудувати конвеєр.</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Визначити всі кроки трансформації</div>
-                <div class="l12-step-text">Що треба зробити, щоб перетворити «сировину» на «готовий продукт»? Випишіть всі кроки — не думайте поки про людей, просто всі дії між «прийшло» і «вийшло». Кожна дія — потенційна функція. На цьому етапі ви знаходите кроки, яких зараз не робите взагалі: «Стоп, а хто у нас контролює якість перед відправкою?» — «Ніхто». Ось ваша «діра».</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">3</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Поставити людей на місця</div>
-                <div class="l12-step-text">До кожної функції — призначте відповідального. «Відповідальний» — не означає «виконує сам». Але він повинен знати, що ця функція — його зона відповідальності. І ви обидва маєте знати: ця робота зроблена або не зроблена.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Підсумок</div>
-    <div class="l12-section-title">Що таке функціональна структура і навіщо вона вам</div>
-    <div class="l12-card">
-        <p>Функціональна структура — це не оргструктура зі стрілочками і квадратиками. Це відповідь на питання: <strong>які роботи мають виконуватись у вашому бізнесі, хто за кожну відповідає і як вони передають роботу одна одній.</strong></p>
-        <p>Це фундамент. Без нього CRM — просто база даних, якою ніхто не користується. Регламенти — папери, які ніхто не читає. Мотивація — хаотичні бонуси, які нікого не мотивують.</p>
-    </div>
-    <div class="l12-result-list">
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Зрозумієте які функції є у вашому бізнесі — і яких немає</div>
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Знайдете «діри» — де тихо втрачаються гроші</div>
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Зможете осмислено ставити людей на конкретні ролі</div>
-        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Перестанете бути «найнезамінимішим виконавцем» у власному бізнесі</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Завдання</div>
-    <div class="l12-section-title">Розробіть функціональну структуру вашого бізнесу через AI-асистента</div>
-    <div class="l12-steps">
-        <div class="l12-step">
-            <div class="l12-step-num">1</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Пройдіть діалог з AI-коучем структури</div>
-                <div class="l12-step-text">Асистент проведе вас через визначення всіх функцій вашого бізнесу, знайде «діри» і допоможе розподілити ролі</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">2</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Збережіть результат у Google Docs</div>
-                <div class="l12-step-text">На виході — готова «Функціональна карта бізнесу» з переліком функцій і відповідальних</div>
-            </div>
-        </div>
-        <div class="l12-step">
-            <div class="l12-step-num">3</div>
-            <div class="l12-step-body">
-                <div class="l12-step-title">Проведіть презентацію для команди</div>
-                <div class="l12-step-text">Покажіть кожному його функцію і зону відповідальності — це ключовий момент впровадження</div>
-            </div>
-        </div>
-    </div>
-    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
-        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Час на впровадження</div>
-        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 години: 1 год на діалог з AI і підготовку карти + 2 год на презентацію команді</div>
-    </div>
-</div>
-
-<div class="l12-divider"></div>
-
-<div class="l12-section">
-    <div class="l12-section-label">Інструмент</div>
-    <div class="l12-tool">
-        <div class="l12-tool-header">
-            <div class="l12-tool-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+<div class="l13-s">
+    <div class="l13-lbl">Інструмент</div>
+    <div class="l13-tool">
+        <div class="l13-th">
+            <div class="l13-ti">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             </div>
             <div>
-                <div class="l12-tool-title">AI-коуч функціональної структури</div>
-                <div class="l12-tool-desc">Асистент веде діалог і допомагає побудувати повну карту функцій вашого бізнесу: визначає всі роботи, знаходить «діри» і розподіляє відповідальність. На виході — готова Функціональна карта бізнесу.</div>
+                <div class="l13-tt">AI-асистент системи статистик</div>
+                <div class="l13-td">Проведе вас через визначення ЦКП кожної функції і допоможе сформулювати правильні статистики. На виході — готовий перелік метрик для впровадження на платформі.</div>
             </div>
         </div>
-        <a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura" target="_blank" class="l12-btn">
+        <a href="https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics" target="_blank" class="l13-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Розробити функціональну структуру
+            Розробити систему статистик
         </a>
     </div>
 </div>`,
