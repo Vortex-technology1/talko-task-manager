@@ -7,6 +7,12 @@
 (function () {
 'use strict';
 
+// ── i18n хелпер (локальний) ──────────────────────────────
+function _t(ua, ru) {
+  return (window.currentLang === 'ru' || (typeof window.getLocale === 'function' && window.getLocale().startsWith('ru'))) ? ru : ua;
+}
+
+
 // ── Реєструємо hook whDealWon (викликається з 77-crm.js) ──
 window.whDealWon = async function(deal) {
   // 1. Перевіряємо чи зв'язок увімкнено
@@ -142,16 +148,16 @@ window._cfbSave = async function(dealId) {
   const currency  = document.getElementById('cfbCurrency')?.value || _getCompanyCurrency();
 
   if (!amountVal || amountVal <= 0) {
-    if (typeof showToast === 'function') showToast('Введіть суму', 'warning');
+    if (typeof showToast === 'function') showToast(_t(_t('Введіть суму','Введите сумму'),'Введите сумму'), 'warning');
     return;
   }
   if (!dateVal) {
-    if (typeof showToast === 'function') showToast('Вкажіть дату оплати', 'warning');
+    if (typeof showToast === 'function') showToast(_t(_t('Вкажіть дату оплати','Укажите дату оплаты'),'Укажите дату оплаты'), 'warning');
     return;
   }
 
   const btn = document.getElementById('cfbSaveBtn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
+  if (btn) { btn.disabled = true; btn.textContent = _t(_t('Збереження...','Сохранение...'),'Сохранение...'); }
 
   try {
     const db = window.db || (window.firebase && firebase.firestore());

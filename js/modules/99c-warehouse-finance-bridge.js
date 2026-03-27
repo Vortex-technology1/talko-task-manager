@@ -6,6 +6,12 @@
 (function () {
 'use strict';
 
+// ── i18n хелпер (локальний) ──────────────────────────────
+function _t(ua, ru) {
+  return (window.currentLang === 'ru' || (typeof window.getLocale === 'function' && window.getLocale().startsWith('ru'))) ? ru : ua;
+}
+
+
 function _patch() {
   // Чекаємо поки core завантажиться
   if (typeof window.whFinanceOnIn !== 'function' || typeof window.whDoOperation !== 'function') {
@@ -22,7 +28,7 @@ function _patch() {
 
     const total    = qty * price;
     const currency = window.currentCompanyData?.currency || 'UAH';
-    const desc     = `Закупівля: ${item.name} × ${qty} ${item.unit || 'шт'} по ${price}`;
+    const desc     = `${_t('Закупівля: ','Закупка: ')}${item.name} × ${qty} ${item.unit || 'шт'} по ${price}`;
 
     try {
       await _saveTx({
@@ -54,7 +60,7 @@ function _patch() {
 
     const total    = qty * costPerUnit;
     const currency = window.currentCompanyData?.currency || 'UAH';
-    const desc     = `Видача: ${item.name} × ${qty} ${item.unit || 'шт'} (собівартість)`;
+    const desc     = `${_t('Видача: ','Выдача: ')}${item.name} × ${qty} ${item.unit || 'шт'} ${_t('(собівартість)','(себестоимость)')}`;
 
     try {
       await _saveTx({
@@ -85,7 +91,7 @@ function _patch() {
 
     const total    = qty * costPerUnit;
     const currency = window.currentCompanyData?.currency || 'UAH';
-    const desc     = `Списання: ${item.name} × ${qty} ${reason ? '(' + reason + ')' : ''}`;
+    const desc     = `${_t('Списання: ','Списание: ')}${item.name} × ${qty} ${reason ? '(' + reason + ')' : ''}`;
 
     try {
       await _saveTx({

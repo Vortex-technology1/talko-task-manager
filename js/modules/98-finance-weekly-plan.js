@@ -5,6 +5,12 @@
 (function () {
 'use strict';
 
+// ── i18n хелпер (локальний) ──────────────────────────────
+function _t(ua, ru) {
+  return (window.currentLang === 'ru' || (typeof window.getLocale === 'function' && window.getLocale().startsWith('ru'))) ? ru : ua;
+}
+
+
 const WP = {
   weeks:    [],
   plan:     {},   // { weekKey: { income:N, expense:N } }
@@ -77,12 +83,12 @@ function _render(root) {
   const kpi = `
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px;">
       ${[
-        {l:'Дохід план',   v:_fmt(tPlanInc,cur), c:'#22c55e', sub:'за горизонт'},
-        {l:'Витрати план', v:_fmt(tPlanExp,cur), c:'#ef4444', sub:'за горизонт'},
+        {l:_t(_t('Дохід план','Доход план'),'Доход план'),   v:_fmt(tPlanInc,cur), c:'#22c55e', sub:'за горизонт'},
+        {l:_t(_t('Витрати план','Расходы план'),'Расходы план'), v:_fmt(tPlanExp,cur), c:'#ef4444', sub:'за горизонт'},
         {l:'Плановий прибуток', v:_fmt(tPlanInc-tPlanExp,cur), c:tPlanInc>=tPlanExp?'#22c55e':'#ef4444', sub:''},
-        {l:'Факт доходів', v:_fmt(tActInc,cur),  c:'#3b82f6', sub:'минулі тижні'},
-        {l:'Залишок наприкінці', v:_fmt(cfFinal,cur), c:cfFinal>=0?'#22c55e':'#ef4444',
-          sub: hasNeg ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> є касовий розрив' : 'очікуваний'},
+        {l:_t(_t('Факт доходів','Факт доходов'),'Факт доходов'), v:_fmt(tActInc,cur),  c:'#3b82f6', sub:'минулі тижні'},
+        {l:_t(_t('Залишок наприкінці','Остаток в конце'),'Остаток в конце'), v:_fmt(cfFinal,cur), c:cfFinal>=0?'#22c55e':'#ef4444',
+          sub: hasNeg ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> є касовий розрив' : _t(_t('очікуваний','ожидаемый'),'ожидаемый')},
       ].map(k=>`
         <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;">
           <div style="font-size:0.67rem;color:#6b7280;margin-bottom:2px;">${k.l}</div>
@@ -271,13 +277,13 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
       <div style="padding:8px 14px;background:#f9fafb;border-bottom:1px solid #e5e7eb;
         display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
         <div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;">
-          📊 Тижневий план — доходи, витрати, cashflow
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Тижневий план — доходи, витрати, cashflow
         </div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
           ${[
-            {c:'#22c55e', l:'Дохід план'},
+            {c:'#22c55e', l:_t(_t('Дохід план','Доход план'),'Доход план')},
             {c:'#86efac', l:'Дохід факт', border:'#22c55e'},
-            {c:'#ef4444', l:'Витрати план'},
+            {c:'#ef4444', l:_t(_t('Витрати план','Расходы план'),'Расходы план')},
             {c:'#fca5a5', l:'Витрати факт', border:'#ef4444'},
             {c:'#3b82f6', l:'Залишок CF', round:true},
           ].map(i=>`
@@ -467,7 +473,7 @@ window._wpSave = async function() {
   if (WP.saving) return;
   WP.saving = true;
   const btn = document.getElementById('wpSaveBtn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
+  if (btn) { btn.disabled = true; btn.textContent = _t(_t('Збереження...','Сохранение...'),'Сохранение...'); }
   try {
     const db = window.db || (window.firebase && firebase.firestore());
     if (!db || !window.currentCompanyId) throw new Error('DB не готова');
@@ -487,7 +493,7 @@ window._wpSave = async function() {
     if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
   } finally {
     WP.saving = false;
-    if (btn) { btn.disabled = false; btn.textContent = 'Зберегти план'; }
+    if (btn) { btn.disabled = false; btn.textContent = _t(_t('Зберегти план','Сохранить план'),'Сохранить план'); }
   }
 };
 
@@ -514,7 +520,7 @@ window._wpFillFromAvg = async function() {
       const exp = txs.filter(t=>t.type==='expense' && _txInWeek(t,w)).reduce((s,t)=>s+_txAmt(t),0);
       if (inc>0||exp>0){sumInc+=inc;sumExp+=exp;cnt++;}
     });
-    if (!cnt) { if (typeof showToast==='function') showToast('Недостатньо даних за 3 місяці','warning'); return; }
+    if (!cnt) { if (typeof showToast==='function') showToast(_t(_t('Недостатньо даних за 3 місяці','Недостаточно данных за 3 месяца'),'Недостаточно данных за 3 месяца'),'warning'); return; }
     const avgInc = Math.round(sumInc/cnt/100)*100;
     const avgExp = Math.round(sumExp/cnt/100)*100;
     const now = new Date();
@@ -529,7 +535,7 @@ window._wpFillFromAvg = async function() {
     if (root) _render(root);
     if (typeof showToast==='function') showToast(`Заповнено: ~${_fmt(avgInc,WP.currency)}/тиж доходу, ~${_fmt(avgExp,WP.currency)}/тиж витрат`,'success');
   } catch(e) {
-    if (typeof showToast==='function') showToast('Помилка: '+e.message,'error');
+    if (typeof showToast==='function') showToast(_t('Помилка: ','Ошибка: ')+e.message,'error');
   }
 };
 

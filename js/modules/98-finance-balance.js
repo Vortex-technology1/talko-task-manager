@@ -6,6 +6,12 @@
 (function () {
 'use strict';
 
+// ── i18n хелпер (локальний) ──────────────────────────────
+function _t(ua, ru) {
+  return (window.currentLang === 'ru' || (typeof window.getLocale === 'function' && window.getLocale().startsWith('ru'))) ? ru : ua;
+}
+
+
 // ── Точка входу (викликається з 98-finance.js) ─────────────
 window.renderBalanceSheet = async function(el) {
   if (!el) return;
@@ -173,11 +179,11 @@ function _render(el, d) {
     <div style="background:#1f2937;border-radius:12px;padding:14px 20px;margin-bottom:14px;
       display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
       ${[
-        {l:'АКТИВИ',  v:f(d.assets.total),      c:'#22c55e'},
+        {l:_t(_t('АКТИВИ','АКТИВЫ'),'АКТИВЫ'),  v:f(d.assets.total),      c:'#22c55e'},
         {l:'=',       v:'',                       c:'#9ca3af', eq:true},
-        {l:'ПАСИВИ',  v:f(d.liabilities.total),  c:'#ef4444'},
+        {l:_t(_t('ПАСИВИ','ПАССИВЫ'),'ПАССИВЫ'),  v:f(d.liabilities.total),  c:'#ef4444'},
         {l:'+',       v:'',                       c:'#9ca3af', eq:true},
-        {l:'КАПІТАЛ', v:f(d.capital.total),       c:'#3b82f6'},
+        {l:_t(_t('КАПІТАЛ','КАПИТАЛ'),'КАПИТАЛ'), v:f(d.capital.total),       c:'#3b82f6'},
       ].map(k=>k.eq
         ? `<span style="font-size:1.2rem;color:${k.c};font-weight:700;">${k.l}</span>`
         : `<div style="text-align:center;">
@@ -218,28 +224,28 @@ function _render(el, d) {
   // АКТИВИ
   const assetsHtml = `
     <div style="${colStyle}">
-      ${sectionHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>','АКТИВИ', d.assets.total, '#16a34a', '#f0fdf4')}
+      ${sectionHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',_t(_t('АКТИВИ','АКТИВЫ'),'АКТИВЫ'), d.assets.total, '#16a34a', '#f0fdf4')}
 
-      ${subHdr('Грошові кошти (рахунки)', d.assets.cash.total)}
+      ${subHdr(_t(_t('Грошові кошти (рахунки)','Денежные средства (счета)'),'Денежные средства (счета)'), d.assets.cash.total)}
       ${d.assets.cash.items.length
         ? d.assets.cash.items.map((it,i)=>row(it.name,it.value,it.sub,i)).join('')
-        : emptyRow('Рахунки не налаштовані')}
+        : emptyRow(_t(_t('Рахунки не налаштовані','Счета не настроены'),'Счета не настроены'))}
 
-      ${subHdr('Дебіторська заборгованість', d.assets.debtors.total)}
+      ${subHdr(_t(_t('Дебіторська заборгованість','Дебиторская задолженность'),'Дебиторская задолженность'), d.assets.debtors.total)}
       ${d.assets.debtors.total > 0
         ? d.assets.debtors.items.map((it,i)=>row(it.name,it.value,it.sub,i)).join('')
-        : emptyRow('Немає відкритої дебіторки')}
+        : emptyRow(_t(_t('Немає відкритої дебіторки','Нет открытой дебиторки'),'Нет открытой дебиторки'))}
       ${d.assets.debtors.total === 0
         ? ''
         : `<div style="padding:4px 14px;font-size:0.68rem;color:#9ca3af;">
             ← Закриті угоди CRM без фіксації у фінансах</div>`}
 
-      ${subHdr('Запаси (склад)', d.assets.stock.total)}
+      ${subHdr(_t(_t('Запаси (склад)','Запасы (склад)'),'Запасы (склад)'), d.assets.stock.total)}
       ${d.assets.stock.total > 0
         ? d.assets.stock.items.map((it,i)=>row(it.name,it.value,it.sub,i)).join('')
-        : emptyRow('Склад порожній або не підключений')}
+        : emptyRow(_t(_t('Склад порожній або не підключений','Склад пуст или не подключён'),'Склад пуст или не подключён'))}
 
-      ${subHdr('Необоротні активи', d.assets.fixed.total)}
+      ${subHdr(_t(_t('Необоротні активи','Внеоборотные активы'),'Внеоборотные активы'), d.assets.fixed.total)}
       ${d.assets.fixed.items.length
         ? d.assets.fixed.items.map((it,i)=>row(it.name||'',it.value||0,it.sub||'',i)).join('')
         : `<div style="padding:8px 14px;font-size:0.75rem;color:#9ca3af;">
@@ -258,11 +264,11 @@ function _render(el, d) {
     <div style="display:flex;flex-direction:column;gap:12px;">
       <!-- Пасиви -->
       <div style="${colStyle}">
-        ${sectionHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>','ПАСИВИ', d.liabilities.total, '#dc2626', '#fef2f2')}
+        ${sectionHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',_t(_t('ПАСИВИ','ПАССИВЫ'),'ПАССИВЫ'), d.liabilities.total, '#dc2626', '#fef2f2')}
 
         ${subHdr('Поточні зобов\'язання', d.liabilities.current.total + d.liabilities.creditors.total)}
         ${d.liabilities.creditors.total > 0
-          ? row('Нараховані але не сплачені витрати', d.liabilities.creditors.total, 'транзакції з майбутньою датою нарахування', 0)
+          ? row(_t(_t('Нараховані але не сплачені витрати','Начисленные, но не выплаченные расходы'),'Начисленные, но не выплаченные расходы'), d.liabilities.creditors.total, 'транзакції з майбутньою датою нарахування', 0)
           : ''}
         ${d.liabilities.current.items.length
           ? d.liabilities.current.items.map((it,i)=>row(it.name||'',it.value||0,it.sub||'',i)).join('')
@@ -286,8 +292,8 @@ function _render(el, d) {
       <div style="${colStyle}">
         ${sectionHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>','ВЛАСНИЙ КАПІТАЛ', d.capital.total, '#2563eb', '#eff6ff')}
 
-        ${row('Статутний капітал', d.capital.registered, 'налаштування балансу', 0)}
-        ${row('Накопичений прибуток', d.capital.retained,
+        ${row(_t(_t('Статутний капітал','Уставной капитал'),'Уставной капитал'), d.capital.registered, _t(_t('налаштування балансу','настройки баланса'),'настройки баланса'), 0)}
+        ${row(_t(_t('Накопичений прибуток','Накопленная прибыль'),'Накопленная прибыль'), d.capital.retained,
           `${f(d.meta.allIncome)} доходів − ${f(d.meta.allExpense)} витрат за весь час`, 1)}
 
         <div style="background:#eff6ff;padding:10px 14px;display:flex;justify-content:space-between;border-top:2px solid #3b82f6;">
@@ -447,8 +453,8 @@ window._bsSave = async function() {
     const inner = document.getElementById('financeContentInner');
     if (inner) window.renderBalanceSheet(inner);
   } catch(e) {
-    if (typeof showToast==='function') showToast('Помилка: '+e.message,'error');
-    if (btn) { btn.disabled=false; btn.textContent='Зберегти'; }
+    if (typeof showToast==='function') showToast(_t('Помилка: ','Ошибка: ')+e.message,'error');
+    if (btn) { btn.disabled=false; btn.textContent=_t(_t('Зберегти','Сохранить'),'Сохранить'); }
   }
 };
 

@@ -6,6 +6,12 @@
 (function () {
 'use strict';
 
+// ── i18n хелпер (локальний) ──────────────────────────────
+function _t(ua, ru) {
+  return (window.currentLang === 'ru' || (typeof window.getLocale === 'function' && window.getLocale().startsWith('ru'))) ? ru : ua;
+}
+
+
 // ── Патчимо _bkCompleteAppointment після завантаження ──────
 function _patchBooking() {
   const orig = window._bkCompleteAppointment;
@@ -106,7 +112,7 @@ async function _syncToCrm(appt) {
         .update({ crmClientId: ref.id });
 
       if (typeof showToast === 'function') {
-        showToast(`📋 Новий клієнт «${appt.clientName || email}» додано в CRM`, 'info');
+        showToast(`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Новий клієнт «${appt.clientName || email}» додано в CRM`, 'info');
       }
     }
   } catch(e) {
@@ -202,11 +208,11 @@ window._bkfbSave = async function(apptId) {
   const catId    = document.getElementById('bkfbCategory')?.value;
   const currency = _getCurrency();
 
-  if (!amount || amount <= 0) { if (typeof showToast==='function') showToast('Введіть суму','warning'); return; }
-  if (!dateVal) { if (typeof showToast==='function') showToast('Вкажіть дату','warning'); return; }
+  if (!amount || amount <= 0) { if (typeof showToast==='function') showToast(_t(_t('Введіть суму','Введите сумму'),'Введите сумму'),'warning'); return; }
+  if (!dateVal) { if (typeof showToast==='function') showToast(_t(_t('Вкажіть дату','Укажите дату'),'Укажите дату'),'warning'); return; }
 
   const btn = document.getElementById('bkfbSaveBtn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
+  if (btn) { btn.disabled = true; btn.textContent = _t(_t('Збереження...','Сохранение...'),'Сохранение...'); }
 
   try {
     const db  = window.db || (window.firebase && firebase.firestore());
