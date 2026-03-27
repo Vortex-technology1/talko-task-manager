@@ -162,7 +162,7 @@ window.renderCrmTodo = function() {
         </div>
         <div style="display:flex;gap:0.5rem;">
           <button onclick="renderCrmTodo()" style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:5px 8px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${TI.refresh}</button>
-          ${['owner','admin'].includes(window.currentUserData?.role) ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;" title="' + window.t('ownerAdminOnly') + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v11l3.5 6H5.5L9 14V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg> Тест</button>' : ''}
+          ${window.isSuperAdmin ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v11l3.5 6H5.5L9 14V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg> Тест</button>' : ''}
           <button onclick="crmOpenCreateDeal()" style="background:#22c55e;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem;">${TI.plus} Новий лід</button>
         </div>
       </div>
@@ -328,9 +328,10 @@ function _renderRow(d, i) {
       <select onclick="event.stopPropagation()"
         onchange="event.stopPropagation();_crmTodoChangeStage('${d.id}',this.value,this)"
         style="font-size:0.72rem;font-weight:600;color:${stageClr};
-          background:${stageClr}18;border:1px solid ${stageClr}33;
-          border-radius:6px;padding:3px 6px;cursor:pointer;outline:none;
-          white-space:nowrap;flex-shrink:0;max-width:130px;">
+          background:${stageClr}18;border:1.5px solid ${stageClr}55;
+          border-radius:6px;padding:3px 8px;cursor:pointer;outline:none;
+          white-space:nowrap;flex-shrink:0;min-width:90px;max-width:140px;
+          -webkit-appearance:auto;appearance:auto;">
         ${stages.filter(s=>s.id!=='lost'&&s.id!=='won').map(s=>`<option value="${s.id}"${s.id===d.stage?' selected':''}>${_esc(s.label)}</option>`).join('')}
         ${stages.find(s=>s.id==='won')?`<option value="won"${d.stage==='won'?' selected':''}>✅ ${_esc(stages.find(s=>s.id==='won').label)}</option>`:''}
         ${stages.find(s=>s.id==='lost')?`<option value="lost"${d.stage==='lost'?' selected':''}>❌ ${_esc(stages.find(s=>s.id==='lost').label)}</option>`:''}
