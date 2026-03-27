@@ -299,6 +299,17 @@ function renderFinanceContainer() {
 
         <div style="flex:1"></div>
 
+        <button onclick="window._finHowToggle()" id="finHowBtn" style="
+          display:flex;align-items:center;gap:0.35rem;
+          padding:0.4rem 0.8rem;
+          background:#fff;color:#6b7280;
+          border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;
+          font-size:0.78rem;font-weight:500;flex-shrink:0;margin-right:4px;
+        ">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          З чого почати
+        </button>
+
         ${isOwnerOrManager() ? `
           <button onclick="window._financeAddTransaction()" style="
             display:flex;align-items:center;gap:0.4rem;
@@ -309,6 +320,11 @@ function renderFinanceContainer() {
             flex-shrink:0;
           ">${I.plus} ${window.t('finAddBtn')}</button>
         ` : ''}
+      </div>
+
+      <!-- How It Works panel -->
+      <div id="finHowPanel" style="display:none;background:linear-gradient(135deg,#f0fdf4,#eff6ff);border-bottom:2px solid #bbf7d0;padding:0;">
+        <div id="finHowContent"></div>
       </div>
 
       <!-- Sub-tab content -->
@@ -4947,3 +4963,217 @@ if (!tryInit()) {
 }
 
 })();
+
+// ══════════════════════════════════════════════════════════
+// «З ЧОГО ПОЧАТИ» — детальна панель для фінансового модуля
+// ══════════════════════════════════════════════════════════
+window._finHowToggle = function() {
+  const panel = document.getElementById('finHowPanel');
+  const btn   = document.getElementById('finHowBtn');
+  if (!panel) return;
+
+  const isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+
+  if (btn) {
+    btn.style.background   = isOpen ? '#fff'    : '#f0fdf4';
+    btn.style.borderColor  = isOpen ? '#e5e7eb' : '#22c55e';
+    btn.style.color        = isOpen ? '#6b7280' : '#16a34a';
+  }
+
+  if (!isOpen) {
+    const content = document.getElementById('finHowContent');
+    if (content && !content.dataset.built) {
+      content.innerHTML = _buildFinHowPanel();
+      content.dataset.built = '1';
+    }
+  }
+};
+
+function _buildFinHowPanel() {
+  const cur = _state.currency || 'UAH';
+
+  // Кольори і стилі
+  const card  = 'background:#fff;border-radius:12px;border:1.5px solid #e5e7eb;padding:1rem 1.1rem;';
+  const title = 'font-weight:700;font-size:0.85rem;color:#1a1a1a;margin-bottom:0.6rem;display:flex;align-items:center;gap:6px;';
+  const sub   = 'font-size:0.75rem;color:#6b7280;line-height:1.5;';
+  const step  = (n, t, d, c='#22c55e') =>
+    `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;">
+      <div style="width:22px;height:22px;border-radius:50%;background:${c};color:#fff;
+        font-size:0.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${n}</div>
+      <div>
+        <div style="font-size:0.8rem;font-weight:600;color:#1a1a1a;">${t}</div>
+        <div style="font-size:0.72rem;color:#6b7280;margin-top:2px;">${d}</div>
+      </div>
+    </div>`;
+
+  const badge = (t, c, bg) =>
+    `<span style="padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:600;
+      color:${c};background:${bg};white-space:nowrap;">${t}</span>`;
+
+  const arrow = `<span style="color:#9ca3af;margin:0 4px;">→</span>`;
+
+  return `
+    <div style="padding:1rem 1.25rem;">
+
+      <!-- Заголовок -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <div style="font-weight:800;font-size:0.95rem;color:#16a34a;display:flex;align-items:center;gap:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Фінанси — з чого почати і як це працює
+        </div>
+        <button onclick="window._finHowToggle()" style="padding:3px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:0.75rem;cursor:pointer;color:#6b7280;">Закрити ✕</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
+
+        <!-- БЛОК 1: Три звіти -->
+        <div style="${card}">
+          <div style="${title}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Три управлінські звіти
+          </div>
+          <div style="display:grid;gap:6px;">
+            <div style="background:#eff6ff;border-radius:8px;padding:8px 10px;">
+              <div style="font-size:0.75rem;font-weight:700;color:#1e40af;">📊 Cash Flow (Дашборд)</div>
+              <div style="${sub}">Реальний рух грошей по рахунках. Коли гроші прийшли і пішли. Актуально в реальному часі.</div>
+            </div>
+            <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;">
+              <div style="font-size:0.75rem;font-weight:700;color:#16a34a;">📈 P&L — Прибутки і збитки (Аналітика)</div>
+              <div style="${sub}">Реальний прибуток: Виручка → Собівартість → Валовий прибуток → OPEX → Чистий прибуток. По даті нарахування послуги.</div>
+            </div>
+            <div style="background:#fff7ed;border-radius:8px;padding:8px 10px;">
+              <div style="font-size:0.75rem;font-weight:700;color:#c2410c;">⚖️ Баланс (Аналітика → кнопка «Баланс»)</div>
+              <div style="${sub}">Активи = Пасиви + Капітал. Що є у бізнесу, за чий рахунок, скільки власний капітал.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- БЛОК 2: Покроковий старт -->
+        <div style="${card}">
+          <div style="${title}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            З чого почати — 5 кроків
+          </div>
+          ${step(1,'Налаштувати рахунки','Фінанси → Налаштування → Рахунки. Каса, банк, картка. Вказати початковий залишок.')}
+          ${step(2,'Налаштувати категорії','Доходи: послуги, продажі, абонементи. Витрати: COGS (матеріали, зарплата майстрів) і OPEX (оренда, маркетинг).')}
+          ${step(3,'Внести перші транзакції','«+ Додати» → тип, сума, категорія, рахунок, дата. Мінімум 5-10 реальних за поточний місяць.')}
+          ${step(4,'Перевірити P&L','Аналітика → P&L. Побачите Валовий і Чистий прибуток. Якщо COGS = 0 — налаштуйте категорії витрат.')}
+          ${step(5,'Підключити автоматику','Налаштування → Зв\'язки модулів. CRM→Фінанси: угода «Виграно» = автодохід.','#3b82f6')}
+        </div>
+
+        <!-- БЛОК 3: Різниця CF vs P&L -->
+        <div style="${card}">
+          <div style="${title}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Чому Cash Flow ≠ P&L
+          </div>
+          <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;margin-bottom:8px;">
+            <div style="font-size:0.72rem;color:#92400e;font-weight:600;margin-bottom:4px;">Приклад:</div>
+            <div style="${sub}">Клієнт заплатив 10,000 передоплати в березні за послугу в квітні.</div>
+            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+              ${badge('Cash Flow: Березень +10K','#1d4ed8','#eff6ff')}
+              ${badge('P&L: Квітень +10K','#16a34a','#f0fdf4')}
+            </div>
+          </div>
+          <div style="${sub}">Тому <b>Cash Flow</b> показує ліквідність (чи є гроші зараз), а <b>P&L</b> — реальну прибутковість (чи заробляє бізнес).</div>
+          <div style="margin-top:8px;${sub}"><b>Дата нарахування</b> у формі транзакції — вкажіть коли надана послуга, якщо вона відрізняється від дати оплати.</div>
+        </div>
+
+        <!-- БЛОК 4: COGS vs OPEX -->
+        <div style="${card}">
+          <div style="${title}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            COGS vs OPEX — навіщо розділяти
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+            <div style="background:#fff7ed;border-radius:8px;padding:7px 9px;border:1px solid #fed7aa;">
+              <div style="font-size:0.7rem;font-weight:700;color:#c2410c;margin-bottom:3px;">🏭 COGS</div>
+              <div style="${sub}">Прямі витрати на послугу. Зростають разом з кількістю клієнтів.<br>Матеріали, зарплата майстрів, підрядники.</div>
+            </div>
+            <div style="background:#f0fdf4;border-radius:8px;padding:7px 9px;border:1px solid #bbf7d0;">
+              <div style="font-size:0.7rem;font-weight:700;color:#16a34a;margin-bottom:3px;">💼 OPEX</div>
+              <div style="${sub}">Постійні витрати. Не залежать від кількості клієнтів.<br>Оренда, маркетинг, бухгалтер, програми.</div>
+            </div>
+          </div>
+          <div style="background:#f9fafb;border-radius:8px;padding:7px 10px;font-size:0.72rem;color:#374151;">
+            <div>Виручка 100K − COGS 40K = <b style="color:#16a34a;">Валовий 60K (60%)</b></div>
+            <div style="margin-top:2px;">Валовий 60K − OPEX 30K = <b style="color:#22c55e;">Чистий 30K (30%)</b></div>
+          </div>
+          <div style="margin-top:7px;${sub}">Налаштувати: <b>Налаштування → Категорії витрат → «+ Додати» → обрати COGS або OPEX</b></div>
+        </div>
+
+        <!-- БЛОК 5: Автоматичні зв'язки -->
+        <div style="${card}">
+          <div style="${title}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Автоматичні зв'язки з іншими модулями
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              ${badge('CRM угода «Виграно»','#1e40af','#eff6ff')}
+              ${arrow}
+              ${badge('Дохід у фінансах','#16a34a','#f0fdf4')}
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              ${badge('Booking завершено','#7c3aed','#f5f3ff')}
+              ${arrow}
+              ${badge('Оплата у фінансах','#16a34a','#f0fdf4')}
+              ${arrow}
+              ${badge('Клієнт у CRM','#1e40af','#eff6ff')}
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              ${badge('Закупівля на склад','#92400e','#fff7ed')}
+              ${arrow}
+              ${badge('Витрата COGS','#dc2626','#fef2f2')}
+            </div>
+          </div>
+          <div style="margin-top:8px;${sub}">Увімкнути: <b>Налаштування → Зв'язки між модулями</b> (toggles)</div>
+        </div>
+
+        <!-- БЛОК 6: Тижневий план -->
+        <div style="${card}">
+          <div style="${title}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Планування і прогнозування
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="background:#ecfeff;border-radius:8px;padding:7px 10px;border:1px solid #a5f3fc;">
+              <div style="font-size:0.72rem;font-weight:700;color:#0e7490;">📅 Тижневий план 6M (Планування → «Тижневий план 6M»)</div>
+              <div style="${sub}">Планування доходів і витрат по тижнях. Графік + Cashflow лінія. Видно касові розриви заздалегідь.</div>
+            </div>
+            <div style="background:#f0fdf4;border-radius:8px;padding:7px 10px;border:1px solid #bbf7d0;">
+              <div style="font-size:0.72rem;font-weight:700;color:#166534;">📊 Бюджет місяця (Планування → «Бюджет по категоріях»)</div>
+              <div style="${sub}">План vs Факт по кожній категорії. Сповіщення при 80% і 100% витраченого бюджету.</div>
+            </div>
+          </div>
+          <div style="margin-top:7px;${sub}">
+            <b>Швидкий старт:</b> Планування → Тижневий план → «Заповнити з середнього 3M» → коригуйте вручну → Зберегти.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Підсумок: де що знайти -->
+      <div style="margin-top:12px;background:#1f2937;border-radius:12px;padding:12px 16px;">
+        <div style="font-size:0.75rem;font-weight:700;color:#fff;margin-bottom:8px;">🗺️ Де що знаходиться:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          ${[
+            {tab:'Дашборд',   desc:'Cash Flow, рахунки, баланс рахунків'},
+            {tab:'Доходи',    desc:'всі надходження + фільтри'},
+            {tab:'Витрати',   desc:'всі витрати по категоріях'},
+            {tab:'Повторювані',desc:'щомісячні автовитрати'},
+            {tab:'Рахунки',   desc:'виставлення рахунків клієнтам'},
+            {tab:'Планування',desc:'бюджет + тижневий план 6M'},
+            {tab:'Аналітика', desc:'P&L, маржа по проектах, Баланс'},
+            {tab:'Налаштування',desc:'рахунки, категорії, курси валют'},
+          ].map(i=>`
+            <div style="background:rgba(255,255,255,0.08);border-radius:7px;padding:4px 10px;">
+              <span style="font-size:0.7rem;font-weight:700;color:#22c55e;">${i.tab}</span>
+              <span style="font-size:0.68rem;color:#9ca3af;margin-left:4px;">— ${i.desc}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+
+    </div>`;
+}
