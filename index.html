@@ -2058,7 +2058,7 @@ document.addEventListener('mousedown', function(e) {
                             <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#06b6d4" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#06b6d4;border:3px solid transparent;"></span></label>
                         </div>
                     </div>
-                    <div class="form-group"><label class="form-label" data-i18n="description">Опис</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту" data-i18n-placeholder="projectDescPh"></textarea></div>
+                    <div class="form-group"><label class="form-label" >Описание</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту" data-i18n-placeholder="projectDescPh"></textarea></div>
                     <!-- Функції проекту -->
                     <div class="form-group">
                         <label class="form-label"><i data-lucide="settings" class="icon icon-sm"></i> <span data-i18n="projectFunctionsLabel">Функції задіяні в проекті</span></label>
@@ -2118,32 +2118,32 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                         <div id="taskAdvancedPanel" style="display:none;grid-column:1/-1;display:none;grid-template-columns:1fr 1fr;gap:0.9rem;">
                         
-                        <div class="form-group"><label class="form-label" data-i18n="endDuration">Кінець / Тривалість</label>
+                        <div class="form-group"><label class="form-label" >Конец / Длительность</label>
                             <div style="display:flex;gap:8px;align-items:center;">
                                 <select id="taskTimeMode" class="form-select" style="width:auto;" onchange="toggleTaskTimeMode()">
-                                    <option value="end" data-i18n="endTime">Час кінця</option>
-                                    <option value="duration" data-i18n="duration">Тривалість</option>
+                                    <option value="end">Время окончания</option>
+                                    <option value="duration">Длительность</option>
                                 </select>
                                 <input type="time" id="taskTimeEnd" class="form-input" value="19:00" style="flex:1;">
-                                <select id="taskEstimatedTime" class="form-select" style="flex:1;display:none;"><option value="15" data-i18n="min15">15 хв</option><option value="30" data-i18n="min30">30 хв</option><option value="45" data-i18n="min45">45 хв</option><option value="60" selected data-i18n="hour1">1 год</option><option value="90" data-i18n="hour1_5">1.5 год</option><option value="120" data-i18n="hour2">2 год</option><option value="180" data-i18n="hour3">3 год</option><option value="240" data-i18n="hour4">4 год</option><option value="480" data-i18n="hour8">8 год</option></select>
+                                <select id="taskEstimatedTime" class="form-select" style="flex:1;display:none;"><option value="15">15 мин</option><option value="30">30 мин</option><option value="45">45 мин</option><option value="60" selected>1 час</option><option value="90">1.5 часа</option><option value="120">2 часа</option><option value="180">3 часа</option><option value="240">4 часа</option><option value="480">8 часов</option></select>
                             </div>
                         </div>
                         
                         <!-- FEAT-003: Дата початку -->
-                        <div class="form-group"><label class="form-label" data-i18n="startDate">Дата початку</label><input type="date" id="taskStartDate" class="form-input" placeholder="Опціонально" data-i18n-placeholder="optional"></div>
+                        <div class="form-group"><label class="form-label" >Дата начала</label><input type="date" id="taskStartDate" class="form-input" placeholder="Необязательно" data-i18n-placeholder="optional"></div>
                         
-                        <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low" data-i18n="priorityLow">Низький</option><option value="medium" selected data-i18n="priorityMedium">Середній</option><option value="high" data-i18n="priorityHigh">Високий</option></select></div>
-                        <div class="form-group"><label class="form-label" data-i18n="status">Статус</label><select id="taskStatus" class="form-select"><option value="new" data-i18n="statusNew">Нове</option><option value="progress" data-i18n="statusProgress">В роботі</option><option value="review" data-i18n="statusReview">Перевірка</option><option value="done" data-i18n="statusDone">Готово</option></select></div>
+                        <div class="form-group"><label class="form-label" >Приоритет</label><select id="taskPriority" class="form-select"><option value="low">Низкий</option><option value="medium" selected>Средний</option><option value="high">Высокий</option></select></div>
+                        <div class="form-group"><label class="form-label" >Статус</label><select id="taskStatus" class="form-select"><option value="new">Новая</option><option value="progress">В работе</option><option value="review">На проверке</option><option value="done">Готово</option></select></div>
                         
                         <!-- FEAT-001: Співвиконавці -->
                         <div class="form-group full-width">
-                            <label class="form-label"><i data-lucide="users" class="icon icon-sm"></i> <span data-i18n="coExecutors">Співвиконавці</span></label>
+                            <label class="form-label"><i data-lucide="users" class="icon icon-sm"></i> <span >Соисполнители</span></label>
                             <div id="taskCoExecutors" style="margin-top:0.5rem;"></div>
                         </div>
                         
                         <!-- FEAT-001: Спостерігачі -->
                         <div class="form-group full-width">
-                            <label class="form-label"><i data-lucide="eye" class="icon icon-sm"></i> <span data-i18n="observers">Спостерігачі</span></label>
+                            <label class="form-label"><i data-lucide="eye" class="icon icon-sm"></i> <span >Наблюдатели</span></label>
                             <div id="taskObservers" style="margin-top:0.5rem;"></div>
                         </div>
                         
@@ -2151,54 +2151,54 @@ document.addEventListener('mousedown', function(e) {
                         <div class="form-group full-width" style="display:flex;gap:2rem;flex-wrap:wrap;">
                             <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;background:#f0fdf4;border-radius:8px;">
                                 <input type="checkbox" id="taskRequireReview" style="width:18px;height:18px;accent-color:var(--primary);" checked>
-                                <span style="font-size:0.85rem;font-weight:500;" data-i18n="requireReview">Перевірка після виконання (Telegram)</span>
+                                <span style="font-size:0.85rem;font-weight:500;" >Проверка после выполнения (Telegram)</span>
                             </label>
                             <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;background:#fef3c7;border-radius:8px;">
                                 <input type="checkbox" id="taskAllowDeadlineChange" style="width:18px;height:18px;accent-color:#f59e0b;">
-                                <span style="font-size:0.85rem;font-weight:500;" data-i18n="allowDeadlineChange">Виконавець може змінювати строки</span>
+                                <span style="font-size:0.85rem;font-weight:500;" >Исполнитель может изменять сроки</span>
                             </label>
                             <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;background:#ede9fe;border-radius:8px;">
                                 <input type="checkbox" id="taskRequireReport" style="width:18px;height:18px;accent-color:#8b5cf6;">
-                                <span style="font-size:0.85rem;font-weight:500;" data-i18n="requireReport">Звіт у Telegram при завершенні</span>
+                                <span style="font-size:0.85rem;font-weight:500;" >Отчёт в Telegram при завершении</span>
                             </label>
                         </div>
                         
-                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" >Ожидаемый результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" >Формат отчёта</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" >Описание</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width" id="taskAiHelpRow" style="display:none;">
                             <a id="taskAiHelpLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.85rem;color:#16a34a;text-decoration:none;font-weight:500;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                <span data-i18n="askAi">Не зрозуміло? Запитай AI-помічника</span>
+                                <span >Непонятно? Спроси AI-помощника</span>
                             </a>
                         </div>
                         
                         <!-- FEAT-001: Чеклист -->
                         <div class="form-group full-width">
-                            <label class="form-label"><i data-lucide="list-checks" class="icon icon-sm"></i> <span data-i18n="checklist">Чеклист</span></label>
+                            <label class="form-label"><i data-lucide="list-checks" class="icon icon-sm"></i> <span >Чеклист</span></label>
                             <div id="taskChecklist" style="margin-top:0.5rem;"></div>
                             <button type="button" onclick="addChecklistItem()" style="margin-top:0.5rem;padding:0.4rem 0.75rem;background:#f9fafb;border:1px dashed #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;color:#6b7280;display:flex;align-items:center;gap:0.4rem;">
-                                <i data-lucide="plus" class="icon icon-sm"></i> <span data-i18n="addChecklistItem">Додати пункт</span>
+                                <i data-lucide="plus" class="icon icon-sm"></i> <span >Добавить пункт</span>
                             </button>
                         </div>
                         
                         <!-- FEAT-006: Time Tracking -->
                         <div class="form-group full-width" id="timeTrackingSection" style="display:none;">
-                            <label class="form-label"><i data-lucide="timer" class="icon icon-sm"></i> <span data-i18n="timeTracking">Облік часу</span></label>
+                            <label class="form-label"><i data-lucide="timer" class="icon icon-sm"></i> <span >Учёт времени</span></label>
                             <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-top:0.5rem;padding:0.75rem;background:#f0f9ff;border-radius:8px;">
                                 <div style="text-align:center;">
-                                    <div style="font-size:0.75rem;color:#6b7280;" data-i18n="planned">Запланований</div>
+                                    <div style="font-size:0.75rem;color:#6b7280;" >Запланировано</div>
                                     <div id="timeTrackPlanned" style="font-size:1.2rem;font-weight:600;color:#3b82f6;">—</div>
                                 </div>
                                 <div style="text-align:center;">
-                                    <div style="font-size:0.75rem;color:#6b7280;" data-i18n="actual">Фактичний</div>
+                                    <div style="font-size:0.75rem;color:#6b7280;" >Фактически</div>
                                     <div id="timeTrackActual" style="font-size:1.2rem;font-weight:600;color:#22c55e;">00:00</div>
                                 </div>
                                 <div style="flex:1;display:flex;gap:0.5rem;justify-content:flex-end;align-items:center;">
                                     <button type="button" id="timeTrackBtn" onclick="toggleTimeTracker()" style="padding:0.5rem 1rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;">
-                                        <i data-lucide="play" class="icon icon-sm"></i> <span data-i18n="startTimer">Старт</span>
+                                        <i data-lucide="play" class="icon icon-sm"></i> <span >Старт</span>
                                     </button>
-                                    <button type="button" onclick="addManualTime()" style="padding:0.5rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;" title="Додати час вручну" aria-label="Додати час вручну" data-i18n-title="addTimeManually">
+                                    <button type="button" onclick="addManualTime()" style="padding:0.5rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;" title="Добавить время вручную" aria-label="Добавить время вручную" data-i18n-title="addTimeManually">
                                         <i data-lucide="plus" class="icon icon-sm"></i>
                                     </button>
                                 </div>
@@ -2210,20 +2210,20 @@ document.addEventListener('mousedown', function(e) {
                         <div class="form-group full-width">
                             <label class="form-label">
                                 <i data-lucide="alarm-clock" class="icon icon-sm"></i> 
-                                <span data-i18n="reminders">Нагадування до дедлайну</span>
+                                <span >Напоминания к дедлайну</span>
                             </label>
                             <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;">
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder60" value="60" style="width:16px;height:16px;accent-color:var(--primary);">
-                                    <span style="font-size:0.85rem;" data-i18n="reminder1hour">За 1 год</span>
+                                    <span style="font-size:0.85rem;" >За 1 час</span>
                                 </label>
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder30" value="30" style="width:16px;height:16px;accent-color:var(--primary);">
-                                    <span style="font-size:0.85rem;" data-i18n="reminder30min">За 30 хв</span>
+                                    <span style="font-size:0.85rem;" >За 30 мин</span>
                                 </label>
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder15" value="15" checked style="width:16px;height:16px;accent-color:var(--primary);">
-                                    <span style="font-size:0.85rem;" data-i18n="reminder15min">За 15 хв</span>
+                                    <span style="font-size:0.85rem;" >За 15 мин</span>
                                 </label>
                             </div>
                         </div>
@@ -2232,19 +2232,19 @@ document.addEventListener('mousedown', function(e) {
                         <div class="form-group full-width">
                             <label class="form-label">
                                 <i data-lucide="alert-triangle" class="icon icon-sm"></i> 
-                                <span data-i18n="escalation">Ескалація при простроченні</span>
+                                <span >Эскалация при просрочке</span>
                             </label>
                             <div style="display:flex;align-items:center;gap:1rem;margin-top:0.5rem;padding:0.75rem;background:#fef3c7;border-radius:8px;">
                                 <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
                                     <input type="checkbox" id="taskEscalationEnabled" style="width:18px;height:18px;accent-color:#f59e0b;">
-                                    <span style="font-size:0.9rem;font-weight:500;" data-i18n="createRepeatTask">Створити повторну задачу</span>
+                                    <span style="font-size:0.9rem;font-weight:500;" >Создать повторную задачу</span>
                                 </label>
-                                <span style="font-size:0.85rem;color:#92400e;" data-i18n="afterTime">через</span>
+                                <span style="font-size:0.85rem;color:#92400e;" >через</span>
                                 <select id="taskEscalationMinutes" style="padding:0.4rem;border-radius:6px;border:1px solid #d1d5db;font-size:0.85rem;">
-                                    <option value="15" data-i18n="min15">15 хв</option>
-                                    <option value="30" data-i18n="min30">30 хв</option>
-                                    <option value="60" selected data-i18n="hour1">1 год</option>
-                                    <option value="120" data-i18n="hour2">2 год</option>
+                                    <option value="15">15 мин</option>
+                                    <option value="30">30 мин</option>
+                                    <option value="60" selected>1 час</option>
+                                    <option value="120">2 часа</option>
                                 </select>
                             </div>
                         </div>
@@ -2376,7 +2376,7 @@ document.addEventListener('mousedown', function(e) {
                     <div class="form-grid">
                         <div class="form-group"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="functionName" class="form-input" required aria-required="true"></div>
                         <div class="form-group"><label class="form-label"><i data-lucide="crown" class="icon icon-sm"></i> <span data-i18n="head">Головний *</span></label><select id="functionHead" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="functionDescription" class="form-textarea"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" >Описание</label><textarea id="functionDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="target" class="icon icon-sm"></i> <span data-i18n="fnCkpLabel">ЦКП — Цінний кінцевий продукт *</span></label><textarea id="functionResult" class="form-textarea" rows="2" data-i18n-placeholder="fnCkpPlaceholder" placeholder="Що є результатом роботи цієї функції? (1-2 речення)" required></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="users" class="icon icon-sm"></i> <span data-i18n="members">Учасники</span></label><div id="functionAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;"></div></div>
                         <div class="form-group"><label class="form-label"><i data-lucide="message-circle" class="icon icon-sm"></i> <span data-i18n="fnContacts">Контакти</span></label><input type="text" id="functionContacts" class="form-input" data-i18n-placeholder="fnContactsPlaceholder" placeholder="Telegram, телефон..."></div>
@@ -2606,29 +2606,29 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                         <div class="form-group" id="dayOfMonthGroup" style="display:none;"><label class="form-label" data-i18n="dayOfMonth">День місяця *</label><select id="regularTaskDayOfMonth" class="form-select"><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="last" data-i18n="lastDay">Останній день</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="startRequired">Початок *</label><input type="time" id="regularTaskTimeStart" class="form-input" value="10:00" required aria-required="true"></div>
-                        <div class="form-group"><label class="form-label" data-i18n="endDuration">Кінець / Тривалість</label>
+                        <div class="form-group"><label class="form-label" >Конец / Длительность</label>
                             <div style="display:flex;gap:8px;align-items:center;">
                                 <select id="regularTaskTimeMode" class="form-select" style="width:auto;" onchange="toggleRegularTimeMode()">
-                                    <option value="end" data-i18n="endTime">Час кінця</option>
-                                    <option value="duration" data-i18n="duration">Тривалість</option>
+                                    <option value="end">Время окончания</option>
+                                    <option value="duration">Длительность</option>
                                 </select>
                                 <input type="time" id="regularTaskTimeEnd" class="form-input" value="11:00" style="flex:1;">
                                 <select id="regularTaskDuration" class="form-select" style="flex:1;display:none;">
-                                    <option value="15" data-i18n="min15">15 хв</option>
-                                    <option value="30" data-i18n="min30">30 хв</option>
-                                    <option value="45" data-i18n="min45">45 хв</option>
-                                    <option value="60" selected data-i18n="hour1">1 год</option>
-                                    <option value="90" data-i18n="hour1_5">1.5 год</option>
-                                    <option value="120" data-i18n="hour2">2 год</option>
-                                    <option value="180" data-i18n="hour3">3 год</option>
-                                    <option value="240" data-i18n="hour4">4 год</option>
+                                    <option value="15">15 мин</option>
+                                    <option value="30">30 мин</option>
+                                    <option value="45">45 мин</option>
+                                    <option value="60" selected>1 час</option>
+                                    <option value="90">1.5 часа</option>
+                                    <option value="120">2 часа</option>
+                                    <option value="180">3 часа</option>
+                                    <option value="240">4 часа</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="regularTaskPriority" class="form-select"><option value="medium" data-i18n="normal">Звичайний</option><option value="high" data-i18n="high">Високий </option><option value="low" data-i18n="low">Низький</option></select></div>
+                        <div class="form-group"><label class="form-label" >Приоритет</label><select id="regularTaskPriority" class="form-select"><option value="medium" data-i18n="normal">Звичайний</option><option value="high" data-i18n="high">Високий </option><option value="low" data-i18n="low">Низький</option></select></div>
                         <div class="form-group"><label class="form-label" style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="regularTaskRequireReview" style="accent-color:var(--primary);width:18px;height:18px;"> <span data-i18n="requireReview">Потрібна перевірка</span></label></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" >Ожидаемый результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" >Формат отчёта</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="file-text" class="icon icon-sm"></i> <span data-i18n="instruction">Інструкція (необов'язково)</span></label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..." data-i18n-placeholder="instructionPlaceholder"></textarea></div>
                         
                         <!-- Чекліст для регулярних -->

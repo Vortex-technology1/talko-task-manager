@@ -42,7 +42,7 @@
                 window.commentsUnsubscribe();
             }
             
-            listEl.innerHTML = '<div class="comments-loading" data-i18n="uploading">Завантаження...</div>';
+            listEl.innerHTML = '<div class="comments-loading" data-i18n="uploading">Загрузка...</div>';
             
             // Real-time listener for comments
             window.commentsUnsubscribe = db.collection('companies').doc(currentCompany)
@@ -69,7 +69,7 @@
                     }
                 }, error => {
                     console.error('Error loading comments:', error);
-                    listEl.innerHTML = '<div class="comments-empty">Помилка завантаження</div>';
+                    listEl.innerHTML = '<div class="comments-empty">Ошибка загрузки</div>';
                 });
         }
         
@@ -95,7 +95,7 @@
                 listEl.innerHTML = `
                     <div class="comments-empty">
                         <div class="comments-empty-icon"><i data-lucide="message-circle" class="icon icon-xl"></i></div>
-                        <span data-i18n="noComments">Ще немає коментарів</span>
+                        <span>Ещё нет комментариев</span>
                     </div>
                 `;
                 return;
@@ -116,9 +116,9 @@
                             <span class="comment-author">${escapeHtml(comment.authorName || window.t('unknown'))}</span>
                             <span class="comment-time">${time}${edited}</span>
                             <div class="comment-actions" style="margin-left:auto;display:flex;gap:0.25rem;opacity:0;transition:opacity 0.15s;">
-                                ${isOwn ? `<button onclick="editComment('${comment.id}')" title="Редагувати"
+                                ${isOwn ? `<button onclick="editComment('${comment.id}')" title="Редактировать"
                                     style="background:none;border:none;cursor:pointer;padding:2px 4px;color:#6b7280;font-size:0.75rem;border-radius:4px;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></span>️</button>` : ''}
-                                ${canDelete ? `<button onclick="deleteComment('${comment.id}')" title="Видалити"
+                                ${canDelete ? `<button onclick="deleteComment('${comment.id}')" title="Удалить"
                                     style="background:none;border:none;cursor:pointer;padding:2px 4px;color:#ef4444;font-size:0.75rem;border-radius:4px;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span></button>` : ''}
                             </div>
                         </div>
@@ -128,9 +128,9 @@
                                 id="comment-edit-input-${comment.id}">${escapeHtml(comment.text)}</textarea>
                             <div style="display:flex;gap:0.4rem;margin-top:0.3rem;">
                                 <button onclick="saveCommentEdit('${comment.id}')"
-                                    style="padding:0.25rem 0.6rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;">Зберегти</button>
+                                    style="padding:0.25rem 0.6rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;">Сохранить</button>
                                 <button onclick="cancelCommentEdit('${comment.id}')"
-                                    style="padding:0.25rem 0.6rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;cursor:pointer;font-size:0.78rem;">Скасувати</button>
+                                    style="padding:0.25rem 0.6rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;cursor:pointer;font-size:0.78rem;">Отменить</button>
                             </div>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                     .collection('comments').doc(commentId)
                     .update({ text: newText, editedAt: firebase.firestore.FieldValue.serverTimestamp() });
                 cancelCommentEdit(commentId);
-            } catch(e) { showToast('Помилка редагування', 'error'); }
+            } catch(e) { showToast('Ошибка редактирования', 'error'); }
         };
 
         // Delete comment
@@ -196,7 +196,7 @@
                     .collection('tasks').doc(currentTaskIdForComments)
                     .update({ commentCount: firebase.firestore.FieldValue.increment(-1) })
                     .catch(() => {});
-            } catch(e) { showToast('Помилка видалення', 'error'); }
+            } catch(e) { showToast('Ошибка удаления', 'error'); }
         };
 
         // Format comment timestamp
@@ -213,7 +213,7 @@
             // Less than 1 hour
             if (diff < 3600000) {
                 const mins = Math.floor(diff / 60000);
-                return `${mins} хв тому`;
+                return `${mins} мин назад`;
             }
             
             // Today
@@ -243,7 +243,7 @@
             
             // BUG-AB FIX: limit comment length to 4000 chars
             if (text.length > 4000) {
-                showToast((typeof t === 'function' ? window.t('commentTooLong') : null) || `Коментар занадто довгий (макс. 4000 символів)`, 'warning');
+                showToast((typeof t === 'function' ? window.t('commentTooLong') : null) || `Комментарий слишком длинный (макс. 4000 символов)`, 'warning');
                 return;
             }
             

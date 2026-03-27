@@ -4,6 +4,8 @@
 'use strict';
         function openTaskModal(id = null) {
             const _modal = document.getElementById('taskModal'); if (!_modal) return; _modal.style.display = 'block';
+            // Apply translations to modal elements
+            if (typeof window.updatePageTranslations === 'function') window.updatePageTranslations();
             // ГЛЮК FIX: скидаємо isSaving при кожному відкритті — захист від зависання spinner
             isSaving = false;
             const _sb = document.querySelector('#taskModal button[type="submit"]');
