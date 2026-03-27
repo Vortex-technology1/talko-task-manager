@@ -267,11 +267,19 @@ function _renderRow(d, i) {
             ? `<span onclick="event.stopPropagation()"
                 style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
                 background:#f0fdf4;border:1px solid #86efac;color:#16a34a;font-size:0.72rem;font-weight:600;white-space:nowrap;flex-shrink:0;">
-                ${TI.confirm} Підтверджено</span>`
+                ${TI.confirm} Підтверджено</span>
+               <button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
+                style="display:inline-flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;
+                background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                ✏️</button>`
             : `<button onclick="event.stopPropagation();_crmTodoConfirmConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
                 background:#fffbeb;border:1px solid #fde68a;color:#b45309;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-                ${TI.cal} ${d.consultationDate} ${d.consultationTime||''} — Підтвердити</button>`
+                ${TI.cal} ${d.consultationDate} ${d.consultationTime||''} — Підтвердити</button>
+               <button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
+                style="display:inline-flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;
+                background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                ✏️</button>`
         : `<button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
             style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
             background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">

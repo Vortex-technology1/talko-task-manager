@@ -419,12 +419,7 @@ service cloud.firestore {
 
       // CRM — DEALS
       match /crm_deals/{dealId} {
-        allow read: if isManagerOrOwner(companyId) ||
-          (isCompanyMember(companyId) && (
-            resource.data.assigneeId == userId() ||
-            resource.data.responsibleId == userId() ||
-            resource.data.createdBy == userId()
-          ));
+        allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId);
         allow update: if isManagerOrOwner(companyId) ||
           (isCompanyMember(companyId) && (
@@ -652,7 +647,12 @@ service cloud.firestore {
       // Клієнт може читати для відображення дашборду
       match /warehouse_stock/{stockId} {
         allow read: if isCompanyMember(companyId);
-        allow write: if false; // Admin SDK only (api/warehouse.js)
+        allow write: if isManagerOrOwner(companyId); // Allow client-side updates for real-time sync
+      }
+
+      match /warehouse_stock_by_location/{docId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if isManagerOrOwner(companyId);
       }
 
       // Локації складу — тільки менеджер+
