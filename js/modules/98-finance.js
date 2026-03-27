@@ -27,7 +27,7 @@ const I = {
 
 // ── Константи ──────────────────────────────────────────────
 const FINANCE_VERSION = '1.0.0';
-const TABS = ['dashboard', 'income', 'expense', 'recurring', 'invoices', 'functions', 'planning', 'analytics', 'ai', 'settings'];
+const TABS = ['dashboard', 'income', 'expense', 'recurring', 'invoices', 'functions', 'planning', 'analytics', 'balance', 'ai', 'settings'];
 
 function getTabLabels() {
   return {
@@ -39,6 +39,7 @@ function getTabLabels() {
     functions:  { icon: 'func',      label: window.t('finTabFunctions') },
     planning:   { icon: 'plan',      label: window.t('finTabPlanning')  },
     analytics:  { icon: 'chart',     label: window.t('finTabAnalytics') },
+    balance:    { icon: 'wallet',    label: window.t('finTabBalance')   },
     ai:         { icon: 'ai',        label: 'AI'                        },
     settings:   { icon: 'settings',  label: window.t('finTabSettings')  },
   };
@@ -345,6 +346,7 @@ function renderSubTab(tab) {
     case 'functions': renderFinanceFunctions(inner); break;
     case 'planning':   renderPlanning(inner); break;
     case 'analytics':  renderAnalytics(inner); break;
+    case 'balance':    if (typeof window.renderBalanceSheet === 'function') window.renderBalanceSheet(inner); else inner.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Завантаження...</div>'; break;
     case 'ai':         renderAI(inner); break;
     case 'settings':  renderSettings(inner); break;
     default:          renderDashboard(inner);
