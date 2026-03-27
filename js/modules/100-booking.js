@@ -122,7 +122,6 @@ function renderCalendarList() {
     if (!root) return;
     const base   = window.location.origin;
     const compId = window.currentCompanyId;
-
     const calCards = bk.calendars.length === 0
         ? `<div class="bk-empty">
             <div style="margin-bottom:0.5rem;color:#9ca3af;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
@@ -228,6 +227,10 @@ ${grpCards}`;
     <div class="bk-page-sub">${t('bookingSubtitle')||'Онлайн-запис для клієнтів'}</div>
   </div>
   <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+    <button class="bk-btn-secondary" onclick="window._bkShowWeekView()" title="Тижневий календар">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/></svg>
+      Тиждень
+    </button>
     <button class="bk-btn-primary" onclick="window._bkNewCalendar()">
       ${I.plus} ${t('newCalService')||'Новий календар'}
     </button>
@@ -550,6 +553,228 @@ window._bkGrpUpdateCount = function() {
         el.textContent = n > 0 ? `${n} ${t('bkCalendarsInGroup')||'обрано'}` : '';
         el.style.color = n >= 2 ? '#22c55e' : '#f59e0b';
     }
+};
+
+// ── View: Week Calendar (Cliniccards style) ───────────────
+window._bkShowWeekView = function() { renderWeekView(); };
+
+let _bkWeekOffset = 0; // 0 = this week, 1 = next week, etc.
+
+async function renderWeekView() {
+    bk.view = 'week';
+    const root = document.getElementById('bk-view-root');
+    if (!root) return;
+
+    root.innerHTML = `
+<div class="bk-header-row">
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <button class="bk-btn-back" onclick="window._bkBackToList()">${I.back} Назад</button>
+    <h2 class="bk-page-title">${I.calendar} Тижневий розклад</h2>
+  </div>
+  <div style="display:flex;gap:.5rem;align-items:center">
+    <button class="bk-btn-sm" onclick="window._bkWeekNav(-1)">&#8592;</button>
+    <span id="bk-week-label" style="font-weight:600;font-size:.9rem;white-space:nowrap"></span>
+    <button class="bk-btn-sm" onclick="window._bkWeekNav(1)">&#8594;</button>
+    <button class="bk-btn-sm" onclick="_bkWeekOffset=0;renderWeekView()" style="font-size:.78rem">Сьогодні</button>
+  </div>
+</div>
+<div id="bk-week-grid-wrap" style="overflow-x:auto">
+  <div class="bk-week-loading">Завантаження...</div>
+</div>`;
+
+    _bkWeekOffset = _bkWeekOffset || 0;
+    await _bkLoadWeekGrid();
+}
+
+window._bkWeekNav = function(dir) {
+    _bkWeekOffset = (_bkWeekOffset || 0) + dir;
+    _bkLoadWeekGrid();
+};
+
+async function _bkLoadWeekGrid() {
+    const wrap = document.getElementById('bk-week-grid-wrap');
+    if (!wrap) return;
+
+    // Визначаємо дати тижня
+    const today = new Date();
+    const dayOfWeek = (today.getDay() + 6) % 7; // Mon=0
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - dayOfWeek + (_bkWeekOffset * 7));
+    monday.setHours(0,0,0,0);
+
+    const days = Array.from({length:7}, (_, i) => {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        return d;
+    });
+
+    const DAY_NAMES = ['Пн','Вт','Ср','Чт','Пт','Сб','Нд'];
+    const MONTHS_GEN = ['','січня','лютого','березня','квітня','травня','червня',
+                        'липня','серпня','вересня','жовтня','листопада','грудня'];
+
+    // Оновлюємо заголовок тижня
+    const labelEl = document.getElementById('bk-week-label');
+    if (labelEl) {
+        const sun = days[6];
+        labelEl.textContent = `${days[0].getDate()} — ${sun.getDate()} ${MONTHS_GEN[sun.getMonth()+1]} ${sun.getFullYear()}`;
+    }
+
+    // Спеціалісти = активні календарі
+    const specialists = bk.calendars.filter(c => c.isActive !== false);
+
+    if (specialists.length === 0) {
+        wrap.innerHTML = `<div class="bk-empty">Немає активних спеціалістів. Створіть календар.</div>`;
+        return;
+    }
+
+    wrap.innerHTML = `<div class="bk-week-loading">Завантаження записів...</div>`;
+
+    // Завантажуємо записи для кожного дня тижня
+    const dateStrs = days.map(d => {
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    });
+
+    let appointments = [];
+    try {
+        const snap = await window.companyCol('booking_appointments')
+            .where('date', 'in', dateStrs.slice(0,10))
+            .where('status', 'in', ['confirmed','pending'])
+            .get();
+        appointments = snap.docs.map(d => ({id:d.id,...d.data()}));
+    } catch(e) { console.warn('[booking week]', e.message); }
+
+    // Кольори по статусу
+    const STATUS_COLOR = {
+        confirmed: '#22c55e',
+        pending:   '#f59e0b',
+        cancelled: '#ef4444',
+    };
+
+    // Будуємо сітку
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+    // Колонки — по спеціалістах, рядки — по днях
+    const minCol = Math.max(120, Math.floor(700 / specialists.length));
+
+    // Заголовки спеціалістів
+    const specHeaders = specialists.map(sp => {
+        const dotColor = sp.color || '#3b82f6';
+        return `<th style="min-width:${minCol}px;padding:.5rem .4rem;text-align:center;border-left:1px solid #e5e7eb;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:5px;">
+                <span style="width:9px;height:9px;border-radius:50%;background:${esc(dotColor)};flex-shrink:0;display:inline-block;"></span>
+                <span style="font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px;">${esc(sp.name)}</span>
+            </div>
+        </th>`;
+    }).join('');
+
+    // Рядки — по днях
+    const rows = days.map((day, di) => {
+        const ds = dateStrs[di];
+        const isToday = ds === todayStr;
+        const isPast  = day < today && !isToday;
+
+        const dayLabel = `<td style="padding:.5rem .6rem;white-space:nowrap;vertical-align:top;min-width:70px;background:${isToday?'#eff6ff':isPast?'#fafafa':'white'};border-bottom:1px solid #f1f5f9;">
+            <div style="font-size:.75rem;font-weight:600;color:${isToday?'#3b82f6':'#6b7280'}">${DAY_NAMES[di]}</div>
+            <div style="font-size:1rem;font-weight:700;color:${isToday?'#2563eb':'#111'}">${day.getDate()}</div>
+        </td>`;
+
+        const cells = specialists.map(sp => {
+            const appts = appointments.filter(a => a.calendarId === sp.id && a.date === ds);
+            const cards = appts.length
+                ? appts.sort((a,b) => (a.timeSlot||'').localeCompare(b.timeSlot||'')).map(a => {
+                    const statusColor = STATUS_COLOR[a.status] || '#94a3b8';
+                    const spColor = sp.color || '#3b82f6';
+                    return `<div onclick="window._bkOpenApptModal('${a.id}')"
+                        style="background:${spColor}18;border-left:3px solid ${spColor};border-radius:6px;padding:.3rem .45rem;margin-bottom:.25rem;cursor:pointer;transition:opacity .15s;"
+                        onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+                        <div style="font-size:.72rem;font-weight:700;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(a.clientName)}</div>
+                        <div style="display:flex;align-items:center;gap:4px;margin-top:1px;">
+                            <span style="font-size:.68rem;color:#6b7280;">${a.timeSlot||''}</span>
+                            <span style="width:6px;height:6px;border-radius:50%;background:${statusColor};flex-shrink:0;"></span>
+                        </div>
+                    </div>`;
+                }).join('')
+                : `<div style="height:100%;min-height:32px;"></div>`;
+
+            return `<td style="padding:.35rem;vertical-align:top;border-left:1px solid #e5e7eb;border-bottom:1px solid #f1f5f9;background:${isToday?'#f0f9ff':isPast?'#fafafa':'white'};min-height:48px;">${cards}</td>`;
+        }).join('');
+
+        return `<tr>${dayLabel}${cells}</tr>`;
+    }).join('');
+
+    wrap.innerHTML = `
+<div style="font-size:.75rem;color:#6b7280;margin-bottom:.5rem;">
+    ● підтверджено &nbsp; ● очікує &nbsp; — клікни на запис для деталей
+</div>
+<div style="overflow-x:auto;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);background:white;">
+<table style="width:100%;border-collapse:collapse;min-width:400px;">
+    <thead>
+        <tr style="background:#f8fafc;border-bottom:2px solid #e5e7eb;">
+            <th style="padding:.5rem .6rem;text-align:left;font-size:.72rem;font-weight:700;color:#6b7280;min-width:70px;">День</th>
+            ${specHeaders}
+        </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+</table>
+</div>`;
+}
+
+// Модалка деталей запису
+window._bkOpenApptModal = async function(apptId) {
+    // Знаходимо запис
+    let appt = null;
+    try {
+        const snap = await window.companyCol('booking_appointments').doc(apptId).get();
+        if (snap.exists) appt = { id: snap.id, ...snap.data() };
+    } catch(e) {}
+    if (!appt) return;
+
+    const cal = bk.calendars.find(c => c.id === appt.calendarId) || {};
+    const STATUS_LABELS = { confirmed:'✅ Підтверджено', pending:'⏳ Очікує', cancelled:'❌ Скасовано', completed:'✔ Завершено' };
+
+    const existing = document.getElementById('bk-appt-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'bk-appt-modal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:10010;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);backdrop-filter:blur(2px);';
+    modal.innerHTML = `
+    <div style="background:white;border-radius:16px;padding:1.5rem;width:90%;max-width:380px;box-shadow:0 20px 50px rgba(0,0,0,.3);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <div style="font-size:.95rem;font-weight:800;">Запис</div>
+            <button onclick="document.getElementById('bk-appt-modal').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem;">
+            <div><span style="color:#6b7280;">Клієнт:</span> <strong>${esc(appt.clientName)}</strong></div>
+            <div><span style="color:#6b7280;">Email:</span> ${esc(appt.clientEmail)}</div>
+            ${appt.clientPhone ? `<div><span style="color:#6b7280;">Тел:</span> ${esc(appt.clientPhone)}</div>` : ''}
+            <div><span style="color:#6b7280;">Дата:</span> ${appt.date} о ${appt.timeSlot}</div>
+            <div><span style="color:#6b7280;">Спеціаліст:</span> ${esc(cal.name||appt.calendarId)}</div>
+            <div><span style="color:#6b7280;">Статус:</span> ${STATUS_LABELS[appt.status]||appt.status}</div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:1.25rem;flex-wrap:wrap;">
+            ${appt.status==='pending' ? `<button onclick="window._bkConfirmApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#22c55e;color:white;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">✓ Підтвердити</button>` : ''}
+            ${['pending','confirmed'].includes(appt.status) ? `<button onclick="window._bkCancelApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">✕ Скасувати</button>` : ''}
+        </div>
+    </div>`;
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    document.body.appendChild(modal);
+};
+
+window._bkConfirmApptDirect = async function(apptId) {
+    try {
+        await window.companyCol('booking_appointments').doc(apptId).update({ status: 'confirmed', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        if (typeof showToast === 'function') showToast('Підтверджено ✓', 'success');
+        await _bkLoadWeekGrid();
+    } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
+};
+
+window._bkCancelApptDirect = async function(apptId) {
+    try {
+        await window.companyCol('booking_appointments').doc(apptId).update({ status: 'cancelled', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        if (typeof showToast === 'function') showToast('Скасовано', 'success');
+        await _bkLoadWeekGrid();
+    } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
 };
 
 // ── View: Appointments ────────────────────────────────────
@@ -971,6 +1196,7 @@ function injectBookingStyles() {
 .bk-loader-row{display:flex;justify-content:center;padding:2.5rem}
 .bk-spinner{width:28px;height:28px;border:3px solid #e2e8f0;border-top-color:#3b82f6;border-radius:50%;animation:bk-spin .7s linear infinite}
 @keyframes bk-spin{to{transform:rotate(360deg)}}
+.bk-week-loading{text-align:center;padding:2rem;color:#94a3b8;font-size:.88rem}
 `;
     document.head.appendChild(style);
 }

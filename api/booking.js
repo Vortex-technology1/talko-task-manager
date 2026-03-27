@@ -1325,7 +1325,7 @@ module.exports = async (req, res) => {
             if (!/^\d{4}-\d{2}-\d{2}$/.test(date))
                 return res.status(400).json({ error: 'Invalid date format' });
 
-            // Групові слоти — об'єднуємо слоти з усіх календарів групи
+            // Групові слоти з Round Robin розподілом
             if (groupId) {
                 const grpDoc = await db.collection('companies').doc(companyId)
                     .collection('booking_groups').doc(groupId).get();
@@ -1336,24 +1336,48 @@ module.exports = async (req, res) => {
                 if (calIds.length === 0)
                     return res.status(200).json({ slots: [] });
 
-                // Отримуємо слоти з кожного календаря
+                // Round Robin: визначаємо порядок черги по лічильнику призначень
+                // Рахуємо скільки записів у кожного спеціаліста за останні 30 днів
+                const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0,10);
+                const countSnap = await db.collection('companies').doc(companyId)
+                    .collection('booking_appointments')
+                    .where('calendarId', 'in', calIds.slice(0, 10)) // Firestore 'in' limit 10
+                    .where('date', '>=', thirtyDaysAgo)
+                    .where('status', 'in', ['confirmed', 'pending'])
+                    .get();
+
+                // Рахуємо завантаженість кожного спеціаліста
+                const loadMap = {};
+                calIds.forEach(cid => { loadMap[cid] = 0; });
+                countSnap.docs.forEach(d => {
+                    const cid = d.data().calendarId;
+                    if (loadMap[cid] !== undefined) loadMap[cid]++;
+                });
+
+                // Сортуємо calIds по завантаженості (менше записів = вищий пріоритет)
+                const sortedCalIds = [...calIds].sort((a, b) => (loadMap[a] || 0) - (loadMap[b] || 0));
+
+                // Отримуємо слоти для кожного календаря
                 const allSlotsArr = await Promise.all(
-                    calIds.map(cid => getAvailableSlots(companyId, cid, date)
-                        .then(slots => slots.map(s => ({ ...s, calendarId: cid })))
+                    sortedCalIds.map(cid => getAvailableSlots(companyId, cid, date)
+                        .then(slots => slots.map(s => ({ time: s, calendarId: cid, load: loadMap[cid] || 0 })))
                         .catch(() => []))
                 );
-                // Об'єднуємо і сортуємо за часом
-                const merged = allSlotsArr.flat()
-                    .sort((a, b) => a.time.localeCompare(b.time));
-                // Дедупліцируємо — якщо кілька календарів мають один слот, беремо перший вільний
-                const seen = new Set();
-                const unique = [];
-                for (const s of merged) {
-                    if (!seen.has(s.time)) {
-                        seen.add(s.time);
-                        unique.push(s);
+
+                // Round Robin merge: для кожного унікального часу — беремо спеціаліста з найменшим навантаженням
+                const timeMap = {}; // time → { calendarId, load }
+                for (const calSlots of allSlotsArr) {
+                    for (const slot of calSlots) {
+                        if (!timeMap[slot.time] || slot.load < timeMap[slot.time].load) {
+                            timeMap[slot.time] = { calendarId: slot.calendarId, load: slot.load };
+                        }
                     }
                 }
+
+                const unique = Object.entries(timeMap)
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([time, { calendarId }]) => ({ time, calendarId }));
+
                 return res.status(200).json({ slots: unique });
             }
 
