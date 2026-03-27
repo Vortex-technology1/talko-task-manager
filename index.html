@@ -1320,7 +1320,7 @@ document.addEventListener('mousedown', function(e) {
                             <button class="calendar-view-btn" data-view="timeline" onclick="setProjectView('timeline')" data-i18n="timelineView">Таймлайн</button>
                         </div>
                         <button class="btn btn-success" onclick="openProjectModal()"><i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="newProject">Новий проєкт</span></button>
-                        <button class="btn" onclick="openProjectTemplatePicker()" style="background:#f0fdf4;color:#16a34a;border-color:#bbf7d0;"><i data-lucide="copy" class="icon icon-sm"></i> <span class="hide-mobile">Із шаблону</span></button>
+                        <button class="btn" onclick="openProjectTemplatePicker()" style="background:#f0fdf4;color:#16a34a;border-color:#bbf7d0;"><i data-lucide="copy" class="icon icon-sm"></i> <span class="hide-mobile">Из шаблона</span></button>
                     </div>
                 </div>
                 
@@ -1333,7 +1333,7 @@ document.addEventListener('mousedown', function(e) {
                     <h3 data-i18n="noProjects">Немає проєктів</h3>
                     <p data-i18n="createFirstProject">Створіть перший проєкт для групування завдань</p>
                     <button class="btn btn-success" onclick="openProjectModal()" style="margin-top:1rem;">
-                        <i data-lucide="plus" class="icon"></i> Створити проєкт
+                        <i data-lucide="plus" class="icon"></i> Создать проект
                     </button>
                 </div>
                 
@@ -1999,7 +1999,7 @@ document.addEventListener('mousedown', function(e) {
                                 <div style="display:flex;gap:0.5rem;">
                                     <input id="settingCompanyName" type="text" placeholder="Назва компанії"
                                         style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
-                                    <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">Зберегти</button>
+                                    <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">Сохранить</button>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -2012,7 +2012,7 @@ document.addEventListener('mousedown', function(e) {
                                     <option value="Europe/London">Europe/London (UTC+0/+1)</option>
                                     <option value="America/New_York">America/New_York (UTC-5/-4)</option>
                                 </select>
-                                <button onclick="saveCompanySetting('timezone')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Зберегти часовий пояс</button>
+                                <button onclick="saveCompanySetting('timezone')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Сохранить часовой пояс</button>
                             </div>
                             <div class="form-group">
                                 <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Тижневий звіт</label>
@@ -2020,7 +2020,7 @@ document.addEventListener('mousedown', function(e) {
                                     <input type="checkbox" id="settingWeeklyReport" style="width:18px;height:18px;accent-color:#22c55e;">
                                     <span style="font-size:0.85rem;color:#374151;">Надсилати тижневий звіт власнику</span>
                                 </label>
-                                <button onclick="saveCompanySetting('weeklyReport')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Зберегти</button>
+                                <button onclick="saveCompanySetting('weeklyReport')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Сохранить</button>
                             </div>
                             <div style="padding:0.75rem;background:#fef9c3;border-radius:8px;border-left:3px solid #f59e0b;">
                                 <p style="margin:0;font-size:0.8rem;color:#92400e;">
@@ -2418,7 +2418,7 @@ document.addEventListener('mousedown', function(e) {
                     <input type="text" id="mergedFunctionName" class="form-input" placeholder="Введіть назву..." data-i18n-placeholder="enterName" required aria-required="true">
                 </div>
                 <div id="mergePreview" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:1rem;margin-top:1rem;">
-                    <div style="font-weight:600;color:#16a34a;margin-bottom:0.5rem;"><i data-lucide="info" class="icon icon-sm"></i> Буде об'єднано:</div>
+                    <div style="font-weight:600;color:#16a34a;margin-bottom:0.5rem;"><i data-lucide="info" class="icon icon-sm"></i> Будет объединено:</div>
                     <div id="mergePreviewContent" style="font-size:0.9rem;color:#166534;"></div>
                 </div>
                 <div class="form-actions" style="margin-top:1.5rem;">
@@ -2435,8 +2435,8 @@ document.addEventListener('mousedown', function(e) {
     <div id="employeeOnboardingModal" class="modal" role="dialog" aria-modal="true">
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('employeeOnboardingModal')" aria-label="Закрити">&times;</button>
-                <h2><i data-lucide="user-check" class="icon"></i> Онбординг співробітника</h2>
+                <button class="close" onclick="closeModal('employeeOnboardingModal')" aria-label="Закрыть">&times;</button>
+                <h2><i data-lucide="user-check" class="icon"></i> Онбординг сотрудника</h2>
             </div>
             <div class="modal-body">
                 <div id="employeeOnboardingBody" style="max-height:70vh;overflow-y:auto;"></div>
@@ -2547,7 +2547,7 @@ document.addEventListener('mousedown', function(e) {
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
                 <button class="close" onclick="closeModal('viewProcessModal')" aria-label="Закрыть диалог">&times;</button>
-                <h2 id="viewProcessTitle"><i data-lucide="git-branch" class="icon"></i> Процес</h2>
+                <h2 id="viewProcessTitle"><i data-lucide="git-branch" class="icon"></i> Процесс</h2>
             </div>
             <div class="modal-body">
                 <div id="viewProcessContent">
@@ -2564,20 +2564,20 @@ document.addEventListener('mousedown', function(e) {
                 <form id="regularTaskForm" onsubmit="saveRegularTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required aria-required="true"></div>
-                        <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
-                        <div class="form-group"><label class="form-label" data-i18n="assignee" data-i18n="assigneeLabel">Виконавець</label><select id="regularTaskAssignee" class="form-select"><option value="">З функції (авто)</option></select></div>
-                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="daily" data-i18n="daily">Щодня</option><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
+                        <div class="form-group"><label class="form-label" >Функция *</label><select id="regularTaskFunction" class="form-select" required><option value="">Выберите</option></select></div>
+                        <div class="form-group"><label class="form-label">Исполнитель</label><select id="regularTaskAssignee" class="form-select"><option value="">Из функции (авто)</option></select></div>
+                        <div class="form-group"><label class="form-label" >Периодичность *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="daily">Ежедневно</option><option value="weekly">Еженедельно</option><option value="monthly">Ежемесячно</option><option value="quarterly">Ежеквартально</option></select></div>
                         <div class="form-group" id="skipWeekendsGroup" style="display:none;">
                             <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.88rem;color:#374151;">
                                 <input type="checkbox" id="regularTaskSkipWeekends" style="accent-color:var(--primary);width:16px;height:16px;">
-                                <span>Пропускати вихідні (сб/нд)</span>
+                                <span>Пропускать выходные (сб/вс)</span>
                             </label>
                         </div>
                         <div class="form-group full-width" id="dayOfWeekGroup">
-                            <label class="form-label" data-i18n="daysOfWeek">Дні тижня *</label>
+                            <label class="form-label" >Дни недели *</label>
                             <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-                                <button type="button" onclick="selectAllDays()" class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;" data-i18n="selectAll">Всі дні</button>
-                                <button type="button" onclick="selectWorkDays()" class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;" data-i18n="workDays">Пн-Пт</button>
+                                <button type="button" onclick="selectAllDays()" class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;">Все дни</button>
+                                <button type="button" onclick="selectWorkDays()" class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;">Пн-Пт</button>
                                 <button type="button" onclick="clearDays()" class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;background:#f3f4f6;color:#374151;" data-i18n="clearDays">Очистити</button>
                             </div>
                             <div id="daysCheckboxes" style="display:flex;flex-wrap:wrap;gap:0.5rem;">
@@ -2633,7 +2633,7 @@ document.addEventListener('mousedown', function(e) {
                         
                         <!-- Чекліст для регулярних -->
                         <div class="form-group full-width">
-                            <label class="form-label"><i data-lucide="check-square" class="icon icon-sm"></i> Чекліст</label>
+                            <label class="form-label"><i data-lucide="check-square" class="icon icon-sm"></i> Чеклист</label>
                             <div id="regularTaskChecklist" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.5rem;"></div>
                             <div style="display:flex;gap:0.5rem;">
                                 <input type="text" id="regularChecklistInput" class="form-input" placeholder="Новий пункт..." data-i18n-placeholder="newChecklistItem" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addRegularChecklistItem();}">
@@ -2717,17 +2717,17 @@ document.addEventListener('mousedown', function(e) {
                             <div id="userFunctions" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"></div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label"><i data-lucide="star" class="icon icon-sm"></i> Основна функція (пріоритет задач)</label>
+                            <label class="form-label"><i data-lucide="star" class="icon icon-sm"></i> Основная функция (приоритет задач)</label>
                             <select id="userPrimaryFunction" class="form-select">
-                                <option value="">— не вибрано —</option>
+                                <option value="">— не выбрано —</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label"><i data-lucide="shield" class="icon icon-sm"></i> Роль у функції</label>
-                            <div id="userFunctionRoles" style="margin-top:0.3rem;font-size:0.82rem;color:#6b7280;">Вибери функції вище, щоб налаштувати ролі</div>
+                            <label class="form-label"><i data-lucide="shield" class="icon icon-sm"></i> Роль в функции</label>
+                            <div id="userFunctionRoles" style="margin-top:0.3rem;font-size:0.82rem;color:#6b7280;">Выбери функции выше, чтобы настроить роли</div>
                         </div>
                         <div class="form-group full-width" id="allowedTabsGroup" style="display:none;">
-                            <label class="form-label"><i data-lucide="layout" class="icon icon-sm"></i> Доступні модулі <span style="font-size:0.72rem;color:#6b7280;font-weight:400;">(якщо не вибрано — бачить все для своєї ролі)</span></label>
+                            <label class="form-label"><i data-lucide="layout" class="icon icon-sm"></i> Доступные модули <span style="font-size:0.72rem;color:#6b7280;font-weight:400;">(если не выбрано — видит всё для своей роли)</span></label>
                             <div id="allowedTabsCheckboxes" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"></div>
                         </div>
                     </div>
@@ -2744,7 +2744,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="profileModal" class="modal">
         <div class="modal-content" style="max-width:500px;">
             <div class="modal-header">
-                <h3><i data-lucide="user" class="icon"></i> Мій профіль</h3>
+                <h3><i data-lucide="user" class="icon"></i> Мой профиль</h3>
                 <button class="close-btn" onclick="closeModal('profileModal')">&times;</button>
             </div>
             <div style="padding:1.5rem;">
@@ -2781,10 +2781,10 @@ document.addEventListener('mousedown', function(e) {
                     <div id="gcalStatus">
                         <div id="gcalNotConnected">
                             <p style="font-size:0.85rem;color:#666;margin-bottom:0.75rem;">
-                                Підключіть Google Calendar щоб бачити завдання у своєму календарі
+                                Подключите Google Calendar чтобы видеть задачи в своём календаре
                             </p>
                             <button class="btn btn-success" onclick="connectGoogleCalendar()" style="width:100%;">
-                                <i data-lucide="link" class="icon"></i> Підключити Google Calendar
+                                <i data-lucide="link" class="icon"></i> Подключить Google Calendar
                             </button>
                         </div>
                         <div id="gcalConnected" style="display:none;">
@@ -2794,7 +2794,7 @@ document.addEventListener('mousedown', function(e) {
                             </div>
                             <p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;" id="gcalEmail"></p>
                             <button class="btn" onclick="disconnectGoogleCalendar()" style="width:100%;background:#fee2e2;color:#991b1b;">
-                                <i data-lucide="unlink" class="icon"></i> Відключити
+                                <i data-lucide="unlink" class="icon"></i> Отключить
                             </button>
                         </div>
                     </div>
@@ -2817,11 +2817,11 @@ document.addEventListener('mousedown', function(e) {
                     <div id="telegramStatus">
                         <div id="telegramNotConnected">
                             <p style="font-size:0.85rem;color:#666;margin-bottom:0.75rem;">
-                                Підключіть Telegram щоб отримувати сповіщення про нові завдання
+                                Подключите Telegram чтобы получать уведомления о новых задачах
                             </p>
                             <button class="btn" onclick="connectTelegram()" style="width:100%;background:linear-gradient(135deg, #0088cc, #00aced);color:white;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="white" style="margin-right:0.5rem;"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                                Підключити Telegram
+                                Подключить Telegram
                             </button>
                         </div>
                         <div id="telegramConnected" style="display:none;">
@@ -2830,7 +2830,7 @@ document.addEventListener('mousedown', function(e) {
                                 <span style="color:#065f46;font-weight:500;" data-i18n="telegramConnected">Telegram підключено</span>
                             </div>
                             <button class="btn" onclick="disconnectTelegram()" style="width:100%;background:#fee2e2;color:#991b1b;">
-                                <i data-lucide="unlink" class="icon"></i> Відключити
+                                <i data-lucide="unlink" class="icon"></i> Отключить
                             </button>
                         </div>
                     </div>
@@ -2843,8 +2843,8 @@ document.addEventListener('mousedown', function(e) {
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
                         </div>
                         <div>
-                            <div style="font-weight:600;">Внутрішній номер (телефонія)</div>
-                            <div style="font-size:0.8rem;color:var(--gray);">Для прив'язки дзвінків з Binotel / Ringostat / Stream Telecom</div>
+                            <div style="font-weight:600;">Внутренний номер (телефония)</div>
+                            <div style="font-size:0.8rem;color:var(--gray);">Для привязки звонков с Binotel / Ringostat / Stream Telecom</div>
                         </div>
                     </div>
                     <div style="display:flex;gap:0.5rem;">
@@ -2858,14 +2858,14 @@ document.addEventListener('mousedown', function(e) {
                         </button>
                     </div>
                     <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.4rem;">
-                        Вкажіть ваш внутрішній номер з АТС — дзвінки на цей номер будуть призначатися вам
+                        Укажите ваш внутренний номер из АТС — звонки на этот номер будут назначаться вам
                     </div>
                 </div>
 
                 <!-- Info -->
                 <div style="font-size:0.8rem;color:#888;text-align:center;">
                     <i data-lucide="info" class="icon icon-sm"></i>
-                    Нові завдання автоматично з'являться у вашому Google Calendar
+                    Новые задачи автоматически появятся в вашем Google Calendar
                 </div>
             </div>
         </div>

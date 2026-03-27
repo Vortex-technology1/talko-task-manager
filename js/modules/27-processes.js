@@ -152,7 +152,7 @@
                 if (isCompleted || i < currentStep) cls = 'done';
                 else if (i === currentStep) cls = 'active';
                 
-                const label = step.function || `Крок ${i + 1}`;
+                const label = step.function || `Шаг ${i + 1}`;
                 // Resolve function by id or name for display
                 const stepFunc = step.functionId
                     ? functions.find(f => f.id === step.functionId)
@@ -173,7 +173,7 @@
                 } else {
                     const dp = process.deadline.split('-');
                     const dayNum = parseInt(dp[2]);
-                    const monthShort = (typeof getMonthNames === 'function' ? getMonthNames() : [window.t('janShort'),'лют','бер',window.t('aprShort'),'тра','чер','лип','сер','вер','жов','лис','гру'])[parseInt(dp[1]) - 1];
+                    const monthShort = (typeof getMonthNames === 'function' ? getMonthNames() : [window.t('janShort'),window.t('febGen')?window.t('febGen').slice(0,3):'фев',window.t('marGen')?window.t('marGen').slice(0,3):'мар',window.t('aprShort'),window.t('mayGen')?window.t('mayGen').slice(0,3):'май',window.t('junGen')?window.t('junGen').slice(0,3):'июн',window.t('julGen')?window.t('julGen').slice(0,3):'июл',window.t('augGen')?window.t('augGen').slice(0,3):'авг',window.t('sepGen')?window.t('sepGen').slice(0,3):'сен',window.t('octGen')?window.t('octGen').slice(0,3):'окт',window.t('novGen')?window.t('novGen').slice(0,3):'ноя',window.t('decGen')?window.t('decGen').slice(0,3):'дек'])[parseInt(dp[1]) - 1];
                     deadlineHTML = `<span><i data-lucide="calendar" class="icon icon-sm"></i> ${dayNum} ${monthShort}</span>`;
                 }
             }
