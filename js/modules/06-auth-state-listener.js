@@ -211,8 +211,7 @@
                 showMainInterface();
 
                 // ── SUBSCRIPTION CHECK ───────────────────────────
-                currentCompanyData = companyData || {};
-                window.currentCompanyData = currentCompanyData;
+                window.currentCompanyData = companyData || {};
                 _checkAndApplySubscription(companyData, currentUserData, isSuperAdmin);
                 // ── END SUBSCRIPTION CHECK ──────────────────────
 
