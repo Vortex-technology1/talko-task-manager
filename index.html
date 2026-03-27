@@ -1633,9 +1633,9 @@ document.addEventListener('mousedown', function(e) {
                             </div>
                             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
                                 <div>
-                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;" data-i18n="companyNameSetting">Назва компанії</label>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;" data-i18n="companyNameSetting">Название компании</label>
                                     <div style="display:flex;gap:0.5rem;">
-                                        <input id="settingCompanyName" type="text" placeholder="Назва компанії"
+                                        <input id="settingCompanyName" type="text" placeholder="Название компании"
                                             style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
                                         <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">
                                             <i data-lucide="save" class="icon icon-sm"></i> <span data-i18n="saveBtn">Зберегти</span>
@@ -1643,7 +1643,7 @@ document.addEventListener('mousedown', function(e) {
                                     </div>
                                 </div>
                                 <div>
-                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;" data-i18n="timezoneSetting">Часовий пояс</label>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;" data-i18n="timezoneSetting">Часовой пояс</label>
                                     <select id="settingTimezone" onchange="saveCompanySetting('timezone')"
                                         style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
                                         <option value="Europe/Kyiv">Київ (UTC+2/+3)</option>
@@ -1937,26 +1937,26 @@ document.addEventListener('mousedown', function(e) {
             <!-- ADMIN (only for superadmin) -->
             <div id="adminTab" class="tab-content">
                 <div class="controls" style="background:linear-gradient(135deg,#fee2e2,#fecaca);">
-                    <h2 style="font-size:1.1rem;color:#dc2626;"><i data-lucide="shield" class="icon"></i> Адмін-панель TALKO</h2>
+                    <h2 style="font-size:1.1rem;color:#dc2626;"><i data-lucide="shield" class="icon"></i> Админ-панель TALKO</h2>
                 </div>
 
                 <!-- Компанії — головний блок -->
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);margin-bottom:1rem;">
                     <h3 style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;">
-                        <span><i data-lucide="building-2" class="icon"></i> Компанії</span>
+                        <span><i data-lucide="building-2" class="icon"></i> Компании</span>
                         <div style="display:flex;gap:0.5rem;align-items:center;">
-                            <button onclick="generateStatsDemoData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f0fdf4;color:#16a34a;" title="Згенерувати демо-метрики" aria-label="Згенерувати демо-метрики">
+                            <button onclick="generateStatsDemoData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f0fdf4;color:#16a34a;" title="Сгенерировать демо-метрики" aria-label="Сгенерировать демо-метрики">
                                 <i data-lucide="bar-chart-3" class="icon icon-sm"></i> Demo Stats
                             </button>
                             <div style="width:1px;height:20px;background:#e5e7eb;margin:0 2px;"></div>
-                            <button onclick="clearAllStatsData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;" title="Незворотно видалити ВСІ метрики та дані" aria-label="Незворотно видалити ВСІ метрики та дані">
+                            <button onclick="clearAllStatsData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;" title="Необратимо удалить ВСЕ метрики и данные" aria-label="Необратимо удалить ВСЕ метрики и данные">
                                 <i data-lucide="trash-2" class="icon icon-sm"></i>
                             </button>
                             <button onclick="openAiAssistantsModal()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f3e8ff;color:#7c3aed;">
                                 <i data-lucide="bot" class="icon icon-sm"></i> AI
                             </button>
                             <button onclick="loadAdminCompanies()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
-                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Оновити
+                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Обновить
                             </button>
                         </div>
                     </h3>
@@ -1976,15 +1976,15 @@ document.addEventListener('mousedown', function(e) {
                     <div style="background:white;border-radius:12px;box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;">
                         <div style="padding:1rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;">
                             <div>
-                                <h3 style="margin:0;font-size:1rem;"><i data-lucide="key" class="icon" style="color:#f97316;"></i> Ролі та дозволи</h3>
-                                <p style="margin:0.25rem 0 0;font-size:0.8rem;color:#9ca3af;">Налаштуйте що може робити кожна роль в системі</p>
+                                <h3 style="margin:0;font-size:1rem;"><i data-lucide="key" class="icon" style="color:#f97316;"></i> Роли и разрешения</h3>
+                                <p style="margin:0.25rem 0 0;font-size:0.8rem;color:#9ca3af;">Настройте что может делать каждая роль в системе</p>
                             </div>
                             <button onclick="renderRolesTab()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
-                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Оновити
+                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Обновить
                             </button>
                         </div>
                         <div id="rolesPermissionsContainer" style="padding:0;">
-                            <div style="text-align:center;padding:2rem;color:#9ca3af;">Завантаження...</div>
+                            <div style="text-align:center;padding:2rem;color:#9ca3af;">Загрузка...</div>
                         </div>
                     </div>
                 </div><!-- /adminSubContent-roles -->
@@ -1992,18 +1992,18 @@ document.addEventListener('mousedown', function(e) {
                 <!-- SUB-TAB: Налаштування -->
                 <div id="adminSubContent-settings" style="display:none;">
                     <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-bottom:1rem;">
-                        <h3 style="margin:0 0 1.25rem;font-size:1rem;"><i data-lucide="settings" class="icon" style="color:#6b7280;"></i> Налаштування компанії</h3>
+                        <h3 style="margin:0 0 1.25rem;font-size:1rem;"><i data-lucide="settings" class="icon" style="color:#6b7280;"></i> Настройки компании</h3>
                         <div style="display:grid;gap:1rem;max-width:560px;">
                             <div class="form-group">
-                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Назва компанії</label>
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Название компании</label>
                                 <div style="display:flex;gap:0.5rem;">
-                                    <input id="settingCompanyName" type="text" placeholder="Назва компанії"
+                                    <input id="settingCompanyName" type="text" placeholder="Название компании"
                                         style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
                                     <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">Сохранить</button>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Часовий пояс</label>
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Часовой пояс</label>
                                 <select id="settingTimezone" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
                                     <option value="Europe/Kyiv">Europe/Kyiv (UTC+2/+3)</option>
                                     <option value="Europe/Warsaw">Europe/Warsaw (UTC+1/+2)</option>
@@ -2015,16 +2015,16 @@ document.addEventListener('mousedown', function(e) {
                                 <button onclick="saveCompanySetting('timezone')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Сохранить часовой пояс</button>
                             </div>
                             <div class="form-group">
-                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Тижневий звіт</label>
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Еженедельный отчёт</label>
                                 <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
                                     <input type="checkbox" id="settingWeeklyReport" style="width:18px;height:18px;accent-color:#22c55e;">
-                                    <span style="font-size:0.85rem;color:#374151;">Надсилати тижневий звіт власнику</span>
+                                    <span style="font-size:0.85rem;color:#374151;">Отправлять еженедельный отчёт владельцу</span>
                                 </label>
                                 <button onclick="saveCompanySetting('weeklyReport')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Сохранить</button>
                             </div>
                             <div style="padding:0.75rem;background:#fef9c3;border-radius:8px;border-left:3px solid #f59e0b;">
                                 <p style="margin:0;font-size:0.8rem;color:#92400e;">
-                                    <strong>Незабаром:</strong> логотип компанії, кастомні теми, Telegram-повідомлення, інтеграції.
+                                    <strong>Скоро:</strong> логотип компании, кастомные темы, Telegram-уведомления, интеграции.
                                 </p>
                             </div>
                         </div>
@@ -2328,7 +2328,7 @@ document.addEventListener('mousedown', function(e) {
                         <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif,.webp,.zip,.txt,.csv" style="display:none" onchange="handleFileSelect(event)">
                         <div id="fileUploadProgress" class="file-upload-progress">
                             <div class="progress-bar"><div class="progress-fill" id="fileProgressFill" style="width:0%"></div></div>
-                            <div class="progress-text" id="fileProgressText" data-i18n="uploading">Завантаження...</div>
+                            <div class="progress-text" id="fileProgressText" data-i18n="uploading">Загрузка...</div>
                         </div>
                     </div>
                     

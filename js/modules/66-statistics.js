@@ -725,7 +725,7 @@
         const respSel = document.getElementById('metricResponsible');
         if (respSel) {
             const us = typeof users !== 'undefined' ? users : [];
-            respSel.innerHTML = '<option value="">Не призначено</option>' +
+            respSel.innerHTML = '<option value="">Не назначено</option>' +
                 us.map(u => '<option value="' + u.id + '">' + esc(u.name || u.email || u.id) + '</option>').join('');
         }
 
@@ -744,7 +744,7 @@
         const funcIdSel = document.getElementById('metricFunctionId');
         if (funcIdSel) {
             const fs = typeof functions !== 'undefined' ? functions.filter(f => f.status !== 'archived') : [];
-            funcIdSel.innerHTML = '<option value="">— не прив\'язана до функції —</option>' +
+            funcIdSel.innerHTML = '<option value="">— не привязана к функции —</option>' +
                 fs.map(f => '<option value="' + f.id + '">' + esc(f.name || '') + '</option>').join('');
         }
 
@@ -755,7 +755,7 @@
         if (mid) {
             const m = statsMetrics.find(x => x.id === mid);
             if (m) {
-                document.getElementById('metricModalTitle').textContent = 'Редагувати показник';
+                document.getElementById('metricModalTitle').textContent = 'Редактировать показатель';
                 document.getElementById('metricName').value = m.name || '';
                 const descEl = document.getElementById('metricDescription');
                 if (descEl) descEl.value = m.description || '';
@@ -798,7 +798,7 @@
                 if (tpSel && m.targetPeriod) tpSel.value = m.targetPeriod;
             }
         } else {
-            document.getElementById('metricModalTitle').textContent = 'Новий показник';
+            document.getElementById('metricModalTitle').textContent = 'Новый показатель';
             document.getElementById('metricName').value = '';
             const _descEl = document.getElementById('metricDescription');
             if (_descEl) _descEl.value = '';
@@ -900,12 +900,12 @@
             <div class="stats-header-title">${SVG.trendUp} <span style="font-size:1.1rem;font-weight:700;">${window.t('tabStatistics')}</span></div>
             <div class="stats-header-actions">
                 ${canEdit ? `<button class="stats-pill accent" onclick="openMetricModal()" style="background:var(--primary);color:white;border-color:var(--primary);font-weight:700;padding:0.45rem 1rem;">${SVG.plus} Метрика</button>` : ''}
-                <button class="stats-pill" onclick="openQuickInputModal()" style="font-weight:600;">${SVG.edit} Внести дані</button>
+                <button class="stats-pill" onclick="openQuickInputModal()" style="font-weight:600;">${SVG.edit} Внести данные</button>
                 <button class="stats-pill" onclick="event.stopPropagation();runAIAnalysis()" style="color:#7c3aed;border-color:#e9d5ff;">${SVG.sparkles} AI</button>
-                <button class="stats-pill" onclick="openTrendsChart(window._statsGetFirstMetricId ? window._statsGetFirstMetricId() : '')" style="color:#3b82f6;border-color:#dbeafe;">${SVG.barChart} Тренди</button>
-                <button class="stats-pill" onclick="statsExportCSV()" style="color:#059669;border-color:#a7f3d0;" title="Експорт CSV">⬇ CSV</button>
-                <button class="stats-pill" onclick="statsExportExcel()" style="color:#1d4ed8;border-color:#bfdbfe;" title="Експорт Excel">⬇ Excel</button>
-                <button class="stats-pill" onclick="statsExportPDF()" style="color:#dc2626;border-color:#fecaca;" title="Вивантажити PDF">⬇ PDF</button>
+                <button class="stats-pill" onclick="openTrendsChart(window._statsGetFirstMetricId ? window._statsGetFirstMetricId() : '')" style="color:#3b82f6;border-color:#dbeafe;">${SVG.barChart} Тренды</button>
+                <button class="stats-pill" onclick="statsExportCSV()" style="color:#059669;border-color:#a7f3d0;" title="Экспорт CSV">⬇ CSV</button>
+                <button class="stats-pill" onclick="statsExportExcel()" style="color:#1d4ed8;border-color:#bfdbfe;" title="Экспорт Excel">⬇ Excel</button>
+                <button class="stats-pill" onclick="statsExportPDF()" style="color:#dc2626;border-color:#fecaca;" title="Выгрузить PDF">⬇ PDF</button>
                 ${canEdit ? `<button class="stats-pill" onclick="statsImportCSV()" style="color:#d97706;border-color:#fde68a;" title="Імпорт CSV">${window.t('statsImport')||'⬆ Import'}</button>` : ''}
             </div>
         </div>
@@ -913,7 +913,7 @@
         <div style="text-align:center;padding:2rem 1rem;background:#f9fafb;border-radius:12px;margin-top:1rem;border:1.5px dashed #e5e7eb;">
             <div style="font-weight:600;font-size:0.95rem;color:#6b7280;margin-bottom:0.75rem;">${window.t('noMetrics')} — ${window.t('noMetricsHint').toLowerCase()}</div>
             <button class="btn btn-success" onclick="openMetricModal()" style="padding:0.5rem 1.25rem;border-radius:10px;font-size:0.9rem;">
-                ${SVG.plus} Додати метрику
+                ${SVG.plus} Добавить метрику
             </button>
         </div>` : ''}`;
     }
@@ -1110,7 +1110,7 @@
             const tooltipText = [
                 m.name,
                 m.description ? m.description : null,
-                respName ? ('Відп: ' + respName) : null,
+                respName ? ('Отв: ' + respName) : null,
             ].filter(Boolean).join('\n');
 
             html += `<th title="${esc(tooltipText)}" style="position:relative;cursor:help;" ${m.description ? `data-tooltip="${esc(m.description)}"` : ''}>
@@ -1143,7 +1143,7 @@
             // Skip empty rows that are not current
             if (!isCurrent && !hasData) return;
             html += `<tr${isCurrent ? ' class="stats-period-row"' : ''}>`;
-            html += `<td><span>${formatPeriodLabel(pk)}${isCurrent ? '<span class="stats-period-current">зараз</span>' : ''}</span></td>`;
+            html += `<td><span>${formatPeriodLabel(pk)}${isCurrent ? '<span class="stats-period-current">сейчас</span>' : ''}</span></td>`;
 
             metrics.forEach((m, mi) => {
                 const entry = getEntryForMetric(m.id, pk);
@@ -1186,7 +1186,7 @@
                         </div>`;
                     }
                 } else {
-                    cellHtml = `<span class="stats-val-empty" onclick="openMetricDetail('${m.id}','${pk}')" title="Натисніть для введення">+</span>`;
+                    cellHtml = `<span class="stats-val-empty" onclick="openMetricDetail('${m.id}','${pk}')" title="Нажмите для ввода">+</span>`;
                 }
                 html += `<td>${cellHtml}</td>`;
             });
@@ -1196,7 +1196,7 @@
             const isOwner = (typeof hasPermission === 'function') ? hasPermission('deleteMetricRows') : (rowRole === 'owner' || rowRole === 'admin' || rowRole === 'manager');
             html += `<td style="white-space:nowrap;">
                 <button class="stats-comment-btn" onclick="openPeriodComment('${pk}')" title="Коментар">${SVG.comment}</button>
-                ${isOwner ? `<button class="stats-comment-btn stats-row-del" onclick="deleteStatsPeriodRow('${pk}','${freq}')" title="Видалити рядок" style="color:#e03e3e;">${SVG.trash}</button>` : ''}
+                ${isOwner ? `<button class="stats-comment-btn stats-row-del" onclick="deleteStatsPeriodRow('${pk}','${freq}')" title="Удалить строку" style="color:#e03e3e;">${SVG.trash}</button>` : ''}
             </td>`;
             html += `</tr>`;
         });
@@ -1280,7 +1280,7 @@
                 <div class="stats-detail-title">${esc(m.name)}</div>
                 <div class="stats-detail-sub">${esc(m.unit || '')} &bull; ${formatPeriodLabel(periodKey)}</div>
             </div>
-            ${canEdit ? `<button class="stats-pill" style="margin-left:auto;" onclick="openMetricModal('${metricId}')">${SVG.settings} Налаштування</button>` : ''}
+            ${canEdit ? `<button class="stats-pill" style="margin-left:auto;" onclick="openMetricModal('${metricId}')">${SVG.settings} Настройки</button>` : ''}
         </div>
 
         <div class="stats-detail-grid">
@@ -1465,7 +1465,7 @@
                 (m.target > 0 ? window.t('targetEq') + m.target + ' (' + Math.round(m.value / m.target * 100) + '%)' : '')
             ).join('\n');
 
-        const initialMessage = 'Проаналізуй ці метрики. Вкажи вузькі місця, причини відхилень та конкретні дії з очікуваним результатом у цифрах.';
+        const initialMessage = 'Проанализируй эти метрики. Укажи узкие места, причины отклонений и конкретные действия с ожидаемым результатом в цифрах.';
 
         window.openAiChat({
             module:         'statistics',
@@ -1817,11 +1817,11 @@
         const tdStyle = 'padding:4px 7px;font-size:10px;text-align:center;border:1px solid #f0f0f0;';
         const tdPeriodStyle = 'padding:4px 7px;font-size:10px;font-weight:600;border:1px solid #e5e7eb;white-space:nowrap;background:#f9fafb;';
 
-        let headerHtml = '<tr><th style="' + thStyle + '">Звітний період</th>';
+        let headerHtml = '<tr><th style="' + thStyle + '">Отчётный период</th>';
         header1.slice(1).forEach(h => { headerHtml += `<th style="${thStyle}">${h}</th>`; });
         headerHtml += '</tr>';
 
-        let goalHtml = '<tr><td style="' + thGoalStyle + '">Ціль</td>';
+        let goalHtml = '<tr><td style="' + thGoalStyle + '">Цель</td>';
         header2.slice(1).forEach(g => { goalHtml += `<td style="${thGoalStyle}">${g ?? ''}</td>`; });
         goalHtml += '</tr>';
 
@@ -1846,7 +1846,7 @@
                 table { width: 100%; border-collapse: collapse; }
             </style></head><body>
             <h1>${companyName} — ${window.t('tabStatistics')}</h1>
-            <div class="meta">Вивантажено: ${new Date().toLocaleDateString('uk-UA')} | Метрик: ${ms.length} | Періодів: ${dataRows.length}</div>
+            <div class="meta">Выгружено: ${new Date().toLocaleDateString('ru-RU')} | Метрик: ${ms.length} | Периодов: ${dataRows.length}</div>
             <table>${headerHtml}${goalHtml}${bodyHtml}</table>
             </body></html>`;
 
@@ -1965,7 +1965,7 @@
             }
         }
         if (batchCount > 0) await batch.commit();
-        showToast(`Імпортовано: ${imported} записів${skipped ? ', пропущено: ' + skipped : ''}`, imported > 0 ? 'success' : 'error');
+        showToast(`Импортировано: ${imported} записей${skipped ? ', пропущено: ' + skipped : ''}`, imported > 0 ? 'success' : 'error');
         if (imported > 0) renderStatistics();
     }
 
@@ -2005,14 +2005,14 @@
             ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
             if (!ov) return;
             ov.innerHTML = `<div style="background:white;border-radius:20px;padding:1.5rem;max-width:340px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.25);">
-                <div style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:#111;">Оберіть нішу для демо</div>
+                <div style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:#111;">Выберите нишу для демо</div>
                 ${[['1',window.t('nicheFurn3'),'#f59e0b'],['2',window.t('nicheConst3'),'#3b82f6'],['3',window.t('nicheClinic3'),'#22c55e']].map(([k,n,c])=>`
                 <button data-k="${k}" style="width:100%;text-align:left;padding:0.75rem 1rem;border:2px solid #e5e7eb;border-radius:12px;background:white;cursor:pointer;font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.75rem;transition:all 0.15s;"
                     onmouseenter="this.style.borderColor='${c}';this.style.background='#f8fafc';"
                     onmouseleave="this.style.borderColor='#e5e7eb';this.style.background='white';">
                     <span style="width:26px;height:26px;background:${c}20;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:${c};font-size:0.85rem;flex-shrink:0;">${k}</span>${n}
                 </button>`).join('')}
-                <button id="_nc" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:10px;background:white;cursor:pointer;color:#9ca3af;font-size:0.85rem;margin-top:0.25rem;">Скасувати</button>
+                <button id="_nc" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:10px;background:white;cursor:pointer;color:#9ca3af;font-size:0.85rem;margin-top:0.25rem;">Отменить</button>
             </div>`;
             document.body.appendChild(ov);
             ov.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { ov.remove(); resolve(b.dataset.k); });
@@ -2205,10 +2205,10 @@
         auto_tasks_done:       { label: window.t('metricDoneTasks'),   unit: 'шт' },
         auto_tasks_overdue:    { label: window.t('metricOverdueTasks'), unit: 'шт' },
         auto_tasks_review:     { label: window.t('metricInReview'),       unit: 'шт' },
-        auto_completion_rate:  { label: '% виконання',        unit: '%'  },
+        auto_completion_rate:  { label: '% выполнения',        unit: '%'  },
         finance_income:        { label: window.t('finIncome2'),              unit: '€'  },
-        finance_expense:       { label: 'Витрати',            unit: '€'  },
-        finance_profit:        { label: 'Прибуток',           unit: '€'  },
+        finance_expense:       { label: 'Расходы',            unit: '€'  },
+        finance_profit:        { label: 'Прибыль',           unit: '€'  },
         finance_margin:        { label: 'Маржа %',            unit: '%'  },
     };
 

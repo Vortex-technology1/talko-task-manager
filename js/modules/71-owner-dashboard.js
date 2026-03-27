@@ -104,29 +104,29 @@ window.renderOwnerDashboard = function(targetEl) {
     <!-- KPI рядок -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin-bottom:1rem;">
         <div style="background:${overdue.length > 0 ? '#fef2f2' : '#f0fdf4'};border-radius:12px;padding:1rem;border:1px solid ${overdue.length > 0 ? '#fecaca' : '#bbf7d0'};" onclick="switchTab('control')" style="cursor:pointer;">
-            <div style="font-size:0.78rem;font-weight:600;color:${overdue.length > 0 ? '#dc2626' : '#16a34a'};text-transform:uppercase;letter-spacing:0.04em;">Прострочені</div>
+            <div style="font-size:0.78rem;font-weight:600;color:${overdue.length > 0 ? '#dc2626' : '#16a34a'};text-transform:uppercase;letter-spacing:0.04em;">Просроченные</div>
             <div style="font-size:2rem;font-weight:800;color:${overdue.length > 0 ? '#dc2626' : '#22c55e'};line-height:1.2;">${overdue.length}</div>
-            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">завдань</div>
+            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">задач</div>
         </div>
         <div style="background:#fffbeb;border-radius:12px;padding:1rem;border:1px solid #fde68a;">
-            <div style="font-size:0.78rem;font-weight:600;color:#d97706;text-transform:uppercase;letter-spacing:0.04em;">Сьогодні/завтра</div>
+            <div style="font-size:0.78rem;font-weight:600;color:#d97706;text-transform:uppercase;letter-spacing:0.04em;">Сегодня/завтра</div>
             <div style="font-size:2rem;font-weight:800;color:#f59e0b;line-height:1.2;">${dueToday.length}</div>
-            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">завдань</div>
+            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">задач</div>
         </div>
         <div style="background:#eff6ff;border-radius:12px;padding:1rem;border:1px solid #bfdbfe;">
-            <div style="font-size:0.78rem;font-weight:600;color:#2563eb;text-transform:uppercase;letter-spacing:0.04em;">В роботі</div>
+            <div style="font-size:0.78rem;font-weight:600;color:#2563eb;text-transform:uppercase;letter-spacing:0.04em;">В работе</div>
             <div style="font-size:2rem;font-weight:800;color:#3b82f6;line-height:1.2;">${inProgress.length}</div>
-            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">завдань</div>
+            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">задач</div>
         </div>
         <div style="background:#f0fdf4;border-radius:12px;padding:1rem;border:1px solid #bbf7d0;">
-            <div style="font-size:0.78rem;font-weight:600;color:#16a34a;text-transform:uppercase;letter-spacing:0.04em;">Виконано за тиждень</div>
+            <div style="font-size:0.78rem;font-weight:600;color:#16a34a;text-transform:uppercase;letter-spacing:0.04em;">Выполнено за неделю</div>
             <div style="font-size:2rem;font-weight:800;color:#22c55e;line-height:1.2;">${doneThisWeek.length}</div>
-            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">завдань</div>
+            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">задач</div>
         </div>
         <div style="background:#f5f3ff;border-radius:12px;padding:1rem;border:1px solid #ddd6fe;">
-            <div style="font-size:0.78rem;font-weight:600;color:#7c3aed;text-transform:uppercase;letter-spacing:0.04em;">Виконання %</div>
+            <div style="font-size:0.78rem;font-weight:600;color:#7c3aed;text-transform:uppercase;letter-spacing:0.04em;">Выполнение %</div>
             <div style="font-size:2rem;font-weight:800;color:#8b5cf6;line-height:1.2;">${completionRate}%</div>
-            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">всього завдань</div>
+            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">всего задач</div>
         </div>
     </div>
 
@@ -135,14 +135,14 @@ window.renderOwnerDashboard = function(targetEl) {
         <!-- Навантаження команди -->
         <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
             <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-weight:600;font-size:0.9rem;">
-                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Навантаження команди
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Нагрузка команды
             </div>
             <table style="width:100%;border-collapse:collapse;">
                 <thead>
                     <tr style="background:#fafafa;font-size:0.72rem;color:#9ca3af;text-transform:uppercase;">
-                        <th style="padding:0.5rem 0.75rem;text-align:left;">Співробітник</th>
-                        <th style="padding:0.5rem 0.75rem;text-align:left;">Завдань</th>
-                        <th style="padding:0.5rem 0.75rem;text-align:left;">Простр.</th>
+                        <th style="padding:0.5rem 0.75rem;text-align:left;">Сотрудник</th>
+                        <th style="padding:0.5rem 0.75rem;text-align:left;">Задач</th>
+                        <th style="padding:0.5rem 0.75rem;text-align:left;">Просроч.</th>
                     </tr>
                 </thead>
                 <tbody>${userRows || '<tr><td colspan="3" style="padding:1rem;text-align:center;color:#9ca3af;">' + window.t('noDataWord') + '</td></tr>'}</tbody>
@@ -153,19 +153,19 @@ window.renderOwnerDashboard = function(targetEl) {
         <div style="display:flex;flex-direction:column;gap:0.75rem;">
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;flex:1;">
                 <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-weight:600;font-size:0.9rem;color:#dc2626;">
-                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Прострочені (${overdue.length})
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Просроченные (${overdue.length})
                 </div>
                 ${overdue.length > 0 ? `<table style="width:100%;border-collapse:collapse;">
                     <tbody>${overdueRows}</tbody>
-                </table>` : '<div style="padding:1rem;text-align:center;color:#22c55e;font-size:0.85rem;">✓ Всі завдання вчасно</div>'}
+                </table>` : '<div style="padding:1rem;text-align:center;color:#22c55e;font-size:0.85rem;">✓ Все задачи вовремя</div>'}
             </div>
 
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
                 <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-weight:600;font-size:0.9rem;color:#16a34a;">
-                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span> Виконано за 7 днів (${doneThisWeek.length})
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span> Выполнено за 7 дней (${doneThisWeek.length})
                 </div>
                 <div style="padding:0.5rem 0.75rem;">
-                    ${doneRows || '<div style="padding:0.5rem;color:#9ca3af;font-size:0.85rem;">Немає виконаних завдань</div>'}
+                    ${doneRows || '<div style="padding:0.5rem;color:#9ca3af;font-size:0.85rem;">Нет выполненных задач</div>'}
                 </div>
             </div>
         </div>

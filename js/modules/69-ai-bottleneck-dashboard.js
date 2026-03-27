@@ -63,7 +63,7 @@
                     type: 'overdue',
                     severity: overdue.length >= 5 ? 'critical' : 'warning',
                     project: p,
-                    message: `${overdue.length} прострочених задач`,
+                    message: `${overdue.length} просроченных задач`,
                 });
             }
 
@@ -77,7 +77,7 @@
                     type: 'material',
                     severity: 'warning',
                     project: p,
-                    message: `${lateMats.length} матеріалів із запізненням`,
+                    message: `${lateMats.length} материалов с задержкой`,
                 });
             }
 
@@ -89,7 +89,7 @@
                         type: 'budget',
                         severity: 'warning',
                         project: p,
-                        message: `Перевитрата матеріалів: ${Math.round(actualMatCost).toLocaleString()} / ${Math.round(p.plannedMaterialCost).toLocaleString()} ₴`,
+                        message: `Перерасход материалов: ${Math.round(actualMatCost).toLocaleString()} / ${Math.round(p.plannedMaterialCost).toLocaleString()} ₴`,
                     });
                     // Emit cost_overrun event — один раз на проєкт на добу
                     if (typeof window.createProjectEvent === 'function') {
@@ -118,12 +118,12 @@
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
                 <h3 style="font-size:1rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;margin:0;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                    Проєкти (${activeProjects.length})
-                    ${alerts.length > 0 ? `<span style="background:#ef4444;color:white;font-size:0.68rem;padding:2px 8px;border-radius:8px;">${alerts.filter(a=>a.severity==='critical').length} критичних</span>` : ''}
+                    Проекты (${activeProjects.length})
+                    ${alerts.length > 0 ? `<span style="background:#ef4444;color:white;font-size:0.68rem;padding:2px 8px;border-radius:8px;">${alerts.filter(a=>a.severity==='critical').length} критических</span>` : ''}
                 </h3>
                 <button onclick="openAIBottleneckAnalysis()" style="border:none;background:#f3e8ff;color:#7c3aed;padding:6px 14px;border-radius:10px;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                    AI Аналіз
+                    AI Анализ
                 </button>
             </div>`;
 
@@ -139,7 +139,7 @@
                         <span style="flex:1;">${esc(a.message)}</span>
                     </div>`;
                 }).join('')}
-                ${alerts.length > 6 ? `<div style="font-size:0.72rem;color:#9ca3af;text-align:center;margin-top:4px;">...і ще ${alerts.length - 6} повідомлень</div>` : ''}
+                ${alerts.length > 6 ? `<div style="font-size:0.72rem;color:#9ca3af;text-align:center;margin-top:4px;">...и ещё ${alerts.length - 6} сообщений</div>` : ''}
             </div>`;
         }
 
@@ -162,8 +162,8 @@
                 </div>
                 ${p.clientName ? `<div style="font-size:0.72rem;color:#9ca3af;">${esc(p.clientName)}</div>` : ''}
                 <div style="display:flex;gap:0.75rem;margin-top:6px;font-size:0.72rem;color:#6b7280;">
-                    <span>Задачі: ${doneTasks}/${total}</span>
-                    <span>Етапи: ${doneStages}/${pStages.length}</span>
+                    <span>Задачи: ${doneTasks}/${total}</span>
+                    <span>Этапы: ${doneStages}/${pStages.length}</span>
                     ${p.plannedRevenue ? `<span>Бюджет: ${Number(p.plannedRevenue).toLocaleString()}₴</span>` : ''}
                 </div>
                 <div style="height:5px;background:#f3f4f6;border-radius:3px;margin-top:6px;">
@@ -199,22 +199,22 @@
             const undelivered = stageMats.filter(m => m.status !== 'delivered' && m.status !== 'used');
             const stageQCs = qcs.filter(q => q.stageId === s.id && q.status === 'rejected');
 
-            let cause = 'Невідома причина блокування';
+            let cause = 'Неизвестная причина блокировки';
             let solutions = [];
 
             if (s.blockedReason === 'materials' && undelivered.length > 0) {
                 cause = `Не доставлено ${undelivered.length} матеріалів: ${undelivered.map(m => m.name).join(', ')}`;
                 solutions = [
-                    { action: 'Зв\'язатися з постачальником для прискорення', risk: 'Низький', speed: 'Швидко' },
-                    { action: 'Знайти альтернативного постачальника', risk: 'Середній', speed: '1-2 дні' },
-                    { action: 'Переключити бригаду на інший етап', risk: 'Низький', speed: 'Одразу' },
+                    { action: 'Связаться с поставщиком для ускорения', risk: 'Низкий', speed: 'Быстро' },
+                    { action: 'Найти альтернативного поставщика', risk: 'Средний', speed: '1-2 дня' },
+                    { action: 'Переключить бригаду на другой этап', risk: 'Низкий', speed: 'Сразу' },
                 ];
             } else if (s.blockedReason === 'rework' || stageQCs.length > 0) {
-                cause = `QC відхилено. Потрібна переробка.`;
+                cause = `QC отклонено. Требуется доработка.`;
                 solutions = [
-                    { action: 'Призначити досвідченого майстра на переробку', risk: 'Низький', speed: '1-2 дні' },
-                    { action: 'Переглянути стандарт — можливо занадто жорсткі вимоги', risk: 'Середній', speed: 'Швидко' },
-                    { action: 'Провести навчання для бригади', risk: 'Низький', speed: '3-5 днів' },
+                    { action: 'Назначить опытного мастера на доработку', risk: 'Низкий', speed: '1-2 дня' },
+                    { action: 'Пересмотреть стандарт — возможно слишком жёсткие требования', risk: 'Средний', speed: 'Быстро' },
+                    { action: 'Провести обучение для бригады', risk: 'Низкий', speed: '3-5 дней' },
                 ];
             }
 
@@ -231,7 +231,7 @@
         // 2. Overdue tasks by function — pattern detection
         const funcOverdue = {};
         scope.tasks.filter(t => t.status !== 'done' && t.status !== 'review' && t.deadlineDate && t.deadlineDate < today).forEach(t => {
-            const f = t.function || 'Без функції';
+            const f = t.function || 'Без функции';
             if (!funcOverdue[f]) funcOverdue[f] = [];
             funcOverdue[f].push(t);
         });
@@ -243,12 +243,12 @@
                     severity: arr.length >= 5 ? 'critical' : 'warning',
                     entity: funcName,
                     projectName: project?.name || 'Всі проєкти',
-                    cause: `${arr.length} прострочених задач у функції "${funcName}". Можливо: перевантаження, некомпетентність, або нереалістичні дедлайни.`,
+                    cause: `${arr.length} просроченных задач в функции "${funcName}". Возможно: перегрузка, некомпетентность, или нереалистичные дедлайны.`,
                     solutions: [
-                        { action: 'Перерозподілити задачі на інших виконавців', risk: 'Низький', speed: 'Одразу' },
-                        { action: 'Переглянути дедлайни — встановити реалістичні', risk: 'Низький', speed: 'Швидко' },
-                        { action: 'Додати людину в функцію (тимчасово)', risk: 'Середній', speed: '1-3 дні' },
-                        { action: 'Провести розмову з відповідальним для з\'ясування причин', risk: 'Низький', speed: 'Швидко' },
+                        { action: 'Перераспределить задачи на других исполнителей', risk: 'Низкий', speed: 'Сразу' },
+                        { action: 'Пересмотреть дедлайны — установить реалистичные', risk: 'Низкий', speed: 'Быстро' },
+                        { action: 'Добавить человека в функцию (временно)', risk: 'Средний', speed: '1-3 дня' },
+                        { action: 'Провести разговор с ответственным для выяснения причин', risk: 'Низкий', speed: 'Быстро' },
                     ],
                 });
             }
@@ -268,11 +268,11 @@
                     severity: 'warning',
                     entity: s.name,
                     projectName: project?.name || '',
-                    cause: `Етап в роботі ${activeDays} днів, але прогрес лише ${progress}%. ${stageTasks.length === 0 ? 'Немає задач — етап без конкретних кроків.' : `${stageTasks.filter(t=>t.status==='done').length}/${stageTasks.length} задач виконано.`}`,
+                    cause: `Етап в роботі ${activeDays} днів, но прогресс лишь ${progress}%. ${stageTasks.length === 0 ? 'Нет задач — этап без конкретных шагов.' : `${stageTasks.filter(t=>t.status==='done').length}/${stageTasks.length} задач выполнено.`}`,
                     solutions: [
-                        { action: 'Декомпозувати етап на конкретні задачі', risk: 'Низький', speed: 'Швидко' },
-                        { action: 'З\'ясувати реальну причину з відповідальним', risk: 'Низький', speed: 'Одразу' },
-                        { action: 'Змінити відповідального', risk: 'Середній', speed: '1 день' },
+                        { action: 'Декомпозировать этап на конкретные задачи', risk: 'Низкий', speed: 'Быстро' },
+                        { action: 'Выяснить реальную причину с ответственным', risk: 'Низкий', speed: 'Сразу' },
+                        { action: 'Сменить ответственного', risk: 'Средний', speed: '1 день' },
                     ],
                 });
             }
@@ -284,7 +284,7 @@
             m.status !== 'delivered' && m.status !== 'used' &&
             m.plannedDeliveryDate && m.plannedDeliveryDate < today
         ).forEach(m => {
-            const sup = m.supplierName || 'Невідомий';
+            const sup = m.supplierName || 'Неизвестный';
             if (!lateMatsBySupplier[sup]) lateMatsBySupplier[sup] = [];
             lateMatsBySupplier[sup].push(m);
         });
@@ -298,9 +298,9 @@
                     projectName: project?.name || 'Всі проєкти',
                     cause: `Постачальник "${sup}" затримав ${arr.length} позицій: ${arr.map(m => m.name).join(', ')}`,
                     solutions: [
-                        { action: 'Терміновий дзвінок постачальнику з вимогою термінів', risk: 'Низький', speed: 'Одразу' },
-                        { action: 'Знайти альтернативного постачальника', risk: 'Середній', speed: '1-2 дні' },
-                        { action: 'Замовити аналог з іншого джерела', risk: 'Середній', speed: '1-3 дні' },
+                        { action: 'Срочный звонок поставщику с требованием сроков', risk: 'Низкий', speed: 'Сразу' },
+                        { action: 'Найти альтернативного поставщика', risk: 'Средний', speed: '1-2 дня' },
+                        { action: 'Заказать аналог из другого источника', risk: 'Средний', speed: '1-3 дня' },
                     ],
                 });
             }
@@ -324,11 +324,11 @@
             <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;">
                 <h2 style="font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                    AI Аналіз вузьких місць
+                    AI Анализ узких мест
                 </h2>
                 <span class="close" onclick="closeModal('aiBottleneckModal')" style="font-size:1.5rem;cursor:pointer;">&times;</span>
             </div>
-            <div style="text-align:center;padding:2rem;"><div class="spinner" style="width:24px;height:24px;border-width:3px;margin:0 auto;"></div><div style="margin-top:0.5rem;color:#9ca3af;font-size:0.85rem;">Аналізую дані...</div></div>`;
+            <div style="text-align:center;padding:2rem;"><div class="spinner" style="width:24px;height:24px;border-width:3px;margin:0 auto;"></div><div style="margin-top:0.5rem;color:#9ca3af;font-size:0.85rem;">Анализирую данные...</div></div>`;
         modal.style.display = 'flex';
 
         // Load data first
@@ -343,7 +343,7 @@
         const bottlenecks = await analyzeBottlenecks(projectId);
 
         const severityColors = { critical: '#ef4444', warning: '#f59e0b', info: '#3b82f6' };
-        const severityLabels = { critical: 'Критично', warning: 'Увага', info: 'Інфо' };
+        const severityLabels = { critical: 'Критично', warning: 'Внимание', info: 'Инфо' };
         const typeIcons = {
             stage_blocked: '', function_overload: '', stalled_stage: '',
             supplier_issue: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>', budget_overrun: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>'
@@ -361,13 +361,13 @@
         if (bottlenecks.length === 0) {
             html += `<div style="text-align:center;padding:2rem;">
                 <div style="margin-bottom:0.5rem;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg></div>
-                <div style="font-weight:700;font-size:1rem;">Вузьких місць не знайдено</div>
-                <div style="color:#9ca3af;font-size:0.85rem;margin-top:0.25rem;">Всі проєкти працюють в нормі</div>
+                <div style="font-weight:700;font-size:1rem;">Узких мест не найдено</div>
+                <div style="color:#9ca3af;font-size:0.85rem;margin-top:0.25rem;">Все проекты работают в норме</div>
             </div>`;
         } else {
             html += `<div style="background:#fef2f2;border-radius:12px;padding:0.75rem 1rem;margin-bottom:1rem;">
-                <span style="font-weight:700;color:#dc2626;">Знайдено ${bottlenecks.length} вузьких місць</span>
-                <span style="font-size:0.78rem;color:#9ca3af;margin-left:0.5rem;">${bottlenecks.filter(b=>b.severity==='critical').length} критичних</span>
+                <span style="font-weight:700;color:#dc2626;">Найдено ${bottlenecks.length} узких мест</span>
+                <span style="font-size:0.78rem;color:#9ca3af;margin-left:0.5rem;">${bottlenecks.filter(b=>b.severity==='critical').length} критических</span>
             </div>`;
 
             bottlenecks.forEach((b, i) => {
@@ -383,7 +383,7 @@
                         ${b.projectName ? `<span style="font-size:0.68rem;color:#9ca3af;">— ${esc(b.projectName)}</span>` : ''}
                     </div>
                     <div style="font-size:0.82rem;color:#374151;margin-bottom:8px;">${esc(b.cause)}</div>
-                    <div style="font-size:0.72rem;font-weight:600;color:#6b7280;margin-bottom:4px;">Варіанти рішень:</div>
+                    <div style="font-size:0.72rem;font-weight:600;color:#6b7280;margin-bottom:4px;">Варианты решений:</div>
                     ${b.solutions.map((s, si) => `
                         <div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;font-size:0.78rem;">
                             <span style="min-width:18px;height:18px;border-radius:50%;background:${color}15;color:${color};font-size:0.65rem;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">${si+1}</span>
