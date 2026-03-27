@@ -14,7 +14,7 @@
         const badge = document.getElementById('subtasksBadge');
         if (!list) return;
 
-        list.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;padding:0.5rem;">Завантаження...</div>';
+        list.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;padding:0.5rem;">Загрузка...</div>';
 
         try {
             const cid = currentUserData?.companyId || currentCompany;
@@ -63,7 +63,7 @@
         const pct = subtasks.length ? Math.round(done / subtasks.length * 100) : 0;
         list.innerHTML = `<div style="margin-bottom:0.6rem;">
             <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:#6b7280;margin-bottom:3px;">
-                <span>${done} з ${subtasks.length} виконано</span><span>${pct}%</span>
+                <span>${done} из ${subtasks.length} выполнено</span><span>${pct}%</span>
             </div>
             <div style="height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
                 <div style="height:100%;width:${pct}%;background:${pct===100?'#22c55e':'#3b82f6'};border-radius:3px;transition:width 0.3s;"></div>
@@ -121,23 +121,23 @@
             <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
                     <h3 style="margin:0;font-size:1rem;font-weight:700;display:flex;align-items:center;gap:0.4rem;">
-                        <span style="color:#22c55e;">⊕</span> Нове підзавдання
+                        <span style="color:#22c55e;">⊕</span> Новая подзадача
                     </h3>
                     <button onclick="document.getElementById('subtaskFormOverlay').remove()" 
                         style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#9ca3af;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:0.75rem;">
                     <div>
-                        <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Назва *</label>
+                        <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Название *</label>
                         <input id="stTitle" type="text" placeholder=${window.t('whatToDoPh')} autofocus
                             style="width:100%;padding:0.5rem 0.65rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;"
                             onkeydown="if(event.key==='Enter'){event.preventDefault();saveSubtask('${parentId}');}">
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                         <div>
-                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Виконавець</label>
+                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Исполнитель</label>
                             <select id="stAssignee" style="width:100%;padding:0.5rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;">
-                                <option value="">— Оберіть —</option>
+                                <option value="">— Выберите —</option>
                                 ${userOptions}
                             </select>
                         </div>
@@ -148,21 +148,21 @@
                         </div>
                     </div>
                     <div>
-                        <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Пріоритет</label>
+                        <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Приоритет</label>
                         <select id="stPriority" style="width:100%;padding:0.5rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;">
-                            <option value="medium"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span> Середній</option>
-                            <option value="high"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Високий</option>
-                            <option value="low"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Низький</option>
+                            <option value="medium"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span> Средний</option>
+                            <option value="high"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Высокий</option>
+                            <option value="low"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Низкий</option>
                         </select>
                     </div>
                     <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
                         <button type="button" onclick="document.getElementById('subtaskFormOverlay').remove()"
                             style="flex:1;padding:0.55rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;font-size:0.85rem;">
-                            Скасувати
+                            Отменить
                         </button>
                         <button type="button" onclick="saveSubtask('${parentId}')"
                             style="flex:2;padding:0.55rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
-                            ✓ Створити підзавдання
+                            ✓ Создать подзадачу
                         </button>
                     </div>
                 </div>
@@ -235,7 +235,7 @@
             if (typeof refreshCurrentView === 'function') refreshCurrentView();
 
             // Показуємо toast
-            if (typeof showToast === 'function') showToast('Підзавдання створено ✓');
+            if (typeof showToast === 'function') showToast('Подзадача создана ✓');
 
             // Нотифікація виконавцю
             if (assigneeId && assigneeId !== currentUser?.uid && typeof notifyUser === 'function') {
@@ -243,7 +243,7 @@
             }
         } catch(err) {
             console.error('saveSubtask error:', err);
-            if(window.showToast)showToast('Помилка збереження: '+err.message,'error'); else if (typeof showToast === 'function') showToast('Помилка збереження: '+err.message, 'error');;
+            if(window.showToast)showToast('Ошибка сохранения: '+err.message,'error'); else if (typeof showToast === 'function') showToast('Ошибка сохранения: '+err.message, 'error');;
         } finally {
             // Розблоковуємо кнопку
             const _saveBtnF = document.querySelector('#subtaskFormOverlay button[onclick*="saveSubtask"]');
@@ -276,7 +276,7 @@
             }
             renderSubtasks(parentId);
             if (typeof refreshCurrentView === 'function') refreshCurrentView();
-            if (typeof showToast === 'function') showToast('Підзавдання видалено');
+            if (typeof showToast === 'function') showToast('Подзадача удалена');
         } catch(err) {
             console.error('deleteSubtask error:', err);
         }
@@ -285,7 +285,7 @@
     // ---- ВІДОБРАЖЕННЯ в списку завдань — іконка якщо є підзавдання ----
     window.getSubtasksBadgeHTML = function(task) {
         if (!task.parentId) return '';
-        return `<span title=${window.t('subtaskWord')} style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 5px;border:1px solid #bbf7d0;">↳ підзавдання</span>`;
+        return `<span title=${window.t('subtaskWord')} style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 5px;border:1px solid #bbf7d0;">↳ подзадача</span>`;
     };
 
 })();

@@ -2088,8 +2088,8 @@ document.addEventListener('mousedown', function(e) {
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="taskModalTitle" data-i18n="newTask">Нове завдання</h2>
-                <button id="duplicateTaskBtn" onclick="if(window.currentEditingId||editingId){duplicateTask(window.currentEditingId||editingId);}" title="Копіювати завдання" style="display:none;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:0.3rem 0.65rem;cursor:pointer;font-size:0.78rem;color:rgba(255,255,255,0.85);align-items:center;gap:0.3rem;flex-shrink:0;transition:background 0.15s;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копіювати
+                <button id="duplicateTaskBtn" onclick="if(window.currentEditingId||editingId){duplicateTask(window.currentEditingId||editingId);}" title="Копировать задачу" style="display:none;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:0.3rem 0.65rem;cursor:pointer;font-size:0.78rem;color:rgba(255,255,255,0.85);align-items:center;gap:0.3rem;flex-shrink:0;transition:background 0.15s;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копировать
                 </button>
                 <button class="close" onclick="closeModal('taskModal')" aria-label="Закрити діалог">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -2286,16 +2286,16 @@ document.addEventListener('mousedown', function(e) {
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
                             <label class="form-label" style="margin:0;display:flex;align-items:center;gap:0.4rem;">
                                 <i data-lucide="git-branch" class="icon icon-sm" style="color:#22c55e;"></i>
-                                <span>Підзавдання</span>
+                                <span>Подзадачи</span>
                                 <span id="subtasksBadge" style="display:none;background:#22c55e;color:white;border-radius:10px;font-size:0.68rem;padding:1px 6px;font-weight:700;"></span>
                             </label>
                             <button type="button" onclick="addSubtaskRow()" style="background:#22c55e;color:white;border:none;border-radius:8px;padding:0.3rem 0.7rem;font-size:0.78rem;cursor:pointer;display:flex;align-items:center;gap:0.3rem;">
-                                <i data-lucide="plus" class="icon icon-sm"></i> Додати
+                                <i data-lucide="plus" class="icon icon-sm"></i> Добавить
                             </button>
                         </div>
                         <div id="subtasksList" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
                         <div id="subtasksEmpty" style="text-align:center;color:#9ca3af;font-size:0.82rem;padding:0.75rem 0;">
-                            Натисніть "+ Додати" щоб розбити завдання на частини
+                            Нажмите «+ Добавить» чтобы разбить задачу на части
                         </div>
                     </div>
 
@@ -2341,11 +2341,11 @@ document.addEventListener('mousedown', function(e) {
                     <div id="commentsList" class="comments-list">
                         <div class="comments-empty">
                             <div class="comments-empty-icon"><i data-lucide="message-circle" class="icon icon-xl"></i></div>
-                            <span data-i18n="noComments">Ще немає коментарів</span>
+                            <span data-i18n="noComments">Ещё нет комментариев</span>
                         </div>
                     </div>
                     <div class="comment-input-wrapper">
-                        <textarea id="commentInput" class="comment-input" placeholder="Написати коментар..." data-i18n-placeholder="writeComment" rows="1" onkeydown="handleCommentKeydown(event)" oninput="handleCommentInput(event)"></textarea>
+                        <textarea id="commentInput" class="comment-input" placeholder="Написать комментарий..." data-i18n-placeholder="writeComment" rows="1" onkeydown="handleCommentKeydown(event)" oninput="handleCommentInput(event)"></textarea>
                         <button type="button" class="comment-send-btn" onclick="sendComment()" id="sendCommentBtn">
                             <i data-lucide="send" class="icon"></i>
                         </button>
