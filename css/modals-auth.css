@@ -130,12 +130,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100%;
             min-height: 100vh;
             min-height: 100dvh;
-            padding: 0;
+            padding: 1rem;
+            box-sizing: border-box;
             background: #080c10;
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             z-index: 99999;
             overflow-y: auto;
             font-family: 'DM Sans', -apple-system, sans-serif;
@@ -209,11 +214,17 @@
             .auth-card {
                 border-radius: 0;
                 min-height: 100vh;
+                min-height: 100dvh;
+                width: 100%;
                 max-width: 100%;
                 border: none;
                 animation: none;
+                margin: 0;
             }
-            .auth-container { align-items: flex-start; }
+            #authPage.auth-container {
+                padding: 0;
+                align-items: flex-start;
+            }
         }
 
         /* Language switcher — top of card */
@@ -321,13 +332,19 @@
         .auth-input-group .form-input:-webkit-autofill:hover,
         .auth-input-group .form-input:-webkit-autofill:focus,
         .auth-input-group .form-input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 50px #0d1117 inset !important;
-            box-shadow: 0 0 0 50px #0d1117 inset !important;
+            -webkit-box-shadow: 0 0 0 100px #111827 inset !important;
+            box-shadow: 0 0 0 100px #111827 inset !important;
             -webkit-text-fill-color: #ffffff !important;
             color: #ffffff !important;
             caret-color: #ffffff !important;
-            background-color: #0d1117 !important;
-            transition: background-color 9999s ease-in-out 0s !important;
+            background: #111827 !important;
+            background-color: #111827 !important;
+            transition: background-color 99999s ease-in-out 0s !important;
+        }
+        /* Also fix non-autofill state */
+        .auth-input-group .form-input {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
         .auth-input-group .input-wrapper { position: relative; }
         .auth-input-group .input-wrapper .form-input { padding-right: 50px; }
