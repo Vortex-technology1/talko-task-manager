@@ -5079,67 +5079,6 @@ window._addEntityTx = function(entityId, field, type) {
     }, 300);
   }
 // ── Перевірка бюджету при 80% і 100% ─────────────────────
-async function _checkBudgetAlert(catId, dateVal) {
-  if (!catId || !dateVal) return;
-  try {
-    // Визначаємо місяць транзакції
-    const d = new Date(dateVal);
-    const monthKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
-
-    // Завантажуємо бюджет місяця
-    const budgetSnap = await colRef('finance_budgets').doc(monthKey).get();
-    if (!budgetSnap.exists) return;
-    const budgetData = budgetSnap.data();
-    const budget = budgetData['cat_' + catId] || 0;
-    if (budget <= 0) return;
-
-    // Рахуємо фактичні витрати по категорії за місяць
-    const from = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth(), 1));
-    const to   = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59));
-    const snap = await colRef('finance_transactions')
-      .where('type', '==', 'expense')
-      .where('categoryId', '==', catId)
-      .where('date', '>=', from)
-      .where('date', '<=', to)
-      .get();
-
-    const fact = snap.docs.reduce((s, doc) => s + txAmt(doc.data()), 0);
-    const pct  = budget > 0 ? Math.round(fact / budget * 100) : 0;
-
-    // Знаходимо назву категорії
-    const cat = (_state.categories.expense || []).find(c => c.id === catId);
-    const catName = cat?.name || catId;
-    const currency = _state.currency || 'UAH';
-
-    // Ключ щоб не показувати одне сповіщення двічі в одній сесії
-    const alertKey = `budgetAlert_${catId}_${monthKey}`;
-    const lastAlerted = parseInt(sessionStorage.getItem(alertKey) || '0');
-
-    if (pct >= 100 && lastAlerted < 100) {
-      sessionStorage.setItem(alertKey, '100');
-      if (typeof showToast === 'function') {
-        showToast(
-          `🚨 Бюджет «${catName}» вичерпано! (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
-          'error',
-          6000
-        );
-      }
-      // Також показуємо більш помітне сповіщення
-      _showBudgetWarningBanner(catName, fact, budget, currency, 100);
-    } else if (pct >= 80 && lastAlerted < 80) {
-      sessionStorage.setItem(alertKey, '80');
-      if (typeof showToast === 'function') {
-        showToast(
-          `⚠️ Бюджет «${catName}» використано на ${pct}% (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
-          'warning',
-          5000
-        );
-      }
-    }
-  } catch(e) {
-    console.warn('[Finance] _checkBudgetAlert:', e.message);
-  }
-}
 
 // ── Банер попередження про бюджет ─────────────────────────
 function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {
@@ -5243,67 +5182,6 @@ if (!tryInit()) {
 }
 
 // ── Перевірка бюджету при 80% і 100% ─────────────────────
-async function _checkBudgetAlert(catId, dateVal) {
-  if (!catId || !dateVal) return;
-  try {
-    // Визначаємо місяць транзакції
-    const d = new Date(dateVal);
-    const monthKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
-
-    // Завантажуємо бюджет місяця
-    const budgetSnap = await colRef('finance_budgets').doc(monthKey).get();
-    if (!budgetSnap.exists) return;
-    const budgetData = budgetSnap.data();
-    const budget = budgetData['cat_' + catId] || 0;
-    if (budget <= 0) return;
-
-    // Рахуємо фактичні витрати по категорії за місяць
-    const from = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth(), 1));
-    const to   = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59));
-    const snap = await colRef('finance_transactions')
-      .where('type', '==', 'expense')
-      .where('categoryId', '==', catId)
-      .where('date', '>=', from)
-      .where('date', '<=', to)
-      .get();
-
-    const fact = snap.docs.reduce((s, doc) => s + txAmt(doc.data()), 0);
-    const pct  = budget > 0 ? Math.round(fact / budget * 100) : 0;
-
-    // Знаходимо назву категорії
-    const cat = (_state.categories.expense || []).find(c => c.id === catId);
-    const catName = cat?.name || catId;
-    const currency = _state.currency || 'UAH';
-
-    // Ключ щоб не показувати одне сповіщення двічі в одній сесії
-    const alertKey = `budgetAlert_${catId}_${monthKey}`;
-    const lastAlerted = parseInt(sessionStorage.getItem(alertKey) || '0');
-
-    if (pct >= 100 && lastAlerted < 100) {
-      sessionStorage.setItem(alertKey, '100');
-      if (typeof showToast === 'function') {
-        showToast(
-          `🚨 Бюджет «${catName}» вичерпано! (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
-          'error',
-          6000
-        );
-      }
-      // Також показуємо більш помітне сповіщення
-      _showBudgetWarningBanner(catName, fact, budget, currency, 100);
-    } else if (pct >= 80 && lastAlerted < 80) {
-      sessionStorage.setItem(alertKey, '80');
-      if (typeof showToast === 'function') {
-        showToast(
-          `⚠️ Бюджет «${catName}» використано на ${pct}% (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
-          'warning',
-          5000
-        );
-      }
-    }
-  } catch(e) {
-    console.warn('[Finance] _checkBudgetAlert:', e.message);
-  }
-}
 
 // ── Банер попередження про бюджет ─────────────────────────
 function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {

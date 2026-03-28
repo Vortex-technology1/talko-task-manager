@@ -1,7 +1,8 @@
 // ============================================================
-// 77k-crm-tasks-bridge.js — CRM → Tasks Bridge v1.0
-// При зміні стадії угоди → автоматичне створення задач
-// Умова: isLinkActive('crm','tasks') === true
+// 77k-crm-tasks-bridge.js — CRM → Tasks Bridge v1.1
+// Розширює 77c-crm-tasks.js:
+// - додає перевірку isLinkActive('crm','tasks')
+// - додає дефолтні шаблони задач при won (якщо немає в pipeline)
 // ============================================================
 (function () {
 'use strict';
@@ -11,131 +12,102 @@ function _t(ua, ru) {
   return (window.currentLang === 'ru') ? ru : ua;
 }
 
-// ── Конфігурація: які задачі створювати при якій стадії ───
-// Власник може редагувати в Налаштуваннях CRM (TODO)
-// Зараз — дефолтна конфігурація для стадії 'won'
-const STAGE_TASK_TEMPLATES = {
-  won: [
-    {
-      title:    (deal) => _t(
-        `Підписати договір з ${deal.clientName || deal.title || 'клієнтом'}`,
-        `Подписать договор с ${deal.clientName || deal.title || 'клиентом'}`
-      ),
-      priority: 'high',
-      daysOffset: 1,  // дедлайн: сьогодні + N днів
-    },
-    {
-      title:    (deal) => _t(
-        `Надіслати рахунок: ${deal.clientName || ''} — ${deal.amount ? deal.amount + ' ' + (deal.currency || '') : ''}`,
-        `Выставить счёт: ${deal.clientName || ''} — ${deal.amount ? deal.amount + ' ' + (deal.currency || '') : ''}`
-      ),
-      priority: 'high',
-      daysOffset: 1,
-    },
-    {
-      title:    (deal) => _t(
-        `Передзвонити після оплати: ${deal.clientName || ''}`,
-        `Перезвонить после оплаты: ${deal.clientName || ''}`
-      ),
-      priority: 'medium',
-      daysOffset: 3,
-    },
-  ],
-  // Можна додати інші стадії
-  // negotiation: [...],
-  // proposal: [...],
-};
+// ── Дефолтні шаблони для won якщо в pipeline немає ────────
+const DEFAULT_WON_TASKS = [
+  {
+    title:    (deal) => _t(
+      `Підписати договір з ${deal.clientName || deal.title || 'клієнтом'}`,
+      `Подписать договор с ${deal.clientName || deal.title || 'клиентом'}`
+    ),
+    priority: 'high',
+    daysOffset: 1,
+  },
+  {
+    title:    (deal) => _t(
+      `Надіслати рахунок: ${deal.clientName || ''} — ${deal.amount ? deal.amount + ' ' + (deal.currency || '') : ''}`,
+      `Выставить счёт: ${deal.clientName || ''} — ${deal.amount ? deal.amount + ' ' + (deal.currency || '') : ''}`
+    ),
+    priority: 'high',
+    daysOffset: 1,
+  },
+  {
+    title:    (deal) => _t(
+      `Передзвонити після оплати: ${deal.clientName || ''}`,
+      `Перезвонить после оплаты: ${deal.clientName || ''}`
+    ),
+    priority: 'medium',
+    daysOffset: 3,
+  },
+];
 
-// ── Реєструємо hook ────────────────────────────────────────
-window.crmAutoTasksOnStageChange = async function(deal, newStage) {
-  // Перевірка зв'язку
-  if (typeof window.isLinkActive === 'function' && !window.isLinkActive('crm', 'tasks')) return;
+// ── Патчимо crmAutoTasksOnStageChange після завантаження 77c ─
+function _patch() {
+  const orig = window.crmAutoTasksOnStageChange;
 
-  const templates = STAGE_TASK_TEMPLATES[newStage];
-  if (!templates || templates.length === 0) return;
+  window.crmAutoTasksOnStageChange = async function(deal, newStage) {
+    // 1. Перевірка зв'язку CRM→Завдання
+    if (typeof window.isLinkActive === 'function' && !window.isLinkActive('crm', 'tasks')) return;
 
-  try {
-    const db  = window.db || (window.firebase && firebase.firestore());
-    const cid = window.currentCompanyId;
-    if (!db || !cid) return;
+    // 2. Спочатку викликаємо оригінальну логіку 77c (шаблони з pipeline)
+    const pipeline = window.crm?.pipeline;
+    const hasPipelineTemplates = pipeline?.taskTemplates?.some(t => t.stageId === newStage && t.title);
 
-    const now     = new Date();
-    const uid     = window.currentUser?.uid || null;
-    const batch   = db.batch();
-    const tasksCol = db.collection('companies').doc(cid).collection('tasks');
-
-    templates.forEach(tpl => {
-      const deadline = new Date(now);
-      deadline.setDate(deadline.getDate() + (tpl.daysOffset || 1));
-      const deadlineStr = deadline.toISOString().split('T')[0];
-
-      const taskRef  = tasksCol.doc();
-      const taskData = {
-        title:       tpl.title(deal),
-        status:      'new',
-        priority:    tpl.priority || 'medium',
-        deadline:    deadlineStr,
-        creatorId:   uid,
-        assigneeId:  deal.assigneeId || deal.assignedToId || uid,
-        source:      'crm_stage_change',
-        crmDealId:   deal.id,
-        crmDealTitle: deal.title || deal.clientName || '',
-        clientName:  deal.clientName || '',
-        note:        _t(
-          `Автозадача при переході угоди в стадію «${newStage}»`,
-          `Автозадача при переходе сделки в стадию «${newStage}»`
-        ),
-        createdAt:   firebase.firestore.FieldValue.serverTimestamp(),
-        updatedAt:   firebase.firestore.FieldValue.serverTimestamp(),
-      };
-
-      // Прибираємо null/undefined
-      Object.keys(taskData).forEach(k => {
-        if (taskData[k] === null || taskData[k] === undefined) delete taskData[k];
-      });
-
-      batch.set(taskRef, taskData);
-    });
-
-    await batch.commit();
-
-    const count = templates.length;
-    if (typeof showToast === 'function') {
-      showToast(
-        _t(
-          `📋 Створено ${count} задач${count === 1 ? 'у' : 'и'} по угоді «${deal.clientName || deal.title || ''}»`,
-          `📋 Создано ${count} задач${count === 1 ? 'у' : 'и'} по сделке «${deal.clientName || deal.title || ''}»`
-        ),
-        'success',
-        4000
-      );
+    if (hasPipelineTemplates && typeof orig === 'function') {
+      await orig.call(this, deal, newStage);
+      return;
     }
 
-    console.log(`[crmTasksBridge] Created ${count} tasks for deal ${deal.id} → stage ${newStage}`);
+    // 3. Fallback — дефолтні шаблони для won якщо в pipeline нічого немає
+    if (newStage !== 'won') return;
 
-  } catch(e) {
-    console.warn('[crmTasksBridge] Error creating tasks:', e.message);
-  }
-};
+    try {
+      const db  = window.db || (window.firebase && firebase.firestore());
+      const cid = window.currentCompanyId;
+      if (!db || !cid) return;
 
-// ── Функція для перегляду автозадач по угоді ──────────────
-// Відображається в картці угоди (якщо CRM підтримує)
-window.crmGetAutoTasks = async function(dealId) {
-  try {
-    const db  = window.db || (window.firebase && firebase.firestore());
-    const cid = window.currentCompanyId;
-    if (!db || !cid || !dealId) return [];
-    const snap = await db.collection('companies').doc(cid).collection('tasks')
-      .where('crmDealId', '==', dealId)
-      .where('source', '==', 'crm_stage_change')
-      .orderBy('createdAt', 'desc')
-      .get();
-    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e) {
-    return [];
-  }
-};
+      const uid    = window.currentUser?.uid || '';
+      const today  = new Date().toISOString().slice(0, 10);
+      const col    = db.collection('companies').doc(cid).collection(window.DB_COLS?.TASKS || 'tasks');
 
-console.log('[crmTasksBridge] v1.0 loaded');
+      for (const tpl of DEFAULT_WON_TASKS) {
+        const deadline = new Date();
+        deadline.setDate(deadline.getDate() + (tpl.daysOffset || 1));
+        const deadlineStr = deadline.toISOString().slice(0, 10);
+
+        await col.add({
+          title:        typeof tpl.title === 'function' ? tpl.title(deal) : tpl.title,
+          dueDate:      deadlineStr,
+          deadlineDate: deadlineStr,
+          deadlineTime: '18:00',
+          deadline:     deadlineStr + 'T18:00',
+          createdDate:  today,
+          assigneeId:   deal.assigneeId || uid,
+          assigneeName: '',
+          creatorId:    uid,
+          status:       'new',
+          priority:     tpl.priority || 'medium',
+          pinned:       false,
+          autoCreated:  true,
+          source:       'crm_won',
+          crmDealId:    deal.id,
+          clientName:   deal.clientName || deal.title || '',
+          createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt:    firebase.firestore.FieldValue.serverTimestamp(),
+        });
+      }
+
+      if (typeof showToast === 'function') {
+        showToast(_t('Задачі по угоді створено', 'Задачи по сделке созданы'), 'success');
+      }
+    } catch(e) {
+      console.warn('[crmTasksBridge] error:', e.message);
+    }
+  };
+
+  console.log('[crmTasksBridge] v1.1 patched ✓');
+}
+
+// Патчимо після завантаження 77c
+setTimeout(_patch, 200);
 
 })();
