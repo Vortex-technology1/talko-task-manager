@@ -6,7 +6,7 @@
                 signInGoogle: 'Увійти через Google',
                 or: 'або',
                 password: 'Пароль:',
-                signIn: '<i data-lucide="log-in" class="icon icon-sm"></i> Увійти',
+                signIn: 'Увійти',
                 forgotPassword: 'Забули пароль?',
                 noAccess: 'Немає доступу?',
                 contactUs: "Зв'яжіться з нами",

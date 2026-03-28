@@ -197,7 +197,7 @@ document.addEventListener('mousedown', function(e) {
     <link rel="stylesheet" href="css/filters-structure.css">
     <link rel="stylesheet" href="css/projects.css">
     <link rel="stylesheet" href="css/tables-forms.css">
-    <link rel="stylesheet" href="css/modals-auth.css?v=20260313w">
+    <link rel="stylesheet" href="css/modals-auth.css?v=20260328v1">
     <link rel="stylesheet" href="css/mobile.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/kanban-calendar.css">
@@ -579,7 +579,7 @@ document.addEventListener('mousedown', function(e) {
                     <div id="loginForm">
                         <div class="auth-input-group">
                             <label data-i18n="emailLabel">Email:</label>
-                            <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com" autocomplete="email">
+                            <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
                         </div>
                         <div class="auth-input-group">
                             <label data-i18n="password">Пароль:</label>
@@ -641,7 +641,7 @@ document.addEventListener('mousedown', function(e) {
                         <h3 style="text-align:center;margin-bottom:1.25rem;color:var(--dark);font-size:1.1rem;"><i data-lucide="user-plus" class="icon"></i> <span data-i18n="registerTitle">Реєстрація за запрошенням</span></h3>
                         <div class="auth-input-group">
                             <label>Email:</label>
-                            <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com" autocomplete="email">
+                            <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
                         </div>
                         <div class="auth-input-group">
                             <label data-i18n="createPassword">Придумайте пароль:</label>
@@ -2891,7 +2891,7 @@ document.addEventListener('mousedown', function(e) {
 
 
     <!-- Scripts (modular) -->
-    <script src="js/modules/01-translations-v2.js?v=20260328v6" defer></script>
+    <script src="js/modules/01-translations-v2.js?v=20260328v7" defer></script>
     <script src="js/modules/02-firebase-config.js?v=20260326v1" defer></script>
     <script src="js/modules/00-module-links.js?v=20260327v1" defer></script>
     <script src="js/modules/03-app-state.js?v=20260314v2" defer></script>
