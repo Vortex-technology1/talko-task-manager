@@ -532,10 +532,10 @@
 
 /* iOS PWA fix — input text visibility */
 #loginEmail, #loginPassword, #registerEmail {
-    -webkit-text-fill-color: #1a1a1a !important;
-    color: #1a1a1a !important;
+    -webkit-text-fill-color: #ffffff !important;
+    color: #ffffff !important;
     opacity: 1 !important;
 }
 #loginEmail:focus, #loginPassword:focus, #registerEmail:focus {
-    -webkit-text-fill-color: #1a1a1a !important;
+    -webkit-text-fill-color: #ffffff !important;
 }
