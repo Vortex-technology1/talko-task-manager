@@ -5252,6 +5252,14 @@ window._finHowToggle = function() {
   }
 };
 
+
+// ── i18n хелпер для функцій поза IIFE ────────────────────
+function _tg(ua, ru) {
+  return (window.currentLang === 'ru' ||
+    (typeof window.getLocale === 'function' && window.getLocale().startsWith('ru')))
+    ? ru : ua;
+}
+
 function _buildFinHowPanel() {
   const cur = window.currentCompanyData?.currency || (window.financeState?.currency) || 'UAH';
 
@@ -5282,9 +5290,9 @@ function _buildFinHowPanel() {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
         <div style="font-weight:800;font-size:0.95rem;color:#16a34a;display:flex;align-items:center;gap:6px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          Фінанси — з чого почати і як це працює
+          '+_tg('Фінанси — з чого почати і як це працює','Финансы — с чего начать и как это работает')+'
         </div>
-        <button onclick="window._finHowToggle()" style="padding:3px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:0.75rem;cursor:pointer;color:#6b7280;">Закрити ×</button>
+        <button onclick="window._finHowToggle()" style="padding:3px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:0.75rem;cursor:pointer;color:#6b7280;">'+_tg('Закрити ×','Закрыть ×')+'</button>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
@@ -5293,20 +5301,20 @@ function _buildFinHowPanel() {
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            Три управлінські звіти
+            '+_tg('Три управлінські звіти','Три управленческих отчёта')+'
           </div>
           <div style="display:grid;gap:6px;">
             <div style="background:#eff6ff;border-radius:8px;padding:8px 10px;">
               <div style="font-size:0.75rem;font-weight:700;color:#1e40af;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Cash Flow (Дашборд)</div>
-              <div style="${sub}">Реальний рух грошей по рахунках. Коли гроші прийшли і пішли. Актуально в реальному часі.</div>
+              <div style="${sub}">'+_tg('Реальний рух грошей по рахунках. Коли гроші прийшли і пішли. Актуально в реальному часі.','Реальное движение денег по счетам. Когда деньги пришли и ушли. Актуально в реальном времени.')+'</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;">
               <div style="font-size:0.75rem;font-weight:700;color:#16a34a;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> P&L — Прибутки і збитки (Аналітика)</div>
-              <div style="${sub}">Реальний прибуток: Виручка → Собівартість → Валовий прибуток → OPEX → Чистий прибуток. По даті нарахування послуги.</div>
+              <div style="${sub}">'+_tg('Реальний прибуток: Виручка → Собівартість → Валовий прибуток → OPEX → Чистий прибуток. По даті нарахування послуги.','Реальная прибыль: Выручка → Себестоимость → Валовая прибыль → OPEX → Чистая прибыль. По дате начисления услуги.')+'</div>
             </div>
             <div style="background:#fff7ed;border-radius:8px;padding:8px 10px;">
               <div style="font-size:0.75rem;font-weight:700;color:#c2410c;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v19"/><path d="M5 10l7-7 7 7"/><path d="M3 17l4-8 4 8"/><path d="M13 17l4-8 4 8"/><path d="M3 21h18"/></svg> Баланс (Аналітика → кнопка «Баланс»)</div>
-              <div style="${sub}">Активи = Пасиви + Капітал. Що є у бізнесу, за чий рахунок, скільки власний капітал.</div>
+              <div style="${sub}">'+_tg('Активи = Пасиви + Капітал. Що є у бізнесу, за чий рахунок, скільки власний капітал.','Активы = Пассивы + Капитал. Что есть у бизнеса, за чей счёт, сколько собственный капитал.')+'</div>
             </div>
           </div>
         </div>
@@ -5315,102 +5323,102 @@ function _buildFinHowPanel() {
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            З чого почати — 5 кроків
+            '+_tg('З чого почати — 5 кроків','С чего начать — 5 шагов')+'
           </div>
-          ${step(1,'Налаштувати рахунки','Фінанси → Налаштування → Рахунки. Каса, банк, картка. Вказати початковий залишок.')}
-          ${step(2,'Налаштувати категорії','Доходи: послуги, продажі, абонементи. Витрати: COGS (матеріали, зарплата майстрів) і OPEX (оренда, маркетинг).')}
-          ${step(3,'Внести перші транзакції','«+ Додати» → тип, сума, категорія, рахунок, дата. Мінімум 5-10 реальних за поточний місяць.')}
-          ${step(4,'Перевірити P&L','Аналітика → P&L. Побачите Валовий і Чистий прибуток. Якщо COGS = 0 — налаштуйте категорії витрат.')}
-          ${step(5,'Підключити автоматику','Налаштування → Зв\'язки модулів. CRM→Фінанси: угода «Виграно» = автодохід.','#3b82f6')}
+          ${step(1,_tg('Налаштувати рахунки','Настроить счета'),_tg('Фінанси → Налаштування → Рахунки. Каса, банк, картка. Вказати початковий залишок.','Финансы → Настройки → Счета. Касса, банк, карта. Указать начальный остаток.'))}
+          ${step(2,_tg('Налаштувати категорії','Настроить категории'),_tg('Доходи: послуги, продажі, абонементи. Витрати: COGS (матеріали, зарплата майстрів) і OPEX (оренда, маркетинг).','Доходы: услуги, продажи, абонементы. Расходы: COGS (материалы, зарплата мастеров) и OPEX (аренда, маркетинг).'))}
+          ${step(3,_tg('Внести перші транзакції','Внести первые транзакции'),_tg('«+ Додати» → тип, сума, категорія, рахунок, дата. Мінімум 5-10 реальних за поточний місяць.','«+ Добавить» → тип, сумма, категория, счёт, дата. Минимум 5-10 реальных за текущий месяц.'))}
+          ${step(4,_tg('Перевірити P&L','Проверить P&L'),_tg('Аналітика → P&L. Побачите Валовий і Чистий прибуток. Якщо COGS = 0 — налаштуйте категорії витрат.','Аналитика → P&L. Увидите Валовую и Чистую прибыль. Если COGS = 0 — настройте категории расходов.'))}
+          ${step(5,_tg('Підключити автоматику','Подключить автоматику'),_tg('Налаштування → Зв\'язки модулів. CRM→Фінанси: угода «Виграно» = автодохід.','Настройки → Связи модулей. CRM→Финансы: сделка «Выиграно» = автодоход.'),'#3b82f6')}
         </div>
 
         <!-- БЛОК 3: Різниця CF vs P&L -->
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            Чому Cash Flow ≠ P&L
+            '+_tg('Чому Cash Flow ≠ P&L','Почему Cash Flow ≠ P&L')+'
           </div>
           <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;margin-bottom:8px;">
-            <div style="font-size:0.72rem;color:#92400e;font-weight:600;margin-bottom:4px;">Приклад:</div>
-            <div style="${sub}">Клієнт заплатив 10,000 передоплати в березні за послугу в квітні.</div>
+            <div style="font-size:0.72rem;color:#92400e;font-weight:600;margin-bottom:4px;">'+_tg('Приклад:','Пример:')+'</div>
+            <div style="${sub}">'+_tg('Клієнт заплатив 10,000 передоплати в березні за послугу в квітні.','Клиент заплатил 10,000 предоплаты в марте за услугу в апреле.')+'</div>
             <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
-              ${badge('Cash Flow: Березень +10K','#1d4ed8','#eff6ff')}
-              ${badge('P&L: Квітень +10K','#16a34a','#f0fdf4')}
+              ${badge(_tg('Cash Flow: Березень +10K','Cash Flow: Март +10K'),'#1d4ed8','#eff6ff')}
+              ${badge(_tg('P&L: Квітень +10K','P&L: Апрель +10K'),'#16a34a','#f0fdf4')}
             </div>
           </div>
-          <div style="${sub}">Тому <b>Cash Flow</b> показує ліквідність (чи є гроші зараз), а <b>P&L</b> — реальну прибутковість (чи заробляє бізнес).</div>
-          <div style="margin-top:8px;${sub}"><b>Дата нарахування</b> у формі транзакції — вкажіть коли надана послуга, якщо вона відрізняється від дати оплати.</div>
+          <div style="${sub}">'+_tg('Тому <b>Cash Flow</b> показує ліквідність (чи є гроші зараз), а <b>P&L</b> — реальну прибутковість (чи заробляє бізнес).','Поэтому <b>Cash Flow</b> показывает ликвидность (есть ли деньги сейчас), а <b>P&L</b> — реальную прибыльность (зарабатывает ли бизнес).')+'</div>
+          <div style="margin-top:8px;${sub}">'+_tg('<b>Дата нарахування</b> у формі транзакції — вкажіть коли надана послуга, якщо вона відрізняється від дати оплати.','<b>Дата начисления</b> в форме транзакции — укажите когда оказана услуга, если она отличается от даты оплаты.')+'</div>
         </div>
 
         <!-- БЛОК 4: COGS vs OPEX -->
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            COGS vs OPEX — навіщо розділяти
+            '+_tg('COGS vs OPEX — навіщо розділяти','COGS vs OPEX — зачем разделять')+'
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
             <div style="background:#fff7ed;border-radius:8px;padding:7px 9px;border:1px solid #fed7aa;">
               <div style="font-size:0.7rem;font-weight:700;color:#c2410c;margin-bottom:3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg> COGS</div>
-              <div style="${sub}">Прямі витрати на послугу. Зростають разом з кількістю клієнтів.<br>Матеріали, зарплата майстрів, підрядники.</div>
+              <div style="${sub}">'+_tg('Прямі витрати на послугу. Зростають разом з кількістю клієнтів.<br>Матеріали, зарплата майстрів, підрядники.','Прямые затраты на услугу. Растут вместе с количеством клиентов.<br>Материалы, зарплата мастеров, подрядчики.')+'</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:7px 9px;border:1px solid #bbf7d0;">
               <div style="font-size:0.7rem;font-weight:700;color:#16a34a;margin-bottom:3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> OPEX</div>
-              <div style="${sub}">Постійні витрати. Не залежать від кількості клієнтів.<br>Оренда, маркетинг, бухгалтер, програми.</div>
+              <div style="${sub}">'+_tg('Постійні витрати. Не залежать від кількості клієнтів.<br>Оренда, маркетинг, бухгалтер, програми.','Постоянные расходы. Не зависят от количества клиентов.<br>Аренда, маркетинг, бухгалтер, программы.')+'</div>
             </div>
           </div>
           <div style="background:#f9fafb;border-radius:8px;padding:7px 10px;font-size:0.72rem;color:#374151;">
             <div>Виручка 100K − COGS 40K = <b style="color:#16a34a;">Валовий 60K (60%)</b></div>
             <div style="margin-top:2px;">Валовий 60K − OPEX 30K = <b style="color:#22c55e;">Чистий 30K (30%)</b></div>
           </div>
-          <div style="margin-top:7px;${sub}">Налаштувати: <b>Налаштування → Категорії витрат → «+ Додати» → обрати COGS або OPEX</b></div>
+          <div style="margin-top:7px;${sub}">'+_tg('Налаштувати: <b>Налаштування → Категорії витрат → «+ Додати» → обрати COGS або OPEX</b>','Настроить: <b>Настройки → Категории расходов → «+ Добавить» → выбрать COGS или OPEX</b>')+'</div>
         </div>
 
         <!-- БЛОК 5: Автоматичні зв'язки -->
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            Автоматичні зв'язки з іншими модулями
+            '+_tg('Автоматичні зв\'язки з іншими модулями','Автоматические связи с другими модулями')+'
           </div>
           <div style="display:flex;flex-direction:column;gap:5px;">
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              ${badge('CRM угода «Виграно»','#1e40af','#eff6ff')}
+              ${badge(_tg('CRM угода «Виграно»','CRM сделка «Выиграно»'),'#1e40af','#eff6ff')}
               ${arrow}
-              ${badge('Дохід у фінансах','#16a34a','#f0fdf4')}
+              ${badge(_tg('Дохід у фінансах','Доход в финансах'),'#16a34a','#f0fdf4')}
             </div>
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              ${badge('Booking завершено','#7c3aed','#f5f3ff')}
+              ${badge(_tg('Booking завершено','Booking завершён'),'#7c3aed','#f5f3ff')}
               ${arrow}
-              ${badge('Оплата у фінансах','#16a34a','#f0fdf4')}
+              ${badge(_tg('Оплата у фінансах','Оплата в финансах'),'#16a34a','#f0fdf4')}
               ${arrow}
-              ${badge('Клієнт у CRM','#1e40af','#eff6ff')}
+              ${badge(_tg('Клієнт у CRM','Клиент в CRM'),'#1e40af','#eff6ff')}
             </div>
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              ${badge('Закупівля на склад','#92400e','#fff7ed')}
+              ${badge(_tg('Закупівля на склад','Закупка на склад'),'#92400e','#fff7ed')}
               ${arrow}
-              ${badge('Витрата COGS','#dc2626','#fef2f2')}
+              ${badge(_tg('Витрата COGS','Расход COGS'),'#dc2626','#fef2f2')}
             </div>
           </div>
-          <div style="margin-top:8px;${sub}">Увімкнути: <b>Налаштування → Зв'язки між модулями</b> (toggles)</div>
+          <div style="margin-top:8px;${sub}">'+_tg('Увімкнути: <b>Налаштування → Зв\'язки між модулями</b> (toggles)','Включить: <b>Настройки → Связи между модулями</b> (toggles)')+'</div>
         </div>
 
         <!-- БЛОК 6: Тижневий план -->
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Планування і прогнозування
+            '+_tg('Планування і прогнозування','Планирование и прогнозирование')+'
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;">
             <div style="background:#ecfeff;border-radius:8px;padding:7px 10px;border:1px solid #a5f3fc;">
-              <div style="font-size:0.72rem;font-weight:700;color:#0e7490;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Тижневий план 6M (Планування → «Тижневий план 6M»)</div>
-              <div style="${sub}">Планування доходів і витрат по тижнях. Графік + Cashflow лінія. Видно касові розриви заздалегідь.</div>
+              <div style="font-size:0.72rem;font-weight:700;color:#0e7490;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> '+_tg('Тижневий план 6M (Планування → «Тижневий план 6M»)','Недельный план 6M (Планирование → «Недельный план 6M»)')+'</div>
+              <div style="${sub}">'+_tg('Планування доходів і витрат по тижнях. Графік + Cashflow лінія. Видно касові розриви заздалегідь.','Планирование доходов и расходов по неделям. График + Cashflow линия. Видны кассовые разрывы заранее.')+'</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:7px 10px;border:1px solid #bbf7d0;">
-              <div style="font-size:0.72rem;font-weight:700;color:#166534;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Бюджет місяця (Планування → «Бюджет по категоріях»)</div>
-              <div style="${sub}">План vs Факт по кожній категорії. Сповіщення при 80% і 100% витраченого бюджету.</div>
+              <div style="font-size:0.72rem;font-weight:700;color:#166534;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> '+_tg('Бюджет місяця (Планування → «Бюджет по категоріях»)','Бюджет месяца (Планирование → «Бюджет по категориям»)')+'</div>
+              <div style="${sub}">'+_tg('План vs Факт по кожній категорії. Сповіщення при 80% і 100% витраченого бюджету.','План vs Факт по каждой категории. Уведомления при 80% и 100% использованного бюджета.')+'</div>
             </div>
           </div>
           <div style="margin-top:7px;${sub}">
-            <b>Швидкий старт:</b> Планування → Тижневий план → «Заповнити з середнього 3M» → коригуйте вручну → Зберегти.
+            '+_tg('<b>Швидкий старт:</b> Планування → Тижневий план → «Заповнити з середнього 3M» → коригуйте вручну → Зберегти.','<b>Быстрый старт:</b> Планирование → Недельный план → «Заполнить из среднего 3M» → корректируйте вручную → Сохранить.')+'
           </div>
         </div>
 
@@ -5418,17 +5426,17 @@ function _buildFinHowPanel() {
 
       <!-- Підсумок: де що знайти -->
       <div style="margin-top:12px;background:#1f2937;border-radius:12px;padding:12px 16px;">
-        <div style="font-size:0.75rem;font-weight:700;color:#fff;margin-bottom:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg> Де що знаходиться:</div>
+        <div style="font-size:0.75rem;font-weight:700;color:#fff;margin-bottom:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg> '+_tg('Де що знаходиться:','Где что находится:')+'</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
           ${[
-            {tab:'Дашборд',   desc:'Cash Flow, рахунки, баланс рахунків'},
-            {tab:'Доходи',    desc:'всі надходження + фільтри'},
-            {tab:'Витрати',   desc:'всі витрати по категоріях'},
-            {tab:'Повторювані',desc:'щомісячні автовитрати'},
-            {tab:'Рахунки',   desc:'виставлення рахунків клієнтам'},
-            {tab:'Планування',desc:'бюджет + тижневий план 6M'},
-            {tab:'Аналітика', desc:'P&L, маржа по проектах, Баланс'},
-            {tab:'Налаштування',desc:'рахунки, категорії, курси валют'},
+            {tab:_tg('Дашборд','Дашборд'),   desc:_tg('Cash Flow, рахунки, баланс рахунків','Cash Flow, счета, баланс счетов')},
+            {tab:_tg('Доходи','Доходы'),    desc:_tg('всі надходження + фільтри','все поступления + фильтры')},
+            {tab:_tg('Витрати','Расходы'),   desc:_tg('всі витрати по категоріях','все расходы по категориям')},
+            {tab:_tg('Повторювані','Регулярные'),desc:_tg('щомісячні автовитрати','ежемесячные авторасходы')},
+            {tab:_tg('Рахунки','Счета'),   desc:_tg('виставлення рахунків клієнтам','выставление счетов клиентам')},
+            {tab:_tg('Планування','Планирование'),desc:_tg('бюджет + тижневий план 6M','бюджет + недельный план 6M')},
+            {tab:_tg('Аналітика','Аналитика'), desc:_tg('P&L, маржа по проектах, Баланс','P&L, маржа по проектам, Баланс')},
+            {tab:_tg('Налаштування','Настройки'),desc:_tg('рахунки, категорії, курси валют','счета, категории, курсы валют')},
           ].map(i=>`
             <div style="background:rgba(255,255,255,0.08);border-radius:7px;padding:4px 10px;">
               <span style="font-size:0.7rem;font-weight:700;color:#22c55e;">${i.tab}</span>
@@ -5526,7 +5534,7 @@ async function _getPnlExportData() {
 // ── XLSX export ───────────────────────────────────────────
 window._exportPnlXlsx = async function() {
   try {
-    if (typeof showToast === 'function') showToast('Формування Excel...', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Формування Excel...','Формирование Excel...'), 'info');
     const d = await _getPnlExportData();
     const cur = d.currency;
     const fmt = (n) => Number((n||0).toFixed(2));
@@ -5590,7 +5598,7 @@ window._exportPnlXlsx = async function() {
     a.download = `PnL_${d.periodLabel.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,10)}.xls`;
     document.body.appendChild(a); a.click();
     setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 1000);
-    if (typeof showToast === 'function') showToast('✓ P&L Excel завантажено', 'success');
+    if (typeof showToast === 'function') showToast(_tg('✓ P&L Excel завантажено','✓ P&L Excel загружен'), 'success');
   } catch(e) {
     console.error('[PnL export]', e);
     if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
@@ -5600,7 +5608,7 @@ window._exportPnlXlsx = async function() {
 // ── PDF export ────────────────────────────────────────────
 window._exportPnlPdf = async function() {
   try {
-    if (typeof showToast === 'function') showToast('Формування PDF...', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Формування PDF...','Формирование PDF...'), 'info');
 
     // Завантажуємо jsPDF якщо ще немає
     if (!window.jspdf) {
@@ -5727,7 +5735,7 @@ window._exportPnlPdf = async function() {
     doc.text('Сформовано TALKO Business System · ' + new Date().toLocaleString('uk-UA'), margin, 287);
 
     doc.save(`PnL_${d.periodLabel.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,10)}.pdf`);
-    if (typeof showToast === 'function') showToast('✓ P&L PDF завантажено', 'success');
+    if (typeof showToast === 'function') showToast(_tg('✓ P&L PDF завантажено','✓ P&L PDF загружен'), 'success');
   } catch(e) {
     console.error('[PnL PDF]', e);
     if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
