@@ -3780,8 +3780,82 @@ function renderSettings(el) {
       ${renderCatList('expense')}
       ${renderAccList()}
       ${renderRatesBlock()}
+      ${_renderFinModuleLinksBlock()}
     </div>
   `;
+}
+
+// ── Блок зв'язків модулів у Finance Settings ──────────────
+function _renderFinModuleLinksBlock() {
+  // Якщо renderModuleLinksSettings доступна — рендеримо inline
+  // Інакше — показуємо кнопку-посилання на системні налаштування
+  const hasLinks = typeof window.isLinkActive === 'function';
+
+  const LINKS = [
+    { from:'crm',      to:'finance',   label:'CRM → Фінанси',      desc:'Угода «Виграно» → автодохід' },
+    { from:'booking',  to:'finance',   label:'Запис → Фінанси',    desc:'Завершений запис → оплата' },
+    { from:'warehouse',to:'finance',   label:'Склад → Фінанси',    desc:'Закупівля/списання → витрата COGS' },
+    { from:'crm',      to:'tasks',     label:'CRM → Завдання',     desc:'Угода «Виграно» → задачі виконавцям' },
+    { from:'booking',  to:'crm',       label:'Запис → CRM',        desc:'Новий запис → клієнт у CRM' },
+  ];
+
+  const toggles = hasLinks ? LINKS.map((l, i) => {
+    const active = window.isLinkActive(l.from, l.to);
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;
+        padding:0.6rem 0.9rem;background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
+        <div>
+          <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${l.label}</div>
+          <div style="font-size:0.72rem;color:#6b7280;">${l.desc}</div>
+        </div>
+        <label style="position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0;margin-left:1rem;">
+          <input type="checkbox" ${active?'checked':''}
+            onchange="window.setModuleLink && window.setModuleLink('${l.from}To${l.to.charAt(0).toUpperCase()+l.to.slice(1)}', this.checked).then(()=>{ var s=this.nextElementSibling; if(s){s.style.background=this.checked?'#22c55e':'#d1d5db'; var d=s.querySelector('span');if(d)d.style.left=this.checked?'21px':'3px';} if(typeof showToast==='function')showToast(this.checked?'Зв\\'язок увімкнено':'Зв\\'язок вимкнено',this.checked?'success':'info'); })"
+            style="opacity:0;width:0;height:0;position:absolute;">
+          <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:22px;
+            background:${active?'#22c55e':'#d1d5db'};transition:.3s;">
+            <span style="position:absolute;height:16px;width:16px;left:${active?'21px':'3px'};bottom:3px;
+              background:white;border-radius:50%;transition:.3s;"></span>
+          </span>
+        </label>
+      </div>`;
+  }).join('') : '';
+
+  const goToSettings = `
+    <div style="padding:10px 12px;font-size:0.75rem;color:#6b7280;background:#f9fafb;
+      display:flex;align-items:center;justify-content:space-between;gap:8px;">
+      <span>Всі зв'язки між модулями — в Системних налаштуваннях</span>
+      <button onclick="
+        var settingsBtn = document.querySelector('[onclick*=\\'switchTab(\\'users\\')\\']') ||
+          [...document.querySelectorAll('button')].find(b=>b.textContent.includes('Налаштування') && !b.closest('#financeModule'));
+        if(settingsBtn) settingsBtn.click();
+        else if(typeof switchTab==='function') switchTab('users');
+      " style="padding:4px 12px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;
+        font-size:0.75rem;cursor:pointer;color:#374151;white-space:nowrap;flex-shrink:0;">
+        Відкрити →
+      </button>
+    </div>`;
+
+  return `
+    <div style="margin-bottom:1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          Зв'язки з іншими модулями
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+        ${hasLinks ? toggles : `
+          <div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">
+            Модуль зв'язків не завантажено
+          </div>`}
+        ${goToSettings}
+      </div>
+    </div>`;
 }
 
 // ── Блок курсів валют ─────────────────────────────────────
