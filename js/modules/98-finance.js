@@ -2139,7 +2139,7 @@ window._finAddRecurring = function(editId) {
 
         <!-- Тип -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Тип</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finTypeLbl')||'Тип'}</label>
           <div style="display:flex;gap:0.5rem;">
             <button id="rec_type_expense" onclick="_recSetType('expense')"
               style="flex:1;padding:8px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;border:2px solid ${!existing || existing.type==='expense' ? '#ef4444' : '#e5e7eb'};background:${!existing || existing.type==='expense' ? '#fef2f2' : '#fff'};color:${!existing || existing.type==='expense' ? '#ef4444' : '#6b7280'};">
@@ -2156,7 +2156,7 @@ window._finAddRecurring = function(editId) {
         <!-- Сума + валюта -->
         <div style="display:grid;grid-template-columns:1fr auto;gap:0.5rem;">
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Сума *</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finAmountLbl')||'Сума'} *</label>
             <input id="rec_amount" type="number" min="0" value="${existing?.amount || ''}" placeholder="0"
               style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
           </div>
@@ -2172,7 +2172,7 @@ window._finAddRecurring = function(editId) {
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCategoryLbl')}</label>
           <select id="rec_category" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
-            <option value="">— Оберіть категорію —</option>
+            <option value="">${window.t('finSelectCategory')||'— Оберіть категорію —'}</option>
             ${allCats.map(c => `<option ${existing?.category===c?'selected':''}>${c}</option>`).join('')}
           </select>
         </div>
@@ -2203,7 +2203,7 @@ window._finAddRecurring = function(editId) {
         <!-- Коментар -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCommentLbl')}</label>
-          <input id="rec_comment" value="${escHtml(existing?.comment || '')}" placeholder="Необов'язково"
+          <input id="rec_comment" value="${escHtml(existing?.comment || '')}" placeholder="${window.t('finOptional')||'Необов\'язково'}"
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
@@ -4560,14 +4560,14 @@ function addTransaction(forceType) {
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCategoryLbl')} *</label>
           <select id="fmCategory"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            <option value="">— оберіть категорію —</option>
+            <option value="">${window.t('finSelectCategory')||'— Оберіть категорію —'}</option>
             ${cats.map(c => `<option value="${c.id}">${escHtml(c.name)}</option>`).join('')}
           </select>
         </div>
 
         <!-- Дата -->
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Дата *</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finDateLbl')||'Дата'} *</label>
           <input id="fmDate" type="date" value="${today}"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;"
             onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
@@ -4584,7 +4584,7 @@ function addTransaction(forceType) {
 
         <!-- Контрагент -->
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Контрагент</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCounterpartyLbl')||'Контрагент'}</label>
           <input id="fmCounterparty" type="text" placeholder=${window.t('supplierClientPh')}
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;"
             onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
@@ -4601,7 +4601,7 @@ function addTransaction(forceType) {
 
         <!-- Проект -->
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Проект / Об'єкт</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finProjectLbl')||'Проект'} / ${window.t('finObjectLbl')||"Об'єкт"}</label>
           <select id="fmProject"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             ${projectsHtml}
@@ -4611,21 +4611,21 @@ function addTransaction(forceType) {
         <!-- Дата нарахування (для P&L) -->
         <div>
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">
-            Дата нарахування (для P&L)
-            <span title="Якщо відрізняється від дати оплати. Наприклад: послуга надана в лютому, але оплачена в березні — вкажіть лютий. Cash Flow = дата оплати, P&L = дата нарахування."
+            ${window.t('finAccrualDateLbl')||'Дата нарахування'} (для P&L)
+            <span title="${window.t('finAccrualDateHint')||'Якщо відрізняється від дати оплати. Cash Flow = дата оплати, P&L = дата нарахування.'}"
               style="cursor:help;margin-left:4px;color:#9ca3af;">ⓘ</span>
           </label>
           <input id="fmAccrualDate" type="date" value=""
-            placeholder="Залиште порожнім якщо збігається з датою оплати"
+            placeholder="${window.t('finAccrualDatePh')||'Залиште порожнім якщо збігається з датою оплати'}"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;color:#6b7280;"
             onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
-          <div style="font-size:0.7rem;color:#9ca3af;margin-top:3px;">Залиште порожнім якщо збігається з датою оплати</div>
+          <div style="font-size:0.7rem;color:#9ca3af;margin-top:3px;">${window.t('finAccrualDatePh')||'Залиште порожнім якщо збігається з датою оплати'}</div>
         </div>
 
         <!-- Коментар -->
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Коментар</label>
-          <input id="fmDescription" type="text" placeholder="Призначення платежу"
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCommentLbl')||'Коментар'}</label>
+          <input id="fmDescription" type="text" placeholder="${window.t('finPurposePh')||'Призначення платежу'}"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;"
             onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
         </div>
