@@ -1096,7 +1096,7 @@ async function loadAndRenderTxList(type) {
     }).join('');
 
     if (summaryEl) {
-      summaryEl.innerHTML = `${window.t('finTotal')}: <strong style="color:${color};">${fmt(total)}</strong> &bull; ${txs.length} ${window.t('finOperationsCount')}`;
+      summaryEl.innerHTML = `${window.t('finTotal')} <strong style="color:${color};">${fmt(total)}</strong> &bull; ${txs.length} ${window.t('finOperationsCount')}`;
     }
 
   } catch(e) {
@@ -1685,7 +1685,7 @@ window._invRecalc = function() {
   if (block) block.innerHTML = `
     <div>${window.t('subtotalLabel')} <strong>${fmt(subtotal, currency)}</strong></div>
     ${vatPct > 0 ? `<div>ПДВ ${vatPct}%: <strong>${fmt(vat, currency)}</strong></div>` : ''}
-    <div style="font-size:1rem;font-weight:700;color:#22c55e;margin-top:2px;">До сплати: ${fmt(total, currency)}</div>`;
+    <div style="font-size:1rem;font-weight:700;color:#22c55e;margin-top:2px;">${window.t('finTotal')} ${fmt(total, currency)}</div>`;
 };
 
 // ── Збереження ─────────────────────────────────────────────
@@ -1924,7 +1924,7 @@ window._invoicePdf = async function(id) {
 
   addRow(window.t('summaryLabel'), subtotal.toFixed(2) + ' ' + currency, false);
   if (vatPct > 0) addRow(`ПДВ ${vatPct}%:`, vat.toFixed(2) + ' ' + currency, false);
-  addRow('ДО СПЛАТИ:', total.toFixed(2) + ' ' + currency, true);
+  addRow(window.t('finTotal'), total.toFixed(2) + ' ' + currency, true);
 
   // Примітки
   if (inv.notes) {
