@@ -197,7 +197,7 @@ document.addEventListener('mousedown', function(e) {
     <link rel="stylesheet" href="css/filters-structure.css">
     <link rel="stylesheet" href="css/projects.css">
     <link rel="stylesheet" href="css/tables-forms.css">
-    <link rel="stylesheet" href="css/modals-auth.css?v=20260328v1">
+    <link rel="stylesheet" href="css/modals-auth.css?v=20260328v2">
     <link rel="stylesheet" href="css/mobile.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/kanban-calendar.css">
@@ -579,12 +579,12 @@ document.addEventListener('mousedown', function(e) {
                     <div id="loginForm">
                         <div class="auth-input-group">
                             <label data-i18n="emailLabel">Email:</label>
-                            <input type="text" id="loginEmail" class="form-input" placeholder="your@email.com" autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
+                            <input type="text" id="loginEmail" name="email" class="form-input" placeholder="your@email.com" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" data-lpignore="true" data-form-type="other">
                         </div>
                         <div class="auth-input-group">
                             <label data-i18n="password">Пароль:</label>
                             <div class="input-wrapper">
-                                <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" autocomplete="current-password">
+                                <input type="password" id="loginPassword" name="password" class="form-input" placeholder="••••••••" autocomplete="current-password">
                                 <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)"><i data-lucide="eye" class="icon icon-sm"></i></button>
                             </div>
                         </div>
