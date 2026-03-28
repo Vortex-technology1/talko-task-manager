@@ -1564,12 +1564,12 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <!-- Номер та дата -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Номер рахунку</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('invNumberLbl')}</label>
             <input id="inv_number" value="${escHtml(inv?.number || nextNum)}"
               style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Дата</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finDateLbl')}</label>
             <input id="inv_date" type="date" value="${inv?.date || new Date().toISOString().split('T')[0]}"
               style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
           </div>
@@ -1593,13 +1593,13 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:8px;">${window.t('invoiceItems')}</label>
           <div id="inv_items_list" style="display:flex;flex-direction:column;gap:6px;"></div>
-          <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">+ ${window.t('finAddLine')}</button>
+          <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">${window.t('finAddLine')}</button>
         </div>
 
         <!-- ПДВ -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end;">
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">ПДВ (%)</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('vatLabel')}</label>
             <input id="inv_vat" type="number" min="0" max="100" value="${inv?.vatPct ?? 0}"
               oninput="window._invRecalc()"
               style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
@@ -1610,7 +1610,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <!-- Примітки -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('invoiceNotes')}</label>
-          <textarea id="inv_notes" rows="3" placeholder="IBAN, банк, призначення платежу..."
+          <textarea id="inv_notes" rows="3" placeholder="${window.t('ibanPlaceholder')}"
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.85rem;resize:vertical;box-sizing:border-box;">${escHtml(inv?.notes || '')}</textarea>
         </div>
 
@@ -1622,7 +1622,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
       <!-- Footer -->
       <div style="display:flex;gap:10px;justify-content:flex-end;padding:16px 24px;border-top:1px solid #f3f4f6;">
         <button onclick="document.getElementById('invoiceModal')?.remove()"
-          style="border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 20px;font-size:0.9rem;cursor:pointer;color:#374151;">Скасувати</button>
+          style="border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 20px;font-size:0.9rem;cursor:pointer;color:#374151;">${window.t('cancel')}</button>
         <button id="inv_save_btn" onclick="window._invoiceSave('${inv?.id || ''}')"
           style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? window.t('finSave') : window.t('finCreate')}</button>
       </div>
@@ -1663,7 +1663,7 @@ function _invRenderLines() {
   if (!container) return;
   container.innerHTML = window._invItems.map((it, idx) => `
     <div style="display:grid;grid-template-columns:1fr 70px 90px 32px;gap:6px;align-items:center;">
-      <input value="${escHtml(it.desc)}" placeholder="Опис послуги/товару"
+      <input value="${escHtml(it.desc)}" placeholder="${window.t('invItemDesc')}"
         oninput="window._invLineChange(${idx},'desc',this.value)"
         style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 10px;font-size:0.82rem;box-sizing:border-box;">
       <input type="number" value="${it.qty}" min="0" placeholder=${window.t('qtyShort')}
@@ -1684,7 +1684,7 @@ window._invRecalc = function() {
   const block = document.getElementById('inv_totals_block');
   if (block) block.innerHTML = `
     <div>${window.t('subtotalLabel')} <strong>${fmt(subtotal, currency)}</strong></div>
-    ${vatPct > 0 ? `<div>ПДВ ${vatPct}%: <strong>${fmt(vat, currency)}</strong></div>` : ''}
+    ${vatPct > 0 ? `<div>${window.t('vatLabel')} ${vatPct}%: <strong>${fmt(vat, currency)}</strong></div>` : ''}
     <div style="font-size:1rem;font-weight:700;color:#22c55e;margin-top:2px;">${window.t('finTotal')} ${fmt(total, currency)}</div>`;
 };
 
@@ -1923,7 +1923,7 @@ window._invoicePdf = async function(id) {
   };
 
   addRow(window.t('summaryLabel'), subtotal.toFixed(2) + ' ' + currency, false);
-  if (vatPct > 0) addRow(`ПДВ ${vatPct}%:`, vat.toFixed(2) + ' ' + currency, false);
+  if (vatPct > 0) addRow(`${window.t('vatLabel')} ${vatPct}%:`, vat.toFixed(2) + ' ' + currency, false);
   addRow(window.t('finTotal'), total.toFixed(2) + ' ' + currency, true);
 
   // Примітки

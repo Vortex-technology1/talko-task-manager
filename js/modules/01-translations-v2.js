@@ -3553,6 +3553,10 @@
                 finExpenseWordLc: 'витрату',
                 finAmountLbl: 'Сума',
                 forPnL: 'для P&L',
+                invNumberLbl: 'Номер рахунку',
+                vatLabel: 'ПДВ (%)',
+                ibanPlaceholder: 'IBAN, банк, призначення платежу...',
+                invItemDesc: 'Опис послуги/товару',
             },
             en: {
                 authSubtitle: 'Task management for business',
@@ -17423,6 +17427,10 @@
                 finExpenseWordLc: 'расход',
                 finAmountLbl: 'Сумма',
                 forPnL: 'для P&L',
+                invNumberLbl: 'Номер счёта',
+                vatLabel: 'НДС (%)',
+                ibanPlaceholder: 'IBAN, банк, назначение платежа...',
+                invItemDesc: 'Описание услуги/товара',
             },
             pl: {
                 authSubtitle: 'Zarządzanie zadaniami dla biznesu',
