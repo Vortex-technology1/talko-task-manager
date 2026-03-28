@@ -162,24 +162,24 @@ function _render(el, d) {
 
   const header = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Управлінський Баланс</div>
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${_t('Управлінський Баланс','Управленческий Баланс')}</div>
       <div style="display:flex;gap:8px;align-items:center;">
         <span style="font-size:0.75rem;color:#6b7280;">
-          Станом на ${d.now.toLocaleDateString('uk-UA',{day:'numeric',month:'long',year:'numeric'})}
+          ${_t('Станом на','По состоянию на')} ${d.now.toLocaleDateString(_t('uk-UA','ru-RU'),{day:'numeric',month:'long',year:'numeric'})}
         </span>
         <span style="padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;
           background:${balanceOk?'#f0fdf4':'#fef2f2'};color:${balanceOk?'#16a34a':'#dc2626'};">
-          ${balanceOk ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Баланс зведений' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Перевірте дані'}
+          ${balanceOk ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ${_t('Баланс зведений','Баланс сведён')}` : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${_t('Перевірте дані','Проверьте данные')}`}
         </span>
         <button onclick="window.renderBalanceSheet(this.closest('[id]'))"
           style="padding:4px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;
             font-size:0.75rem;cursor:pointer;color:#374151;">
-          ↻ Оновити
+          ↻ ${_t('Оновити','Обновить')}
         </button>
         <button onclick="window._showBalanceSettings()"
           style="padding:4px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;
             font-size:0.75rem;cursor:pointer;color:#374151;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2M12 2v2M12 20v2"/></svg> Налаштування
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2M12 2v2M12 20v2"/></svg> ${_t('Налаштування','Настройки')}
         </button>
       </div>
     </div>`;
