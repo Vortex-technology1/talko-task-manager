@@ -56,7 +56,7 @@ function _crmImportStepUpload() {
             style="border:2px dashed #e8eaed;border-radius:10px;padding:2.5rem;text-align:center;
             cursor:pointer;background:#f8fafc;transition:all 0.15s;">
             <div style="font-size:2rem;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-            <div style="font-weight:600;color:#374151;font-size:0.88rem;">Перетягніть файл або натисніть</div>
+            <div style="font-weight:600;color:#374151;font-size:0.88rem;">${window.t('crmImportDragDrop')}</div>
             <div style="color:#9ca3af;font-size:0.75rem;margin-top:0.25rem;">CSV, XLSX — до 10 МБ</div>
         </div>
         <input type="file" id="crmImportFileInput" accept=".csv,.xlsx,.xls" style="display:none"
@@ -202,7 +202,7 @@ function _crmImportStepMapping(rows) {
 
         <!-- Маппінг -->
         <div style="display:grid;grid-template-columns:1fr 1.5rem 1fr;gap:0.4rem;align-items:center;">
-            <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;">КОЛОНКА У ФАЙЛІ</div>
+            <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;">${window.t('crmColumnMapping')}</div>
             <div></div>
             <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;">ПОЛЕ В CRM</div>
             ${headers.map((h, i) => `
@@ -217,7 +217,7 @@ function _crmImportStepMapping(rows) {
 
         <!-- Preview -->
         <div>
-            <div style="font-size:0.75rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Перегляд (перші 5 рядків):</div>
+            <div style="font-size:0.75rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">${window.t('crmPreview')} рядків):</div>
             <div style="overflow-x:auto;border:1px solid #e8eaed;border-radius:8px;">
                 <table style="width:100%;border-collapse:collapse;font-size:0.72rem;">
                     <thead>
@@ -245,7 +245,7 @@ function _crmImportStepMapping(rows) {
                 <input type="radio" name="crmImportType" value="clients" checked style="accent-color:#22c55e;">
                 <div>
                     <div style="font-size:0.8rem;font-weight:600;color:#111827;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Клієнти</div>
-                    <div style="font-size:0.68rem;color:#6b7280;">Тільки картки клієнтів</div>
+                    <div style="font-size:0.68rem;color:#6b7280;">${window.t('crmOnlyClients')}</div>
                 </div>
             </label>
             <label style="flex:1;display:flex;align-items:center;gap:0.5rem;padding:0.6rem 0.75rem;
@@ -253,7 +253,7 @@ function _crmImportStepMapping(rows) {
                 <input type="radio" name="crmImportType" value="deals" style="accent-color:#22c55e;">
                 <div>
                     <div style="font-size:0.8rem;font-weight:600;color:#111827;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Угоди</div>
-                    <div style="font-size:0.68rem;color:#6b7280;">Клієнти + угоди у воронці</div>
+                    <div style="font-size:0.68rem;color:#6b7280;">${window.t('crmClientsAndDeals')}</div>
                 </div>
             </label>
         </div>
@@ -313,7 +313,7 @@ window.crmImportExecute = async function () {
 
     // Перевірка: є поле name?
     if (!mapping.includes('name')) {
-        if (window.showToast) showToast("Вкажіть колонку \"Ім'я клієнта\"", 'error');
+        if (window.showToast) showToast(window.t('crmEnterClientName'), 'error');
         return;
     }
 
@@ -321,7 +321,7 @@ window.crmImportExecute = async function () {
     body.innerHTML = `
     <div style="text-align:center;padding:2rem;">
         <div style="font-size:1.5rem;margin-bottom:0.5rem;">⏳</div>
-        <div id="crmImportProgress" style="font-size:0.85rem;color:#374151;">Підготовка...</div>
+        <div id="crmImportProgress" style="font-size:0.85rem;color:#374151;">${window.t('crmPreparing')}</div>
         <div id="crmImportBar" style="margin-top:0.75rem;background:#e8eaed;border-radius:6px;height:6px;overflow:hidden;">
             <div id="crmImportBarFill" style="height:100%;background:#22c55e;width:0%;transition:width 0.3s;"></div>
         </div>
@@ -330,7 +330,7 @@ window.crmImportExecute = async function () {
     const db       = firebase.firestore();
     const compRef  = window.companyRef();
     if (!compRef) {
-        if (window.showToast) showToast('Помилка: компанія не завантажена', 'error');
+        if (window.showToast) showToast(window.t('crmCompanyNotLoaded'), 'error');
         return;
     }
     const uid      = window.currentUser?.uid || '';
@@ -441,15 +441,15 @@ window.crmImportExecute = async function () {
     body.innerHTML = `
     <div style="text-align:center;padding:1.5rem;">
         <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div style="font-weight:700;font-size:1rem;color:#111827;margin-bottom:0.5rem;">Імпорт завершено</div>
+        <div style="font-weight:700;font-size:1rem;color:#111827;margin-bottom:0.5rem;">${window.t('crmImportDone')}</div>
         <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.25rem;">
             <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.65rem 1.25rem;">
                 <div style="font-size:1.5rem;font-weight:700;color:#16a34a;">${imported}</div>
-                <div style="font-size:0.72rem;color:#6b7280;">Імпортовано</div>
+                <div style="font-size:0.72rem;color:#6b7280;">${window.t('crmImported')}</div>
             </div>
             ${skipped ? `<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:0.65rem 1.25rem;">
                 <div style="font-size:1.5rem;font-weight:700;color:#ea580c;">${skipped}</div>
-                <div style="font-size:0.72rem;color:#6b7280;">Дублікати / порожні</div>
+                <div style="font-size:0.72rem;color:#6b7280;">${window.t('crmDuplicates')}</div>
             </div>` : ''}
             ${errors ? `<div style="background:#fef2f2;border:1px solid#fecaca;border-radius:8px;padding:0.65rem 1.25rem;">
                 <div style="font-size:1.5rem;font-weight:700;color:#ef4444;">${_escHtml(String(errors))}</div>
@@ -463,7 +463,7 @@ window.crmImportExecute = async function () {
         </button>
     </div>`;
 
-    if (window.showToast) showToast(`Імпортовано: ${imported}, пропущено: ${skipped}`, imported > 0 ? 'success' : 'warning');
+    if (window.showToast) showToast(`${window.t('crmImported')}: ${imported}, ${window.t('crmDuplicates')}: ${skipped}`, imported > 0 ? 'success' : 'warning');
 };
 
 // Спробуємо знайти стадію по назві

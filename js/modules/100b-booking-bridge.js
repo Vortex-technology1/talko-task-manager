@@ -140,7 +140,7 @@ async function _showFinanceModal(appt, amount) {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
         <div>
-          <div style="font-size:0.9rem;font-weight:700;color:#1a1a1a;">Запис завершено — зафіксувати оплату?</div>
+          <div style="font-size:0.9rem;font-weight:700;color:#1a1a1a;">${_t('Запис завершено — зафіксувати оплату?','Запись завершена — зафиксировать оплату?')}ту?</div>
           <div style="font-size:0.75rem;color:#6b7280;">${_esc(appt.clientName || '')} · ${_esc(appt.serviceName || appt.calendarName || '')}</div>
         </div>
       </div>
@@ -175,9 +175,9 @@ async function _showFinanceModal(appt, amount) {
         </div>
 
         <div>
-          <label style="font-size:0.72rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.25rem;">Категорія доходу</label>
+          <label style="font-size:0.72rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.25rem;">${_t('Категорія','Категория')}егорія доходу</label>
           <select id="bkfbCategory" style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;background:#fff;">
-            <option value="">— оберіть категорію —</option>
+            <option value="">${_t('— оберіть категорію —','— выберите категорию —')}</option>
             ${categories.map(c=>`<option value="${_esc(c.id)}">${_esc(c.name)}</option>`).join('')}
           </select>
         </div>

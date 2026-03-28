@@ -413,12 +413,12 @@ function renderCalendarForm(cal) {
 </div>
 <div style="margin-top:.75rem;padding:.85rem 1rem;background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;">
   <div>
-    <div style="font-size:.72rem;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;">🔗 Посилання для клієнта</div>
+    <div style="font-size:.72rem;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;">🔗 ${t('bkPublicLink')||'Посилання для клієнта'}</div>
     <div id="bk-preview-url" style="font-size:.82rem;color:#0c4a6e;word-break:break-all;">${isEdit && cal.slug
       ? window.location.origin + '/book/' + window.currentCompanyId + '/' + cal.slug
-      : '⏳ Збережіть, щоб отримати посилання'}</div>
+      : t('bkSaveForLink')||'⏳ Збережіть, щоб отримати посилання'}</div>
   </div>
-  ${isEdit && cal.slug ? `<button onclick="window._bkCopyLink(window.location.origin+'/book/'+window.currentCompanyId+'/${cal.slug}')" style="padding:.45rem .9rem;background:#0369a1;color:white;border:none;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">Копіювати</button>` : ''}
+  ${isEdit && cal.slug ? `<button onclick="window._bkCopyLink(window.location.origin+'/book/'+window.currentCompanyId+'/${cal.slug}')" style="padding:.45rem .9rem;background:#0369a1;color:white;border:none;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">${t('copyWord')||'Копіювати'}</button>` : ''}
 </div>`;
 
     document.getElementById('bk-f-name').addEventListener('input', function() {
@@ -588,7 +588,7 @@ async function renderWeekView() {
     <button class="bk-btn-sm" onclick="window._bkWeekNav(-1)">&#8592;</button>
     <span id="bk-week-label" style="font-weight:600;font-size:.9rem;white-space:nowrap"></span>
     <button class="bk-btn-sm" onclick="window._bkWeekNav(1)">&#8594;</button>
-    <button class="bk-btn-sm" onclick="_bkWeekOffset=0;renderWeekView()" style="font-size:.78rem">Сьогодні</button>
+    <button class="bk-btn-sm" onclick="_bkWeekOffset=0;renderWeekView()" style="font-size:.78rem">${t('bkTodayBtn')||'Сьогодні'}</button>
   </div>
 </div>
 <div id="bk-week-grid-wrap" style="overflow-x:auto">
@@ -621,9 +621,10 @@ async function _bkLoadWeekGrid() {
         return d;
     });
 
-    const DAY_NAMES = ['Пн','Вт','Ср','Чт','Пт','Сб','Нд'];
-    const MONTHS_GEN = ['','січня','лютого','березня','квітня','травня','червня',
-                        'липня','серпня','вересня','жовтня','листопада','грудня'];
+    const DAY_NAMES = window.currentLang==='ru' ? ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'] : ['Пн','Вт','Ср','Чт','Пт','Сб','Нд'];
+    const MONTHS_GEN = window.currentLang==='ru'
+        ? ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']
+        : ['','січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
 
     // Оновлюємо заголовок тижня
     const labelEl = document.getElementById('bk-week-label');
@@ -636,11 +637,11 @@ async function _bkLoadWeekGrid() {
     const specialists = bk.calendars.filter(c => c.isActive !== false);
 
     if (specialists.length === 0) {
-        wrap.innerHTML = `<div class="bk-empty">Немає активних спеціалістів. Створіть календар.</div>`;
+        wrap.innerHTML = `<div class="bk-empty">${t('bkNoSpecialists')||'Немає активних спеціалістів. Створіть календар.'}</div>`;
         return;
     }
 
-    wrap.innerHTML = `<div class="bk-week-loading">Завантаження записів...</div>`;
+    wrap.innerHTML = `<div class="bk-week-loading">${t('bkLoadingSlots')||'Завантаження записів...'}</div>`;
 
     // Завантажуємо записи для кожного дня тижня
     const dateStrs = days.map(d => {
@@ -717,7 +718,7 @@ async function _bkLoadWeekGrid() {
 
     wrap.innerHTML = `
 <div style="font-size:.75rem;color:#6b7280;margin-bottom:.5rem;">
-    ● підтверджено &nbsp; ● очікує &nbsp; — клікни на запис для деталей
+    ${t('confirmedWord3')||'● підтверджено'} &nbsp; ${t('pendingWord3')||'● очікує'} &nbsp; — ${t('clickForDetails')||'клікни на запис для деталей'}
 </div>
 <div style="overflow-x:auto;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);background:white;">
 <table style="width:100%;border-collapse:collapse;min-width:400px;">
@@ -743,7 +744,7 @@ window._bkOpenApptModal = async function(apptId) {
     if (!appt) return;
 
     const cal = bk.calendars.find(c => c.id === appt.calendarId) || {};
-    const STATUS_LABELS = { confirmed:'✅ Підтверджено', pending:'⏳ Очікує', cancelled:'❌ Скасовано', completed:'✔ Завершено' };
+    const STATUS_LABELS = { confirmed:`✅ ${t('confirmedWord3')||'Підтверджено'}`, pending:`⏳ ${t('pendingWord3')||'Очікує'}`, cancelled:`❌ ${t('cancelledWord')||'Скасовано'}`, completed:`✔ ${t('completedWord')||'Завершено'}` };
 
     const existing = document.getElementById('bk-appt-modal');
     if (existing) existing.remove();
@@ -758,11 +759,11 @@ window._bkOpenApptModal = async function(apptId) {
             <button onclick="document.getElementById('bk-appt-modal').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">✕</button>
         </div>
         <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem;">
-            <div><span style="color:#6b7280;">Клієнт:</span> <strong>${esc(appt.clientName)}</strong></div>
+            <div><span style="color:#6b7280;">${t('bkClientLabel')}</span> <strong>${esc(appt.clientName)}</strong></div>
             <div><span style="color:#6b7280;">Email:</span> ${esc(appt.clientEmail)}</div>
             ${appt.clientPhone ? `<div><span style="color:#6b7280;">Тел:</span> ${esc(appt.clientPhone)}</div>` : ''}
             <div><span style="color:#6b7280;">Дата:</span> ${appt.date} о ${appt.timeSlot}</div>
-            <div><span style="color:#6b7280;">Спеціаліст:</span> ${esc(cal.name||appt.calendarId)}</div>
+            <div><span style="color:#6b7280;">${t('bkSpecialist')}</span> ${esc(cal.name||appt.calendarId)}</div>
             <div><span style="color:#6b7280;">Статус:</span> ${STATUS_LABELS[appt.status]||appt.status}</div>
         </div>
         <div style="display:flex;gap:.5rem;margin-top:1.25rem;flex-wrap:wrap;">
@@ -777,7 +778,7 @@ window._bkOpenApptModal = async function(apptId) {
 window._bkConfirmApptDirect = async function(apptId) {
     try {
         await window.companyCol('booking_appointments').doc(apptId).update({ status: 'confirmed', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (typeof showToast === 'function') showToast('Підтверджено ✓', 'success');
+        if (typeof showToast === 'function') showToast(t('bkConfirmed'), 'success');
         await _bkLoadWeekGrid();
     } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
 };
@@ -837,7 +838,7 @@ async function loadAppointments(id, isGroup) {
         const snap  = await q.get();
         const appts = snap.docs.map(d => ({id:d.id,...d.data()}));
         if (appts.length === 0) {
-            wrap.innerHTML = `<div class="bk-empty">${t('noRecords4')||'Записів немає'}</div>`;
+            wrap.innerHTML = `<div class="bk-empty">${t('noRecords4')}</div>`;
             return;
         }
         const SL = {
@@ -1091,7 +1092,7 @@ window._bkSaveGroup = async function() {
     }
     const description = (document.getElementById('bk-g-desc')?.value||'').trim();
     const slug = (document.getElementById('bk-g-slug')?.value||'').trim().toLowerCase().replace(/[^a-z0-9-]/g,'-');
-    if (!slug) { if(typeof showToast==='function') showToast('Вкажіть URL (slug)','warning'); return; }
+    if (!slug) { if(typeof showToast==='function') showToast(t('bkSlugRequired')||'Вкажіть URL (slug)','warning'); return; }
     const data = {name, slug, description, calendarIds, updatedAt: firebase.firestore.FieldValue.serverTimestamp()};
     try {
         if (bk.editGroup && bk.editGroup.id) {

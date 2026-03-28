@@ -81,9 +81,9 @@ function _renderFormsList() {
     <div style="text-align:center;padding:3rem 1rem;background:white;border-radius:14px;
         box-shadow:0 1px 4px rgba(0,0,0,0.06);">
         <div style="font-size:2.5rem;margin-bottom:0.5rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span></div>
-        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.3rem;">Форм ще немає</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.3rem;">${window.t('noFormsYet')||'Форм ще немає'}</div>
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;">
-            Кожна форма автоматично відправляє ліда в CRM
+            ${window.t('formAutoLead')||'Кожна форма автоматично відправляє ліда в CRM'}
         </div>
         <button onclick="sfOpenCreate()"
             style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;
@@ -178,11 +178,11 @@ window.sfOpenCreate = function () {
                     <label style="font-size:0.67rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Інтеграції</label>
                     <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;cursor:pointer;margin-bottom:0.3rem;">
                         <input type="checkbox" id="sfc_crm" checked style="width:15px;height:15px;accent-color:#22c55e;">
-                        Автоматично створювати ліда в CRM
+                        ${window.t('autoCreateLead')||'Автоматично створювати ліда в CRM'}
                     </label>
                     <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;cursor:pointer;">
                         <input type="checkbox" id="sfc_tg" style="width:15px;height:15px;accent-color:#22c55e;">
-                        Сповіщення в Telegram менеджеру
+                        ${window.t('tgNotifyManager')||'Сповіщення в Telegram менеджеру'}
                     </label>
                 </div>
             </div>
@@ -299,16 +299,16 @@ async function _renderFormEditor() {
             <input type="checkbox" id="sfe_crm" ${form.crmIntegration?'checked':''}
                 style="width:15px;height:15px;accent-color:#22c55e;margin-top:2px;">
             <div>
-                <div style="font-size:0.82rem;font-weight:600;">→ Створювати ліда в CRM</div>
-                <div style="font-size:0.7rem;color:#9ca3af;">Кожна заявка → новий лід в воронці</div>
+                <div style="font-size:0.82rem;font-weight:600;">→ ${window.t('createLeadInCRM')||'Створювати ліда в CRM'}</div>
+                <div style="font-size:0.7rem;color:#9ca3af;">${window.t('eachAppLeadFunnel')||'Кожна заявка → новий лід в воронці'}</div>
             </div>
         </label>
         <label style="display:flex;align-items:flex-start;gap:0.5rem;cursor:pointer;">
             <input type="checkbox" id="sfe_tg" ${form.telegramNotify?'checked':''}
                 style="width:15px;height:15px;accent-color:#22c55e;margin-top:2px;">
             <div>
-                <div style="font-size:0.82rem;font-weight:600;">→ Сповіщення в Telegram</div>
-                <div style="font-size:0.7rem;color:#9ca3af;">Менеджер отримає повідомлення з заявкою</div>
+                <div style="font-size:0.82rem;font-weight:600;">→ ${window.t('tgNotification')||'Сповіщення в Telegram'}</div>
+                <div style="font-size:0.7rem;color:#9ca3af;">${window.t('managerGetNotify')||'Менеджер отримає повідомлення з заявкою'}</div>
             </div>
         </label>
     </div>
@@ -421,7 +421,7 @@ window.sfOpenSubmissions = async function (formId) {
         if (!submissions.length) {
             el.innerHTML = `<div style="text-align:center;padding:3rem;background:white;border-radius:14px;">
                 <div style="font-size:2rem;margin-bottom:0.5rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><path d="m17 17 4 4"/><path d="m21 17-4 4"/></svg></span></div>
-                <div style="font-weight:700;font-size:0.88rem;">Заявок ще немає</div>
+                <div style="font-weight:700;font-size:0.88rem;">${window.t('noLeadsYet')||'Заявок ще немає'}</div>
             </div>`;
             return;
         }
@@ -445,7 +445,7 @@ window.sfOpenSubmissions = async function (formId) {
                     ${_esc(String(v))}
                 </div>` : '').join('')}
                 ${sub.crmDealId ? `<div style="margin-top:0.4rem;font-size:0.68rem;background:#f0fdf4;color:#16a34a;
-                    padding:2px 7px;border-radius:6px;display:inline-block;">✓ Лід в CRM</div>` : ''}
+                    padding:2px 7px;border-radius:6px;display:inline-block;">${window.t('leadInCRM')||'✓ Лід в CRM'}</div>` : ''}
             </div>`;
         }).join('')}`;
     } catch(e) {

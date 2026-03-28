@@ -93,7 +93,7 @@ function _crmShowCallLogModal() {
 
         <!-- Результат -->
         <div style="margin-bottom:0.75rem;">
-            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">Результат дзвінка</div>
+            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">${window.t('callResult')||'Результат дзвінка'}</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;">
                 ${[
                     ['answered',  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Взяв трубку',   '#f0fdf4', '#16a34a', '#bbf7d0'],
@@ -113,7 +113,7 @@ function _crmShowCallLogModal() {
         <!-- Тривалість (ручна, якщо не відстежили) -->
         <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
             <div style="flex:1;">
-                <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.3rem;">Тривалість (хв)</div>
+                <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.3rem;">${window.t('callDuration')||'Тривалість (хв)'}</div>
                 <input id="crmCallDuration" type="number" min="0" max="180" placeholder="0"
                     style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
             </div>
@@ -132,7 +132,7 @@ function _crmShowCallLogModal() {
 
         <!-- Нотатка -->
         <div style="margin-bottom:1rem;">
-            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.3rem;">Нотатка по дзвінку</div>
+            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.3rem;">${window.t('callNote')||'Нотатка по дзвінку'}</div>
             <textarea id="crmCallNote" rows="2" placeholder="Що обговорили, домовились..."
                 style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;
                 font-size:0.82rem;font-family:inherit;resize:none;box-sizing:border-box;"></textarea>
@@ -247,7 +247,7 @@ window.crmSaveCallLog = async function () {
             if (nextTime) deal.nextContactTime = nextTime;
         }
 
-        if (window.showToast) showToast('Дзвінок збережено', 'success');
+        if (window.showToast) showToast(window.t('callSaved')||'Дзвінок збережено', 'success');
 
         // Якщо відкрита картка угоди — оновлюємо активності
         const actTab = document.getElementById('crmDealContent');

@@ -1127,7 +1127,7 @@ window.crmBulkReassign = async function(uid) {
 window.crmBulkMoveStage = async function(stageId) {
     if (!stageId || crm.selectedIds.size === 0) return;
     if (stageId === 'lost') {
-        if (typeof showToast === 'function') showToast('Для стадії "Програно" використовуйте індивідуальну зміну', 'error');
+        if (typeof showToast === 'function') showToast(window.t('crmUseLostStage'), 'error');
         return;
     }
     await _bulkUpdateDeals({ stage: stageId, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp() });
@@ -1187,7 +1187,7 @@ window.crmBulkStage = function() {
         menu.remove();
         const newStage = btn.dataset.sid;
         if (newStage === 'lost') {
-            if (typeof showToast === 'function') showToast('Для стадії "Програно" використовуйте індивідуальну зміну', 'error');
+            if (typeof showToast === 'function') showToast(window.t('crmUseLostStage'), 'error');
             return;
         }
         await _bulkUpdateDeals({ stage: newStage });
@@ -3610,7 +3610,7 @@ window.crmOpenCreateClient = function() {
         </div>`;
     overlay.innerHTML = `
     <div style="background:white;border-radius:14px;padding:1.5rem;width:380px;max-width:95vw;">
-        <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">Новий клієнт</div>
+        <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">${window.t('crmNewClient')}</div>
         ${inp('name',window.t('nameField'),window.t('crmClientName'))}
         ${inp('phone',window.t('crmPhone'),'+380...')}
         ${inp('email','Email','email@example.com','email')}
@@ -3638,7 +3638,7 @@ window.crmOpenCreateClient = function() {
 window.crmSaveNewClient = async function() {
     const v = id => document.getElementById('ccc_' + id)?.value?.trim() || '';
     const name = v('name');
-    if (!name) { if(window.showToast) showToast('Вкажіть ім\'я','error'); return; }
+    if (!name) { if(window.showToast) showToast(window.t('crmEnterName'),'error'); return; }
     try {
         const now = firebase.firestore.FieldValue.serverTimestamp();
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_CLIENTS).add({
@@ -3731,7 +3731,7 @@ function _renderActivitiesUI(c, allActivities) {
         const filtered = filter === 'all' ? allActivities : allActivities.filter(a => a.type === filter);
         const addForm = `
         <div style="background:white;border:1px solid #e8eaed;border-radius:10px;padding:1rem;margin-bottom:0.75rem;">
-            <div style="font-weight:600;font-size:0.85rem;color:#111827;margin-bottom:0.65rem;">Нова активність</div>
+            <div style="font-weight:600;font-size:0.85rem;color:#111827;margin-bottom:0.65rem;">${window.t('crmNewActivity')}</div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
                 ${Object.entries(ACT_LABELS).map(([k,v]) => `
                 <button id="actType_${k}"
@@ -3743,7 +3743,7 @@ function _renderActivitiesUI(c, allActivities) {
             </div>
             <select id="actDealSelect" style="width:100%;padding:0.4rem 0.5rem;border:1.5px solid #e8eaed;
                 border-radius:7px;font-size:0.8rem;margin-bottom:0.4rem;background:white;">
-                <option value="">Оберіть угоду...</option>
+                <option value="">${window.t('crmSelectDeal')||'Оберіть угоду...'}</option>
                 ${crm.deals.filter(d=>d.stage!=='won'&&d.stage!=='lost').map(d =>
                     `<option value="${d.id}">${_esc(d.title||d.clientName||window.t('crmDeal'))}</option>`).join('')}
             </select>
@@ -3753,7 +3753,7 @@ function _renderActivitiesUI(c, allActivities) {
             <button id="actSaveBtn"
                 style="margin-top:0.4rem;padding:0.45rem 1rem;background:#22c55e;color:white;
                 border:none;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                Зберегти активність
+                ${window.t('crmSaveActivity')}
             </button>
         </div>`;
 
@@ -4047,7 +4047,7 @@ function _renderAnalytics() {
             </button>
             <button onclick="crmSwitchAnalyticsMode('niche')"
               style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:transparent;color:#6b7280;">
-              Зріз по нішах
+              ${window.t('crmSliceByNiches')}
             </button>
           </div>
           <!-- Фільтр: з ... до -->
@@ -4157,7 +4157,7 @@ function _renderAnalytics() {
                             <span style="font-size:0.72rem;font-weight:700;color:#111;">${Math.round(cnt/totalSrc*100)}%</span>
                         </div>`).join('')}
                     </div>
-                </div>` : '<div style="color:#9ca3af;font-size:0.8rem;">Немає даних</div>'}
+                </div>` : `<div style="color:#9ca3af;font-size:0.8rem;">${window.t('crmNoPipelineData')}</div>`}
             </div>
 
             <!-- Воронка конверсій між стадіями -->
@@ -4479,7 +4479,7 @@ function _renderCrmNicheMatrix() {
         });
     });
 
-    const groupByLabel  = st.groupBy === 'niche' ? 'Нішами' : 'Джерелами';
+    const groupByLabel  = st.groupBy === 'niche' ? window.t('crmGroupBy') : window.t('crmSourcesBy');
     const periodLabel   = st.period  === 'week'  ? 'Тижні'  : 'Місяці';
     const metricLabels  = { leads: 'Ліди', won: 'Виграно', revenue: 'Revenue', conv: 'Конверсія' };
 
@@ -4510,7 +4510,7 @@ function _renderCrmNicheMatrix() {
     </div>
 
     <div style="display:flex;align-items:center;gap:6px;">
-      <span style="font-size:.75rem;color:#6b7280;font-weight:600;">ПЕРІОД:</span>
+      <span style="font-size:.75rem;color:#6b7280;font-weight:600;">${window.t('crmPeriodLabel')}</span>
       ${['week','month'].map(v => `
         <button onclick="window._nmState.period='${v}';_renderCrmNicheMatrix()" style="padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;border:1.5px solid ${st.period===v?'#6366f1':'#e5e7eb'};background:${st.period===v?'#eef2ff':'white'};color:${st.period===v?'#4f46e5':'#374151'};">
           ${v==='week'?'Тижні':'Місяці'}
@@ -4526,7 +4526,7 @@ function _renderCrmNicheMatrix() {
     </div>
 
     <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
-      <span style="font-size:.75rem;color:#6b7280;font-weight:600;">ДІАПАЗОН:</span>
+      <span style="font-size:.75rem;color:#6b7280;font-weight:600;">${window.t('crmRangeLabel')}</span>
       <input type="date" value="${st.dateFrom}" onchange="window._nmState.dateFrom=this.value;_renderCrmNicheMatrix()"
         style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 7px;font-size:.75rem;color:#374151;">
       <span style="font-size:.75rem;color:#9ca3af;">—</span>
@@ -4539,7 +4539,7 @@ function _renderCrmNicheMatrix() {
   ${periods.length === 0 ? `
     <div style="text-align:center;padding:3rem;color:#9ca3af;">
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:.75rem;opacity:.4"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
-      <div>Немає угод за обраний період</div>
+      <div>${window.t('crmNoDealsForPeriod')}</div>
     </div>
   ` : `
   <!-- Таблиця -->
@@ -4645,7 +4645,7 @@ function _renderCRMSettings() {
         <!-- Воронки -->
         <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-                <div style="${sectionTitle}margin-bottom:0;">Воронки продажів</div>
+                <div style="${sectionTitle}margin-bottom:0;">${window.t('crmFunnels')}</div>
                 <button onclick="crmCreatePipeline()"
                     style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;
                     background:#22c55e;color:white;border:none;border-radius:6px;
@@ -4664,7 +4664,7 @@ function _renderCRMSettings() {
                         <span style="font-size:0.82rem;font-weight:600;color:#111827;">${_esc(p.name)}</span>
                         ${p.isDefault ? '<span style="font-size:0.65rem;background:#f0fdf4;color:#16a34a;padding:1px 6px;border-radius:4px;margin-left:0.4rem;font-weight:600;">основна</span>' : ''}
                     </div>
-                    <span style="font-size:0.72rem;color:#9ca3af;">${(p.stages||[]).length} стадій</span>
+                    <span style="font-size:0.72rem;color:#9ca3af;">${(p.stages||[]).length} ${window.t('crmStagesCount')}</span>
                     ${!p.isDefault ? `<button onclick="event.stopPropagation();crmDeletePipeline('${p.id}','${_esc(p.name)}')"
                         style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px;
                         display:flex;align-items:center;" title="${window.t('crmDelete')}">${I.trash}</button>` : ''}
@@ -4757,8 +4757,8 @@ function _renderCRMSettings() {
 
         <!-- Обов'язкові поля при зміні стадії -->
         <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
-            <div style="${sectionTitle}">Обов'язкові поля при переході в стадію</div>
-            <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.75rem;">При переході в стадію буде запит відсутніх даних</div>
+            <div style="${sectionTitle}">${window.t('crmRequiredFields')}</div>
+            <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.75rem;">${window.t('crmRequiredHint')}</div>
             ${stages.filter(s => !['won','lost'].includes(s.id)).map(s => {
                 const req = (pipeline?.stageRequiredFields || {})[s.id] || [];
                 const fields = [
@@ -5046,7 +5046,7 @@ window.crmRemoveStage = async function(stageId) {
     const dealsInStage = crm.deals.filter(d => d.stage === stageId);
     let confirmMsg = window.t('crmDeleteStage');
     if (dealsInStage.length > 0) {
-        confirmMsg = `В стадії "${_stageLabel(stageId)}" є ${dealsInStage.length} угод(и). Вони будуть переміщені в window.t('incStatusNew'). Продовжити?`;
+        confirmMsg = `В стадії "${_stageLabel(stageId)}" є ${dealsInStage.length} угод(и). Вони будуть переміщені в ${window.t('incStatusNew')||'Новий'}. Продовжити?`;
     }
     if (!(await (window.showConfirmModal ? showConfirmModal(confirmMsg, {danger:true}) : Promise.resolve(confirm(confirmMsg))))) return;
     // FIX: переміщуємо угоди в 'new' перед видаленням стадії
@@ -5148,7 +5148,7 @@ async function _checkRequiredFields(deal, newStage) {
                 <label style="font-size:0.72rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.25rem;">${FIELD_LABELS[f] || f}</label>
                 ${f === 'assigneeId' ? `
                 <select id="crmReqField_${f}" style="${inp}">
-                    <option value="">— оберіть —</option>
+                    <option value="">${window.t('selectDash')||'— оберіть —'}</option>
                     ${(typeof users !== 'undefined' ? users : []).map(u => `<option value="${u.id}">${_esc(u.name)}</option>`).join('')}
                 </select>` :
                 f === 'nextContactDate' ? `<input type="date" id="crmReqField_${f}" style="${inp}" value="${deal[f]||''}">` :
@@ -5352,7 +5352,7 @@ window.crmCreateTaskFromDeal = function(dealId) {
     modal.innerHTML = `
     <div style="background:white;border-radius:12px;padding:1.5rem;width:420px;max-width:95vw;">
         <div style="font-weight:700;font-size:0.95rem;margin-bottom:1rem;color:#111827;">
-            Нова задача по угоді: <span style="color:#22c55e;">${_esc(deal.clientName||deal.title||'')}</span>
+            ${window.t('crmNewDealTask')} <span style="color:#22c55e;">${_esc(deal.clientName||deal.title||'')}</span>
         </div>
         <div style="margin-bottom:0.75rem;">
             <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:4px;">Назва задачі</label>
@@ -5470,7 +5470,7 @@ window.crmOpenImport = function() {
                 ondrop="window.crmHandleImportDrop(event);"
                 onclick="document.getElementById('crmImportFileInput').click()">
                 <div style="font-size:2rem;margin-bottom:0.5rem;">📂</div>
-                <div style="font-size:0.9rem;color:#374151;font-weight:600;">Перетягніть CSV або натисніть для вибору</div>
+                <div style="font-size:0.9rem;color:#374151;font-weight:600;">${window.t('crmImportDragDrop')}</div>
                 <div style="font-size:0.78rem;color:#9ca3af;margin-top:0.25rem;">Підтримується .csv до 5MB</div>
             </div>
             <input type="file" id="crmImportFileInput" accept=".csv,text/csv" style="display:none;"
@@ -5524,11 +5524,11 @@ window.crmHandleImportDrop = function(e) {
 
 window.crmHandleImportFile = function(file) {
     if (!file || !file.name.endsWith('.csv')) {
-        if (window.showToast) showToast('Тільки .csv файли', 'error');
+        if (window.showToast) showToast(window.t('csvOnly')||'Тільки .csv файли', 'error');
         return;
     }
     if (file.size > 5 * 1024 * 1024) {
-        if (window.showToast) showToast('Файл більше 5MB', 'error');
+        if (window.showToast) showToast(window.t('fileTooLarge')||'Файл більше 5MB', 'error');
         return;
     }
     const reader = new FileReader();
@@ -5567,7 +5567,7 @@ window.crmParseCSV = function(text) {
 
 window.crmShowImportPreview = function(rows) {
     if (!rows.length) {
-        if (window.showToast) showToast('CSV порожній або некоректний', 'error');
+        if (window.showToast) showToast(window.t('csvInvalid')||'CSV порожній або некоректний', 'error');
         return;
     }
     const preview = document.getElementById('crmImportPreview');

@@ -60,7 +60,7 @@ async function _showFinanceConfirmModal(deal) {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
         <div>
-          <div style="font-size:0.95rem;font-weight:700;color:#1a1a1a;">Угода закрита — записати дохід?</div>
+          <div style="font-size:0.95rem;font-weight:700;color:#1a1a1a;">${_t('Угода закрита — записати дохід?','Сделка закрыта — записать доход?')}</div>
           <div style="font-size:0.78rem;color:#6b7280;margin-top:1px;">${_esc(clientName)}</div>
         </div>
       </div>
@@ -97,16 +97,16 @@ async function _showFinanceConfirmModal(deal) {
           <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Рахунок</label>
           <select id="cfbAccount"
             style="width:100%;padding:0.5rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            ${accOptions || '<option value="">— рахунки не налаштовані —</option>'}
+            ${accOptions || `<option value="">${_t('— рахунки не налаштовані —','— счета не настроены —')}</option>`}
           </select>
         </div>
 
         <!-- Категорія доходу -->
         <div>
-          <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Категорія доходу</label>
+          <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_t('Категорія доходу','Категория дохода')}егорія доходу</label>
           <select id="cfbCategory"
             style="width:100%;padding:0.5rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            <option value="">— оберіть категорію —</option>
+            <option value="">${_t('— оберіть категорію —','— выберите категорию —')}</option>
             ${catOptions}
           </select>
         </div>

@@ -99,9 +99,9 @@
       { id: 'dashboard',     icon: 'layout-dashboard', label: window.t('whDashboard') },
       { id: 'catalog',       icon: 'package',           label: window.t('whCatalog') },
       { id: 'by-location',   icon: 'map',               label: 'По точках' },
-      { id: 'transfer',      icon: 'arrow-right-left',  label: 'Переміщення' },
-      { id: 'inventory',     icon: 'clipboard-check',   label: 'Інвентаризація' },
-      { id: 'reports',       icon: 'bar-chart-2',       label: 'Звіти' },
+      { id: 'transfer',      icon: 'arrow-right-left',  label: _t('Переміщення','Перемещение') },
+      { id: 'inventory',     icon: 'clipboard-check',   label: _t('Інвентаризація','Инвентаризация') },
+      { id: 'reports',       icon: 'bar-chart-2',       label: _t('Звіти','Отчёты') },
       { id: 'operations',    icon: 'arrow-left-right',  label: window.t('operationsWord') },
       { id: 'suppliers',     icon: 'truck',             label: window.t('whSuppliers') },
       { id: 'locations',     icon: 'map-pin',           label: window.t('locationsWord') },
@@ -128,7 +128,7 @@
         ` : ''}
         ${_currentView === 'operations' ? `
           <button onclick="window.whOpenOpForm('IN')" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;margin-right:0.4rem;white-space:nowrap;">
-            <i data-lucide="arrow-down-circle" style="width:15px;height:15px;"></i> Прихід
+            <i data-lucide="arrow-down-circle" style="width:15px;height:15px;"></i> ${_t('Прихід','Приход')}
           </button>
           <button onclick="window.whOpenOpForm('OUT')" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;margin-right:0.4rem;white-space:nowrap;">
             <i data-lucide="arrow-up-circle" style="width:15px;height:15px;"></i> Видача
@@ -139,12 +139,12 @@
         ` : ''}
         ${_currentView === 'inventory' ? `
           <button onclick="window.whOpenInventoryForm()" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;white-space:nowrap;">
-            <i data-lucide="plus" style="width:15px;height:15px;"></i> Нова інвентаризація
+            <i data-lucide="plus" style="width:15px;height:15px;"></i> ${_t('Нова інвентаризація','Новая инвентаризация')}
           </button>
         ` : ''}
         ${_currentView === 'transfer' ? `
           <button onclick="window.whOpenTransferForm()" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;white-space:nowrap;">
-            <i data-lucide="arrow-right-left" style="width:15px;height:15px;"></i> Нове переміщення
+            <i data-lucide="arrow-right-left" style="width:15px;height:15px;"></i> ${_t('Нове переміщення','Новое перемещение')}
           </button>
         ` : ''}
         ${_currentView === 'suppliers' ? `
@@ -390,9 +390,9 @@
             <div class="hide-mobile" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 80px;gap:0.5rem;padding:0.6rem 1rem;background:#f9fafb;border-bottom:1px solid #e5e7eb;font-size:0.75rem;color:#6b7280;font-weight:600;text-transform:uppercase;">
               <span>Назва / SKU</span>
               <span>Залишок</span>
-              <span>Мін. запас</span>
-              <span>Собівартість</span>
-              <span>Вартість</span>
+              <span>${_t('Мін. запас','Мин. запас')}</span>
+              <span>${_t('Собівартість','Себестоимость')}</span>
+              <span>${_t('Вартість','Стоимость')}</span>
               <span></span>
             </div>
             ${filtered.map(item => {
@@ -434,8 +434,8 @@
         `}
         ${filtered.length > 0 ? `
           <div style="padding:0.6rem 1rem;background:#f9fafb;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;font-size:0.8rem;color:#6b7280;">
-            <span>Показано: <b>${filtered.length}</b> з ${items.length} позицій</span>
-            <span>Загальна вартість: <b style="color:#1f2937;">${fmtMoney(filtered.reduce((s,i)=>{ const st=window.whGetStock(i.id); return s+(st.qty*(i.costPrice||0)); },0))}</b></span>
+            <span>${_t('Показано:','Показано:')} <b>${filtered.length}</b> ${_t('з','из')} ${items.length} ${_t('позицій','позиций')}</span>
+            <span>${_t('Загальна вартість:','Общая стоимость:')} <b style="color:#1f2937;">${fmtMoney(filtered.reduce((s,i)=>{ const st=window.whGetStock(i.id); return s+(st.qty*(i.costPrice||0)); },0))}</b></span>
           </div>
         ` : ''}
       </div>
@@ -466,7 +466,7 @@
     const locations = window.whGetLocations ? window.whGetLocations() : [];
 
     if (locations.length === 0) {
-      return `<div style="text-align:center;padding:3rem;color:#6b7280;">Спочатку створіть локації у вкладці «Локації»</div>`;
+      return `<div style="text-align:center;padding:3rem;color:#6b7280;">${window.t('whCreateLocations')}ці «Локації»</div>`;
     }
 
     // Фільтровані локації
@@ -479,7 +479,7 @@
       : items;
 
     if (visItems.length === 0) {
-      return `<div style="text-align:center;padding:3rem;color:#6b7280;">Каталог товарів порожній. Спочатку додайте товари.</div>`;
+      return `<div style="text-align:center;padding:3rem;color:#6b7280;">${window.t('whCatalogEmpty')}у додайте товари.</div>`;
     }
 
     // Шапка таблиці: Товар | од | loc1 | loc2 | ... | Разом
@@ -526,10 +526,10 @@
             style="padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;width:200px;outline:none;">
           <select onchange="window._whByLocFilter(this.value)"
             style="padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;color:#374151;">
-            <option value="">Всі локації</option>
+            <option value="">${_t('Всі локації','Все локации')}</option>
             ${locations.map(l => `<option value="${l.id}" ${_locFilterId===l.id?'selected':''}>${_whEscHtml(l.name)}</option>`).join('')}
           </select>
-          <span style="font-size:0.8rem;color:#6b7280;margin-left:auto;">${visItems.length} товарів · ${visLocs.length} локацій</span>
+          <span style="font-size:0.8rem;color:#6b7280;margin-left:auto;">${visItems.length} ${_t('товарів','товаров')} · ${visLocs.length} локацій</span>
         </div>
         <!-- Таблиця -->
         <div style="overflow-x:auto;">
@@ -567,10 +567,10 @@
     const locMap = {};
     locations.forEach(l => { locMap[l.id] = l.name; });
 
-    const typeLabel = { IN:'↓ Прихід', OUT:'↑ Видача', WRITE_OFF:'✕ Списання', TRANSFER:'⇄ Переміщення', ADJUST:'≡ Коригування' };
+    const typeLabel = { IN:`↓ ${_t('Прихід','Приход')}`, OUT:`↑ ${_t('Видача','Выдача')}`, WRITE_OFF:`✕ ${_t('Списання','Списание')}`, TRANSFER:`⇄ ${_t('Переміщення','Перемещение')}`, ADJUST:'≡ Коригування' };
 
     const rows = ops.length === 0
-      ? `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#6b7280;">Переміщень ще не було</td></tr>`
+      ? `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#6b7280;">${window.t('whNoTransfers')}</td></tr>`
       : ops.map(op => `
           <tr style="border-bottom:1px solid #f3f4f6;">
             <td style="padding:0.6rem 0.75rem;font-size:0.83rem;">${fmtDate(op.createdAt)}</td>
@@ -584,18 +584,18 @@
     return `
       <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
         <div style="padding:1rem;border-bottom:1px solid #f3f4f6;">
-          <p style="margin:0;font-size:0.85rem;color:#6b7280;">Журнал переміщень між локаціями. Нове переміщення — кнопка вгорі праворуч.</p>
+          <p style="margin:0;font-size:0.85rem;color:#6b7280;">${_t('Журнал переміщень між локаціями. Нове переміщення — кнопка «+ Нове переміщення» вгорі.','Журнал перемещений между локациями. Новое перемещение — кнопка «+ Новое перемещение» вверху.')} переміщення — кнопка вгорі праворуч.</p>
         </div>
         <div style="overflow-x:auto;">
           <table style="width:100%;border-collapse:collapse;">
             <thead style="background:#f9fafb;">
               <tr>
                 <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Дата</th>
-                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Товар</th>
-                <th style="padding:0.6rem 0.75rem;text-align:right;font-size:0.78rem;font-weight:600;color:#374151;">Кількість</th>
-                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Звідки</th>
-                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Куди</th>
-                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Примітка</th>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${_t('Товар','Товар')}</th>
+                <th style="padding:0.6rem 0.75rem;text-align:right;font-size:0.78rem;font-weight:600;color:#374151;">${window.t('whQtyLabel')}</th>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${_t('Звідки','Откуда')}</th>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${_t('Куди','Куда')}</th>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${window.t('whNoteLabel')}</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -609,8 +609,8 @@
     const items     = window.whGetItems     ? window.whGetItems()     : [];
     const locations = window.whGetLocations ? window.whGetLocations() : [];
 
-    if (items.length === 0) { showToast('Каталог товарів порожній', 'warning'); return; }
-    if (locations.length < 2) { showToast('Потрібно мінімум 2 локації для переміщення', 'warning'); return; }
+    if (items.length === 0) { showToast(window.t('whCatalogEmpty'), 'warning'); return; }
+    if (locations.length < 2) { showToast(_t('Потрібно мінімум 2 локації для переміщення','Нужно минимум 2 локации для перемещения'), 'warning'); return; }
 
     const existing = document.getElementById('whTransferModal');
     if (existing) existing.remove();
@@ -621,7 +621,7 @@
     modal.innerHTML = `
       <div style="background:white;border-radius:16px;padding:1.5rem;width:420px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
-          <h3 style="margin:0;font-size:1.05rem;font-weight:700;color:#111827;">⇄ Переміщення товару</h3>
+          <h3 style="margin:0;font-size:1.05rem;font-weight:700;color:#111827;">⇄ ${window.t('whTransferTitle')}</h3>
           <button onclick="document.getElementById('whTransferModal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#6b7280;">✕</button>
         </div>
         <div style="display:flex;flex-direction:column;gap:0.85rem;">
@@ -633,7 +633,7 @@
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
             <div>
-              <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Звідки</label>
+              <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">${window.t('whFromLabel')}</label>
               <select id="wtFromLoc" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;outline:none;">
                 ${locations.map(l => `<option value="${l.id}">${_whEscHtml(l.name)}</option>`).join('')}
               </select>
@@ -646,21 +646,21 @@
             </div>
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Кількість</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">${window.t('whQtyLabel')}</label>
             <input id="wtQty" type="number" min="0.001" step="any" placeholder="0"
               style="width:100%;padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box;">
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Примітка (опціонально)</label>
-            <input id="wtNote" type="text" placeholder="Причина переміщення..."
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">${_t('Примітка (опціонально)','Примечание (опционально)')}</label>
+            <input id="wtNote" type="text" placeholder="${window.t('whReasonPh')}"
               style="width:100%;padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box;">
           </div>
         </div>
         <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
           <button onclick="document.getElementById('whTransferModal').remove()"
-            style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;font-size:0.88rem;color:#374151;">Скасувати</button>
+            style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;font-size:0.88rem;color:#374151;">${window.t('cancel')}</button>
           <button onclick="window._whDoTransferSubmit()"
-            style="flex:1;padding:0.6rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:600;">Перемістити</button>
+            style="flex:1;padding:0.6rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:600;">${window.t('whTransferMove')}</button>
         </div>
       </div>`;
     document.body.appendChild(modal);
@@ -673,21 +673,21 @@
     const qty           = parseFloat(document.getElementById('wtQty')?.value);
     const note          = document.getElementById('wtNote')?.value || '';
 
-    if (!itemId || !fromLocationId || !toLocationId) { showToast('Заповніть всі поля', 'warning'); return; }
-    if (fromLocationId === toLocationId) { showToast('Локації «Звідки» і «Куди» повинні різнитись', 'warning'); return; }
-    if (!qty || qty <= 0) { showToast('Введіть кількість більше 0', 'warning'); return; }
+    if (!itemId || !fromLocationId || !toLocationId) { showToast(window.t('whFillAll'), 'warning'); return; }
+    if (fromLocationId === toLocationId) { showToast(window.t('whLocationsNotSame'), 'warning'); return; }
+    if (!qty || qty <= 0) { showToast(window.t('whQtyPositive'), 'warning'); return; }
 
     const btn = document.querySelector('#whTransferModal button[onclick*="TransferSubmit"]');
-    if (btn) { btn.disabled = true; btn.textContent = 'Зберігаю...'; }
+    if (btn) { btn.disabled = true; btn.textContent = window.t('whSaving'); }
 
     try {
       await window.whDoOperation({ itemId, type: 'TRANSFER', qty, locationId: fromLocationId, toLocationId, note });
       document.getElementById('whTransferModal')?.remove();
-      showToast('Переміщення виконано', 'success');
+      showToast(window.t('whTransferDone'), 'success');
       window._whSetView('transfer');
     } catch(e) {
-      showToast(e.message || 'Помилка переміщення', 'error');
-      if (btn) { btn.disabled = false; btn.textContent = 'Перемістити'; }
+      showToast(e.message || window.t('whTransferError'), 'error');
+      if (btn) { btn.disabled = false; btn.textContent = window.t('whTransferMove'); }
     }
   };
 
@@ -736,24 +736,24 @@
           <select onchange="window._whOpFilter(this.value)"
             style="padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
             <option value="">${window.t('allTypes')}</option>
-            <option value="IN" ${_opTypeFilter==='IN'?'selected':''}>Прихід</option>
+            <option value="IN" ${_opTypeFilter==='IN'?'selected':''}>${_t('Прихід','Приход')}</option>
             <option value="OUT" ${_opTypeFilter==='OUT'?'selected':''}>Видача</option>
             <option value="WRITE_OFF" ${_opTypeFilter==='WRITE_OFF'?'selected':''}>Списання</option>
           </select>
           <select onchange="window._whOpDateFilter(this.value)"
             style="padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
             <option value="">Весь час</option>
-            <option value="today" ${_opDateFilter==='today'?'selected':''}>Сьогодні</option>
+            <option value="today" ${_opDateFilter==='today'?'selected':''}>${window.t('whToday')}</option>
             <option value="week" ${_opDateFilter==='week'?'selected':''}>Тиждень</option>
-            <option value="month" ${_opDateFilter==='month'?'selected':''}>Місяць</option>
+            <option value="month" ${_opDateFilter==='month'?'selected':''}>${window.t('whMonth')}</option>
           </select>
         </div>
         ${filtered.length > 0 ? `
           <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-            ${totals.inQty > 0 ? `<span style="padding:0.3rem 0.75rem;background:#dcfce7;color:#166534;border-radius:8px;font-size:0.8rem;font-weight:600;">↓ Прихід: ${fmt(totals.inQty)} од · ${fmtMoney(totals.inSum)}</span>` : ''}
-            ${totals.outQty > 0 ? `<span style="padding:0.3rem 0.75rem;background:#fee2e2;color:#991b1b;border-radius:8px;font-size:0.8rem;font-weight:600;">↑ Видача: ${fmt(totals.outQty)} од</span>` : ''}
-            ${totals.offQty > 0 ? `<span style="padding:0.3rem 0.75rem;background:#fef3c7;color:#92400e;border-radius:8px;font-size:0.8rem;font-weight:600;">✕ Списано: ${fmt(totals.offQty)} од</span>` : ''}
-            <span style="padding:0.3rem 0.75rem;background:#f3f4f6;color:#6b7280;border-radius:8px;font-size:0.8rem;">${filtered.length} записів</span>
+            ${totals.inQty > 0 ? `<span style="padding:0.3rem 0.75rem;background:#dcfce7;color:#166534;border-radius:8px;font-size:0.8rem;font-weight:600;">${_t('↓ Прихід','↓ Приход')}: ${fmt(totals.inQty)} ${_t('од','ед')} · ${fmtMoney(totals.inSum)}</span>` : ''}
+            ${totals.outQty > 0 ? `<span style="padding:0.3rem 0.75rem;background:#fee2e2;color:#991b1b;border-radius:8px;font-size:0.8rem;font-weight:600;">${_t('↑ Видача','↑ Выдача')}: ${fmt(totals.outQty)} ${_t('од','ед')}</span>` : ''}
+            ${totals.offQty > 0 ? `<span style="padding:0.3rem 0.75rem;background:#fef3c7;color:#92400e;border-radius:8px;font-size:0.8rem;font-weight:600;">${_t('✕ Списано','✕ Списано')}: ${fmt(totals.offQty)} ${_t('од','ед')}</span>` : ''}
+            <span style="padding:0.3rem 0.75rem;background:#f3f4f6;color:#6b7280;border-radius:8px;font-size:0.8rem;">${filtered.length} ${_t('записів','записей')}</span>
           </div>
         ` : ''}
 
@@ -836,7 +836,7 @@
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
         <div style="display:flex;justify-content:flex-end;">
           <button onclick="window.whOpenLocationForm()" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">
-            <i data-lucide="plus" style="width:15px;height:15px;"></i> Додати локацію
+            <i data-lucide="plus" style="width:15px;height:15px;"></i> ${_t('Додати локацію','Добавить локацию')}
           </button>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;">
@@ -891,7 +891,7 @@
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Категорія</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${window.t('whCategoryLabel')}</label>
               <datalist id="wh_cat_dl">${existingCats.map(c => `<option value="${c}">`).join('')}</datalist>
               <input id="wh_cat" value="${item.category || ''}" list="wh_cat_dl" style="${_inp()}" placeholder=${window.t('materialsChemPh')}>
             </div>
@@ -904,21 +904,21 @@
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:0.5rem;">
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Собівартість ₴</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${window.t('whCostLabel')}</label>
               <input id="wh_cost" type="number" value="${item.costPrice || ''}" style="${_inp()}" placeholder="0">
             </div>
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Ціна продажу ₴</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${window.t('whSalePriceLabel')}</label>
               <input id="wh_sale" type="number" value="${item.salePrice || ''}" style="${_inp()}" placeholder="0">
             </div>
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Мінімум на складі</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${window.t('whMinStockLabel')}</label>
               <input id="wh_min" type="number" value="${item.minStock || ''}" style="${_inp()}" placeholder="0">
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Ніша</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${window.t('whNicheLabel')}</label>
               <select id="wh_niche" style="${_inp()}">
                 ${niches.map(n => `<option value="${n}" ${item.niche === n ? 'selected' : ''}>${nicheLabels[n]}</option>`).join('')}
               </select>
@@ -941,10 +941,10 @@
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
-          ${itemId ? `<button onclick="window._whConfirmDelete('${itemId}')" style="padding:0.45rem 0.9rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Видалити</button>` : ''}
-          <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Скасувати</button>
-          ${!itemId ? `<button onclick="window._whSubmitItem('',true)" style="padding:0.45rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Зберегти і прийняти</button>` : ''}
-          <button onclick="window._whSubmitItem('${itemId || ''}')" style="padding:0.45rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Зберегти</button>
+          ${itemId ? `<button onclick="window._whConfirmDelete('${itemId}')" style="padding:0.45rem 0.9rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${_t('Видалити','Удалить')}</button>` : ''}
+          <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${window.t('cancel')}</button>
+          ${!itemId ? `<button onclick="window._whSubmitItem('',true)" style="padding:0.45rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${_t('Зберегти і прийняти','Сохранить и принять')}</button>` : ''}
+          <button onclick="window._whSubmitItem('${itemId || ''}')" style="padding:0.45rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${window.t('finSave')}</button>
         </div>
       </div>
     `);
@@ -952,7 +952,7 @@
 
   window._whSubmitItem = async function (id, openOp) {
     const name = document.getElementById('wh_name')?.value?.trim();
-    if (!name) { if (window.showToast) showToast('Введіть назву товару', 'error'); return; }
+    if (!name) { if (window.showToast) showToast(window.t('whEnterItemName'), 'error'); return; }
     try {
       const savedId = await window.whSaveItem({
         name,
@@ -996,9 +996,9 @@
     // Для OUT показуємо поле "Куди (локація призначення)"
     const toLocField = (type === 'OUT') ? `
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Куди (локація призначення)</label>
+            <label style="font-size:0.78rem;color:#6b7280;">${window.t('whToLocation')}</label>
             <select id="wh_op_to_loc" style="${_inp()}">
-              <option value="">— продаж / без переміщення —</option>
+              <option value="">${window.t('whNoTransfer')}</option>
               ${locs.map(l => `<option value="${l.id}">${_whEscHtml(l.name)}</option>`).join('')}
             </select>
           </div>` : '';
@@ -1010,7 +1010,7 @@
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Товар *</label>
             <select id="wh_op_item" style="${_inp()}" onchange="window._whOpItemChange(this.value,'${type}')">
-              <option value="">— Оберіть товар —</option>
+              <option value="">${window.t('whSelectItem')}</option>
               ${items.map(i => {
                 const s = window.whGetStock(i.id);
                 return `<option value="${i.id}" ${preItemId === i.id ? 'selected' : ''}>${_whEscHtml(i.name)} (${s.qty} ${_whEscHtml(i.unit || 'шт')})</option>`;
@@ -1019,7 +1019,7 @@
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Кількість *</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${window.t('whQtyLabel')} *</label>
               <input id="wh_op_qty" type="number" min="0.001" step="any" style="${_inp()}" placeholder="1">
             </div>
             <div>
@@ -1028,28 +1028,28 @@
             </div>
           </div>
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Локація</label>
+            <label style="font-size:0.78rem;color:#6b7280;">${window.t('whLocationLabel')}</label>
             <select id="wh_op_loc" style="${_inp()}">
               ${locs.length > 0 ? locs.map(l => `<option value="${l.id}">${_whEscHtml(l.name)}</option>`).join('') : '<option value="main">Головний склад</option>'}
             </select>
           </div>
           ${toLocField}
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Примітка</label>
+            <label style="font-size:0.78rem;color:#6b7280;">${window.t('whNoteLabel')}</label>
             <input id="wh_op_note" style="${_inp()}" placeholder=${window.t('fromSupplierPh')}>
           </div>
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Функція (яка запросила)</label>
+            <label style="font-size:0.78rem;color:#6b7280;">${window.t('whFunctionLabel')}</label>
             <select id="wh_op_function" style="${_inp()}">
-              <option value="">— без функції —</option>
+              <option value="">${window.t('whNoFunction')}</option>
               ${(typeof functions !== 'undefined' ? functions : []).filter(f => f.status !== 'archived').map(f => `<option value="${f.id}">${_whEscHtml(f.name)}</option>`).join('')}
             </select>
           </div>
           <div id="wh_op_stock_info" style="font-size:0.8rem;color:#6b7280;background:#f9fafb;padding:0.5rem;border-radius:6px;display:none;"></div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
-          <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Скасувати</button>
-          <button onclick="window._whSubmitOp('${type}')" style="padding:0.45rem 0.9rem;background:${typeColors[type]||'#6366f1'};color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Підтвердити</button>
+          <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${window.t('cancel')}</button>
+          <button onclick="window._whSubmitOp('${type}')" style="padding:0.45rem 0.9rem;background:${typeColors[type]||'#6366f1'};color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${_t('Підтвердити','Подтвердить')}</button>
         </div>
       </div>
     `);
@@ -1079,7 +1079,7 @@
     const funcId  = document.getElementById('wh_op_function')?.value || null;
 
     if (!itemId || !qty || isNaN(qty) || qty <= 0) {
-      if (window.showToast) showToast('Оберіть товар і вкажіть кількість', 'error');
+      if (window.showToast) showToast(window.t('whSelectItemQty'), 'error');
       return;
     }
     // Якщо OUT і вибрана локація призначення — це переміщення TRANSFER
@@ -1098,7 +1098,7 @@
       }
       window._whCloseModal();
       const doneMsg = actualType === 'TRANSFER'
-        ? `Переміщено ${qty} → ${document.getElementById('wh_op_to_loc')?.selectedOptions[0]?.text || ''}`
+        ? `${window.t('whTransferMove')} ${qty} → ${document.getElementById('wh_op_to_loc')?.selectedOptions[0]?.text || ''}`
         : `${window.t('whOpDone').replace('{V}', result.newQty)}`;
       if (window.showToast) showToast(doneMsg, 'success');
     } catch (e) {
@@ -1132,14 +1132,14 @@
             <input id="wh_sup_url" value="${s.url || ''}" style="${_inp()}" placeholder="https://...">
           </div>
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Примітка</label>
+            <label style="font-size:0.78rem;color:#6b7280;">${window.t('whNoteLabel')}</label>
             <textarea id="wh_sup_note" style="${_inp()}height:56px;resize:none;">${_whEscHtml(s.note || '')}</textarea>
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;flex-wrap:wrap;">
-          ${supplierId ? `<button onclick="window._whDeleteSupplier('${supplierId}')" style="padding:0.45rem 0.9rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Видалити</button>` : ''}
-          <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Скасувати</button>
-          <button onclick="window._whSubmitSupplier('${supplierId || ''}')" style="padding:0.45rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Зберегти</button>
+          ${supplierId ? `<button onclick="window._whDeleteSupplier('${supplierId}')" style="padding:0.45rem 0.9rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${_t('Видалити','Удалить')}</button>` : ''}
+          <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${window.t('cancel')}</button>
+          <button onclick="window._whSubmitSupplier('${supplierId || ''}')" style="padding:0.45rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${window.t('finSave')}</button>
         </div>
       </div>
     `);
@@ -1147,7 +1147,7 @@
 
   window._whSubmitSupplier = async function (id) {
     const name = document.getElementById('wh_sup_name')?.value?.trim();
-    if (!name) { if (window.showToast) showToast('Введіть назву', 'error'); return; }
+    if (!name) { if (window.showToast) showToast(window.t('whEnterName'), 'error'); return; }
     try {
       await window.whSaveSupplier({
         name,
@@ -1179,7 +1179,7 @@
     const l = locId ? (window.whGetLocations().find(x => x.id === locId) || {}) : {};
     _showModal(`
       <div style="padding:1.25rem;">
-        <h3 style="margin:0 0 1rem;font-size:1rem;">Локація</h3>
+        <h3 style="margin:0 0 1rem;font-size:1rem;">${window.t('whLocationTitle')}</h3>
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Назва *</label>
@@ -1189,15 +1189,15 @@
             <label style="font-size:0.78rem;color:#6b7280;">Тип</label>
             <select id="wh_loc_type" style="${_inp()}">
               <option value="warehouse" ${l.type==='warehouse'?'selected':''}>Склад</option>
-              <option value="room" ${l.type==='room'?'selected':''}>Кімната</option>
+              <option value="room" ${l.type==='room'?'selected':''}>${window.t('whRoomType')}</option>
               <option value="car" ${l.type==='car'?'selected':''}>Авто</option>
-              <option value="object" ${l.type==='object'?'selected':''}>Об'єкт</option>
+              <option value="object" ${l.type==='object'?'selected':''}>${window.t('whObjectType')}</option>
             </select>
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
-          <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Скасувати</button>
-          <button onclick="window._whSubmitLocation('${locId || ''}')" style="padding:0.45rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Зберегти</button>
+          <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${window.t('cancel')}</button>
+          <button onclick="window._whSubmitLocation('${locId || ''}')" style="padding:0.45rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">${window.t('finSave')}</button>
         </div>
       </div>
     `);
@@ -1205,7 +1205,7 @@
 
   window._whSubmitLocation = async function (id) {
     const name = document.getElementById('wh_loc_name')?.value?.trim();
-    if (!name) { if (window.showToast) showToast('Введіть назву', 'error'); return; }
+    if (!name) { if (window.showToast) showToast(window.t('whEnterName'), 'error'); return; }
     try {
       await window.whSaveLocation({ name, type: document.getElementById('wh_loc_type')?.value }, id || null);
       window._whCloseModal();
@@ -1312,7 +1312,7 @@
         <!-- Фінанси -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;font-size:0.82rem;">
           <div style="background:#f9fafb;border-radius:8px;padding:0.6rem;">
-            <div style="color:#6b7280;margin-bottom:2px;">Собівартість</div>
+            <div style="color:#6b7280;margin-bottom:2px;">${window.t('whCostLabel')}</div>
             <div style="font-weight:600;">${item.costPrice ? fmtMoney(item.costPrice) + ' / ' + (item.unit||'шт') : '—'}</div>
           </div>
           <div style="background:#f9fafb;border-radius:8px;padding:0.6rem;">
@@ -1321,7 +1321,7 @@
           </div>
           ${item.minStock ? `
           <div style="background:#f9fafb;border-radius:8px;padding:0.6rem;">
-            <div style="color:#6b7280;margin-bottom:2px;">Мін. залишок</div>
+            <div style="color:#6b7280;margin-bottom:2px;">${window.t('whMinStockLabel')}</div>
             <div style="font-weight:600;">${item.minStock} ${item.unit||'шт'}</div>
           </div>` : ''}
           ${sup ? `
@@ -1416,7 +1416,7 @@
   function _renderInventory() {
     const locations = window.whGetLocations ? window.whGetLocations() : [];
     if (locations.length === 0) {
-      return `<div style="text-align:center;padding:3rem;color:#6b7280;">Спочатку створіть локації у вкладці «Локації»</div>`;
+      return `<div style="text-align:center;padding:3rem;color:#6b7280;">${window.t('whCreateLocations')}ці «Локації»</div>`;
     }
 
     // Завантажуємо список збережених інвентаризацій
@@ -1425,17 +1425,17 @@
     locations.forEach(l => { locMap[l.id] = l.name; });
 
     const rows = invList.length === 0
-      ? `<tr><td colspan="5" style="text-align:center;padding:2rem;color:#9ca3af;">Інвентаризацій ще не проводилось</td></tr>`
+      ? `<tr><td colspan="5" style="text-align:center;padding:2rem;color:#9ca3af;">${window.t('whInventoryNone')}оводилось</td></tr>`
       : invList.map(inv => {
           const statusColor = inv.status === 'confirmed' ? '#22c55e' : '#f59e0b';
-          const statusLabel = inv.status === 'confirmed' ? 'Підтверджено' : 'Чернетка';
+          const statusLabel = inv.status === 'confirmed' ? window.t('whInventoryDone') : window.t('whInventoryDraft');
           const diffTotal = (inv.items||[]).reduce((s,i) => s + ((i.actual||0)-(i.expected||0)), 0);
           const diffColor = diffTotal < 0 ? '#ef4444' : diffTotal > 0 ? '#f59e0b' : '#22c55e';
           return `
             <tr style="border-bottom:1px solid #f3f4f6;cursor:pointer;" onclick="window.whOpenInventoryDoc('${inv.id}')">
               <td style="padding:0.65rem 0.75rem;font-size:0.83rem;font-weight:500;">${_whEscHtml(inv.month||'')}</td>
               <td style="padding:0.65rem 0.75rem;font-size:0.83rem;">${_whEscHtml(locMap[inv.locationId]||inv.locationId||'—')}</td>
-              <td style="padding:0.65rem 0.75rem;font-size:0.83rem;">${(inv.items||[]).length} позицій</td>
+              <td style="padding:0.65rem 0.75rem;font-size:0.83rem;">${(inv.items||[]).length} ${window.t('whPositions')}</td>
               <td style="padding:0.65rem 0.75rem;font-size:0.83rem;color:${diffColor};">
                 ${diffTotal >= 0 ? '+' : ''}${fmt(diffTotal)}
               </td>
@@ -1449,17 +1449,17 @@
       <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
         <div style="padding:1rem;border-bottom:1px solid #f3f4f6;">
           <p style="margin:0;font-size:0.85rem;color:#6b7280;">
-            Щомісячна інвентаризація по кожній точці. Введіть фактичні залишки — система покаже відхилення і скоригує stock.
+            ${_t('Щомісячна інвентаризація по кожній точці. Введіть фактичні залишки — система покаже відхилення і скоригує залишки.','Ежемесячная инвентаризация по каждой точке. Введите фактические остатки — система покажет отклонения и скорректирует остатки.')}ення і скоригує stock.
           </p>
         </div>
         <table style="width:100%;border-collapse:collapse;">
           <thead style="background:#f9fafb;">
             <tr>
-              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Місяць</th>
-              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Локація</th>
-              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Позицій</th>
-              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Відхилення (сума)</th>
-              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Статус</th>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${window.t('whMonth2')}</th>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${window.t('whLocationLabel')}</th>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${window.t('whPositions')}</th>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${_t('Відхилення (сума)','Отклонение (сумма)')}</th>
+              <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${_t('Статус','Статус')}</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -1471,8 +1471,8 @@
   window.whOpenInventoryForm = function () {
     const locations = window.whGetLocations ? window.whGetLocations() : [];
     const items     = window.whGetItems     ? window.whGetItems()     : [];
-    if (locations.length === 0) { showToast('Спочатку створіть локації', 'warning'); return; }
-    if (items.length === 0)     { showToast('Каталог товарів порожній', 'warning'); return; }
+    if (locations.length === 0) { showToast(window.t('whCreateLocations'), 'warning'); return; }
+    if (items.length === 0)     { showToast(window.t('whCatalogEmpty'), 'warning'); return; }
 
     const now   = new Date();
     const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
@@ -1487,19 +1487,19 @@
       <div style="background:white;border-radius:16px;width:580px;max-width:97vw;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
         <!-- Заголовок -->
         <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-          <h3 style="margin:0;font-size:1.05rem;font-weight:700;color:#111827;">📋 Нова інвентаризація</h3>
+          <h3 style="margin:0;font-size:1.05rem;font-weight:700;color:#111827;">${window.t('whNewInventory')}</h3>
           <button onclick="document.getElementById('whInvModal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#6b7280;">✕</button>
         </div>
         <!-- Налаштування -->
         <div style="padding:1rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;gap:1rem;flex-shrink:0;flex-wrap:wrap;">
           <div style="flex:1;min-width:160px;">
-            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Локація</label>
+            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">${window.t('whLocationLabel')}ація</label>
             <select id="invLocId" onchange="window._whInvLoadItems()" style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;">
               ${locations.map(l => `<option value="${l.id}">${_whEscHtml(l.name)}</option>`).join('')}
             </select>
           </div>
           <div style="flex:1;min-width:140px;">
-            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Місяць</label>
+            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">${window.t('whMonthLabel')}яць</label>
             <input id="invMonth" type="month" value="${month}" style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;box-sizing:border-box;">
           </div>
         </div>
@@ -1508,7 +1508,7 @@
           <table style="width:100%;border-collapse:collapse;">
             <thead style="position:sticky;top:0;background:#f9fafb;z-index:1;">
               <tr>
-                <th style="padding:0.5rem 0.5rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">Товар</th>
+                <th style="padding:0.5rem 0.5rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Товар','Товар')}</th>
                 <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Очікувано</th>
                 <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Фактично</th>
                 <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Відхилення</th>
@@ -1522,7 +1522,7 @@
         <!-- Кнопки -->
         <div style="padding:1rem 1.5rem;border-top:1px solid #f3f4f6;display:flex;gap:0.75rem;flex-shrink:0;">
           <button onclick="document.getElementById('whInvModal').remove()"
-            style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;font-size:0.88rem;color:#374151;">Скасувати</button>
+            style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;font-size:0.88rem;color:#374151;">${window.t('cancel')}</button>
           <button onclick="window._whSaveInventory(false)"
             style="padding:0.6rem 1rem;border:1px solid #6366f1;background:white;color:#6366f1;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:600;">Зберегти чернетку</button>
           <button onclick="window._whSaveInventory(true)"
@@ -1583,7 +1583,7 @@
   window._whSaveInventory = async function(confirm) {
     const locId = document.getElementById('invLocId')?.value;
     const month = document.getElementById('invMonth')?.value;
-    if (!locId || !month) { showToast('Оберіть локацію і місяць', 'warning'); return; }
+    if (!locId || !month) { showToast(_t('Оберіть локацію і місяць','Выберите локацию и месяц'), 'warning'); return; }
 
     const inputs = document.querySelectorAll('#invItemsTbody input[data-item-id]');
     const invItems = [];
@@ -1595,7 +1595,7 @@
     });
 
     const btn = document.querySelector('#whInvModal button[onclick*="true"]');
-    if (btn) { btn.disabled = true; btn.textContent = 'Зберігаю...'; }
+    if (btn) { btn.disabled = true; btn.textContent = window.t('whSaving'); }
 
     try {
       const cRef = window.companyRef ? window.companyRef()
@@ -1623,13 +1623,13 @@
               type: 'ADJUST',
               qty: it.actual,
               locationId: locId,
-              note: `Інвентаризація ${month}`,
+              note: `${window.t('whInventoryDetail')}${month}`,
             });
           } catch(e) {
             console.warn('[inv] adjust failed', it.itemId, e.message);
           }
         }
-        showToast('Інвентаризацію підтверджено, залишки скориговано', 'success');
+        showToast(window.t('whInventoryConfirmed'), 'success');
       } else {
         showToast('Чернетку збережено', 'success');
       }
@@ -1639,7 +1639,7 @@
       _render();
     } catch(e) {
       showToast(e.message || 'Помилка збереження', 'error');
-      if (btn) { btn.disabled = false; btn.textContent = 'Підтвердити і скоригувати'; }
+      if (btn) { btn.disabled = false; btn.textContent = window.t('whConfirmAdjust'); }
     }
   };
 
@@ -1674,7 +1674,7 @@
     const existing = document.getElementById('whInvViewModal');
     if (existing) existing.remove();
 
-    const statusLabel = inv.status === 'confirmed' ? '✅ Підтверджено' : '📝 Чернетка';
+    const statusLabel = inv.status === 'confirmed' ? window.t('whStatusConfirmed') : window.t('whStatusDraft');
     const rows = (inv.items||[]).map((it, ri) => {
       const items = window.whGetItems ? window.whGetItems() : [];
       const item  = items.find(i => i.id === it.itemId);
@@ -1698,7 +1698,7 @@
       <div style="background:white;border-radius:16px;width:540px;max-width:97vw;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
         <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
           <div>
-            <h3 style="margin:0;font-size:1rem;font-weight:700;color:#111827;">Інвентаризація · ${_whEscHtml(inv.month)}</h3>
+            <h3 style="margin:0;font-size:1rem;font-weight:700;color:#111827;">${window.t('whInventoryDetail')}${_whEscHtml(inv.month)}</h3>
             <p style="margin:0.2rem 0 0;font-size:0.8rem;color:#6b7280;">${_whEscHtml(locMap[inv.locationId]||inv.locationId||'—')} · ${statusLabel}</p>
           </div>
           <button onclick="document.getElementById('whInvViewModal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#6b7280;">✕</button>
@@ -1707,7 +1707,7 @@
           <table style="width:100%;border-collapse:collapse;">
             <thead style="background:#f9fafb;position:sticky;top:0;">
               <tr>
-                <th style="padding:0.5rem 0.75rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">Товар</th>
+                <th style="padding:0.5rem 0.75rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Товар','Товар')}</th>
                 <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Очікувано</th>
                 <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Фактично</th>
                 <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Відхилення</th>
@@ -1755,18 +1755,18 @@
     const filters = `
       <div style="padding:0.85rem 1rem;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:1rem;display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-          <button style="${tabStyle('monthly')}"  onclick="window._whRepSet('monthly')">По місяцях</button>
-          <button style="${tabStyle('compare')}"  onclick="window._whRepSet('compare')">Порівняння салонів</button>
-          <button style="${tabStyle('yearly')}"   onclick="window._whRepSet('yearly')">Річний огляд</button>
-          <button style="${tabStyle('inv_cost')}" onclick="window._whRepSet('inv_cost')">Витрати по інвентаризації</button>
+          <button style="${tabStyle('monthly')}"  onclick="window._whRepSet('monthly')">${window.t('whMonthly')}</button>
+          <button style="${tabStyle('compare')}"  onclick="window._whRepSet('compare')">${window.t('whCompare')}</button>
+          <button style="${tabStyle('yearly')}"   onclick="window._whRepSet('yearly')">${window.t('whYearly')}</button>
+          <button style="${tabStyle('inv_cost')}" onclick="window._whRepSet('inv_cost')">${window.t('whInvCost')}</buації</button>
         </div>
         <div style="display:flex;gap:0.5rem;margin-left:auto;flex-wrap:wrap;align-items:center;">
           <select onchange="window._whRepSetLoc(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;">
-            <option value="">Всі локації</option>
+            <option value="">${_t('Всі локації','Все локации')}</option>
             ${locations.map(l=>`<option value="${l.id}" ${_repLocId===l.id?'selected':''}>${_whEscHtml(l.name)}</option>`).join('')}
           </select>
           <select onchange="window._whRepSetItem(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;max-width:180px;">
-            <option value="">Всі товари</option>
+            <option value="">${_t('Всі товари','Все товары')}</option>
             ${items.map(i=>`<option value="${i.id}" ${_repItemId===i.id?'selected':''}>${_whEscHtml(i.name)}</option>`).join('')}
           </select>
           <select onchange="window._whRepSetYear(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;">
@@ -1868,8 +1868,8 @@
           <table style="width:100%;border-collapse:collapse;">
             <thead style="background:#f9fafb;">
               <tr>
-                <th style="${thSL}">Місяць</th>
-                <th style="${thS}color:#22c55e;">↓ Надійшло</th>
+                <th style="${thSL}">${window.t('whMonth2')}</th>
+                <th style="${thS}color:#22c55e;">${window.t('whIncoming')}</th>
                 <th style="${thS}color:#ef4444;">↑ Видано</th>
                 <th style="${thS}color:#f59e0b;">✕ Списано</th>
                 <th style="${thS}">Всього витрачено</th>
@@ -1878,7 +1878,7 @@
             <tbody>
               ${rows}
               <tr style="background:#f0f9ff;font-weight:700;">
-                <td style="${tdSL}">Разом за рік</td>
+                <td style="${tdSL}">${window.t('whYearTotal')}</td>
                 <td style="${tdS}color:#22c55e;">${fmt(totIn)}</td>
                 <td style="${tdS}color:#ef4444;">${fmt(totOut)}</td>
                 <td style="${tdS}color:#f59e0b;">${fmt(totWo)}</td>
@@ -2048,7 +2048,7 @@
               <tr>
                 <th style="${thSL}">Товар</th>
                 ${shortMonths.map(m=>`<th style="${thS}">${m}</th>`).join('')}
-                <th style="${thS}background:#eef6ff;">Рік</th>
+                <th style="${thS}background:#eef6ff;">${window.t('whYear')}</th>
               </tr>
             </thead>
             <tbody>${rows}${totalRow}</tbody>
@@ -2125,17 +2125,17 @@
           <table style="width:100%;border-collapse:collapse;">
             <thead style="background:#f9fafb;">
               <tr>
-                <th style="${thSL}">Місяць</th>
+                <th style="${thSL}">${window.t('whMonth2')}</th>
                 <th style="${thSL}">Локація</th>
-                <th style="${thS}">Позицій</th>
-                <th style="${thS}">Відхилення (кількість)</th>
-                <th style="${thS}">Вартість витрат ₴</th>
+                <th style="${thS}">${window.t('whPositions')}</th>
+                <th style="${thS}">${window.t('whDiff')}</th>
+                <th style="${thS}">${window.t('whInvCostHead')}</th>
               </tr>
             </thead>
             <tbody>
               ${rows}
               <tr style="background:#f0f9ff;font-weight:700;">
-                <td style="${tdSL}" colspan="4">Разом за рік</td>
+                <td style="${tdSL}" colspan="4">${window.t('whYearTotal')}</td>
                 <td style="${tdS}color:#1e3a5f;">${fmtMoney(grandTotal)}</td>
               </tr>
             </tbody>

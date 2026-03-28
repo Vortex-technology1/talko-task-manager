@@ -54,7 +54,7 @@ window.crmRenderFormsSettings = async function () {
         ${forms.length ? forms.map(f => _formCard(f, stages, users)).join('') :
         `<div style="background:#f8fafc;border:2px dashed #e8eaed;border-radius:10px;padding:2rem;text-align:center;">
             <div style="font-size:1.5rem;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>
-            <div style="font-size:0.82rem;color:#9ca3af;">Форм ще немає. Натисніть "+ Нова форма"</div>
+            <div style="font-size:0.82rem;color:#9ca3af;">${window.t('noFormsYet')||'Форм ще немає. Натисніть + Нова форма'}</div>
         </div>`}
 
     </div>`;
@@ -106,7 +106,7 @@ function _formCard(f, stages, users) {
                 <button onclick="crmCopyEmbed('${f.id}')"
                     style="padding:0.35rem 0.6rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
                     border-radius:5px;cursor:pointer;font-size:0.72rem;font-weight:600;flex-shrink:0;">
-                    Копіювати
+                    ${window.t('copyWord')||'Копіювати'}
                 </button>
             </div>
         </div>
@@ -119,7 +119,7 @@ function _formCard(f, stages, users) {
                 text-overflow:ellipsis;text-decoration:none;">
                 ${formUrl}
             </a>
-            <button onclick="navigator.clipboard?.writeText('${formUrl}');showToast&&showToast('Скопійовано','success')"
+            <button onclick="navigator.clipboard?.writeText('${formUrl}');showToast&&showToast(window.t('copied')||'Скопійовано','success')"
                 style="padding:3px 7px;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;
                 border-radius:5px;cursor:pointer;font-size:0.7rem;flex-shrink:0;">
                 Копіювати
@@ -143,7 +143,7 @@ window.crmCreateForm = function () {
     modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10055;display:flex;align-items:center;justify-content:center;padding:1rem;';
     modal.innerHTML = `
     <div style="background:white;border-radius:12px;width:100%;max-width:420px;padding:1.25rem;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-        <div style="font-weight:700;font-size:0.92rem;color:#111827;margin-bottom:1rem;">Нова форма ліда</div>
+        <div style="font-weight:700;font-size:0.92rem;color:#111827;margin-bottom:1rem;">${window.t('newLeadForm')||'Нова форма ліда'}</div>
 
         <label style="display:block;margin-bottom:0.65rem;">
             <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Назва форми *</div>
@@ -151,14 +151,14 @@ window.crmCreateForm = function () {
         </label>
 
         <label style="display:block;margin-bottom:0.65rem;">
-            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Стадія для нових лідів</div>
+            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">${window.t('stageForNew')||'Стадія для нових лідів'} лідів</div>
             <select id="crmFormStage" style="${selStyle}">
                 ${stages.map(s => `<option value="${s.id}">${_fEsc(s.label)}</option>`).join('')}
             </select>
         </label>
 
         <label style="display:block;margin-bottom:0.65rem;">
-            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Відповідальний менеджер</div>
+            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">${window.t('responsibleMgr')||'Відповідальний менеджер'}енеджер</div>
             <select id="crmFormAssignee" style="${selStyle}">
                 <option value="">— Автоматично —</option>
                 ${users.map(u => `<option value="${u.id}">${_fEsc(u.name||u.email)}</option>`).join('')}
@@ -166,7 +166,7 @@ window.crmCreateForm = function () {
         </label>
 
         <label style="display:block;margin-bottom:0.65rem;">
-            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Повідомлення після відправки</div>
+            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">${window.t('notifyAfterLead')||'Повідомлення після заявки'}ля відправки</div>
             <input id="crmFormSuccess" value=${window.t('thankYouMsg')} style="${selStyle}">
         </label>
 
@@ -205,7 +205,7 @@ window.crmSaveNewForm = async function () {
     const success = document.getElementById('crmFormSuccess')?.value.trim() || '';
     const fields  = ['name','phone','email','message'].filter(f => document.getElementById(`crmFormField_${f}`)?.checked);
 
-    if (!name) { if (window.showToast) showToast('Вкажіть назву форми', 'error'); return; }
+    if (!name) { if (window.showToast) showToast(window.t('enterFormName')||'Вкажіть назву форми', 'error'); return; }
 
     const saveBtn = document.querySelector('#crmFormCreateModal button:last-child');
     if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Збереження...'; }
@@ -262,7 +262,7 @@ window.crmCopyEmbed = function (formId) {
     const companyId = window.currentCompanyId || window.companyId;
     const code = `<script src="${location.origin}/crm-form-widget.js" data-form="${formId}" data-company="${companyId}"><\/script>`;
     navigator.clipboard?.writeText(code).then(() => {
-        if (window.showToast) showToast('Embed код скопійовано', 'success');
+        if (window.showToast) showToast(window.t('embedCopied')||'Embed код скопійовано', 'success');
     }).catch(() => {
         prompt('Скопіюйте код:', code);
     });

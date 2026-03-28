@@ -367,8 +367,8 @@ function renderFlowsTab() {
             <div style="margin-bottom:0.6rem;color:#9ca3af;">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg>
             </div>
-            <div style="font-weight:600;margin-bottom:0.3rem;">Ланцюгів поки немає</div>
-            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">Ланцюг — це сценарій діалогу з користувачем</div>
+            <div style="font-weight:600;margin-bottom:0.3rem;">${_tg('Ланцюгів поки немає','Цепочек пока нет')}</div>
+            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">${_tg('Ланцюг — це сценарій діалогу з користувачем','Цепочка — это сценарий диалога с пользователем')}стувачем</div>
             <button onclick="openCreateFlowModal()"
                 style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:9px;cursor:pointer;font-weight:600;">
                 + Створити ланцюг
@@ -488,7 +488,7 @@ window.openCreateBotModal = function() {
             display:flex;align-items:center;justify-content:center;padding:1rem;">
             <div style="background:white;border-radius:16px;width:100%;max-width:440px;">
                 <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
-                    <div style="font-weight:700;font-size:1rem;">Підключити нового бота</div>
+                    <div style="font-weight:700;font-size:1rem;">${_tg('Підключити нового бота','Подключить нового бота')}</div>
                     <button onclick="document.getElementById('bpCreateBot').remove()"
                         style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><i data-lucide="x" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i></button>
                 </div>
@@ -936,8 +936,8 @@ function _ctsRenderList() {
         list.innerHTML = `
             <div style="text-align:center;padding:3rem 1rem;background:white;border-radius:12px;">
                 <svg style="color:#d1d5db;margin-bottom:0.75rem;" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <div style="font-weight:600;color:#374151;margin-bottom:0.3rem;">Контактів не знайдено</div>
-                <div style="font-size:0.78rem;color:#9ca3af;">Спробуйте змінити фільтри або дочекайтесь нових лідів</div>
+                <div style="font-weight:600;color:#374151;margin-bottom:0.3rem;">${_tg('Контактів не знайдено','Контактов не найдено')}</div>
+                <div style="font-size:0.78rem;color:#9ca3af;">${_tg('Спробуйте змінити фільтри або дочекайтесь нових лідів','Попробуйте изменить фильтры или дождитесь новых лидов')}/div>
             </div>`;
         if (loadMore) loadMore.style.display = 'none';
         return;
@@ -1535,7 +1535,7 @@ async function renderChatTab() {
                     background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;color:#6b7280;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                 </button>
-                <div style="color:#9ca3af;font-size:0.82rem;">Оберіть контакт зліва</div>
+                <div style="color:#9ca3af;font-size:0.82rem;">${_tg('Оберіть контакт зліва','Выберите контакт слева')}</div>
             </div>
 
             <!-- Повідомлення -->
@@ -1807,8 +1807,8 @@ function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
                 <svg style="margin-bottom:0.5rem;opacity:0.4;" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
-                <div>Повідомлень поки немає</div>
-                <div style="font-size:0.74rem;margin-top:4px;">Напишіть першим або дочекайтесь відповіді</div>
+                <div>${_tg('Повідомлень поки немає','Сообщений пока нет')}</div>
+                <div style="font-size:0.74rem;margin-top:4px;">${_tg('Напишіть першим або дочекайтесь відповіді','Напишите первым или дождитесь ответа')}</div>
             </div>`;
         return;
     }
@@ -1899,7 +1899,7 @@ window.chatSend = window.bpSendMsg = async function(instanceId = 'main') {
             }
             // Показуємо статус доставки
             if (data.telegramOk === false) {
-                if (typeof showToast === 'function') showToast('⚠️ Повідомлення збережено, але Telegram не відповів (клієнт міг заблокувати бота)', 'warning');
+                if (typeof showToast === 'function') showToast('⚠️ ' + _tg('Повідомлення збережено, але Telegram не відповів','Сообщение сохранено, но Telegram не ответил') + '(клієнт міг заблокувати бота)', 'warning');
             }
         } finally {
             clearTimeout(_sendTimer);
@@ -1914,7 +1914,7 @@ window.chatSend = window.bpSendMsg = async function(instanceId = 'main') {
         // Відновлюємо текст в полі щоб юзер міг повторити
         if (input) input.value = text;
         console.error('[chat] send:', e);
-        if (typeof showToast === 'function') showToast('Помилка відправки: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(_tg('Помилка відправки: ','Ошибка отправки: ') + e.message, 'error');
     } finally {
         if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
     }
@@ -2050,7 +2050,7 @@ async function renderBroadcastTab() {
 
                 <!-- Аудиторія -->
                 <div style="margin-bottom:0.65rem;">
-                    <label style="${labelStyle}">СЕГМЕНТ АУДИТОРІЇ</label>
+                    <label style="${labelStyle}">${_tg('СЕГМЕНТ АУДИТОРІЇ','СЕГМЕНТ АУДИТОРИИ')}</label>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;">
                         <div>
                             <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Канал</div>
@@ -2068,7 +2068,7 @@ async function renderBroadcastTab() {
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Ніша</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${_tg('Ніша','Ниша')}</div>
                             <select id="bcastNiche" onchange="bcastPreview()" style="${selectStyle}">
                                 <option value="">${window.t('allNiches')}</option>
                                 ${allNiches.map(n => `<option value="${escH(n)}">${escH(n)}</option>`).join('')}
@@ -2092,9 +2092,9 @@ async function renderBroadcastTab() {
 
                 <!-- Повідомлення -->
                 <div style="margin-bottom:0.65rem;">
-                    <label style="${labelStyle}">ТЕКСТ ПОВІДОМЛЕННЯ</label>
+                    <label style="${labelStyle}">${_tg('ТЕКСТ ПОВІДОМЛЕННЯ','ТЕКСТ СООБЩЕНИЯ')}</label>
                     <textarea id="bcastText" rows="4"
-                        placeholder="Текст розсилки...&#10;&#10;Підтримується *жирний* і _курсив_ (Telegram Markdown)"
+                        placeholder="${_tg('Текст розсилки...','Текст рассылки...')}"
                         oninput="bcastCountChars(this.value)"
                         style="${inputStyle}resize:vertical;"></textarea>
                     <div style="display:flex;justify-content:space-between;margin-top:3px;">
@@ -2109,7 +2109,7 @@ async function renderBroadcastTab() {
                 <div style="margin-bottom:0.85rem;">
                     <label style="${labelStyle}">АБО ЗАПУСТИТИ ЛАНЦЮГ</label>
                     <select id="bcastFlowSend" style="${selectStyle}">
-                        <option value="">— Тільки текст —</option>
+                        <option value="">${_tg('— Тільки текст —','— Только текст —')}</option>
                         ${bp.flows.map(f => `<option value="${f.id}">${escH(f.name)}</option>`).join('')}
                     </select>
                     <div style="font-size:0.71rem;color:#9ca3af;margin-top:3px;">
@@ -2151,7 +2151,7 @@ async function renderBroadcastTab() {
                 <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
                     <div id="bcastStatSent" style="flex:1;text-align:center;padding:0.4rem;background:#f0fdf4;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#22c55e;" id="bcastStatSentNum">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">Надіслано</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">${_tg('Надіслано','Отправлено')}</div>
                     </div>
                     <div id="bcastStatFailed" style="flex:1;text-align:center;padding:0.4rem;background:#fff5f5;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#ef4444;" id="bcastStatFailedNum">0</div>
@@ -2303,7 +2303,7 @@ window.bpSendBroadcast = async function() {
 
         const snap = await q.get();
         if (snap.size >= BCAST_LIMIT) {
-            if (window.showToast) showToast(`⚠️ Показано перші ${BCAST_LIMIT} контактів. Використовуйте фільтри для звуження аудиторії.`, 'warning');
+            if (window.showToast) showToast(`⚠️ ${_tg('Показано перші','Показаны первые')} ${BCAST_LIMIT} ${_tg('контактів. Використовуйте фільтри.','контактов. Используйте фильтры.')} для звуження аудиторії.`, 'warning');
         }
 
         let targets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -2548,7 +2548,7 @@ async function renderSettingsTab() {
     if (!bot) {
         c.innerHTML = `
             <div style="text-align:center;padding:3rem;background:white;border-radius:14px;">
-                <div style="color:#9ca3af;font-size:0.85rem;">Оберіть бота щоб відкрити налаштування</div>
+                <div style="color:#9ca3af;font-size:0.85rem;">${_tg('Оберіть бота щоб відкрити налаштування','Выберите бота чтобы открыть настройки')}</div>
                 <button onclick="bpSwitch('bots')"
                     style="margin-top:1rem;padding:0.5rem 1.25rem;background:#22c55e;color:white;
                     border:none;border-radius:9px;cursor:pointer;font-weight:600;font-size:0.82rem;">
@@ -2638,7 +2638,7 @@ async function renderSettingsTab() {
                     ${bot.token ? '•••••••••' + bot.token.slice(-8) : window.t('botsNotSet')}
                 </div>
             </div>
-            <label style="${labelStyle}">ЗАМІНИТИ ТОКЕН</label>
+            <label style="${labelStyle}">${_tg('ЗАМІНИТИ ТОКЕН','ЗАМЕНИТЬ ТОКЕН')}</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="password" id="bpSettingsToken"
                     placeholder=${window.t('botsNewTokenPh')}
@@ -2687,8 +2687,8 @@ async function renderSettingsTab() {
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
                 <div>
-                    <div style="font-size:0.82rem;font-weight:600;">Telegram сповіщення</div>
-                    <div style="font-size:0.72rem;color:#6b7280;">Отримувати сповіщення при новому ліді</div>
+                    <div style="font-size:0.82rem;font-weight:600;">${_tg('Telegram сповіщення','Telegram уведомления')}</div>
+                    <div style="font-size:0.72rem;color:#6b7280;">${_tg('Отримувати сповіщення при новому ліді','Получать уведомления при новом лиде')}</div>
                 </div>
                 <label style="position:relative;display:inline-block;width:42px;height:24px;cursor:pointer;">
                     <input type="checkbox" id="settingsNotifyEnabled"
@@ -2770,7 +2770,7 @@ window.bpCheckBotStatus = async function(botId) {
                         ${whInfo.url ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>'} Webhook: ${whInfo.url ? window.t('botsIsSet') : window.t('botsNotSetShort')}
                     </div>
                     ${whInfo.last_error_message ? `<div style="color:#ef4444;">⚠️ Остання помилка: ${escH(whInfo.last_error_message)}</div>` : ''}
-                    <div style="color:#6b7280;">Очікуваних оновлень: ${whInfo.pending_update_count || 0}</div>
+                    <div style="color:#6b7280;">${_tg('Очікуваних оновлень:','Ожидаемых обновлений:')} ${whInfo.pending_update_count || 0}</div>
                 </div>
             </div>`;
 
@@ -2885,7 +2885,7 @@ window.settingsSaveApiKey = window.saveBotApiKey = async function(type) {
     const _tooShort = key.length < 20;
     if (_isEmail || _isUrl || _isDomain || _tooShort) {
         const _hint = _isEmail ? 'Це email, не API ключ' : _isUrl ? 'Це URL, не API ключ' : _isDomain ? 'Це домен, не API ключ' : 'Занадто короткий ключ';
-        if(window.showToast)showToast('❌ Невалідний API ключ: ' + _hint + '. Очікується sk-...', 'error');
+        if(window.showToast)showToast('❌ ' + _tg('Невалідний API ключ: ','Невалидный API ключ: ') + _hint + _tg('. Очікується sk-...','. Ожидается sk-...'), 'error');
         return;
     }
 

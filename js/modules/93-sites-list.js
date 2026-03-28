@@ -264,7 +264,7 @@ window.sitesOpenCreate = function () {
                         font-size:0.72rem;font-family:monospace;box-sizing:border-box;resize:vertical;
                         line-height:1.5;min-height:180px;"></textarea>
                     <div style="font-size:0.65rem;color:#9ca3af;margin-top:3px;">
-                        Вставте повний HTML — сайт буде одразу опублікований
+                        ${window.t('siteHtmlHint')||'Вставте повний HTML — сайт буде одразу опублікований'}
                     </div>
                 </div>
 
@@ -337,7 +337,7 @@ window.sitesEditHtml = function(siteId) {
         <div style="padding:0.85rem 1.25rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
             <div>
                 <div style="font-weight:700;font-size:0.95rem;">HTML код: ${_esc(site.name)}</div>
-                <div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;">Вставте або відредагуйте HTML — натисніть Зберегти</div>
+                <div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;">${window.t('pasteHtml')||'Вставте або відредагуйте HTML'} — натисніть Зберегти</div>
             </div>
             <button onclick="document.getElementById('sitesEditHtmlOverlay').remove()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#9ca3af;">×</button>
         </div>
@@ -349,7 +349,7 @@ window.sitesEditHtml = function(siteId) {
         <div style="padding:0.75rem 1.25rem;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
             <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;cursor:pointer;">
                 <input type="checkbox" id="editHtml_publish" ${site.status==='published'?'checked':''} style="width:15px;height:15px;accent-color:#22c55e;">
-                Опублікований
+                ${window.t('publishedWord')||'Опублікований'}
             </label>
             <div style="display:flex;gap:0.5rem;">
                 <button onclick="document.getElementById('sitesEditHtmlOverlay').remove()"
@@ -438,7 +438,7 @@ window.sitesCreate = async function () {
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
             document.getElementById('sitesCreateOverlay')?.remove();
-            if (typeof showToast === 'function') showToast('🚀 Сайт створено і опубліковано!', 'success');
+            if (typeof showToast === 'function') showToast(window.t('siteCreatedPublished')||'🚀 Сайт створено і опубліковано!', 'success');
             // Оновлюємо список — не відкриваємо білдер (HTML режим)
             if (typeof window.initSitesModule === 'function') window.initSitesModule();
         } catch(e) {
@@ -533,7 +533,7 @@ function _showPublicUrlModal(url, siteId) {
     <div style="background:white;border-radius:14px;padding:1.75rem;max-width:500px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
         <div style="text-align:center;margin-bottom:1.25rem;">
             <div style="margin-bottom:0.5rem;color:#22c55e;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></div>
-            <div style="font-weight:800;font-size:1.1rem;">Сайт опубліковано!</div>
+            <div style="font-weight:800;font-size:1.1rem;">${window.t('sitePublished')||'Сайт опубліковано!'}</div>
             <div style="color:#6b7280;font-size:0.85rem;margin-top:4px;">Ваш сайт доступний за посиланням:</div>
         </div>
         <div style="display:flex;gap:0.5rem;margin-bottom:1.25rem;">
@@ -547,7 +547,7 @@ function _showPublicUrlModal(url, siteId) {
         <div style="display:flex;gap:0.5rem;">
             <button onclick="window.open('${url}','_blank');"
                 style="flex:1;padding:0.55rem;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                🌐 Відкрити сайт
+                ${window.t('openSite')||'🌐 Відкрити сайт'}
             </button>
             <button onclick="document.getElementById('siteUrlModal').remove()"
                 style="flex:1;padding:0.55rem;background:#f9fafb;color:#374151;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.85rem;">
@@ -689,11 +689,11 @@ window.sitesOpenAnalytics = async function(siteId) {
 
     window.showAlertModal(`
         <div style="min-width:280px;">
-            <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">${name} — Аналітика</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">${name} — ${window.t('analyticsWord')||'Аналітика'}</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;">
                 <div style="background:#f0fdf4;border-radius:8px;padding:0.75rem;text-align:center;">
                     <div style="font-size:1.4rem;font-weight:800;color:#22c55e;">${visits}</div>
-                    <div style="font-size:0.7rem;color:#6b7280;">Відвідувань</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">${window.t('visitsWord')||'Відвідувань'}</div>
                 </div>
                 <div style="background:#eff6ff;border-radius:8px;padding:0.75rem;text-align:center;">
                     <div style="font-size:1.4rem;font-weight:800;color:#3b82f6;">${leads}</div>
@@ -701,11 +701,11 @@ window.sitesOpenAnalytics = async function(siteId) {
                 </div>
                 <div style="background:#fefce8;border-radius:8px;padding:0.75rem;text-align:center;">
                     <div style="font-size:1.4rem;font-weight:800;color:#f59e0b;">${conv}%</div>
-                    <div style="font-size:0.7rem;color:#6b7280;">Конверсія</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">${window.t('conversionWord')||'Конверсія'}</div>
                 </div>
                 <div style="background:#f9fafb;border-radius:8px;padding:0.75rem;text-align:center;">
                     <div style="font-size:0.78rem;font-weight:700;color:#374151;">${lastVisit}</div>
-                    <div style="font-size:0.7rem;color:#6b7280;">Останній візит</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">${window.t('lastVisit')||'Останній візит'}</div>
                 </div>
             </div>
             ${visits === 0 ? '<div style="font-size:0.78rem;color:#9ca3af;text-align:center;">Поки що немає даних. Відвідування трекуються при кліку на кнопку <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span></div>' : ''}

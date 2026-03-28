@@ -206,7 +206,7 @@
         <span style="color:#f59e0b;display:flex;">${I.stage}</span>
         <div>
             <div style="font-size:.77rem;font-weight:700;color:#374151;">Етап ${i+1}</div>
-            <div style="font-size:.58rem;color:#9ca3af;">кваліфікація / продаж</div>
+            <div style="font-size:.58rem;color:#9ca3af;">${window.t('qualSale')||'кваліфікація / продаж'}</div>
         </div>
     </div>
 </div>`).join('')
@@ -255,7 +255,7 @@
                 onmouseleave="this.style.color='#d1d5db'">${I.close}</button>
         </div>
         <div style="font-size:.6rem;color:${st.color||'#f59e0b'}90;">
-            клік → CRM
+            ${window.t('clickToCRM')||'клік → CRM'}
         </div>
     </div>
 </div>`;
@@ -286,7 +286,7 @@
             <span style="color:#22c55e;display:flex;">${I.leads}</span>
             <span style="font-size:.62rem;font-weight:600;
                 color:${(f.leadsCount||0)>0?'#16a34a':'#9ca3af'};">
-                ${f.leadsCount||0} лідів
+                ${f.leadsCount||0} ${window.t('leadsWord')||'лідів'}
             </span>
         </div>
 
@@ -548,7 +548,7 @@
 
     window.mktEditFunnel = function(fid) {
         if (typeof openFunnelEditorModule==='function') openFunnelEditorModule(fid);
-        else if(window.showToast) showToast('Редактор завантажується...','info');
+        else if(window.showToast) showToast(window.t('editorLoading')||'Редактор завантажується...','info');
     };
 
     window.mktDeleteFunnel = async function(fid) {
@@ -767,7 +767,7 @@
 
     function _noItems(what, tab, color) {
         return `<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:.82rem;">
-            Ще немає: ${what}
+            ${window.t('notYet')||'Ще немає'}: ${what}
             <br><button onclick="if(typeof switchTab==='function')switchTab('${tab}');document.getElementById('mktPickOv')?.remove()"
                 style="margin-top:.5rem;padding:.35rem .75rem;background:${color};color:white;
                 border:none;border-radius:6px;cursor:pointer;font-size:.78rem;">
