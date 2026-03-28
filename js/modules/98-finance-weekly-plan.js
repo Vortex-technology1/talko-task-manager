@@ -19,6 +19,7 @@ const WP = {
   currency: 'UAH',
   startBalance: 0,
   saving:   false,
+  events:   {},   // { weekKey: [{id, type:'income'|'expense', label, amount}] }
 };
 
 // ── Точка входу ────────────────────────────────────────────
@@ -42,12 +43,16 @@ function _render(root) {
   const enriched = weeks.map(w => {
     const p = WP.plan[w.key]   || {income:0, expense:0};
     const a = WP.actual[w.key] || {income:0, expense:0};
+    const evs = WP.events[w.key] || [];
+    const evInc = evs.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+    const evExp = evs.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
     return {
       ...w,
-      pInc: p.income,  pExp: p.expense,
-      aInc: a.income,  aExp: a.expense,
-      pProfit: p.income - p.expense,
-      aProfit: a.income - a.expense,
+      pInc: p.income + evInc,  pExp: p.expense + evExp,
+      aInc: a.income,           aExp: a.expense,
+      pProfit: (p.income + evInc) - (p.expense + evExp),
+      aProfit:  a.income - a.expense,
+      evInc, evExp, evs,
       isPast:    w.to   < now,
       isCurrent: w.from <= now && w.to >= now,
       isFuture:  w.from > now,
@@ -129,6 +134,13 @@ function _render(root) {
       <button onclick="window._wpClearAll()"
         style="padding:0.45rem 0.8rem;border:1px solid #fecaca;border-radius:8px;
           background:#fff;font-size:0.8rem;color:#ef4444;cursor:pointer;">Очистити</button>
+      <button onclick="window._wpAddEventModal()"
+        style="padding:0.45rem 0.9rem;border:1px solid #3b82f6;border-radius:8px;
+          background:#eff6ff;font-size:0.8rem;color:#1d4ed8;cursor:pointer;font-weight:600;
+          display:flex;align-items:center;gap:5px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        ${_t('Додати подію','Добавить событие')}
+      </button>
     </div>`;
 
   // Основний графік — стовпчиковий з cashflow лінією
@@ -365,6 +377,7 @@ function _renderTable(weeks, currency) {
           </td>
           <!-- Дохід план (редагується) -->
           <td style="padding:4px 6px;border-bottom:1px solid #f3f4f6;">
+            <div style="display:flex;flex-direction:column;gap:2px;">
             <input type="number" value="${w.pInc||''}" min="0" step="100"
               data-wp-key="${w.key}" data-wp-field="income"
               onchange="window._wpCellChange(this)"
@@ -373,6 +386,13 @@ function _renderTable(weeks, currency) {
                 font-size:0.78rem;text-align:right;outline:none;box-sizing:border-box;
                 background:${w.isFuture?'#fafffe':'#fff'};"
               onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+            ${(WP.events[w.key]||[]).filter(e=>e.type==='income').map(e=>`
+              <div style="display:flex;align-items:center;gap:3px;background:#f0fdf4;border-radius:4px;padding:1px 5px;font-size:0.67rem;">
+                <span style="color:#16a34a;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60px;" title="${_esc(e.label)}">${_esc(e.label)}</span>
+                <span style="color:#22c55e;font-weight:600;">+${_fmtShort(e.amount)}</span>
+                <span onclick="window._wpRemoveEvent('${w.key}','${e.id}')" style="cursor:pointer;color:#9ca3af;margin-left:1px;">×</span>
+              </div>`).join('')}
+          </div>
           </td>
           <!-- Дохід факт -->
           <td style="padding:6px;text-align:right;font-size:0.78rem;color:${showFact&&w.aInc>0?'#16a34a':'#d1d5db'};border-bottom:1px solid #f3f4f6;">
@@ -481,6 +501,7 @@ window._wpSave = async function() {
       .collection('finance_settings').doc('weekly_plan')
       .set({
         plan: WP.plan,
+        events: WP.events,
         horizon: WP.horizon,
         startBalance: WP.startBalance,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -559,6 +580,7 @@ async function _loadPlan() {
     if (snap.exists) {
       const d = snap.data();
       WP.plan         = d.plan         || {};
+      WP.events       = d.events        || {};
       WP.horizon      = d.horizon      || WP.horizon;
       WP.startBalance = d.startBalance || 0;
       WP.weeks        = _buildWeeks(WP.horizon);
@@ -654,6 +676,122 @@ function _skeleton() {
     </svg>
     Завантаження тижневого плану...
   </div>`;
+}
+
+// ── Поодинокі події (великий платіж, сезон, бонус) ───────
+
+window._wpAddEventModal = function() {
+  const old = document.getElementById('wpEventModal');
+  if (old) old.remove();
+
+  const weeks = WP.weeks;
+  const weekOpts = weeks.map(w =>
+    `<option value="${w.key}">${w.label}</option>`
+  ).join('');
+
+  const modal = document.createElement('div');
+  modal.id = 'wpEventModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999999;display:flex;align-items:center;justify-content:center;padding:1rem;';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:14px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="padding:1rem 1.2rem;border-bottom:1px solid #f3f4f6;font-size:0.9rem;font-weight:700;color:#1a1a1a;">
+        + ${_t('Додати поодиноку подію','Добавить разовое событие')}
+      </div>
+      <div style="padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:0.85rem;">
+        <div>
+          <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_t('Тиждень','Неделя')} *</label>
+          <select id="wpEvWeek" style="width:100%;padding:0.5rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;background:#fff;">
+            ${weekOpts}
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_t('Тип','Тип')} *</label>
+          <div style="display:flex;gap:0.5rem;">
+            <label style="flex:1;display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.7rem;border:2px solid #22c55e;border-radius:8px;cursor:pointer;background:#f0fdf4;">
+              <input type="radio" name="wpEvType" value="income" checked style="accent-color:#22c55e;">
+              <span style="font-size:0.82rem;font-weight:600;color:#16a34a;">${_t('Дохід','Доход')}</span>
+            </label>
+            <label style="flex:1;display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.7rem;border:2px solid #e5e7eb;border-radius:8px;cursor:pointer;background:#fff;" id="wpEvExpLabel">
+              <input type="radio" name="wpEvType" value="expense" style="accent-color:#ef4444;">
+              <span style="font-size:0.82rem;font-weight:600;color:#6b7280;">${_t('Витрата','Расход')}</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_t('Назва події','Название события')} *</label>
+          <input id="wpEvLabel" type="text" placeholder="${_t('напр. Сезонний бонус, Велика закупівля','напр. Сезонный бонус, Крупная закупка')}"
+            style="width:100%;padding:0.5rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;box-sizing:border-box;outline:none;"
+            onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_t('Сума','Сумма')} *</label>
+          <input id="wpEvAmount" type="number" min="0" step="100" placeholder="0"
+            style="width:100%;padding:0.5rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.9rem;font-weight:600;box-sizing:border-box;outline:none;"
+            onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.1rem;">
+          <button onclick="document.getElementById('wpEventModal')?.remove()"
+            style="flex:1;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:0.82rem;color:#6b7280;">
+            ${_t('Скасувати','Отмена')}
+          </button>
+          <button onclick="window._wpSaveEvent()"
+            style="flex:2;padding:0.55rem;border:none;border-radius:8px;background:#3b82f6;color:#fff;cursor:pointer;font-size:0.82rem;font-weight:700;">
+            ${_t('Додати','Добавить')}
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+  // Підсвічування radio при перемиканні
+  modal.querySelectorAll('input[name="wpEvType"]').forEach(r => {
+    r.addEventListener('change', () => {
+      modal.querySelector('label:nth-of-type(1)').style.borderColor = r.value==='income'?'#22c55e':'#e5e7eb';
+      modal.querySelector('label:nth-of-type(1)').style.background  = r.value==='income'?'#f0fdf4':'#fff';
+      const expLbl = modal.querySelector('#wpEvExpLabel');
+      if(expLbl){expLbl.style.borderColor=r.value==='expense'?'#ef4444':'#e5e7eb';expLbl.style.background=r.value==='expense'?'#fef2f2':'#fff';}
+    });
+  });
+
+  modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
+  document.body.appendChild(modal);
+  setTimeout(() => document.getElementById('wpEvLabel')?.focus(), 80);
+};
+
+window._wpSaveEvent = function() {
+  const weekKey = document.getElementById('wpEvWeek')?.value;
+  const label   = document.getElementById('wpEvLabel')?.value?.trim();
+  const amount  = parseFloat(document.getElementById('wpEvAmount')?.value) || 0;
+  const type    = document.querySelector('input[name="wpEvType"]:checked')?.value || 'income';
+
+  if (!weekKey) { if(typeof showToast==='function') showToast(_t('Оберіть тиждень','Выберите неделю'),'warning'); return; }
+  if (!label)   { if(typeof showToast==='function') showToast(_t('Введіть назву','Введите название'),'warning'); return; }
+  if (!amount)  { if(typeof showToast==='function') showToast(_t('Введіть суму','Введите сумму'),'warning'); return; }
+
+  if (!WP.events[weekKey]) WP.events[weekKey] = [];
+  WP.events[weekKey].push({
+    id:     Date.now().toString(36),
+    type,
+    label,
+    amount,
+  });
+
+  document.getElementById('wpEventModal')?.remove();
+  const root = document.getElementById('weeklyPlanRoot');
+  if (root) _render(root);
+  if (typeof showToast==='function') showToast(_t('Подію додано','Событие добавлено'),'success');
+};
+
+window._wpRemoveEvent = function(weekKey, eventId) {
+  if (!WP.events[weekKey]) return;
+  WP.events[weekKey] = WP.events[weekKey].filter(e => e.id !== eventId);
+  if (WP.events[weekKey].length === 0) delete WP.events[weekKey];
+  const root = document.getElementById('weeklyPlanRoot');
+  if (root) _render(root);
+};
+
+function _esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 console.log('[weeklyPlan] v2.0 loaded');

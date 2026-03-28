@@ -3284,6 +3284,18 @@ function renderAnalytics(el) {
             <option value="quarter">Цей квартал</option>
             <option value="year">Цей рік</option>
           </select>
+          <button onclick="window._exportPnlXlsx()"
+            title="Експорт P&L в Excel"
+            style="padding:5px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.78rem;background:#fff;cursor:pointer;display:flex;align-items:center;gap:4px;color:#374151;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Excel
+          </button>
+          <button onclick="window._exportPnlPdf()"
+            title="Експорт P&L в PDF"
+            style="padding:5px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.78rem;background:#fff;cursor:pointer;display:flex;align-items:center;gap:4px;color:#374151;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            PDF
+          </button>
         </div>
       </div>
 
@@ -5427,3 +5439,297 @@ function _buildFinHowPanel() {
 
     </div>`;
 }
+
+// ══════════════════════════════════════════════════════════
+// P&L EXPORT — Excel і PDF
+// ══════════════════════════════════════════════════════════
+
+// ── Збір даних P&L для export ─────────────────────────────
+async function _getPnlExportData() {
+  const db  = window.db || (window.firebase && firebase.firestore());
+  const cid = window.currentCompanyId;
+  if (!db || !cid) throw new Error('DB не ініціалізовано');
+
+  const period   = window._analyticsPeriod || 'month';
+  const currency = window.currentCompanyData?.currency || 'UAH';
+  const now      = new Date();
+  let from, to;
+
+  if (period === 'month') {
+    from = new Date(now.getFullYear(), now.getMonth(), 1);
+    to   = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+  } else if (period === 'quarter') {
+    const q = Math.floor(now.getMonth() / 3);
+    from = new Date(now.getFullYear(), q * 3, 1);
+    to   = new Date(now.getFullYear(), q * 3 + 3, 0, 23, 59, 59);
+  } else {
+    from = new Date(now.getFullYear(), 0, 1);
+    to   = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+  }
+
+  const fromTs = firebase.firestore.Timestamp.fromDate(from);
+  const toTs   = firebase.firestore.Timestamp.fromDate(to);
+
+  const [txSnap, catSnap] = await Promise.all([
+    db.collection('companies').doc(cid).collection('finance_transactions')
+      .where('date','>=',fromTs).where('date','<=',toTs).get(),
+    db.collection('companies').doc(cid).collection('finance_categories').get(),
+  ]);
+
+  const txs  = txSnap.docs.map(d=>({id:d.id,...d.data()}));
+  const cats = catSnap.docs.map(d=>({id:d.id,...d.data()}));
+  const incCats = cats.filter(c=>c.type==='income');
+  const expCats = cats.filter(c=>c.type==='expense');
+
+  const byIncCat = {}, byCogsCat = {}, byOpexCat = {};
+  let totalInc=0, totalCogs=0, totalOpex=0;
+
+  txs.forEach(tx => {
+    const getDate = (t) => t.accrualDate || t.date;
+    const d = getDate(tx)?.toDate?.() || new Date();
+    if (d < from || d > to) return;
+    const amt = tx.amountBase || tx.amount || 0;
+    if (tx.type === 'income') {
+      byIncCat[tx.categoryId] = (byIncCat[tx.categoryId]||0) + amt;
+      totalInc += amt;
+    } else {
+      const cat = expCats.find(c=>c.id===tx.categoryId);
+      if (cat?.costType === 'cogs') {
+        byCogsCat[tx.categoryId] = (byCogsCat[tx.categoryId]||0) + amt;
+        totalCogs += amt;
+      } else {
+        byOpexCat[tx.categoryId] = (byOpexCat[tx.categoryId]||0) + amt;
+        totalOpex += amt;
+      }
+    }
+  });
+
+  const grossProfit = totalInc - totalCogs;
+  const netProfit   = grossProfit - totalOpex;
+  const pctOf = (v) => totalInc > 0 ? Math.round(v/totalInc*100) : 0;
+
+  const periodLabel = period === 'month'
+    ? from.toLocaleDateString('uk-UA',{month:'long',year:'numeric'})
+    : period === 'quarter'
+    ? `Q${Math.floor(from.getMonth()/3)+1} ${from.getFullYear()}`
+    : String(from.getFullYear());
+
+  return {
+    currency, periodLabel, from, to,
+    incCats, expCats,
+    byIncCat, byCogsCat, byOpexCat,
+    totalInc, totalCogs, totalOpex, grossProfit, netProfit,
+    pctOf,
+  };
+}
+
+// ── XLSX export ───────────────────────────────────────────
+window._exportPnlXlsx = async function() {
+  try {
+    if (typeof showToast === 'function') showToast('Формування Excel...', 'info');
+    const d = await _getPnlExportData();
+    const cur = d.currency;
+    const fmt = (n) => Number((n||0).toFixed(2));
+
+    // Будуємо рядки
+    const rows = [
+      ['P&L Звіт — ' + d.periodLabel, '', '', ''],
+      ['', '', '', ''],
+      ['Показник', 'Сума (' + cur + ')', '% від виручки', ''],
+      ['', '', '', ''],
+      ['ВИРУЧКА (Revenue)', fmt(d.totalInc), '100%', ''],
+    ];
+
+    d.incCats.filter(c=>d.byIncCat[c.id]).forEach(c => {
+      rows.push(['  ' + c.name, fmt(d.byIncCat[c.id]||0), d.pctOf(d.byIncCat[c.id]||0)+'%', '']);
+    });
+
+    rows.push(['', '', '', '']);
+    rows.push(['СОБІВАРТІСТЬ (COGS)', fmt(d.totalCogs), d.pctOf(d.totalCogs)+'%', '']);
+    d.expCats.filter(c=>d.byCogsCat[c.id]).forEach(c => {
+      rows.push(['  ' + c.name, fmt(d.byCogsCat[c.id]||0), d.pctOf(d.byCogsCat[c.id]||0)+'%', '']);
+    });
+
+    rows.push(['', '', '', '']);
+    rows.push(['ВАЛОВИЙ ПРИБУТОК', fmt(d.grossProfit), d.pctOf(d.grossProfit)+'%', '']);
+
+    rows.push(['', '', '', '']);
+    rows.push(['ОПЕРАЦІЙНІ ВИТРАТИ (OPEX)', fmt(d.totalOpex), d.pctOf(d.totalOpex)+'%', '']);
+    d.expCats.filter(c=>d.byOpexCat[c.id]).forEach(c => {
+      rows.push(['  ' + c.name, fmt(d.byOpexCat[c.id]||0), d.pctOf(d.byOpexCat[c.id]||0)+'%', '']);
+    });
+
+    rows.push(['', '', '', '']);
+    rows.push(['ЧИСТИЙ ПРИБУТОК (Net Profit)', fmt(d.netProfit), d.pctOf(d.netProfit)+'%', '']);
+
+    // Генеруємо XML-based XLSX без бібліотек
+    const xmlRows = rows.map(row =>
+      '<Row>' + row.map((cell, ci) => {
+        const isNum = typeof cell === 'number';
+        return `<Cell><Data ss:Type="${isNum?'Number':'String'}">${String(cell).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</Data></Cell>`;
+      }).join('') + '</Row>'
+    ).join('\n');
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Styles>
+    <Style ss:ID="header"><Font ss:Bold="1" ss:Size="12"/></Style>
+    <Style ss:ID="total"><Font ss:Bold="1"/><Interior ss:Color="#F0FDF4" ss:Pattern="Solid"/></Style>
+  </Styles>
+  <Worksheet ss:Name="P&amp;L">
+    <Table>${xmlRows}</Table>
+  </Worksheet>
+</Workbook>`;
+
+    const blob = new Blob([xml], {type:'application/vnd.ms-excel;charset=utf-8'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `PnL_${d.periodLabel.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,10)}.xls`;
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 1000);
+    if (typeof showToast === 'function') showToast('✓ P&L Excel завантажено', 'success');
+  } catch(e) {
+    console.error('[PnL export]', e);
+    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+  }
+};
+
+// ── PDF export ────────────────────────────────────────────
+window._exportPnlPdf = async function() {
+  try {
+    if (typeof showToast === 'function') showToast('Формування PDF...', 'info');
+
+    // Завантажуємо jsPDF якщо ще немає
+    if (!window.jspdf) {
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+      });
+    }
+
+    const d = await _getPnlExportData();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit:'mm', format:'a4' });
+    const cur = d.currency;
+    const pageW = 210, margin = 18;
+    let y = 0;
+
+    const fmtN = (n) => (n||0).toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2});
+    const pct  = (n) => d.pctOf(n) + '%';
+
+    // Шапка
+    doc.setFillColor(34,197,94);
+    doc.rect(0,0,pageW,14,'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(12);
+    doc.text('TALKO Business System', margin, 9.5);
+    doc.setFontSize(9);
+    doc.setFont('helvetica','normal');
+    doc.text('P&L Report', pageW - margin - 20, 9.5);
+
+    y = 24;
+    doc.setTextColor(26,26,26);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(16);
+    doc.text('P&L — Звіт про прибутки і збитки', margin, y);
+    y += 7;
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(9);
+    doc.setTextColor(100,100,100);
+    doc.text(`Період: ${d.periodLabel}  |  Валюта: ${cur}  |  Дата: ${new Date().toLocaleDateString('uk-UA')}`, margin, y);
+
+    // Функція для рядка таблиці
+    const addRow = (label, val, pctStr, bold, bgColor) => {
+      if (y > 270) { doc.addPage(); y = 20; }
+      if (bgColor) { doc.setFillColor(...bgColor); doc.rect(margin, y-4, pageW-margin*2, 8, 'F'); }
+      doc.setFont('helvetica', bold ? 'bold' : 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(26,26,26);
+      doc.text(label, margin+2, y);
+      if (val !== null) {
+        doc.text(fmtN(val), pageW - margin - 42, y, {align:'right'});
+        doc.setTextColor(100,100,100);
+        doc.text(pctStr||'', pageW - margin - 4, y, {align:'right'});
+      }
+      y += 7;
+    };
+
+    const divider = (color) => {
+      doc.setDrawColor(...(color||[229,231,235]));
+      doc.line(margin, y-3, pageW-margin, y-3);
+    };
+
+    y += 6;
+    // Заголовок таблиці
+    doc.setFillColor(31,41,55);
+    doc.rect(margin, y-5, pageW-margin*2, 9, 'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8.5);
+    doc.text('Показник', margin+2, y);
+    doc.text(`Сума (${cur})`, pageW-margin-42, y, {align:'right'});
+    doc.text('% вир.', pageW-margin-4, y, {align:'right'});
+    y += 8;
+
+    // Виручка
+    doc.setTextColor(26,26,26);
+    addRow('ВИРУЧКА (Revenue)', d.totalInc, '100%', true, [240,253,244]);
+    d.incCats.filter(c=>d.byIncCat[c.id]).forEach(c =>
+      addRow('  ' + c.name, d.byIncCat[c.id]||0, pct(d.byIncCat[c.id]||0), false)
+    );
+
+    y += 2; divider([187,247,208]);
+    // COGS
+    addRow('СОБІВАРТІСТЬ (COGS)', d.totalCogs, pct(d.totalCogs), true, [255,247,237]);
+    d.expCats.filter(c=>d.byCogsCat[c.id]).forEach(c =>
+      addRow('  ' + c.name, d.byCogsCat[c.id]||0, pct(d.byCogsCat[c.id]||0), false)
+    );
+
+    y += 2;
+    addRow('ВАЛОВИЙ ПРИБУТОК', d.grossProfit, pct(d.grossProfit), true,
+      d.grossProfit >= 0 ? [240,253,244] : [254,242,242]);
+
+    y += 2; divider();
+    // OPEX
+    addRow('ОПЕРАЦІЙНІ ВИТРАТИ (OPEX)', d.totalOpex, pct(d.totalOpex), true, [254,242,242]);
+    d.expCats.filter(c=>d.byOpexCat[c.id]).forEach(c =>
+      addRow('  ' + c.name, d.byOpexCat[c.id]||0, pct(d.byOpexCat[c.id]||0), false)
+    );
+
+    y += 3;
+    // Чистий прибуток — виділений блок
+    doc.setFillColor(31,41,55);
+    doc.rect(margin, y-5, pageW-margin*2, 11, 'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(10);
+    doc.text('ЧИСТИЙ ПРИБУТОК (Net Profit)', margin+2, y+1);
+    doc.setTextColor(d.netProfit>=0 ? [34,197,94] : [239,68,68]);
+    if (Array.isArray(d.netProfit>=0 ? [34,197,94] : [239,68,68])) {
+      doc.setTextColor(...(d.netProfit>=0?[34,197,94]:[239,68,68]));
+    }
+    doc.setTextColor(d.netProfit>=0?34:239, d.netProfit>=0?197:68, d.netProfit>=0?94:68);
+    doc.text(fmtN(d.netProfit), pageW-margin-42, y+1, {align:'right'});
+    doc.setTextColor(200,200,200);
+    doc.setFontSize(9);
+    doc.text(pct(d.netProfit), pageW-margin-4, y+1, {align:'right'});
+
+    // Футер
+    doc.setTextColor(150,150,150);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7.5);
+    doc.text('Сформовано TALKO Business System · ' + new Date().toLocaleString('uk-UA'), margin, 287);
+
+    doc.save(`PnL_${d.periodLabel.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,10)}.pdf`);
+    if (typeof showToast === 'function') showToast('✓ P&L PDF завантажено', 'success');
+  } catch(e) {
+    console.error('[PnL PDF]', e);
+    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+  }
+};
