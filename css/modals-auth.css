@@ -312,6 +312,16 @@
             background: rgba(255,255,255,0.07);
             outline: none;
         }
+
+        /* Fix browser autofill background - keeps dark theme */
+        .auth-input-group .form-input:-webkit-autofill,
+        .auth-input-group .form-input:-webkit-autofill:hover,
+        .auth-input-group .form-input:-webkit-autofill:focus,
+        .auth-input-group .form-input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #1a1a2e inset !important;
+            -webkit-text-fill-color: #ffffff !important;
+            caret-color: #ffffff;
+        }
         .auth-input-group .input-wrapper { position: relative; }
         .auth-input-group .input-wrapper .form-input { padding-right: 50px; }
         .auth-input-group .password-toggle {
