@@ -582,7 +582,7 @@ async function loadDashboardData(monthVal) {
       alerts.push({ type: 'warn', text: `${window.t('finOverspend')} ${fmt(expense - income)}` });
     }
     if (margin < 10 && income > 0) {
-      alerts.push({ type: 'warn', text: `Низька маржа: ${margin}% (норма > 15%)` });
+      alerts.push({ type: 'warn', text: `${window.t('lowMarginAlert').replace('{V}', margin)}` });
     }
     if (alerts.length === 0) {
       alerts.push({ type: 'ok', text: window.t('finAllOk') });
@@ -2050,7 +2050,7 @@ function _recurringUpcoming(items, currency) {
 
 function _recurringCard(item, currency) {
   const active = item.active !== false;
-  const freqLabel = { monthly: window.t('monthlyWord'), quarterly: 'Щоквартально', yearly: 'Щороку' }[item.frequency] || window.t('monthlyWord');
+  const freqLabel = { monthly: window.t('monthlyWord'), quarterly: window.t('quarterlyWord'), yearly: window.t('yearlyWord') }[item.frequency] || window.t('monthlyWord');
   const typeColor = item.type === 'expense' ? '#ef4444' : '#22c55e';
   const typeLabel = item.type === 'expense' ? window.t('finExpense2') : window.t('finIncome2');
 
@@ -2111,8 +2111,8 @@ window._finAddRecurring = function(editId) {
 
   const freqOptions = [
     { v: 'monthly',     l: window.t('monthlyWord')      },
-    { v: 'quarterly',   l: 'Щоквартально'  },
-    { v: 'yearly',      l: 'Щороку'        },
+    { v: 'quarterly',   l: window.t('quarterlyWord') },
+    { v: 'yearly',      l: window.t('yearlyWord') },
   ];
 
   const days = Array.from({length:28}, (_,i) => i+1);
@@ -3281,7 +3281,7 @@ function renderAnalytics(el) {
           <select id="analyticsPeriodSel" onchange="window._analyticsPeriodChange(this.value)"
             style="padding:5px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
             <option value="month">${window.t('finThisMonth')}</option>
-            <option value="quarter">Цей квартал</option>
+            <option value="quarter">${window.t('thisQuarter')}</option>
             <option value="year">${window.t('thisYear')}</option>
           </select>
           <button onclick="window._exportPnlXlsx()"
@@ -3316,7 +3316,7 @@ function renderAnalytics(el) {
         <button onclick="window._analyticsMode('balance')" id="anlBtn_balance"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h16v4"/><circle cx="18" cy="12" r="2"/></svg>
-          Баланс
+          ${window.t('finTabBalance')}
         </button>
       </div>
 
@@ -3481,10 +3481,10 @@ function _renderPnl(el, txs, currency, from, to) {
   el.innerHTML = accrualNote +
     `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;">` +
     [
-      { label:'Виручка',          val: fmt(totalInc, currency),    color:'#22c55e', sub:'' },
-      { label:'Валовий прибуток', val: fmt(grossProfit, currency), color:pColor(grossProfit), sub: grossMargin + '% маржа' },
+      { label:window.t('revenueLabel'), val: fmt(totalInc, currency), color:'#22c55e', sub:'' },
+      { label:window.t('grossProfitLabel'), val: fmt(grossProfit, currency), color:pColor(grossProfit), sub: grossMargin + '% ' + window.t('marginWord') },
       { label:window.t('opexLabel'), val: fmt(totalOpex, currency), color:'#f59e0b', sub:'' },
-      { label:'Чистий прибуток',  val: fmt(netProfit, currency),   color:pColor(netProfit),   sub: netMargin + '% маржа' },
+      { label:window.t('netProfitLabel'), val: fmt(netProfit, currency), color:pColor(netProfit), sub: netMargin + '% ' + window.t('marginWord') },
     ].map(k =>
       `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px 14px;">` +
       `<div style="font-size:0.7rem;color:#6b7280;margin-bottom:3px;">${k.label}</div>` +
@@ -3493,19 +3493,19 @@ function _renderPnl(el, txs, currency, from, to) {
       `</div>`).join('') +
     `</div>` +
     `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">` +
-    secHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Виручка (Revenue)', totalInc, '#f0fdf4', '#16a34a') +
+    secHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> ' + window.t('revenueLabel') + ' (Revenue)', totalInc, '#f0fdf4', '#16a34a') +
     (incCats.filter(c => byIncCat[c.id]).map(c => incRow(c, byIncCat[c.id]||0)).join('') ||
       noData(window.t('noIncomeData'))) +
-    secHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg> Собівартість (COGS)', totalCogs, '#fff7ed', '#c2410c') +
+    secHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg> ' + window.t('cogsLabel') + ' (COGS)', totalCogs, '#fff7ed', '#c2410c') +
     (expCats.filter(c => byCogsCat[c.id]).map(c => catRow(c, byCogsCat[c.id]||0, totalInc)).join('') ||
       `<div style="padding:8px 14px;font-size:0.78rem;color:#9ca3af;">` +
       `${window.t('noCOGSData')}</div>`) +
-    subRow('Валовий прибуток (Gross Profit)', grossProfit, '#f8fafc') +
-    secHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Операційні витрати (OPEX)', totalOpex, '#fef2f2', '#dc2626') +
+    subRow(window.t('grossProfitLabel') + ' (Gross Profit)', grossProfit, '#f8fafc') +
+    secHdr('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> ' + window.t('opexFullLabel') + ' (OPEX)', totalOpex, '#fef2f2', '#dc2626') +
     (expCats.filter(c => byOpexCat[c.id]).map(c => catRow(c, byOpexCat[c.id]||0, totalInc)).join('') ||
       noData(window.t('noOpexData'))) +
     `<div style="background:#1f2937;color:#fff;padding:14px 14px;display:flex;justify-content:space-between;align-items:center;">` +
-    `<div><div style="font-size:0.85rem;font-weight:700;">Чистий прибуток (Net Profit)</div>` +
+    `<div><div style="font-size:0.85rem;font-weight:700;">${window.t('netProfitLabel')} (Net Profit)</div>` +
     `<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">${window.t('marginLabel')} ${netMargin}%</div></div>` +
     `<span style="font-size:1.1rem;font-weight:700;color:${pColor(netProfit)};">` +
     `${netProfit >= 0 ? '+' : ''}${fmt(netProfit, currency)}</span></div>` +
