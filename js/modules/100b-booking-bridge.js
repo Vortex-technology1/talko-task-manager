@@ -41,9 +41,8 @@ function _patchBooking() {
         tasks.push(_syncToCrm(appt));
       }
       if (typeof window.isLinkActive === 'function' && window.isLinkActive('booking', 'finance')) {
-        if (amount && amount > 0) {
-          tasks.push(_showFinanceModal(appt, amount));
-        }
+        // Показуємо модал завжди — сума може бути 0 (вводиться вручну в модалі)
+        tasks.push(_showFinanceModal(appt, amount || 0));
       }
       await Promise.allSettled(tasks);
     } catch(e) {

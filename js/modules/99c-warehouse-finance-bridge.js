@@ -133,7 +133,7 @@ function _patch() {
       if (!item) return result;
 
       // Середня собівартість для OUT і WRITE_OFF
-      const costPerUnit = item.avgPrice || item.price || price || 0;
+      const costPerUnit = item.costPrice || item.avgPrice || item.price || price || 0;
 
       if (type === 'OUT' && costPerUnit > 0) {
         window.whFinanceOnOut(item, qty, costPerUnit).catch(()=>{});

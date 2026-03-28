@@ -64,7 +64,17 @@ async function _buildBalanceData() {
   const cashItems = accounts.map(a=>({ name: a.name, value: a.balance||0, sub: a.type+' · '+a.currency }));
 
   // 2. Дебіторська заборгованість (з CRM — виграні угоди без financeLinked)
-  const debtors = deals.filter(d=>!d.financeLinked && (d.amount||0)>0);
+  // Дебіторка: виграні угоди без прив'язки до фінансів
+  // Виключаємо угоди закриті більше 90 днів тому (вважаємо що вже оплачено або не актуально)
+  const ninetyDaysAgo = new Date(); ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+  const debtors = deals.filter(d => {
+    if (d.financeLinked) return false;
+    if ((d.amount||0) <= 0) return false;
+    // Якщо є дата закриття і вона старша 90 днів — не рахуємо
+    const wonAt = d.wonAt?.toDate?.() || (d.wonAt ? new Date(d.wonAt) : null);
+    if (wonAt && wonAt < ninetyDaysAgo) return false;
+    return true;
+  });
   const debtorTotal = debtors.reduce((s,d)=>s+(d.amount||0),0);
   const debtorItems = debtors.slice(0,5).map(d=>({
     name: d.clientName||d.title||'—',
@@ -74,10 +84,10 @@ async function _buildBalanceData() {
   if (debtors.length > 5) debtorItems.push({name:`+ще ${debtors.length-5} угод`, value: debtors.slice(5).reduce((s,d)=>s+(d.amount||0),0), sub:''});
 
   // 3. Запаси (зі складу)
-  const stockTotal = items.reduce((s,i)=>s+((i.qty||0)*(i.avgPrice||i.price||0)),0);
+  const stockTotal = items.reduce((s,i)=>s+((i.qty||0)*(i.costPrice||i.avgPrice||i.price||0)),0);
   const stockItems = items.filter(i=>(i.qty||0)>0).slice(0,5).map(i=>({
     name: i.name||'—',
-    value: (i.qty||0)*(i.avgPrice||i.price||0),
+    value: (i.qty||0)*(i.costPrice||i.avgPrice||i.price||0),
     sub: `${i.qty} ${i.unit||'шт'} × ${i.avgPrice||i.price||0}`
   }));
 
