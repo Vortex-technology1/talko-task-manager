@@ -1013,7 +1013,7 @@ async function loadAndRenderTxList(type) {
       const [y, m] = _txFilter.month.split('-').map(Number);
       const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
       const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
-      query = query.where('date', '>=', from).where('date', '<=', to).orderBy('date', 'desc');
+      query = query.where('date', '>=', from).where('date', '<=', to); // orderBy на клієнті
     } else if (hasCat) {
       query = query.where('categoryId', '==', _txFilter.categoryId);
     } else if (hasAcc) {
@@ -1169,7 +1169,7 @@ async function _getTxForExport(type) {
   if (_txFilter.month) {
     const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
     const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
-    query = query.where('date', '>=', from).where('date', '<=', to).orderBy('date', 'desc');
+    query = query.where('date', '>=', from).where('date', '<=', to); // orderBy на клієнті
   } else {
     query = query.limit(EXPORT_LIMIT);
   }
@@ -4351,7 +4351,7 @@ async function _buildAiFinContext() {
 
     // Останні 3 місяці
     const from3m = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth()-2, 1));
-    const txSnap = await colRef('finance_transactions').where('date','>=',from3m).orderBy('date','desc').get();
+    const txSnap = await colRef('finance_transactions').where('date','>=',from3m).get();
     const txs = txSnap.docs.map(d => d.data());
 
     // Групуємо по місяцях
@@ -5336,7 +5336,7 @@ window._finHowToggle = function() {
 };
 
 function _buildFinHowPanel() {
-  const cur = _state.currency || 'UAH';
+  const cur = window.currentCompanyData?.currency || (window.financeState?.currency) || 'UAH';
 
   // Кольори і стилі
   const card  = 'background:#fff;border-radius:12px;border:1.5px solid #e5e7eb;padding:1rem 1.1rem;';
