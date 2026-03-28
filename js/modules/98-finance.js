@@ -3513,7 +3513,7 @@ function _renderPnl(el, txs, currency, from, to) {
     (totalCogs === 0 ?
       `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;` +
       `margin-top:12px;font-size:0.78rem;color:#92400e;">` +
-      `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> <b>Підказка:</b> Щоб бачити Собівартість окремо — в Налаштуваннях → Категорії витрат ` +
+      `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> <b>${window.t('hintLabel')}:</b> ${window.t('cogsHintFull')} ` +
       `${window.t('cogsHint')}</div>` : '');
 }
 
@@ -3644,7 +3644,7 @@ function _renderTrends(el, txs, currency, from, to, period) {
 
   el.innerHTML = `
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;">
-      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:16px;">Топ-5 категорій витрат по ${period === 'year' ? window.t('inMonthsWord') : period === 'quarter' ? window.t('inQuarterMonths') : 'тижнях'}</div>
+      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:16px;">${window.t('top5CatTitle')} ${period === 'year' ? window.t('inMonthsWord') : period === 'quarter' ? window.t('inQuarterMonths') : window.t('inWeeksWord')}</div>
 
       <!-- Легенда -->
       <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
@@ -5742,14 +5742,14 @@ window._exportPnlPdf = async function() {
     doc.setTextColor(255,255,255);
     doc.setFont('helvetica','bold');
     doc.setFontSize(8.5);
-    doc.text('Показник', margin+2, y);
-    doc.text(`Сума (${cur})`, pageW-margin-42, y, {align:'right'});
-    doc.text('% вир.', pageW-margin-4, y, {align:'right'});
+    doc.text(_tg('Показник','Показатель'), margin+2, y);
+    doc.text(`${_tg('Сума','Сумма')} (${cur})`, pageW-margin-42, y, {align:'right'});
+    doc.text(_tg('% вир.','% вир.'), pageW-margin-4, y, {align:'right'});
     y += 8;
 
     // Виручка
     doc.setTextColor(26,26,26);
-    addRow('ВИРУЧКА (Revenue)', d.totalInc, '100%', true, [240,253,244]);
+    addRow(_tg('ВИРУЧКА (Revenue)','ВЫРУЧКА (Revenue)'), d.totalInc, '100%', true, [240,253,244]);
     d.incCats.filter(c=>d.byIncCat[c.id]).forEach(c =>
       addRow('  ' + c.name, d.byIncCat[c.id]||0, pct(d.byIncCat[c.id]||0), false)
     );
@@ -5762,7 +5762,7 @@ window._exportPnlPdf = async function() {
     );
 
     y += 2;
-    addRow('ВАЛОВИЙ ПРИБУТОК', d.grossProfit, pct(d.grossProfit), true,
+    addRow(_tg('ВАЛОВИЙ ПРИБУТОК','ВАЛОВАЯ ПРИБЫЛЬ'), d.grossProfit, pct(d.grossProfit), true,
       d.grossProfit >= 0 ? [240,253,244] : [254,242,242]);
 
     y += 2; divider();
@@ -5779,11 +5779,7 @@ window._exportPnlPdf = async function() {
     doc.setTextColor(255,255,255);
     doc.setFont('helvetica','bold');
     doc.setFontSize(10);
-    doc.text('ЧИСТИЙ ПРИБУТОК (Net Profit)', margin+2, y+1);
-    doc.setTextColor(d.netProfit>=0 ? [34,197,94] : [239,68,68]);
-    if (Array.isArray(d.netProfit>=0 ? [34,197,94] : [239,68,68])) {
-      doc.setTextColor(...(d.netProfit>=0?[34,197,94]:[239,68,68]));
-    }
+    doc.text(_tg('ЧИСТИЙ ПРИБУТОК (Net Profit)','ЧИСТАЯ ПРИБЫЛЬ (Net Profit)'), margin+2, y+1);
     doc.setTextColor(d.netProfit>=0?34:239, d.netProfit>=0?197:68, d.netProfit>=0?94:68);
     doc.text(fmtN(d.netProfit), pageW-margin-42, y+1, {align:'right'});
     doc.setTextColor(200,200,200);
@@ -5794,7 +5790,7 @@ window._exportPnlPdf = async function() {
     doc.setTextColor(150,150,150);
     doc.setFont('helvetica','normal');
     doc.setFontSize(7.5);
-    doc.text('Сформовано TALKO Business System · ' + new Date().toLocaleString('uk-UA'), margin, 287);
+    doc.text(_tg('Сформовано TALKO Business System · ','Сформировано TALKO Business System · ') + new Date().toLocaleString('uk-UA'), margin, 287);
 
     doc.save(`PnL_${d.periodLabel.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,10)}.pdf`);
     if (typeof showToast === 'function') showToast(_tg('✓ P&L PDF завантажено','✓ P&L PDF загружен'), 'success');

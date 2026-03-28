@@ -3567,6 +3567,10 @@
                 netProfitLabel: 'Чистий прибуток',
                 marginWord: 'маржа',
                 lowMarginAlert: 'Низька маржа: {V}% (норма > 15%)',
+                inWeeksWord: 'тижнях',
+                top5CatTitle: 'Топ-5 категорій витрат по',
+                hintLabel: 'Підказка',
+                cogsHintFull: 'Щоб бачити Собівартість окремо — в Налаштуваннях → Категорії витрат',
             },
             en: {
                 authSubtitle: 'Task management for business',
@@ -17451,6 +17455,10 @@
                 netProfitLabel: 'Чистая прибыль',
                 marginWord: 'маржа',
                 lowMarginAlert: 'Низкая маржа: {V}% (норма > 15%)',
+                inWeeksWord: 'неделях',
+                top5CatTitle: 'Топ-5 категорий расходов по',
+                hintLabel: 'Подсказка',
+                cogsHintFull: 'Чтобы видеть Себестоимость отдельно — в Настройках → Категории расходов',
             },
             pl: {
                 authSubtitle: 'Zarządzanie zadaniami dla biznesu',
