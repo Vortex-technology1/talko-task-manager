@@ -443,7 +443,7 @@ function renderDashboard(el) {
               <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;"></div>${window.t('finIncome')}
             </div>
             <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
-              <div style="width:10px;height:10px;border-radius:2px;background:#ef4444;"></div>Витрати
+              <div style="width:10px;height:10px;border-radius:2px;background:#ef4444;"></div>${window.t('finExpense')||'Витрати'}
             </div>
           </div>
         </div>
@@ -1963,7 +1963,7 @@ function renderRecurring(el) {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
         <div>
           <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabRecurring')}</h3>
-          <p style="margin:0.25rem 0 0;font-size:0.82rem;color:#6b7280;">Автоматичне списання/нарахування в заданий день місяця</p>
+          <p style="margin:0.25rem 0 0;font-size:0.82rem;color:#6b7280;">${window.t('finRecurringHint')||'Автоматичне списання/нарахування в заданий день місяця'}</p>
         </div>
         ${isOwnerOrManager() ? `
           <button onclick="window._finAddRecurring()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;">
@@ -2078,7 +2078,7 @@ function _recurringCard(item, currency) {
         <div style="font-size:1.05rem;font-weight:700;color:${typeColor};">
           ${item.type === 'expense' ? '−' : '+'}${fmt(item.amount, currency)}
         </div>
-        <div style="font-size:0.72rem;color:#9ca3af;">/міс</div>
+        <div style="font-size:0.72rem;color:#9ca3af;">${window.t('finPerMonth')||'/ міс'}</div>
       </div>
 
       <!-- Дії -->
@@ -2125,14 +2125,14 @@ window._finAddRecurring = function(editId) {
   overlay.innerHTML = `
     <div style="background:#fff;border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
-        <h3 style="margin:0;font-size:1rem;font-weight:700;">${existing ? window.t('flowEdit') : window.t('incStatusNew')} регулярний платіж</h3>
+        <h3 style="margin:0;font-size:1rem;font-weight:700;">${existing ? window.t('flowEdit') : window.t('incStatusNew')} ${window.t('finRecurring')||'регулярний платіж'}</h3>
         <button onclick="document.getElementById('recurringModal')?.remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
       </div>
       <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
 
         <!-- Назва -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Назва платежу *</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finRecurringName')||'Назва платежу'} *</label>
           <input id="rec_name" value="${escHtml(existing?.name || '')}" placeholder=${window.t('expensesExPh')} 
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
@@ -2143,11 +2143,11 @@ window._finAddRecurring = function(editId) {
           <div style="display:flex;gap:0.5rem;">
             <button id="rec_type_expense" onclick="_recSetType('expense')"
               style="flex:1;padding:8px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;border:2px solid ${!existing || existing.type==='expense' ? '#ef4444' : '#e5e7eb'};background:${!existing || existing.type==='expense' ? '#fef2f2' : '#fff'};color:${!existing || existing.type==='expense' ? '#ef4444' : '#6b7280'};">
-              Витрата
+              ${window.t('finExpense2')||'Витрата'}
             </button>
             <button id="rec_type_income" onclick="_recSetType('income')"
               style="flex:1;padding:8px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;border:2px solid ${existing?.type==='income' ? '#22c55e' : '#e5e7eb'};background:${existing?.type==='income' ? '#f0fdf4' : '#fff'};color:${existing?.type==='income' ? '#22c55e' : '#6b7280'};">
-              Дохід
+              ${window.t('finIncome2')||'Дохід'}
             </button>
           </div>
           <input type="hidden" id="rec_type" value="${existing?.type || 'expense'}">
@@ -2161,7 +2161,7 @@ window._finAddRecurring = function(editId) {
               style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Валюта</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCurrencyLbl')||'Валюта'}</label>
             <select id="rec_currency" style="border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;font-size:0.9rem;height:38px;">
               ${['UAH','EUR','USD','PLN','CZK'].map(c => `<option ${(existing?.currency||currency)===c?'selected':''}>${c}</option>`).join('')}
             </select>
@@ -2180,13 +2180,13 @@ window._finAddRecurring = function(editId) {
         <!-- Частота + день -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Частота</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finFrequency')||'Частота'}</label>
             <select id="rec_freq" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
               ${freqOptions.map(f => `<option value="${f.v}" ${existing?.frequency===f.v?'selected':''}>${f.l}</option>`).join('')}
             </select>
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">День місяця</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finDayOfMonth')||'День місяця'}</label>
             <select id="rec_day" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
               ${days.map(d => `<option ${existing?.dayOfMonth===d?'selected':''}>${d}</option>`).join('')}
             </select>
@@ -2196,7 +2196,7 @@ window._finAddRecurring = function(editId) {
         <!-- Контрагент -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCounterpartyLbl')}</label>
-          <input id="rec_counterparty" value="${escHtml(existing?.counterparty || '')}" placeholder="Орендодавець, постачальник..."
+          <input id="rec_counterparty" value="${escHtml(existing?.counterparty || '')}" placeholder="${window.t('finRecCounterpart')||'Орендодавець, постачальник...'}"
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
@@ -2209,7 +2209,7 @@ window._finAddRecurring = function(editId) {
 
         <!-- Рахунок -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Рахунок</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finAccountLbl')||'Рахунок'}</label>
           <select id="rec_account" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
             ${(_state.accounts||[]).map(a => `<option value="${a.id}" ${existing?.accountId===a.id?'selected':''}>${escHtml(a.name)}</option>`).join('')}
           </select>
@@ -2219,7 +2219,7 @@ window._finAddRecurring = function(editId) {
         <div style="display:flex;gap:0.5rem;padding-top:0.5rem;">
           <button onclick="document.getElementById('recurringModal')?.remove()"
             style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;cursor:pointer;font-size:0.9rem;color:#6b7280;">
-            Скасувати
+            ${window.t('cancel')||'Скасувати'}
           </button>
           <button onclick="window._finSaveRecurring('${editId || ''}')"
             style="flex:2;padding:10px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:700;">
@@ -3558,7 +3558,7 @@ async function _renderProjectsMargin(el, txs, currency) {
         display:grid;grid-template-columns:1fr 100px 100px 100px 70px;text-transform:uppercase;">
         <div>${window.t('finProjectLbl')}</div>
         <div style="text-align:right;">${window.t('finTransactionIncome')}</div>
-        <div style="text-align:right;">Витрати</div>
+        <div style="text-align:right;">${window.t('finExpense')||'Витрати'}</div>
         <div style="text-align:right;">${window.t('finProfit')}</div>
         <div style="text-align:right;">${window.t('finMargin')}</div>
       </div>
@@ -4028,7 +4028,7 @@ window._financeAddCategory = function(type) {
         <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
           <button onclick="document.getElementById('finCatModal')?.remove()"
             style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:0.85rem;color:#6b7280;font-weight:500;">
-            Скасувати
+            ${window.t('cancel')||'Скасувати'}
           </button>
           <button onclick="window._finCatSave('${type}')"
             style="flex:2;padding:0.6rem;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.85rem;font-weight:700;">
@@ -4543,7 +4543,7 @@ function addTransaction(forceType) {
               oninput="window._updateCurrencyHint()">
           </div>
           <div style="width:90px;">
-            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Валюта</label>
+            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCurrencyLbl')||'Валюта'}</label>
             <select id="fmCurrency" onchange="window._updateCurrencyHint()"
               style="width:100%;padding:0.55rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
               ${['EUR','USD','UAH','PLN','GBP','CZK'].map(cur =>
@@ -4575,7 +4575,7 @@ function addTransaction(forceType) {
 
         <!-- Рахунок -->
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Рахунок</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finAccountLbl')||'Рахунок'}</label>
           <select id="fmAccount"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             ${_state.accounts.map(a => `<option value="${a.id}" ${a.isDefault?'selected':''}>${escHtml(a.name)} (${a.currency})</option>`).join('')}
@@ -4634,7 +4634,7 @@ function addTransaction(forceType) {
         <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
           <button onclick="document.getElementById('financeModal')?.remove()"
             style="flex:1;padding:0.65rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:0.85rem;color:#6b7280;font-weight:500;">
-            Скасувати
+            ${window.t('cancel')||'Скасувати'}
           </button>
           <button id="fmSaveBtn" onclick="window._financeSaveTx()"
             style="flex:2;padding:0.65rem;border:none;border-radius:8px;background:${color};color:#fff;cursor:pointer;font-size:0.85rem;font-weight:700;">
