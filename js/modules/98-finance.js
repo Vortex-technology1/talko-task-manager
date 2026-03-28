@@ -3341,6 +3341,17 @@ async function _loadAnalytics(mode, period) {
 
   try {
     const currency = _state.currency || 'EUR';
+
+    // Balance mode — не потребує завантаження транзакцій по періоду
+    if (mode === 'balance') {
+      if (typeof window.renderBalanceSheet === 'function') {
+        window.renderBalanceSheet(el);
+      } else {
+        el.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Модуль балансу не завантажено</div>';
+      }
+      return;
+    }
+
     const now = new Date();
     let from, to;
 
@@ -3366,15 +3377,6 @@ async function _loadAnalytics(mode, period) {
     if (mode === 'pnl')      _renderPnl(el, txs, currency, from, to);
     if (mode === 'projects')  _renderProjectsMargin(el, txs, currency);
     if (mode === 'trends')    _renderTrends(el, txs, currency, from, to, period);
-    if (mode === 'balance') {
-      // Баланс не залежить від вибраного періоду — показуємо повний
-      if (typeof window.renderBalanceSheet === 'function') {
-        window.renderBalanceSheet(el);
-      } else {
-        el.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Модуль балансу не завантажено</div>';
-      }
-      return; // не потрібно читати txs для балансу — renderBalanceSheet сам завантажить
-    }
 
   } catch(e) {
     el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${escHtml(e.message)}</div>`;
