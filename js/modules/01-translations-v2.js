@@ -14539,7 +14539,7 @@
                 finBudgetByCategory: 'Бюджет по категориям',
                 finBudgetByFunction: 'Бюджет по функциям',
                 finCashflow3060: 'Cashflow 30/60/90 дней',
-                finCashflowMonth: 'Cashflow луны',
+                finCashflowMonth: 'Cashflow месяца',
                 finDone: 'выполнено',
                 finPLReport: 'P&L отчет',
                 finMarginByProject: 'Маржа по проектам',
