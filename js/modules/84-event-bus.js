@@ -25,7 +25,7 @@
 // ─────────────────────────────────────────
 'use strict';
 // i18n helper
-const _tg = (ua, ru) => (window.currentLang === 'ru' ? ru : ua);
+var _tg = typeof _tg !== 'undefined' ? _tg : function(ua,ru){return window.currentLang==='ru'?ru:ua;};
 
 
 const TALKO_EVENTS = {

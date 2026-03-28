@@ -5,9 +5,9 @@
 'use strict';
 
 // i18n helper
-function _tg(ua, ru) {
+var _tg = _tg || function(ua, ru) {
   return (window.currentLang === 'ru' || (typeof window.getLocale === 'function' && window.getLocale().startsWith('ru'))) ? ru : ua;
-}
+};
 
 
 // ── Render beauty tab in deal modal ───────────────────────

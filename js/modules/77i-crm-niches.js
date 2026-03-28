@@ -1,4 +1,4 @@
-const _tg=(ua,ru)=>window.currentLang==='ru'?ru:ua;
+var _tg = typeof _tg !== 'undefined' ? _tg : function(ua,ru){return window.currentLang==='ru'?ru:ua;};
 // ============================================================
 // 77i-crm-niches.js — Кастомні CRM-вкладки під ніші
 // autoservice: Авто / Наряди
