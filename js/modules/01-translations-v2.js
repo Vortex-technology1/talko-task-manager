@@ -3550,6 +3550,9 @@
                 category: 'Категорія',
                 total: 'Разом',
                 finModuleNotReady: 'Фінансовий модуль не ініціалізовано.',
+                finExpenseWordLc: 'витрату',
+                finAmountLbl: 'Сума',
+                forPnL: 'для P&L',
             },
             en: {
                 authSubtitle: 'Task management for business',
@@ -17417,6 +17420,9 @@
                 category: 'Категория',
                 total: 'Итого',
                 finModuleNotReady: 'Финансовый модуль не инициализирован.',
+                finExpenseWordLc: 'расход',
+                finAmountLbl: 'Сумма',
+                forPnL: 'для P&L',
             },
             pl: {
                 authSubtitle: 'Zarządzanie zadaniami dla biznesu',

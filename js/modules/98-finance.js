@@ -4471,7 +4471,7 @@ function addTransaction(forceType) {
   const cats     = _state.categories[type] || [];
   const today    = new Date().toISOString().split('T')[0];
   const color    = type === 'income' ? '#22c55e' : '#ef4444';
-  const label    = type === 'income' ? window.t('incomeWordLc') : 'витрату';
+  const label    = type === 'income' ? window.t('incomeWordLc') : window.t('finExpenseWordLc');
 
   // Функції для прив'язки — глобальний functions[] + fallback до _state.functions
   const _finFunctions = (typeof functions !== 'undefined' && functions.length > 0)
@@ -4502,13 +4502,13 @@ function addTransaction(forceType) {
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
         <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">
-          Додати ${label}
+          ${window.t('finAddBtn')} ${label}
         </div>
         <div style="display:flex;gap:0.5rem;">
           <button id="fmTabIncome" onclick="window._financeModalSwitchType('income')"
             style="padding:0.3rem 0.75rem;border-radius:6px;border:none;cursor:pointer;font-size:0.8rem;font-weight:600;
             background:${type==='income'?'#22c55e':'#f3f4f6'};color:${type==='income'?'#fff':'#6b7280'};">
-            ${window.t('income')}
+            ${window.t('finIncome2')}
           </button>
           <button id="fmTabExpense" onclick="window._financeModalSwitchType('expense')"
             style="padding:0.3rem 0.75rem;border-radius:6px;border:none;cursor:pointer;font-size:0.8rem;font-weight:600;
@@ -4530,7 +4530,7 @@ function addTransaction(forceType) {
         <!-- Сума + валюта -->
         <div style="display:flex;gap:0.5rem;">
           <div style="flex:1;">
-            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Сума *</label>
+            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finAmountLbl')} *</label>
             <input id="fmAmount" type="number" min="0" step="0.01" placeholder="0.00"
               style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;outline:none;"
               onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"
@@ -4605,7 +4605,7 @@ function addTransaction(forceType) {
         <!-- Дата нарахування (для P&L) -->
         <div>
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">
-            ${window.t('finAccrualDateLbl')||'Дата нарахування'} (для P&L)
+            ${window.t('finAccrualDateLbl')||'Дата нарахування'} (${window.t('forPnL')||'для P&L'})
             <span title="${window.t('finAccrualDateHint')||'Якщо відрізняється від дати оплати. Cash Flow = дата оплати, P&L = дата нарахування.'}"
               style="cursor:help;margin-left:4px;color:#9ca3af;">ⓘ</span>
           </label>
