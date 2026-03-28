@@ -4083,24 +4083,92 @@ window._financeDeleteCategory = async function(catId, type) {
   }
 };
 
-// Додавання рахунку
-window._financeAddAccount = async function() {
-  const name = prompt('Назва рахунку (напр. Monobank, Готівка USD):');
-  if (!name || !name.trim()) return;
-  const currency = prompt('Валюта (EUR / USD / UAH / PLN):', _state.currency) || _state.currency;
-  const typeAcc  = prompt('Тип (bank / cash / card):', 'bank') || 'bank';
+// Додавання рахунку — кастомний модал (замість browser prompt)
+window._financeAddAccount = function() {
+  // Видаляємо старий модал
+  const old = document.getElementById('finAddAccountModal');
+  if (old) old.remove();
+
+  const currencies = ['UAH','EUR','USD','PLN','GBP','CZK'];
+  const accTypes   = ['bank','cash','card'];
+
+  const modal = document.createElement('div');
+  modal.id = 'finAddAccountModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:99999;display:flex;align-items:center;justify-content:center;padding:1rem;';
+
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:16px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.2);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${_tg('Новий рахунок','Новый счёт')}</div>
+
+      <div>
+        <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_tg('Назва рахунку','Название счёта')} *</label>
+        <input id="faaName" type="text" placeholder="${_tg('Напр: Monobank, Готівка USD','Напр: Monobank, Наличные USD')}"
+          style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;"
+          onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+      </div>
+
+      <div style="display:flex;gap:0.75rem;">
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCurrencyLbl')}</label>
+          <select id="faaCurrency" style="width:100%;padding:0.55rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
+            ${currencies.map(c => `<option value="${c}" ${(_state.currency||'UAH')===c?'selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_tg('Тип','Тип')}</label>
+          <select id="faaType" style="width:100%;padding:0.55rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
+            <option value="bank">${_tg('Банк','Банк')}</option>
+            <option value="cash">${_tg('Готівка','Наличные')}</option>
+            <option value="card">${_tg('Картка','Карта')}</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
+        <button onclick="document.getElementById('finAddAccountModal')?.remove()"
+          style="flex:1;padding:0.65rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:0.85rem;color:#6b7280;font-weight:500;">
+          ${window.t('cancel')}
+        </button>
+        <button id="faaSaveBtn" onclick="window._financeAddAccountSave()"
+          style="flex:2;padding:0.65rem;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.85rem;font-weight:700;">
+          ${window.t('finSave')}
+        </button>
+      </div>
+    </div>
+  `;
+
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
+  setTimeout(() => { const el = document.getElementById('faaName'); if (el) el.focus(); }, 100);
+};
+
+window._financeAddAccountSave = async function() {
+  const nameEl = document.getElementById('faaName');
+  const name = nameEl ? nameEl.value.trim() : '';
+  if (!name) {
+    if (nameEl) { nameEl.style.borderColor = '#ef4444'; nameEl.focus(); }
+    return;
+  }
+  const currency = (document.getElementById('faaCurrency')?.value || _state.currency || 'UAH').toUpperCase();
+  const typeAcc  = document.getElementById('faaType')?.value || 'bank';
+
+  const btn = document.getElementById('faaSaveBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
   try {
     const ref = await colRef('finance_accounts').add({
-      name: name.trim(),
+      name,
       type: typeAcc,
-      currency: currency.toUpperCase(),
+      currency,
       balance: 0,
       isDefault: false,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
-    _state.accounts.push({ id: ref.id, name: name.trim(), type: typeAcc, currency: currency.toUpperCase(), balance: 0 });
+    _state.accounts.push({ id: ref.id, name, type: typeAcc, currency, balance: 0 });
+    document.getElementById('finAddAccountModal')?.remove();
     renderSubTab('settings');
   } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
     if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
   }
 };
