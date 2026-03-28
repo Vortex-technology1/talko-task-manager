@@ -579,12 +579,12 @@ document.addEventListener('mousedown', function(e) {
                     <div id="loginForm">
                         <div class="auth-input-group">
                             <label data-i18n="emailLabel">Email:</label>
-                            <input type="text" id="loginEmail" name="email" class="form-input" placeholder="your@email.com" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" data-lpignore="true" data-form-type="other">
+                            <input type="text" id="loginEmail" name="talko_email_x7" class="form-input" placeholder="your@email.com" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" data-lpignore="true" data-form-type="other" style="background:#111827!important;color:#fff!important;-webkit-text-fill-color:#fff!important;">
                         </div>
                         <div class="auth-input-group">
                             <label data-i18n="password">Пароль:</label>
                             <div class="input-wrapper">
-                                <input type="password" id="loginPassword" name="password" class="form-input" placeholder="••••••••" autocomplete="current-password">
+                                <input type="password" id="loginPassword" name="talko_pwd_x7" class="form-input" placeholder="••••••••" autocomplete="new-password" style="background:#111827!important;color:#fff!important;-webkit-text-fill-color:#fff!important;">
                                 <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)"><i data-lucide="eye" class="icon icon-sm"></i></button>
                             </div>
                         </div>
@@ -4660,5 +4660,26 @@ document.addEventListener('mousedown', function(e) {
     }
     </script>
     <!-- ════════════════════════════════════════════════════════════════════ -->
+
+<script>
+// Force dark background on auth inputs - overrides browser autofill
+function fixAuthInputs() {
+    ['loginEmail','loginPassword','registerEmail','registerPassword'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.style.setProperty('background', '#111827', 'important');
+        el.style.setProperty('background-color', '#111827', 'important');
+        el.style.setProperty('color', '#ffffff', 'important');
+        el.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
+        el.addEventListener('animationstart', function() {
+            el.style.setProperty('background', '#111827', 'important');
+            el.style.setProperty('color', '#ffffff', 'important');
+        });
+    });
+}
+document.addEventListener('DOMContentLoaded', fixAuthInputs);
+setTimeout(fixAuthInputs, 500);
+setTimeout(fixAuthInputs, 1500);
+</script>
 </body>
 </html>
