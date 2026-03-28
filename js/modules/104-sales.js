@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  function _tg(ua,ru){return window.currentLang==='ru'?ru:ua;}
 
   // ─── helpers ──────────────────────────────────────────────────────────────
   function getDb() {
@@ -47,7 +48,7 @@
   };
   const STATUS_LABELS = {
     draft:     'Чернетка',
-    sent:      'Відправлено',
+    sent:      _tg('Відправлено','Отправлено'),
     paid:      'Оплачено',
     partial:   'Частково',
     cancelled: 'Скасовано',
@@ -168,19 +169,19 @@
     const avg = count30 > 0 ? monthRev / count30 : 0;
     kpiEl.innerHTML = `
       <div class="sl-kpi-card">
-        <div class="sl-kpi-label">Виручка сьогодні</div>
+        <div class="sl-kpi-label">${_tg('Виручка сьогодні','Выручка сегодня')}</div>
         <div class="sl-kpi-value">${fmt(todayRev)} ₴</div>
       </div>
       <div class="sl-kpi-card">
-        <div class="sl-kpi-label">За місяць</div>
+        <div class="sl-kpi-label">${_tg('За місяць','За месяц')}</div>
         <div class="sl-kpi-value">${fmt(monthRev)} ₴</div>
       </div>
       <div class="sl-kpi-card">
-        <div class="sl-kpi-label">Середній чек</div>
+        <div class="sl-kpi-label">${_tg('Середній чек','Средний чек')}</div>
         <div class="sl-kpi-value">${fmt(avg)} ₴</div>
       </div>
       <div class="sl-kpi-card" style="border-color:#fca5a5">
-        <div class="sl-kpi-label">Неоплачено</div>
+        <div class="sl-kpi-label">${_tg('Неоплачено','Не оплачено')}</div>
         <div class="sl-kpi-value" style="color:#ef4444">${fmt(unpaid)} ₴</div>
       </div>
     `;
@@ -192,7 +193,7 @@
     if (!tbody) return;
     const list = getFilteredOrders();
     if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9ca3af">Немає документів</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9ca3af">${_tg('Немає документів','Нет документов')}</td></tr>`;
       return;
     }
     tbody.innerHTML = list.map(o => {
@@ -251,7 +252,7 @@
         <!-- Header fields -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
           <div>
-            <label class="sl-label">Клієнт</label>
+            <label class="sl-label">${_tg('Клієнт','Клиент')}</label>
             <input id="slInvClient" class="sl-inp" placeholder="Пошук клієнта або введіть вручну" value="${esc(order?.clientName||'')}" list="slClientsList" autocomplete="off">
             <datalist id="slClientsList">${S.clients.map(c=>`<option value="${esc(c.name||c.fullName||'')}">`).join('')}</datalist>
           </div>
@@ -282,7 +283,7 @@
         <!-- Items -->
         <div style="margin-bottom:1rem">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
-            <b style="font-size:.85rem">Позиції</b>
+            <b style="font-size:.85rem">${_tg('Позиції','Позиции')}</b>
             <div style="display:flex;gap:.5rem">
               <button onclick="window._salesAddCatalogItem()" class="sl-btn-sm" style="background:#eef2ff;color:#6366f1">З каталогу</button>
               <button onclick="window._salesAddInvoiceItem()" class="sl-btn-sm" style="background:#f0fdf4;color:#16a34a">+ Позиція</button>
@@ -293,11 +294,11 @@
               <thead>
                 <tr style="background:#f8fafc">
                   <th style="text-align:left;padding:6px 8px;color:#6b7280;font-weight:600">Назва</th>
-                  <th style="width:60px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">Кіл.</th>
+                  <th style="width:60px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Кіл.','Кол.')}</th>
                   <th style="width:70px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">Од.</th>
-                  <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">Ціна</th>
+                  <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Ціна','Цена')}</th>
                   <th style="width:60px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">Зн.%</th>
-                  <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">Сума</th>
+                  <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Сума','Сумма')}</th>
                   <th style="width:30px"></th>
                 </tr>
               </thead>
@@ -320,9 +321,9 @@
 
         <!-- Payment -->
         <div style="margin-bottom:1rem">
-          <label class="sl-label">Спосіб оплати</label>
+          <label class="sl-label">${_tg('Спосіб оплати','Способ оплаты')}</label>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-            ${[['cash','Готівка'],['terminal','Термінал'],['transfer','Переказ'],['mixed','Змішана']].map(([v,l])=>`
+            ${[[  'cash',_tg('Готівка','Наличные')],['terminal',_tg('Термінал','Терминал')],['transfer',_tg('Переказ','Перевод')],['mixed',_tg('Змішана','Смешанная')]].map(([v,l])=>`
               <label style="display:flex;align-items:center;gap:4px;padding:5px 12px;border:1px solid #e5e7eb;border-radius:6px;cursor:pointer;font-size:.83rem">
                 <input type="radio" name="slInvPayMethod" value="${v}" ${(order?.paymentMethod||'cash')===v?'checked':''}> ${l}
               </label>`).join('')}
@@ -330,7 +331,7 @@
         </div>
 
         <div style="margin-bottom:1.25rem">
-          <label class="sl-label">Примітки</label>
+          <label class="sl-label">${_tg('Примітки','Примечания')}</label>
           <textarea id="slInvNotes" class="sl-inp" rows="2" placeholder="Коментар...">${esc(order?.notes||'')}</textarea>
         </div>
 
@@ -424,7 +425,7 @@
       <div id="slCatalogOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:10px;padding:1.25rem;width:min(440px,95vw);max-height:80vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
-            <b>Вибір з каталогу</b>
+            <b>${_tg('Вибір з каталогу','Выбор из каталога')}</b>
             <button onclick="document.getElementById('slCatalogOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
           <input class="sl-inp" placeholder="Пошук..." oninput="window._salesCatalogSearch(this.value)" style="margin-bottom:.75rem" id="slCatalogSearch">
@@ -531,7 +532,7 @@
       await txRef.set({
         type: 'income',
         amount: order.paidAmount,
-        categoryName: 'Виручка (реалізація)',
+        categoryName: _tg('Виручка (реалізація)','Выручка (реализация)'),
         note: `${typeMap[order.type]||''} ${order.number||''} · ${order.clientName||''}`.trim(),
         date: order.date || todayISO(),
         sourceModule: 'sales',
@@ -594,7 +595,7 @@
     <div class="meta">від ${esc(order.date || '')}</div>
     <table style="margin-bottom:8px;border:none"><tr>
       <td style="border:none;vertical-align:top;padding:0 24px 0 0">
-        <b>Від кого:</b><br>${esc(company.name || company.companyName || '—')}<br>
+        <b>${_tg('Від кого:','От кого:')}</b><br>${esc(company.name || company.companyName || '—')}<br>
         <span style="color:#666">${esc(company.address||'')}</span><br>
         <span style="color:#666">${esc(company.phone||'')}</span>
       </td>
@@ -604,7 +605,7 @@
       </td>
     </tr></table>
     <table>
-      <thead><tr><th>#</th><th>Назва</th><th>Кіл.</th><th>Ціна</th><th>Зн.%</th><th>Сума</th></tr></thead>
+      <thead><tr><th>#</th><th>Назва</th><th>${_tg('Кіл.','Кол.')}</th><th>${_tg('Ціна','Цена')}</th><th>Зн.%</th><th>${_tg('Сума','Сумма')}</th></tr></thead>
       <tbody>
         ${items.map((item,i)=>`<tr><td>${i+1}</td><td>${esc(item.name)}</td><td>${item.qty} ${esc(item.unit||'')}</td><td>${fmt(item.price)} ₴</td><td>${item.discount||0}%</td><td><b>${fmt(item.total)} ₴</b></td></tr>`).join('')}
       </tbody>
@@ -613,7 +614,7 @@
       ${order.discountTotal>0 ? `<div style="color:#666">Знижка: −${fmt(order.discountTotal)} ₴</div>` : ''}
       <div class="total-row" style="font-size:1.15rem;color:#6366f1">До сплати: ${fmt(order.total)} ₴</div>
     </div>
-    ${company.iban||company.bankDetails ? `<div class="footer"><b>Реквізити:</b> ${esc(company.iban||company.bankDetails||'')}</div>` : ''}
+    ${company.iban||company.bankDetails ? `<div class="footer"><b>${_tg('Реквізити:','Реквизиты:')}</b> ${esc(company.iban||company.bankDetails||'')}</div>` : ''}
     ${order.notes ? `<div class="footer">${esc(order.notes)}</div>` : ''}
     </body></html>`;
 
@@ -665,7 +666,7 @@
         <!-- Items -->
         <div style="margin-bottom:1rem">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
-            <b style="font-size:.85rem">Позиції</b>
+            <b style="font-size:.85rem">${_tg('Позиції','Позиции')}</b>
             <div style="display:flex;gap:.5rem">
               <button onclick="window._salesAddCatalogItemRcp()" class="sl-btn-sm" style="background:#eef2ff;color:#6366f1">З каталогу</button>
               <button onclick="window._salesAddReceiptItem()" class="sl-btn-sm" style="background:#f0fdf4;color:#16a34a">+ Позиція</button>
@@ -682,9 +683,9 @@
 
         <!-- Payment method -->
         <div style="margin-bottom:1.25rem">
-          <label class="sl-label">Оплата</label>
+          <label class="sl-label">${_tg('Оплата','Оплата')}</label>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-            ${[['cash','Готівка'],['terminal','Термінал'],['transfer','Переказ']].map(([v,l])=>`
+            ${[['cash',_tg('Готівка','Наличные')],['terminal',_tg('Термінал','Терминал')],['transfer',_tg('Переказ','Перевод')]].map(([v,l])=>`
               <label style="display:flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600">
                 <input type="radio" name="slRcpPayMethod" value="${v}" ${(order?.paymentMethod||'cash')===v?'checked':''}> ${l}
               </label>`).join('')}
@@ -743,7 +744,7 @@
       <div id="slCatalogOverlay2" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10001;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:10px;padding:1.25rem;width:min(400px,95vw);max-height:80vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
-            <b>Вибір з каталогу</b>
+            <b>${_tg('Вибір з каталогу','Выбор из каталога')}</b>
             <button onclick="document.getElementById('slCatalogOverlay2').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
           ${S.products.map(p=>`
@@ -803,16 +804,16 @@
     await loadProducts();
     cont.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-        <b>Каталог товарів та послуг</b>
+        <b>${_tg('Каталог товарів та послуг','Каталог товаров и услуг')}</b>
         <button onclick="window._salesOpenProductForm(null)" class="sl-btn" style="background:#6366f1;color:#fff">+ Додати</button>
       </div>
       ${!S.products.length ? '<div style="text-align:center;padding:2rem;color:#9ca3af">Каталог порожній</div>' :
       `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem">
         <thead><tr style="background:#f8fafc">
           <th style="padding:8px;text-align:left">Назва</th>
-          <th style="padding:8px;text-align:left">Категорія</th>
+          <th style="padding:8px;text-align:left">${_tg('Категорія','Категория')}</th>
           <th style="padding:8px;text-align:center">Од.</th>
-          <th style="padding:8px;text-align:right">Ціна</th>
+          <th style="padding:8px;text-align:right">${_tg('Ціна','Цена')}</th>
           <th style="padding:8px;width:60px"></th>
         </tr></thead>
         <tbody>${S.products.map(p=>`
@@ -995,7 +996,7 @@
                 <th style="padding:9px 8px;text-align:left;color:#6b7280;font-weight:600">Номер</th>
                 <th style="padding:9px 8px;text-align:left;color:#6b7280;font-weight:600">Клієнт</th>
                 <th style="padding:9px 8px;text-align:left;color:#6b7280;font-weight:600">Дата</th>
-                <th style="padding:9px 8px;text-align:right;color:#6b7280;font-weight:600">Сума</th>
+                <th style="padding:9px 8px;text-align:right;color:#6b7280;font-weight:600">${_tg('Сума','Сумма')}</th>
                 <th style="padding:9px 8px;text-align:left;color:#6b7280;font-weight:600">Статус</th>
                 <th style="padding:9px 8px;width:80px"></th>
               </tr>

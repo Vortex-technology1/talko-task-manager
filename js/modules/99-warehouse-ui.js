@@ -1,4 +1,8 @@
 'use strict';
+// i18n helper
+function _t(ua, ru) {
+  return (window.currentLang === 'ru' || (typeof window.getLocale === 'function' && window.getLocale().startsWith('ru'))) ? ru : ua;
+}
 // ═══════════════════════════════════════════════════════════
 //  99-warehouse-ui.js  —  TALKO Склад: UI
 //  Дашборд, каталог, операції, постачальники, локації

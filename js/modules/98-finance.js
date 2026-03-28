@@ -2674,7 +2674,7 @@ function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {
         <div style="display:flex;gap:6px;">
           <button onclick="window._planMode&&window._planMode('budget');window._financeTab&&window._financeTab('planning');document.getElementById('finBudgetWarningBanner')?.remove();"
             style="flex:1;padding:5px 8px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;">
-            Переглянути бюджет
+            ${_tg('Переглянути бюджет','Просмотреть бюджет')}
           </button>
           <button onclick="document.getElementById('finBudgetWarningBanner')?.remove();"
             style="padding:5px 10px;background:#fff;border:1px solid #fecaca;border-radius:6px;font-size:0.72rem;cursor:pointer;color:#6b7280;">
@@ -3034,7 +3034,7 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
       _budgetToastShown.add(toastKey);
       const warnSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
       if (level === 'red') {
-        showToast(`${warnSvg} Бюджет «${cat.name}» перевищено! Витрачено ${fmt(fact, currency)} з ${fmt(budget, currency)}`, 'error');
+        showToast(`${warnSvg} ${_tg('Бюджет','Бюджет')} «${cat.name}» ${_tg('перевищено! Витрачено','превышен! Потрачено')} ${fmt(fact, currency)} ${_tg('з','из')} ${fmt(budget, currency)}`, 'error');
       } else {
         showToast(`${warnSvg} Бюджет «${cat.name}» використано на ${usedPct}% — залишилось ${fmt(remaining, currency)}`, 'warning');
       }
@@ -3059,7 +3059,7 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
             </div>
             <div style="font-size:0.72rem;color:${a.level==='red'?'#dc2626':'#d97706'};margin-top:1px;">
               ${a.level==='red'
-                ? `Перевищено: витрачено ${fmt(a.fact,currency)} з ${fmt(a.budget,currency)} (${a.usedPct}%)`
+                ? `${_tg('Перевищено: витрачено','Превышено: потрачено')} ${fmt(a.fact,currency)} ${_tg('з','из')} ${fmt(a.budget,currency)} (${a.usedPct}%)`
                 : `Використано ${a.usedPct}% бюджету — залишилось ${fmt(a.remaining,currency)}`
               }
             </div>

@@ -6,6 +6,7 @@
 //   companies/{id}/project_estimates/  — кошториси проектів
 // ============================================================
 'use strict';
+  function _tg(ua, ru) { return window.currentLang === 'ru' ? ru : ua; }
 
 // ── SVG іконки ────────────────────────────────────────────────
 const _estIco = {
@@ -100,8 +101,8 @@ window.renderEstimateTab = function() {
         <div style="display:flex;align-items:center;gap:0.5rem;">
           ${_estIco.clipboard}
           <div>
-            <h2 style="margin:0;font-size:1.1rem;font-weight:700;color:#111827;">Кошторис матеріалів</h2>
-            <p style="margin:0;font-size:0.78rem;color:#9ca3af;">Розрахунок потреби в матеріалах по проектах</p>
+            <h2 style="margin:0;font-size:1.1rem;font-weight:700;color:#111827;">${_tg('Кошторис матеріалів','Смета материалов')}</h2>
+            <p style="margin:0;font-size:0.78rem;color:#9ca3af;">${_tg('Розрахунок потреби в матеріалах по проектах','Расчёт потребности в материалах по проектам')}</p>
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
@@ -423,14 +424,14 @@ window.renderEstimateListView = function() {
     if (!sub) return;
 
     const estimates = window._projectEstimates || [];
-    const statusLabel = { draft:'Чернетка', approved:'Затверджено', in_progress:'В роботі', done:'Виконано' };
+    const statusLabel = { draft:_tg('Чернетка','Черновик'), approved:_tg('Затверджено','Утверждено'), in_progress:_tg('В роботі','В работе'), done:_tg('Виконано','Выполнено') };
     const statusColor = { draft:'#f59e0b', approved:'#3b82f6', in_progress:'#8b5cf6', done:'#10b981' };
 
     const cards = estimates.length === 0
         ? `<div style="text-align:center;padding:3rem 1rem;color:#9ca3af;">
             <div style="display:flex;justify-content:center;margin-bottom:0.75rem;opacity:0.3;">${_estIco.clipboard.replace('16','48')}</div>
-            <div style="font-size:1rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">Кошторисів ще немає</div>
-            <div style="font-size:0.83rem;">Натисніть "+ Новий кошторис" щоб почати</div>
+            <div style="font-size:1rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">${_tg('Кошторисів ще немає','Смет ещё нет')}</div>
+            <div style="font-size:0.83rem;">${_tg('Натисніть "+ Новий кошторис" щоб почати','Нажмите "+ Новая смета" чтобы начать')}</div>
            </div>`
         : estimates.map(e => {
             const status = statusLabel[e.status] || e.status;
@@ -449,7 +450,7 @@ window.renderEstimateListView = function() {
                 <span style="padding:0.25rem 0.65rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:${color}18;color:${color};">${status}</span>
               </div>
               <div style="text-align:right;min-width:140px;">
-                <div style="font-size:0.78rem;color:#6b7280;">Бюджет матеріалів</div>
+                <div style="font-size:0.78rem;color:#6b7280;">${_tg('Бюджет матеріалів','Бюджет материалов')}</div>
                 <div style="font-weight:700;color:#111827;">${formatMoney(budget)}</div>
                 ${deficit>0
                     ? `<div style="font-size:0.75rem;color:#ef4444;font-weight:600;display:flex;align-items:center;gap:0.2rem;justify-content:flex-end;">${_estIco.warning} докупити: ${formatMoney(deficit)}</div>`
@@ -508,17 +509,17 @@ window.renderEstimateNormsView = function() {
     const rows = norms.length === 0
         ? `<div style="text-align:center;padding:3rem 1rem;color:#9ca3af;">
             <div style="display:flex;justify-content:center;margin-bottom:0.75rem;opacity:0.3;">${_estIco.ruler.replace('16','48')}</div>
-            <div style="font-size:1rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">Довідник норм порожній</div>
+            <div style="font-size:1rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">${_tg('Довідник норм порожній','Справочник норм пуст')}</div>
             <div style="font-size:0.83rem;">Завантажте стандартні норми або додайте власні</div>
            </div>`
         : `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
             <thead>
               <tr style="border-bottom:2px solid #e5e7eb;">
                 <th style="text-align:left;padding:0.6rem 0.75rem;color:#6b7280;font-weight:600;">Назва</th>
-                <th style="text-align:left;padding:0.6rem 0.75rem;color:#6b7280;font-weight:600;">Категорія</th>
+                <th style="text-align:left;padding:0.6rem 0.75rem;color:#6b7280;font-weight:600;">${_tg('Категорія','Категория')}</th>
                 <th style="text-align:center;padding:0.6rem 0.75rem;color:#6b7280;font-weight:600;">Вх. одиниця</th>
-                <th style="text-align:center;padding:0.6rem 0.75rem;color:#6b7280;font-weight:600;">Матеріали</th>
-                <th style="text-align:right;padding:0.6rem 0.75rem;color:#6b7280;font-weight:600;">Дії</th>
+                <th style="text-align:center;padding:0.6rem 0.75rem;color:#6b7280;font-weight:600;">${_tg('Матеріали','Материалы')}</th>
+                <th style="text-align:right;padding:0.6rem 0.75rem;color:#6b7280;font-weight:600;">${_tg('Дії','Действия')}</th>
               </tr>
             </thead>
             <tbody>
@@ -610,13 +611,13 @@ window.openNormModal = function(normId) {
             <input id="normName" value="${esc(norm.name||'')}" placeholder="напр. Фундаментна плита" style="width:100%;padding:0.55rem 0.75rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;"/>
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Категорія</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">${_tg('Категорія','Категория')}</label>
             <select id="normCategory" style="width:100%;padding:0.55rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.88rem;">
               ${categories.map(c=>`<option value="${c.v}" ${norm.category===c.v?'selected':''}>${c.l}</option>`).join('')}
             </select>
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Ніша</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">${_tg('Ніша','Ниша')}</label>
             <select id="normNiche" style="width:100%;padding:0.55rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.88rem;">
               ${niches.map(n=>`<option value="${n.v}" ${norm.niche===n.v?'selected':''}>${n.l}</option>`).join('')}
             </select>
@@ -636,7 +637,7 @@ window.openNormModal = function(normId) {
 
         <div style="margin-bottom:1rem;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
-            <label style="font-size:0.88rem;font-weight:700;color:#374151;">Матеріали та норми витрат</label>
+            <label style="font-size:0.88rem;font-weight:700;color:#374151;">${_tg('Матеріали та норми витрат','Материалы и нормы расхода')}</label>
             <button onclick="window._normEditMaterials.push({name:'',unit:'кг',normPerUnit:0,warehouseItemId:''});document.getElementById('normMaterialsBody').innerHTML=normMaterialsRowsHtml()"
               style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.75rem;background:#3b82f6;color:white;border:none;border-radius:6px;font-size:0.8rem;cursor:pointer;">${_estIco.plus} Додати матеріал</button>
           </div>
@@ -644,10 +645,10 @@ window.openNormModal = function(normId) {
             <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
               <thead>
                 <tr style="border-bottom:2px solid #e5e7eb;">
-                  <th style="text-align:left;padding:0.4rem;color:#6b7280;font-weight:600;min-width:120px;">Матеріал</th>
+                  <th style="text-align:left;padding:0.4rem;color:#6b7280;font-weight:600;min-width:120px;">${_tg('Матеріал','Материал')}</th>
                   <th style="text-align:left;padding:0.4rem;color:#6b7280;font-weight:600;min-width:80px;">Одиниця</th>
                   <th style="text-align:left;padding:0.4rem;color:#6b7280;font-weight:600;min-width:100px;">Норма/1 вх.од.</th>
-                  <th style="text-align:left;padding:0.4rem;color:#6b7280;font-weight:600;min-width:120px;">Позиція складу</th>
+                  <th style="text-align:left;padding:0.4rem;color:#6b7280;font-weight:600;min-width:120px;">${_tg('Позиція складу','Позиция склада')}</th>
                   <th style="width:30px;"></th>
                 </tr>
               </thead>
@@ -857,11 +858,11 @@ window.openEstimateModal = function(estimateId) {
               ${mats.length>0?`
               <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
                 <thead><tr style="border-bottom:1px solid #f3f4f6;">
-                  <th style="text-align:left;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">Матеріал</th>
-                  <th style="text-align:right;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">Потрібно</th>
-                  <th style="text-align:right;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">На складі</th>
-                  <th style="text-align:right;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">Дефіцит</th>
-                  <th style="text-align:right;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">Ціна/од</th>
+                  <th style="text-align:left;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">${_tg('Матеріал','Материал')}</th>
+                  <th style="text-align:right;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">${_tg('Потрібно','Нужно')}</th>
+                  <th style="text-align:right;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">${_tg('На складі','На складе')}</th>
+                  <th style="text-align:right;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">${_tg('Дефіцит','Дефицит')}</th>
+                  <th style="text-align:right;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">${_tg('Ціна/од','Цена/ед')}</th>
                   <th style="text-align:right;padding:0.3rem 0.4rem;color:#9ca3af;font-weight:500;">Сума</th>
                 </tr></thead>
                 <tbody>
@@ -919,7 +920,7 @@ window.openEstimateModal = function(estimateId) {
               <div>
                 <label style="font-size:0.78rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.25rem;">⚙️ Функція (ТЗ: кошторис прив'язаний до функції)</label>
                 <select id="estFunctionId" style="width:100%;padding:0.5rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
-                  <option value="">— без функції —</option>
+                  <option value="">${_tg('— без функції —','— без функции —')}</option>
                   ${(typeof functions !== 'undefined' ? functions : []).filter(f=>f.status!=='archived').map(f=>`<option value="${esc(f.id)}" ${existing?.functionId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}
                 </select>
               </div>
@@ -969,7 +970,7 @@ function renderEstTotals() {
     <div style="font-weight:600;font-size:0.88rem;color:#374151;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;">${_estIco.barChart} Підсумок</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem;">
       <div style="padding:0.75rem;background:#f0fdf4;border-radius:8px;text-align:center;">
-        <div style="font-size:0.75rem;color:#6b7280;">Бюджет матеріалів</div>
+        <div style="font-size:0.75rem;color:#6b7280;">${_tg('Бюджет матеріалів','Бюджет материалов')}</div>
         <div style="font-size:1.1rem;font-weight:700;color:#10b981;">${formatMoney(totalCost)}</div>
       </div>
       <div style="padding:0.75rem;background:${totalDeficit>0?'#fef2f2':'#f0fdf4'};border-radius:8px;text-align:center;">
@@ -994,7 +995,7 @@ window.recalcTotalsDisplay = function() {
 window.openAddSectionModal = function() {
     const norms = window._estimateNorms || [];
     if (norms.length === 0) {
-        alert('Спочатку додайте норми витрат у Довіднику норм (вкладка "Довідник норм")');
+        alert(_tg('Спочатку додайте норми витрат у Довіднику норм (вкладка "Довідник норм")','Сначала добавьте нормы расхода в Справочнике норм (вкладка "Справочник норм")'  ));
         return;
     }
     const html = `
@@ -1004,7 +1005,7 @@ window.openAddSectionModal = function() {
         <div style="margin-bottom:0.75rem;">
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Тип роботи</label>
           <select id="addSecNormId" onchange="updateAddSectionExtra()" style="width:100%;padding:0.5rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.88rem;">
-            <option value="">— оберіть норму —</option>
+            <option value="">${_tg('— оберіть норму —','— выберите норму —')}</option>
             ${norms.map(n=>`<option value="${n.id}">${esc(n.name)} (/${esc(n.inputUnit)})</option>`).join('')}
           </select>
         </div>
@@ -1242,7 +1243,7 @@ window.syncEstimateWithWarehouse = async function(estimateId) {
                 totals: { totalMaterialsCost, totalDeficitCost, currency: 'UAH' },
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
-        if (typeof window.showToast === 'function') window.showToast('Залишки оновлено зі складу');
+        if (typeof window.showToast === 'function') window.showToast(_tg('Залишки оновлено зі складу','Остатки обновлены со склада'));
     } catch(e) {
         console.error('[syncEstimate]', e);
         alert('Помилка синхронізації: ' + e.message);
@@ -1253,7 +1254,7 @@ window.syncEstimateWithWarehouse = async function(estimateId) {
 window.writeOffEstimateMaterials = async function(estimateId, sectionId) {
     const estimate = (window._projectEstimates||[]).find(e=>e.id===estimateId);
     if (!estimate) return;
-    if (!confirm('Списати матеріали зі складу по кошторису? Дія незворотна.')) return;
+    if (!confirm(_tg('Списати матеріали зі складу по кошторису? Дія незворотна.','Списать материалы со склада по смете? Действие необратимо.'))) return;
 
     const sections = sectionId
         ? (estimate.sections||[]).filter(s=>s.sectionId===sectionId)
@@ -1316,7 +1317,7 @@ window.writeOffEstimateMaterials = async function(estimateId, sectionId) {
             }).catch(e => console.warn('[writeOff finance]', e));
     }
 
-    if (typeof window.showToast === 'function') window.showToast(`Списано ${writtenOff} позицій зі складу`);
+    if (typeof window.showToast === 'function') window.showToast(`${_tg('Списано','Списано')} ${writtenOff} ${_tg('позицій зі складу','позиций со склада')}`);
     await syncEstimateWithWarehouse(estimateId);
 };
 
@@ -1332,7 +1333,7 @@ window.exportEstimatePDF = function(estimateId) {
 
     const fmt = n => new Intl.NumberFormat('uk-UA', {style:'currency',currency:'UAH',maximumFractionDigits:0}).format(n||0);
     const fmtNum = n => { const num = parseFloat(n||0); return isNaN(num)?'0':(num%1===0?num.toString():num.toFixed(2)); };
-    const statusLabel = { draft:'Чернетка', approved:'Затверджено', in_progress:'В роботі', done:'Виконано' };
+    const statusLabel = { draft:_tg('Чернетка','Черновик'), approved:_tg('Затверджено','Утверждено'), in_progress:_tg('В роботі','В работе'), done:_tg('Виконано','Выполнено') };
     const project = (window.projects||[]).find(p=>p.id===estimate.projectId);
 
     const sectionsHtml = (estimate.sections||[]).map(sec => `
@@ -1344,11 +1345,11 @@ window.exportEstimatePDF = function(estimateId) {
             <table style="width:100%;border-collapse:collapse;font-size:12px;">
                 <thead>
                     <tr style="background:#e5e7eb;">
-                        <th style="text-align:left;padding:5px 8px;border:1px solid #d1d5db;">Матеріал</th>
-                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">Потрібно</th>
-                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">На складі</th>
-                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">Дефіцит</th>
-                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">Ціна/од</th>
+                        <th style="text-align:left;padding:5px 8px;border:1px solid #d1d5db;">${_tg('Матеріал','Материал')}</th>
+                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">${_tg('Потрібно','Нужно')}</th>
+                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">${_tg('На складі','На складе')}</th>
+                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">${_tg('Дефіцит','Дефицит')}</th>
+                        <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">${_tg('Ціна/од','Цена/ед')}</th>
                         <th style="text-align:right;padding:5px 8px;border:1px solid #d1d5db;">Сума</th>
                     </tr>
                 </thead>
@@ -1395,7 +1396,7 @@ window.exportEstimatePDF = function(estimateId) {
 
 <div class="totals">
     <div class="total-card">
-        <div class="total-label">Бюджет матеріалів</div>
+        <div class="total-label">${_tg('Бюджет матеріалів','Бюджет материалов')}</div>
         <div class="total-val" style="color:#10b981;">${fmt(estimate.totals?.totalMaterialsCost)}</div>
     </div>
     <div class="total-card">
