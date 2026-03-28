@@ -2577,6 +2577,119 @@ async function loadFunctionsData(monthVal) {
 let _planMonth = (() => {
   const d = new Date();
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+// ── Перевірка бюджету при 80% і 100% ─────────────────────
+async function _checkBudgetAlert(catId, dateVal) {
+  if (!catId || !dateVal) return;
+  try {
+    // Визначаємо місяць транзакції
+    const d = new Date(dateVal);
+    const monthKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+
+    // Завантажуємо бюджет місяця
+    const budgetSnap = await colRef('finance_budgets').doc(monthKey).get();
+    if (!budgetSnap.exists) return;
+    const budgetData = budgetSnap.data();
+    const budget = budgetData['cat_' + catId] || 0;
+    if (budget <= 0) return;
+
+    // Рахуємо фактичні витрати по категорії за місяць
+    const from = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth(), 1));
+    const to   = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59));
+    const snap = await colRef('finance_transactions')
+      .where('type', '==', 'expense')
+      .where('categoryId', '==', catId)
+      .where('date', '>=', from)
+      .where('date', '<=', to)
+      .get();
+
+    const fact = snap.docs.reduce((s, doc) => s + txAmt(doc.data()), 0);
+    const pct  = budget > 0 ? Math.round(fact / budget * 100) : 0;
+
+    // Знаходимо назву категорії
+    const cat = (_state.categories.expense || []).find(c => c.id === catId);
+    const catName = cat?.name || catId;
+    const currency = _state.currency || 'UAH';
+
+    // Ключ щоб не показувати одне сповіщення двічі в одній сесії
+    const alertKey = `budgetAlert_${catId}_${monthKey}`;
+    const lastAlerted = parseInt(sessionStorage.getItem(alertKey) || '0');
+
+    if (pct >= 100 && lastAlerted < 100) {
+      sessionStorage.setItem(alertKey, '100');
+      if (typeof showToast === 'function') {
+        showToast(
+          `🚨 Бюджет «${catName}» вичерпано! (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
+          'error',
+          6000
+        );
+      }
+      // Також показуємо більш помітне сповіщення
+      _showBudgetWarningBanner(catName, fact, budget, currency, 100);
+    } else if (pct >= 80 && lastAlerted < 80) {
+      sessionStorage.setItem(alertKey, '80');
+      if (typeof showToast === 'function') {
+        showToast(
+          `⚠️ Бюджет «${catName}» використано на ${pct}% (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
+          'warning',
+          5000
+        );
+      }
+    }
+  } catch(e) {
+    console.warn('[Finance] _checkBudgetAlert:', e.message);
+  }
+}
+
+// ── Банер попередження про бюджет ─────────────────────────
+function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {
+  const old = document.getElementById('finBudgetWarningBanner');
+  if (old) old.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'finBudgetWarningBanner';
+  banner.style.cssText = [
+    'position:fixed;top:70px;right:20px;z-index:99998;',
+    'background:#fef2f2;border:2px solid #fecaca;border-radius:12px;',
+    'padding:12px 16px;max-width:320px;box-shadow:0 8px 24px rgba(239,68,68,0.2);',
+    'animation:slideIn 0.3s ease;',
+  ].join('');
+
+  banner.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:0.85rem;font-weight:700;color:#dc2626;margin-bottom:4px;">
+          Бюджет вичерпано!
+        </div>
+        <div style="font-size:0.78rem;color:#374151;margin-bottom:8px;">
+          Категорія <b>${catName}</b>:<br>
+          Витрачено <b style="color:#dc2626;">${fmt(fact, currency)}</b> з <b>${fmt(budget, currency)}</b>
+        </div>
+        <div style="height:6px;background:#fee2e2;border-radius:3px;margin-bottom:8px;">
+          <div style="height:6px;background:#dc2626;border-radius:3px;width:100%;"></div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="window._planMode&&window._planMode('budget');window._financeTab&&window._financeTab('planning');document.getElementById('finBudgetWarningBanner')?.remove();"
+            style="flex:1;padding:5px 8px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;">
+            Переглянути бюджет
+          </button>
+          <button onclick="document.getElementById('finBudgetWarningBanner')?.remove();"
+            style="padding:5px 10px;background:#fff;border:1px solid #fecaca;border-radius:6px;font-size:0.72rem;cursor:pointer;color:#6b7280;">
+            ×
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+  document.body.appendChild(banner);
+  // Автоприбирання через 10 секунд
+  setTimeout(() => banner.remove(), 10000);
+}
+
+
 })();
 
 function renderPlanning(el) {
@@ -2888,29 +3001,76 @@ async function loadPlanningData(monthVal) {
   }
 }
 
-// ── Сигнали відхилень бюджету ─────────────────────────────
+// ── Сигнали відхилень бюджету (80% і 100%) ───────────────
+// Зберігаємо які toast вже показані в цій сесії
+const _budgetToastShown = new Set();
+
 function _renderPlanAlerts(expCats, factByCat, budgetData) {
   const el = document.getElementById('planAlerts');
   if (!el) return;
+
   const alerts = [];
+  const currency = _state.currency || 'EUR';
+
   expCats.forEach(cat => {
     const budget = budgetData['cat_' + cat.id] || 0;
     if (budget <= 0) return;
-    const fact = factByCat[cat.id] || 0;
-    const overPct = Math.round((fact - budget) / budget * 100);
-    if (overPct >= 25) alerts.push({ label: cat.name, pct: overPct, level: 'red' });
-    else if (overPct >= 10) alerts.push({ label: cat.name, pct: overPct, level: 'yellow' });
+    const fact   = factByCat[cat.id] || 0;
+    const usedPct = Math.round(fact / budget * 100); // скільки % бюджету витрачено
+
+    // Визначаємо рівень
+    let level = null;
+    if (usedPct >= 100)     level = 'red';    // 100%+ — перевищення
+    else if (usedPct >= 80) level = 'yellow'; // 80-99% — попередження
+
+    if (!level) return;
+
+    const remaining = budget - fact;
+    alerts.push({ cat, budget, fact, usedPct, remaining, level });
+
+    // Toast-сповіщення (один раз за сесію для кожної категорії на кожному рівні)
+    const toastKey = `${cat.id}_${level}`;
+    if (!_budgetToastShown.has(toastKey) && typeof showToast === 'function') {
+      _budgetToastShown.add(toastKey);
+      const warnSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+      if (level === 'red') {
+        showToast(`${warnSvg} Бюджет «${cat.name}» перевищено! Витрачено ${fmt(fact, currency)} з ${fmt(budget, currency)}`, 'error');
+      } else {
+        showToast(`${warnSvg} Бюджет «${cat.name}» використано на ${usedPct}% — залишилось ${fmt(remaining, currency)}`, 'warning');
+      }
+    }
   });
+
   if (alerts.length === 0) { el.innerHTML = ''; return; }
+
+  const dotSvg = (color) =>
+    `<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="${color}"/></svg>`;
+
   el.innerHTML = `
     <div style="display:flex;flex-direction:column;gap:6px;">
       ${alerts.map(a => `
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;
-          background:${a.level==='red'?'#fef2f2':'#fffbeb'};border:1px solid ${a.level==='red'?'#fecaca':'#fde68a'};">
-          <span style="font-size:1rem;">${a.level==='red'?'<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span>':'<span style="display:inline-flex;align-items:center;vertical-align:middle;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span>'}</span>
-          <span style="font-size:0.82rem;font-weight:600;color:${a.level==='red'?'#dc2626':'#d97706'};">
-            ${escHtml(a.label)}: перевищення бюджету на +${a.pct}%
-          </span>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:10px;
+          background:${a.level==='red'?'#fef2f2':'#fffbeb'};
+          border:1px solid ${a.level==='red'?'#fecaca':'#fde68a'};">
+          <span style="flex-shrink:0;">${dotSvg(a.level==='red'?'#ef4444':'#f59e0b')}</span>
+          <div style="flex:1;">
+            <div style="font-size:0.82rem;font-weight:600;color:${a.level==='red'?'#dc2626':'#d97706'};">
+              ${escHtml(a.cat.name)}
+            </div>
+            <div style="font-size:0.72rem;color:${a.level==='red'?'#dc2626':'#d97706'};margin-top:1px;">
+              ${a.level==='red'
+                ? `Перевищено: витрачено ${fmt(a.fact,currency)} з ${fmt(a.budget,currency)} (${a.usedPct}%)`
+                : `Використано ${a.usedPct}% бюджету — залишилось ${fmt(a.remaining,currency)}`
+              }
+            </div>
+          </div>
+          <!-- Прогрес-бар -->
+          <div style="width:80px;height:6px;background:#f3f4f6;border-radius:3px;flex-shrink:0;">
+            <div style="height:6px;border-radius:3px;background:${a.level==='red'?'#ef4444':'#f59e0b'};
+              width:${Math.min(a.usedPct,100)}%;transition:width .3s;"></div>
+          </div>
+          <div style="font-size:0.72rem;font-weight:700;color:${a.level==='red'?'#dc2626':'#d97706'};
+            width:32px;text-align:right;flex-shrink:0;">${a.usedPct}%</div>
         </div>`).join('')}
     </div>`;
 }
@@ -4493,6 +4653,11 @@ window._financeSaveTx = async function() {
 
     modal.remove();
 
+    // Перевірка бюджету після запису витрати
+    if (type === 'expense' && catId) {
+      _checkBudgetAlert(catId, dateVal).catch(() => {});
+    }
+
     // Оновлюємо поточну вкладку
     const inner = document.getElementById('financeContentInner');
     if (inner) renderSubTab(_state.activeSubTab);
@@ -4911,6 +5076,119 @@ window._addEntityTx = function(entityId, field, type) {
       if (_subscribe() || attempts >= 20) clearInterval(poll);
     }, 300);
   }
+// ── Перевірка бюджету при 80% і 100% ─────────────────────
+async function _checkBudgetAlert(catId, dateVal) {
+  if (!catId || !dateVal) return;
+  try {
+    // Визначаємо місяць транзакції
+    const d = new Date(dateVal);
+    const monthKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+
+    // Завантажуємо бюджет місяця
+    const budgetSnap = await colRef('finance_budgets').doc(monthKey).get();
+    if (!budgetSnap.exists) return;
+    const budgetData = budgetSnap.data();
+    const budget = budgetData['cat_' + catId] || 0;
+    if (budget <= 0) return;
+
+    // Рахуємо фактичні витрати по категорії за місяць
+    const from = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth(), 1));
+    const to   = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59));
+    const snap = await colRef('finance_transactions')
+      .where('type', '==', 'expense')
+      .where('categoryId', '==', catId)
+      .where('date', '>=', from)
+      .where('date', '<=', to)
+      .get();
+
+    const fact = snap.docs.reduce((s, doc) => s + txAmt(doc.data()), 0);
+    const pct  = budget > 0 ? Math.round(fact / budget * 100) : 0;
+
+    // Знаходимо назву категорії
+    const cat = (_state.categories.expense || []).find(c => c.id === catId);
+    const catName = cat?.name || catId;
+    const currency = _state.currency || 'UAH';
+
+    // Ключ щоб не показувати одне сповіщення двічі в одній сесії
+    const alertKey = `budgetAlert_${catId}_${monthKey}`;
+    const lastAlerted = parseInt(sessionStorage.getItem(alertKey) || '0');
+
+    if (pct >= 100 && lastAlerted < 100) {
+      sessionStorage.setItem(alertKey, '100');
+      if (typeof showToast === 'function') {
+        showToast(
+          `🚨 Бюджет «${catName}» вичерпано! (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
+          'error',
+          6000
+        );
+      }
+      // Також показуємо більш помітне сповіщення
+      _showBudgetWarningBanner(catName, fact, budget, currency, 100);
+    } else if (pct >= 80 && lastAlerted < 80) {
+      sessionStorage.setItem(alertKey, '80');
+      if (typeof showToast === 'function') {
+        showToast(
+          `⚠️ Бюджет «${catName}» використано на ${pct}% (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
+          'warning',
+          5000
+        );
+      }
+    }
+  } catch(e) {
+    console.warn('[Finance] _checkBudgetAlert:', e.message);
+  }
+}
+
+// ── Банер попередження про бюджет ─────────────────────────
+function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {
+  const old = document.getElementById('finBudgetWarningBanner');
+  if (old) old.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'finBudgetWarningBanner';
+  banner.style.cssText = [
+    'position:fixed;top:70px;right:20px;z-index:99998;',
+    'background:#fef2f2;border:2px solid #fecaca;border-radius:12px;',
+    'padding:12px 16px;max-width:320px;box-shadow:0 8px 24px rgba(239,68,68,0.2);',
+    'animation:slideIn 0.3s ease;',
+  ].join('');
+
+  banner.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:0.85rem;font-weight:700;color:#dc2626;margin-bottom:4px;">
+          Бюджет вичерпано!
+        </div>
+        <div style="font-size:0.78rem;color:#374151;margin-bottom:8px;">
+          Категорія <b>${catName}</b>:<br>
+          Витрачено <b style="color:#dc2626;">${fmt(fact, currency)}</b> з <b>${fmt(budget, currency)}</b>
+        </div>
+        <div style="height:6px;background:#fee2e2;border-radius:3px;margin-bottom:8px;">
+          <div style="height:6px;background:#dc2626;border-radius:3px;width:100%;"></div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="window._planMode&&window._planMode('budget');window._financeTab&&window._financeTab('planning');document.getElementById('finBudgetWarningBanner')?.remove();"
+            style="flex:1;padding:5px 8px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;">
+            Переглянути бюджет
+          </button>
+          <button onclick="document.getElementById('finBudgetWarningBanner')?.remove();"
+            style="padding:5px 10px;background:#fff;border:1px solid #fecaca;border-radius:6px;font-size:0.72rem;cursor:pointer;color:#6b7280;">
+            ×
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+  document.body.appendChild(banner);
+  // Автоприбирання через 10 секунд
+  setTimeout(() => banner.remove(), 10000);
+}
+
+
 })();
 
 // ── Хук: коли switchTab('finance') викликається ──────────
@@ -4961,6 +5239,119 @@ if (!tryInit()) {
     if (tryInit() || attempts >= 30) clearInterval(poll);
   }, 500);
 }
+
+// ── Перевірка бюджету при 80% і 100% ─────────────────────
+async function _checkBudgetAlert(catId, dateVal) {
+  if (!catId || !dateVal) return;
+  try {
+    // Визначаємо місяць транзакції
+    const d = new Date(dateVal);
+    const monthKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+
+    // Завантажуємо бюджет місяця
+    const budgetSnap = await colRef('finance_budgets').doc(monthKey).get();
+    if (!budgetSnap.exists) return;
+    const budgetData = budgetSnap.data();
+    const budget = budgetData['cat_' + catId] || 0;
+    if (budget <= 0) return;
+
+    // Рахуємо фактичні витрати по категорії за місяць
+    const from = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth(), 1));
+    const to   = firebase.firestore.Timestamp.fromDate(new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59));
+    const snap = await colRef('finance_transactions')
+      .where('type', '==', 'expense')
+      .where('categoryId', '==', catId)
+      .where('date', '>=', from)
+      .where('date', '<=', to)
+      .get();
+
+    const fact = snap.docs.reduce((s, doc) => s + txAmt(doc.data()), 0);
+    const pct  = budget > 0 ? Math.round(fact / budget * 100) : 0;
+
+    // Знаходимо назву категорії
+    const cat = (_state.categories.expense || []).find(c => c.id === catId);
+    const catName = cat?.name || catId;
+    const currency = _state.currency || 'UAH';
+
+    // Ключ щоб не показувати одне сповіщення двічі в одній сесії
+    const alertKey = `budgetAlert_${catId}_${monthKey}`;
+    const lastAlerted = parseInt(sessionStorage.getItem(alertKey) || '0');
+
+    if (pct >= 100 && lastAlerted < 100) {
+      sessionStorage.setItem(alertKey, '100');
+      if (typeof showToast === 'function') {
+        showToast(
+          `🚨 Бюджет «${catName}» вичерпано! (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
+          'error',
+          6000
+        );
+      }
+      // Також показуємо більш помітне сповіщення
+      _showBudgetWarningBanner(catName, fact, budget, currency, 100);
+    } else if (pct >= 80 && lastAlerted < 80) {
+      sessionStorage.setItem(alertKey, '80');
+      if (typeof showToast === 'function') {
+        showToast(
+          `⚠️ Бюджет «${catName}» використано на ${pct}% (${fmt(fact, currency)} / ${fmt(budget, currency)})`,
+          'warning',
+          5000
+        );
+      }
+    }
+  } catch(e) {
+    console.warn('[Finance] _checkBudgetAlert:', e.message);
+  }
+}
+
+// ── Банер попередження про бюджет ─────────────────────────
+function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {
+  const old = document.getElementById('finBudgetWarningBanner');
+  if (old) old.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'finBudgetWarningBanner';
+  banner.style.cssText = [
+    'position:fixed;top:70px;right:20px;z-index:99998;',
+    'background:#fef2f2;border:2px solid #fecaca;border-radius:12px;',
+    'padding:12px 16px;max-width:320px;box-shadow:0 8px 24px rgba(239,68,68,0.2);',
+    'animation:slideIn 0.3s ease;',
+  ].join('');
+
+  banner.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:0.85rem;font-weight:700;color:#dc2626;margin-bottom:4px;">
+          Бюджет вичерпано!
+        </div>
+        <div style="font-size:0.78rem;color:#374151;margin-bottom:8px;">
+          Категорія <b>${catName}</b>:<br>
+          Витрачено <b style="color:#dc2626;">${fmt(fact, currency)}</b> з <b>${fmt(budget, currency)}</b>
+        </div>
+        <div style="height:6px;background:#fee2e2;border-radius:3px;margin-bottom:8px;">
+          <div style="height:6px;background:#dc2626;border-radius:3px;width:100%;"></div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="window._planMode&&window._planMode('budget');window._financeTab&&window._financeTab('planning');document.getElementById('finBudgetWarningBanner')?.remove();"
+            style="flex:1;padding:5px 8px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;">
+            Переглянути бюджет
+          </button>
+          <button onclick="document.getElementById('finBudgetWarningBanner')?.remove();"
+            style="padding:5px 10px;background:#fff;border:1px solid #fecaca;border-radius:6px;font-size:0.72rem;cursor:pointer;color:#6b7280;">
+            ×
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+  document.body.appendChild(banner);
+  // Автоприбирання через 10 секунд
+  setTimeout(() => banner.remove(), 10000);
+}
+
 
 })();
 
