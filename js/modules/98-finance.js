@@ -1984,8 +1984,8 @@ function renderRecurring(el) {
       ${items.length === 0 ? `
         <div style="text-align:center;padding:3rem 1rem;color:#9ca3af;">
           ${I.repeat}
-          <p style="margin:0.75rem 0 0;font-size:0.9rem;">Регулярних платежів ще немає</p>
-          <p style="margin:0.25rem 0 0;font-size:0.8rem;">Додайте оренду, зарплату, підписки — вони будуть списуватись автоматично</p>
+          <p style="margin:0.75rem 0 0;font-size:0.9rem;">${window.t('finNoRecurring')}</p>
+          <p style="margin:0.25rem 0 0;font-size:0.8rem;">${window.t('finRecurringEmpty')}</p>
         </div>
       ` : `
         <div style="display:flex;flex-direction:column;gap:0.75rem;">
@@ -4519,7 +4519,7 @@ function addTransaction(forceType) {
           <button id="fmTabExpense" onclick="window._financeModalSwitchType('expense')"
             style="padding:0.3rem 0.75rem;border-radius:6px;border:none;cursor:pointer;font-size:0.8rem;font-weight:600;
             background:${type==='expense'?'#ef4444':'#f3f4f6'};color:${type==='expense'?'#fff':'#6b7280'};">
-            Витрата
+            ${window.t('finExpense2')||'Витрата'}
           </button>
           <button onclick="document.getElementById('financeModal')?.remove()"
             style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:0.25rem;">
@@ -5541,11 +5541,11 @@ window._exportPnlXlsx = async function() {
 
     // Будуємо рядки
     const rows = [
-      ['P&L Звіт — ' + d.periodLabel, '', '', ''],
+      [_tg('P&L Звіт — ','P&L Отчёт — ') + d.periodLabel, '', '', ''],
       ['', '', '', ''],
-      ['Показник', 'Сума (' + cur + ')', '% від виручки', ''],
+      [_tg('Показник','Показатель'), _tg('Сума','Сумма') + ' (' + cur + ')', _tg('% від виручки','% от выручки'), ''],
       ['', '', '', ''],
-      ['ВИРУЧКА (Revenue)', fmt(d.totalInc), '100%', ''],
+      [_tg('ВИРУЧКА (Revenue)','ВЫРУЧКА (Revenue)'), fmt(d.totalInc), '100%', ''],
     ];
 
     d.incCats.filter(c=>d.byIncCat[c.id]).forEach(c => {
@@ -5553,22 +5553,22 @@ window._exportPnlXlsx = async function() {
     });
 
     rows.push(['', '', '', '']);
-    rows.push(['СОБІВАРТІСТЬ (COGS)', fmt(d.totalCogs), d.pctOf(d.totalCogs)+'%', '']);
+    rows.push([_tg('СОБІВАРТІСТЬ (COGS)','СЕБЕСТОИМОСТЬ (COGS)'), fmt(d.totalCogs), d.pctOf(d.totalCogs)+'%', '']);
     d.expCats.filter(c=>d.byCogsCat[c.id]).forEach(c => {
       rows.push(['  ' + c.name, fmt(d.byCogsCat[c.id]||0), d.pctOf(d.byCogsCat[c.id]||0)+'%', '']);
     });
 
     rows.push(['', '', '', '']);
-    rows.push(['ВАЛОВИЙ ПРИБУТОК', fmt(d.grossProfit), d.pctOf(d.grossProfit)+'%', '']);
+    rows.push([_tg('ВАЛОВИЙ ПРИБУТОК','ВАЛОВАЯ ПРИБЫЛЬ'), fmt(d.grossProfit), d.pctOf(d.grossProfit)+'%', '']);
 
     rows.push(['', '', '', '']);
-    rows.push(['ОПЕРАЦІЙНІ ВИТРАТИ (OPEX)', fmt(d.totalOpex), d.pctOf(d.totalOpex)+'%', '']);
+    rows.push([_tg('ОПЕРАЦІЙНІ ВИТРАТИ (OPEX)','ОПЕРАЦИОННЫЕ РАСХОДЫ (OPEX)'), fmt(d.totalOpex), d.pctOf(d.totalOpex)+'%', '']);
     d.expCats.filter(c=>d.byOpexCat[c.id]).forEach(c => {
       rows.push(['  ' + c.name, fmt(d.byOpexCat[c.id]||0), d.pctOf(d.byOpexCat[c.id]||0)+'%', '']);
     });
 
     rows.push(['', '', '', '']);
-    rows.push(['ЧИСТИЙ ПРИБУТОК (Net Profit)', fmt(d.netProfit), d.pctOf(d.netProfit)+'%', '']);
+    rows.push([_tg('ЧИСТИЙ ПРИБУТОК (Net Profit)','ЧИСТАЯ ПРИБЫЛЬ (Net Profit)'), fmt(d.netProfit), d.pctOf(d.netProfit)+'%', '']);
 
     // Генеруємо XML-based XLSX без бібліотек
     const xmlRows = rows.map(row =>
@@ -5645,12 +5645,12 @@ window._exportPnlPdf = async function() {
     doc.setTextColor(26,26,26);
     doc.setFont('helvetica','bold');
     doc.setFontSize(16);
-    doc.text('P&L — Звіт про прибутки і збитки', margin, y);
+    doc.text(_tg('P&L — Звіт про прибутки і збитки','P&L — Отчёт о прибылях и убытках'), margin, y);
     y += 7;
     doc.setFont('helvetica','normal');
     doc.setFontSize(9);
     doc.setTextColor(100,100,100);
-    doc.text(`Період: ${d.periodLabel}  |  Валюта: ${cur}  |  Дата: ${new Date().toLocaleDateString('uk-UA')}`, margin, y);
+    doc.text(`${_tg('Період','Период')}: ${d.periodLabel}  |  Валюта: ${cur}  |  Дата: ${new Date().toLocaleDateString('uk-UA')}`, margin, y);
 
     // Функція для рядка таблиці
     const addRow = (label, val, pctStr, bold, bgColor) => {
@@ -5694,7 +5694,7 @@ window._exportPnlPdf = async function() {
 
     y += 2; divider([187,247,208]);
     // COGS
-    addRow('СОБІВАРТІСТЬ (COGS)', d.totalCogs, pct(d.totalCogs), true, [255,247,237]);
+    addRow(_tg('СОБІВАРТІСТЬ (COGS)','СЕБЕСТОИМОСТЬ (COGS)'), d.totalCogs, pct(d.totalCogs), true, [255,247,237]);
     d.expCats.filter(c=>d.byCogsCat[c.id]).forEach(c =>
       addRow('  ' + c.name, d.byCogsCat[c.id]||0, pct(d.byCogsCat[c.id]||0), false)
     );
@@ -5705,7 +5705,7 @@ window._exportPnlPdf = async function() {
 
     y += 2; divider();
     // OPEX
-    addRow('ОПЕРАЦІЙНІ ВИТРАТИ (OPEX)', d.totalOpex, pct(d.totalOpex), true, [254,242,242]);
+    addRow(_tg('ОПЕРАЦІЙНІ ВИТРАТИ (OPEX)','ОПЕРАЦИОННЫЕ РАСХОДЫ (OPEX)'), d.totalOpex, pct(d.totalOpex), true, [254,242,242]);
     d.expCats.filter(c=>d.byOpexCat[c.id]).forEach(c =>
       addRow('  ' + c.name, d.byOpexCat[c.id]||0, pct(d.byOpexCat[c.id]||0), false)
     );
