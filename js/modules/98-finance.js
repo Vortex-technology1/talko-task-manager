@@ -3836,12 +3836,7 @@ function _renderFinModuleLinksBlock() {
     <div style="padding:10px 12px;font-size:0.75rem;color:#6b7280;background:#f9fafb;
       display:flex;align-items:center;justify-content:space-between;gap:8px;">
       <span>${window.t('allModuleLinks')}</span>
-      <button onclick="
-        var settingsBtn = document.querySelector('[onclick*=\\'switchTab(\\'users\\')\\']') ||
-          [...document.querySelectorAll('button')].find(b=>b.textContent.includes('Налаштування') && !b.closest('#financeModule'));
-        if(settingsBtn) settingsBtn.click();
-        else if(typeof switchTab==='function') switchTab('users');
-      " style="padding:4px 12px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;
+      <button onclick="if(typeof switchTab==='function') switchTab('users'); else { var btn=[...document.querySelectorAll('button')].find(b=>b.getAttribute&&b.getAttribute('onclick')&&b.getAttribute('onclick').includes('users')&&!b.closest('#financeModule')); if(btn) btn.click(); }" style="padding:4px 12px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;
         font-size:0.75rem;cursor:pointer;color:#374151;white-space:nowrap;flex-shrink:0;">
         ${window.t('openArrow')}
       </button>
