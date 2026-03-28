@@ -157,7 +157,7 @@ const _defaultAutomationRules = [
         triggerEvent: TALKO_EVENTS.BOT_FLOW_COMPLETED,
         condition: null, // завжди
         action: _actionCreateClientAndDeal,
-        description: window.t('eventBotLead'),
+        description: () => window.t('eventBotLead'),
     },
 
     // DEAL: угода перейшла в window.t('proposalWord') → задача "Підготувати КП"
@@ -173,7 +173,7 @@ const _defaultAutomationRules = [
             clientId: e.payload.clientId,
             assigneeId: e.payload.assignedToId,
         }),
-        description: window.t('eventDealProposal'),
+        description: () => window.t('eventDealProposal'),
     },
 
     // DEAL: угода перейшла в "Закриття" → задача "Фінальний дзвінок"
@@ -189,7 +189,7 @@ const _defaultAutomationRules = [
             clientId: e.payload.clientId,
             assigneeId: e.payload.assignedToId,
         }),
-        description: window.t('eventDealClosing'),
+        description: () => window.t('eventDealClosing'),
     },
 
     // DEAL WON → задача "Виставити рахунок"
@@ -216,7 +216,7 @@ const _defaultAutomationRules = [
         triggerEvent: TALKO_EVENTS.INVOICE_PAID,
         condition: (e) => !!e.payload.dealId,
         action: _actionMarkDealWon,
-        description: window.t('invoicePaidWon'),
+        description: () => window.t('invoicePaidWon'),
     },
 
     // FORM SUBMITTED → лід у CRM
@@ -225,7 +225,7 @@ const _defaultAutomationRules = [
         triggerEvent: TALKO_EVENTS.FORM_SUBMITTED,
         condition: (e) => e.payload.crmIntegration === true,
         action: _actionCreateClientAndDeal,
-        description: window.t('siteFormCRM'),
+        description: () => window.t('siteFormCRM'),
     },
 
     // BUDGET EXCEEDED → задача попередження

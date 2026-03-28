@@ -33,13 +33,21 @@
     let _unsubs    = [];
 
     // ── Column definitions ─────────────────────────────────
-    const COLS = [
-        { id:'site',    icon:()=>I.site,    label:window.t('siteWord'),      color:'#3b82f6', bg:'#eff6ff', hint:'Лендінг, звідки приходять ліди' },
-        { id:'bot',     icon:()=>I.bot,     label:window.t('botWord'),       color:'#8b5cf6', bg:'#f5f3ff', hint:'Telegram бот для обробки ліда' },
-        { id:'ai',      icon:()=>I.ai,      label:window.t('aiChain'), color:'#06b6d4', bg:'#ecfeff', hint:'Кроки: питання, AI відповідь, збір даних' },
-        { id:'crm',     icon:()=>I.crm,     label:'CRM',       color:'#22c55e', bg:'#f0fdf4', hint:'Автоматичне створення угоди' },
-        { id:'process', icon:()=>I.process, label:window.t('processProject'), color:'#f59e0b', bg:'#fffbeb', hint:'Процес або проект після воронки' },
-    ];
+    // NOTE: labels use lazy getters — window.t() called at render time, not at load time
+    function _getCOLS() {
+        return [
+            { id:'site',    icon:()=>I.site,    label:(window.t ? window.t('siteWord') : 'Сайт'),      color:'#3b82f6', bg:'#eff6ff', hint:'Лендінг, звідки приходять ліди' },
+            { id:'bot',     icon:()=>I.bot,     label:(window.t ? window.t('botWord') : 'Бот'),        color:'#8b5cf6', bg:'#f5f3ff', hint:'Telegram бот для обробки ліда' },
+            { id:'ai',      icon:()=>I.ai,      label:(window.t ? window.t('aiChain') : 'AI Ланцюг'), color:'#06b6d4', bg:'#ecfeff', hint:'Кроки: питання, AI відповідь, збір даних' },
+            { id:'crm',     icon:()=>I.crm,     label:'CRM',       color:'#22c55e', bg:'#f0fdf4', hint:'Автоматичне створення угоди' },
+            { id:'process', icon:()=>I.process, label:(window.t ? window.t('processProject') : 'Процес'), color:'#f59e0b', bg:'#fffbeb', hint:'Процес або проект після воронки' },
+        ];
+    }
+    // Keep COLS as a getter-proxy for backward compat
+    const COLS = new Proxy([], {
+        get(_, prop) { return _getCOLS()[prop]; },
+        has(_, prop) { return prop in _getCOLS(); }
+    });
 
     // ── Init ───────────────────────────────────────────────
     let _initialized = false;
