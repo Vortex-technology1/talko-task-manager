@@ -4982,8 +4982,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
     const snap = await db.collection('companies').doc(companyId)
       .collection('finance_transactions')
       .where(filterField, '==', entityId)
-      .orderBy('date', 'desc')
-      .get();
+      .get(); // orderBy на клієнті нижче
 
     const txs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     const currency = _state.currency || 'EUR';
@@ -5155,53 +5154,6 @@ window._addEntityTx = function(entityId, field, type) {
 // ── Перевірка бюджету при 80% і 100% ─────────────────────
 
 // ── Банер попередження про бюджет ─────────────────────────
-function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {
-  const old = document.getElementById('finBudgetWarningBanner');
-  if (old) old.remove();
-
-  const banner = document.createElement('div');
-  banner.id = 'finBudgetWarningBanner';
-  banner.style.cssText = [
-    'position:fixed;top:70px;right:20px;z-index:99998;',
-    'background:#fef2f2;border:2px solid #fecaca;border-radius:12px;',
-    'padding:12px 16px;max-width:320px;box-shadow:0 8px 24px rgba(239,68,68,0.2);',
-    'animation:slideIn 0.3s ease;',
-  ].join('');
-
-  banner.innerHTML = `
-    <div style="display:flex;align-items:flex-start;gap:10px;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:0.85rem;font-weight:700;color:#dc2626;margin-bottom:4px;">
-          Бюджет вичерпано!
-        </div>
-        <div style="font-size:0.78rem;color:#374151;margin-bottom:8px;">
-          Категорія <b>${catName}</b>:<br>
-          Витрачено <b style="color:#dc2626;">${fmt(fact, currency)}</b> з <b>${fmt(budget, currency)}</b>
-        </div>
-        <div style="height:6px;background:#fee2e2;border-radius:3px;margin-bottom:8px;">
-          <div style="height:6px;background:#dc2626;border-radius:3px;width:100%;"></div>
-        </div>
-        <div style="display:flex;gap:6px;">
-          <button onclick="window._planMode&&window._planMode('budget');window._financeTab&&window._financeTab('planning');document.getElementById('finBudgetWarningBanner')?.remove();"
-            style="flex:1;padding:5px 8px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;">
-            Переглянути бюджет
-          </button>
-          <button onclick="document.getElementById('finBudgetWarningBanner')?.remove();"
-            style="padding:5px 10px;background:#fff;border:1px solid #fecaca;border-radius:6px;font-size:0.72rem;cursor:pointer;color:#6b7280;">
-            ×
-          </button>
-        </div>
-      </div>
-    </div>`;
-
-  document.body.appendChild(banner);
-  // Автоприбирання через 10 секунд
-  setTimeout(() => banner.remove(), 10000);
-}
 
 
 })();
@@ -5258,53 +5210,6 @@ if (!tryInit()) {
 // ── Перевірка бюджету при 80% і 100% ─────────────────────
 
 // ── Банер попередження про бюджет ─────────────────────────
-function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {
-  const old = document.getElementById('finBudgetWarningBanner');
-  if (old) old.remove();
-
-  const banner = document.createElement('div');
-  banner.id = 'finBudgetWarningBanner';
-  banner.style.cssText = [
-    'position:fixed;top:70px;right:20px;z-index:99998;',
-    'background:#fef2f2;border:2px solid #fecaca;border-radius:12px;',
-    'padding:12px 16px;max-width:320px;box-shadow:0 8px 24px rgba(239,68,68,0.2);',
-    'animation:slideIn 0.3s ease;',
-  ].join('');
-
-  banner.innerHTML = `
-    <div style="display:flex;align-items:flex-start;gap:10px;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:0.85rem;font-weight:700;color:#dc2626;margin-bottom:4px;">
-          Бюджет вичерпано!
-        </div>
-        <div style="font-size:0.78rem;color:#374151;margin-bottom:8px;">
-          Категорія <b>${catName}</b>:<br>
-          Витрачено <b style="color:#dc2626;">${fmt(fact, currency)}</b> з <b>${fmt(budget, currency)}</b>
-        </div>
-        <div style="height:6px;background:#fee2e2;border-radius:3px;margin-bottom:8px;">
-          <div style="height:6px;background:#dc2626;border-radius:3px;width:100%;"></div>
-        </div>
-        <div style="display:flex;gap:6px;">
-          <button onclick="window._planMode&&window._planMode('budget');window._financeTab&&window._financeTab('planning');document.getElementById('finBudgetWarningBanner')?.remove();"
-            style="flex:1;padding:5px 8px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;">
-            Переглянути бюджет
-          </button>
-          <button onclick="document.getElementById('finBudgetWarningBanner')?.remove();"
-            style="padding:5px 10px;background:#fff;border:1px solid #fecaca;border-radius:6px;font-size:0.72rem;cursor:pointer;color:#6b7280;">
-            ×
-          </button>
-        </div>
-      </div>
-    </div>`;
-
-  document.body.appendChild(banner);
-  // Автоприбирання через 10 секунд
-  setTimeout(() => banner.remove(), 10000);
-}
 
 
 })();
