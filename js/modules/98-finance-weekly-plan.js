@@ -90,7 +90,7 @@ function _render(root) {
       ${[
         {l:_t(_t('Дохід план','Доход план'),'Доход план'),   v:_fmt(tPlanInc,cur), c:'#22c55e', sub:'за горизонт'},
         {l:_t(_t('Витрати план','Расходы план'),'Расходы план'), v:_fmt(tPlanExp,cur), c:'#ef4444', sub:'за горизонт'},
-        {l:'Плановий прибуток', v:_fmt(tPlanInc-tPlanExp,cur), c:tPlanInc>=tPlanExp?'#22c55e':'#ef4444', sub:''},
+        {l:_t('Плановий прибуток','Плановая прибыль'), v:_fmt(tPlanInc-tPlanExp,cur), c:tPlanInc>=tPlanExp?'#22c55e':'#ef4444', sub:''},
         {l:_t(_t('Факт доходів','Факт доходов'),'Факт доходов'), v:_fmt(tActInc,cur),  c:'#3b82f6', sub:'минулі тижні'},
         {l:_t(_t('Залишок наприкінці','Остаток в конце'),'Остаток в конце'), v:_fmt(cfFinal,cur), c:cfFinal>=0?'#22c55e':'#ef4444',
           sub: hasNeg ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> є касовий розрив' : _t(_t('очікуваний','ожидаемый'),'ожидаемый')},
@@ -110,16 +110,16 @@ function _render(root) {
           font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
           stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Зберегти план
+        ${_t('Зберегти план','Сохранить план')}
       </button>
       <select id="wpHorizonSel" onchange="window._wpChangeHorizon(this.value)"
         style="padding:0.45rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-        <option value="20" ${WP.horizon===20?'selected':''}>5 місяців (20 тижнів)</option>
-        <option value="26" ${WP.horizon===26?'selected':''}>6 місяців (26 тижнів)</option>
-        <option value="32" ${WP.horizon===32?'selected':''}>8 місяців (32 тижні)</option>
+        <option value="20" ${WP.horizon===20?'selected':''}>${_t('5 місяців (20 тижнів)','5 месяцев (20 недель)')}</option>
+        <option value="26" ${WP.horizon===26?'selected':''}>${_t('6 місяців (26 тижнів)','6 месяцев (26 недель)')}</option>
+        <option value="32" ${WP.horizon===32?'selected':''}>${_t('8 місяців (32 тижні)','8 месяцев (32 недели)')}</option>
       </select>
       <div style="display:flex;align-items:center;gap:5px;">
-        <span style="font-size:0.78rem;color:#6b7280;">Початковий залишок:</span>
+        <span style="font-size:0.78rem;color:#6b7280;">${_t('Початковий залишок:','Начальный остаток:')}</span>
         <input id="wpStartBal" type="number" value="${WP.startBalance}" min="0" step="100"
           onchange="window._wpStartBalChange(this.value)"
           style="width:110px;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;
@@ -133,7 +133,7 @@ function _render(root) {
       </button>
       <button onclick="window._wpClearAll()"
         style="padding:0.45rem 0.8rem;border:1px solid #fecaca;border-radius:8px;
-          background:#fff;font-size:0.8rem;color:#ef4444;cursor:pointer;">Очистити</button>
+          background:#fff;font-size:0.8rem;color:#ef4444;cursor:pointer;">${_t('Очистити','Очистить')}</button>
       <button onclick="window._wpAddEventModal()"
         style="padding:0.45rem 0.9rem;border:1px solid #3b82f6;border-radius:8px;
           background:#eff6ff;font-size:0.8rem;color:#1d4ed8;cursor:pointer;font-weight:600;
@@ -213,24 +213,24 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <!-- Дохід план -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:2px;width:${bw}px;height:${Math.max(1,pIncH)}px;
           background:#22c55e;border-radius:2px 2px 0 0;opacity:0.85;"
-          title="Дохід план: ${_fmt(w.pInc,currency)}"></div>
+          title="${_t('Дохід план','Доход план')}: ${_fmt(w.pInc,currency)}"></div>
 
         ${showFact && w.aInc > 0 ? `
         <!-- Дохід факт (накладений) -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:2px;width:${bw}px;height:${Math.max(1,aIncH)}px;
           background:#86efac;border-radius:2px 2px 0 0;border:1.5px solid #22c55e;box-sizing:border-box;"
-          title="Дохід факт: ${_fmt(w.aInc,currency)}"></div>` : ''}
+          title="${_t('Дохід факт','Доход факт')}: ${_fmt(w.aInc,currency)}"></div>` : ''}
 
         <!-- Витрати план -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:${halfW+2}px;width:${bw}px;height:${Math.max(1,pExpH)}px;
           background:#ef4444;border-radius:2px 2px 0 0;opacity:0.85;"
-          title="Витрати план: ${_fmt(w.pExp,currency)}"></div>
+          title="${_t('Витрати план','Расходы план')}: ${_fmt(w.pExp,currency)}"></div>
 
         ${showFact && w.aExp > 0 ? `
         <!-- Витрати факт -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:${halfW+2}px;width:${bw}px;height:${Math.max(1,aExpH)}px;
           background:#fca5a5;border-radius:2px 2px 0 0;border:1.5px solid #ef4444;box-sizing:border-box;"
-          title="Витрати факт: ${_fmt(w.aExp,currency)}"></div>` : ''}
+          title="${_t('Витрати факт','Расходы факт')}: ${_fmt(w.aExp,currency)}"></div>` : ''}
 
         <!-- Розділювач між зонами -->
         <div style="position:absolute;bottom:${CF_H+26}px;left:0;right:0;height:2px;background:#f3f4f6;"></div>
@@ -239,7 +239,7 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <div style="position:absolute;bottom:${26 + cfZeroY - cfY - 4}px;left:50%;transform:translateX(-50%);
           width:8px;height:8px;border-radius:50%;background:${w.cfEnd<0?'#ef4444':'#3b82f6'};
           border:2px solid white;box-shadow:0 0 0 1px ${w.cfEnd<0?'#ef4444':'#3b82f6'};z-index:3;"
-          title="Залишок: ${_fmt(w.cfEnd,currency)}"></div>
+          title="${_t('Залишок','Остаток')}: ${_fmt(w.cfEnd,currency)}"></div>
 
         <!-- Нульова лінія CF якщо є мінус -->
         ${minCf < 0 ? `<div style="position:absolute;bottom:${26 + cfZeroY}px;left:0;right:0;height:1px;
@@ -254,7 +254,7 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <!-- Поточний тиждень мітка -->
         ${w.isCurrent ? `<div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);
           background:#22c55e;color:white;font-size:0.55rem;font-weight:700;padding:1px 5px;
-          border-radius:8px;white-space:nowrap;">Зараз</div>` : ''}
+          border-radius:8px;white-space:nowrap;">${_t('Зараз','Сейчас')}</div>` : ''}
       </div>`;
   }).join('');
 
@@ -294,10 +294,10 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
           ${[
             {c:'#22c55e', l:_t(_t('Дохід план','Доход план'),'Доход план')},
-            {c:'#86efac', l:'Дохід факт', border:'#22c55e'},
+            {c:'#86efac', l:_t('Дохід факт','Доход факт'), border:'#22c55e'},
             {c:'#ef4444', l:_t(_t('Витрати план','Расходы план'),'Расходы план')},
-            {c:'#fca5a5', l:'Витрати факт', border:'#ef4444'},
-            {c:'#3b82f6', l:'Залишок CF', round:true},
+            {c:'#fca5a5', l:_t('Витрати факт','Расходы факт'), border:'#ef4444'},
+            {c:'#3b82f6', l:_t('Залишок CF','Остаток CF'), round:true},
           ].map(i=>`
             <div style="display:flex;align-items:center;gap:4px;font-size:0.71rem;color:#374151;">
               <div style="width:${i.round?8:12}px;height:${i.round?8:7}px;
@@ -314,7 +314,7 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
           <!-- Зона барів підпис -->
           <div style="position:absolute;left:2px;top:20px;width:${LABEL_W-8}px;
             font-size:0.62rem;color:#9ca3af;font-weight:600;text-align:right;padding-right:6px;">
-            Доходи / Витрати
+            ${_t('Доходи / Витрати','Доходы / Расходы')}
           </div>
           <!-- Зона CF підпис -->
           <div style="position:absolute;left:2px;top:${BAR_H+28}px;width:${LABEL_W-8}px;
@@ -344,11 +344,11 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
       ${weeks.some(w=>w.cfIsNeg) ? `
       <div style="margin:8px 14px;padding:8px 12px;background:#fef2f2;border:1px solid #fecaca;
         border-radius:8px;font-size:0.75rem;color:#dc2626;display:flex;align-items:center;gap:6px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> <b>Касовий розрив</b> — у деяких тижнях прогнозується від'ємний залишок.
-        Перевірте план витрат або скоригуйте продажі.
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> <b>${_t('Касовий розрив','Кассовый разрыв')}</b> — ${_t("у деяких тижнях прогнозується від'ємний залишок.","в некоторых неделях прогнозируется отрицательный остаток.")}
+        ${_t('Перевірте план витрат або скоригуйте продажі.','Проверьте план расходов или скорректируйте продажи.')}
       </div>` : ''}
       <div style="padding:6px 14px 10px;font-size:0.7rem;color:#9ca3af;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Відредагуйте планові суми в таблиці нижче — графік оновиться після збереження
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> ${_t('Відредагуйте планові суми в таблиці нижче — графік оновиться після збереження','Отредактируйте плановые суммы в таблице ниже — график обновится после сохранения')}
       </div>
     </div>`;
 }
@@ -459,14 +459,14 @@ function _renderTable(weeks, currency) {
         <table style="width:100%;border-collapse:collapse;min-width:650px;">
           <thead>
             <tr style="background:#374151;color:#fff;">
-              <th style="padding:8px 10px;text-align:left;font-size:0.72rem;font-weight:600;min-width:130px;">Тиждень</th>
-              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#14532d;">Дохід план</th>
-              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#14532d;">Факт</th>
+              <th style="padding:8px 10px;text-align:left;font-size:0.72rem;font-weight:600;min-width:130px;">${_t('Тиждень','Неделя')}</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#14532d;">${_t('Дохід план','Доход план')}</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#14532d;">${_t('Факт','Факт')}</th>
               <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#14532d;">Δ</th>
-              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#7f1d1d;">Витрати план</th>
-              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#7f1d1d;">Факт</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#7f1d1d;">${_t('Витрати план','Расходы план')}</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#7f1d1d;">${_t('Факт','Факт')}</th>
               <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#7f1d1d;">Δ</th>
-              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#1e3a5f;">Залишок CF</th>
+              <th style="padding:8px 6px;text-align:right;font-size:0.72rem;font-weight:600;background:#1e3a5f;">${_t('Залишок CF','Остаток CF')}</th>
             </tr>
           </thead>
           ${monthBlocks}
@@ -562,8 +562,8 @@ window._wpFillFromAvg = async function() {
 
 window._wpClearAll = async function() {
   const ok = typeof showConfirmModal==='function'
-    ? await showConfirmModal('Очистити весь тижневий план?',{danger:true})
-    : confirm('Очистити весь тижневий план?');
+    ? await showConfirmModal(_t('Очистити весь тижневий план?','Очистить весь недельный план?'),{danger:true})
+    : confirm(_t('Очистити весь тижневий план?','Очистить весь недельный план?'));
   if (!ok) return;
   WP.plan = {};
   const root = document.getElementById('weeklyPlanRoot');

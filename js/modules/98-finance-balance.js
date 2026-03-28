@@ -248,7 +248,7 @@ function _render(el, d) {
       ${d.assets.debtors.total === 0
         ? ''
         : `<div style="padding:4px 14px;font-size:0.68rem;color:#9ca3af;">
-            ← Закриті угоди CRM без фіксації у фінансах</div>`}
+            ${_t('← Закриті угоди CRM без фіксації у фінансах','← Закрытые сделки CRM без фиксации в финансах')}</div>`}
 
       ${subHdr(_t('Запаси (склад)','Запасы (склад)'), d.assets.stock.total)}
       ${d.assets.stock.total > 0
