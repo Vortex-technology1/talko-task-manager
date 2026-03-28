@@ -530,7 +530,7 @@
                 finAccrualDateLbl: 'Дата нарахування',
                 finAccrualDatePh: 'Залиште порожнім якщо збігається з датою оплати',
                 finAccrualDateHint: 'Якщо відрізняється від дати оплати. Cash Flow = дата оплати, P&L = дата нарахування.',
-                finObjectLbl: 'Об'єкт',
+                finObjectLbl: 'Об\'єкт',
                 finFunctionLbl: 'Функція',
                 finFunctionHint: 'При додаванні транзакцій вибирайте поле «Функція»',
                 finProjectHint: 'При додаванні транзакції вкажіть «Проект».',
