@@ -131,10 +131,13 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh;
             padding: 0;
             background: #080c10;
-            position: relative;
-            overflow: hidden;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            overflow-y: auto;
             font-family: 'DM Sans', -apple-system, sans-serif;
         }
 
@@ -318,9 +321,12 @@
         .auth-input-group .form-input:-webkit-autofill:hover,
         .auth-input-group .form-input:-webkit-autofill:focus,
         .auth-input-group .form-input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 30px #0d1117 inset !important;
+            -webkit-box-shadow: 0 0 0 50px #0d1117 inset !important;
+            box-shadow: 0 0 0 50px #0d1117 inset !important;
             -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff !important;
             caret-color: #ffffff !important;
+            background-color: #0d1117 !important;
             transition: background-color 9999s ease-in-out 0s !important;
         }
         .auth-input-group .input-wrapper { position: relative; }
