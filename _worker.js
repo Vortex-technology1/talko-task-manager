@@ -187,6 +187,38 @@ export default {
         // ── /api/stripe ──────────────────────────────────────
         if (path.startsWith('/api/stripe')) return handleStripe(request, url, env);
 
+        // ── /api/debug-token ─────────────────────────────────
+        if (path === '/api/debug-token') {
+            try {
+                const pk = env.FIREBASE_PRIVATE_KEY || '';
+                const email = env.FIREBASE_CLIENT_EMAIL || '';
+                const now = Math.floor(Date.now() / 1000);
+                const header  = b64url(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
+                const payload = b64url(JSON.stringify({
+                    iss: email, sub: email,
+                    aud: 'https://oauth2.googleapis.com/token',
+                    iat: now, exp: now + 3600,
+                    scope: 'https://www.googleapis.com/auth/datastore',
+                }));
+                const unsigned = `${header}.${payload}`;
+                let pkFixed = pk;
+                if (pkFixed.includes('\\n')) pkFixed = pkFixed.replace(/\\n/g, '\n');
+                const keyBuf = pemToBuf(pkFixed);
+                const key = await crypto.subtle.importKey('pkcs8', keyBuf, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['sign']);
+                const sig = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key, enc(unsigned));
+                const jwt = `${unsigned}.${b64url_raw(sig)}`;
+                const r = await fetch('https://oauth2.googleapis.com/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`,
+                });
+                const d = await r.json();
+                return json({ ok: r.ok, status: r.status, response: d, email, pkStart: pkFixed.substring(0, 50) });
+            } catch(e) {
+                return json({ error: e.message, stack: e.stack });
+            }
+        }
+
         // ── /api/ping ────────────────────────────────────────
         if (path === '/api/ping') return json({ ok:true, ts:Date.now() });
 
