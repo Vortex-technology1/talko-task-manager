@@ -141,27 +141,27 @@ function renderBotsTab() {
     c.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
             <div>
-                <div style="font-weight:700;font-size:1rem;">Мої боти</div>
-                <div style="font-size:0.74rem;color:#6b7280;">${bp.bots.length} ботів</div>
+                <div style="font-weight:700;font-size:1rem;">${window.t('botsMyBots')}</div>
+                <div style="font-size:0.74rem;color:#6b7280;">${bp.bots.length} ${window.t('botsBotsCount')}</div>
             </div>
             <button onclick="openCreateBotModal()"
                 style="padding:0.5rem 1rem;background:#22c55e;color:white;border:none;
                 border-radius:10px;cursor:pointer;font-weight:600;font-size:0.84rem;">
-                + Новий бот
+                + ${window.t('botsNewBot')}
             </button>
         </div>
 
         ${bp.bots.length === 0 ? `
         <div style="text-align:center;padding:3rem;background:white;border-radius:16px;box-shadow:var(--shadow);">
             <div style="font-size:3rem;margin-bottom:0.75rem;"><i data-lucide="bot" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i></div>
-            <div style="font-weight:700;font-size:1rem;margin-bottom:0.4rem;">Ботів поки немає</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.4rem;">${window.t('botsNoBots')}</div>
             <div style="font-size:0.84rem;color:#6b7280;margin-bottom:1.25rem;">
-                Підключіть Telegram бота або інший канал<br>і створіть перший ланцюг сценарію
+                ${window.t('botsNoBotsHint')}
             </div>
             <button onclick="openCreateBotModal()"
                 style="padding:0.65rem 1.5rem;background:#22c55e;color:white;border:none;
                 border-radius:10px;cursor:pointer;font-weight:600;">
-                + Підключити бота
+                ${window.t('botsConnectBot')}
             </button>
         </div>` : `
         <div style="display:flex;flex-direction:column;gap:0.6rem;">
@@ -189,7 +189,7 @@ function renderBotsTab() {
                                     </span>
                                 </div>
                                 <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">
-                                    ${(bot.flowCount||0)} ланцюгів · ${(bot.contactCount||0)} контактів
+                                    ${(bot.flowCount||0)} ${window.t('botsChainCount')} · ${(bot.contactCount||0)} ${window.t('botsContactCount')}
                                 </div>
                             </div>
                         </div>
@@ -197,7 +197,7 @@ function renderBotsTab() {
                             <button onclick="openBot('${bot.id}')"
                                 style="padding:0.45rem 0.8rem;background:#22c55e;color:white;
                                 border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                                Відкрити <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i>
+                                ${window.t('botsOpen')} <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i>
                             </button>
                             <button onclick="openBotSettings('${bot.id}')"
                                 style="padding:0.45rem 0.6rem;background:#f9fafb;border:1px solid #e5e7eb;
@@ -256,7 +256,7 @@ function renderFlowsTab() {
             <button onclick="bpSwitch('bots')"
                 style="background:none;border:none;cursor:pointer;color:#6b7280;font-size:0.82rem;padding:0;display:flex;align-items:center;gap:4px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                Всі боти
+                ${window.t('botsAllBots')}
             </button>
             <span style="color:#9ca3af;">›</span>
             <span style="font-weight:700;font-size:0.85rem;color:#374151;">${escH(bot?.name||window.t('botsBot'))}</span>
@@ -268,13 +268,13 @@ function renderFlowsTab() {
         </div>
 
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
-            <div style="font-weight:700;font-size:0.95rem;">Ланцюги бота</div>
+            <div style="font-weight:700;font-size:0.95rem;">${window.t('botsChains')}</div>
             <button onclick="openCreateFlowModal()"
                 style="padding:0.42rem 0.85rem;background:#22c55e;color:white;border:none;
                 border-radius:9px;cursor:pointer;font-weight:600;font-size:0.8rem;
                 display:flex;align-items:center;gap:5px;box-shadow:0 1px 4px #22c55e44;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-                Новий ланцюг
+                ${window.t('botsNewChain')}
             </button>
         </div>
 
@@ -283,11 +283,11 @@ function renderFlowsTab() {
             <div style="margin-bottom:0.6rem;color:#9ca3af;">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg>
             </div>
-            <div style="font-weight:600;margin-bottom:0.3rem;">Ланцюгів поки немає</div>
-            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">Ланцюг — це сценарій діалогу з користувачем</div>
+            <div style="font-weight:600;margin-bottom:0.3rem;">${window.t('botsNoChains')}</div>
+            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">${window.t('botsChainDesc')}</div>
             <button onclick="openCreateFlowModal()"
                 style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:9px;cursor:pointer;font-weight:600;">
-                + Створити ланцюг
+                ${window.t('botsCreateChain')}
             </button>
         </div>` : `
         <div style="display:flex;flex-direction:column;gap:0.5rem;">
@@ -342,7 +342,7 @@ function renderFlowsTab() {
                                         style="padding:3px 8px;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;
                                         border-radius:5px;cursor:pointer;font-size:0.68rem;white-space:nowrap;flex-shrink:0;font-weight:600;"
                                         onmouseenter="this.style.background='#dbeafe'" onmouseleave="this.style.background='#eff6ff'">
-                                        Копіювати
+                                        ${window.t('botsCopyLink')}
                                     </button>
                                     <button onclick="showQR('${encodeURIComponent(deepLink)}')"
                                         style="padding:3px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
@@ -360,7 +360,7 @@ function renderFlowsTab() {
                                     box-shadow:0 1px 4px #22c55e44;transition:background 0.15s;"
                                     onmouseenter="this.style.background='#16a34a'" onmouseleave="this.style.background='#22c55e'">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                    Редагувати
+                                    ${window.t('botsEdit')}
                                 </button>
                                 <div style="display:flex;gap:0.25rem;">
                                     <button onclick="toggleFlowStatus('${flow.id}','${flow.status}')"
@@ -404,13 +404,13 @@ window.openCreateBotModal = function() {
             display:flex;align-items:center;justify-content:center;padding:1rem;">
             <div style="background:white;border-radius:16px;width:100%;max-width:440px;">
                 <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
-                    <div style="font-weight:700;font-size:1rem;">Підключити нового бота</div>
+                    <div style="font-weight:700;font-size:1rem;">${window.t('botsConnectNew')}</div>
                     <button onclick="document.getElementById('bpCreateBot').remove()"
                         style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><i data-lucide="x" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i></button>
                 </div>
                 <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                     <div>
-                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">КАНАЛ</label>
+                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">${window.t('botsChannelLabel')}</label>
                         <select id="bpNewBotChannel"
                             onchange="updateBotTokenHint(this.value)"
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;background:white;">
@@ -420,25 +420,25 @@ window.openCreateBotModal = function() {
                         </select>
                     </div>
                     <div>
-                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА БОТА</label>
+                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">${window.t('botsBotNameLabel')}</label>
                         <input id="bpNewBotName" placeholder=window.t('botsTokenExample')
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
                     <div>
-                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;" id="bpTokenLabel">BOT TOKEN (від @BotFather)</label>
+                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;" id="bpTokenLabel">${window.t('botsBotTokenLabel')}</label>
                         <input id="bpNewBotToken" placeholder="123456789:AAF..."
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                         <div id="bpTokenHint" style="font-size:0.72rem;color:#6b7280;margin-top:0.3rem;">
-                            1. Відкрий @BotFather <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> /newbot <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> скопіюй токен
+                            ${window.t('botsTgHint')}
                         </div>
                     </div>
                 </div>
                 <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
                     <button onclick="document.getElementById('bpCreateBot').remove()"
-                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">Скасувати</button>
+                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">${window.t('botsCancel')}</button>
                     <button onclick="createAndConnectBot()"
                         style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">
-                        <i data-lucide="check" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> Підключити
+                        <i data-lucide="check" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> ${window.t('botsConnect')}
                     </button>
                 </div>
             </div>
@@ -548,27 +548,27 @@ window.openCreateFlowModal = function() {
             display:flex;align-items:center;justify-content:center;padding:1rem;">
             <div style="background:white;border-radius:16px;width:100%;max-width:400px;">
                 <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;">
-                    <div style="font-weight:700;">Новий ланцюг</div>
+                    <div style="font-weight:700;">${window.t('botsNewFlowTitle')}</div>
                     <button onclick="document.getElementById('bpCreateFlow').remove()"
                         style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><i data-lucide="x" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i></button>
                 </div>
                 <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.6rem;">
                     <div>
-                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА *</label>
+                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">${window.t('botsFlowNameLabel')} *</label>
                         <input id="bpFlowName" placeholder=window.t('sitesFormExPh')
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
                     <div>
-                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ТРИГЕР</label>
+                        <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">${window.t('botsTriggerLabel')}</label>
                         <input id="bpFlowTrigger" placeholder=window.t('botsStartKeyword')
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
                 </div>
                 <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
                     <button onclick="document.getElementById('bpCreateFlow').remove()"
-                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">Скасувати</button>
+                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">${window.t('botsCancel')}</button>
                     <button onclick="saveNewFlow()"
-                        style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;"><i data-lucide="check" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> Створити</button>
+                        style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;"><i data-lucide="check" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> ${window.t('botsCreateChain')}</button>
                 </div>
             </div>
         </div>`);
@@ -677,7 +677,7 @@ async function renderContactsTab() {
                 <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
                     <div style="flex:1;position:relative;">
                         <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#9ca3af;" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                        <input id="ctsSearch" type="text" placeholder="Ім'я, телефон, нікнейм..."
+                        <input id="ctsSearch" type="text" placeholder="${window.t('botsSearchPh')}"
                             value="${escH(cts.search)}"
                             oninput="ctsOnSearch(this.value)"
                             style="width:100%;padding:0.45rem 0.5rem 0.45rem 2rem;border:1.5px solid #e5e7eb;
@@ -700,13 +700,13 @@ async function renderContactsTab() {
                     <select id="ctsFilterBot" onchange="ctsOnFilterBot(this.value)"
                         style="flex:1;min-width:100px;padding:0.38rem 0.5rem;border:1.5px solid #e5e7eb;
                         border-radius:8px;font-size:0.76rem;background:white;cursor:pointer;">
-                        <option value="">Всі боти</option>
+                        <option value="">${window.t('botsFilterBot')}</option>
                         ${bp.bots.map(b=>`<option value="${b.id}" ${cts.botId===b.id?'selected':''}>${escH(b.name)}</option>`).join('')}
                     </select>
                     <select id="ctsFilterFlow" onchange="ctsOnFilterFlow(this.value)"
                         style="flex:1;min-width:100px;padding:0.38rem 0.5rem;border:1.5px solid #e5e7eb;
                         border-radius:8px;font-size:0.76rem;background:white;cursor:pointer;">
-                        <option value="">Всі воронки</option>
+                        <option value="">${window.t('botsAllFunnels')}</option>
                         ${bp.flows.map(f=>`<option value="${f.id}" ${cts.flowId===f.id?'selected':''}>${escH(f.name)}</option>`).join('')}
                     </select>
                     <input type="date" id="ctsDateFrom" value="${cts.dateFrom}"
@@ -731,7 +731,7 @@ async function renderContactsTab() {
                 <button onclick="ctsLoadMore()"
                     style="width:100%;padding:0.55rem;background:white;border:1.5px solid #e5e7eb;
                     border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:600;color:#374151;">
-                    Завантажити ще
+                    ${window.t('botsLoadContacts')}
                 </button>
             </div>
         </div>
@@ -824,8 +824,8 @@ function _ctsRenderList() {
         list.innerHTML = `
             <div style="text-align:center;padding:3rem 1rem;background:white;border-radius:12px;">
                 <svg style="color:#d1d5db;margin-bottom:0.75rem;" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <div style="font-weight:600;color:#374151;margin-bottom:0.3rem;">Контактів не знайдено</div>
-                <div style="font-size:0.78rem;color:#9ca3af;">Спробуйте змінити фільтри або дочекайтесь нових лідів</div>
+                <div style="font-weight:600;color:#374151;margin-bottom:0.3rem;">${window.t('botsContactsNotFound')}</div>
+                <div style="font-size:0.78rem;color:#9ca3af;">${window.t('botsContactsNotFoundHint')}</div>
             </div>`;
         if (loadMore) loadMore.style.display = 'none';
         return;
@@ -973,7 +973,7 @@ window.ctsOpenCard = function(contactId) {
 
             <!-- Хедер картки -->
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-                <div style="font-weight:700;font-size:0.85rem;color:#374151;">Картка контакту</div>
+                <div style="font-weight:700;font-size:0.85rem;color:#374151;">${window.t('botsContactCard')}</div>
                 <button onclick="ctsCloseCard()"
                     style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:2px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -996,7 +996,7 @@ window.ctsOpenCard = function(contactId) {
                 <button onclick="bpOpenChat('${ct.id}')"
                     style="flex:1;padding:0.5rem;background:#22c55e;color:white;border:none;
                     border-radius:9px;cursor:pointer;font-size:0.78rem;font-weight:700;">
-                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> Написати
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> ${window.t('botsWrite')}
                 </button>
                 <button onclick="ctsAddToCRM('${ct.id}')"
                     style="flex:1;padding:0.5rem;background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0;
@@ -1015,7 +1015,7 @@ window.ctsOpenCard = function(contactId) {
                 ${field(window.t('botsChannel'), ct.channel || 'telegram', '')}
                 ${field(window.t('crmRole'), ct.role, '')}
                 ${field(window.t('onbBizType'), ct.business_type, '')}
-                ${field('Головна проблема', ct.main_problem, '')}
+                ${field(window.t('botsProblem'), ct.main_problem, '')}
                 ${field(window.t('crmGoal'), ct.main_goal, '')}
                 ${field(window.t('botsSearchTerm'), ct.search_time, '')}
                 ${field(window.t('crmTabFunnel'), ct.flowName || ct.flowId, '')}
@@ -1035,7 +1035,7 @@ window.ctsOpenCard = function(contactId) {
 
             <!-- Теги -->
             <div style="margin-bottom:0.75rem;">
-                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Теги</div>
+                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">${window.t('crmTags')||'Теги'}</div>
                 <div id="ctsTagsContainer" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;">
                     ${(ct.tags||[]).map((tag,i) => `
                     <span style="background:#f0fdf4;color:#16a34a;font-size:0.72rem;padding:2px 8px;
@@ -1057,15 +1057,15 @@ window.ctsOpenCard = function(contactId) {
 
             <!-- Примітка -->
             <div style="margin-bottom:1rem;">
-                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Примітка менеджера</div>
-                <textarea id="ctsNote" rows="3" placeholder="Додати примітку..."
+                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">${window.t('crmNote')||'Примітка менеджера'}</div>
+                <textarea id="ctsNote" rows="3" placeholder="${window.t('botsAddNote')}"
                     style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;
                     font-size:0.78rem;resize:vertical;box-sizing:border-box;font-family:inherit;"
                     >${escH(ct.managerNote||'')}</textarea>
                 <button onclick="ctsSaveNote('${ct.id}')"
                     style="margin-top:4px;width:100%;padding:0.4rem;background:#f0fdf4;color:#16a34a;
                     border:1.5px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.76rem;font-weight:600;">
-                    Зберегти примітку
+                    ${window.t('botsSaveNote')}
                 </button>
             </div>
 
@@ -1073,7 +1073,7 @@ window.ctsOpenCard = function(contactId) {
             <button onclick="ctsDeleteContact('${ct.id}')"
                 style="width:100%;padding:0.45rem;background:#fff5f5;color:#ef4444;
                 border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;font-size:0.76rem;font-weight:600;">
-                Видалити контакт
+                ${window.t('botsDeleteContact2')}
             </button>
         </div>`;
 };
@@ -1142,7 +1142,7 @@ window.ctsSaveNote = async function(contactId) {
         .update({ managerNote: note, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     const ct = cts.items.find(c => c.id === contactId);
     if (ct) ct.managerNote = note;
-    if (typeof showToast === 'function') showToast('Примітку збережено ✓', 'success');
+    if (typeof showToast === 'function') showToast(window.t('botsNoteSaved'), 'success');
 };
 
 // ─────────────────────────────────────────
@@ -1152,7 +1152,7 @@ window.ctsAddToCRM = async function(contactId) {
     const ct = cts.items.find(c => c.id === contactId);
     if (!ct) return;
     if (typeof emitTalkoEvent !== 'function') {
-        if (typeof showToast === 'function') showToast('Event Bus не завантажений', 'error');
+        if (typeof showToast === 'function') showToast(window.t('botsEventBusError'), 'error');
         return;
     }
     try {
@@ -1170,7 +1170,7 @@ window.ctsAddToCRM = async function(contactId) {
             ai_response: ct.ai_response,
             tags: ct.tags,
         }, { triggeredBy: 'user' });
-        if (typeof showToast === 'function') showToast('<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Додано в CRM', 'success');
+        if (typeof showToast === 'function') showToast('<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> ' + window.t('botsAddedToCrm'), 'success');
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
@@ -1231,7 +1231,7 @@ window.ctsExportCSV = async function() {
         const a = document.createElement('a');
         a.href = url; a.download = `contacts_${new Date().toISOString().slice(0,10)}.csv`;
         a.click(); URL.revokeObjectURL(url);
-        if (typeof showToast === 'function') showToast(`Експортовано ${rows.length} контактів`, 'success');
+        if (typeof showToast === 'function') showToast(window.t('botsExported').replace('{count}', rows.length), 'success');
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
@@ -1271,7 +1271,7 @@ function _ctsShowRefreshBanner() {
         ` <button class="cts-refresh-btn" onclick="ctsLoad(true)"
             style="background:#22c55e;color:white;border:none;padding:2px 8px;
             border-radius:6px;font-size:0.7rem;cursor:pointer;font-weight:600;">
-            ↻ Нові ліди
+            ${window.t('botsNewLead')}
         </button>`
     );
 }
@@ -1301,7 +1301,7 @@ function _ctsUpdateCounter(loaded) {
     const el = document.getElementById('ctsCounter');
     if (el) {
         const total = cts.items.length;
-        el.textContent = `Показано: ${total}${cts.hasMore ? '+' : ''} контактів`;
+        el.textContent = `${window.t('botsShown')}: ${total}${cts.hasMore ? '+' : ''} ${window.t('botsContactCount')}`;
     }
 }
 
@@ -1346,7 +1346,7 @@ async function renderChatTab() {
             <!-- Хедер + пошук -->
             <div style="padding:0.75rem;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
                 <div style="font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.5rem;">
-                    Повідомлення
+                    ${window.t('botsMessages')}
                 </div>
                 <div style="position:relative;">
                     <svg style="position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;"
@@ -1373,7 +1373,7 @@ async function renderChatTab() {
             <div id="chatMsgHeader"
                 style="padding:0.65rem 1rem;border-bottom:1px solid #f1f5f9;
                 flex-shrink:0;display:flex;align-items:center;gap:0.6rem;min-height:54px;">
-                <div style="color:#9ca3af;font-size:0.82rem;">Оберіть контакт зліва</div>
+                <div style="color:#9ca3af;font-size:0.82rem;">${window.t('botsSelectContact')}</div>
             </div>
 
             <!-- Повідомлення -->
@@ -1386,7 +1386,7 @@ async function renderChatTab() {
             <div id="chatInputArea"
                 style="padding:0.6rem;border-top:1px solid #f1f5f9;flex-shrink:0;display:none;">
                 <div style="display:flex;gap:0.4rem;align-items:flex-end;">
-                    <textarea id="chatInput" rows="1" placeholder="Написати повідомлення... (Enter — відправити)"
+                    <textarea id="chatInput" rows="1" placeholder="${window.t('botsWriteMsg')}"
                         style="flex:1;padding:0.5rem 0.65rem;border:1.5px solid #e5e7eb;
                         border-radius:10px;font-size:0.83rem;resize:none;font-family:inherit;
                         max-height:100px;overflow-y:auto;outline:none;line-height:1.4;"
@@ -1462,7 +1462,7 @@ function _chatRenderContactsList() {
 
     if (!chat.contacts.length) {
         list.innerHTML = `<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.78rem;">
-            Контактів немає.<br>Очікуйте нових лідів.
+            ${window.t('botsNoContactsChat')}
         </div>`;
         return;
     }
@@ -1625,8 +1625,8 @@ function _chatRenderMessages(msgs) {
                 <svg style="margin-bottom:0.5rem;opacity:0.4;" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
-                <div>Повідомлень поки немає</div>
-                <div style="font-size:0.74rem;margin-top:4px;">Напишіть першим або дочекайтесь відповіді</div>
+                <div>${window.t('botsMsgEmpty')}</div>
+                <div style="font-size:0.74rem;margin-top:4px;">${window.t('botsMsgEmptyHint')}</div>
             </div>`;
         return;
     }
@@ -1847,39 +1847,39 @@ async function renderBroadcastTab() {
             <div style="${sectionStyle}">
                 <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.85rem;display:flex;align-items:center;gap:0.5rem;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    Нова розсилка
+                    ${window.t('botsBroadcastNew')}
                 </div>
 
                 <!-- Аудиторія -->
                 <div style="margin-bottom:0.65rem;">
-                    <label style="${labelStyle}">СЕГМЕНТ АУДИТОРІЇ</label>
+                    <label style="${labelStyle}">${window.t('botsAudienceSegment')}</label>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;">
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Канал</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${window.t('botsChannel')}</div>
                             <select id="bcastChannel" onchange="bcastPreview()" style="${selectStyle}">
-                                <option value="">Всі канали</option>
+                                <option value="">${window.t('botsAllChannels')}</option>
                                 <option value="telegram">Telegram</option>
                                 <option value="instagram">Instagram</option>
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Воронка</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${window.t('crmTabFunnel')}</div>
                             <select id="bcastFlow" onchange="bcastPreview()" style="${selectStyle}">
-                                <option value="">Всі воронки</option>
+                                <option value="">${window.t('botsAllFunnels')}</option>
                                 ${bp.flows.map(f => `<option value="${f.id}">${escH(f.name)}</option>`).join('')}
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Ніша</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${window.t('onbBizType')}</div>
                             <select id="bcastNiche" onchange="bcastPreview()" style="${selectStyle}">
-                                <option value="">Всі ніші</option>
+                                <option value="">${window.t('botsAllNiches')}</option>
                                 ${allNiches.map(n => `<option value="${escH(n)}">${escH(n)}</option>`).join('')}
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">Тег</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${window.t('crmTags')||'Тег'}</div>
                             <select id="bcastTag" onchange="bcastPreview()" style="${selectStyle}">
-                                <option value="">Всі теги</option>
+                                <option value="">${window.t('botsAllTags')}</option>
                                 ${allTags.map(t => `<option value="${escH(t)}">${escH(t)}</option>`).join('')}
                             </select>
                         </div>
@@ -1894,14 +1894,14 @@ async function renderBroadcastTab() {
 
                 <!-- Повідомлення -->
                 <div style="margin-bottom:0.65rem;">
-                    <label style="${labelStyle}">ТЕКСТ ПОВІДОМЛЕННЯ</label>
+                    <label style="${labelStyle}">${window.t('botsMsgText')}</label>
                     <textarea id="bcastText" rows="4"
-                        placeholder="Текст розсилки...&#10;&#10;Підтримується *жирний* і _курсив_ (Telegram Markdown)"
+                        placeholder="${window.t('botsMsgTextPh')}"
                         oninput="bcastCountChars(this.value)"
                         style="${inputStyle}resize:vertical;"></textarea>
                     <div style="display:flex;justify-content:space-between;margin-top:3px;">
                         <div style="font-size:0.7rem;color:#9ca3af;">
-                            Enter = новий рядок · *bold* · _italic_
+                            ${window.t('botsMsgHint')}
                         </div>
                         <div id="bcastCharCount" style="font-size:0.7rem;color:#9ca3af;">0 / 4096</div>
                     </div>
@@ -1909,13 +1909,13 @@ async function renderBroadcastTab() {
 
                 <!-- Або запустити ланцюг -->
                 <div style="margin-bottom:0.85rem;">
-                    <label style="${labelStyle}">АБО ЗАПУСТИТИ ЛАНЦЮГ</label>
+                    <label style="${labelStyle}">${window.t('botsOrChain')}</label>
                     <select id="bcastFlowSend" style="${selectStyle}">
-                        <option value="">— Тільки текст —</option>
+                        <option value="">${window.t('botsOnlyText')}</option>
                         ${bp.flows.map(f => `<option value="${f.id}">${escH(f.name)}</option>`).join('')}
                     </select>
                     <div style="font-size:0.71rem;color:#9ca3af;margin-top:3px;">
-                        Якщо обрано ланцюг — текст ігнорується. Бот запустить ланцюг для кожного.
+                        ${window.t('botsChainHint')}
                     </div>
                 </div>
 
@@ -1932,7 +1932,7 @@ async function renderBroadcastTab() {
                     border-radius:10px;cursor:pointer;font-weight:700;font-size:0.88rem;
                     display:flex;align-items:center;justify-content:center;gap:6px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    Надіслати розсилку
+                    ${window.t('botsSendBroadcast')}
                 </button>
             </div>
 
@@ -1953,21 +1953,21 @@ async function renderBroadcastTab() {
                 <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
                     <div id="bcastStatSent" style="flex:1;text-align:center;padding:0.4rem;background:#f0fdf4;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#22c55e;" id="bcastStatSentNum">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">Надіслано</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">${window.t('botsSent')}</div>
                     </div>
                     <div id="bcastStatFailed" style="flex:1;text-align:center;padding:0.4rem;background:#fff5f5;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#ef4444;" id="bcastStatFailedNum">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">Помилок</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">${window.t('botsErrors')}</div>
                     </div>
                     <div style="flex:1;text-align:center;padding:0.4rem;background:#f8fafc;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#374151;" id="bcastStatTotal">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">Всього</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">${window.t('botsTotal')}</div>
                     </div>
                 </div>
                 <button onclick="bcastCancel()"
                     style="margin-top:0.6rem;width:100%;padding:0.45rem;background:#fee2e2;color:#ef4444;
                     border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                    ✕ Зупинити розсилку
+                    ${window.t('botsStopBtn')}
                 </button>
             </div>
         </div>
@@ -1975,11 +1975,11 @@ async function renderBroadcastTab() {
         <!-- ПРАВА ЧАСТИНА: історія -->
         <div style="width:280px;flex-shrink:0;display:flex;flex-direction:column;gap:0.5rem;">
             <div style="font-weight:700;font-size:0.85rem;color:#374151;padding:0 0.1rem;">
-                Історія розсилок
+                ${window.t('botsBroadcastHistory')}
             </div>
             ${history.length === 0
                 ? `<div style="text-align:center;padding:2rem;background:white;border-radius:12px;color:#9ca3af;font-size:0.78rem;">
-                    Розсилок ще не було
+                    ${window.t('botsNoBroadcastsYet')}
                    </div>`
                 : history.map(b => {
                     const rate = b.total > 0 ? Math.round(b.sent / b.total * 100) : 0;
@@ -2064,7 +2064,7 @@ window.bcastPreview = async function() {
             ${count === 1000 ? '<span style="color:#f97316;"> (показано перші 1000)</span>' : ''}`;
     } catch(e) {
         box.style.display = '';
-        box.innerHTML = `<span style="color:#9ca3af;">Не вдалось порахувати аудиторію</span>`;
+        box.innerHTML = `<span style="color:#9ca3af;">${window.t('botsAudienceError')}</span>`;
     }
 };
 
@@ -2111,7 +2111,7 @@ window.bpSendBroadcast = async function() {
 
     if (targets.length === 0) { if(window.showToast)showToast(window.t('botsNoBroadcastContacts'),'warning'); else alert(window.t('botsNoBroadcastContacts')); return; }
 
-    if (!(await (window.showConfirmModal ? showConfirmModal(`Надіслати розсилку ${targets.length} контактам?`) : Promise.resolve(confirm(`Надіслати розсилку ${targets.length} контактам?`))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsConfirmBroadcast').replace('{count}', targets.length)) : Promise.resolve(confirm(window.t('botsConfirmBroadcast').replace('{count}', targets.length)))))) return;
 
     // Отримуємо токен бота
     const compDoc = await firebase.firestore()
@@ -2286,11 +2286,11 @@ async function renderSettingsTab() {
     if (!bot) {
         c.innerHTML = `
             <div style="text-align:center;padding:3rem;background:white;border-radius:14px;">
-                <div style="color:#9ca3af;font-size:0.85rem;">Оберіть бота щоб відкрити налаштування</div>
+                <div style="color:#9ca3af;font-size:0.85rem;">${window.t('botsSelectContact')}</div>
                 <button onclick="bpSwitch('bots')"
                     style="margin-top:1rem;padding:0.5rem 1.25rem;background:#22c55e;color:white;
                     border:none;border-radius:9px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                    ← До списку ботів
+                    ← ${window.t('botsAllBots')}
                 </button>
             </div>`;
         return;
@@ -2334,7 +2334,7 @@ async function renderSettingsTab() {
                 </div>
                 <button onclick="bpCheckBotStatus('${bot.id}')" id="btnCheckStatus"
                     style="${btnGrayStyle}margin-left:auto;">
-                    Перевірити
+                    ${window.t('botsVerify')}
                 </button>
             </div>
             <div id="settingsStatusResult"></div>
@@ -2345,22 +2345,21 @@ async function renderSettingsTab() {
             <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
                 <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span> Webhook URL
             </div>
-            <label style="${labelStyle}">URL ДЛЯ TELEGRAM WEBHOOK</label>
+            <label style="${labelStyle}">${window.t('botsWebhookUrl')}</label>
             <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem;">
                 <input readonly value="${escH(webhookUrl)}"
                     style="${inputStyle}background:#f9fafb;color:#374151;font-size:0.74rem;cursor:text;"
                     onclick="this.select()">
                 <button onclick="copyLink('${escH(webhookUrl)}')" style="${btnGrayStyle}">
-                    Копіювати
+                    ${window.t('botsCopyBtn')}
                 </button>
             </div>
             <div style="font-size:0.72rem;color:#6b7280;">
-                Цей URL вже встановлений автоматично при підключенні бота.
-                Якщо webhook перестав працювати — натисніть window.t('botsReinstall').
+                ${window.t('botsWebhookHint')}
             </div>
             <button onclick="bpReinstallWebhook('${bot.id}')" id="btnReinstall"
                 style="margin-top:0.6rem;${btnGreenStyle}">
-                ↺ Перевстановити webhook
+                ${window.t('botsReinstallBtn')}
             </button>
             <div id="webhookResult" style="margin-top:0.5rem;font-size:0.76rem;"></div>
         </div>
@@ -2368,33 +2367,33 @@ async function renderSettingsTab() {
         <!-- Секція 3: Токен бота -->
         <div style="${sectionStyle}">
             <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
-                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span> Токен бота
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span> ${window.t('botsBot')}
             </div>
-            <label style="${labelStyle}">ПОТОЧНИЙ ТОКЕН</label>
+            <label style="${labelStyle}">${window.t('botsCurrentToken')}</label>
             <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.75rem;">
                 <div style="flex:1;padding:0.5rem 0.6rem;background:#f9fafb;border:1.5px solid #e5e7eb;
                     border-radius:9px;font-size:0.78rem;color:#6b7280;font-family:monospace;">
-                    ${bot.token ? '•••••••••' + bot.token.slice(-8) : 'Не встановлено'}
+                    ${bot.token ? window.t('botsTokenMasked') + bot.token.slice(-8) : window.t('botsTokenNotSet')}
                 </div>
             </div>
-            <label style="${labelStyle}">ЗАМІНИТИ ТОКЕН</label>
+            <label style="${labelStyle}">${window.t('botsReplaceToken')}</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="password" id="bpSettingsToken"
                     placeholder=window.t('botsNewTokenPh')
                     style="${inputStyle}flex:1;">
                 <button onclick="bpReconnectBot('${bot.id}')" style="${btnGreenStyle}">
-                    Замінити
+                    ${window.t('botsReplaceBtn')}
                 </button>
             </div>
             <div style="font-size:0.71rem;color:#9ca3af;margin-top:0.35rem;">
-                Токен не починається з бота — він потрібен тільки серверу. Нікому не передавай.
+                ${window.t('botsTokenWarning')}
             </div>
         </div>
 
         <!-- Секція 4: AI ключ -->
         <div style="${sectionStyle}">
             <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
-                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span> OpenAI / Claude API ключ
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span> OpenAI / Claude API ${window.t('adminKey')||'ключ'}
             </div>
             <label style="${labelStyle}">OPENAI (GPT-4o-mini, GPT-4o)</label>
             <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
@@ -2403,7 +2402,7 @@ async function renderSettingsTab() {
                     placeholder="sk-..."
                     style="${inputStyle}flex:1;">
                 <button onclick="settingsSaveApiKey('openai')" style="${btnGreenStyle}">
-                    Зберегти
+                    ${window.t('saveBtn')}
                 </button>
             </div>
             <label style="${labelStyle}">ANTHROPIC CLAUDE (claude-3-5-haiku)</label>
@@ -2413,7 +2412,7 @@ async function renderSettingsTab() {
                     placeholder="sk-ant-..."
                     style="${inputStyle}flex:1;">
                 <button onclick="settingsSaveApiKey('anthropic')" style="${btnGreenStyle}">
-                    Зберегти
+                    ${window.t('saveBtn')}
                 </button>
             </div>
             <div id="apiKeyResult" style="margin-top:0.4rem;font-size:0.76rem;"></div>
@@ -2422,12 +2421,12 @@ async function renderSettingsTab() {
         <!-- Секція 5: Сповіщення менеджеру -->
         <div style="${sectionStyle}">
             <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
-                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Сповіщення менеджеру
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> ${window.t('botsTgNotifTitle')}
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
                 <div>
-                    <div style="font-size:0.82rem;font-weight:600;">Telegram сповіщення</div>
-                    <div style="font-size:0.72rem;color:#6b7280;">Отримувати сповіщення при новому ліді</div>
+                    <div style="font-size:0.82rem;font-weight:600;">${window.t('botsTgNotifTitle')}</div>
+                    <div style="font-size:0.72rem;color:#6b7280;">${window.t('botsTgNotifHint')}</div>
                 </div>
                 <label style="position:relative;display:inline-block;width:42px;height:24px;cursor:pointer;">
                     <input type="checkbox" id="settingsNotifyEnabled"
@@ -2441,18 +2440,18 @@ async function renderSettingsTab() {
                         transition:0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);" id="settingsNotifyThumb"></span>
                 </label>
             </div>
-            <label style="${labelStyle}">TELEGRAM ID МЕНЕДЖЕРА</label>
+            <label style="${labelStyle}">${window.t('botsTgIdLabel')}</label>
             <div style="display:flex;gap:0.4rem;margin-bottom:0.35rem;">
                 <input id="settingsNotifyTgId" type="text"
                     value="${escH(notifyTg)}"
                     placeholder=window.t('botsExampleChatId')
                     style="${inputStyle}flex:1;">
                 <button onclick="settingsSaveNotify()" style="${btnGreenStyle}">
-                    Зберегти
+                    ${window.t('saveBtn')}
                 </button>
             </div>
             <div style="font-size:0.71rem;color:#6b7280;">
-                Щоб дізнатись свій Telegram ID — напиши боту @userinfobot
+                ${window.t('botsTgIdHint')}
             </div>
             <div id="notifyResult" style="margin-top:0.4rem;font-size:0.76rem;"></div>
         </div>
@@ -2460,16 +2459,16 @@ async function renderSettingsTab() {
         <!-- Секція 6: Небезпечна зона -->
         <div style="${sectionStyle}border:1.5px solid #fee2e2;">
             <div style="font-weight:700;font-size:0.85rem;color:#ef4444;margin-bottom:0.6rem;">
-                ⚠️ Небезпечна зона
+                ${window.t('botsDangerZone')}
             </div>
             <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.75rem;">
-                Видалення бота видалить також усі його ланцюги. Контакти і переписка збережуться.
+                ${window.t('botsDangerHint')}
             </div>
             <button onclick="confirmDeleteBot('${bot.id}')"
                 style="padding:0.5rem 1rem;background:#fee2e2;color:#ef4444;
                 border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;
                 font-size:0.82rem;font-weight:600;">
-                Видалити бота і ланцюги
+                ${window.t('botsDeleteBotChains')}
             </button>
         </div>
 
@@ -2537,8 +2536,8 @@ window.bpReinstallWebhook = async function(botId) {
 
     const bot = bp.bots.find(b => b.id === botId);
     if (!bot?.token) {
-        if (result) result.innerHTML = `<div style="color:#ef4444;">Спочатку введіть токен</div>`;
-        if (btn) { btn.textContent = '↺ Перевстановити webhook'; btn.disabled = false; }
+        if (result) result.innerHTML = `<div style="color:#ef4444;">${window.t('botsTokenFirst')}</div>`;
+        if (btn) { btn.textContent = window.t('botsReinstallBtn'); btn.disabled = false; }
         return;
     }
 
@@ -2564,7 +2563,7 @@ window.bpReinstallWebhook = async function(botId) {
         if (result) result.innerHTML = `<div style="color:#ef4444;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> ${escH(e.message)}</div>`;
     }
 
-    if (btn) { btn.textContent = '↺ Перевстановити webhook'; btn.disabled = false; }
+    if (btn) { btn.textContent = window.t('botsReinstallBtn'); btn.disabled = false; }
 };
 
 // ─────────────────────────────────────────
@@ -2669,12 +2668,12 @@ window.showQR = function(encodedLink) {
         <div onclick="this.remove()" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10030;
             display:flex;align-items:center;justify-content:center;cursor:pointer;">
             <div style="background:white;border-radius:16px;padding:1.5rem;text-align:center;max-width:260px;" onclick="event.stopPropagation()">
-                <div style="font-weight:700;margin-bottom:1rem;">QR-код</div>
+                <div style="font-weight:700;margin-bottom:1rem;">${window.t('botsQrTitle')}</div>
                 <img src="${qrUrl}" style="width:200px;height:200px;border-radius:8px;">
                 <div style="font-size:0.7rem;color:#6b7280;margin-top:0.6rem;word-break:break-all;">${link}</div>
                 <button onclick="this.closest('[style*=fixed]').remove()"
                     style="margin-top:0.75rem;padding:0.45rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-weight:600;">
-                    Закрити
+                    ${window.t('botsQrClose')}
                 </button>
             </div>
         </div>`);
