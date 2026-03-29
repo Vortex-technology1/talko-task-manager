@@ -1445,34 +1445,101 @@
     };
 
     // ========================
-    //  AI ANALYSIS
+    //  AI ANALYSIS — FULL MULTI-PERIOD
     // ========================
     async function runAIAnalysis() {
-        const pk = getStatsPeriodKey(statsPeriodOffset);
         let vis = statsMetrics.filter(m => canViewMetric(m));
         if (!vis.length) vis = statsMetrics;
         if (!vis.length) { showToast('Немає метрик для аналізу. Спочатку додайте метрики.', 'error'); return; }
 
-        const md = vis.map(m => {
-            const e = getEntryForMetric(m.id, pk);
-            const tg = getTargetForMetric(m.id, pk);
-            return { name: m.name, unit: m.unit, value: e?.value || 0, target: tg?.targetValue || 0 };
+        // Збираємо дані по ВСІХ частотах і ВСІХ доступних періодах
+        const freqs = ['monthly', 'weekly', 'daily'];
+        const periodCounts = { monthly: 12, weekly: 12, daily: 14 };
+        let contextParts = [];
+
+        freqs.forEach(freq => {
+            const freqMetrics = vis.filter(m => (m.frequency || m.freq || 'weekly') === freq);
+            if (!freqMetrics.length) return;
+
+            const count = periodCounts[freq];
+            const periods = [];
+            for (let i = 0; i < count; i++) periods.push(getStatsPeriodKey(-i, freq));
+
+            const freqLabel = freq === 'monthly' ? 'Місячні' : freq === 'weekly' ? 'Тижневі' : 'Щоденні';
+            contextParts.push(`\n=== ${freqLabel} метрики ===`);
+
+            // Заголовок таблиці
+            const periodLabels = periods.map(p => formatPeriodLabel ? formatPeriodLabel(p) : p);
+            contextParts.push('Метрика | Ціль | ' + periodLabels.join(' | '));
+            contextParts.push('---');
+
+            freqMetrics.forEach(m => {
+                const tg = getTargetForMetric(m.id, periods[0]);
+                const target = tg?.targetValue || 0;
+
+                const values = periods.map(pk => {
+                    const e = getEntryForMetric(m.id, pk);
+                    const val = e?.value ?? null;
+                    if (val === null) return '—';
+                    if (target > 0) {
+                        const pct = Math.round(val / target * 100);
+                        return `${val}(${pct}%)`;
+                    }
+                    return String(val);
+                });
+
+                // Тренд: порівнюємо перший і третій доступний реальний запис
+                const realVals = periods.map(pk => {
+                    const e = getEntryForMetric(m.id, pk);
+                    return e?.value ?? null;
+                }).filter(v => v !== null);
+
+                let trend = '';
+                if (realVals.length >= 3) {
+                    const last = realVals[0];
+                    const prev = realVals[2];
+                    if (last > prev * 1.05) trend = '↑';
+                    else if (last < prev * 0.95) trend = '↓';
+                    else trend = '→';
+                }
+
+                const unit = m.unit || '';
+                const targetStr = target > 0 ? `${target}${unit}` : '—';
+                contextParts.push(`${m.name}${trend} [${unit}] | ${targetStr} | ${values.join(' | ')}`);
+            });
         });
 
-        // Контекст метрик для чату
-        const contextText = window.t('periodLabel') + ' ' + (formatPeriodLabel ? formatPeriodLabel(pk) : pk) + '\n' +
-            md.map(m => '- ' + m.name + ': факт=' + m.value + ' ' + m.unit +
-                (m.target > 0 ? window.t('targetEq') + m.target + ' (' + Math.round(m.value / m.target * 100) + '%)' : '')
-            ).join('\n');
+        // Поточний стан зведено
+        const currentPk = getStatsPeriodKey(0);
+        const currentSummary = vis.map(m => {
+            const e = getEntryForMetric(m.id, currentPk);
+            const tg = getTargetForMetric(m.id, currentPk);
+            const val = e?.value || 0;
+            const target = tg?.targetValue || 0;
+            const pct = target > 0 ? Math.round(val / target * 100) : null;
+            const status = pct === null ? '' : pct >= 100 ? '✅' : pct >= 80 ? '⚠️' : '🔴';
+            return `${status} ${m.name}: факт=${val}${m.unit || ''}` +
+                (target > 0 ? `, ціль=${target}${m.unit || ''} (${pct}%)` : '');
+        }).join('\n');
 
-        const initialMessage = 'Проанализируй эти метрики. Укажи узкие места, причины отклонений и конкретные действия с ожидаемым результатом в цифрах.';
+        const contextText =
+            `ПОТОЧНИЙ СТАН (${formatPeriodLabel ? formatPeriodLabel(currentPk) : currentPk}):\n${currentSummary}\n\n` +
+            `ДИНАМІКА ЗА ВСІМА ПЕРІОДАМИ:\n${contextParts.join('\n')}\n\n` +
+            `Легенда трендів: ↑ зростання >5%, ↓ падіння >5%, → стабільно\n` +
+            `Значення в дужках — % виконання цілі`;
+
+        const initialMessage =
+            'Проведи повний аналіз всіх метрик за всіма доступними періодами. ' +
+            'Визнач вузькі місця, причинно-наслідкові зв\'язки, передбач майбутні ризики, ' +
+            'запропонуй 3 варіанти рішень з плюсами/мінусами та сценарним плануванням рентабельності.';
 
         window.openAiChat({
             module:         'statistics',
             title:          window.t('aiMetricsAnalysis'),
             contextText:    contextText,
-            systemPrompt:   null, // береться з superadmin/settings.agents.statistics
+            systemPrompt:   null,
             initialMessage: initialMessage,
+            maxTokens:      4000,
         });
     }
 

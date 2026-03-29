@@ -269,7 +269,7 @@ async function handleAiProxy(request, env) {
     const user = await verifyIdToken(idToken, env);
     if (!user) return json({error:'Invalid token'},401);
 
-    const { messages=[], model, systemPrompt, companyId, module:mod } = body;
+    const { messages=[], model, systemPrompt, companyId, module:mod, maxTokens } = body;
 
     let token;
     try { token = await getToken(env); } catch(e) { return json({error:'Firebase error'},500); }
@@ -324,7 +324,7 @@ async function handleAiProxy(request, env) {
                 headers:{ 'x-api-key':apiKey, 'anthropic-version':'2023-06-01', 'Content-Type':'application/json' },
                 body: JSON.stringify({
                     model: finalModel||'claude-sonnet-4-20250514',
-                    max_tokens: 4096,
+                    max_tokens: maxTokens||4096,
                     system: finalSystemPrompt||undefined,
                     messages: messages.filter(m=>m.role!=='system'),
                 }),
@@ -339,7 +339,7 @@ async function handleAiProxy(request, env) {
                 const r = await fetch('https://api.openai.com/v1/chat/completions', {
                     method:'POST',
                     headers:{ Authorization:`Bearer ${apiKey}`, 'Content-Type':'application/json' },
-                    body: JSON.stringify({ model:finalModel||'gpt-4o-mini', messages:finalMessages, max_tokens:2048 }),
+                    body: JSON.stringify({ model:finalModel||'gpt-4o-mini', messages:finalMessages, max_tokens: maxTokens||2048 }),
                     signal: controller.signal,
                 });
                 clearTimeout(timeout);
