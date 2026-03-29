@@ -69,9 +69,12 @@ document.addEventListener('mousedown', function(e) {
         _origToggle && _origToggle(menuId, wrapperId, e);
         var m = document.getElementById(menuId);
         menuOpen = !!(m && m.style.display === 'block');
-        // Застосовуємо переклад щоразу при відкритті меню
-        if (menuOpen && typeof window.applyNavTranslations === 'function' && window.currentLang) {
-            window.applyNavTranslations(window.currentLang);
+        // Застосовуємо переклад після того як меню показане
+        if (menuOpen) {
+            var _lang = window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || 'ua';
+            if (_lang !== 'ua' && typeof window.applyNavTranslations === 'function') {
+                window.applyNavTranslations(_lang);
+            }
         }
         lastScrollY = window.scrollY;
         lastScrollX = window.scrollX;
@@ -807,7 +810,7 @@ document.addEventListener('mousedown', function(e) {
 
                 <!-- 8-11. Бізнес dropdown: CRM / Маркетинг / Боти / Сайти -->
                 <div style="position:relative;display:inline-block;" id="bizTabDropdown">
-                    <button class="tab-btn" onclick="toggleNavDropdown('bizTabMenu','bizTabDropdown',event)" id="bizNavBtn" aria-label="Бізнес" style="position:relative;">
+                    <button class="tab-btn" onclick="toggleNavDropdown('bizTabMenu','bizTabDropdown',event);setTimeout(function(){var l=window.currentLang||window.currentLanguage||localStorage.getItem('talko_language')||'ua';if(l!=='ua'&&window.applyNavTranslations)window.applyNavTranslations(l);},50);" id="bizNavBtn" aria-label="Бізнес" style="position:relative;">
                         <i data-lucide="briefcase" class="icon"></i>
                         <span data-i18n="tabBusiness" id="navSpanBusiness">Бізнес</span>
                         <span id="crmNavBadge" style="display:none;position:absolute;top:4px;right:4px;background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;font-size:0.65rem;font-weight:700;align-items:center;justify-content:center;"></span>
