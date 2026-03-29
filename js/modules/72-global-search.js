@@ -326,6 +326,212 @@
             });
         }
 
+        // CRM — УГОДИ
+        const _crmDeals = window.crm?.deals || [];
+        if (_crmDeals.length) {
+            _crmDeals.filter(d =>
+                (d.name||'').toLowerCase().includes(q) ||
+                (d.clientName||'').toLowerCase().includes(q) ||
+                (d.description||'').toLowerCase().includes(q) ||
+                (d.tags||[]).some(t => (t||'').toLowerCase().includes(q)) ||
+                String(d.amount||'').includes(q)
+            ).slice(0,4).forEach(d => {
+                const stageColor = d.stage==='won'?'#22c55e':d.stage==='lost'?'#ef4444':'#3b82f6';
+                const stageLbl = d.stage==='won'?gs_t('gsWon','Виграно'):d.stage==='lost'?gs_t('gsLost','Програно'):gs_t('gsInProgress','В роботі');
+                const amt = d.amount ? ` · ${Number(d.amount).toLocaleString()}` : '';
+                results.push({
+                    category: gs_t('gsSearchDeals','CRM — Угоди'),
+                    categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>',
+                    title: d.name || d.clientName || '(без назви)',
+                    subtitle: (d.clientName||'') + amt,
+                    badge: stageLbl, badgeColor: stageColor,
+                    action: () => {
+                        if (typeof switchTab==='function') switchTab('crm');
+                        setTimeout(() => {
+                            if (typeof window.openDealCard==='function') window.openDealCard(d.id);
+                        }, 500);
+                    }
+                });
+            });
+        }
+
+        // CRM — КЛІЄНТИ
+        const _crmClients = window.crm?.contacts || window.crm?.clients || [];
+        if (_crmClients.length) {
+            _crmClients.filter(c =>
+                (c.name||'').toLowerCase().includes(q) ||
+                (c.phone||'').toLowerCase().includes(q) ||
+                (c.email||'').toLowerCase().includes(q) ||
+                (c.company||'').toLowerCase().includes(q) ||
+                (c.tags||[]).some(t=>(t||'').toLowerCase().includes(q))
+            ).slice(0,3).forEach(c => {
+                results.push({
+                    category: gs_t('gsSearchClients','CRM — Клієнти'),
+                    categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>',
+                    title: c.name || c.email || c.phone,
+                    subtitle: [c.company, c.phone, c.email].filter(Boolean).join(' · '),
+                    badge: gs_t('gsSearchClientBadge','Клієнт'), badgeColor:'#f97316',
+                    action: () => {
+                        if (typeof switchTab==='function') switchTab('crm');
+                        setTimeout(() => {
+                            if (typeof window.openClientCard==='function') window.openClientCard(c.id);
+                        }, 500);
+                    }
+                });
+            });
+        }
+
+        // ФІНАНСИ — ТРАНЗАКЦІЇ
+        const _txCache = window._financeTxCache || [];
+        if (_txCache.length) {
+            _txCache.filter(tx =>
+                (tx.description||tx.comment||'').toLowerCase().includes(q) ||
+                (tx.categoryName||'').toLowerCase().includes(q) ||
+                String(tx.amount||'').includes(q) ||
+                (tx.accountName||'').toLowerCase().includes(q)
+            ).slice(0,4).forEach(tx => {
+                const isIncome = tx.type === 'income';
+                const amt = tx.amount ? (isIncome?'+':'-') + Number(tx.amount).toLocaleString() : '';
+                const d = tx.date?.toDate ? tx.date.toDate() : tx.date ? new Date(tx.date) : null;
+                const dateStr = d ? d.toLocaleDateString('uk-UA') : '';
+                results.push({
+                    category: gs_t('gsSearchTransactions','Фінанси — Транзакції'),
+                    categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>',
+                    title: tx.description || tx.comment || tx.categoryName || '(без опису)',
+                    subtitle: [dateStr, tx.categoryName, tx.accountName].filter(Boolean).join(' · '),
+                    badge: amt, badgeColor: isIncome ? '#22c55e' : '#ef4444',
+                    action: () => { if (typeof switchTab==='function') switchTab('finance'); }
+                });
+            });
+        }
+
+        // ФІНАНСИ — РАХУНКИ КЛІЄНТАМ (INVOICES)
+        const _invoices = window._financeInvoices || (typeof _state !== 'undefined' && _state.invoices) || [];
+        if (_invoices.length) {
+            _invoices.filter(inv =>
+                (inv.clientName||'').toLowerCase().includes(q) ||
+                (inv.number||'').toLowerCase().includes(q) ||
+                (inv.notes||'').toLowerCase().includes(q) ||
+                String(inv.total||inv.amount||'').includes(q)
+            ).slice(0,3).forEach(inv => {
+                const statusColor = inv.status==='paid'?'#22c55e':inv.status==='overdue'?'#ef4444':'#f59e0b';
+                const statusLbl = inv.status==='paid'?gs_t('gsInvPaid','Оплачений'):inv.status==='overdue'?gs_t('gsInvOverdue','Прострочений'):gs_t('gsInvSent','Відправлений');
+                results.push({
+                    category: gs_t('gsSearchInvoices','Фінанси — Рахунки'),
+                    categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>',
+                    title: (inv.number ? '#'+inv.number+' · ' : '') + (inv.clientName||'(без клієнта)'),
+                    subtitle: inv.total ? Number(inv.total).toLocaleString() + ' ' + (inv.currency||'') : '',
+                    badge: statusLbl, badgeColor: statusColor,
+                    action: () => { if (typeof switchTab==='function') switchTab('finance'); }
+                });
+            });
+        }
+
+        // СКЛАД — ТОВАРИ
+        const _whItems = typeof window.whGetItems==='function' ? window.whGetItems() : [];
+        if (_whItems.length) {
+            _whItems.filter(i =>
+                (i.name||'').toLowerCase().includes(q) ||
+                (i.sku||'').toLowerCase().includes(q) ||
+                (i.category||'').toLowerCase().includes(q) ||
+                (i.supplier||'').toLowerCase().includes(q) ||
+                (i.description||'').toLowerCase().includes(q)
+            ).slice(0,4).forEach(i => {
+                const qty = i.quantity ?? i.qty ?? 0;
+                const minQty = i.minQuantity ?? i.minQty ?? 0;
+                const isLow = qty <= minQty;
+                const statusColor = qty <= 0 ? '#ef4444' : isLow ? '#f59e0b' : '#22c55e';
+                const statusLbl = qty <= 0 ? gs_t('gsStockOut','Немає') : isLow ? gs_t('gsStockLow','Мало') : gs_t('gsStockOk','В наявності');
+                results.push({
+                    category: gs_t('gsSearchWarehouse','Склад'),
+                    categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M9 21v-6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6"/></svg></span>',
+                    title: i.name,
+                    subtitle: [i.sku ? 'SKU: '+i.sku : '', i.category, `${gs_t('gsQty','Залишок')}: ${qty}`].filter(Boolean).join(' · '),
+                    badge: statusLbl, badgeColor: statusColor,
+                    action: () => {
+                        if (typeof switchTab==='function') switchTab('warehouse');
+                        setTimeout(() => {
+                            if (typeof window.openWarehouseItem==='function') window.openWarehouseItem(i.id);
+                        }, 400);
+                    }
+                });
+            });
+        }
+
+        // BOOKING — БРОНЮВАННЯ
+        const _bookings = window._bookingEvents || window._calendarEvents || [];
+        if (_bookings.length) {
+            _bookings.filter(b =>
+                (b.title||b.clientName||'').toLowerCase().includes(q) ||
+                (b.clientPhone||'').toLowerCase().includes(q) ||
+                (b.notes||b.description||'').toLowerCase().includes(q) ||
+                (b.serviceName||b.service||'').toLowerCase().includes(q)
+            ).slice(0,3).forEach(b => {
+                const d = b.start ? new Date(b.start) : null;
+                const dateStr = d ? d.toLocaleDateString('uk-UA') + ' ' + d.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'}) : '';
+                results.push({
+                    category: gs_t('gsSearchBooking','Booking'),
+                    categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>',
+                    title: b.title || b.clientName || '(без назви)',
+                    subtitle: [dateStr, b.serviceName||b.service, b.clientPhone].filter(Boolean).join(' · '),
+                    badge: gs_t('gsSearchBookingBadge','Запис'), badgeColor:'#8b5cf6',
+                    action: () => { if (typeof switchTab==='function') switchTab('booking'); }
+                });
+            });
+        }
+
+        // НАВЧАННЯ — УРОКИ
+        const _lessons = window.learningCourseData || [];
+        if (_lessons.length) {
+            _lessons.filter(l =>
+                (l.title||'').toLowerCase().includes(q) ||
+                (l.title_ru||'').toLowerCase().includes(q) ||
+                (l.subtitle||'').toLowerCase().includes(q) ||
+                (l.subtitle_ru||'').toLowerCase().includes(q) ||
+                (l.category||'').toLowerCase().includes(q)
+            ).slice(0,3).forEach(l => {
+                const lang = window.currentLang || 'uk';
+                const title = (lang==='ru' && l.title_ru) ? l.title_ru : l.title;
+                const sub = (lang==='ru' && l.subtitle_ru) ? l.subtitle_ru : (l.subtitle||'');
+                results.push({
+                    category: gs_t('gsSearchLearning','Навчання'),
+                    categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>',
+                    title: title || '(без назви)',
+                    subtitle: sub.length > 60 ? sub.substring(0,60)+'…' : sub,
+                    badge: gs_t('gsSearchLessonBadge','Урок'), badgeColor:'#0ea5e9',
+                    action: () => {
+                        if (typeof switchTab==='function') switchTab('learning');
+                        setTimeout(() => {
+                            if (typeof window.openLesson==='function') window.openLesson(l.id);
+                            else if (typeof window._openLearningLesson==='function') window._openLearningLesson(l.id);
+                        }, 400);
+                    }
+                });
+            });
+        }
+
+        // ЛЕНДИНГИ / САЙТИ
+        const _sites = window._companySites || window._sites || [];
+        if (_sites.length) {
+            _sites.filter(s =>
+                (s.name||s.title||'').toLowerCase().includes(q) ||
+                (s.slug||'').toLowerCase().includes(q) ||
+                (s.niche||'').toLowerCase().includes(q)
+            ).slice(0,3).forEach(s => {
+                const url = s.slug ? `apptalko.com/s/${s.slug}` : '';
+                results.push({
+                    category: gs_t('gsSearchSites','Сайти'),
+                    categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>',
+                    title: s.name || s.title || s.slug,
+                    subtitle: url,
+                    badge: s.published ? gs_t('gsPublished','Опублікований') : gs_t('gsDraft','Чернетка'),
+                    badgeColor: s.published ? '#22c55e' : '#9ca3af',
+                    action: () => { if (typeof switchTab==='function') switchTab('sites'); }
+                });
+            });
+        }
+
+
         // НАВІГАЦІЯ по вкладках
         const navItems = [
             {keys:['мій день','myday','my day','mein tag','mon jour','mój dzień'], label: gs_t('tabMyDay','Мій день'), tab:'myday'},
@@ -346,6 +552,13 @@
             {keys:['маркетинг','marketing'], label: gs_t('tabMarketing','Маркетинг'), tab:'marketing'},
             {keys:['боти','bots'], label: gs_t('tabBots','Боти'), tab:'bots'},
             {keys:['сайти','sites','websites'], label: gs_t('tabSites','Сайти'), tab:'sites'},
+            {keys:['склад','warehouse','товари','запаси'], label: gs_t('gsNavWarehouse','Склад'), tab:'warehouse'},
+            {keys:['booking','запис','бронювання','розклад'], label: gs_t('gsNavBooking','Booking'), tab:'booking'},
+            {keys:['навчання','learning','уроки','курс'], label: gs_t('tabLearning','Навчання'), tab:'learning'},
+            {keys:['crm','клієнти','угоди','contacts','deals'], label:'CRM', tab:'crm'},
+            {keys:['система','system','онбординг','налаштування'], label: gs_t('gsNavSystem','Система'), tab:'system'},
+            {keys:['баланс','balance','баланс'], label: gs_t('gsNavBalance','Баланс'), tab:'finance'},
+            {keys:['p&l','pl','прибутки','збитки','маржа'], label: gs_t('gsNavPL','P&L'), tab:'finance'},
             {keys:['інтеграції','integrations','integrationen'], label: gs_t('tabIntegrations','Інтеграції'), tab:'integrations'},
         ];
         navItems.forEach(item => {
