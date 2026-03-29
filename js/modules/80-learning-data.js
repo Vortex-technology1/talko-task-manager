@@ -16008,6 +16008,272 @@ Bist du dabei?</div>
             homeworkLinkName: 'Перейти до AI-генератора оффера',
             homeworkLinkName_ru: 'Перейти к AI-генератору оффера',
         },
+        {
+            id: 105,
+            category: 'marketing',
+            title: 'ПРОДАЮЧИЙ ТЕКСТ ДЛЯ САЙТУ: від офера до лендінгу',
+            title_ru: 'ПРОДАЮЩИЙ ТЕКСТ ДЛЯ САЙТА: от оффера к лендингу',
+            title_en: 'SALES PAGE TEXT: from offer to landing page',
+            subtitle: 'AI створює повноцінний продаючий текст на основі офера з уроку 4',
+            subtitle_ru: 'AI создаёт полноценный продающий текст на основе оффера из урока 4',
+            subtitle_en: 'AI creates a full sales page text based on the offer from lesson 4',
+            duration: 25,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s105-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s105-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s105-card p+p{margin-top:.65rem}
+.s105-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s105-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s105-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s105-struct{border-radius:10px;padding:.75rem 1rem;margin-bottom:.4rem;border-left:3px solid;background:#f8fafc}
+.s105-struct-num{font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:.15rem}
+.s105-struct-title{font-weight:700;font-size:.875rem;margin-bottom:.2rem}
+.s105-struct-desc{font-size:.78rem;color:#525252;line-height:1.45}
+.s105-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s105-snum{width:28px;height:28px;background:#3b82f6;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s105-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s105-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s105-warn{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;margin-bottom:.4rem}
+.s105-ok{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;margin-bottom:.35rem}
+.s105-offer-block{background:#1e1b4b;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s105-offer-block p{font-size:.85rem;color:#c7d2fe;line-height:1.65;margin:0}
+.s105-offer-block strong{color:#a5b4fc}
+.s105-offer-block .field{display:flex;gap:.5rem;padding:.45rem .65rem;background:#312e81;border-radius:7px;margin-top:.5rem;font-size:.82rem;color:#e0e7ff}
+.s105-offer-block .field-lbl{color:#818cf8;font-weight:700;flex-shrink:0}
+.s105-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.s105-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s105-ticon{width:40px;height:40px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s105-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s105-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s105-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#3b82f6;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s105-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#eff6ff,#dbeafe);border-left:3px solid #3b82f6;border-radius:0 10px 10px 0;font-size:.875rem;color:#1e40af;font-style:italic;line-height:1.6}
+.s105-arrow{text-align:center;font-size:1.5rem;color:#3b82f6;margin:.3rem 0}
+</style>
+
+<div class="s105-lbl">Зв'язок з попереднім уроком</div>
+<div class="s105-title">Урок 4 → Урок 5: оффер стає продаючим текстом</div>
+<div class="s105-card">
+<p>У попередньому уроці ти створив оффер — конкретну обіцянку результату для клієнта. Це фундамент.</p>
+<p>Тепер наступний крок: на основі цього офера AI-асистент створить <strong>повноцінний продаючий текст</strong> для сайту або лендінгу. Текст, який конвертує відвідувачів у клієнтів.</p>
+<p>Логіка проста: <strong>оффер = що ти пропонуєш → продаючий текст = як це пояснити клієнту так, щоб він купив.</strong></p>
+</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Дві структури</div>
+<div class="s105-title">Для платної консультації і для безкоштовного заходу</div>
+
+<div class="s105-struct" style="border-color:#3b82f6">
+<div class="s105-struct-num">Структура 1 — Платна консультація</div>
+<div class="s105-struct-title" style="color:#1d4ed8">9 блоків: заголовок → емоційна історія → перехід → результат → кроки → ціна → гарантія → бонуси → CTA</div>
+<div class="s105-struct-desc">Для послуг де клієнт платить одразу. Кожен блок знімає конкретний страх або заперечення.</div>
+</div>
+
+<div class="s105-struct" style="border-color:#8b5cf6">
+<div class="s105-struct-num">Структура 2 — Безкоштовний майстер-клас / вебінар</div>
+<div class="s105-struct-title" style="color:#6d28d9">9 блоків: заголовок → результати → система → без чого → програма → бонуси → спікер → для кого → CTA</div>
+<div class="s105-struct-desc">Для безкоштовних заходів де потрібна реєстрація. Фокус на цінність і конкретику часу.</div>
+</div>
+
+<div class="s105-quote">AI знає обидві структури і сам запропонує яка підходить — залежно від твого типу пропозиції.</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Що потрібно підготувати</div>
+<div class="s105-title">Дані з твого офера — ось що передаєш асистенту</div>
+
+<div class="s105-offer-block">
+<p><strong>Візьми оффер який створив в уроці 4 і підготуй ці дані:</strong></p>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Ніша:</span> Хто твій клієнт і яким бізнесом займається</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Біль:</span> Головна проблема клієнта яку ти вирішуєш</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Результат:</span> Що конкретно отримає клієнт (в цифрах)</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Термін:</span> За який час досягається результат</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Тип:</span> Платна консультація чи безкоштовний захід</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Ціна:</span> Скільки коштує (або "безкоштовно")</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Твоє ім'я і досвід:</span> Скільки років, скільки клієнтів, результати</div>
+</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Як працювати з асистентом</div>
+<div class="s105-title">4 кроки від офера до готового тексту</div>
+
+<div class="s105-step">
+<div class="s105-snum">1</div>
+<div><div class="s105-stitle">Відкрий асистент і скажи що маєш оффер</div>
+<div class="s105-stext">Напиши: "Маю готовий оффер з уроку 4, потрібно створити продаючий текст для [платна консультація / безкоштовний майстер-клас]"</div></div>
+</div>
+
+<div class="s105-step">
+<div class="s105-snum">2</div>
+<div><div class="s105-stitle">Передай дані офера</div>
+<div class="s105-stext">Вкажи всі поля зі свого офера: ніша, біль клієнта, результат, термін, ціна, твій досвід. Чим більше деталей — тим точніший текст.</div></div>
+</div>
+
+<div class="s105-step">
+<div class="s105-snum">3</div>
+<div><div class="s105-stitle">Асистент створює текст по структурі</div>
+<div class="s105-stext">AI застосує правильну структуру (платна або безкоштовна), заповнить всі 9 блоків і створить суцільний текст без технічних назв блоків.</div></div>
+</div>
+
+<div class="s105-step">
+<div class="s105-snum">4</div>
+<div><div class="s105-stitle">Відредагуй і розмісти</div>
+<div class="s105-stext">Перевір текст, додай реальні цифри і деталі з власного досвіду — і розміщуй на сайті або в TALKO → Бізнес → Сайти.</div></div>
+</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Важливо</div>
+<div class="s105-title">Чого не варто робити</div>
+<div class="s105-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не давай асистенту розмитий оффер — він створить розмитий текст</div>
+<div class="s105-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не залишай технічні назви блоків у фінальному тексті — вони мають злитися</div>
+<div class="s105-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не пропускай блок гарантії — він знімає головний страх клієнта</div>
+<div class="s105-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Чим конкретніший оффер — тим вища конверсія тексту (норма 30–70%)</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Інструмент</div>
+<div class="s105-tool">
+<div class="s105-thdr">
+<div class="s105-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.75" width="20" height="20"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+<div>
+<div class="s105-ttitle">Sales Page Master — Творець продаючих текстів</div>
+<div class="s105-tdesc">AI створює повноцінний продаючий текст для сайту або лендінгу на основі твого офера. Знає дві структури: для платної консультації і для безкоштовного заходу. Результат — текст з конверсією 30–70%.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-689576785e9081919afa3ec84b258b1d-sales-page-master-tvorets-prodaiuchikh-tekstiv" target="_blank" class="s105-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Створити продаючий текст
+</a>
+</div>`,
+
+            lessonContent_ru: `<style>
+.s105-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s105-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s105-card p+p{margin-top:.65rem}
+.s105-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s105-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s105-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s105-struct{border-radius:10px;padding:.75rem 1rem;margin-bottom:.4rem;border-left:3px solid;background:#f8fafc}
+.s105-struct-num{font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:.15rem}
+.s105-struct-title{font-weight:700;font-size:.875rem;margin-bottom:.2rem}
+.s105-struct-desc{font-size:.78rem;color:#525252;line-height:1.45}
+.s105-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s105-snum{width:28px;height:28px;background:#3b82f6;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s105-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s105-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s105-warn{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;margin-bottom:.4rem}
+.s105-ok{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;margin-bottom:.35rem}
+.s105-offer-block{background:#1e1b4b;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s105-offer-block p{font-size:.85rem;color:#c7d2fe;line-height:1.65;margin:0}
+.s105-offer-block strong{color:#a5b4fc}
+.s105-offer-block .field{display:flex;gap:.5rem;padding:.45rem .65rem;background:#312e81;border-radius:7px;margin-top:.5rem;font-size:.82rem;color:#e0e7ff}
+.s105-offer-block .field-lbl{color:#818cf8;font-weight:700;flex-shrink:0}
+.s105-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.s105-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s105-ticon{width:40px;height:40px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s105-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s105-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s105-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#3b82f6;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s105-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#eff6ff,#dbeafe);border-left:3px solid #3b82f6;border-radius:0 10px 10px 0;font-size:.875rem;color:#1e40af;font-style:italic;line-height:1.6}
+</style>
+
+<div class="s105-lbl">Связь с предыдущим уроком</div>
+<div class="s105-title">Урок 4 → Урок 5: оффер становится продающим текстом</div>
+<div class="s105-card">
+<p>В предыдущем уроке ты создал оффер — конкретное обещание результата для клиента. Это фундамент.</p>
+<p>Теперь следующий шаг: на основе этого оффера AI-ассистент создаст <strong>полноценный продающий текст</strong> для сайта или лендинга. Текст, который конвертирует посетителей в клиентов.</p>
+<p>Логика простая: <strong>оффер = что ты предлагаешь → продающий текст = как это объяснить клиенту так, чтобы он купил.</strong></p>
+</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Две структуры</div>
+<div class="s105-title">Для платной консультации и для бесплатного мероприятия</div>
+
+<div class="s105-struct" style="border-color:#3b82f6">
+<div class="s105-struct-num">Структура 1 — Платная консультация</div>
+<div class="s105-struct-title" style="color:#1d4ed8">9 блоков: заголовок → эмоциональная история → переход → результат → шаги → цена → гарантия → бонусы → CTA</div>
+<div class="s105-struct-desc">Для услуг где клиент платит сразу. Каждый блок снимает конкретный страх или возражение.</div>
+</div>
+
+<div class="s105-struct" style="border-color:#8b5cf6">
+<div class="s105-struct-num">Структура 2 — Бесплатный мастер-класс / вебинар</div>
+<div class="s105-struct-title" style="color:#6d28d9">9 блоков: заголовок → результаты → система → без чего → программа → бонусы → спикер → для кого → CTA</div>
+<div class="s105-struct-desc">Для бесплатных мероприятий где нужна регистрация. Фокус на ценность и конкретику времени.</div>
+</div>
+
+<div class="s105-quote">AI знает обе структуры и сам предложит какая подходит — в зависимости от типа твоего предложения.</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Что нужно подготовить</div>
+<div class="s105-title">Данные из твоего оффера — вот что передаёшь ассистенту</div>
+
+<div class="s105-offer-block">
+<p><strong>Возьми оффер который создал в уроке 4 и подготовь эти данные:</strong></p>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Ниша:</span> Кто твой клиент и каким бизнесом занимается</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Боль:</span> Главная проблема клиента которую ты решаешь</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Результат:</span> Что конкретно получит клиент (в цифрах)</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Срок:</span> За какое время достигается результат</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Тип:</span> Платная консультация или бесплатное мероприятие</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Цена:</span> Сколько стоит (или "бесплатно")</div>
+<div class="s105-offer-block field"><span class="s105-offer-block field-lbl">Твоё имя и опыт:</span> Сколько лет, сколько клиентов, результаты</div>
+</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Как работать с ассистентом</div>
+<div class="s105-title">4 шага от оффера до готового текста</div>
+
+<div class="s105-step">
+<div class="s105-snum">1</div>
+<div><div class="s105-stitle">Открой ассистент и скажи что у тебя есть оффер</div>
+<div class="s105-stext">Напиши: "У меня есть готовый оффер из урока 4, нужно создать продающий текст для [платная консультация / бесплатный мастер-класс]"</div></div>
+</div>
+
+<div class="s105-step">
+<div class="s105-snum">2</div>
+<div><div class="s105-stitle">Передай данные оффера</div>
+<div class="s105-stext">Укажи все поля из своего оффера: ниша, боль клиента, результат, срок, цена, твой опыт. Чем больше деталей — тем точнее текст.</div></div>
+</div>
+
+<div class="s105-step">
+<div class="s105-snum">3</div>
+<div><div class="s105-stitle">Ассистент создаёт текст по структуре</div>
+<div class="s105-stext">AI применит правильную структуру (платная или бесплатная), заполнит все 9 блоков и создаст цельный текст без технических названий блоков.</div></div>
+</div>
+
+<div class="s105-step">
+<div class="s105-snum">4</div>
+<div><div class="s105-stitle">Отредактируй и размести</div>
+<div class="s105-stext">Проверь текст, добавь реальные цифры и детали из собственного опыта — и размещай на сайте или в TALKO → Бизнес → Сайты.</div></div>
+</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Важно</div>
+<div class="s105-title">Чего не стоит делать</div>
+<div class="s105-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не давай ассистенту размытый оффер — он создаст размытый текст</div>
+<div class="s105-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не оставляй технические названия блоков в финальном тексте — они должны слиться</div>
+<div class="s105-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не пропускай блок гарантии — он снимает главный страх клиента</div>
+<div class="s105-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Чем конкретнее оффер — тем выше конверсия текста (норма 30–70%)</div>
+
+<div class="s105-div"></div>
+<div class="s105-lbl">Инструмент</div>
+<div class="s105-tool">
+<div class="s105-thdr">
+<div class="s105-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.75" width="20" height="20"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+<div>
+<div class="s105-ttitle">Sales Page Master — Создатель продающих текстов</div>
+<div class="s105-tdesc">AI создаёт полноценный продающий текст для сайта или лендинга на основе твоего оффера. Знает две структуры: для платной консультации и для бесплатного мероприятия. Результат — текст с конверсией 30–70%.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-689576785e9081919afa3ec84b258b1d-sales-page-master-tvorets-prodaiuchikh-tekstiv" target="_blank" class="s105-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Создать продающий текст
+</a>
+</div>`,
+
+            homeworkLink: 'https://chatgpt.com/g/g-689576785e9081919afa3ec84b258b1d-sales-page-master-tvorets-prodaiuchikh-tekstiv',
+            homeworkLinkName: 'Перейти до Sales Page Master',
+            homeworkLinkName_ru: 'Перейти к Sales Page Master',
+        },
     ];
 
     // Merge into main course data
