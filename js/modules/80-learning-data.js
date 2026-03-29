@@ -16856,8 +16856,255 @@ Bist du dabei?</div>
             homeworkLinkName: null,
             homeworkLinkName_ru: null,
         },
+        {
+            id: 402,
+            category: 'finance',
+            title: '3 ЗВІТИ ПІДПРИЄМЦЯ: P&L, Cash Flow і Баланс',
+            title_ru: '3 ОТЧЁТА ПРЕДПРИНИМАТЕЛЯ: P&L, Cash Flow и Баланс',
+            title_en: '3 ENTREPRENEUR REPORTS: P&L, Cash Flow and Balance',
+            subtitle: 'Основи фінансового контролю без фіндиректора — і як це працює прямо в платформі',
+            subtitle_ru: 'Основы финансового контроля без финдиректора — и как это работает прямо в платформе',
+            subtitle_en: 'Financial control basics without a CFO — and how it works right in the platform',
+            duration: 25,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s402-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s402-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s402-card p+p{margin-top:.65rem}
+.s402-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s402-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s402-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s402-report{border-radius:12px;padding:1rem;margin-bottom:.65rem;border:1px solid}
+.s402-report h4{font-size:.88rem;font-weight:700;margin-bottom:.35rem}
+.s402-report p{font-size:.82rem;line-height:1.5;margin:0}
+.s402-report.pl{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
+.s402-report.pl h4{color:#1d4ed8}
+.s402-report.cf{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.s402-report.cf h4{color:#15803d}
+.s402-report.bal{background:#faf5ff;border-color:#e9d5ff;color:#6b21a8}
+.s402-report.bal h4{color:#7c3aed}
+.s402-prob{display:flex;align-items:flex-start;gap:.65rem;padding:.7rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;margin-bottom:.4rem}
+.s402-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s402-snum{width:28px;height:28px;background:#ef4444;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s402-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s402-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s402-platform{background:#0f172a;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s402-platform p{font-size:.85rem;color:#94a3b8;line-height:1.6;margin:0}
+.s402-platform strong{color:#22c55e}
+.s402-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.s402-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s402-ticon{width:40px;height:40px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s402-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s402-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s402-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#ef4444;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s402-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left:3px solid #ef4444;border-radius:0 10px 10px 0;font-size:.875rem;color:#7f1d1d;font-style:italic;line-height:1.6}
+</style>
+
+<div class="s402-lbl">Проблема</div>
+<div class="s402-title">«Оборот є, а грошей немає» — звідки це береться</div>
+<div class="s402-prob"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Бізнес приносить оборот — але прибутку немає або він незрозумілий</div>
+<div class="s402-prob"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Наприкінці місяця гроші «кудись зникають» — незрозуміло куди</div>
+<div class="s402-prob"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Касовий розрив виникає раптово — нічим платити постачальникам</div>
+<div class="s402-prob"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Рішення приймаються «на відчуттях» — без реальних цифр</div>
+
+<div class="s402-quote">Причина одна: немає трьох базових звітів. Без них бізнес — це чорна скринька, де гроші входять і виходять незрозуміло як.</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Три звіти</div>
+<div class="s402-title">P&L, Cash Flow і Баланс — навіщо кожен</div>
+
+<div class="s402-report pl">
+<h4>📊 P&L — Звіт про прибутки та збитки</h4>
+<p>Показує: заробляєш ти чи ні. Виручка мінус всі витрати = реальний прибуток. Відповідає на питання: <strong>«Чи прибутковий мій бізнес?»</strong></p>
+</div>
+
+<div class="s402-report cf">
+<h4>💸 Cash Flow — Рух грошових коштів</h4>
+<p>Показує: де зараз гроші і коли вони прийдуть. Бізнес може бути прибутковим на папері але без грошей на рахунку. Відповідає на питання: <strong>«Чи є гроші прямо зараз?»</strong></p>
+</div>
+
+<div class="s402-report bal">
+<h4>⚖️ Баланс — Активи і зобов'язання</h4>
+<p>Показує: що у тебе є і скільки ти винен. Обладнання, запаси, дебіторка — і борги, кредити, заборгованості. Відповідає на питання: <strong>«Скільки насправді коштує мій бізнес?»</strong></p>
+</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Зв'язок між звітами</div>
+<div class="s402-title">Чому потрібні всі три — а не один</div>
+<div class="s402-card">
+<p>Якщо є тільки P&L — ти бачиш прибуток, але не знаєш чи є гроші зараз. Можна показати прибуток 200 тис, але мати нуль на рахунку бо клієнти ще не заплатили.</p>
+<p>Якщо є тільки Cash Flow — ти бачиш гроші, але не розумієш прибутковий бізнес чи ні. Можна отримати передоплату і думати що все добре — а насправді збитки.</p>
+<p>Баланс поєднує обидва: показує реальний стан бізнесу в будь-який момент часу.</p>
+<p><strong>Три звіти разом = повна фінансова картина.</strong> Це і є те, що робить фіндиректор. Тепер це можеш робити ти сам.</p>
+</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Платформа TALKO</div>
+<div class="s402-title">Ці звіти вже є в системі — починаємо зараз</div>
+<div class="s402-platform">
+<p>У розділі <strong>Аналітика → Фінанси</strong> вже є всі три звіти. Тобі не потрібно будувати таблиці в Excel вручну — система формує їх автоматично на основі твоїх даних.</p>
+<p style="margin-top:.5rem">Після цього уроку ти розберешся з основами через AI-наставника — і одразу зможеш налаштувати свої звіти в платформі. Теорія одразу стає практикою.</p>
+</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Як працювати з наставником</div>
+<div class="s402-title">3 кроки до розуміння своїх фінансів</div>
+
+<div class="s402-step">
+<div class="s402-snum">1</div>
+<div><div class="s402-stitle">Розкажи про свій бізнес</div>
+<div class="s402-stext">Наставник спочатку розбереться в твоєму контексті — без цього будь-яке пояснення буде теорією що не допоможе.</div></div>
+</div>
+
+<div class="s402-step">
+<div class="s402-snum">2</div>
+<div><div class="s402-stitle">Отримай пояснення на прикладі твого бізнесу</div>
+<div class="s402-stext">P&L, Cash Flow і Баланс — не абстрактно, а конкретно: як це виглядає у твоїй ніші, з твоїми цифрами.</div></div>
+</div>
+
+<div class="s402-step">
+<div class="s402-snum">3</div>
+<div><div class="s402-stitle">Повертайся в платформу і налаштовуй</div>
+<div class="s402-stext">Після сесії з наставником відкрий Аналітика → Фінанси і почни вести свої реальні звіти. Тепер ти розумієш що і навіщо.</div></div>
+</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Інструмент</div>
+<div class="s402-tool">
+<div class="s402-thdr">
+<div class="s402-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.75" width="20" height="20"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+<div>
+<div class="s402-ttitle">Фінансовий наставник підприємця</div>
+<div class="s402-tdesc">AI-наставник пояснює P&L, Cash Flow і Баланс на прикладі твого бізнесу. Мета — закрити фінанси як функцію без найму фіндиректора. Після сесії повертаєшся в платформу і ведеш реальні звіти.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-68c6892b234c8191a4f6d1b5d7e75ef3-entrepreneur-s-financial-mentor" target="_blank" class="s402-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Розпочати з наставником
+</a>
+</div>`,
+
+            lessonContent_ru: `<style>
+.s402-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s402-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s402-card p+p{margin-top:.65rem}
+.s402-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s402-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s402-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s402-report{border-radius:12px;padding:1rem;margin-bottom:.65rem;border:1px solid}
+.s402-report h4{font-size:.88rem;font-weight:700;margin-bottom:.35rem}
+.s402-report p{font-size:.82rem;line-height:1.5;margin:0}
+.s402-report.pl{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
+.s402-report.pl h4{color:#1d4ed8}
+.s402-report.cf{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.s402-report.cf h4{color:#15803d}
+.s402-report.bal{background:#faf5ff;border-color:#e9d5ff;color:#6b21a8}
+.s402-report.bal h4{color:#7c3aed}
+.s402-prob{display:flex;align-items:flex-start;gap:.65rem;padding:.7rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;margin-bottom:.4rem}
+.s402-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s402-snum{width:28px;height:28px;background:#ef4444;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s402-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s402-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s402-platform{background:#0f172a;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s402-platform p{font-size:.85rem;color:#94a3b8;line-height:1.6;margin:0}
+.s402-platform strong{color:#22c55e}
+.s402-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.s402-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s402-ticon{width:40px;height:40px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s402-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s402-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s402-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#ef4444;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s402-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left:3px solid #ef4444;border-radius:0 10px 10px 0;font-size:.875rem;color:#7f1d1d;font-style:italic;line-height:1.6}
+</style>
+
+<div class="s402-lbl">Проблема</div>
+<div class="s402-title">«Оборот есть, а денег нет» — откуда это берётся</div>
+<div class="s402-prob"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Бизнес приносит оборот — но прибыли нет или она непонятна</div>
+<div class="s402-prob"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>В конце месяца деньги «куда-то пропадают» — непонятно куда</div>
+<div class="s402-prob"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Кассовый разрыв возникает внезапно — нечем платить поставщикам</div>
+<div class="s402-prob"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Решения принимаются «на ощущениях» — без реальных цифр</div>
+
+<div class="s402-quote">Причина одна: нет трёх базовых отчётов. Без них бизнес — это чёрный ящик, где деньги входят и выходят непонятно как.</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Три отчёта</div>
+<div class="s402-title">P&L, Cash Flow и Баланс — зачем каждый</div>
+
+<div class="s402-report pl">
+<h4>📊 P&L — Отчёт о прибылях и убытках</h4>
+<p>Показывает: зарабатываешь ты или нет. Выручка минус все расходы = реальная прибыль. Отвечает на вопрос: <strong>«Прибыльный ли мой бизнес?»</strong></p>
+</div>
+
+<div class="s402-report cf">
+<h4>💸 Cash Flow — Движение денежных средств</h4>
+<p>Показывает: где сейчас деньги и когда они придут. Бизнес может быть прибыльным на бумаге но без денег на счету. Отвечает на вопрос: <strong>«Есть ли деньги прямо сейчас?»</strong></p>
+</div>
+
+<div class="s402-report bal">
+<h4>⚖️ Баланс — Активы и обязательства</h4>
+<p>Показывает: что у тебя есть и сколько ты должен. Оборудование, запасы, дебиторка — и долги, кредиты, задолженности. Отвечает на вопрос: <strong>«Сколько на самом деле стоит мой бизнес?»</strong></p>
+</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Связь между отчётами</div>
+<div class="s402-title">Почему нужны все три — а не один</div>
+<div class="s402-card">
+<p>Если есть только P&L — ты видишь прибыль, но не знаешь есть ли деньги сейчас. Можно показать прибыль 200 тыс, но иметь ноль на счету потому что клиенты ещё не заплатили.</p>
+<p>Если есть только Cash Flow — ты видишь деньги, но не понимаешь прибыльный бизнес или нет. Можно получить предоплату и думать что всё хорошо — а на самом деле убытки.</p>
+<p>Баланс объединяет оба: показывает реальное состояние бизнеса в любой момент времени.</p>
+<p><strong>Три отчёта вместе = полная финансовая картина.</strong> Это и делает финдиректор. Теперь это можешь делать ты сам.</p>
+</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Платформа TALKO</div>
+<div class="s402-title">Эти отчёты уже есть в системе — начинаем сейчас</div>
+<div class="s402-platform">
+<p>В разделе <strong>Аналитика → Финансы</strong> уже есть все три отчёта. Тебе не нужно строить таблицы в Excel вручную — система формирует их автоматически на основе твоих данных.</p>
+<p style="margin-top:.5rem">После этого урока ты разберёшься с основами через AI-наставника — и сразу сможешь настроить свои отчёты в платформе. Теория сразу становится практикой.</p>
+</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Как работать с наставником</div>
+<div class="s402-title">3 шага к пониманию своих финансов</div>
+
+<div class="s402-step">
+<div class="s402-snum">1</div>
+<div><div class="s402-stitle">Расскажи о своём бизнесе</div>
+<div class="s402-stext">Наставник сначала разберётся в твоём контексте — без этого любое объяснение будет теорией которая не поможет.</div></div>
+</div>
+
+<div class="s402-step">
+<div class="s402-snum">2</div>
+<div><div class="s402-stitle">Получи объяснение на примере твоего бизнеса</div>
+<div class="s402-stext">P&L, Cash Flow и Баланс — не абстрактно, а конкретно: как это выглядит в твоей нише, с твоими цифрами.</div></div>
+</div>
+
+<div class="s402-step">
+<div class="s402-snum">3</div>
+<div><div class="s402-stitle">Возвращайся в платформу и настраивай</div>
+<div class="s402-stext">После сессии с наставником открой Аналитика → Финансы и начни вести свои реальные отчёты. Теперь ты понимаешь что и зачем.</div></div>
+</div>
+
+<div class="s402-div"></div>
+<div class="s402-lbl">Инструмент</div>
+<div class="s402-tool">
+<div class="s402-thdr">
+<div class="s402-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.75" width="20" height="20"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+<div>
+<div class="s402-ttitle">Финансовый наставник предпринимателя</div>
+<div class="s402-tdesc">AI-наставник объясняет P&L, Cash Flow и Баланс на примере твоего бизнеса. Цель — закрыть финансы как функцию без найма финдиректора. После сессии возвращаешься в платформу и ведёшь реальные отчёты.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-68c6892b234c8191a4f6d1b5d7e75ef3-entrepreneur-s-financial-mentor" target="_blank" class="s402-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Начать с наставником
+</a>
+</div>`,
+
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
     ];
-    if (window.learningCourseData) {
-        window.learningCourseData = window.learningCourseData.concat(financeCourseData);
-    }
-})();
