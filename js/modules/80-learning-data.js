@@ -16643,7 +16643,219 @@ Bist du dabei?</div>
 (function() {
 'use strict';
     const financeCourseData = [
-        // id: 401, 402, 403...
+        {
+            id: 401,
+            category: 'finance',
+            title: 'РОЗБАГАТІТИ В EXCEL: фінансовий розрахунок твого бізнесу',
+            title_ru: 'РАЗБОГАТЕТЬ В EXCEL: финансовый расчёт твоего бизнеса',
+            title_en: 'GET RICH IN EXCEL: financial calculation of your business',
+            subtitle: 'AI-калькулятор рахує реальний шлях до твоєї фінансової цілі — з цифрами, ресурсами та стрес-тестом',
+            subtitle_ru: 'AI-калькулятор считает реальный путь к твоей финансовой цели — с цифрами, ресурсами и стресс-тестом',
+            subtitle_en: 'AI calculator computes the real path to your financial goal — with numbers, resources and stress test',
+            duration: 35,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s401-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s401-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s401-card p+p{margin-top:.65rem}
+.s401-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s401-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s401-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s401-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s401-snum{width:28px;height:28px;background:#ef4444;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s401-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s401-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s401-out{display:flex;align-items:flex-start;gap:.6rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;margin-bottom:.35rem}
+.s401-ok{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;margin-bottom:.35rem}
+.s401-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.s401-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s401-ticon{width:40px;height:40px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s401-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s401-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s401-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#ef4444;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s401-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left:3px solid #ef4444;border-radius:0 10px 10px 0;font-size:.875rem;color:#7f1d1d;font-style:italic;line-height:1.6}
+.s401-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-bottom:.3rem}
+</style>
+
+<div class="s401-lbl">Суть</div>
+<div class="s401-title">Не мотивація. Жорсткий фінансовий розрахунок</div>
+<div class="s401-card">
+<p>Більшість підприємців планують фінанси «на відчуттях»: «думаю, вийде заробити», «здається, буде попит», «десь чув що в цій ніші гарний прибуток».</p>
+<p>Результат — бізнес росте, але грошей не стає більше. Або взагалі не росте, бо ціль спочатку була нереальною.</p>
+<p>Цей калькулятор рахує <strong>не ідеальний сценарій</strong>, а реальний шлях — з урахуванням фізичних обмежень, ринкових даних і твоєї конкретної ситуації.</p>
+</div>
+
+<div class="s401-quote">Не "більше клієнтів" — а скільки саме. Не "найняти людей" — а скількох і коли. Не "гарно буде" — а чи взагалі досяжна ціль.</div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Що рахує калькулятор</div>
+<div class="s401-title">6 конкретних відповідей замість «спробуємо»</div>
+
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Реально чи ні</strong> — чи досяжна твоя ціль взагалі, або потрібно міняти модель</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Конкретні цифри</strong> — скільки клієнтів, який чек, скільки людей у команді, яка виручка</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Ресурси</strong> — скільки грошей потрібно на старт, скільки часу займе</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>План по етапах</strong> — що робити перші 3 місяці, далі, коли очікувати прибуток</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Альтернативи</strong> — якщо план не спрацьовує: підняти чек, змінити модель, зайти в B2B</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Стрес-тест</strong> — що буде якщо все піде гірше, чи витримає бізнес, чи не збанкрутуєш</div></div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Як це працює</div>
+<div class="s401-title">3 кроки до готового фінансового документу</div>
+
+<div class="s401-step">
+<div class="s401-snum">1</div>
+<div><div class="s401-stitle">Ти даєш базу</div>
+<div class="s401-stext">5 питань: ніша, де працюєш, скільки зараз заробляєш (точка А), скільки хочеш заробляти (точка Б), за який термін.</div></div>
+</div>
+
+<div class="s401-step">
+<div class="s401-snum">2</div>
+<div><div class="s401-stitle">Калькулятор рахує</div>
+<div class="s401-stext">Підтягує ринкові дані, рахує економіку, перевіряє реальність з урахуванням фізичних обмежень — люди не роботи.</div></div>
+</div>
+
+<div class="s401-step">
+<div class="s401-snum">3</div>
+<div><div class="s401-stitle">Ти отримуєш готовий документ</div>
+<div class="s401-stext">Точка А → шлях до точки Б → ресурси → ризики → стрес-тест → фінальний вердикт. Можна зберегти і використовувати як план.</div></div>
+</div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Важливо знати</div>
+<div class="s401-title">Чого НЕ робить цей калькулятор</div>
+<div class="s401-out"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не вигадує цифри — тільки реальні дані</div>
+<div class="s401-out"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не мотивує — може сказати що ціль нереальна</div>
+<div class="s401-out"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не «підтягує» цифри під бажаний результат</div>
+<div class="s401-out"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не ігнорує негатив — показує ризики чесно</div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Коли особливо корисно</div>
+<div class="s401-title">Використовуй якщо...</div>
+<div class="s401-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Хочеш вирости в доході але не розумієш за рахунок чого</div>
+<div class="s401-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Сумніваєшся — чи взагалі «воно» працює в твоїй ніші</div>
+<div class="s401-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Не хочеш втратити гроші на експериментах</div>
+<div class="s401-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Плануєш масштабування і хочеш реальні цифри</div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Інструмент</div>
+<div class="s401-tool">
+<div class="s401-thdr">
+<div class="s401-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+<div>
+<div class="s401-ttitle">Business Calculator — Розбагатіти в Excel</div>
+<div class="s401-tdesc">AI-калькулятор рахує реальний фінансовий шлях від точки А до точки Б: скільки клієнтів, який чек, скільки людей, які витрати, коли прибуток. Видає готовий структурований документ зі стрес-тестом і альтернативами.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-68b53aa30c5c81919678cf38d35f51cf-business-calculator-get-rich-in-excel" target="_blank" class="s401-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Запустити калькулятор
+</a>
+</div>`,
+
+            lessonContent_ru: `<style>
+.s401-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s401-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s401-card p+p{margin-top:.65rem}
+.s401-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s401-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s401-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s401-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s401-snum{width:28px;height:28px;background:#ef4444;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s401-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s401-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s401-out{display:flex;align-items:flex-start;gap:.6rem;padding:.65rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;margin-bottom:.35rem}
+.s401-ok{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;margin-bottom:.35rem}
+.s401-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.s401-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s401-ticon{width:40px;height:40px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s401-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s401-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s401-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#ef4444;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s401-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left:3px solid #ef4444;border-radius:0 10px 10px 0;font-size:.875rem;color:#7f1d1d;font-style:italic;line-height:1.6}
+.s401-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-bottom:.3rem}
+</style>
+
+<div class="s401-lbl">Суть</div>
+<div class="s401-title">Не мотивация. Жёсткий финансовый расчёт</div>
+<div class="s401-card">
+<p>Большинство предпринимателей планируют финансы «на ощущениях»: «думаю, получится заработать», «кажется, будет спрос», «где-то слышал что в этой нише хорошая прибыль».</p>
+<p>Результат — бизнес растёт, но денег не становится больше. Или вообще не растёт, потому что цель изначально была нереальной.</p>
+<p>Этот калькулятор считает <strong>не идеальный сценарий</strong>, а реальный путь — с учётом физических ограничений, рыночных данных и твоей конкретной ситуации.</p>
+</div>
+
+<div class="s401-quote">Не "больше клиентов" — а сколько именно. Не "нанять людей" — а сколько и когда. Не "хорошо будет" — а достижима ли вообще цель.</div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Что считает калькулятор</div>
+<div class="s401-title">6 конкретных ответов вместо «попробуем»</div>
+
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Реально или нет</strong> — достижима ли твоя цель вообще, или нужно менять модель</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Конкретные цифры</strong> — сколько клиентов, какой чек, сколько людей в команде, какая выручка</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Ресурсы</strong> — сколько денег нужно на старт, сколько времени займёт</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>План по этапам</strong> — что делать первые 3 месяца, дальше, когда ожидать прибыль</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Альтернативы</strong> — если план не срабатывает: поднять чек, изменить модель, зайти в B2B</div></div>
+<div class="s401-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Стресс-тест</strong> — что будет если всё пойдёт хуже, выдержит ли бизнес, не обанкротишься ли</div></div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Как это работает</div>
+<div class="s401-title">3 шага до готового финансового документа</div>
+
+<div class="s401-step">
+<div class="s401-snum">1</div>
+<div><div class="s401-stitle">Ты даёшь базу</div>
+<div class="s401-stext">5 вопросов: ниша, где работаешь, сколько сейчас зарабатываешь (точка А), сколько хочешь зарабатывать (точка Б), за какой срок.</div></div>
+</div>
+
+<div class="s401-step">
+<div class="s401-snum">2</div>
+<div><div class="s401-stitle">Калькулятор считает</div>
+<div class="s401-stext">Подтягивает рыночные данные, считает экономику, проверяет реальность с учётом физических ограничений — люди не роботы.</div></div>
+</div>
+
+<div class="s401-step">
+<div class="s401-snum">3</div>
+<div><div class="s401-stitle">Ты получаешь готовый документ</div>
+<div class="s401-stext">Точка А → путь к точке Б → ресурсы → риски → стресс-тест → финальный вердикт. Можно сохранить и использовать как план.</div></div>
+</div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Важно знать</div>
+<div class="s401-title">Чего НЕ делает этот калькулятор</div>
+<div class="s401-out"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не выдумывает цифры — только реальные данные</div>
+<div class="s401-out"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не мотивирует — может сказать что цель нереальна</div>
+<div class="s401-out"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не «подтягивает» цифры под желаемый результат</div>
+<div class="s401-out"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Не игнорирует негатив — показывает риски честно</div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Когда особенно полезно</div>
+<div class="s401-title">Используй если...</div>
+<div class="s401-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Хочешь вырасти в доходе но не понимаешь за счёт чего</div>
+<div class="s401-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Сомневаешься — работает ли «оно» вообще в твоей нише</div>
+<div class="s401-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Не хочешь терять деньги на экспериментах</div>
+<div class="s401-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Планируешь масштабирование и хочешь реальные цифры</div>
+
+<div class="s401-div"></div>
+<div class="s401-lbl">Инструмент</div>
+<div class="s401-tool">
+<div class="s401-thdr">
+<div class="s401-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+<div>
+<div class="s401-ttitle">Business Calculator — Разбогатеть в Excel</div>
+<div class="s401-tdesc">AI-калькулятор считает реальный финансовый путь от точки А до точки Б: сколько клиентов, какой чек, сколько людей, какие затраты, когда прибыль. Выдаёт готовый структурированный документ со стресс-тестом и альтернативами.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-68b53aa30c5c81919678cf38d35f51cf-business-calculator-get-rich-in-excel" target="_blank" class="s401-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Запустить калькулятор
+</a>
+</div>`,
+
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
     ];
     if (window.learningCourseData) {
         window.learningCourseData = window.learningCourseData.concat(financeCourseData);
