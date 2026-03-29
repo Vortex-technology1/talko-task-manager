@@ -223,7 +223,7 @@
         }
 
         container.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-            <span style="font-weight:700;">Стандарти робіт (${workStandards.length})</span>
+            <span style="font-weight:700;">${(window.t && window.t('standards')) || 'Стандарти робіт'} (${workStandards.length})</span>
             <button class="btn btn-success btn-small" onclick="openStandardModal()">+ Стандарт</button>
         </div>` +
         workStandards.map(s => {

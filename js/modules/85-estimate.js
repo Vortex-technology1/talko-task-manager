@@ -851,7 +851,7 @@ window.openEstimateModal = function(estimateId) {
                   <span style="margin-left:0.5rem;font-size:0.8rem;color:#6b7280;">${sec.inputValue||0} ${esc(sec.inputUnit||'')} ${sec.extraParam?'× '+sec.extraParam+' '+esc(sec.extraParamLabel||''):''}</span>
                 </div>
                 <div style="display:flex;gap:0.4rem;">
-                  <button onclick="recalcSection(${si})" style="display:flex;align-items:center;gap:0.3rem;padding:0.25rem 0.6rem;border:1px solid #e5e7eb;border-radius:6px;background:white;font-size:0.78rem;cursor:pointer;">${_estIco.refresh} Перерахувати</button>
+                  <button onclick="recalcSection(${si})" style="display:flex;align-items:center;gap:0.3rem;padding:0.25rem 0.6rem;border:1px solid #e5e7eb;border-radius:6px;background:white;font-size:0.78rem;cursor:pointer;">${_estIco.refresh} ${_tg('Перерахувати','Пересчитать')}</button>
                   <button onclick="window._estEditSections.splice(${si},1);document.getElementById('estSectionsBody').innerHTML=renderEstSectionsHtml()" style="display:flex;align-items:center;padding:0.25rem 0.5rem;border:1px solid #fecaca;border-radius:6px;background:#fef2f2;color:#dc2626;font-size:0.78rem;cursor:pointer;">${_estIco.x}</button>
                 </div>
               </div>
@@ -897,7 +897,7 @@ window.openEstimateModal = function(estimateId) {
         <div style="padding:1.25rem 1.5rem;">
 
           <div style="background:white;border:1px solid #e5e7eb;border-radius:12px;padding:1rem;margin-bottom:1rem;">
-            <div style="font-weight:600;font-size:0.88rem;color:#374151;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.4rem;">${_estIco.clipboard} Загальна інформація</div>
+            <div style="font-weight:600;font-size:0.88rem;color:#374151;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.4rem;">${_estIco.clipboard} ${_tg('Загальна інформація','Общая информация')}</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
               <div style="grid-column:1/-1;">
                 <label style="font-size:0.78rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.25rem;">${_tg('Назва кошторису *','Название сметы *')}</label>
@@ -906,19 +906,19 @@ window.openEstimateModal = function(estimateId) {
               <div>
                 <label style="font-size:0.78rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.25rem;">${_tg('Прив\'язати до проекту','Привязать к проекту')}<у</label>
                 <select id="estProjectId" style="width:100%;padding:0.5rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
-                  <option value="">— без проекту —</option>
+                  <option value="">— ${_tg('без проекту','без проекта')} —</option>
                   ${projects.map(p=>`<option value="${p.id}" ${existing?.projectId===p.id?'selected':''}>${esc(p.title||p.name||p.id)}</option>`).join('')}
                 </select>
               </div>
               <div>
                 <label style="font-size:0.78rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.25rem;">${_tg('Угода CRM (опціональна)','Сделка CRM (необязательно)')}<но)</label>
                 <select id="estDealId" style="width:100%;padding:0.5rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
-                  <option value="">— без угоди —</option>
+                  <option value="">— ${_tg('без угоди','без сделки')} —</option>
                   ${deals.slice(0,50).map(d=>`<option value="${d.id}" ${existing?.dealId===d.id?'selected':''}>${esc(d.title||d.name||d.id)}</option>`).join('')}
                 </select>
               </div>
               <div>
-                <label style="font-size:0.78rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.25rem;">⚙️ Функція (ТЗ: кошторис прив'язаний до функції)</label>
+                <label style="font-size:0.78rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.25rem;">${_tg('Функція (ТЗ: кошторис прив\'язаний до функції)','Функция (ТЗ: смета привязана к функции)')}</label>
                 <select id="estFunctionId" style="width:100%;padding:0.5rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
                   <option value="">${_tg('— без функції —','— без функции —')}</option>
                   ${(typeof functions !== 'undefined' ? functions : []).filter(f=>f.status!=='archived').map(f=>`<option value="${esc(f.id)}" ${existing?.functionId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}
@@ -942,9 +942,9 @@ window.openEstimateModal = function(estimateId) {
           <div style="display:flex;justify-content:flex-end;gap:0.6rem;flex-wrap:wrap;">
             <button onclick="closeEstimateModal()" style="padding:0.55rem 1.1rem;border:1.5px solid #e5e7eb;background:white;border-radius:8px;font-size:0.88rem;cursor:pointer;">${_tg('Скасувати','Отмена')}</button>
             ${estimateId ? `<button onclick="exportEstimatePDF('${estimateId}')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.1rem;border:1.5px solid #e5e7eb;background:white;border-radius:8px;font-size:0.88rem;cursor:pointer;">${_estIco.save} PDF</button>` : ''}
-            ${estimateId && existing?.status === 'approved' ? `<button onclick="writeOffEstimateMaterials('${estimateId}')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.1rem;background:#ef4444;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">${_estIco.package} Списати матеріали</button>` : ''}
-            <button onclick="saveEstimate('draft')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.25rem;background:#f59e0b;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">${_estIco.save} Зберегти як чернетку</button>
-            <button onclick="saveEstimate('approved')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.25rem;background:#10b981;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">${_estIco.check} Затвердити</button>
+            ${estimateId && existing?.status === 'approved' ? `<button onclick="writeOffEstimateMaterials('${estimateId}')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.1rem;background:#ef4444;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">${_estIco.package} ${_tg('Списати матеріали','Списать материалы')}</button>` : ''}
+            <button onclick="saveEstimate('draft')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.25rem;background:#f59e0b;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">${_estIco.save} ${_tg('Зберегти як чернетку','Сохранить как черновик')}</button>
+            <button onclick="saveEstimate('approved')" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1.25rem;background:#10b981;color:white;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">${_estIco.check} ${_tg('Затвердити','Утвердить')}</button>
           </div>
         </div>
       </div>
