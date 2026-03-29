@@ -16362,14 +16362,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">1</div><div class="l106-iblock">
 <div class="l106-ititle">Велика ідея тексту</div>
 <div class="l106-ifor">За що відповідає: головна думка яка тримає весь текст і чіпляє за 3 секунди</div>
-<div class="l106-idialog">💭 «Про що взагалі цей сайт? Незрозуміло що вони роблять...»</div>
+<div class="l106-idialog">«Про що взагалі цей сайт? Незрозуміло що вони роблять...»</div>
 <div class="l106-iimpact">→ Людина закриває сторінку за 3–5 секунд. Навіть не доходить до офферу. Трафік злитий.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — переформулюй головну думку в 1 речення</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — переформулюй головну думку в 1 речення</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 1 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як доробити велику ідею — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади сильної великої ідеї для мого бізнесу.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як доробити велику ідею — ось оцінка: «Текст не має центральної ідеї, читач не розуміє за 3 секунди про що сторінка». Наведи 3 приклади сильної великої ідеї для стоматологічної клініки."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як доробити велику ідею — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади сильної великої ідеї для мого бізнесу.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як доробити велику ідею — ось оцінка: «Текст не має центральної ідеї, читач не розуміє за 3 секунди про що сторінка». Наведи 3 приклади сильної великої ідеї для стоматологічної клініки."</div>
 </div>
 </div>
 </div></div></div>
@@ -16377,14 +16377,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">2</div><div class="l106-iblock">
 <div class="l106-ititle">Оффер (основна пропозиція)</div>
 <div class="l106-ifor">За що відповідає: що отримає людина, за скільки, і чому зараз</div>
-<div class="l106-idialog">💭 «Ну окей, цікаво... але що конкретно вони пропонують? Що я отримаю? Скільки це коштує?»</div>
+<div class="l106-idialog">«Ну окей, цікаво... але що конкретно вони пропонують? Що я отримаю? Скільки це коштує?»</div>
 <div class="l106-iimpact">→ Людина читає весь текст але не розуміє що робити далі. Іде «подумати» — і не повертається.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — додай конкретику: що, за скільки, що отримає</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — додай конкретику: що, за скільки, що отримає</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 2 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як доробити оффер — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади сильного офферу для мого бізнесу.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як доробити оффер — ось оцінка: «Оффер розмитий, незрозуміло що конкретно пропонується і за скільки». Наведи 3 приклади сильного офферу для юридичної фірми."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як доробити оффер — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади сильного офферу для мого бізнесу.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як доробити оффер — ось оцінка: «Оффер розмитий, незрозуміло що конкретно пропонується і за скільки». Наведи 3 приклади сильного офферу для юридичної фірми."</div>
 </div>
 </div>
 </div></div></div>
@@ -16392,14 +16392,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">3</div><div class="l106-iblock">
 <div class="l106-ititle">Аудиторія</div>
 <div class="l106-ifor">За що відповідає: чи текст говорить з потрібною людиною</div>
-<div class="l106-idialog">💭 «Це не про мене... вони говорять про якихось інших людей з іншими проблемами»</div>
+<div class="l106-idialog">«Це не про мене... вони говорять про якихось інших людей з іншими проблемами»</div>
 <div class="l106-iimpact">→ Людина не ідентифікує себе з текстом. Немає відчуття «це для мене» — немає мотивації залишати контакт.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — уточни для кого: хто конкретно, яка ситуація</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — уточни для кого: хто конкретно, яка ситуація</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 3 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як доробити аудиторію — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як чітко описати ЦА для мого тексту.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як доробити аудиторію — ось оцінка: «Текст написаний для всіх, немає конкретного портрету клієнта». Наведи 3 приклади як описати ЦА для фітнес-клубу."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як доробити аудиторію — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як чітко описати ЦА для мого тексту.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як доробити аудиторію — ось оцінка: «Текст написаний для всіх, немає конкретного портрету клієнта». Наведи 3 приклади як описати ЦА для фітнес-клубу."</div>
 </div>
 </div>
 </div></div></div>
@@ -16407,14 +16407,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">4</div><div class="l106-iblock">
 <div class="l106-ititle">Опис проблеми</div>
 <div class="l106-ifor">За що відповідає: чи текст показує що розуміє біль клієнта</div>
-<div class="l106-idialog">💭 «Вони не розуміють моєї ситуації. Описують щось поверхово, не те що я реально відчуваю»</div>
+<div class="l106-idialog">«Вони не розуміють моєї ситуації. Описують щось поверхово, не те що я реально відчуваю»</div>
 <div class="l106-iimpact">→ Немає довіри з першого блоку. Людина не відчуває що її розуміють — значить не вірить що допоможуть.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — опиши проблему детальніше, від першої особи клієнта</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — опиши проблему детальніше, від першої особи клієнта</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 4 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як доробити опис проблеми — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади сильного опису болю клієнта для мого бізнесу.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як доробити опис проблеми — ось оцінка: «Проблема описана поверхово, немає емоційного резонансу». Наведи 3 приклади опису болю для власника ресторану."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як доробити опис проблеми — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади сильного опису болю клієнта для мого бізнесу.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як доробити опис проблеми — ось оцінка: «Проблема описана поверхово, немає емоційного резонансу». Наведи 3 приклади опису болю для власника ресторану."</div>
 </div>
 </div>
 </div></div></div>
@@ -16427,14 +16427,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">5</div><div class="l106-iblock">
 <div class="l106-ititle">Заголовок</div>
 <div class="l106-ifor">За що відповідає: перше враження. Читати чи ні</div>
-<div class="l106-idialog">💭 «Ще один сайт про "ефективний бізнес"... нічого нового»</div>
+<div class="l106-idialog">«Ще один сайт про "ефективний бізнес"... нічого нового»</div>
 <div class="l106-iimpact">→ 80% людей не йдуть далі заголовку. Слабкий заголовок = весь інший текст читають одиниці незалежно від якості.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — заголовок має містити: результат + для кого + чим відрізняється</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — заголовок має містити: результат + для кого + чим відрізняється</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 5 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як доробити заголовок — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади сильного заголовку для мого бізнесу.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як доробити заголовок — ось оцінка: «Заголовок загальний, не зачіпає, нема конкретики». Наведи 3 приклади заголовку для курсів з англійської мови."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як доробити заголовок — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади сильного заголовку для мого бізнесу.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як доробити заголовок — ось оцінка: «Заголовок загальний, не зачіпає, нема конкретики». Наведи 3 приклади заголовку для курсів з англійської мови."</div>
 </div>
 </div>
 </div></div></div>
@@ -16442,14 +16442,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">6</div><div class="l106-iblock">
 <div class="l106-ititle">Підзаголовок</div>
 <div class="l106-ifor">За що відповідає: утримує увагу після заголовку, розкриває суть</div>
-<div class="l106-idialog">💭 «Заголовок зачепив, але далі — знову розмито. Що конкретно? Для кого?»</div>
+<div class="l106-idialog">«Заголовок зачепив, але далі — знову розмито. Що конкретно? Для кого?»</div>
 <div class="l106-iimpact">→ Людина «охолоджується» одразу після першого інтересу. Не доходить до тіла тексту. Втрачаємо тих кого зачепили.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — підзаголовок має пояснити суть і дати причину читати далі</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — підзаголовок має пояснити суть і дати причину читати далі</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 6 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як доробити підзаголовок — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади підзаголовку що утримує увагу для мого бізнесу.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як доробити підзаголовок — ось оцінка: «Підзаголовок не підсилює заголовок, не дає причину читати далі». Наведи 3 приклади для сервісу доставки їжі."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як доробити підзаголовок — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади підзаголовку що утримує увагу для мого бізнесу.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як доробити підзаголовок — ось оцінка: «Підзаголовок не підсилює заголовок, не дає причину читати далі». Наведи 3 приклади для сервісу доставки їжі."</div>
 </div>
 </div>
 </div></div></div>
@@ -16457,14 +16457,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">7</div><div class="l106-iblock">
 <div class="l106-ititle">Пропозиція що вирішує проблему</div>
 <div class="l106-ifor">За що відповідає: як саме продукт закриває біль клієнта</div>
-<div class="l106-idialog">💭 «Ну добре, проблема є — але як конкретно ви її вирішите? Що ви будете робити? Чому це спрацює саме у мене?»</div>
+<div class="l106-idialog">«Ну добре, проблема є — але як конкретно ви її вирішите? Що ви будете робити? Чому це спрацює саме у мене?»</div>
 <div class="l106-iimpact">→ Людина не розуміє механіку рішення. Без розуміння механіки немає впевненості в результаті. Не залишає заявку.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — поясни конкретні кроки: що ти робиш → що людина отримує</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — поясни конкретні кроки: що ти робиш → що людина отримує</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 7 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як доробити пропозицію — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як описати механіку рішення для мого бізнесу.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як доробити пропозицію — ось оцінка: «Незрозуміло як саме продукт вирішує проблему, немає кроків». Наведи 3 приклади опису механіки для бухгалтерського аутсорсингу."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як доробити пропозицію — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як описати механіку рішення для мого бізнесу.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як доробити пропозицію — ось оцінка: «Незрозуміло як саме продукт вирішує проблему, немає кроків». Наведи 3 приклади опису механіки для бухгалтерського аутсорсингу."</div>
 </div>
 </div>
 </div></div></div>
@@ -16472,14 +16472,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">8</div><div class="l106-iblock">
 <div class="l106-ititle">Де текст перевантажений</div>
 <div class="l106-ifor">За що відповідає: місця де читач «зависає» або втомлюється</div>
-<div class="l106-idialog">💭 «Боже, скільки тексту... дай хоч щось знайду головне... та ну його»</div>
+<div class="l106-idialog">«Боже, скільки тексту... дай хоч щось знайду головне... та ну його»</div>
 <div class="l106-iimpact">→ Людина скролить по діагоналі або просто закриває. Конверсія падає пропорційно до перевантаженості.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — скороти абзаци до 3–4 речень, розбий на блоки з підзаголовками</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — скороти абзаци до 3–4 речень, розбий на блоки з підзаголовками</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 8 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як прибрати перевантаженість — ось оцінка: "{вставте текст відповіді асистента}". Спрости та скороти ці блоки мого тексту: [вставте перевантажені блоки].»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як прибрати перевантаженість — ось оцінка: «Абзаци по 8–10 речень, читач втомлюється». Спрости та скороти ці блоки: [великий абзац про переваги]."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як прибрати перевантаженість — ось оцінка: "{вставте текст відповіді асистента}". Спрости та скороти ці блоки мого тексту: [вставте перевантажені блоки].»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як прибрати перевантаженість — ось оцінка: «Абзаци по 8–10 речень, читач втомлюється». Спрости та скороти ці блоки: [великий абзац про переваги]."</div>
 </div>
 </div>
 </div></div></div>
@@ -16487,14 +16487,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">9</div><div class="l106-iblock">
 <div class="l106-ititle">Де складно читати / розуміти</div>
 <div class="l106-ifor">За що відповідає: технічні слова, довгі речення, незрозумілі терміни</div>
-<div class="l106-idialog">💭 «Що вони мають на увазі? Перечитаю... знову незрозуміло. Мабуть це не для мене»</div>
+<div class="l106-idialog">«Що вони мають на увазі? Перечитаю... знову незрозуміло. Мабуть це не для мене»</div>
 <div class="l106-iimpact">→ Роздратування = недовіра. Якщо людина не розуміє текст — вирішує що не зрозуміє і продукт. Йде до конкурента де «простіше».</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — заміни терміни на прості слова, речення до 15–20 слів</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — заміни терміни на прості слова, речення до 15–20 слів</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 9 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як спростити текст — ось оцінка: "{вставте текст відповіді асистента}". Перепиши ці складні місця простою мовою: [вставте складні фрагменти].»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як спростити текст — ось оцінка: «Використовуються терміни незрозумілі цільовій аудиторії». Перепиши простою мовою: «Наша методологія синергетичної оптимізації бізнес-процесів...»"</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як спростити текст — ось оцінка: "{вставте текст відповіді асистента}". Перепиши ці складні місця простою мовою: [вставте складні фрагменти].»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як спростити текст — ось оцінка: «Використовуються терміни незрозумілі цільовій аудиторії». Перепиши простою мовою: «Наша методологія синергетичної оптимізації бізнес-процесів...»"</div>
 </div>
 </div>
 </div></div></div>
@@ -16502,14 +16502,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">10</div><div class="l106-iblock">
 <div class="l106-ititle">Логіка і переходи між блоками</div>
 <div class="l106-ifor">За що відповідає: чи текст веде людину по логічному шляху до покупки</div>
-<div class="l106-idialog">💭 «Стоп, а чому вони тепер говорять про це? Ми ж щойно були про інше... загубився»</div>
+<div class="l106-idialog">«Стоп, а чому вони тепер говорять про це? Ми ж щойно були про інше... загубився»</div>
 <div class="l106-iimpact">→ Людина «випадає» з потоку читання. Як тільки зупинилась і задумалась — магія тексту зламана. Повернути увагу майже неможливо.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — перевір: кожен блок логічно випливає з попереднього? Є зв'язки між секціями?</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — перевір: кожен блок логічно випливає з попереднього? Є зв'язки між секціями?</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 10 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як виправити логіку тексту — ось оцінка: "{вставте текст відповіді асистента}". Запропонуй правильну структуру і переходи між блоками для мого тексту.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як виправити логіку — ось оцінка: «Різкий перехід від проблеми до ціни без пояснення рішення». Запропонуй правильну структуру для лендінгу стоматології."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як виправити логіку тексту — ось оцінка: "{вставте текст відповіді асистента}". Запропонуй правильну структуру і переходи між блоками для мого тексту.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як виправити логіку — ось оцінка: «Різкий перехід від проблеми до ціни без пояснення рішення». Запропонуй правильну структуру для лендінгу стоматології."</div>
 </div>
 </div>
 </div></div></div>
@@ -16522,14 +16522,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">11</div><div class="l106-iblock">
 <div class="l106-ititle">Стиль і тональність</div>
 <div class="l106-ifor">За що відповідає: чи мова тексту відповідає аудиторії</div>
-<div class="l106-idialog">💭 «Вони говорять зі мною як з дитиною / як з корпоративним менеджером / занадто пафосно / занадто по-вуличному»</div>
+<div class="l106-idialog">«Вони говорять зі мною як з дитиною / як з корпоративним менеджером / занадто пафосно / занадто по-вуличному»</div>
 <div class="l106-iimpact">→ Невідповідний тон створює психологічну дистанцію. Людина не відчуває «свою» компанію. Довіри немає — заявки немає.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — перечитай текст вголос. Так говорять твої клієнти між собою?</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — перечитай текст вголос. Так говорять твої клієнти між собою?</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 11 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як змінити тон — ось оцінка: "{вставте текст відповіді асистента}". Перепиши ці фрагменти в правильному тоні для моєї аудиторії: [вставте фрагменти].»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як змінити тон — ось оцінка: «Текст занадто офіційний для молодої аудиторії підприємців». Перепиши фрагмент в живому розмовному стилі: «Наша компанія здійснює комплексний супровід...»"</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як змінити тон — ось оцінка: "{вставте текст відповіді асистента}". Перепиши ці фрагменти в правильному тоні для моєї аудиторії: [вставте фрагменти].»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як змінити тон — ось оцінка: «Текст занадто офіційний для молодої аудиторії підприємців». Перепиши фрагмент в живому розмовному стилі: «Наша компанія здійснює комплексний супровід...»"</div>
 </div>
 </div>
 </div></div></div>
@@ -16537,14 +16537,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">12</div><div class="l106-iblock">
 <div class="l106-ititle">Цінність пропозиції для ЦА</div>
 <div class="l106-ifor">За що відповідає: чи розуміє читач що він виграє від покупки</div>
-<div class="l106-idialog">💭 «І що? Ну є така послуга. І що я з цього маю? Навіщо мені це?»</div>
+<div class="l106-idialog">«І що? Ну є така послуга. І що я з цього маю? Навіщо мені це?»</div>
 <div class="l106-iimpact">→ Людина не бачить особистої вигоди. Ціна автоматично здається завищеною — бо незрозуміло за що платити. Не купує навіть якщо може дозволити.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — додай конкретні результати: що зміниться в житті клієнта після покупки</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — додай конкретні результати: що зміниться в житті клієнта після покупки</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 12 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як підсилити цінність — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як показати конкретний результат для клієнта мого бізнесу.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як підсилити цінність — ось оцінка: «Текст описує послугу але не показує що зміниться в житті клієнта». Наведи 3 приклади результатів для клієнтів фінансового консультанта."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як підсилити цінність — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як показати конкретний результат для клієнта мого бізнесу.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як підсилити цінність — ось оцінка: «Текст описує послугу але не показує що зміниться в житті клієнта». Наведи 3 приклади результатів для клієнтів фінансового консультанта."</div>
 </div>
 </div>
 </div></div></div>
@@ -16552,14 +16552,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">13</div><div class="l106-iblock">
 <div class="l106-ititle">Конкурентоспроможність</div>
 <div class="l106-ifor">За що відповідає: чи є причина купити саме тут</div>
-<div class="l106-idialog">💭 «Таких пропозицій повно. Чим вони кращі? Піду порівняю ціни...»</div>
+<div class="l106-idialog">«Таких пропозицій повно. Чим вони кращі? Піду порівняю ціни...»</div>
 <div class="l106-iimpact">→ Людина йде «порівнювати» і купує там де дешевше або де краще пояснили відмінність. Ви отримуєте трафік — але віддаєте продажі конкурентам.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — сформулюй 1–2 конкретні причини «чому саме ми, а не інші»</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — сформулюй 1–2 конкретні причини «чому саме ми, а не інші»</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 13 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як показати відмінність від конкурентів — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як сформулювати унікальну причину обрати нас.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як показати відмінність — ось оцінка: «Немає чіткої причини чому обрати саме вас». Наведи 3 приклади диференціації для агентства нерухомості."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як показати відмінність від конкурентів — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як сформулювати унікальну причину обрати нас.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як показати відмінність — ось оцінка: «Немає чіткої причини чому обрати саме вас». Наведи 3 приклади диференціації для агентства нерухомості."</div>
 </div>
 </div>
 </div></div></div>
@@ -16567,14 +16567,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">14</div><div class="l106-iblock">
 <div class="l106-ititle">Де текст викликає скептицизм</div>
 <div class="l106-ifor">За що відповідає: необґрунтовані обіцянки, відсутність доказів</div>
-<div class="l106-idialog">💭 «"Подвоїмо ваш прибуток"... звісно. Всі так кажуть. Де докази? Це звичайна реклама»</div>
+<div class="l106-idialog">«"Подвоїмо ваш прибуток"... звісно. Всі так кажуть. Де докази? Це звичайна реклама»</div>
 <div class="l106-iimpact">→ Скептицизм — це стіна між текстом і покупкою. Одна фраза що викликає недовіру може знищити ефект всього попереднього тексту.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Якщо &lt;7 — підкріпи кожну обіцянку: факт, кейс, цифра, відгук</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Якщо &lt;7 — підкріпи кожну обіцянку: факт, кейс, цифра, відгук</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Виділи відповідь асистента по пункту 14 → скопіюй → відправ в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопіюй цей запит:</strong><br><em>«Як прибрати скептицизм — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як підкріпити ці обіцянки доказами для мого бізнесу.»</em></div>
-<div class="l106-howto-example">💡 Наприклад: "Як прибрати скептицизм — ось оцінка: «Фраза «гарантуємо результат» без жодних доказів викликає недовіру». Наведи 3 приклади як підкріпити гарантію доказами для онлайн-школи."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопіюй цей запит:</strong><br><em>«Як прибрати скептицизм — ось оцінка: "{вставте текст відповіді асистента}". Наведи 3 приклади як підкріпити ці обіцянки доказами для мого бізнесу.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Наприклад: "Як прибрати скептицизм — ось оцінка: «Фраза «гарантуємо результат» без жодних доказів викликає недовіру». Наведи 3 приклади як підкріпити гарантію доказами для онлайн-школи."</div>
 </div>
 </div>
 </div></div></div>
@@ -16709,14 +16709,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">1</div><div class="l106-iblock">
 <div class="l106-ititle">Велика ідея тексту</div>
 <div class="l106-ifor">За що відповідає: головна думка яка тримає весь текст і чіпляє за 3 секунди</div>
-<div class="l106-idialog">💭 «Про що взагалі цей сайт? Незрозуміло що вони роблять...»</div>
+<div class="l106-idialog">«Про що взагалі цей сайт? Незрозуміло що вони роблять...»</div>
 <div class="l106-iimpact">→ Людина закриває сторінку за 3–5 секунд. Навіть не доходить до офферу. Трафік злитий.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — переформулируй главную мысль в 1 предложение</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — переформулируй главную мысль в 1 предложение</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 1 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как доработать большую идею — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера сильной большой идеи для моего бизнеса.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как доработать большую идею — вот оценка: «Текст не имеет центральной идеи, читатель не понимает за 3 секунды о чём страница». Приведи 3 примера для стоматологической клиники."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как доработать большую идею — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера сильной большой идеи для моего бизнеса.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как доработать большую идею — вот оценка: «Текст не имеет центральной идеи, читатель не понимает за 3 секунды о чём страница». Приведи 3 примера для стоматологической клиники."</div>
 </div>
 </div>
 </div></div></div>
@@ -16724,14 +16724,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">2</div><div class="l106-iblock">
 <div class="l106-ititle">Оффер (основна пропозиція)</div>
 <div class="l106-ifor">За що відповідає: що отримає людина, за скільки, і чому зараз</div>
-<div class="l106-idialog">💭 «Ну окей, цікаво... але що конкретно вони пропонують? Що я отримаю? Скільки це коштує?»</div>
+<div class="l106-idialog">«Ну окей, цікаво... але що конкретно вони пропонують? Що я отримаю? Скільки це коштує?»</div>
 <div class="l106-iimpact">→ Людина читає весь текст але не розуміє що робити далі. Іде «подумати» — і не повертається.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — добавь конкретику: что, за сколько, что получит</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — добавь конкретику: что, за сколько, что получит</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 2 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как доработать оффер — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера сильного оффера для моего бизнеса.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как доработать оффер — вот оценка: «Оффер размытый, непонятно что конкретно предлагается и за сколько». Приведи 3 примера для юридической фирмы."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как доработать оффер — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера сильного оффера для моего бизнеса.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как доработать оффер — вот оценка: «Оффер размытый, непонятно что конкретно предлагается и за сколько». Приведи 3 примера для юридической фирмы."</div>
 </div>
 </div>
 </div></div></div>
@@ -16739,14 +16739,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">3</div><div class="l106-iblock">
 <div class="l106-ititle">Аудиторія</div>
 <div class="l106-ifor">За що відповідає: чи текст говорить з потрібною людиною</div>
-<div class="l106-idialog">💭 «Це не про мене... вони говорять про якихось інших людей з іншими проблемами»</div>
+<div class="l106-idialog">«Це не про мене... вони говорять про якихось інших людей з іншими проблемами»</div>
 <div class="l106-iimpact">→ Людина не ідентифікує себе з текстом. Немає відчуття «це для мене» — немає мотивації залишати контакт.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — уточни для кого: кто конкретно, какая ситуация</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — уточни для кого: кто конкретно, какая ситуация</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 3 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как доработать описание аудитории — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как чётко описать ЦА для моего текста.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как доработать аудиторию — вот оценка: «Текст написан для всех, нет конкретного портрета клиента». Приведи 3 примера для фитнес-клуба."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как доработать описание аудитории — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как чётко описать ЦА для моего текста.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как доработать аудиторию — вот оценка: «Текст написан для всех, нет конкретного портрета клиента». Приведи 3 примера для фитнес-клуба."</div>
 </div>
 </div>
 </div></div></div>
@@ -16754,14 +16754,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">4</div><div class="l106-iblock">
 <div class="l106-ititle">Опис проблеми</div>
 <div class="l106-ifor">За що відповідає: чи текст показує що розуміє біль клієнта</div>
-<div class="l106-idialog">💭 «Вони не розуміють моєї ситуації. Описують щось поверхово, не те що я реально відчуваю»</div>
+<div class="l106-idialog">«Вони не розуміють моєї ситуації. Описують щось поверхово, не те що я реально відчуваю»</div>
 <div class="l106-iimpact">→ Немає довіри з першого блоку. Людина не відчуває що її розуміють — значить не вірить що допоможуть.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — опиши проблему детальнее, от первого лица клиента</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — опиши проблему детальнее, от первого лица клиента</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 4 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как доработать описание проблемы — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера сильного описания боли клиента для моего бизнеса.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как доработать проблему — вот оценка: «Проблема описана поверхностно, нет эмоционального резонанса». Приведи 3 примера для владельца ресторана."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как доработать описание проблемы — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера сильного описания боли клиента для моего бизнеса.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как доработать проблему — вот оценка: «Проблема описана поверхностно, нет эмоционального резонанса». Приведи 3 примера для владельца ресторана."</div>
 </div>
 </div>
 </div></div></div>
@@ -16774,14 +16774,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">5</div><div class="l106-iblock">
 <div class="l106-ititle">Заголовок</div>
 <div class="l106-ifor">За що відповідає: перше враження. Читати чи ні</div>
-<div class="l106-idialog">💭 «Ще один сайт про "ефективний бізнес"... нічого нового»</div>
+<div class="l106-idialog">«Ще один сайт про "ефективний бізнес"... нічого нового»</div>
 <div class="l106-iimpact">→ 80% людей не йдуть далі заголовку. Слабкий заголовок = весь інший текст читають одиниці незалежно від якості.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — заголовок должен содержать: результат + для кого + чем отличается</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — заголовок должен содержать: результат + для кого + чем отличается</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 5 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как доработать заголовок — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера сильного заголовка для моего бизнеса.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как доработать заголовок — вот оценка: «Заголовок общий, не цепляет, нет конкретики». Приведи 3 примера для курсов английского языка."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как доработать заголовок — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера сильного заголовка для моего бизнеса.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как доработать заголовок — вот оценка: «Заголовок общий, не цепляет, нет конкретики». Приведи 3 примера для курсов английского языка."</div>
 </div>
 </div>
 </div></div></div>
@@ -16789,14 +16789,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">6</div><div class="l106-iblock">
 <div class="l106-ititle">Підзаголовок</div>
 <div class="l106-ifor">За що відповідає: утримує увагу після заголовку, розкриває суть</div>
-<div class="l106-idialog">💭 «Заголовок зачепив, але далі — знову розмито. Що конкретно? Для кого?»</div>
+<div class="l106-idialog">«Заголовок зачепив, але далі — знову розмито. Що конкретно? Для кого?»</div>
 <div class="l106-iimpact">→ Людина «охолоджується» одразу після першого інтересу. Не доходить до тіла тексту. Втрачаємо тих кого зачепили.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — подзаголовок должен объяснить суть и дать причину читать дальше</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — подзаголовок должен объяснить суть и дать причину читать дальше</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 6 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как доработать подзаголовок — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера подзаголовка удерживающего внимание для моего бизнеса.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как доработать подзаголовок — вот оценка: «Подзаголовок не усиливает заголовок, не даёт причину читать дальше». Приведи 3 примера для сервиса доставки еды."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как доработать подзаголовок — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера подзаголовка удерживающего внимание для моего бизнеса.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как доработать подзаголовок — вот оценка: «Подзаголовок не усиливает заголовок, не даёт причину читать дальше». Приведи 3 примера для сервиса доставки еды."</div>
 </div>
 </div>
 </div></div></div>
@@ -16804,14 +16804,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">7</div><div class="l106-iblock">
 <div class="l106-ititle">Пропозиція що вирішує проблему</div>
 <div class="l106-ifor">За що відповідає: як саме продукт закриває біль клієнта</div>
-<div class="l106-idialog">💭 «Ну добре, проблема є — але як конкретно ви її вирішите? Що ви будете робити? Чому це спрацює саме у мене?»</div>
+<div class="l106-idialog">«Ну добре, проблема є — але як конкретно ви її вирішите? Що ви будете робити? Чому це спрацює саме у мене?»</div>
 <div class="l106-iimpact">→ Людина не розуміє механіку рішення. Без розуміння механіки немає впевненості в результаті. Не залишає заявку.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — объясни конкретные шаги: что ты делаешь → что человек получает</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — объясни конкретные шаги: что ты делаешь → что человек получает</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 7 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как доработать предложение — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как описать механику решения для моего бизнеса.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как доработать предложение — вот оценка: «Непонятно как именно продукт решает проблему, нет шагов». Приведи 3 примера для бухгалтерского аутсорсинга."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как доработать предложение — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как описать механику решения для моего бизнеса.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как доработать предложение — вот оценка: «Непонятно как именно продукт решает проблему, нет шагов». Приведи 3 примера для бухгалтерского аутсорсинга."</div>
 </div>
 </div>
 </div></div></div>
@@ -16819,14 +16819,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">8</div><div class="l106-iblock">
 <div class="l106-ititle">Де текст перевантажений</div>
 <div class="l106-ifor">За що відповідає: місця де читач «зависає» або втомлюється</div>
-<div class="l106-idialog">💭 «Боже, скільки тексту... дай хоч щось знайду головне... та ну його»</div>
+<div class="l106-idialog">«Боже, скільки тексту... дай хоч щось знайду головне... та ну його»</div>
 <div class="l106-iimpact">→ Людина скролить по діагоналі або просто закриває. Конверсія падає пропорційно до перевантаженості.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — сократи абзацы до 3–4 предложений, разбей на блоки с подзаголовками</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — сократи абзацы до 3–4 предложений, разбей на блоки с подзаголовками</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 8 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как убрать перегруженность — вот оценка: "{вставьте текст ответа ассистента}". Упрости и сократи эти блоки моего текста: [вставьте перегруженные блоки].»</em></div>
-<div class="l106-howto-example">💡 Например: "Как убрать перегруженность — вот оценка: «Абзацы по 8–10 предложений, читатель устаёт». Упрости блок: [большой абзац о преимуществах]."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как убрать перегруженность — вот оценка: "{вставьте текст ответа ассистента}". Упрости и сократи эти блоки моего текста: [вставьте перегруженные блоки].»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как убрать перегруженность — вот оценка: «Абзацы по 8–10 предложений, читатель устаёт». Упрости блок: [большой абзац о преимуществах]."</div>
 </div>
 </div>
 </div></div></div>
@@ -16834,14 +16834,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">9</div><div class="l106-iblock">
 <div class="l106-ititle">Де складно читати / розуміти</div>
 <div class="l106-ifor">За що відповідає: технічні слова, довгі речення, незрозумілі терміни</div>
-<div class="l106-idialog">💭 «Що вони мають на увазі? Перечитаю... знову незрозуміло. Мабуть це не для мене»</div>
+<div class="l106-idialog">«Що вони мають на увазі? Перечитаю... знову незрозуміло. Мабуть це не для мене»</div>
 <div class="l106-iimpact">→ Роздратування = недовіра. Якщо людина не розуміє текст — вирішує що не зрозуміє і продукт. Йде до конкурента де «простіше».</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — замени термины на простые слова, предложения до 15–20 слов</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — замени термины на простые слова, предложения до 15–20 слов</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 9 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как упростить текст — вот оценка: "{вставьте текст ответа ассистента}". Перепиши эти сложные места простым языком: [вставьте сложные фрагменты].»</em></div>
-<div class="l106-howto-example">💡 Например: "Как упростить — вот оценка: «Используются термины непонятные аудитории». Перепиши простым языком: «Наша методология синергетической оптимизации...»"</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как упростить текст — вот оценка: "{вставьте текст ответа ассистента}". Перепиши эти сложные места простым языком: [вставьте сложные фрагменты].»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как упростить — вот оценка: «Используются термины непонятные аудитории». Перепиши простым языком: «Наша методология синергетической оптимизации...»"</div>
 </div>
 </div>
 </div></div></div>
@@ -16849,14 +16849,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">10</div><div class="l106-iblock">
 <div class="l106-ititle">Логіка і переходи між блоками</div>
 <div class="l106-ifor">За що відповідає: чи текст веде людину по логічному шляху до покупки</div>
-<div class="l106-idialog">💭 «Стоп, а чому вони тепер говорять про це? Ми ж щойно були про інше... загубився»</div>
+<div class="l106-idialog">«Стоп, а чому вони тепер говорять про це? Ми ж щойно були про інше... загубився»</div>
 <div class="l106-iimpact">→ Людина «випадає» з потоку читання. Як тільки зупинилась і задумалась — магія тексту зламана. Повернути увагу майже неможливо.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — проверь: каждый блок логично вытекает из предыдущего? Есть связи между секциями?</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — проверь: каждый блок логично вытекает из предыдущего? Есть связи между секциями?</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 10 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как исправить логику — вот оценка: "{вставьте текст ответа ассистента}". Предложи правильную структуру и переходы между блоками для моего текста.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как исправить логику — вот оценка: «Резкий переход от проблемы к цене без объяснения решения». Предложи правильную структуру для лендинга стоматологии."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как исправить логику — вот оценка: "{вставьте текст ответа ассистента}". Предложи правильную структуру и переходы между блоками для моего текста.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как исправить логику — вот оценка: «Резкий переход от проблемы к цене без объяснения решения». Предложи правильную структуру для лендинга стоматологии."</div>
 </div>
 </div>
 </div></div></div>
@@ -16869,14 +16869,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">11</div><div class="l106-iblock">
 <div class="l106-ititle">Стиль і тональність</div>
 <div class="l106-ifor">За що відповідає: чи мова тексту відповідає аудиторії</div>
-<div class="l106-idialog">💭 «Вони говорять зі мною як з дитиною / як з корпоративним менеджером / занадто пафосно / занадто по-вуличному»</div>
+<div class="l106-idialog">«Вони говорять зі мною як з дитиною / як з корпоративним менеджером / занадто пафосно / занадто по-вуличному»</div>
 <div class="l106-iimpact">→ Невідповідний тон створює психологічну дистанцію. Людина не відчуває «свою» компанію. Довіри немає — заявки немає.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — перечитай текст вслух. Так говорят твои клиенты между собой?</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — перечитай текст вслух. Так говорят твои клиенты между собой?</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 11 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как изменить тон — вот оценка: "{вставьте текст ответа ассистента}". Перепиши фрагменты в правильном тоне для моей аудитории: [вставьте фрагменты].»</em></div>
-<div class="l106-howto-example">💡 Например: "Как изменить тон — вот оценка: «Текст слишком официальный для молодой аудитории». Перепиши в живом стиле: «Наша компания осуществляет комплексное сопровождение...»"</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как изменить тон — вот оценка: "{вставьте текст ответа ассистента}". Перепиши фрагменты в правильном тоне для моей аудитории: [вставьте фрагменты].»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как изменить тон — вот оценка: «Текст слишком официальный для молодой аудитории». Перепиши в живом стиле: «Наша компания осуществляет комплексное сопровождение...»"</div>
 </div>
 </div>
 </div></div></div>
@@ -16884,14 +16884,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">12</div><div class="l106-iblock">
 <div class="l106-ititle">Цінність пропозиції для ЦА</div>
 <div class="l106-ifor">За що відповідає: чи розуміє читач що він виграє від покупки</div>
-<div class="l106-idialog">💭 «І що? Ну є така послуга. І що я з цього маю? Навіщо мені це?»</div>
+<div class="l106-idialog">«І що? Ну є така послуга. І що я з цього маю? Навіщо мені це?»</div>
 <div class="l106-iimpact">→ Людина не бачить особистої вигоди. Ціна автоматично здається завищеною — бо незрозуміло за що платити. Не купує навіть якщо може дозволити.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — добавь конкретные результаты: что изменится в жизни клиента после покупки</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — добавь конкретные результаты: что изменится в жизни клиента после покупки</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 12 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как усилить ценность — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как показать конкретный результат для клиента моего бизнеса.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как усилить ценность — вот оценка: «Текст описывает услугу но не показывает что изменится в жизни клиента». Приведи 3 примера для финансового консультанта."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как усилить ценность — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как показать конкретный результат для клиента моего бизнеса.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как усилить ценность — вот оценка: «Текст описывает услугу но не показывает что изменится в жизни клиента». Приведи 3 примера для финансового консультанта."</div>
 </div>
 </div>
 </div></div></div>
@@ -16899,14 +16899,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">13</div><div class="l106-iblock">
 <div class="l106-ititle">Конкурентоспроможність</div>
 <div class="l106-ifor">За що відповідає: чи є причина купити саме тут</div>
-<div class="l106-idialog">💭 «Таких пропозицій повно. Чим вони кращі? Піду порівняю ціни...»</div>
+<div class="l106-idialog">«Таких пропозицій повно. Чим вони кращі? Піду порівняю ціни...»</div>
 <div class="l106-iimpact">→ Людина йде «порівнювати» і купує там де дешевше або де краще пояснили відмінність. Ви отримуєте трафік — але віддаєте продажі конкурентам.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — сформулируй 1–2 конкретные причины «почему именно мы, а не другие»</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — сформулируй 1–2 конкретные причины «почему именно мы, а не другие»</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 13 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как показать отличие от конкурентов — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как сформулировать уникальную причину выбрать нас.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как показать отличие — вот оценка: «Нет чёткой причины почему выбрать именно вас». Приведи 3 примера дифференциации для агентства недвижимости."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как показать отличие от конкурентов — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как сформулировать уникальную причину выбрать нас.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как показать отличие — вот оценка: «Нет чёткой причины почему выбрать именно вас». Приведи 3 примера дифференциации для агентства недвижимости."</div>
 </div>
 </div>
 </div></div></div>
@@ -16914,14 +16914,14 @@ Bist du dabei?</div>
 <div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">14</div><div class="l106-iblock">
 <div class="l106-ititle">Де текст викликає скептицизм</div>
 <div class="l106-ifor">За що відповідає: необґрунтовані обіцянки, відсутність доказів</div>
-<div class="l106-idialog">💭 «"Подвоїмо ваш прибуток"... звісно. Всі так кажуть. Де докази? Це звичайна реклама»</div>
+<div class="l106-idialog">«"Подвоїмо ваш прибуток"... звісно. Всі так кажуть. Де докази? Це звичайна реклама»</div>
 <div class="l106-iimpact">→ Скептицизм — це стіна між текстом і покупкою. Одна фраза що викликає недовіру може знищити ефект всього попереднього тексту.</div>
 <div class="l106-score-wrap">
-<div class="l106-score">⚠ Если &lt;7 — подкрепи каждое обещание: факт, кейс, цифра, отзыв</div>
+<div class="l106-score"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Если &lt;7 — подкрепи каждое обещание: факт, кейс, цифра, отзыв</div>
 <div class="l106-howto">
 <div class="l106-howto-title">Выдели ответ ассистента по пункту 14 → скопируй → отправь в Sales Page Master:</div>
-<div class="l106-howto-request">📋 <strong>Скопируй этот запрос:</strong><br><em>«Как убрать скептицизм — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как подкрепить обещания доказательствами для моего бизнеса.»</em></div>
-<div class="l106-howto-example">💡 Например: "Как убрать скептицизм — вот оценка: «Фраза «гарантируем результат» без доказательств вызывает недоверие». Приведи 3 примера подкрепления гарантии для онлайн-школы."</div>
+<div class="l106-howto-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="14" height="14" style="vertical-align:middle;margin-right:4px;flex-shrink:0"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><strong>Скопируй этот запрос:</strong><br><em>«Как убрать скептицизм — вот оценка: "{вставьте текст ответа ассистента}". Приведи 3 примера как подкрепить обещания доказательствами для моего бизнеса.»</em></div>
+<div class="l106-howto-example"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.75" width="13" height="13" style="vertical-align:middle;margin-right:3px;flex-shrink:0"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Например: "Как убрать скептицизм — вот оценка: «Фраза «гарантируем результат» без доказательств вызывает недоверие». Приведи 3 примера подкрепления гарантии для онлайн-школы."</div>
 </div>
 </div>
 </div></div></div>
