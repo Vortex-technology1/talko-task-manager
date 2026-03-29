@@ -352,6 +352,11 @@ document.addEventListener('mousedown', function(e) {
             });
         }
     };
+    // updatePageTranslations — викликається з setLanguage в 01-translations-v2.js
+    window.updatePageTranslations = function() {
+        var lang = window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || 'ua';
+        if (typeof window.applyNavTranslations === 'function') window.applyNavTranslations(lang);
+    };
     function _syncAuthLangBtns(active) {
         ['ua','ru','en','pl','de','cs'].forEach(code => {
             document.getElementById('langBtn_' + code)?.classList.toggle('active', code === active);
