@@ -3469,7 +3469,28 @@ document.addEventListener('mousedown', function(e) {
                             <div style="width:32px;height:32px;border-radius:8px;background:#6366f118;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <i data-lucide="package" style="width:16px;height:16px;color:#6366f1;"></i>
                             </div>
-                            <span style="font-size:0.88rem;font-weight:500;color:#111827;">Склад</span>
+                            <span style="font-size:0.88rem;font-weight:500;color:#111827;" data-i18n="tabWarehouse">Склад</span>
+                            <i data-lucide="chevron-right" style="width:14px;height:14px;color:#d1d5db;margin-left:auto;"></i>
+                        </button>
+                        <button onclick="lazyLoad('sales',function(){switchTab('sales');});closeMobileMenu();" id="salesMobileNavBtn" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:none;border:none;border-bottom:1px solid #f5f5f5;cursor:pointer;text-align:left;">
+                            <div style="width:32px;height:32px;border-radius:8px;background:#22c55e18;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i data-lucide="receipt" style="width:16px;height:16px;color:#22c55e;"></i>
+                            </div>
+                            <span style="font-size:0.88rem;font-weight:500;color:#111827;" data-i18n="tabSales">Реалізація</span>
+                            <i data-lucide="chevron-right" style="width:14px;height:14px;color:#d1d5db;margin-left:auto;"></i>
+                        </button>
+                        <button onclick="lazyLoad('foodProduction',function(){switchTab('foodProduction');});closeMobileMenu();" id="foodProductionMobileNavBtn" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:none;border:none;border-bottom:1px solid #f5f5f5;cursor:pointer;text-align:left;">
+                            <div style="width:32px;height:32px;border-radius:8px;background:#f59e0b18;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i data-lucide="chef-hat" style="width:16px;height:16px;color:#f59e0b;"></i>
+                            </div>
+                            <span style="font-size:0.88rem;font-weight:500;color:#111827;" data-i18n="tabFoodProduction">Виробництво</span>
+                            <i data-lucide="chevron-right" style="width:14px;height:14px;color:#d1d5db;margin-left:auto;"></i>
+                        </button>
+                        <button onclick="lazyLoad('estimate',function(){switchTab('estimate');});closeMobileMenu();" id="estimateMobileNavBtn" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:none;border:none;border-bottom:1px solid #f5f5f5;cursor:pointer;text-align:left;">
+                            <div style="width:32px;height:32px;border-radius:8px;background:#ef444418;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i data-lucide="clipboard-list" style="width:16px;height:16px;color:#ef4444;"></i>
+                            </div>
+                            <span style="font-size:0.88rem;font-weight:500;color:#111827;" data-i18n="tabEstimate">Кошторис</span>
                             <i data-lucide="chevron-right" style="width:14px;height:14px;color:#d1d5db;margin-left:auto;"></i>
                         </button>
                         <button onclick="switchTab('statistics');closeMobileMenu();" id="statsMobileBtn" style="display:none;width:100%;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:none;border:none;cursor:pointer;text-align:left;">
