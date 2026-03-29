@@ -174,7 +174,7 @@ function _renderShell() {
                 style="display:flex;align-items:center;gap:.3rem;padding:.3rem .65rem;
                 border:1px solid #22c55e;border-radius:6px;background:#f0fdf4;
                 color:#16a34a;cursor:pointer;font-size:.75rem;font-weight:600;">
-                ${I.list} Список
+                ${I.list} ${_tg('Список','Список')}
             </button>
             <button id="crmToggleKanban" onclick="crmSetViewMode('kanban')"
                 style="display:flex;align-items:center;gap:.3rem;padding:.3rem .65rem;
@@ -231,7 +231,7 @@ function _renderShell() {
                         ${I.kanban}
                     </button>
                     <button id="crmToggleList" onclick="crmSetViewMode('list')"
-                        title="Список" style="padding:0.3rem 0.5rem;border:1px solid #e8eaed;border-radius:0 6px 6px 0;
+                        title="${_tg('Список','Список')}" style="padding:0.3rem 0.5rem;border:1px solid #e8eaed;border-radius:0 6px 6px 0;
                         background:white;cursor:pointer;display:flex;align-items:center;color:#6b7280;">
                         ${I.list}
                     </button>
@@ -402,7 +402,7 @@ window.crmExportCSV = function() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    if (typeof showToast === 'function') showToast('Експортовано ' + deals.length + ' угод', 'success');
+    if (typeof showToast === 'function') showToast(_tg('Експортовано ','Экспортировано ') + deals.length + _tg(' угод',' сделок'), 'success');
 };
 
 
@@ -742,7 +742,7 @@ function _renderKanban() {
         </div>
         <button onclick="crm.selectedIds.clear();_renderKanban()"
             style="margin-left:auto;padding:0.25rem 0.6rem;background:none;color:#9ca3af;border:1px solid #4b5563;border-radius:6px;font-size:0.74rem;cursor:pointer;">
-            Отменить
+            ${_tg('Скасувати','Отменить')}
         </button>
     </div>` : ''}
 
@@ -786,7 +786,7 @@ function _kanbanCol(stage) {
             ${deals.length ? deals.map(d => _dealCard(d)).join('') : `
             <div style="margin-top:0.5rem;border:2px dashed #dde1e7;border-radius:8px;
                 padding:1.5rem 0.5rem;text-align:center;color:#c4c9d4;font-size:0.72rem;">
-                Перетягни сюди
+                ${_tg('Перетягни сюди','Перетащи сюда')}
             </div>`}
         </div>
     </div>`;
@@ -879,10 +879,10 @@ function _renderListView() {
                 ${_tg('Змінити стадію','Изменить стадию')}
             </button>
             <button onclick="crmBulkAssign()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                Призначити
+                ${_tg('Призначити','Назначить')}
             </button>
             <button onclick="crmBulkTag()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                Додати тег
+                ${_tg('Додати тег','Добавить тег')}
             </button>
             <button onclick="crmBulkDelete()" style="padding:0.3rem 0.7rem;background:#7f1d1d;color:#fca5a5;border:1px solid #991b1b;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
                 Видалити
@@ -890,7 +890,7 @@ function _renderListView() {
         </div>
         <button onclick="crm.selectedIds=new Set();crm._bulkMode=false;crmSetViewMode('list')"
             style="margin-left:auto;padding:0.3rem 0.6rem;background:none;color:#9ca3af;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.72rem;">
-            Отменить
+            ${_tg('Скасувати','Отменить')}
         </button>
     </div>` : '';
 
@@ -924,7 +924,7 @@ function _renderListView() {
         ${deals.length === 0 ? `
         <div style="text-align:center;padding:3rem 1rem;color:#9ca3af;font-size:.83rem;">
             <div style="margin-bottom:0.5rem;color:#9ca3af;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg></div>
-            Угод не знайдено
+            ${_tg('Угод не знайдено','Сделок не найдено')}
         </div>` :
         deals.map(d => {
             const stage = stages.find(s=>s.id===d.stage);
@@ -984,7 +984,7 @@ function _renderListView() {
             ${crm.filters.assignee || crm.filters.stage || crm.filters.search ? `
             <button onclick="crm.filters={assignee:'',stage:'',tag:'',search:''};document.getElementById('crmSearchInput').value='';crmSetViewMode('list')"
                 style="padding:0.35rem 0.65rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;color:#6b7280;">
-                × Скинути
+                ${_tg('× Скинути','× Сбросить')}
             </button>` : ''}
             <div style="margin-left:auto;font-size:0.78rem;color:#9ca3af;">${deals.length} ${window.t('crmDealsWord')||'угод'}</div>
         </div>
@@ -1013,7 +1013,7 @@ function _renderListView() {
                 <tbody>
                     ${deals.length === 0 ? `
                     <tr><td colspan="9" style="text-align:center;padding:3rem;color:#9ca3af;font-size:0.82rem;">
-                        Угод не знайдено
+                        ${_tg('Угод не знайдено','Сделок не найдено')}
                     </td></tr>` :
                     deals.map((d,i) => {
                         const stage = stages.find(s=>s.id===d.stage);
@@ -1261,7 +1261,7 @@ window.crmBulkTag = function() {
                 done++;
             } catch(e) { console.error('[Bulk tag]', e); }
         }
-        if (typeof showToast === 'function') showToast('Тег додано до ' + done + ' угод', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Тег додано до ','Тег добавлен к ') + done + _tg(' угод',' сделкам'), 'success');
         crm.selectedIds = new Set();
         crm._bulkMode = false;
         _renderListView();
@@ -1305,7 +1305,7 @@ window.crmBulkDelete = async function() {
     );
     const done = deletedIds.size;
     crm.deals = crm.deals.filter(d => !deletedIds.has(d.id));
-    if (typeof showToast === 'function') showToast('Видалено ' + done + ' угод', 'success');
+    if (typeof showToast === 'function') showToast(_tg('Видалено ','Удалено ') + done + _tg(' угод',' сделок'), 'success');
     crm.selectedIds = new Set();
     crm._bulkMode = false;
     _renderKanban();
@@ -1341,10 +1341,10 @@ async function _bulkUpdateDeals(updates) {
         }
     } catch(e) {
         console.error('[Bulk update] batch error:', e);
-        if (typeof showToast === 'function') showToast('Помилка оновлення: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(_tg('Помилка оновлення: ','Ошибка обновления: ') + e.message, 'error');
         return;
     }
-    if (typeof showToast === 'function') showToast('Оновлено ' + done + ' угод', 'success');
+    if (typeof showToast === 'function') showToast(_tg('Оновлено ','Обновлено ') + done + _tg(' угод',' сделок'), 'success');
     crm.selectedIds = new Set();
     crm._bulkMode = false;
     if (crm.viewMode === 'kanban') _renderKanban();
@@ -1936,7 +1936,7 @@ window.crmOpenDeal = function(dealId) {
                 <button onclick="crmSaveDeal('${deal.id}')"
                     style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;
                     border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                    Зберегти
+                    ${_tg('Зберегти','Сохранить')}
                 </button>
             </div>
         </div>
@@ -2347,9 +2347,9 @@ window._crmWhAddItem = async function(dealId, select) {
             const updDeal = crm.deals.find(d => d.id === dealId);
             if (updDeal && typeof _renderDealDetails === 'function') _renderDealDetails(updDeal);
         }
-        if (window.showToast) showToast('Товар додано до угоди ✓', 'success');
+        if (window.showToast) showToast(_tg('Товар додано до угоди ✓','Товар добавлен к сделке ✓'), 'success');
     } catch(e) {
-        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        if (window.showToast) showToast(_tg('Помилка: ','Ошибка: ') + e.message, 'error');
     }
 };
 
@@ -2365,7 +2365,7 @@ window._crmWhRemoveItem = async function(dealId, idx) {
             if (updDeal && typeof _renderDealDetails === 'function') _renderDealDetails(updDeal);
         }
     } catch(e) {
-        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        if (window.showToast) showToast(_tg('Помилка: ','Ошибка: ') + e.message, 'error');
     }
 };
 
@@ -2379,7 +2379,7 @@ window._crmWhUpdateQty = async function(dealId, idx, val) {
         await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
             .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     } catch(e) {
-        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        if (window.showToast) showToast(_tg('Помилка: ','Ошибка: ') + e.message, 'error');
     }
 };
 
@@ -2457,10 +2457,10 @@ window.crmToggleDealChat = async function (dealId) {
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
                     height:100%;text-align:center;padding:2rem;color:#9ca3af;">
                     <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                    <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Чат не подключён</div>
+                    <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">${_tg('Чат не підключено','Чат не подключён')}</div>
                     <div style="font-size:0.75rem;line-height:1.5;">
-                        Клиент ещё не писал через бота.<br>
-                        Когда он напишет — переписка появится здесь автоматически.
+                        ${_tg('Клієнт ще не писав через бота.','Клиент ещё не писал через бота.')}<br>
+                        ${_tg('Коли напише — переписка зʼявиться тут автоматично.','Когда напишет — переписка появится здесь автоматически.')}
                     </div>
                     ${deal.phone ? `
                     <div style="margin-top:1rem;display:flex;flex-direction:column;gap:0.4rem;width:100%;">
@@ -2863,7 +2863,7 @@ window.crmMarkTaskDone = async function(taskId) {
                 await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
                     .doc(taskObj.crmDealId).collection('history').add({
                         type: 'task_done',
-                        text: 'Завдання виконано: ' + (taskObj.title || taskId),
+                        text: _tg('Завдання виконано: ','Задание выполнено: ') + (taskObj.title || taskId),
                         taskId,
                         by: window.currentUser?.email || 'manager',
                         at: firebase.firestore.FieldValue.serverTimestamp(),
@@ -2977,7 +2977,7 @@ async function _loadAITab(deal) {
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.65rem;">
                 <div style="display:flex;align-items:center;gap:0.4rem;">
                     <div style="width:28px;height:28px;background:#f0fdf4;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#22c55e;">${I.ai}</div>
-                    <div style="font-weight:700;font-size:0.88rem;color:#111827;">AI Анализ</div>
+                    <div style="font-weight:700;font-size:0.88rem;color:#111827;">${_tg('AI Аналіз','AI Анализ')}</div>
                 </div>
                 ${analyzedAt ? `<div style="font-size:0.68rem;color:#9ca3af;">${analyzedAt}</div>` : ''}
             </div>
@@ -2986,7 +2986,7 @@ async function _loadAITab(deal) {
         <button onclick="crmRunAI('${deal.id}')"
             style="width:100%;padding:0.5rem;background:#f0fdf4;color:#16a34a;
             border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:0.35rem;">
-            ${I.refresh} Обновить анализ
+            ${I.refresh} ${_tg('Оновити аналіз','Обновить анализ')}
         </button>`;
         return;
     }
@@ -3441,9 +3441,9 @@ window.crmOpenClient = function(clientId) {
 
         <!-- Контакти -->
         <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;margin-bottom:0.75rem;">
-            <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">Контакти</div>
+            <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">${_tg('Контакти','Контакты')}</div>
             ${cl.phone ? `<div style="font-size:0.82rem;color:#374151;margin-bottom:0.25rem;">
-                <span style="color:#9ca3af;">Тел:</span> ${_esc(cl.phone)}</div>` : ''}
+                <span style="color:#9ca3af;">${_tg('Тел:','Тел:')}</span> ${_esc(cl.phone)}</div>` : ''}
             ${cl.email ? `<div style="font-size:0.82rem;color:#374151;margin-bottom:0.25rem;">
                 <span style="color:#9ca3af;">Email:</span> ${_esc(cl.email)}</div>` : ''}
             ${cl.telegram ? `<div style="font-size:0.82rem;color:#374151;">
@@ -3467,7 +3467,7 @@ window.crmOpenClient = function(clientId) {
 
         <!-- Угоди клієнта -->
         <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.4rem;">
-            Угоди (${clientDeals.length})
+            ${_tg('Угоди','Сделки')} (${clientDeals.length})
         </div>
         ${clientDeals.length ? clientDeals.slice(0,5).map(d => {
             const stage = (crm.pipeline?.stages||[]).find(s=>s.id===d.stage);
@@ -3488,7 +3488,7 @@ window.crmOpenClient = function(clientId) {
             <button onclick="crmNewDealFromClient('${_esc(cl.name||'')}','${cl.id}')"
                 style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;
                 border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-                + Угода
+                ${_tg('+ Угода','+ Сделка')}
             </button>
             ${cl.botContactId || cl.senderId ? `
             <button onclick="crmClientToggleChat('${cl.botContactId || ((cl.channel||'telegram')+'_'+cl.senderId)}')"
@@ -3516,7 +3516,7 @@ window.crmOpenClient = function(clientId) {
                 style="height:280px;overflow-y:auto;padding:0.75rem;
                 background:#f8fafc;border-radius:8px;border:1px solid #f1f5f9;
                 display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.5rem;">
-                <div style="text-align:center;color:#9ca3af;font-size:0.78rem;padding:2rem;">Завантаження...</div>
+                <div style="text-align:center;color:#9ca3af;font-size:0.78rem;padding:2rem;">${_tg('Завантаження...','Загрузка...')}</div>
             </div>
             <!-- Поле вводу -->
             <div id="chatInputArea_crm" style="display:flex;gap:0.4rem;align-items:flex-end;">
@@ -3625,7 +3625,7 @@ window.crmOpenCreateClient = function() {
         <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
             <button onclick="crmSaveNewClient()"
                 style="flex:1;padding:0.55rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                Зберегти
+                ${_tg('Зберегти','Сохранить')}
             </button>
             <button onclick="document.getElementById('crmCreateClientOverlay').remove()"
                 style="padding:0.55rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">
@@ -3805,7 +3805,7 @@ function _renderActivitiesUI(c, allActivities) {
                     ${a.by ? `<div style="font-size:0.68rem;color:#9ca3af;margin-top:2px;">${_esc(a.by)}</div>` : ''}
                 </div>
             </div>`;
-        }).join('') : '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">Активностей не знайдено</div>';
+        }).join('') : '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">' + _tg('Активностей не знайдено','Активностей не найдено') + '</div>';
 
         c.innerHTML = `<div>${addForm}${filterBar}${timeline}</div>`;
 
@@ -3922,7 +3922,7 @@ function _renderAnalytics() {
         ['Avg Deal', _fmt(avgDeal, true), '#3b82f6'],
         [window.t('crmStageLost'), lost, '#ef4444'],
         ['Velocity', avgVelocity > 0 ? avgVelocity + ' дн' : '—', '#8b5cf6'],
-        ['Прогноз', _fmt(forecast, true), '#f59e0b'],
+        [_tg('Прогноз','Прогноз'), _fmt(forecast, true), '#f59e0b'],
     ];
 
     // IMP 2 FIX: один прохід по crm.deals замість 4×6=24
@@ -4044,7 +4044,7 @@ function _renderAnalytics() {
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
           <div style="display:flex;gap:6px;background:#f4f5f7;border-radius:10px;padding:4px;">
             <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;background:#6366f1;color:white;">
-              Огляд
+              ${_tg('Огляд','Обзор')}
             </button>
             <button onclick="crmSwitchAnalyticsMode('niche')"
               style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:transparent;color:#6b7280;">
@@ -4058,7 +4058,7 @@ function _renderAnalytics() {
               onchange="crm._leadsReportPeriod='custom';crm._leadsReportFrom=this.value;_renderAnalytics();"
               style="border:1.5px solid #e5e7eb;border-radius:7px;padding:4px 8px;font-size:.78rem;color:#374151;cursor:pointer;outline:none;">
             <span style="font-size:.75rem;color:#9ca3af;">—</span>
-            <span style="font-size:.75rem;color:#6b7280;font-weight:600;">До</span>
+            <span style="font-size:.75rem;color:#6b7280;font-weight:600;">${_tg('До','До')}</span>
             <input type="date" value="${_leadsReportTo}"
               onchange="crm._leadsReportPeriod='custom';crm._leadsReportTo=this.value;_renderAnalytics();"
               style="border:1.5px solid #e5e7eb;border-radius:7px;padding:4px 8px;font-size:.78rem;color:#374151;cursor:pointer;outline:none;">
@@ -4290,7 +4290,7 @@ function _renderAnalytics() {
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.85rem;">
                 <div style="font-weight:700;font-size:0.85rem;color:#111827;display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    Ліди: джерело і ніша
+                    ${_tg('Ліди: джерело і ніша','Лиды: источник и ниша')}
                     <span style="background:#f3f4f6;color:#6b7280;border-radius:20px;padding:2px 8px;font-size:0.72rem;font-weight:600;">${_leadsFiltered.length}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;">
@@ -4306,10 +4306,10 @@ function _renderAnalytics() {
             <div style="overflow-x:auto;">
             <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
                 <thead><tr style="border-bottom:2px solid #f3f4f6;">
-                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Джерело</th>
+                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Джерело','Источник')}</th>
                     <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Ніша','Ниша')}</th>
                     <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Лідів','Лидов')}</th>
-                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Виграно</th>
+                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Виграно','Выиграно')}</th>
                     <th style="text-align:right;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Дохід','Доход')}</th>
                 </tr></thead>
                 <tbody>${_srcNicheRows.map((r,i) => `
@@ -4321,7 +4321,7 @@ function _renderAnalytics() {
                     <td style="padding:0.45rem 0.5rem;text-align:right;color:#16a34a;font-weight:600;">${r.amount>0?_fmt(r.amount):'—'}</td>
                 </tr>`).join('')}</tbody>
                 <tfoot><tr style="border-top:2px solid #e5e7eb;background:#f9fafb;">
-                    <td colspan="2" style="padding:0.45rem 0.5rem;font-weight:700;font-size:0.78rem;">Всього</td>
+                    <td colspan="2" style="padding:0.45rem 0.5rem;font-weight:700;font-size:0.78rem;">${_tg('Всього','Всего')}</td>
                     <td style="padding:0.45rem 0.5rem;text-align:center;font-weight:700;">${_leadsFiltered.length}</td>
                     <td style="padding:0.45rem 0.5rem;text-align:center;font-weight:700;color:#22c55e;">${_srcNicheRows.reduce((s,r)=>s+r.won,0)||'—'}</td>
                     <td style="padding:0.45rem 0.5rem;text-align:right;font-weight:700;color:#16a34a;">${_fmt(_srcNicheRows.reduce((s,r)=>s+r.amount,0))}</td>
@@ -4492,7 +4492,7 @@ function _renderCrmNicheMatrix() {
   <div style="display:flex;gap:6px;margin-bottom:1rem;background:#f4f5f7;border-radius:10px;padding:4px;width:fit-content;">
     <button onclick="crmSwitchAnalyticsMode('overview')"
       style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:white;color:#6b7280;box-shadow:none;">
-      ← Огляд
+      ${_tg('← Огляд','← Обзор')}
     </button>
     <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:#22c55e;color:white;">
       ${_tg('Зріз по','Срез по')} ${groupByLabel.toLowerCase()}
@@ -4556,7 +4556,7 @@ function _renderCrmNicheMatrix() {
               ${g.length > 18 ? g.slice(0,17)+'…' : g}
             </th>`).join('')}
           <th style="padding:.6rem .75rem;font-size:.72rem;font-weight:700;color:#6b7280;text-align:center;border-bottom:2px solid #e5e7eb;background:#f8fafc;">
-            Всього
+            ${_tg('Всього','Всего')}
           </th>
         </tr>
       </thead>
@@ -4606,7 +4606,7 @@ function _renderCrmNicheMatrix() {
 
   <!-- Підказка -->
   <div style="margin-top:.75rem;font-size:.72rem;color:#9ca3af;text-align:right;">
-    ${metricLabels[st.metric]} · ${periods.length} ${st.period==='week'?'тижнів':'місяців'} · ${groups.length} ${st.groupBy==='niche'?'ніш':'джерел'} · ${deals.length} угод
+    ${metricLabels[st.metric]} · ${periods.length} ${st.period==='week'?_tg('тижнів','недель'):_tg('місяців','месяцев')} · ${groups.length} ${st.groupBy==='niche'?'ніш':'джерел'} · ${deals.length} угод
   </div>
   `}
 </div>`;
@@ -4651,7 +4651,7 @@ function _renderCRMSettings() {
                     style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;
                     background:#22c55e;color:white;border:none;border-radius:6px;
                     cursor:pointer;font-size:0.78rem;font-weight:600;">
-                    ${I.plus} Нова воронка
+                    ${I.plus} ${_tg('Нова воронка','Новая воронка')}
                 </button>
             </div>
             <div id="crmPipelineList">
@@ -4716,14 +4716,14 @@ function _renderCRMSettings() {
         <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
                 <div>
-                    <div style="${sectionTitle}margin-bottom:0;">Стадії: ${_esc(pipeline?.name || '')}</div>
+                    <div style="${sectionTitle}margin-bottom:0;">${_tg('Стадії:','Стадии:')} ${_esc(pipeline?.name || '')}</div>
                     <div style="font-size:0.7rem;color:#9ca3af;">${_tg('Перетягуй щоб змінити порядок','Перетащи чтобы изменить порядок')}</div>
                 </div>
                 <button onclick="crmAddStage()"
                     style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;
                     background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;
                     cursor:pointer;font-size:0.78rem;font-weight:600;">
-                    ${I.plus} Стадія
+                    ${I.plus} ${_tg('Стадія','Стадия')}
                 </button>
             </div>
             <div id="crmStageList" style="display:flex;flex-direction:column;gap:0.35rem;">
@@ -4965,7 +4965,7 @@ window.crmLoadMore = async function() {
         const morDeals = moreSnap.docs.map(d => ({id:d.id,...d.data()}));
         crm.deals = [...crm.deals, ...morDeals];
         crm._dealsLimitReached = moreSnap.docs.length >= DEALS_LIMIT;
-        if (typeof showToast === 'function') showToast(`Завантажено ще ${morDeals.length} угод`, 'success');
+        if (typeof showToast === 'function') showToast(_tg(`Завантажено ще ${morDeals.length} угод`,`Загружено ещё ${morDeals.length} сделок`), 'success');
         if (crm.subTab === 'kanban') _renderKanban();
         else _renderListView();
     } catch(e) {
@@ -5455,13 +5455,13 @@ window.crmOpenImport = function() {
                 <button onclick="document.getElementById('crmImportModal')?.remove()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#6b7280;">✕</button>
             </div>
             <p style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">
-                Файл CSV має містити колонки: <b>name</b> (обов'язково), phone, email, source, amount, stage, nextContactDate, description.<br>
-                Перший рядок — заголовки. Роздільник: кома або крапка з комою.
+                ${_tg("Файл CSV має містити колонки: <b>name</b> (обов'язково), phone, email",'Файл CSV должен содержать колонки: <b>name</b> (обязательно), phone, email')}, source, amount, stage, nextContactDate, description.<br>
+                ${_tg('Перший рядок — заголовки. Роздільник: кома або крапка з комою.','Первая строка — заголовки. Разделитель: запятая или точка с запятой.')}
             </p>
             <div style="margin-bottom:0.75rem;">
                 <a href="#" onclick="window.crmDownloadImportTemplate();return false;"
                    style="font-size:0.81rem;color:#22c55e;font-weight:600;text-decoration:underline;">
-                    ⬇ Завантажити шаблон CSV
+                    ${_tg('⬇ Завантажити шаблон CSV','⬇ Скачать шаблон CSV')}
                 </a>
             </div>
             <div id="crmImportDropzone"
@@ -5472,7 +5472,7 @@ window.crmOpenImport = function() {
                 onclick="document.getElementById('crmImportFileInput').click()">
                 <div style="font-size:2rem;margin-bottom:0.5rem;">📂</div>
                 <div style="font-size:0.9rem;color:#374151;font-weight:600;">${window.t('crmImportDragDrop')}</div>
-                <div style="font-size:0.78rem;color:#9ca3af;margin-top:0.25rem;">Підтримується .csv до 5MB</div>
+                <div style="font-size:0.78rem;color:#9ca3af;margin-top:0.25rem;">${_tg('Підтримується .csv до 5MB','Поддерживается .csv до 5MB')}</div>
             </div>
             <input type="file" id="crmImportFileInput" accept=".csv,text/csv" style="display:none;"
                 onchange="window.crmHandleImportFile(this.files[0])">
@@ -5486,7 +5486,7 @@ window.crmOpenImport = function() {
                     </button>
                     <button onclick="window.crmResetImport()"
                         style="padding:0.65rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.9rem;">
-                        Скинути
+                        ${_tg('Скинути','Сбросить')}
                     </button>
                 </div>
             </div>
@@ -5627,7 +5627,7 @@ window.crmDoImport = async function() {
 
         chunk.forEach(row => {
             // Нормалізуємо поля
-            const name = (row.name || row['ім\'я'] || row['имя'] || 'Без імені').slice(0, 100);
+            const name = (row.name || row['ім\'я'] || row['имя'] || _tg('Без імені','Без имени')).slice(0, 100);
             const phone = (row.phone || row['телефон'] || '').slice(0, 30);
             const email = (row.email || '').toLowerCase().slice(0, 100);
             const source = (row.source || row['джерело'] || 'import').slice(0, 50);

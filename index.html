@@ -287,6 +287,11 @@ document.addEventListener('mousedown', function(e) {
         tabAdmin:        { ua:'Адмін',        ru:'Админ',        pl:'Admin',        en:'Admin',        de:'Admin',         cs:'Admin' },
         tabAllTasks:     { ua:'Всі завдання', ru:'Все задачи',   pl:'Wszystkie',    en:'All Tasks',    de:'Alle Aufgaben', cs:'Všechny úkoly' },
         tabRegular:      { ua:'Регулярні',    ru:'Регулярные',   pl:'Regularne',    en:'Regular',      de:'Regelmäßige',   cs:'Pravidelné' },
+        tabSales:        { ua:'Реалізація',   ru:'Реализация',   pl:'Sprzedaż',     en:'Sales',        de:'Verkauf',       cs:'Prodej' },
+        tabFoodProduction:{ ua:'Виробництво', ru:'Производство', pl:'Produkcja',    en:'Production',   de:'Produktion',    cs:'Výroba' },
+        tabEstimate:     { ua:'Кошторис',     ru:'Смета',        pl:'Kosztorys',    en:'Estimate',     de:'Kostenvoranschlag', cs:'Rozpočet' },
+        tabBooking:      { ua:'Запис',        ru:'Бронирование', pl:'Rezerwacja',   en:'Booking',      de:'Buchung',       cs:'Rezervace' },
+        tabWarehouse:    { ua:'Склад',        ru:'Склад',        pl:'Magazyn',      en:'Warehouse',    de:'Lager',         cs:'Sklad' },
     };
     // Patch missing keys into translations object (fixes old cached JS files)
     function _patchTranslations() {
@@ -312,6 +317,9 @@ document.addEventListener('mousedown', function(e) {
             navSpanBusiness:'tabBusiness',         navSpanMarketing:'tabMarketing',
             navSpanBots:'tabBots',                 navSpanSites:'tabSites',
             navSpanIntegrations:'tabIntegrations', navSpanFinance:'finFinances',
+            navSpanSales:'tabSales',               navSpanFoodProduction:'tabFoodProduction',
+            navSpanEstimate:'tabEstimate',         navSpanBooking:'tabBooking',
+            navSpanWarehouse:'tabWarehouse',
         };
         Object.keys(_byId).forEach(function(id) {
             var k = _byId[id]; var el = document.getElementById(id);
@@ -812,10 +820,10 @@ document.addEventListener('mousedown', function(e) {
                             <i data-lucide="calendar-check" class="icon icon-sm"></i><span id="navSpanBooking" data-i18n="tabBooking">Запис</span>
                         </button>
                         <button class="tab-btn _ntab" id="salesNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('sales',function(){switchTab('sales');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="receipt" class="icon icon-sm"></i><span id="navSpanSales">Реалізація</span>
+                            <i data-lucide="receipt" class="icon icon-sm"></i><span id="navSpanSales" data-i18n="tabSales">Реалізація</span>
                         </button>
                         <button class="tab-btn _ntab" id="foodProductionNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('foodProduction',function(){switchTab('foodProduction');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="chef-hat" class="icon icon-sm"></i><span id="navSpanFoodProduction">Виробництво</span>
+                            <i data-lucide="chef-hat" class="icon icon-sm"></i><span id="navSpanFoodProduction" data-i18n="tabFoodProduction">Виробництво</span>
                         </button>
                         <button class="tab-btn _ntab" id="sitesNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';switchTab('sites');" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="globe" class="icon icon-sm"></i><span data-i18n="tabSites" id="navSpanSites">Сайти</span>
@@ -826,7 +834,7 @@ document.addEventListener('mousedown', function(e) {
                         </button>
                         <div style="height:1px;background:#f1f5f9;margin:0.2rem 0;"></div>
                         <button class="tab-btn _ntab" id="estimateNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('estimate',function(){switchTab('estimate');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="clipboard-list" class="icon icon-sm"></i><span id="navSpanEstimate">Кошторис</span>
+                            <i data-lucide="clipboard-list" class="icon icon-sm"></i><span id="navSpanEstimate" data-i18n="tabEstimate">Кошторис</span>
                         </button>
                         <div style="height:1px;background:#f1f5f9;margin:0.2rem 0;"></div>
                         <button class="tab-btn _ntab" id="integrationsNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';switchTab('integrations');" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
@@ -4627,10 +4635,10 @@ document.addEventListener('mousedown', function(e) {
 
     // ── Групи модулів ──────────────────────────────────────────────────────
     window.LAZY_GROUPS = {
-        crm:          ["js/modules/77-crm.js?v=20260329v2", "js/modules/77b-crm-calls.js?v=20260328v1", "js/modules/77c-crm-tasks.js?v=20260328v1", "js/modules/77d-crm-import.js?v=20260328v1", "js/modules/77e-crm-access.js?v=20260313b", "js/modules/77f-crm-mobile.js?v=20260313b", "js/modules/77g-crm-forms.js?v=20260328v1", "js/modules/77h-crm-beauty.js?v=20260328v2", "js/modules/77i-crm-niches.js?v=20260328v2", "js/modules/78-crm-todo.js?v=20260322b1", "js/modules/90b-sales-deepgram.js?v=20260320v1", "js/modules/90-sales-assistant.js?v=20260320v1", "js/modules/77j-crm-finance-bridge.js?v=20260328v1", "js/modules/77k-crm-tasks-bridge.js?v=20260327v1"],
-        bots:         ["js/modules/81-bots-flows.js?v=20260329v1", "js/modules/82-flow-canvas.js?v=20260317v1", "js/modules/83-bots-contacts.js?v=20260329v2"],
-        finance:      ["js/modules/98-finance.js?v=20260328v11", "js/modules/98-finance-weekly-plan.js?v=20260328v1", "js/modules/98-finance-balance.js?v=20260328v3"],
-        warehouse:    ["js/modules/99-warehouse-core.js?v=20260317v1", "js/modules/99-warehouse-alerts.js?v=20260317v1", "js/modules/99-warehouse-ui.js?v=20260329v2", "js/modules/99c-warehouse-finance-bridge.js?v=20260327v1"],
+        crm:          ["js/modules/77-crm.js?v=20260329v3", "js/modules/77b-crm-calls.js?v=20260328v1", "js/modules/77c-crm-tasks.js?v=20260328v1", "js/modules/77d-crm-import.js?v=20260328v1", "js/modules/77e-crm-access.js?v=20260313b", "js/modules/77f-crm-mobile.js?v=20260313b", "js/modules/77g-crm-forms.js?v=20260328v1", "js/modules/77h-crm-beauty.js?v=20260328v2", "js/modules/77i-crm-niches.js?v=20260328v2", "js/modules/78-crm-todo.js?v=20260322b1", "js/modules/90b-sales-deepgram.js?v=20260320v1", "js/modules/90-sales-assistant.js?v=20260320v1", "js/modules/77j-crm-finance-bridge.js?v=20260328v1", "js/modules/77k-crm-tasks-bridge.js?v=20260327v1"],
+        bots:         ["js/modules/81-bots-flows.js?v=20260329v1", "js/modules/82-flow-canvas.js?v=20260317v1", "js/modules/83-bots-contacts.js?v=20260329v3"],
+        finance:      ["js/modules/98-finance.js?v=20260329v3", "js/modules/98-finance-weekly-plan.js?v=20260328v1", "js/modules/98-finance-balance.js?v=20260328v3"],
+        warehouse:    ["js/modules/99-warehouse-core.js?v=20260317v1", "js/modules/99-warehouse-alerts.js?v=20260317v1", "js/modules/99-warehouse-ui.js?v=20260329v3", "js/modules/99c-warehouse-finance-bridge.js?v=20260327v1"],
         statistics:   ["js/modules/66-statistics.js?v=20260324vG"],
         coordination: ["js/modules/76-coordination.js?v=20260324v2"],
         onboarding:   ["js/modules/97-onboarding-i18n.js?v=20260326v4", "js/modules/97-onboarding.js?v=20260326v4"],
@@ -4648,11 +4656,11 @@ document.addEventListener('mousedown', function(e) {
         demo_trucking_us:  ["js/modules/42-niche-trucking-us.js?v=20260324v4"],
         sites:        ["js/modules/94-sites-builder.js?v=20260317v1"],
         funnels:      ["js/modules/79-funnels.js?v=20260329v1"],
-        integrations: ["js/modules/96-integrations.js?v=20260329v2"],
-        booking:      ["js/modules/26-staff-schedule.js?v=20260322b1", "js/modules/100-booking.js?v=20260328v1?v=20260322b1", "js/modules/100b-booking-bridge.js?v=20260328v1?v=20260327v1", "js/modules/101-loyalty.js?v=20260322b1", "js/modules/102-subscriptions.js?v=20260322b1", "js/modules/103-notifications.js?v=20260322b1"],
-        estimate:     ["js/modules/85-estimate.js?v=20260329v1"],
-        foodProduction: ["js/modules/105-food-production.js?v=20260329v2"],
-        sales:        ["js/modules/104-sales.js?v=20260329v2", "js/modules/104b-sales-pdf.js?v=20260322s2", "js/modules/104c-sales-shifts.js?v=20260322s2", "js/modules/104d-sales-vehicles.js?v=20260322s2", "js/modules/104e-sales-routes.js?v=20260322s2"],
+        integrations: ["js/modules/96-integrations.js?v=20260329v3"],
+        booking:      ["js/modules/26-staff-schedule.js?v=20260322b1", "js/modules/100-booking.js?v=20260329v3", "js/modules/100b-booking-bridge.js?v=20260328v1?v=20260327v1", "js/modules/101-loyalty.js?v=20260322b1", "js/modules/102-subscriptions.js?v=20260322b1", "js/modules/103-notifications.js?v=20260322b1"],
+        estimate:     ["js/modules/85-estimate.js?v=20260329v3"],
+        foodProduction: ["js/modules/105-food-production.js?v=20260329v3"],
+        sales:        ["js/modules/104-sales.js?v=20260329v3", "js/modules/104b-sales-pdf.js?v=20260322s2", "js/modules/104c-sales-shifts.js?v=20260322s2", "js/modules/104d-sales-vehicles.js?v=20260322s2", "js/modules/104e-sales-routes.js?v=20260322s2"],
     };
 
     function lazyLoad(group, cb) {

@@ -4,6 +4,7 @@
 // ============================================================
 (function () {
 'use strict';
+var _tg = function(ua,ru){return window.currentLang==='ru'?ru:ua;};
 
 const t   = k => (window.t ? window.t(k) : k);
 const esc = s => window.htmlEsc ? window.htmlEsc(s||'') : (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -227,9 +228,9 @@ ${grpCards}`;
     <div class="bk-page-sub">${t('bookingSubtitle')||'Онлайн-запис для клієнтів'}</div>
   </div>
   <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-    <button class="bk-btn-secondary" onclick="window._bkShowWeekView()" title="Тижневий календар">
+    <button class="bk-btn-secondary" onclick="window._bkShowWeekView()" title="${_tg('Тижневий календар','Недельный календарь')}">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/></svg>
-      Тиждень
+      ${_tg('Тиждень','Неделя')}
     </button>
     <button class="bk-btn-primary" onclick="window._bkNewCalendar()">
       ${I.plus} ${t('newCalService')||'Новий календар'}
@@ -263,7 +264,7 @@ function renderCalendarForm(cal) {
         ['manual', t('manualConfirm')|| 'Вручну'],
     ].map(([v,l]) => `<option value="${v}" ${(d.confirmationType||'auto')===v?'selected':''}>${l}</option>`).join('');
 
-    const DAYS = [['mon','Пн'],['tue','Вт'],['wed','Ср'],['thu','Чт'],['fri','Пт'],['sat','Сб'],['sun','Нд']];
+    const DAYS = [['mon',_tg('Пн','Пн')],['tue',_tg('Вт','Вт')],['wed',_tg('Ср','Ср')],['thu',_tg('Чт','Чт')],['fri',_tg('Пт','Пт')],['sat',_tg('Сб','Сб')],['sun',_tg('Нд','Вс')]];
     const schedRows = DAYS.map(([day, lbl]) => {
         const h  = ((sched.weeklyHours)||{})[day] || [];
         const on = h.length > 0;
@@ -286,10 +287,10 @@ function renderCalendarForm(cal) {
         <input type="text" class="bk-q-label" placeholder="${t('questionText')||'Текст питання'}"
                value="${esc(q.label||'')}" style="padding:.4rem .6rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.85rem">
         <select class="bk-q-type" style="padding:.4rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.82rem">
-          <option value="text"   ${q.type==='text'  ?'selected':''}>Текст</option>
-          <option value="phone"  ${q.type==='phone' ?'selected':''}>Телефон</option>
+          <option value="text"   ${q.type==='text'  ?'selected':''}>${_tg('Текст','Текст')}</option>
+          <option value="phone"  ${q.type==='phone' ?'selected':''}>${_tg('Телефон','Телефон')}</option>
           <option value="email"  ${q.type==='email' ?'selected':''}>Email</option>
-          <option value="select" ${q.type==='select'?'selected':''}>Список</option>
+          <option value="select" ${q.type==='select'?'selected':''}>${_tg('Список','Список')}</option>
         </select>
         <label style="font-size:.8rem;display:flex;align-items:center;gap:.3rem;white-space:nowrap">
           <input type="checkbox" class="bk-q-required" ${q.required?'checked':''}> ${t('requiredShort')||'Обов.'}
@@ -361,11 +362,11 @@ function renderCalendarForm(cal) {
     <div class="bk-field" style="display:flex;gap:1.25rem;flex-wrap:wrap;align-items:center">
       <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
         <input type="checkbox" id="bk-f-phone-show" ${d.phoneShow!==false?'checked':''} onchange="window._bkTogglePhoneRequired(this)">
-        Показувати телефон
+        ${_tg('Показувати телефон','Показывать телефон')}
       </label>
       <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer" id="bk-f-phone-req-wrap" ${d.phoneShow===false?'style=\"opacity:.4;pointer-events:none\"':''}>
         <input type="checkbox" id="bk-f-phone-required" ${d.phoneRequired!==false?'checked':''}>
-        Обов'язковий
+        ${_tg("Обов'язковий",'Обязательный')}
       </label>
     </div>
     <div class="bk-field">
@@ -581,8 +582,8 @@ async function renderWeekView() {
     root.innerHTML = `
 <div class="bk-header-row">
   <div style="display:flex;align-items:center;gap:.75rem">
-    <button class="bk-btn-back" onclick="window._bkBackToList()">${I.back} Назад</button>
-    <h2 class="bk-page-title">${I.calendar} Тижневий розклад</h2>
+    <button class="bk-btn-back" onclick="window._bkBackToList()">${I.back} ${_tg('Назад','Назад')}</button>
+    <h2 class="bk-page-title">${I.calendar} ${_tg('Тижневий розклад','Недельное расписание')}</h2>
   </div>
   <div style="display:flex;gap:.5rem;align-items:center">
     <button class="bk-btn-sm" onclick="window._bkWeekNav(-1)">&#8592;</button>
@@ -592,7 +593,7 @@ async function renderWeekView() {
   </div>
 </div>
 <div id="bk-week-grid-wrap" style="overflow-x:auto">
-  <div class="bk-week-loading">Завантаження...</div>
+  <div class="bk-week-loading">${_tg('Завантаження...','Загрузка...')}</div>
 </div>`;
 
     _bkWeekOffset = _bkWeekOffset || 0;
@@ -724,7 +725,7 @@ async function _bkLoadWeekGrid() {
 <table style="width:100%;border-collapse:collapse;min-width:400px;">
     <thead>
         <tr style="background:#f8fafc;border-bottom:2px solid #e5e7eb;">
-            <th style="padding:.5rem .6rem;text-align:left;font-size:.72rem;font-weight:700;color:#6b7280;min-width:70px;">День</th>
+            <th style="padding:.5rem .6rem;text-align:left;font-size:.72rem;font-weight:700;color:#6b7280;min-width:70px;">${_tg('День','День')}</th>
             ${specHeaders}
         </tr>
     </thead>
@@ -755,20 +756,20 @@ window._bkOpenApptModal = async function(apptId) {
     modal.innerHTML = `
     <div style="background:white;border-radius:16px;padding:1.5rem;width:90%;max-width:380px;box-shadow:0 20px 50px rgba(0,0,0,.3);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-            <div style="font-size:.95rem;font-weight:800;">Запис</div>
+            <div style="font-size:.95rem;font-weight:800;">${_tg('Запис','Запись')}</div>
             <button onclick="document.getElementById('bk-appt-modal').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">✕</button>
         </div>
         <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem;">
             <div><span style="color:#6b7280;">${t('bkClientLabel')}</span> <strong>${esc(appt.clientName)}</strong></div>
             <div><span style="color:#6b7280;">Email:</span> ${esc(appt.clientEmail)}</div>
-            ${appt.clientPhone ? `<div><span style="color:#6b7280;">Тел:</span> ${esc(appt.clientPhone)}</div>` : ''}
-            <div><span style="color:#6b7280;">Дата:</span> ${appt.date} о ${appt.timeSlot}</div>
+            ${appt.clientPhone ? `<div><span style="color:#6b7280;">${_tg('Тел:','Тел:')}</span> ${esc(appt.clientPhone)}</div>` : ''}
+            <div><span style="color:#6b7280;">${_tg('Дата:','Дата:')}</span> ${appt.date} ${_tg('о','в')} ${appt.timeSlot}</div>
             <div><span style="color:#6b7280;">${t('bkSpecialist')}</span> ${esc(cal.name||appt.calendarId)}</div>
-            <div><span style="color:#6b7280;">Статус:</span> ${STATUS_LABELS[appt.status]||appt.status}</div>
+            <div><span style="color:#6b7280;">${_tg('Статус:','Статус:')}</span> ${STATUS_LABELS[appt.status]||appt.status}</div>
         </div>
         <div style="display:flex;gap:.5rem;margin-top:1.25rem;flex-wrap:wrap;">
-            ${appt.status==='pending' ? `<button onclick="window._bkConfirmApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#22c55e;color:white;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">✓ Підтвердити</button>` : ''}
-            ${['pending','confirmed'].includes(appt.status) ? `<button onclick="window._bkCancelApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">✕ Скасувати</button>` : ''}
+            ${appt.status==='pending' ? `<button onclick="window._bkConfirmApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#22c55e;color:white;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">${_tg('✓ Підтвердити','✓ Подтвердить')}</button>` : ''}
+            ${['pending','confirmed'].includes(appt.status) ? `<button onclick="window._bkCancelApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">${_tg('✕ Скасувати','✕ Отменить')}</button>` : ''}
         </div>
     </div>`;
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
@@ -786,7 +787,7 @@ window._bkConfirmApptDirect = async function(apptId) {
 window._bkCancelApptDirect = async function(apptId) {
     try {
         await window.companyCol('booking_appointments').doc(apptId).update({ status: 'cancelled', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (typeof showToast === 'function') showToast('Скасовано', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Скасовано','Отменено'), 'success');
         await _bkLoadWeekGrid();
     } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
 };
@@ -931,8 +932,8 @@ window._bkSaveCalendar = async function() {
     const name = nameEl.value.trim();
     const slug = slugEl.value.trim();
     if (!name) { alert(t('enterName3')||'Вкажіть назву'); nameEl.focus(); return; }
-    if (!slug) { alert('Вкажіть slug'); slugEl.focus(); return; }
-    if (!/^[a-z0-9-]+$/.test(slug)) { alert('Slug: тільки малі літери, цифри, дефіс'); return; }
+    if (!slug) { alert(_tg('Вкажіть slug','Укажите slug')); slugEl.focus(); return; }
+    if (!/^[a-z0-9-]+$/.test(slug)) { alert(_tg('Slug: тільки малі літери, цифри, дефіс','Slug: только строчные буквы, цифры, дефис')); return; }
     const btn = document.getElementById('bk-save-btn');
     if (btn) { btn.disabled = true; btn.textContent = t('savingDots')||'Збереження...'; }
 
@@ -1132,8 +1133,8 @@ window._bkAddQuestion = function() {
       <input type="text" class="bk-q-label" placeholder="${t('questionText')||'Текст питання'}"
              style="padding:.4rem .6rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.85rem">
       <select class="bk-q-type" style="padding:.4rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.82rem">
-        <option value="text">Текст</option><option value="phone">Телефон</option>
-        <option value="email">Email</option><option value="select">Список</option>
+        <option value="text">${_tg('Текст','Текст')}</option><option value="phone">${_tg('Телефон','Телефон')}</option>
+        <option value="email">Email</option><option value="select">${_tg('Список','Список')}</option>
       </select>
       <label style="font-size:.8rem;display:flex;align-items:center;gap:.3rem;white-space:nowrap">
         <input type="checkbox" class="bk-q-required"> ${t('requiredShort')||'Обов.'}
@@ -1336,7 +1337,7 @@ window._bkCompleteAppointment = async function(apptId, amount) {
                 });
             }
         }
-        window.showToast?.('Запис завершено ✓', 'success');
+        window.showToast?.(_tg('Запис завершено ✓','Запись завершена ✓'), 'success');
     } catch(e) { console.error('_bkCompleteAppointment:', e); }
 };
 

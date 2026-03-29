@@ -83,7 +83,7 @@
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:14px;width:min(780px,98vw);padding:1.5rem;margin-bottom:2rem">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
-          <h3 style="margin:0;font-size:1.05rem;font-weight:700">🍽️ ${recipe ? 'Редагувати рецептуру' : 'Нова рецептура'}</h3>
+          <h3 style="margin:0;font-size:1.05rem;font-weight:700">🍽️ ${_tg(recipe ? 'Редагувати рецептуру' : 'Нова рецептура', recipe ? 'Редактировать рецептуру' : 'Новая рецептура')}</h3>
           <button onclick="document.getElementById('fpRecipeOverlay').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#9ca3af">✕</button>
         </div>
 
@@ -117,19 +117,19 @@
         <!-- Ingredients table -->
         <div style="margin-bottom:1rem">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
-            <b style="font-size:.85rem">Інгредієнти (технологічна карта)</b>
+            <b style="font-size:.85rem">${_tg('Інгредієнти (технологічна карта)','Ингредиенты (технологическая карта)')}</b>
             <div style="display:flex;gap:.5rem">
               <button onclick="window._fpAddIngredientFromWarehouse()" class="fp-btn-sm" style="background:#eef2ff;color:#6366f1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Зі складу</button>
-              <button onclick="window._fpAddIngredient()" class="fp-btn-sm" style="background:#f0fdf4;color:#16a34a">+ Вручну</button>
+              <button onclick="window._fpAddIngredient()" class="fp-btn-sm" style="background:#f0fdf4;color:#16a34a">${_tg('+ Вручну','+ Вручную')}</button>
             </div>
           </div>
           <div style="overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:.82rem">
               <thead><tr style="background:#f8fafc">
                 <th style="padding:6px 8px;text-align:left;color:#6b7280;font-weight:600">${_tg('Інгредієнт', 'Ингредиент')}</th>
-                <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">Брутто</th>
-                <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">Нетто</th>
-                <th style="width:60px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">Од.</th>
+                <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Брутто','Брутто')}</th>
+                <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Нетто','Нетто')}</th>
+                <th style="width:60px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Од.','Ед.')}</th>
                 <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Ціна/од', 'Цена/ед')}</th>
                 <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Вартість', 'Стоимость')}</th>
                 <th style="width:30px"></th>
@@ -155,7 +155,7 @@
               <span id="fpSalePriceDisplay" style="font-weight:600">0.00 ₴</span>
             </div>
             <div style="display:flex;justify-content:space-between;padding-top:.5rem;border-top:2px solid #e5e7eb;font-size:.9rem">
-              <span style="font-weight:700">Маржа:</span>
+              <span style="font-weight:700">${_tg('Маржа:','Маржа:')}</span>
               <span id="fpMarginDisplay" style="font-weight:700;color:#10b981">— %</span>
             </div>
           </div>
@@ -190,7 +190,7 @@
     tbody.innerHTML = items.map((ing, idx) => `
       <tr style="border-bottom:1px solid #f3f4f6">
         <td style="padding:4px 6px">
-          <input class="fp-inp-sm" value="${esc(ing.name)}" onchange="window._fpIngChange(${idx},'name',this.value)" placeholder="Назва" style="min-width:120px">
+          <input class="fp-inp-sm" value="${esc(ing.name)}" onchange="window._fpIngChange(${idx},'name',this.value)" placeholder="${_tg('Назва','Название')}" style="min-width:120px">
         </td>
         <td style="padding:4px">
           <input class="fp-inp-sm" type="number" min="0" step="0.001" value="${fmtQty(ing.grossQty)}" onchange="window._fpIngChange(${idx},'grossQty',+this.value)" style="width:100%;text-align:center">
@@ -401,19 +401,19 @@
       .sign-block{display:flex;justify-content:space-between;margin-top:20px;font-size:11px}
     </style></head><body>
     <div class="org-line">Організація: <b>${esc(company.name||company.companyName||'')}</b></div>
-    <div class="org-line">Підрозділ: ___________________</div>
+    <div class="org-line">${_tg('Підрозділ:','Подразделение:')} ___________________</div>
     <br>
-    <h2>КАЛЬКУЛЯЦІЙНА КАРТА № ___</h2>
-    <h2>Форма ОП-1</h2>
+    <h2>${_tg('КАЛЬКУЛЯЦІЙНА КАРТА № ___','КАЛЬКУЛЯЦИОННАЯ КАРТА № ___')}</h2>
+    <h2>${_tg('Форма ОП-1','Форма ОП-1')}</h2>
     <br>
     <table style="border:none">
       <tr style="border:none">
-        <td style="border:none">Найменування страви: <b>${esc(recipe.name)}</b></td>
-        <td style="border:none;text-align:right">Дата складання: ${today}</td>
+        <td style="border:none">${_tg('Найменування страви:','Наименование блюда:')} <b>${esc(recipe.name)}</b></td>
+        <td style="border:none;text-align:right">${_tg('Дата складання:','Дата составления:')} ${today}</td>
       </tr>
       <tr style="border:none">
         <td style="border:none">Категорія: ${esc(recipe.category||'—')}</td>
-        <td style="border:none;text-align:right">Вихід: ${recipe.yield||0} г/мл/шт</td>
+        <td style="border:none;text-align:right">${_tg('Вихід:','Выход:')} ${recipe.yield||0} ${_tg('г/мл/шт','г/мл/шт')}</td>
       </tr>
     </table>
 
@@ -421,12 +421,12 @@
       <thead>
         <tr>
           <th style="width:5%">№</th>
-          <th>Найменування продуктів</th>
-          <th style="width:10%">Од.</th>
-          <th style="width:12%">Брутто</th>
-          <th style="width:12%">Нетто</th>
-          <th style="width:12%">Ціна (₴)</th>
-          <th style="width:12%">Сума (₴)</th>
+          <th>${_tg('Найменування продуктів','Наименование продуктов')}</th>
+          <th style="width:10%">${_tg('Од.','Ед.')}</th>
+          <th style="width:12%">${_tg('Брутто','Брутто')}</th>
+          <th style="width:12%">${_tg('Нетто','Нетто')}</th>
+          <th style="width:12%">${_tg('Ціна (₴)','Цена (₴)')}</th>
+          <th style="width:12%">${_tg('Сума (₴)','Сумма (₴)')}</th>
         </tr>
       </thead>
       <tbody>
@@ -446,7 +446,7 @@
           <td class="right bold">${fmt(recipe.totalCost||0)}</td>
         </tr>
         <tr>
-          <td colspan="5" style="text-align:right;font-weight:bold">Собівартість 1 порції:</td>
+          <td colspan="5" style="text-align:right;font-weight:bold">${_tg('Собівартість 1 порції:','Себестоимость 1 порции:')}</td>
           <td></td>
           <td class="right bold">${fmt(recipe.costPerPortion||0)}</td>
         </tr>
@@ -455,20 +455,20 @@
 
     <table style="border:none;margin-top:4px">
       <tr style="border:none">
-        <td style="border:none">Ціна продажу 1 порції: <b>${fmt(recipe.salePrice||0)} ₴</b></td>
-        <td style="border:none;text-align:right">Торгова надбавка: <b>${recipe.margin !== null && recipe.margin !== undefined ? recipe.margin + '%' : '—'}</b></td>
+        <td style="border:none">${_tg('Ціна продажу 1 порції:','Цена продажи 1 порции:')} <b>${fmt(recipe.salePrice||0)} ₴</b></td>
+        <td style="border:none;text-align:right">${_tg('Торгова надбавка:','Торговая надбавка:')} <b>${recipe.margin !== null && recipe.margin !== undefined ? recipe.margin + '%' : '—'}</b></td>
       </tr>
     </table>
 
     ${recipe.technology ? `<div style="margin-top:10px;font-size:11px"><b>Технологія приготування:</b><br>${esc(recipe.technology).replace(/\n/g,'<br>')}</div>` : ''}
 
     <div class="sign-block">
-      <div>Завідувач виробництвом: _______________/______________</div>
-      <div>Калькулятор: _______________/______________</div>
+      <div>${_tg('Завідувач виробництвом:','Заведующий производством:')} _______________/______________</div>
+      <div>${_tg('Калькулятор:','Калькулятор:')} _______________/______________</div>
     </div>
     <div class="sign-block" style="margin-top:10px">
-      <div>Керівник закладу: _______________/______________</div>
-      <div>Дата затвердження: _______________</div>
+      <div>${_tg('Керівник закладу:','Руководитель заведения:')} _______________/______________</div>
+      <div>${_tg('Дата затвердження:','Дата утверждения:')} _______________</div>
     </div>
     </body></html>`;
 
@@ -490,10 +490,10 @@
     cont.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
         <div>
-          <b>Планування виробництва</b>
+          <b>${_tg('Планування виробництва','Планирование производства')}</b>
           <span style="font-size:.78rem;color:#9ca3af;margin-left:.5rem">${new Date().toLocaleDateString('uk-UA')}</span>
         </div>
-        <button onclick="window._fpAddToPlan()" class="fp-btn" style="background:#6366f1;color:#fff">+ Додати в план</button>
+        <button onclick="window._fpAddToPlan()" class="fp-btn" style="background:#6366f1;color:#fff">${_tg('+ Додати в план','+ Добавить в план')}</button>
       </div>
 
       ${stopList.length ? `
@@ -509,28 +509,28 @@
       ${!FP.productionPlan.length ? `
         <div style="text-align:center;padding:2rem;color:#9ca3af">
           <div style="margin-bottom:.5rem"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-          <div>План на сьогодні порожній</div>
-          <div style="font-size:.78rem;margin-top:.25rem">Натисніть "+ Додати в план" щоб запланувати виробництво</div>
+          <div>${_tg('План на сьогодні порожній','План на сегодня пуст')}</div>
+          <div style="font-size:.78rem;margin-top:.25rem">${_tg('Натисніть "+ Додати в план" щоб запланувати виробництво','Нажмите "+ Добавить в план" чтобы запланировать производство')}</div>
         </div>` :
       `<div style="display:flex;flex-direction:column;gap:.5rem">
         ${FP.productionPlan.map(p => {
           const recipe = FP.recipes.find(r => r.id === p.recipeId);
           const status = p.status || 'planned';
           const statusColors = { planned:'#3b82f6', in_progress:'#f59e0b', done:'#10b981', cancelled:'#ef4444' };
-          const statusLabels = { planned:'Заплановано', in_progress:'Виробляється', done:'Готово', cancelled:'Скасовано' };
+          const statusLabels = { planned:_tg('Заплановано','Запланировано'), in_progress:_tg('Виробляється','В производстве'), done:_tg('Готово','Готово'), cancelled:_tg('Скасовано','Отменено') };
           return `
           <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:.85rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
             <div style="flex:1;min-width:180px">
               <div style="font-weight:700;font-size:.9rem">${esc(p.recipeName||recipe?.name||'—')}</div>
-              <div style="font-size:.75rem;color:#6b7280">${p.portions} порц. · Собівартість: ${fmt((recipe?.costPerPortion||0)*p.portions)} ₴</div>
+              <div style="font-size:.75rem;color:#6b7280">${p.portions} порц. · ${_tg('Собівартість:','Себестоимость:')} ${fmt((recipe?.costPerPortion||0)*p.portions)} ₴</div>
             </div>
             <div style="display:flex;gap:.5rem;align-items:center">
               <span style="color:${statusColors[status]};font-size:.78rem;font-weight:600;background:${statusColors[status]}20;padding:2px 8px;border-radius:12px">${statusLabels[status]}</span>
               ${status === 'planned' ? `
-                <button onclick="window._fpStartProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><polygon points="5 3 19 12 5 21 5 3"/></svg>Почати</button>
-                <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">✓ Готово + списати</button>` : ''}
+                <button onclick="window._fpStartProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><polygon points="5 3 19 12 5 21 5 3"/></svg>${_tg('Почати','Начать')}</button>
+                <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">${_tg('✓ Готово + списати','✓ Готово + списать')}</button>` : ''}
               ${status === 'in_progress' ? `
-                <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#10b981;border:none;color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">✓ Готово + списати</button>` : ''}
+                <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#10b981;border:none;color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">${_tg('✓ Готово + списати','✓ Готово + списать')}</button>` : ''}
             </div>
           </div>`;
         }).join('')}
@@ -569,7 +569,7 @@
       <div id="fpPlanPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:12px;padding:1.25rem;width:min(420px,96vw)">
           <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
-            <b>Додати в план виробництва</b>
+            <b>${_tg('Додати в план виробництва','Добавить в план производства')}</b>
             <button onclick="document.getElementById('fpPlanPicker').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem">✕</button>
           </div>
           <div style="margin-bottom:.75rem">
@@ -588,7 +588,7 @@
           </div>
           <div style="display:flex;gap:.5rem;justify-content:flex-end">
             <button onclick="document.getElementById('fpPlanPicker').remove()" class="fp-btn" style="background:#f3f4f6;color:#374151">Скасувати</button>
-            <button onclick="window._fpConfirmAddToPlan()" class="fp-btn" style="background:#6366f1;color:#fff">Додати в план</button>
+            <button onclick="window._fpConfirmAddToPlan()" class="fp-btn" style="background:#6366f1;color:#fff">${_tg('Додати в план','Добавить в план')}</button>
           </div>
         </div>
       </div>`;
@@ -664,7 +664,7 @@
             itemId: ing.warehouseItemId,
             type: 'out',
             qty,
-            note: `Виробництво: ${recipe.name} (${plan.portions} порц.)`,
+            note: `${_tg('Виробництво:','Производство:')} ${recipe.name} (${plan.portions} ${_tg('порц.','порц.')})`,
           });
         }
       } catch(e) {
@@ -695,7 +695,7 @@
     // Group by category
     const categories = {};
     FP.recipes.forEach(r => {
-      const cat = r.category || 'Без категорії';
+      const cat = r.category || _tg('Без категорії','Без категории');
       if (!categories[cat]) categories[cat] = [];
       categories[cat].push(r);
     });
@@ -703,16 +703,16 @@
     cont.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
         <div>
-          <b>Рецептури (${FP.recipes.length})</b>
+          <b>${_tg('Рецептури','Рецептуры')} (${FP.recipes.length})</b>
         </div>
-        <button onclick="window._fpOpenRecipe(null)" class="fp-btn" style="background:#6366f1;color:#fff">+ Нова рецептура</button>
+        <button onclick="window._fpOpenRecipe(null)" class="fp-btn" style="background:#6366f1;color:#fff">${_tg('+ Нова рецептура','+ Новая рецептура')}</button>
       </div>
 
       ${!FP.recipes.length ?
         `<div style="text-align:center;padding:3rem;color:#9ca3af">
           <div style="margin-bottom:.75rem"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
-          <div style="font-weight:600;margin-bottom:.35rem">Рецептур ще немає</div>
-          <div style="font-size:.82rem">Створіть першу рецептуру з інгредієнтами та калькуляцією собівартості</div>
+          <div style="font-weight:600;margin-bottom:.35rem">${_tg('Рецептур ще немає','Рецептур ещё нет')}</div>
+          <div style="font-size:.82rem">${_tg('Створіть першу рецептуру з інгредієнтами та калькуляцією собівартості','Создайте первую рецептуру с ингредиентами и расчётом себестоимости')}</div>
         </div>` :
         Object.entries(categories).map(([cat, recipes]) => `
           <div style="margin-bottom:1.25rem">
@@ -728,16 +728,16 @@
                     ${margin !== null && margin !== undefined ? `<span style="color:${marginColor};font-size:.75rem;font-weight:700;background:${marginColor}15;padding:2px 7px;border-radius:10px;margin-left:.5rem">${margin}%</span>` : ''}
                   </div>
                   <div style="display:flex;gap:1rem;font-size:.75rem;color:#6b7280">
-                    <span>⚖️ Вихід: ${r.yield||0} г</span>
+                    <span>${_tg('⚖️ Вихід:','⚖️ Выход:')} ${r.yield||0} г</span>
                     <span>🍽️ ${r.portions||1} порц.</span>
                   </div>
                   <div style="display:flex;justify-content:space-between;margin-top:.5rem;font-size:.78rem">
-                    <span style="color:#9ca3af">Собівартість/порц.:</span>
+                    <span style="color:#9ca3af">${_tg('Собівартість/порц.:','Себестоимость/порц.:')}</span>
                     <span style="font-weight:700;color:#6366f1">${fmt(r.costPerPortion||0)} ₴</span>
                   </div>
                   ${r.salePrice ? `
                   <div style="display:flex;justify-content:space-between;font-size:.78rem">
-                    <span style="color:#9ca3af">Ціна продажу:</span>
+                    <span style="color:#9ca3af">${_tg('Ціна продажу:','Цена продажи:')}</span>
                     <span style="font-weight:600">${fmt(r.salePrice)} ₴</span>
                   </div>` : ''}
                   <div style="display:flex;gap:.35rem;margin-top:.65rem;flex-wrap:wrap">

@@ -102,7 +102,7 @@ function _t(ua, ru) {
     const tabs = [
       { id: 'dashboard',     icon: 'layout-dashboard', label: window.t('whDashboard') },
       { id: 'catalog',       icon: 'package',           label: window.t('whCatalog') },
-      { id: 'by-location',   icon: 'map',               label: 'По точках' },
+      { id: 'by-location',   icon: 'map',               label: _t('По точках','По точкам') },
       { id: 'transfer',      icon: 'arrow-right-left',  label: _t('Переміщення','Перемещение') },
       { id: 'inventory',     icon: 'clipboard-check',   label: _t('Інвентаризація','Инвентаризация') },
       { id: 'reports',       icon: 'bar-chart-2',       label: _t('Звіти','Отчёты') },
@@ -366,7 +366,7 @@ function _t(ua, ru) {
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
           <div style="position:relative;flex:1;min-width:180px;">
             <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#9ca3af;pointer-events:none;"></i>
-            <input type="text" placeholder="Пошук..." value="${_searchQuery}"
+            <input type="text" placeholder="${_t('Пошук...','Поиск...')}" value="${_searchQuery}"
               oninput="window._whSearchCatalog(this.value)"
               style="width:100%;box-sizing:border-box;padding:0.45rem 0.5rem 0.45rem 2rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;">
           </div>
@@ -384,7 +384,7 @@ function _t(ua, ru) {
             ${items.length === 0 ? `
               <p style="color:#9ca3af;margin:0 0 0.75rem;">${window.t('whNoItems')}</p>
               <button onclick="window.whOpenItemForm()" style="padding:0.45rem 1rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">
-                + Додати перший товар
+                ${_t('+ Додати перший товар','+ Добавить первый товар')}
               </button>
             ` : '<p style="color:#9ca3af;margin:0;">' + window.t('nothingFound2') + '</p>'}
           </div>
@@ -392,8 +392,8 @@ function _t(ua, ru) {
           <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
             <!-- Заголовок таблиці — тільки для десктоп -->
             <div class="hide-mobile" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 80px;gap:0.5rem;padding:0.6rem 1rem;background:#f9fafb;border-bottom:1px solid #e5e7eb;font-size:0.75rem;color:#6b7280;font-weight:600;text-transform:uppercase;">
-              <span>Назва / SKU</span>
-              <span>Залишок</span>
+              <span>${_t('Назва / SKU','Название / SKU')}</span>
+              <span>${_t('Залишок','Остаток')}</span>
               <span>${_t('Мін. запас','Мин. запас')}</span>
               <span>${_t('Собівартість','Себестоимость')}</span>
               <span>${_t('Вартість','Стоимость')}</span>
@@ -524,7 +524,7 @@ function _t(ua, ru) {
         <div style="padding:0.75rem 1rem;display:flex;gap:0.75rem;align-items:center;border-bottom:1px solid #f3f4f6;flex-wrap:wrap;">
           <input
             type="text"
-            placeholder="Пошук товару..."
+            placeholder="${_t('Пошук товару...','Поиск товара...')}"
             value="${_whEscHtml(_searchQuery)}"
             oninput="window._whByLocSearch(this.value)"
             style="padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;width:200px;outline:none;">
@@ -540,10 +540,10 @@ function _t(ua, ru) {
           <table style="width:100%;border-collapse:collapse;min-width:600px;">
             <thead style="background:#f9fafb;">
               <tr>
-                <th style="${thStyleL}">Товар</th>
-                <th style="${thStyle}">Од.</th>
+                <th style="${thStyleL}">${_t('Товар','Товар')}</th>
+                <th style="${thStyle}">${_t('Од.','Ед.')}</th>
                 ${locHeaders}
-                <th style="${thStyle}background:#eef6ff;">Разом</th>
+                <th style="${thStyle}background:#eef6ff;">${_t('Разом','Итого')}</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -594,7 +594,7 @@ function _t(ua, ru) {
           <table style="width:100%;border-collapse:collapse;">
             <thead style="background:#f9fafb;">
               <tr>
-                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">Дата</th>
+                <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${_t('Дата','Дата')}</th>
                 <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${_t('Товар','Товар')}</th>
                 <th style="padding:0.6rem 0.75rem;text-align:right;font-size:0.78rem;font-weight:600;color:#374151;">${window.t('whQtyLabel')}</th>
                 <th style="padding:0.6rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;">${_t('Звідки','Откуда')}</th>
@@ -733,7 +733,7 @@ function _t(ua, ru) {
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
           <div style="position:relative;flex:1;min-width:180px;">
             <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#9ca3af;pointer-events:none;"></i>
-            <input type="text" placeholder="Пошук..." value="${_searchQuery}"
+            <input type="text" placeholder="${_t('Пошук...','Поиск...')}" value="${_searchQuery}"
               oninput="window._whOpSearch(this.value)"
               style="width:100%;box-sizing:border-box;padding:0.45rem 0.5rem 0.45rem 2rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;">
           </div>
@@ -741,14 +741,14 @@ function _t(ua, ru) {
             style="padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
             <option value="">${window.t('allTypes')}</option>
             <option value="IN" ${_opTypeFilter==='IN'?'selected':''}>${_t('Прихід','Приход')}</option>
-            <option value="OUT" ${_opTypeFilter==='OUT'?'selected':''}>Видача</option>
-            <option value="WRITE_OFF" ${_opTypeFilter==='WRITE_OFF'?'selected':''}>Списання</option>
+            <option value="OUT" ${_opTypeFilter==='OUT'?'selected':''}>${_t('Видача','Выдача')}</option>
+            <option value="WRITE_OFF" ${_opTypeFilter==='WRITE_OFF'?'selected':''}>${_t('Списання','Списание')}</option>
           </select>
           <select onchange="window._whOpDateFilter(this.value)"
             style="padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
-            <option value="">Весь час</option>
+            <option value="">${_t('Весь час','Всё время')}</option>
             <option value="today" ${_opDateFilter==='today'?'selected':''}>${window.t('whToday')}</option>
-            <option value="week" ${_opDateFilter==='week'?'selected':''}>Тиждень</option>
+            <option value="week" ${_opDateFilter==='week'?'selected':''}>${_t('Тиждень','Неделя')}</option>
             <option value="month" ${_opDateFilter==='month'?'selected':''}>${window.t('whMonth')}</option>
           </select>
         </div>
@@ -885,11 +885,11 @@ function _t(ua, ru) {
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Назва *</label>
-              <input id="wh_name" value="${item.name || ''}" style="${_inp()}" placeholder="Назва товару">
+              <label style="font-size:0.78rem;color:#6b7280;">${_t('Назва *','Название *')}</label>
+              <input id="wh_name" value="${item.name || ''}" style="${_inp()}" placeholder="${_t('Назва товару','Название товара')}">
             </div>
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">SKU / Артикул</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${_t('SKU / Артикул','SKU / Артикул')}</label>
               <input id="wh_sku" value="${item.sku || ''}" style="${_inp()}" placeholder="SKU-001">
             </div>
           </div>
@@ -900,7 +900,7 @@ function _t(ua, ru) {
               <input id="wh_cat" value="${item.category || ''}" list="wh_cat_dl" style="${_inp()}" placeholder=${window.t('materialsChemPh')}>
             </div>
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Одиниця</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${_t('Одиниця','Единица')}</label>
               <select id="wh_unit" style="${_inp()}">
                 ${units.map(u => `<option value="${u}" ${item.unit === u ? 'selected' : ''}>${u}</option>`).join('')}
               </select>
@@ -928,20 +928,20 @@ function _t(ua, ru) {
               </select>
             </div>
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Штрих-код</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${_t('Штрих-код','Штрих-код')}</label>
               <input id="wh_barcode" value="${item.barcode || ''}" style="${_inp()}" placeholder="1234567890">
             </div>
           </div>
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Постачальник</label>
+            <label style="font-size:0.78rem;color:#6b7280;">${_t('Постачальник','Поставщик')}</label>
             <select id="wh_supplier" style="${_inp()}">
               <option value="">— без постачальника —</option>
               ${(window.whGetSuppliers ? window.whGetSuppliers() : []).map(s => `<option value="${s.id}" ${item.supplierId === s.id ? 'selected' : ''}>${_whEscHtml(s.name)}</option>`).join('')}
             </select>
           </div>
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Опис</label>
-            <textarea id="wh_desc" style="${_inp()}height:56px;resize:none;" placeholder="Додатковий опис...">${_whEscHtml(item.description || '')}</textarea>
+            <label style="font-size:0.78rem;color:#6b7280;">${_t('Опис','Описание')}</label>
+            <textarea id="wh_desc" style="${_inp()}height:56px;resize:none;" placeholder="${_t('Додатковий опис...','Дополнительное описание...')}">${_whEscHtml(item.description || '')}</textarea>
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
@@ -972,7 +972,7 @@ function _t(ua, ru) {
         supplierId: document.getElementById('wh_supplier')?.value || null,
       }, id || null);
       window._whCloseModal();
-      if (window.showToast) showToast('Товар збережено ✓', 'success');
+      if (window.showToast) showToast(_t('Товар збережено ✓','Товар сохранён ✓'), 'success');
       // "Зберегти і прийняти" — одразу відкриваємо форму прийому
       if (openOp && savedId) {
         setTimeout(() => window.whOpenOpForm('IN', savedId), 200);
@@ -983,10 +983,10 @@ function _t(ua, ru) {
   };
 
   window._whConfirmDelete = function (id) {
-    if (!confirm('Видалити товар?')) return;
+    if (!confirm(_t('Видалити товар?','Удалить товар?'))) return;
     window.whDeleteItem(id).then(() => {
       window._whCloseModal();
-      if (window.showToast) showToast('Товар видалено', 'info');
+      if (window.showToast) showToast(_t('Товар видалено','Товар удалён'), 'info');
     });
   };
 
@@ -1012,7 +1012,7 @@ function _t(ua, ru) {
         <h3 style="margin:0 0 1rem;font-size:1rem;color:${typeColors[type] || '#374151'};">${typeLabels[type] || type}</h3>
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Товар *</label>
+            <label style="font-size:0.78rem;color:#6b7280;">${_t('Товар *','Товар *')}</label>
             <select id="wh_op_item" style="${_inp()}" onchange="window._whOpItemChange(this.value,'${type}')">
               <option value="">${window.t('whSelectItem')}</option>
               ${items.map(i => {
@@ -1067,7 +1067,7 @@ function _t(ua, ru) {
     const info = document.getElementById('wh_op_stock_info');
     if (info) {
       info.style.display = 'block';
-      info.innerHTML = `Поточний залишок: <b>${s.qty}</b> ${item?.unit || 'шт'} | Доступно: <b>${s.available}</b>`;
+      info.innerHTML = `${_t('Поточний залишок:','Текущий остаток:')} <b>${s.qty}</b> ${item?.unit || 'шт'} | ${_t('Доступно:','Доступно:')} <b>${s.available}</b>`;
     }
     const priceInput = document.getElementById('wh_op_price');
     if (priceInput && item && type === 'IN' && item.costPrice) priceInput.value = item.costPrice;
@@ -1118,12 +1118,12 @@ function _t(ua, ru) {
         <h3 style="margin:0 0 1rem;font-size:1rem;">${supplierId ? window.t('whEditSupplier') : window.t('whNewSupplier')}</h3>
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Назва *</label>
-            <input id="wh_sup_name" value="${s.name || ''}" style="${_inp()}" placeholder="ТОВ «Постачальник»">
+            <label style="font-size:0.78rem;color:#6b7280;">${_t('Назва *','Название *')}</label>
+            <input id="wh_sup_name" value="${s.name || ''}" style="${_inp()}" placeholder="${_t('ТОВ «Постачальник»','ООО «Поставщик»')}">
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">Телефон</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${_t('Телефон','Телефон')}</label>
               <input id="wh_sup_phone" value="${s.phone || ''}" style="${_inp()}" placeholder="+380...">
             </div>
             <div>
@@ -1132,7 +1132,7 @@ function _t(ua, ru) {
             </div>
           </div>
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Посилання (сайт / каталог)</label>
+            <label style="font-size:0.78rem;color:#6b7280;">${_t('Посилання (сайт / каталог)','Ссылка (сайт / каталог)')}</label>
             <input id="wh_sup_url" value="${s.url || ''}" style="${_inp()}" placeholder="https://...">
           </div>
           <div>
@@ -1161,14 +1161,14 @@ function _t(ua, ru) {
         note:  document.getElementById('wh_sup_note')?.value?.trim(),
       }, id || null);
       window._whCloseModal();
-      if (window.showToast) showToast('Збережено ✓', 'success');
+      if (window.showToast) showToast(_t('Збережено ✓','Сохранено ✓'), 'success');
     } catch (e) {
       if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
   };
 
   window._whDeleteSupplier = async function (id) {
-    if (!confirm('Видалити постачальника?')) return;
+    if (!confirm(_t('Видалити постачальника?','Удалить поставщика?'))) return;
     try {
       await window.whSaveSupplier({ deleted: true }, id);
       window._whCloseModal();
@@ -1186,15 +1186,15 @@ function _t(ua, ru) {
         <h3 style="margin:0 0 1rem;font-size:1rem;">${window.t('whLocationTitle')}</h3>
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Назва *</label>
-            <input id="wh_loc_name" value="${l.name || ''}" style="${_inp()}" placeholder="Головний склад">
+            <label style="font-size:0.78rem;color:#6b7280;">${_t('Назва *','Название *')}</label>
+            <input id="wh_loc_name" value="${l.name || ''}" style="${_inp()}" placeholder="${_t('Головний склад','Главный склад')}">
           </div>
           <div>
-            <label style="font-size:0.78rem;color:#6b7280;">Тип</label>
+            <label style="font-size:0.78rem;color:#6b7280;">${_t('Тип','Тип')}</label>
             <select id="wh_loc_type" style="${_inp()}">
-              <option value="warehouse" ${l.type==='warehouse'?'selected':''}>Склад</option>
+              <option value="warehouse" ${l.type==='warehouse'?'selected':''}>${_t('Склад','Склад')}</option>
               <option value="room" ${l.type==='room'?'selected':''}>${window.t('whRoomType')}</option>
-              <option value="car" ${l.type==='car'?'selected':''}>Авто</option>
+              <option value="car" ${l.type==='car'?'selected':''}>${_t('Авто','Авто')}</option>
               <option value="object" ${l.type==='object'?'selected':''}>${window.t('whObjectType')}</option>
             </select>
           </div>
@@ -1213,7 +1213,7 @@ function _t(ua, ru) {
     try {
       await window.whSaveLocation({ name, type: document.getElementById('wh_loc_type')?.value }, id || null);
       window._whCloseModal();
-      if (window.showToast) showToast('Збережено ✓', 'success');
+      if (window.showToast) showToast(_t('Збережено ✓','Сохранено ✓'), 'success');
     } catch (e) {
       if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
@@ -1330,7 +1330,7 @@ function _t(ua, ru) {
           </div>` : ''}
           ${sup ? `
           <div style="background:#ede9fe;border-radius:8px;padding:0.6rem;">
-            <div style="color:#7c3aed;margin-bottom:2px;">Постачальник</div>
+            <div style="color:#7c3aed;margin-bottom:2px;">${_t('Постачальник','Поставщик')}</div>
             <div style="font-weight:600;color:#5b21b6;">${_whEscHtml(sup.name)}</div>
           </div>` : ''}
         </div>
@@ -1514,7 +1514,7 @@ function _t(ua, ru) {
               <tr>
                 <th style="padding:0.5rem 0.5rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Товар','Товар')}</th>
                 <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Очікувано','Ожидаемо')}</th>
-                <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Фактично</th>
+                <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Фактично','Фактически')}</th>
                 <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Відхилення','Отклонение')}</th>
               </tr>
             </thead>
@@ -1635,14 +1635,14 @@ function _t(ua, ru) {
         }
         showToast(window.t('whInventoryConfirmed'), 'success');
       } else {
-        showToast('Чернетку збережено', 'success');
+        showToast(_t('Чернетку збережено','Черновик сохранён'), 'success');
       }
 
       document.getElementById('whInvModal')?.remove();
       await _whLoadInvList();
       _render();
     } catch(e) {
-      showToast(e.message || 'Помилка збереження', 'error');
+      showToast(e.message || _t('Помилка збереження','Ошибка сохранения'), 'error');
       if (btn) { btn.disabled = false; btn.textContent = window.t('whConfirmAdjust'); }
     }
   };
@@ -1713,7 +1713,7 @@ function _t(ua, ru) {
               <tr>
                 <th style="padding:0.5rem 0.75rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Товар','Товар')}</th>
                 <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Очікувано','Ожидаемо')}</th>
-                <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Фактично</th>
+                <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Фактично','Фактически')}</th>
                 <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Відхилення','Отклонение')}</th>
               </tr>
             </thead>
@@ -1874,9 +1874,9 @@ function _t(ua, ru) {
               <tr>
                 <th style="${thSL}">${window.t('whMonth2')}</th>
                 <th style="${thS}color:#22c55e;">${window.t('whIncoming')}</th>
-                <th style="${thS}color:#ef4444;">↑ Видано</th>
-                <th style="${thS}color:#f59e0b;">✕ Списано</th>
-                <th style="${thS}">Всього витрачено</th>
+                <th style="${thS}color:#ef4444;">${_t('↑ Видано','↑ Выдано')}</th>
+                <th style="${thS}color:#f59e0b;">${_t('✕ Списано','✕ Списано')}</th>
+                <th style="${thS}">${_t('Всього витрачено','Всего потрачено')}</th>
               </tr>
             </thead>
             <tbody>
@@ -1954,7 +1954,7 @@ function _t(ua, ru) {
       const grandTotal = totals.reduce((s,t)=>s+t,0);
       return `
         <tr style="background:#f0f9ff;font-weight:700;">
-          <td style="${tdSL}">Разом</td>
+          <td style="${tdSL}">${_t('Разом','Итого')}</td>
           ${totals.map(t=>`<td style="${tdS}color:#1e3a5f;">${fmt(t)}</td>`).join('')}
           <td style="${tdS}color:#1e3a5f;">${fmt(grandTotal)}</td>
         </tr>`;
@@ -1969,9 +1969,9 @@ function _t(ua, ru) {
           <table style="width:100%;border-collapse:collapse;">
             <thead style="background:#f9fafb;">
               <tr>
-                <th style="${thSL}">Товар</th>
+                <th style="${thSL}">${_t('Товар','Товар')}</th>
                 ${locHeaders}
-                <th style="${thS}background:#eef6ff;">Разом</th>
+                <th style="${thS}background:#eef6ff;">${_t('Разом','Итого')}</th>
               </tr>
             </thead>
             <tbody>${rows}${totalRow}</tbody>
@@ -2035,7 +2035,7 @@ function _t(ua, ru) {
       const grand  = totals.reduce((s,t)=>s+t,0);
       return `
         <tr style="background:#f0f9ff;font-weight:700;">
-          <td style="${tdSL}">Разом</td>
+          <td style="${tdSL}">${_t('Разом','Итого')}</td>
           ${totals.map(t=>`<td style="${tdS}color:#1e3a5f;">${t>0?fmt(t):'·'}</td>`).join('')}
           <td style="${tdS}color:#1e3a5f;">${fmt(grand)}</td>
         </tr>`;
@@ -2050,7 +2050,7 @@ function _t(ua, ru) {
           <table style="width:100%;border-collapse:collapse;">
             <thead style="background:#f9fafb;">
               <tr>
-                <th style="${thSL}">Товар</th>
+                <th style="${thSL}">${_t('Товар','Товар')}</th>
                 ${shortMonths.map(m=>`<th style="${thS}">${m}</th>`).join('')}
                 <th style="${thS}background:#eef6ff;">${window.t('whYear')}</th>
               </tr>
