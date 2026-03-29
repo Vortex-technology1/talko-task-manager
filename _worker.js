@@ -10,12 +10,8 @@ const PROJECT_ID  = 'task-manager-44e84';
 const FS_URL      = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
 const FS_QUERY    = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents:runQuery`;
 
-// ── Firebase JWT / token cache ───────────────────────────────
-let _cachedToken = null;
-let _tokenExpiry = 0;
-
+// ── Firebase JWT ─────────────────────────────────────────────
 async function getToken(env) {
-    if (_cachedToken && Date.now() < _tokenExpiry - 60000) return _cachedToken;
     let pk = env.FIREBASE_PRIVATE_KEY || '';
     // Handle literal \n sequences
     if (pk.includes('\\n')) pk = pk.replace(/\\n/g, '\n');
@@ -52,9 +48,7 @@ async function getToken(env) {
     });
     const d = await r.json();
     if (!d.access_token) throw new Error('Token error: ' + JSON.stringify(d));
-    _cachedToken = d.access_token;
-    _tokenExpiry = Date.now() + (d.expires_in || 3600) * 1000;
-    return _cachedToken;
+    return d.access_token;
 }
 
 function b64url(s)     { return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,''); }
