@@ -35,6 +35,8 @@ async function getToken(env) {
         scope: 'https://www.googleapis.com/auth/datastore https://www.googleapis.com/auth/firebase.auth',
     }));
     const unsigned = `${header}.${payload}`;
+
+
     const key = await crypto.subtle.importKey(
         'pkcs8', pemToBuf(pk),
         { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
@@ -59,9 +61,17 @@ function b64url(s)     { return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').re
 function b64url_raw(b) { return btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,''); }
 function enc(s)        { return new TextEncoder().encode(s); }
 function pemToBuf(pem) {
-    const b64 = pem.replace(/-----[^-]+-----/g,'').replace(/\s+/g,'');
-    const bin = atob(b64); const buf = new Uint8Array(bin.length);
-    for (let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
+    // Remove PEM headers and all whitespace
+    const b64 = pem
+        .replace(/-----BEGIN[^-]+-----/, '')
+        .replace(/-----END[^-]+-----/, '')
+        .replace(/[\r\n\s]+/g, '');
+    // Decode base64 to binary
+    const binary = atob(b64);
+    const buf = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        buf[i] = binary.charCodeAt(i);
+    }
     return buf.buffer;
 }
 
