@@ -16,7 +16,13 @@ let _tokenExpiry = 0;
 
 async function getToken(env) {
     if (_cachedToken && Date.now() < _tokenExpiry - 60000) return _cachedToken;
-    const pk = (env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
+    let pk = env.FIREBASE_PRIVATE_KEY || '';
+    // Handle literal \n sequences
+    if (pk.includes('\\n')) pk = pk.replace(/\\n/g, '\n');
+    // Handle base64 encoded key
+    if (pk && !pk.includes('-----BEGIN')) {
+        try { pk = atob(pk); } catch(e) {}
+    }
     const email = env.FIREBASE_CLIENT_EMAIL;
     if (!pk || !email) throw new Error('Missing Firebase credentials');
 
