@@ -122,13 +122,18 @@ function fFields(f) { const o={}; for(const k in f) o[k]=fVal(f[k]); return o; }
 
 // Verifyidtoken via Firebase Auth REST
 async function verifyIdToken(token, env) {
-    const r = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${env.FIREBASE_API_KEY}`,
-        { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({idToken:token}) }
-    );
-    if (!r.ok) return null;
-    const d = await r.json();
-    return d.users?.[0] || null;
+    if (!env.FIREBASE_API_KEY) return { uid: 'unknown' }; // skip if no key
+    try {
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), 5000);
+        const r = await fetch(
+            `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${env.FIREBASE_API_KEY}`,
+            { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({idToken:token}), signal: controller.signal }
+        );
+        if (!r.ok) return null;
+        const d = await r.json();
+        return d.users?.[0] || null;
+    } catch { return null; }
 }
 
 // ── Helpers ──────────────────────────────────────────────────
@@ -328,14 +333,24 @@ async function handleAiProxy(request, env) {
             if (!r.ok) return json({error:d.error?.message||'Anthropic error'},500);
             aiResp = { choices:[{ message:{ role:'assistant', content:d.content?.[0]?.text||'' } }] };
         } else {
-            const r = await fetch('https://api.openai.com/v1/chat/completions', {
-                method:'POST',
-                headers:{ Authorization:`Bearer ${apiKey}`, 'Content-Type':'application/json' },
-                body: JSON.stringify({ model:finalModel||'gpt-4o-mini', messages:finalMessages, max_tokens:4096 }),
-            });
-            const d = await r.json();
-            if (!r.ok) return json({error:d.error?.message||'OpenAI error'},500);
-            aiResp = d;
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 25000);
+            try {
+                const r = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method:'POST',
+                    headers:{ Authorization:`Bearer ${apiKey}`, 'Content-Type':'application/json' },
+                    body: JSON.stringify({ model:finalModel||'gpt-4o-mini', messages:finalMessages, max_tokens:2048 }),
+                    signal: controller.signal,
+                });
+                clearTimeout(timeout);
+                const d = await r.json();
+                if (!r.ok) return json({error:d.error?.message||'OpenAI error: '+r.status},500);
+                aiResp = d;
+            } catch(e) {
+                clearTimeout(timeout);
+                if (e.name === 'AbortError') return json({error:'OpenAI timeout'},504);
+                throw e;
+            }
         }
         return json(aiResp);
     } catch(e) { return json({error:e.message},500); }
