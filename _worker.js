@@ -1,6 +1,5 @@
-// Cloudflare Pages Worker - pass through to static assets
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     return env.ASSETS.fetch(request);
-  }
-}
+  },
+};
