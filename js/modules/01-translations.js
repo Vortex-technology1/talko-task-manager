@@ -7474,6 +7474,7 @@ en: {
         function setLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('talko_lang', lang);
+            window.currentLang = lang;
             dayNames = getDayNames();
             dayNamesShort = getDayNamesShort();
             monthNames = getMonthNames();
@@ -7528,3 +7529,7 @@ en: {
             }
         }
         window.setLanguage = setLanguage;
+        window.t = t;
+        window.currentLang = currentLang;
+        window.getLocale = getLocale;
+        window.getMonthNames = getMonthNames;

@@ -212,8 +212,9 @@ function renderBotsTab() {
                         </div>
                     </div>
                 </div>`;
-    lcIcons(c); }).join('')}
+    }).join('')}
         </div>`}`;
+    lcIcons(c);
 }
 
 // ── Відкрити бота <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> показати його ланцюги ─────────────────
