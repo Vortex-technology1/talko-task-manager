@@ -17107,4 +17107,379 @@ Bist du dabei?</div>
             homeworkLinkName: null,
             homeworkLinkName_ru: null,
         },
+        {
+            id: 403,
+            category: 'finance',
+            title: 'ФІНАНСИ ЧЕРЕЗ 7 ДЕПАРТАМЕНТІВ: система контролю витрат',
+            title_ru: 'ФИНАНСЫ ЧЕРЕЗ 7 ДЕПАРТАМЕНТОВ: система контроля расходов',
+            title_en: 'FINANCE THROUGH 7 DEPARTMENTS: expense control system',
+            subtitle: 'Прив\'яжи кожну гривню до функції — і назавжди забудь про касові розриви',
+            subtitle_ru: 'Привяжи каждую гривну к функции — и навсегда забудь о кассовых разрывах',
+            subtitle_en: 'Link every dollar to a function — and forget about cash gaps forever',
+            duration: 30,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s403-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s403-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s403-card p+p{margin-top:.65rem}
+.s403-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s403-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s403-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s403-dept{display:flex;align-items:center;gap:.75rem;padding:.75rem .95rem;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.4rem;background:#f8fafc}
+.s403-dpct{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0;color:white}
+.s403-dname{font-weight:700;color:#1a1a1a;font-size:.875rem}
+.s403-ddesc{font-size:.78rem;color:#6b7280;margin-top:.15rem}
+.s403-formula{background:#0f172a;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s403-formula p{font-size:.85rem;color:#94a3b8;line-height:1.7;margin:0}
+.s403-formula strong{color:#22c55e}
+.s403-formula .pct{color:#f59e0b;font-weight:700}
+.s403-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s403-snum{width:28px;height:28px;background:#ef4444;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s403-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s403-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s403-metric{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;margin-bottom:.35rem}
+.s403-platform{background:#0f172a;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s403-platform p{font-size:.85rem;color:#94a3b8;line-height:1.6;margin:0}
+.s403-platform strong{color:#22c55e}
+.s403-hw{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem}
+.s403-hw-title{font-weight:700;color:#166534;font-size:.95rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.s403-hw-step{display:flex;gap:.65rem;padding:.75rem .9rem;background:white;border-radius:9px;border:1px solid #d1fae5;margin-bottom:.4rem}
+.s403-hw-num{width:24px;height:24px;background:#22c55e;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.s403-hw-stitle{font-weight:700;color:#166534;font-size:.85rem;margin-bottom:.2rem}
+.s403-hw-stext{font-size:.8rem;color:#374151;line-height:1.5}
+.s403-hw-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:#22c55e;color:white;border-radius:9px;font-size:.87rem;font-weight:700;text-decoration:none;margin-top:.75rem}
+.s403-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:.75rem}
+.s403-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s403-ticon{width:40px;height:40px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s403-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s403-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s403-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#ef4444;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s403-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left:3px solid #ef4444;border-radius:0 10px 10px 0;font-size:.875rem;color:#7f1d1d;font-style:italic;line-height:1.6}
+</style>
+
+<div class="s403-lbl">Логіка</div>
+<div class="s403-title">Чому фінанси мають бути прив'язані до функцій</div>
+<div class="s403-card">
+<p>У попередньому уроці ми вивчили три звіти: P&L, Cash Flow і Баланс. Тепер наступний рівень — <strong>розподілити гроші по функціях бізнесу</strong>.</p>
+<p>Чому це важливо? Бо "витрати 500 тис на місяць" — це нічого не говорить. А "технічний департамент: 250 тис (50%), маркетинг: 80 тис (16%), адмін: 45 тис (9%)" — це вже управлінська інформація. Одразу видно де норма, а де перевитрата.</p>
+<p>В TALKO кожна функція = департамент. І до кожного департаменту прив'язані свої витрати і доходи. Це і є фінансовий контроль через структуру бізнесу.</p>
+</div>
+
+<div class="s403-quote">Якщо не знаєш скільки коштує кожна функція — не можеш нею керувати. Не можеш оптимізувати. Не можеш прогнозувати.</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Система</div>
+<div class="s403-title">7 департаментів і їх % від доходу</div>
+
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#ef4444">8%</div>
+<div><div class="s403-dname">Дивіденди власника</div><div class="s403-ddesc">Мінімум 8% від доходу — платиш собі першим, не залишком</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#6b7280">2%</div>
+<div><div class="s403-dname">Резервний фонд</div><div class="s403-ddesc">Подушка безпеки — захист від касових розривів і форс-мажорів</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#3b82f6">50%</div>
+<div><div class="s403-dname">Технічний департамент</div><div class="s403-ddesc">Виробництво, надання послуги, матеріали, персонал що створює продукт</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#22c55e">20%</div>
+<div><div class="s403-dname">Департамент розповсюдження</div><div class="s403-ddesc">Маркетинг, реклама, продажі, залучення клієнтів</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#8b5cf6">10%</div>
+<div><div class="s403-dname">Адміністративний</div><div class="s403-ddesc">Управління, офіс, юридичні, бухгалтерія, програмне забезпечення</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#f59e0b">5%</div>
+<div><div class="s403-dname">HR та навчання</div><div class="s403-ddesc">Підбір, онбординг, навчання, мотивація персоналу</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#06b6d4">5%</div>
+<div><div class="s403-dname">Розвиток і резерв росту</div><div class="s403-ddesc">Нові напрями, обладнання, R&D, масштабування</div></div>
+</div>
+
+<div class="s403-formula">
+<p><strong>Формула тижневого планування:</strong></p>
+<p>Фактичні надходження за тиждень<br>
+− <span class="pct">8%</span> дивіденди → виводиш одразу<br>
+− <span class="pct">2%</span> резерв → відкладаєш<br>
+= <strong>Залишок розподіляється по 5 департаментах</strong><br><br>
+<strong>Ціль:</strong> всі витрати + дивіденди = 100–103% доходу. Не більше.</p>
+</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Метрики ефективності</div>
+<div class="s403-title">Як зрозуміти що система працює</div>
+<div class="s403-metric"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Всі витрати + дивіденди = 100–103% доходу (не більше)</div>
+<div class="s403-metric"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Дивіденди ≥ 8% від доходу щотижня</div>
+<div class="s403-metric"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Кожен департамент не перевищує свій % бюджету</div>
+<div class="s403-metric"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Відсутність касових розривів протягом місяця</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Платформа TALKO</div>
+<div class="s403-title">Модуль Фінанси — вже є, починаємо зараз</div>
+<div class="s403-platform">
+<p>У розділі <strong>Система → Онбординг → Фінанси</strong> є покроковий процес налаштування фінансового обліку через 7 департаментів. Після того як розберешся з системою через AI-асистента — переходиш туди і налаштовуєш під свій бізнес.</p>
+<p style="margin-top:.5rem">15–20 хвилин на тиждень — і ти маєш повний контроль над рухом коштів. Без фіндиректора. Без складних таблиць.</p>
+</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Інструмент</div>
+<div class="s403-tool">
+<div class="s403-thdr">
+<div class="s403-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.75" width="20" height="20"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+<div>
+<div class="s403-ttitle">Фінанси через призму 7 департаментів</div>
+<div class="s403-tdesc">AI-асистент пояснює систему розподілу доходів і витрат по 7 функціях бізнесу. Налаштовує щотижневе планування бюджету від фактичних надходжень. Результат — відсутність касових розривів і прогнозований бізнес.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-68c6dc5a2f308191b83e651fe4e2854b-finance-through-the-prism-of-7-departments" target="_blank" class="s403-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Налаштувати систему
+</a>
+</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Домашнє завдання</div>
+<div class="s403-hw">
+<div class="s403-hw-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="18" height="18"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+Налаштуй фінансовий облік по департаментах прямо зараз
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">1</div>
+<div>
+<div class="s403-hw-stitle">Пройди сесію з AI-асистентом</div>
+<div class="s403-hw-stext">Відкрий асистент вище → розкажи про свій бізнес → отримай розподіл % по твоїх 7 департаментах з урахуванням специфіки ніші. Збережи результат.</div>
+</div>
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">2</div>
+<div>
+<div class="s403-hw-stitle">Перейди в Система → Онбординг → Фінанси</div>
+<div class="s403-hw-stext">Відкрий платформу → розділ «Система» у верхньому меню → вкладка «Онбординг» → блок «Фінанси». Там є покрокова інструкція налаштування.</div>
+</div>
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">3</div>
+<div>
+<div class="s403-hw-stitle">Внеси реальні дані минулого тижня</div>
+<div class="s403-hw-stext">Фактичні надходження за минулий тиждень → відрахуй 8% дивіденди + 2% резерв → розподіли залишок по 5 департаментах за своїми % → зафіксуй бюджети.</div>
+</div>
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">4</div>
+<div>
+<div class="s403-hw-stitle">Звір факт з планом</div>
+<div class="s403-hw-stext">Подивися де є перевищення бюджету по департаментах. Це і є точки оптимізації — місця де гроші йдуть понад норму. Занотуй що будеш коригувати.</div>
+</div>
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">5</div>
+<div>
+<div class="s403-hw-stitle">Встанови нагадування на щотижневе планування</div>
+<div class="s403-hw-stext">Обери день і час (наприклад, понеділок 9:00) — 15–20 хвилин щотижня на внесення надходжень і планування бюджету по департаментах. Постав нагадування прямо зараз.</div>
+</div>
+</div>
+
+<a href="#" onclick="if(window.showSystemTab)window.showSystemTab('onboarding');return false;" class="s403-hw-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+Перейти в Система → Онбординг → Фінанси
+</a>
+</div>`,
+
+            lessonContent_ru: `<style>
+.s403-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s403-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s403-card p+p{margin-top:.65rem}
+.s403-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s403-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s403-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s403-dept{display:flex;align-items:center;gap:.75rem;padding:.75rem .95rem;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.4rem;background:#f8fafc}
+.s403-dpct{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0;color:white}
+.s403-dname{font-weight:700;color:#1a1a1a;font-size:.875rem}
+.s403-ddesc{font-size:.78rem;color:#6b7280;margin-top:.15rem}
+.s403-formula{background:#0f172a;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s403-formula p{font-size:.85rem;color:#94a3b8;line-height:1.7;margin:0}
+.s403-formula strong{color:#22c55e}
+.s403-formula .pct{color:#f59e0b;font-weight:700}
+.s403-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s403-snum{width:28px;height:28px;background:#ef4444;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s403-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s403-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s403-metric{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;margin-bottom:.35rem}
+.s403-platform{background:#0f172a;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s403-platform p{font-size:.85rem;color:#94a3b8;line-height:1.6;margin:0}
+.s403-platform strong{color:#22c55e}
+.s403-hw{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem}
+.s403-hw-title{font-weight:700;color:#166534;font-size:.95rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.s403-hw-step{display:flex;gap:.65rem;padding:.75rem .9rem;background:white;border-radius:9px;border:1px solid #d1fae5;margin-bottom:.4rem}
+.s403-hw-num{width:24px;height:24px;background:#22c55e;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.s403-hw-stitle{font-weight:700;color:#166534;font-size:.85rem;margin-bottom:.2rem}
+.s403-hw-stext{font-size:.8rem;color:#374151;line-height:1.5}
+.s403-hw-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:#22c55e;color:white;border-radius:9px;font-size:.87rem;font-weight:700;text-decoration:none;margin-top:.75rem}
+.s403-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:.75rem}
+.s403-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s403-ticon{width:40px;height:40px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s403-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s403-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s403-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#ef4444;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s403-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left:3px solid #ef4444;border-radius:0 10px 10px 0;font-size:.875rem;color:#7f1d1d;font-style:italic;line-height:1.6}
+</style>
+
+<div class="s403-lbl">Логика</div>
+<div class="s403-title">Почему финансы должны быть привязаны к функциям</div>
+<div class="s403-card">
+<p>В предыдущем уроке мы изучили три отчёта: P&L, Cash Flow и Баланс. Теперь следующий уровень — <strong>распределить деньги по функциям бизнеса</strong>.</p>
+<p>Почему это важно? Потому что "расходы 500 тыс в месяц" — это ничего не говорит. А "технический департамент: 250 тыс (50%), маркетинг: 80 тыс (16%), админ: 45 тыс (9%)" — это уже управленческая информация. Сразу видно где норма, а где перерасход.</p>
+<p>В TALKO каждая функция = департамент. И к каждому департаменту привязаны свои расходы и доходы. Это и есть финансовый контроль через структуру бизнеса.</p>
+</div>
+
+<div class="s403-quote">Если не знаешь сколько стоит каждая функция — не можешь ею управлять. Не можешь оптимизировать. Не можешь прогнозировать.</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Система</div>
+<div class="s403-title">7 департаментов и их % от дохода</div>
+
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#ef4444">8%</div>
+<div><div class="s403-dname">Дивиденды собственника</div><div class="s403-ddesc">Минимум 8% от дохода — платишь себе первым, не остатком</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#6b7280">2%</div>
+<div><div class="s403-dname">Резервный фонд</div><div class="s403-ddesc">Подушка безопасности — защита от кассовых разрывов и форс-мажоров</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#3b82f6">50%</div>
+<div><div class="s403-dname">Технический департамент</div><div class="s403-ddesc">Производство, оказание услуги, материалы, персонал создающий продукт</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#22c55e">20%</div>
+<div><div class="s403-dname">Департамент распространения</div><div class="s403-ddesc">Маркетинг, реклама, продажи, привлечение клиентов</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#8b5cf6">10%</div>
+<div><div class="s403-dname">Административный</div><div class="s403-ddesc">Управление, офис, юридические, бухгалтерия, программное обеспечение</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#f59e0b">5%</div>
+<div><div class="s403-dname">HR и обучение</div><div class="s403-ddesc">Подбор, онбординг, обучение, мотивация персонала</div></div>
+</div>
+<div class="s403-dept">
+<div class="s403-dpct" style="background:#06b6d4">5%</div>
+<div><div class="s403-dname">Развитие и резерв роста</div><div class="s403-ddesc">Новые направления, оборудование, R&D, масштабирование</div></div>
+</div>
+
+<div class="s403-formula">
+<p><strong>Формула еженедельного планирования:</strong></p>
+<p>Фактические поступления за неделю<br>
+− <span class="pct">8%</span> дивиденды → выводишь сразу<br>
+− <span class="pct">2%</span> резерв → откладываешь<br>
+= <strong>Остаток распределяется по 5 департаментам</strong><br><br>
+<strong>Цель:</strong> все расходы + дивиденды = 100–103% дохода. Не больше.</p>
+</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Метрики эффективности</div>
+<div class="s403-title">Как понять что система работает</div>
+<div class="s403-metric"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Все расходы + дивиденды = 100–103% дохода (не больше)</div>
+<div class="s403-metric"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Дивиденды ≥ 8% от дохода каждую неделю</div>
+<div class="s403-metric"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Каждый департамент не превышает свой % бюджета</div>
+<div class="s403-metric"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Отсутствие кассовых разрывов в течение месяца</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Платформа TALKO</div>
+<div class="s403-title">Модуль Финансы — уже есть, начинаем сейчас</div>
+<div class="s403-platform">
+<p>В разделе <strong>Система → Онбординг → Финансы</strong> есть пошаговый процесс настройки финансового учёта через 7 департаментов. После того как разберёшься с системой через AI-ассистента — переходишь туда и настраиваешь под свой бизнес.</p>
+<p style="margin-top:.5rem">15–20 минут в неделю — и у тебя полный контроль над движением средств. Без финдиректора. Без сложных таблиц.</p>
+</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Инструмент</div>
+<div class="s403-tool">
+<div class="s403-thdr">
+<div class="s403-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.75" width="20" height="20"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+<div>
+<div class="s403-ttitle">Финансы через призму 7 департаментов</div>
+<div class="s403-tdesc">AI-ассистент объясняет систему распределения доходов и расходов по 7 функциям бизнеса. Настраивает еженедельное планирование бюджета от фактических поступлений. Результат — отсутствие кассовых разрывов и прогнозируемый бизнес.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-68c6dc5a2f308191b83e651fe4e2854b-finance-through-the-prism-of-7-departments" target="_blank" class="s403-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Настроить систему
+</a>
+</div>
+
+<div class="s403-div"></div>
+<div class="s403-lbl">Домашнее задание</div>
+<div class="s403-hw">
+<div class="s403-hw-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="18" height="18"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+Настрой финансовый учёт по департаментам прямо сейчас
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">1</div>
+<div>
+<div class="s403-hw-stitle">Пройди сессию с AI-ассистентом</div>
+<div class="s403-hw-stext">Открой ассистент выше → расскажи о своём бизнесе → получи распределение % по твоим 7 департаментам с учётом специфики ниши. Сохрани результат.</div>
+</div>
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">2</div>
+<div>
+<div class="s403-hw-stitle">Перейди в Система → Онбординг → Финансы</div>
+<div class="s403-hw-stext">Открой платформу → раздел «Система» в верхнем меню → вкладка «Онбординг» → блок «Финансы». Там есть пошаговая инструкция настройки.</div>
+</div>
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">3</div>
+<div>
+<div class="s403-hw-stitle">Внеси реальные данные прошлой недели</div>
+<div class="s403-hw-stext">Фактические поступления за прошлую неделю → вычти 8% дивиденды + 2% резерв → распредели остаток по 5 департаментам по своим % → зафиксируй бюджеты.</div>
+</div>
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">4</div>
+<div>
+<div class="s403-hw-stitle">Сверь факт с планом</div>
+<div class="s403-hw-stext">Посмотри где есть превышение бюджета по департаментам. Это и есть точки оптимизации — места где деньги идут сверх нормы. Запиши что будешь корректировать.</div>
+</div>
+</div>
+
+<div class="s403-hw-step">
+<div class="s403-hw-num">5</div>
+<div>
+<div class="s403-hw-stitle">Установи напоминание на еженедельное планирование</div>
+<div class="s403-hw-stext">Выбери день и время (например, понедельник 9:00) — 15–20 минут каждую неделю на внесение поступлений и планирование бюджета по департаментам. Поставь напоминание прямо сейчас.</div>
+</div>
+</div>
+
+<a href="#" onclick="if(window.showSystemTab)window.showSystemTab('onboarding');return false;" class="s403-hw-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+Перейти в Система → Онбординг → Финансы
+</a>
+</div>`,
+
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
     ];
+    if (window.learningCourseData) {
+        window.learningCourseData = window.learningCourseData.concat(financeCourseData);
+    }
+})();
