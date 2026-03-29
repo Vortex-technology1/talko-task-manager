@@ -675,7 +675,7 @@ window.sbTogglePublish = async function() {
     const newStatus = sb.site.status === 'published' ? 'draft' : 'published';
     try {
         const _base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-            ? location.origin : 'https://taskmanagerai-vert.vercel.app';
+            ? location.origin : 'https://apptalko.com';
         const _cid  = window.currentCompanyId || window.currentCompany || '';
         const _pub  = newStatus === 'published';
         const _pubUrl = _pub ? `${_base}/api/site?id=${sb.siteId}&cid=${_cid}` : null;
@@ -755,7 +755,7 @@ function _updatePublishBtn() {
     let _pubUrl = pubUrl;
     if (pub && !_pubUrl && sb.siteId) {
         const _base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-            ? location.origin : 'https://taskmanagerai-vert.vercel.app';
+            ? location.origin : 'https://apptalko.com';
         const _cid  = window.currentCompanyId || window.currentCompany || '';
         _pubUrl = `${_base}/api/site?id=${sb.siteId}&cid=${_cid}`;
         // Зберігаємо в Firestore щоб наступного разу вже було
@@ -775,7 +775,7 @@ function _updatePublishBtn() {
             }
             // Зберігаємо URL для кнопки відкрити
             const _href = sb.site.slug
-                ? 'https://taskmanagerai-vert.vercel.app/s/' + sb.site.slug
+                ? 'https://apptalko.com/s/' + sb.site.slug
                 : _pubUrl || '';
             urlBtn._href = _href;
             urlBtn.title = _href;
@@ -798,7 +798,7 @@ window.sbSaveSlug = async function(val) {
         // Оновлюємо title кнопки
         const urlBtn = document.getElementById('sbUrlBtn');
         if (urlBtn && slug) {
-            urlBtn._href = 'https://taskmanagerai-vert.vercel.app/s/' + slug;
+            urlBtn._href = 'https://apptalko.com/s/' + slug;
             urlBtn.title = urlBtn._href;
         }
         if (typeof showToast === 'function')
@@ -814,9 +814,9 @@ window.sbOpenPublicUrl = function() {
     // Пріоритет: slug → customDomain → publicUrl
     const _slug = sb.site?.slug;
     const pubUrl = _slug
-        ? 'https://taskmanagerai-vert.vercel.app/s/' + _slug
+        ? 'https://apptalko.com/s/' + _slug
         : (document.getElementById('sbUrlBtn')?._href || sb.site?.publicUrl ||
-           (sb.siteId ? `https://taskmanagerai-vert.vercel.app/api/site?id=${sb.siteId}&cid=${window.currentCompanyId||window.currentCompany||''}` : null));
+           (sb.siteId ? `https://apptalko.com/api/site?id=${sb.siteId}&cid=${window.currentCompanyId||window.currentCompany||''}` : null));
     if (!pubUrl) return;
     // Показуємо modal з URL
     if (typeof _showPublicUrlModal === 'function') {
@@ -941,8 +941,8 @@ function _renderSeoPanel() {
         </div>
         ${s.slug ? `
         <div style="display:flex;align-items:center;gap:6px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:0.5rem 0.75rem;">
-            <span style="font-size:0.72rem;color:#7c3aed;font-family:monospace;flex:1;">taskmanagerai-vert.vercel.app/s/${_esc(s.slug)}</span>
-            <button onclick="navigator.clipboard?.writeText('https://taskmanagerai-vert.vercel.app/s/${_esc(s.slug)}');if(typeof showToast==='function')showToast('Скопійовано','success');"
+            <span style="font-size:0.72rem;color:#7c3aed;font-family:monospace;flex:1;">apptalko.com/s/${_esc(s.slug)}</span>
+            <button onclick="navigator.clipboard?.writeText('https://apptalko.com/s/${_esc(s.slug)}');if(typeof showToast==='function')showToast('Скопійовано','success');"
                 style="background:none;border:none;cursor:pointer;color:#7c3aed;padding:2px;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             </button>
@@ -969,7 +969,7 @@ function _renderSeoPanel() {
             <div style="background:white;border-radius:6px;padding:0.4rem 0.6rem;margin:0.35rem 0;font-family:monospace;font-size:0.68rem;border:1px solid #e0f2fe;">
                 Тип: <strong>CNAME</strong><br>
                 Ім'я: <strong>${_esc(s.customDomain.startsWith('www.')?'www':'@')}</strong><br>
-                Значення: <strong>cname.vercel-dns.com</strong><br>
+                Значення: <strong>apptalko.com</strong><br>
                 TTL: 3600
             </div>
             <div>4. Напишіть нам — ми підключимо домен в Vercel</div>
