@@ -69,6 +69,10 @@ document.addEventListener('mousedown', function(e) {
         _origToggle && _origToggle(menuId, wrapperId, e);
         var m = document.getElementById(menuId);
         menuOpen = !!(m && m.style.display === 'block');
+        // Застосовуємо переклад щоразу при відкритті меню
+        if (menuOpen && typeof window.applyNavTranslations === 'function' && window.currentLang) {
+            window.applyNavTranslations(window.currentLang);
+        }
         lastScrollY = window.scrollY;
         lastScrollX = window.scrollX;
     };
@@ -399,6 +403,12 @@ document.addEventListener('mousedown', function(e) {
         // FIX: talko_language — правильний ключ (talko_lang застарілий)
         var savedLang = localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
         if (savedLang !== 'ua') applyNavTranslations(savedLang);
+        // Повторно застосовуємо після повного завантаження сторінки
+        if (savedLang !== 'ua') {
+            setTimeout(function() { applyNavTranslations(savedLang); }, 500);
+            setTimeout(function() { applyNavTranslations(savedLang); }, 1500);
+            setTimeout(function() { applyNavTranslations(savedLang); }, 3000);
+        }
         // Також підписуємось на зміну window.currentLanguage щоб підхопити після setLanguage
         var _prevLang = savedLang;
         var _langWatcher = setInterval(function() {
