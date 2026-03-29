@@ -5,6 +5,7 @@
 // ============================================================
 (function () {
 'use strict';
+var _tg = function(ua,ru){return window.currentLang==='ru'?ru:ua;};
 
 // ── State ──────────────────────────────────────────────────
 let bp = {
@@ -162,7 +163,7 @@ function renderTabBar(visibleTabs) {
     bar.innerHTML = visible.map(([id, icon, label]) => {
         const active = isActive(id);
         // Скорочуємо лейбли для компактного режиму
-        const shortLabels = { bots:'Боти', flows:'Ланц.', contacts:'Конт.', chat:'Чат', broadcast:'Розс.', settings:'⚙️' };
+        const shortLabels = { bots:_tg('Боти','Боты'), flows:_tg('Ланц.','Цеп.'), contacts:_tg('Конт.','Конт.'), chat:'Чат', broadcast:_tg('Розс.','Рассл.'), settings:'⚙️' };
         const displayLabel = compact ? shortLabels[id] || label : label;
         return `
         <button id="bpTab_${id}" onclick="bpSwitch('${id}')"
@@ -407,7 +408,7 @@ function renderFlowsTab() {
                                     </span>
                                     <span style="font-size:0.73rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
                                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
-                                        ${nodeCount} вузл${nodeCount===1?'':nodeCount<5?'и':'ів'}
+                                        ${nodeCount} ${_tg('вузл','узл')}${_tg(nodeCount===1?'':nodeCount<5?'и':'ів', nodeCount===1?'':nodeCount<5?'а':'ов')}
                                     </span>
                                     <span style="font-size:0.73rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
                                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
@@ -734,7 +735,7 @@ window.deleteFlow = async function(flowId) {
         await batch.commit();
         if (typeof showToast === 'function') showToast(window.t('crmDeleted'), 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка видалення: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(_tg('Помилка видалення: ','Ошибка удаления: ') + e.message, 'error');
         console.error('[deleteFlow]', e.message);
     }
 };
@@ -1350,7 +1351,7 @@ window.ctsExportCSV = async function() {
             ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
         });
 
-        const header = 'Ім\'я,Username,Telegram ID,Телефон,Канал,Роль,Ніша,Проблема,Ціль,Термін,Теги,Воронка,Бот,Дата,Примітка';
+        const header = _tg('Ім\'я,Username,Telegram ID,Телефон,Канал,Роль,Ніша,Проблема,Ціль,Термін,Теги,Воронка,Бот,Дата,Примітка','Имя,Username,Telegram ID,Телефон,Канал,Роль,Ниша,Проблема,Цель,Срок,Теги,Воронка,Бот,Дата,Примечание');
         const csv = '\uFEFF' + header + '\n' + rows.join('\n'); // BOM для Excel
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
@@ -1826,7 +1827,7 @@ function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
             </div>` : '');
         // Оператор vs бот автовідповідь
         const senderLabel = isBot
-            ? (m.sentBy === 'operator' ? '<span style="font-size:0.62rem;color:#86efac;font-weight:600;">Оператор · </span>' : '')
+            ? (m.sentBy === 'operator' ? ('<span style="font-size:0.62rem;color:#86efac;font-weight:600;">' + _tg('Оператор','Оператор') + ' · </span>') : '')
             : '';
         return `
         <div style="display:flex;justify-content:${isBot ? 'flex-end' : 'flex-start'};margin-bottom:2px;">
@@ -1872,7 +1873,7 @@ window.chatSend = window.bpSendMsg = async function(instanceId = 'main') {
         // Раніше писали тільки pendingOutMessage в Firestore і чекали Cloud Functions
         // яких немає → повідомлення ніколи не доходили до клієнта в Telegram
         const idToken = await firebase.auth().currentUser?.getIdToken().catch(() => null);
-        if (!idToken) throw new Error('Не авторизований');
+        if (!idToken) throw new Error(_tg('Не авторизований','Не авторизован'));
 
         const _sendAbort = new AbortController();
         const _sendTimer = setTimeout(() => _sendAbort.abort(), 10000);
@@ -2204,7 +2205,7 @@ async function renderBroadcastTab() {
                             <span style="color:#6b7280;">${b.total || 0} всього</span>
                             <span style="color:${statusColor};font-weight:600;">${rate}%</span>
                         </div>
-                        ${b.status === 'cancelled' ? '<div style="font-size:0.68rem;color:#f97316;margin-top:3px;">⏹ Зупинено вручну</div>' : ''}
+                        ${b.status === 'cancelled' ? ('<div style="font-size:0.68rem;color:#f97316;margin-top:3px;">⏹ ' + _tg('Зупинено вручну','Остановлено вручную') + '</div>') : ''}
                     </div>`;
                 }).join('')}
         </div>
@@ -2258,7 +2259,7 @@ window.bcastPreview = async function() {
         box.innerHTML = `
             <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> <b>${count}</b> контактів отримають розсилку
             ${parts.length ? `· <span style="font-weight:400;color:#16a34a;">${parts.join(' · ')}</span>` : ''}
-            ${count === 1000 ? '<span style="color:#f97316;"> (показано перші 1000)</span>' : ''}`;
+            ${count === 1000 ? ('<span style="color:#f97316;"> (' + _tg('показано перші 1000','показано первые 1000') + ')</span>') : ''}`;
     } catch(e) {
         box.style.display = '';
         box.innerHTML = `<span style="color:#9ca3af;">${window.t('cantCountAudience')}</span>`;
@@ -2323,7 +2324,7 @@ window.bpSendBroadcast = async function() {
     // BUG FIX: попереджаємо про тривалість і необхідність не закривати вкладку
     const _bcastMins = Math.ceil(targets.length / 25 / 60);
     const _bcastMsg = targets.length > 100
-        ? `Надіслати розсилку ${targets.length} контактам?\n\n⚠️ Орієнтовний час: ~${_bcastMins} хв.\nНЕ закривайте вкладку до завершення!`
+        ? _tg(`Надіслати розсилку ${targets.length} контактам?\n\n⚠️ Орієнтовний час: ~${_bcastMins} хв.\nНЕ закривайте вкладку до завершення!`,`Отправить рассылку ${targets.length} контактам?\n\n⚠️ Ориентировочное время: ~${_bcastMins} мин.\nНЕ закрывайте вкладку до завершения!`)
         : `${window.t('sendBroadcastN').replace('{V}', targets.length)}`;
     if (!(await (window.showConfirmModal ? showConfirmModal(_bcastMsg) : Promise.resolve(confirm(_bcastMsg))))) return;
 
@@ -2513,9 +2514,9 @@ window.bpSendBroadcast = async function() {
         console.error('[83-bots-contacts] bpSendBroadcast error:', e);
         bcast.running = false;
         if (typeof showToast === 'function') {
-            showToast('Помилка розсилки: ' + e.message, 'error');
+            showToast(_tg('Помилка розсилки: ','Ошибка рассылки: ') + e.message, 'error');
         } else {
-            alert('Помилка розсилки: ' + e.message);
+            alert(_tg('Помилка розсилки: ','Ошибка рассылки: ') + e.message);
         }
         // Повертаємо UI в початковий стан
         const sendBtn = document.getElementById('bcastSendBtn');
@@ -2747,7 +2748,7 @@ window.bpCheckBotStatus = async function(botId) {
 
     const bot = bp.bots.find(b => b.id === botId);
     if (!bot?.token) {
-        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">Токен не встановлений</div>`;
+        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">${_tg('Токен не встановлений','Токен не установлен')}</div>`;
         if (btn) { btn.textContent = window.t('botsCheck'); btn.disabled = false; }
         return;
     }
@@ -2769,7 +2770,7 @@ window.bpCheckBotStatus = async function(botId) {
                     <div style="color:${whInfo.url ? '#16a34a' : '#ef4444'};">
                         ${whInfo.url ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>'} Webhook: ${whInfo.url ? window.t('botsIsSet') : window.t('botsNotSetShort')}
                     </div>
-                    ${whInfo.last_error_message ? `<div style="color:#ef4444;">⚠️ Остання помилка: ${escH(whInfo.last_error_message)}</div>` : ''}
+                    ${whInfo.last_error_message ? `<div style="color:#ef4444;">⚠️ ${_tg('Остання помилка:','Последняя ошибка:')} ${escH(whInfo.last_error_message)}</div>` : ''}
                     <div style="color:#6b7280;">${_tg('Очікуваних оновлень:','Ожидаемых обновлений:')} ${whInfo.pending_update_count || 0}</div>
                 </div>
             </div>`;
@@ -2884,7 +2885,7 @@ window.settingsSaveApiKey = window.saveBotApiKey = async function(type) {
     const _isDomain = /^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(key);
     const _tooShort = key.length < 20;
     if (_isEmail || _isUrl || _isDomain || _tooShort) {
-        const _hint = _isEmail ? 'Це email, не API ключ' : _isUrl ? 'Це URL, не API ключ' : _isDomain ? 'Це домен, не API ключ' : 'Занадто короткий ключ';
+        const _hint = _isEmail ? _tg('Це email, не API ключ','Это email, не API ключ') : _isUrl ? _tg('Це URL, не API ключ','Это URL, не API ключ') : _isDomain ? _tg('Це домен, не API ключ','Это домен, не API ключ') : _tg('Занадто короткий ключ','Слишком короткий ключ');
         if(window.showToast)showToast('❌ ' + _tg('Невалідний API ключ: ','Невалидный API ключ: ') + _hint + _tg('. Очікується sk-...','. Ожидается sk-...'), 'error');
         return;
     }

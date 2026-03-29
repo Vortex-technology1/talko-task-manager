@@ -1513,9 +1513,9 @@ function _t(ua, ru) {
             <thead style="position:sticky;top:0;background:#f9fafb;z-index:1;">
               <tr>
                 <th style="padding:0.5rem 0.5rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Товар','Товар')}</th>
-                <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Очікувано</th>
+                <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Очікувано','Ожидаемо')}</th>
                 <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Фактично</th>
-                <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Відхилення</th>
+                <th style="padding:0.5rem 0.5rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Відхилення','Отклонение')}</th>
               </tr>
             </thead>
             <tbody id="invItemsTbody">
@@ -1538,7 +1538,7 @@ function _t(ua, ru) {
 
   // ── Рендер рядків таблиці інвентаризації ─────────────────
   function _whInvRenderRows(items, locationId) {
-    if (!items || items.length === 0) return '<tr><td colspan="4" style="text-align:center;padding:1rem;color:#9ca3af;">Немає товарів</td></tr>';
+    if (!items || items.length === 0) return '<tr><td colspan="4" style="text-align:center;padding:1rem;color:#9ca3af;">' + _t('Немає товарів','Нет товаров') + '</td></tr>';
     return items.map((item, ri) => {
       const expected = window.whGetStockByLocation
         ? (window.whGetStockByLocation(item.id, locationId).qty || 0)
@@ -1712,9 +1712,9 @@ function _t(ua, ru) {
             <thead style="background:#f9fafb;position:sticky;top:0;">
               <tr>
                 <th style="padding:0.5rem 0.75rem;text-align:left;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Товар','Товар')}</th>
-                <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Очікувано</th>
+                <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Очікувано','Ожидаемо')}</th>
                 <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Фактично</th>
-                <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">Відхилення</th>
+                <th style="padding:0.5rem 0.75rem;text-align:right;font-size:0.75rem;font-weight:600;color:#374151;">${_t('Відхилення','Отклонение')}</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -1813,7 +1813,7 @@ function _t(ua, ru) {
   }
 
   function _repMonthLabel(ym) {
-    const months = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+    const months = _t(['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'],['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек']);
     const [y, m] = ym.split('-');
     return `${months[parseInt(m)-1]} ${y}`;
   }
@@ -1836,7 +1836,7 @@ function _t(ua, ru) {
     // 12 місяців поточного року
     const months = Array.from({length:12},(_,i)=>`${_repYear}-${String(i+1).padStart(2,'0')}`);
 
-    if (filtered.length === 0) return _repEmpty('Немає операцій за обраний рік і фільтри');
+    if (filtered.length === 0) return _repEmpty(_t('Немає операцій за обраний рік і фільтри','Нет операций за выбранный год и фильтры'));
 
     const thS = 'padding:0.55rem 0.75rem;text-align:right;font-size:0.78rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
     const thSL= 'padding:0.55rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
@@ -1865,7 +1865,7 @@ function _t(ua, ru) {
     return `
       <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
         <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-size:0.82rem;color:#6b7280;">
-          Надходження і витрати по місяцях · ${_repYear}
+          ${_t('Надходження і витрати по місяцях','Поступления и расходы по месяцам')} · ${_repYear}
           ${_repLocId ? ` · ${locMap[_repLocId]||''}` : ''}
         </div>
         <div style="overflow-x:auto;">
@@ -1898,7 +1898,7 @@ function _t(ua, ru) {
   function _repRenderCompare(ops, locations, items, locMap) {
     // Фільтр: тільки OUT+WRITE_OFF по обраному році
     const filtered = _repFilterOps(ops);
-    if (filtered.length === 0) return _repEmpty('Немає операцій за обраний рік і фільтри');
+    if (filtered.length === 0) return _repEmpty(_t('Немає операцій за обраний рік і фільтри','Нет операций за выбранный год и фильтры'));
 
     // Агрегація: { itemId: { locationId: qty } }
     const agg = {};
@@ -1914,7 +1914,7 @@ function _t(ua, ru) {
       ? items.filter(i => i.id === _repItemId)
       : items.filter(i => agg[i.id]);
 
-    if (visItems.length === 0) return _repEmpty('Немає даних для відображення');
+    if (visItems.length === 0) return _repEmpty(_t('Немає даних для відображення','Нет данных для отображения'));
 
     const visLocs = _repLocId ? locations.filter(l=>l.id===_repLocId) : locations;
 
@@ -1963,7 +1963,7 @@ function _t(ua, ru) {
     return `
       <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
         <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-size:0.82rem;color:#6b7280;">
-          Витрати по салонах · ${_repYear} · темніший колір = більше витрат
+          ${_t('Витрати по салонах','Расходы по салонам')} · ${_repYear} + _t(' · темніший колір = більше витрат', ' · тёмнее = больше расходов')
         </div>
         <div style="overflow-x:auto;">
           <table style="width:100%;border-collapse:collapse;">
@@ -1983,10 +1983,10 @@ function _t(ua, ru) {
   // ── Звіт 3: Річний огляд (12 місяців в рядку) ───────────
   function _repRenderYearly(ops, locations, items, locMap) {
     const filtered = _repFilterOps(ops).filter(op => op.type !== 'IN');
-    if (filtered.length === 0) return _repEmpty('Немає операцій за обраний рік і фільтри');
+    if (filtered.length === 0) return _repEmpty(_t('Немає операцій за обраний рік і фільтри','Нет операций за выбранный год и фильтры'));
 
     const months = Array.from({length:12},(_,i)=>String(i+1).padStart(2,'0'));
-    const shortMonths = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+    const shortMonths = _t(['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'],['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек']);
 
     // Агрегація { itemId: { '01': qty, '02': qty ... } }
     const agg = {};
@@ -2003,7 +2003,7 @@ function _t(ua, ru) {
       ? items.filter(i => i.id === _repItemId)
       : items.filter(i => agg[i.id]);
 
-    if (visItems.length === 0) return _repEmpty('Немає даних для відображення');
+    if (visItems.length === 0) return _repEmpty(_t('Немає даних для відображення','Нет данных для отображения'));
 
     const thS  = 'padding:0.45rem 0.5rem;text-align:right;font-size:0.72rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;white-space:nowrap;';
     const thSL = 'padding:0.45rem 0.75rem;text-align:left;font-size:0.72rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
@@ -2044,7 +2044,7 @@ function _t(ua, ru) {
     return `
       <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
         <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-size:0.82rem;color:#6b7280;">
-          Річний огляд витрат · ${_repYear} · темніший = більше витрат за місяць
+          ${_t('Річний огляд витрат','Годовой обзор расходов')} · ${_repYear} + _t(' · темніший = більше витрат за місяць', ' · тёмнее = больше расходов за месяц')
         </div>
         <div style="overflow-x:auto;">
           <table style="width:100%;border-collapse:collapse;">
@@ -2064,7 +2064,7 @@ function _t(ua, ru) {
   // ── Звіт 4: Витрати по інвентаризаціях ──────────────────
   function _repRenderInvCost(locations, items, locMap) {
     const invList = window._whInvList || [];
-    if (invList.length === 0) return _repEmpty('Інвентаризацій ще не проводилось. Проведіть першу інвентаризацію у вкладці «Інвентаризація».');
+    if (invList.length === 0) return _repEmpty(_t('Інвентаризацій ще не проводилось. Проведіть першу інвентаризацію у вкладці «Інвентаризація».','Инвентаризаций ещё не проводилось. Проведите первую инвентаризацию во вкладке «Инвентаризация».'));
 
     const itemMap = {};
     items.forEach(i => { itemMap[i.id] = i; });
@@ -2076,7 +2076,7 @@ function _t(ua, ru) {
       return inv.status === 'confirmed';
     });
 
-    if (filtered.length === 0) return _repEmpty('Немає підтверджених інвентаризацій за обраний рік і фільтри. Показуються тільки підтверджені.');
+    if (filtered.length === 0) return _repEmpty(_t('Немає підтверджених інвентаризацій за обраний рік і фільтри. Показуються тільки підтверджені.','Нет подтверждённых инвентаризаций за выбранный год и фильтры. Отображаются только подтверждённые.'));
 
     const thS  = 'padding:0.55rem 0.75rem;text-align:right;font-size:0.78rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
     const thSL = 'padding:0.55rem 0.75rem;text-align:left;font-size:0.78rem;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;';
@@ -2123,14 +2123,14 @@ function _t(ua, ru) {
     return `
       <div style="background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;">
         <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-size:0.82rem;color:#6b7280;">
-          Витрати по матеріалах з інвентаризацій · ${_repYear} · тільки підтверджені · вартість = кількість витрат × собівартість
+          ${_t('Витрати по матеріалах з інвентаризацій','Расходы по материалам из инвентаризаций')} · ${_repYear} · ${_t('тільки підтверджені · вартість = кількість витрат × собівартість','только подтверждённые · стоимость = кол-во расходов × себестоимость')}
         </div>
         <div style="overflow-x:auto;">
           <table style="width:100%;border-collapse:collapse;">
             <thead style="background:#f9fafb;">
               <tr>
                 <th style="${thSL}">${window.t('whMonth2')}</th>
-                <th style="${thSL}">Локація</th>
+                <th style="${thSL}">${_t('Локація','Локация')}</th>
                 <th style="${thS}">${window.t('whPositions')}</th>
                 <th style="${thS}">${window.t('whDiff')}</th>
                 <th style="${thS}">${window.t('whInvCostHead')}</th>
@@ -2146,7 +2146,7 @@ function _t(ua, ru) {
           </table>
         </div>
         <div style="padding:0.75rem 1rem;background:#fffbeb;border-top:1px solid #fde68a;font-size:0.78rem;color:#92400e;">
-          ⚠️ Вартість рахується тільки якщо у товара заповнена «Собівартість» в каталозі. Заповніть собівартість для точного обліку.
+          ${_t('⚠️ Вартість рахується тільки якщо у товара заповнена «Собівартість» в каталозі. Заповніть собівартість для точного обліку.','⚠️ Стоимость считается только если у товара заполнена «Себестоимость» в каталоге. Заполните себестоимость для точного учёта.')}
         </div>
       </div>`;
   }

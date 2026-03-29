@@ -4,6 +4,7 @@
 // ============================================================
 (function () {
 'use strict';
+var _tg = function(ua,ru){return window.currentLang==='ru'?ru:ua;};
 
 const I = {
     key:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>',
@@ -686,7 +687,7 @@ window.intgSaveStripe = async function() {
     const key    = (keyEl?.value || '').trim();
     const wh     = (whEl?.value || '').trim();
     if (!key && !wh) {
-        if (typeof showToast === 'function') showToast('Введіть ключ Stripe', 'warning');
+        if (typeof showToast === 'function') showToast(_tg('Введіть ключ Stripe', 'Введите ключ Stripe'), 'warning');
         return;
     }
     try {
@@ -710,7 +711,7 @@ window.intgTestStripe = async function() {
         if (typeof showToast === 'function') showToast(window.t('stripeSecretKey')||'Введіть Secret Key', 'warning');
         return;
     }
-    if (typeof showToast === 'function') showToast('Перевірка Stripe...', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Перевірка Stripe...', 'Проверка Stripe...'), 'info');
     try {
         const res = await fetch('/api/stripe?action=create-session', {
             method: 'POST',
@@ -767,7 +768,7 @@ window.intgGenerateApiKey = async function() {
         inp.type = 'text';
         setTimeout(() => { if (inp) inp.type = 'password'; }, 3000);
     }
-    if (typeof showToast === 'function') showToast('Ключ згенеровано — натисніть «Зберегти»', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Ключ згенеровано — натисніть «Зберегти»', 'Ключ сгенерирован — нажмите «Сохранить»'), 'info');
 };
 
 
@@ -803,7 +804,7 @@ window.intgSaveFacebook = async function() {
     const pageId  = document.getElementById('intg_fb_pageid')?.value.trim();
     const verify  = document.getElementById('intg_fb_verify')?.value.trim();
     if (!token || !pageId) {
-        if (typeof showToast === 'function') showToast('Заповніть Page Access Token і Page ID', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Page Access Token і Page ID', 'Заполните Page Access Token и Page ID'), 'error'); return;
     }
     try {
         await window.companyRef().update({
@@ -815,7 +816,7 @@ window.intgSaveFacebook = async function() {
         intg.settings.fbPageAccessToken = token;
         intg.settings.fbPageId          = pageId;
         intg.settings.fbVerifyToken     = verify;
-        if (typeof showToast === 'function') showToast('Facebook Lead Ads збережено', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Facebook Lead Ads збережено', 'Facebook Lead Ads сохранены'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -824,14 +825,14 @@ window.intgSaveFacebook = async function() {
 
 window.intgSaveNP = async function() {
     const key = document.getElementById('intg_np_key')?.value.trim();
-    if (!key) { if (typeof showToast === 'function') showToast('Введіть API ключ Нової Пошти', 'error'); return; }
+    if (!key) { if (typeof showToast === 'function') showToast(_tg('Введіть API ключ Нової Пошти', 'Введите API ключ Новой Почты'), 'error'); return; }
     try {
         await window.companyRef().update({
             novaPoshtaApiKey: key,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
         intg.settings.novaPoshtaApiKey = key;
-        if (typeof showToast === 'function') showToast('Nova Poshta API збережено', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Nova Poshta API збережено', 'Nova Poshta API сохранено'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -840,7 +841,7 @@ window.intgSaveNP = async function() {
 
 window.intgTestNP = async function() {
     const key = document.getElementById('intg_np_key')?.value.trim() || intg.settings?.novaPoshtaApiKey;
-    if (!key) { if (typeof showToast === 'function') showToast('Введіть API ключ', 'error'); return; }
+    if (!key) { if (typeof showToast === 'function') showToast(_tg('Введіть API ключ', 'Введите API ключ'), 'error'); return; }
     try {
         const _npCtrl = new AbortController();
         setTimeout(() => _npCtrl.abort(), 10000); // 10s timeout
@@ -857,7 +858,7 @@ window.intgTestNP = async function() {
         });
         const data = await res.json();
         if (data.success) {
-            if (typeof showToast === 'function') showToast('Nova Poshta API працює', 'success');
+            if (typeof showToast === 'function') showToast(_tg('Nova Poshta API працює', 'Nova Poshta API работает'), 'success');
         } else {
             if (typeof showToast === 'function') showToast(window.t('errPfx2') + (data.errors?.[0] || 'невірний ключ'), 'error');
         }
@@ -870,8 +871,8 @@ window.intgTrackNP = async function() {
     const key = intg.settings?.novaPoshtaApiKey;
     const ttn = document.getElementById('intg_np_ttn')?.value.trim();
     const resultEl = document.getElementById('intg_np_result');
-    if (!ttn) { if (typeof showToast === 'function') showToast('Введіть номер ТТН', 'warning'); return; }
-    if (resultEl) { resultEl.style.display = 'block'; resultEl.innerHTML = 'Завантаження...'; }
+    if (!ttn) { if (typeof showToast === 'function') showToast(_tg('Введіть номер ТТН', 'Введите номер ТТН'), 'warning'); return; }
+    if (resultEl) { resultEl.style.display = 'block'; resultEl.innerHTML = _tg('Завантаження...', 'Загрузка...'); }
     try {
         const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
             method: 'POST',
@@ -908,7 +909,7 @@ window.intgTrackNP = async function() {
 window.crmTrackNP = async function(ttn) {
     if (!ttn) return;
     const key = (await window.companyRef().get().then(d => d.data()?.novaPoshtaApiKey));
-    if (!key) { if (typeof showToast === 'function') showToast('Nova Poshta API ключ не налаштовано', 'warning'); return; }
+    if (!key) { if (typeof showToast === 'function') showToast(_tg('Nova Poshta API ключ не налаштовано', 'Nova Poshta API ключ не настроен'), 'warning'); return; }
     try {
         const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
             method: 'POST',
@@ -938,7 +939,7 @@ window.intgSavePayments = async function() {
     const liqPub  = document.getElementById('intg_liqpay_pub')?.value.trim();
     const liqPriv = document.getElementById('intg_liqpay_priv')?.value.trim();
     if (!mono && !liqPub) {
-        if (typeof showToast === 'function') showToast('Введіть хоча б один ключ', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть хоча б один ключ', 'Введите хотя бы один ключ'), 'warning'); return;
     }
     try {
         const upd = { updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
@@ -946,7 +947,7 @@ window.intgSavePayments = async function() {
         if (liqPub)  { upd.liqpayPublicKey   = liqPub;  intg.settings.liqpayPublicKey  = liqPub; }
         if (liqPriv) { upd.liqpayPrivateKey  = liqPriv; intg.settings.liqpayPrivateKey = liqPriv; }
         await window.companyRef().update(upd);
-        if (typeof showToast === 'function') showToast('Платіжні ключі збережено', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Платіжні ключі збережено', 'Платёжные ключи сохранены'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -956,7 +957,7 @@ window.intgSavePayments = async function() {
 // ── Генерація Monobank посилання на оплату ─────────────────
 window.crmMonoPayLink = async function(amount, description, dealId) {
     const token = intg.settings?.monobankToken;
-    if (!token) { if (typeof showToast === 'function') showToast('Monobank не налаштовано — Інтеграції → Оплата', 'warning'); return null; }
+    if (!token) { if (typeof showToast === 'function') showToast(_tg('Monobank не налаштовано — Інтеграції → Оплата', 'Monobank не настроен — Интеграции → Оплата'), 'warning'); return null; }
     try {
         const res = await fetch('https://api.monobank.ua/api/merchant/invoice/create', {
             method: 'POST',
@@ -972,7 +973,7 @@ window.crmMonoPayLink = async function(amount, description, dealId) {
         const data = await res.json();
         if (data.pageUrl) {
             navigator.clipboard?.writeText(data.pageUrl);
-            if (typeof showToast === 'function') showToast('Посилання скопійовано', 'success');
+            if (typeof showToast === 'function') showToast(_tg('Посилання скопійовано', 'Ссылка скопирована'), 'success');
             return data.pageUrl;
         } else {
             if (typeof showToast === 'function') showToast(window.t('errPfx2') + (data.errText || JSON.stringify(data)), 'error');
@@ -987,7 +988,7 @@ window.crmMonoPayLink = async function(amount, description, dealId) {
 window.intgSaveViber = async function() {
     const token   = document.getElementById('intg_vibertoken')?.value.trim();
     const manager = document.getElementById('intg_viberchat')?.value.trim();
-    if (!token) { if (typeof showToast === 'function') showToast('Введіть Viber Bot Token', 'error'); return; }
+    if (!token) { if (typeof showToast === 'function') showToast(_tg('Введіть Viber Bot Token', 'Введите Viber Bot Token'), 'error'); return; }
     try {
         await window.companyRef().update({
             viberBotToken:  token,
@@ -996,7 +997,7 @@ window.intgSaveViber = async function() {
         });
         intg.settings.viberBotToken  = token;
         intg.settings.viberManagerId = manager;
-        if (typeof showToast === 'function') showToast('Viber Bot збережено', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Viber Bot збережено', 'Viber Bot сохранён'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -1007,7 +1008,7 @@ window.intgTestViber = async function() {
     const token   = document.getElementById('intg_vibertoken')?.value.trim() || intg.settings?.viberBotToken;
     const manager = document.getElementById('intg_viberchat')?.value.trim()  || intg.settings?.viberManagerId;
     if (!token || !manager) {
-        if (typeof showToast === 'function') showToast('Заповніть Token і ID менеджера', 'error');
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Token і ID менеджера', 'Заполните Token и ID менеджера'), 'error');
         return;
     }
     try {
@@ -1024,7 +1025,7 @@ window.intgTestViber = async function() {
         });
         const data = await res.json();
         if (data.status === 0) {
-            if (typeof showToast === 'function') showToast('Повідомлення відправлено у Viber', 'success');
+            if (typeof showToast === 'function') showToast(_tg('Повідомлення відправлено у Viber', 'Сообщение отправлено в Viber'), 'success');
         } else {
             if (typeof showToast === 'function') showToast('Viber помилка: ' + (data.status_message || data.status), 'error');
         }
@@ -1035,7 +1036,7 @@ window.intgTestViber = async function() {
 
 window.intgSetViberWebhook = async function() {
     const token = document.getElementById('intg_vibertoken')?.value.trim() || intg.settings?.viberBotToken;
-    if (!token) { if (typeof showToast === 'function') showToast('Спочатку введіть Token', 'error'); return; }
+    if (!token) { if (typeof showToast === 'function') showToast(_tg('Спочатку введіть Token', 'Сначала введите Token'), 'error'); return; }
     const webhookUrl = `https://taskmanagerai-vert.vercel.app/api/webhook?channel=viber&cid=${window.currentCompanyId||''}`;
     try {
         const res = await fetch('https://chatapi.viber.com/pa/set_webhook', {
@@ -1049,7 +1050,7 @@ window.intgSetViberWebhook = async function() {
         });
         const data = await res.json();
         if (data.status === 0) {
-            if (typeof showToast === 'function') showToast('Webhook підключено — Viber бот активний', 'success');
+            if (typeof showToast === 'function') showToast(_tg('Webhook підключено — Viber бот активний', 'Webhook подключён — Viber бот активен'), 'success');
         } else {
             if (typeof showToast === 'function') showToast('Помилка webhook: ' + (data.status_message || data.status), 'error');
         }
@@ -1107,7 +1108,7 @@ window.intgSaveBinotel = async function() {
     const key    = document.getElementById('intg_binotel_key')?.value.trim();
     const secret = document.getElementById('intg_binotel_secret')?.value.trim();
     if (!key || !secret) {
-        if (typeof showToast === 'function') showToast('Введіть API Key і Secret', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть API Key і Secret', 'Введите API Key и Secret'), 'error'); return;
     }
     try {
         await window.companyRef().update({
@@ -1117,7 +1118,7 @@ window.intgSaveBinotel = async function() {
         });
         intg.settings.binotelKey    = key;
         intg.settings.binotelSecret = secret;
-        if (typeof showToast === 'function') showToast('Binotel збережено', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Binotel збережено', 'Binotel сохранён'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
@@ -1130,14 +1131,14 @@ window.intgTestBinotel = async function() {
     const key    = document.getElementById('intg_binotel_key')?.value.trim()    || intg.settings?.binotelKey;
     const secret = document.getElementById('intg_binotel_secret')?.value.trim() || intg.settings?.binotelSecret;
     if (!key || !secret) {
-        if (typeof showToast === 'function') showToast('Заповніть Key і Secret', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Key і Secret', 'Заполните Key и Secret'), 'error'); return;
     }
     // Перевіряємо формат ключів (UUID-подібний)
     const uuidRe = /^[0-9a-f\-]{32,40}$/i;
     if (!uuidRe.test(key)) {
-        if (typeof showToast === 'function') showToast('API Key виглядає невірно — перевірте Binotel кабінет', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('API Key виглядає невірно — перевірте Binotel кабінет', 'API Key выглядит неверным — проверьте кабинет Binotel'), 'warning'); return;
     }
-    if (typeof showToast === 'function') showToast('Ключі виглядають коректно. Перевірка відбудеться при першому дзвінку', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Ключі виглядають коректно. Перевірка відбудеться при першому дзвінку', 'Ключи выглядят корректно. Проверка произойдёт при первом звонке'), 'info');
 };
 
 // ── Ringostat ──────────────────────────────────────────────
@@ -1145,7 +1146,7 @@ window.intgSaveRingostat = async function() {
     const key     = document.getElementById('intg_ringostat_key')?.value.trim();
     const project = document.getElementById('intg_ringostat_project')?.value.trim();
     if (!key) {
-        if (typeof showToast === 'function') showToast('Введіть API Token', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть API Token', 'Введите API Token'), 'error'); return;
     }
     try {
         await window.companyRef().update({
@@ -1155,7 +1156,7 @@ window.intgSaveRingostat = async function() {
         });
         intg.settings.ringostatApiKey    = key;
         intg.settings.ringostatProjectId = project;
-        if (typeof showToast === 'function') showToast('Ringostat збережено', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Ringostat збережено', 'Ringostat сохранён'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
@@ -1166,13 +1167,13 @@ window.intgTestRingostat = async function() {
     // Ringostat API не підтримує CORS — пряма перевірка з браузера неможлива.
     const key = document.getElementById('intg_ringostat_key')?.value.trim() || intg.settings?.ringostatApiKey;
     if (!key) {
-        if (typeof showToast === 'function') showToast('Введіть API Token', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть API Token', 'Введите API Token'), 'error'); return;
     }
     // Мінімальна валідація: токен має бути рядком >= 16 символів
     if (key.length < 16) {
-        if (typeof showToast === 'function') showToast('Токен виглядає занадто коротким — перевірте Ringostat кабінет', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('Токен виглядає занадто коротким — перевірте Ringostat кабінет', 'Токен выглядит слишком коротким — проверьте кабинет Ringostat'), 'warning'); return;
     }
-    if (typeof showToast === 'function') showToast('Токен збережено. Перевірка відбудеться при першому дзвінку', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Токен збережено. Перевірка відбудеться при першому дзвінку', 'Токен сохранён. Проверка произойдёт при первом звонке'), 'info');
 };
 
 // ── Stream Telecom ─────────────────────────────────────────
@@ -1180,7 +1181,7 @@ window.intgSaveStreamTelecom = async function() {
     const login = document.getElementById('intg_stream_login')?.value.trim();
     const pass  = document.getElementById('intg_stream_pass')?.value.trim();
     if (!login || !pass) {
-        if (typeof showToast === 'function') showToast('Введіть Login і Password', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть Login і Password', 'Введите Login и Password'), 'error'); return;
     }
     try {
         await window.companyRef().update({
@@ -1190,7 +1191,7 @@ window.intgSaveStreamTelecom = async function() {
         });
         intg.settings.streamTelecomLogin    = login;
         intg.settings.streamTelecomPassword = pass;
-        if (typeof showToast === 'function') showToast('Stream Telecom збережено', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Stream Telecom збережено', 'Stream Telecom сохранён'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
@@ -1201,16 +1202,16 @@ window.intgTestStreamTelecom = async function() {
     const login = document.getElementById('intg_stream_login')?.value.trim()  || intg.settings?.streamTelecomLogin;
     const pass  = document.getElementById('intg_stream_pass')?.value.trim()   || intg.settings?.streamTelecomPassword;
     if (!login || !pass) {
-        if (typeof showToast === 'function') showToast('Заповніть Login і Password', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Login і Password', 'Заполните Login и Password'), 'error'); return;
     }
     // Базова валідація email
     if (!login.includes('@')) {
-        if (typeof showToast === 'function') showToast('Login має бути email адресою', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('Login має бути email адресою', 'Login должен быть email адресом'), 'warning'); return;
     }
     if (pass.length < 6) {
-        if (typeof showToast === 'function') showToast('Пароль/ключ занадто короткий', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('Пароль/ключ занадто короткий', 'Пароль/ключ слишком короткий'), 'warning'); return;
     }
-    if (typeof showToast === 'function') showToast('Дані виглядають коректно. Перевірка відбудеться при першому дзвінку', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Дані виглядають коректно. Перевірка відбудеться при першому дзвінку', 'Данные выглядят корректно. Проверка произойдёт при первом звонке'), 'info');
 };
 
 // ── Tab hook ───────────────────────────────────────────────
@@ -1246,7 +1247,7 @@ _registerTab('integrations', function() { window.initIntegrationsModule(); });
         const apiKey = document.getElementById('intg_wapikey')?.value.trim();
         const phone  = document.getElementById('intg_waphone')?.value.trim();
         if (!apiKey) {
-            if (typeof showToast === 'function') showToast('Введіть 360dialog API Key', 'error');
+            if (typeof showToast === 'function') showToast(_tg('Введіть 360dialog API Key', 'Введите 360dialog API Key'), 'error');
             return;
         }
         try {
@@ -1259,7 +1260,7 @@ _registerTab('integrations', function() { window.initIntegrationsModule(); });
                 intg.settings.whatsappApiKey = apiKey;
                 intg.settings.whatsappPhone  = phone || null;
             }
-            if (typeof showToast === 'function') showToast('WhatsApp Business збережено ✓', 'success');
+            if (typeof showToast === 'function') showToast(_tg('WhatsApp Business збережено ✓', 'WhatsApp Business сохранён ✓'), 'success');
         } catch(e) {
             if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
         }
@@ -1269,15 +1270,15 @@ _registerTab('integrations', function() { window.initIntegrationsModule(); });
         const apiKey = document.getElementById('intg_wapikey')?.value.trim() || intg.settings?.whatsappApiKey;
         const phone  = document.getElementById('intg_waphone')?.value.trim() || intg.settings?.whatsappPhone;
         if (!apiKey || !phone) {
-            if (typeof showToast === 'function') showToast('Заповніть API Key і номер WhatsApp', 'error');
+            if (typeof showToast === 'function') showToast(_tg('Заповніть API Key і номер WhatsApp', 'Заполните API Key и номер WhatsApp'), 'error');
             return;
         }
         try {
             const result = await window.waSend(phone, '✅ Тестове повідомлення з платформи Талько. WhatsApp підключено успішно!', apiKey);
             if (result.ok) {
-                if (typeof showToast === 'function') showToast('Тест успішний — перевірте WhatsApp', 'success');
+                if (typeof showToast === 'function') showToast(_tg('Тест успішний — перевірте WhatsApp', 'Тест успешен — проверьте WhatsApp'), 'success');
             } else {
-                if (typeof showToast === 'function') showToast('Помилка відправки: ' + (result.error || 'невідома'), 'error');
+                if (typeof showToast === 'function') showToast(_tg('Помилка відправки: ', 'Ошибка отправки: ') + (result.error || _tg('невідома', 'неизвестна')), 'error');
             }
         } catch(e) {
             if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');

@@ -4,6 +4,7 @@
 // ============================================================
 (function () {
 'use strict';
+var _tg = function(ua,ru){return window.currentLang==='ru'?ru:ua;};
 
 // ── SVG Icons ──────────────────────────────────────────────
 const I = {
@@ -875,7 +876,7 @@ function _renderListView() {
         </span>
         <div style="display:flex;gap:0.35rem;margin-left:0.5rem;flex-wrap:wrap;">
             <button onclick="crmBulkStage()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                Змінити стадію
+                ${_tg('Змінити стадію','Изменить стадию')}
             </button>
             <button onclick="crmBulkAssign()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
                 Призначити
@@ -1169,7 +1170,7 @@ window.crmBulkStage = function() {
     menu.id = 'crmBulkActionMenu';
     menu.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
     menu.innerHTML = '<div style="background:white;border-radius:12px;padding:1.25rem;width:320px;max-width:95vw;">' +
-        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Змінити стадію (' + crm.selectedIds.size + ' ' + (window.t('crmDealsWord')||'угод') + ')</div>' +
+        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">' + _tg('Змінити стадію','Изменить стадию') + ' (' + crm.selectedIds.size + ' ' + (window.t('crmDealsWord')||'угод') + ')</div>' +
         '<div style="display:flex;flex-direction:column;gap:0.3rem;" id="bulkStageList">' +
         stages.map(function(s) {
             return '<button data-sid="' + s.id + '" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.65rem;' +
@@ -1207,7 +1208,7 @@ window.crmBulkAssign = function() {
     menu.id = 'crmBulkActionMenu';
     menu.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
     menu.innerHTML = '<div style="background:white;border-radius:12px;padding:1.25rem;width:300px;max-width:95vw;">' +
-        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Призначити відповідального (' + crm.selectedIds.size + ')</div>' +
+        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">' + _tg('Призначити відповідального','Назначить ответственного') + ' (' + crm.selectedIds.size + ')</div>' +
         '<div style="display:flex;flex-direction:column;gap:0.3rem;" id="bulkAssignList">' +
         userList.map(function(u) {
             return '<button data-uid="' + u.id + '" style="padding:0.5rem 0.65rem;border:1px solid #e8eaed;border-radius:7px;background:white;cursor:pointer;font-size:0.8rem;text-align:left;">' +
@@ -2170,7 +2171,7 @@ function _renderDealDetails(deal) {
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
         <div style="font-size:0.68rem;font-weight:700;color:#15803d;text-transform:uppercase;margin-bottom:0.6rem;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Деталі замовлення
+            ${_tg('Деталі замовлення','Детали заказа')}
         </div>
 
         <!-- Рядок 1: Філіал + Адреса об'єкту -->
@@ -2499,7 +2500,7 @@ window.crmToggleDealChat = async function (dealId) {
 
     } catch(e) {
         console.error('[crmToggleDealChat]', e);
-        if (window.showToast) showToast('Помилка відкриття чату: ' + e.message, 'error');
+        if (window.showToast) showToast(_tg('Помилка відкриття чату: ','Ошибка открытия чата: ') + e.message, 'error');
     }
 };
 
@@ -3192,7 +3193,7 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 <div>
                     <label style="${lbl}">Ниша</label>
                     <div style="position:relative;">
-                        <input id="nd_niche" placeholder="Меблі UA, Клініка, Ремонт..."
+                        <input id="nd_niche" placeholder="${_tg('Меблі UA, Клініка, Ремонт...', 'Мебель UA, Клиника, Ремонт...')}"
                             list="nd_nicheList"
                             autocomplete="off"
                             style="${inp}"
@@ -3343,7 +3344,7 @@ function _renderClients() {
                     <button onclick="crmOpenCreateClient()"
                         style="padding:0.5rem 1rem;background:#22c55e;color:white;border:none;
                         border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;white-space:nowrap;">
-                        + Клієнт
+                        ${_tg('+ Клієнт','+ Клиент')}
                     </button>
                 </div>
                 <div id="crmClientList">${_clientListHTML(crm.clients)}</div>
@@ -3480,7 +3481,7 @@ window.crmOpenClient = function(clientId) {
                 </div>
                 ${d.amount ? `<span style="font-size:0.75rem;font-weight:600;color:#374151;">${Number(d.amount).toLocaleString()}</span>` : ''}
             </div>`;
-        }).join('') : '<div style="font-size:0.78rem;color:#d1d5db;text-align:center;padding:0.75rem;">Угод немає</div>'}
+        }).join('') : '<div style="font-size:0.78rem;color:#d1d5db;text-align:center;padding:0.75rem;">' + _tg('Угод немає','Сделок нет') + '</div>'}
 
         <!-- Кнопки дій -->
         <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
@@ -3963,7 +3964,7 @@ function _renderAnalytics() {
         amount: (_stageCountMap[s.id] || {}).amount || 0,
     }));
 
-    // Джерела лідів — для пай-чарту
+    // ${_tg('Джерела лідів','Источники лидов')} — для пай-чарту
     const sources = crm.deals.reduce((acc, d) => { const src=d.source||'manual'; acc[src]=(acc[src]||0)+1; return acc; }, {});
     const srcColors = { telegram:'#3b82f6', instagram:'#e879f9', site_form:'#22c55e', manual:'#f59e0b' };
     const srcLabels = { telegram:'Telegram', instagram:'Instagram', site_form:window.t('sitesSite'), manual:window.t('crmManual') };
@@ -4034,7 +4035,7 @@ function _renderAnalytics() {
         if (d.stage === 'won') { _bySourceNiche[key].won++; _bySourceNiche[key].amount += d.amount||0; }
     });
     const _srcNicheRows = Object.values(_bySourceNiche).sort((a,b) => b.count - a.count);
-    const _srcLabels = { telegram:'Telegram', instagram:'Instagram', site_form:'Сайт', manual:'Вручну', referral:'Referral', ads:'Реклама', phone_call:'Дзвінок', facebook_lead:'Facebook Lead', telegram_bot:'Telegram Bot' };
+    const _srcLabels = { telegram:'Telegram', instagram:'Instagram', site_form:_tg('Сайт','Сайт'), manual:_tg('Вручну','Вручную'), referral:'Referral', ads:'Реклама', phone_call:'Дзвінок', facebook_lead:'Facebook Lead', telegram_bot:'Telegram Bot' };
 
     c.innerHTML = `
     <div style="padding-bottom:2rem;display:flex;flex-direction:column;gap:0.75rem;">
@@ -4130,7 +4131,7 @@ function _renderAnalytics() {
 
             <!-- Пай-чарт: джерела -->
             <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
-                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span> Джерела лідів</div>
+                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span> ${_tg('Джерела лідів','Источники лидов')}</div>
                 ${Object.keys(sources).length ? `
                 <div style="display:flex;align-items:center;gap:0.75rem;">
                     <svg width="80" height="80" viewBox="-1 -1 2 2" style="transform:rotate(-90deg);flex-shrink:0;">
@@ -4170,7 +4171,7 @@ function _renderAnalytics() {
                     const funnelStages = (crm.pipeline?.stages || [])
                         .filter(s => !['lost'].includes(s.id))
                         .sort((a,b) => a.order - b.order);
-                    if (!funnelStages.length) return '<div style="color:#9ca3af;font-size:0.8rem;">Немає даних</div>';
+                    if (!funnelStages.length) return '<div style="color:#9ca3af;font-size:0.8rem;">' + _tg('Немає даних','Нет данных') + '</div>';
 
                     // Будуємо індекс стадій для O(1) lookup
                     const stageIdx = {};
@@ -4281,7 +4282,7 @@ function _renderAnalytics() {
                 <div style="text-align:right;flex-shrink:0;">
                     <div style="font-size:0.78rem;font-weight:700;color:#22c55e;">${_fmt(u.amount)}</div>
                 </div>
-            </div>`).join('') : '<div style="color:#9ca3af;font-size:0.8rem;">Ще немає угод з відповідальними</div>'}
+            </div>`).join('') : '<div style="color:#9ca3af;font-size:0.8rem;">' + _tg('Ще немає угод з відповідальними','Ещё нет сделок с ответственными') + '</div>'}
         </div>
 
         <!-- ── Звіт по лідах ── -->
@@ -4301,15 +4302,15 @@ function _renderAnalytics() {
                 <span style="color:#9ca3af;">—</span>
                 <input type="date" value="${_leadsReportTo}" onchange="crm._leadsReportTo=this.value;_renderAnalytics();" style="border:1px solid #e5e7eb;border-radius:6px;padding:0.25rem 0.5rem;font-size:0.78rem;">
             </div>` : ''}
-            ${_srcNicheRows.length === 0 ? `<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1.5rem 0;">Немає лідів за вибраний період</div>` : `
+            ${_srcNicheRows.length === 0 ? `<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1.5rem 0;">${_tg('Немає лідів за вибраний період','Нет лидов за выбранный период')}</div>` : `
             <div style="overflow-x:auto;">
             <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
                 <thead><tr style="border-bottom:2px solid #f3f4f6;">
                     <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Джерело</th>
-                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Ніша</th>
-                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Лідів</th>
+                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Ніша','Ниша')}</th>
+                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Лідів','Лидов')}</th>
                     <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Виграно</th>
-                    <th style="text-align:right;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">Дохід</th>
+                    <th style="text-align:right;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Дохід','Доход')}</th>
                 </tr></thead>
                 <tbody>${_srcNicheRows.map((r,i) => `
                 <tr style="border-bottom:1px solid #f9fafb;${i%2===0?'background:#fafafa;':''}">
@@ -4370,7 +4371,7 @@ function _renderCrmNicheMatrix() {
             const fmt = d => d.getDate().toString().padStart(2,'0') + '.' + (d.getMonth()+1).toString().padStart(2,'0');
             return fmt(ws) + '–' + fmt(we) + '.' + we.getFullYear().toString().slice(-2);
         } else {
-            const months = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+            const months = _tg(['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'],['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек']);
             return months[date.getMonth()] + ' ' + date.getFullYear().toString().slice(-2);
         }
     }
@@ -4480,8 +4481,8 @@ function _renderCrmNicheMatrix() {
     });
 
     const groupByLabel  = st.groupBy === 'niche' ? window.t('crmGroupBy') : window.t('crmSourcesBy');
-    const periodLabel   = st.period  === 'week'  ? 'Тижні'  : 'Місяці';
-    const metricLabels  = { leads: 'Ліди', won: 'Виграно', revenue: 'Revenue', conv: 'Конверсія' };
+    const periodLabel   = st.period  === 'week'  ? _tg('Тижні','Недели')  : _tg('Місяці','Месяцы');
+    const metricLabels  = { leads: _tg('Ліди','Лиды'), won: _tg('Виграно','Выиграно'), revenue: 'Revenue', conv: _tg('Конверсія','Конверсия') };
 
     // ── render ─────────────────────────────────────────────
     c.innerHTML = `
@@ -4494,7 +4495,7 @@ function _renderCrmNicheMatrix() {
       ← Огляд
     </button>
     <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:#22c55e;color:white;">
-      Зріз по ${groupByLabel.toLowerCase()}
+      ${_tg('Зріз по','Срез по')} ${groupByLabel.toLowerCase()}
     </button>
   </div>
 
@@ -4505,7 +4506,7 @@ function _renderCrmNicheMatrix() {
       <span style="font-size:.75rem;color:#6b7280;font-weight:600;">ГРУПУВАТИ:</span>
       ${['niche','source'].map(v => `
         <button onclick="window._nmState.groupBy='${v}';_renderCrmNicheMatrix()" style="padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;border:1.5px solid ${st.groupBy===v?'#22c55e':'#e5e7eb'};background:${st.groupBy===v?'#f0fdf4':'white'};color:${st.groupBy===v?'#16a34a':'#374151'};">
-          ${v==='niche'?'Ніша':'Джерело'}
+          ${v==='niche'?_tg('Ніша','Ниша'):_tg('Джерело','Источник')}
         </button>`).join('')}
     </div>
 
@@ -4513,7 +4514,7 @@ function _renderCrmNicheMatrix() {
       <span style="font-size:.75rem;color:#6b7280;font-weight:600;">${window.t('crmPeriodLabel')}</span>
       ${['week','month'].map(v => `
         <button onclick="window._nmState.period='${v}';_renderCrmNicheMatrix()" style="padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;border:1.5px solid ${st.period===v?'#6366f1':'#e5e7eb'};background:${st.period===v?'#eef2ff':'white'};color:${st.period===v?'#4f46e5':'#374151'};">
-          ${v==='week'?'Тижні':'Місяці'}
+          ${v==='week'?_tg('Тижні','Недели'):_tg('Місяці','Месяцы')}
         </button>`).join('')}
     </div>
 
@@ -4672,10 +4673,10 @@ function _renderCRMSettings() {
             </div>
         </div>
 
-        <!-- Джерела лідів -->\
+        <!-- ${_tg('Джерела лідів','Источники лидов')} -->\
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
             <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">
-                Джерела лідів
+                ${_tg('Джерела лідів','Источники лидов')}
             </div>
             ${(function(){
                 // FIX: bySource та total оголошені локально (були з іншої функції)
@@ -4716,7 +4717,7 @@ function _renderCRMSettings() {
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
                 <div>
                     <div style="${sectionTitle}margin-bottom:0;">Стадії: ${_esc(pipeline?.name || '')}</div>
-                    <div style="font-size:0.7rem;color:#9ca3af;">Перетягуй щоб змінити порядок</div>
+                    <div style="font-size:0.7rem;color:#9ca3af;">${_tg('Перетягуй щоб змінити порядок','Перетащи чтобы изменить порядок')}</div>
                 </div>
                 <button onclick="crmAddStage()"
                     style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;
@@ -4751,7 +4752,7 @@ function _renderCRMSettings() {
             <button onclick="crmSaveStages()"
                 style="margin-top:0.75rem;width:100%;padding:0.5rem;background:#22c55e;color:white;
                 border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                Зберегти стадії
+                ${_tg('Зберегти стадії','Сохранить стадии')}
             </button>
         </div>
 
@@ -4839,7 +4840,7 @@ window.crmMoveDealToPipeline = async function(dealId, targetPipelineId, targetPi
     const firstStage = targetPipeline.stages?.[0]?.id || 'new';
 
     // BUG C FIX: showConfirmModal замість нативного confirm()
-    const _moveMsg = `Перемістити "${deal.clientName || deal.title || 'лід'}" у воронку "${targetPipelineName}"?`;
+    const _moveMsg = _tg(`Перемістити "${deal.clientName || deal.title || 'лід'}" у воронку "${targetPipelineName}"?`,`Переместить "${deal.clientName || deal.title || 'лид'}" в воронку "${targetPipelineName}"?`);
     const confirmed = await (window.showConfirmModal
         ? showConfirmModal(_moveMsg, { danger: false })
         : showConfirmModal(_moveMsg, {danger:true}));
@@ -4858,7 +4859,7 @@ window.crmMoveDealToPipeline = async function(dealId, targetPipelineId, targetPi
             await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
                 .doc(dealId).collection('history').add({
                     type: 'pipeline_move',
-                    text: `Переміщено у воронку "${targetPipelineName}"`,
+                    text: _tg(`Переміщено у воронку "${targetPipelineName}"`,`Перемещено в воронку "${targetPipelineName}"`),
                     from: crm.pipeline?.name || '',
                     to: targetPipelineName,
                     at: firebase.firestore.FieldValue.serverTimestamp(),
@@ -5003,7 +5004,7 @@ async function _doCreatePipeline(name) {
 window.crmDeletePipeline = async function(pipelineId, name) {
     // FIX F+C: перевіряємо скільки угод в pipeline
     const dealsInPipeline = crm.deals.filter(d => d.pipelineId === pipelineId).length;
-    const dealsWarn = dealsInPipeline > 0 ? `\nУ воронці є ${dealsInPipeline} угод — вони залишаться в базі, але зникнуть з UI.` : '\nУгод у воронці немає.';
+    const dealsWarn = dealsInPipeline > 0 ? `\n${_tg('У воронці є','В воронке есть')} ${dealsInPipeline} ${_tg('угод — вони залишаться в базі, але зникнуть з','сделок — они останутся в базе, но исчезнуть из')} UI.` : '\nУгод у воронці немає.';
     const msg = `Видалити воронку "${name}"?${dealsWarn}`;
     if (!(await (window.showConfirmModal ? showConfirmModal(msg, {danger:true}) : Promise.resolve(confirm(msg))))) return;
     try {
@@ -5140,7 +5141,7 @@ async function _checkRequiredFields(deal, newStage) {
 
     overlay.innerHTML = `
     <div style="background:white;border-radius:12px;padding:1.25rem;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.3rem;">Обов'язкові поля</div>
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.3rem;">${_tg("Обов'язкові поля",'Обязательные поля')}</div>
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;">Для переходу в <b style="color:#374151;">${_esc(stageName)}</b> заповніть:</div>
         <div id="crmReqFieldsList" style="display:flex;flex-direction:column;gap:0.65rem;">
             ${missing.map(f => `
@@ -5164,7 +5165,7 @@ async function _checkRequiredFields(deal, newStage) {
             </button>
             <button id="crmReqFieldsConfirm"
                 style="flex:2;padding:0.5rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                Зберегти і продовжити
+                ${_tg('Зберегти і продовжити','Сохранить и продолжить')}
             </button>
         </div>
     </div>`;

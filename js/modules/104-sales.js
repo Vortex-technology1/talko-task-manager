@@ -420,7 +420,7 @@
   };
 
   window._salesAddCatalogItem = function() {
-    if (!S.products.length) { toast('Каталог порожній. Додайте товари/послуги в розділ "Каталог".', 'info'); return; }
+    if (!S.products.length) { toast(_tg('Каталог порожній. Додайте товари/послуги в розділ "Каталог".', 'Каталог пуст. Добавьте товары/услуги в раздел "Каталог".'), 'info'); return; }
     const html = `
       <div id="slCatalogOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:10px;padding:1.25rem;width:min(440px,95vw);max-height:80vh;overflow-y:auto">
@@ -470,9 +470,9 @@
     const status = markPaid ? 'paid' : (el('slInvStatus')?.value || 'draft');
     const paymentMethod = document.querySelector('input[name="slInvPayMethod"]:checked')?.value || 'cash';
 
-    if (!number) { toast('Вкажіть номер документа', 'warn'); return; }
+    if (!number) { toast(_tg('Вкажіть номер документа', 'Укажите номер документа'), 'warn'); return; }
     const items = (S._invoiceItems || []).filter(i => i.name);
-    if (!items.length) { toast('Додайте хоча б одну позицію', 'warn'); return; }
+    if (!items.length) { toast(_tg('Додайте хоча б одну позицію', 'Добавьте хотя бы одну позицию'), 'warn'); return; }
 
     let subtotal = 0, discountTotal = 0, total = 0;
     items.forEach(i => {
@@ -557,10 +557,10 @@
       await openReceiptForm(id);
     } else if (o.type === 'work_order') {
       if (typeof window._salesOpenWorkOrder === 'function') await window._salesOpenWorkOrder(id, null);
-      else toast('Модуль Нарядів завантажується...', 'info');
+      else toast(_tg('Модуль Нарядів завантажується...', 'Модуль Нарядов загружается...'), 'info');
     } else if (o.type === 'route') {
       if (typeof window._salesOpenRouteForm === 'function') await window._salesOpenRouteForm(id);
-      else toast('Модуль Рейсів завантажується...', 'info');
+      else toast(_tg('Модуль Рейсів завантажується...', 'Модуль Рейсов загружается...'), 'info');
     }
   };
 
@@ -653,8 +653,8 @@
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem">
           <div>
-            <label class="sl-label">Клієнт (необов'язково)</label>
-            <input id="slRcpClient" class="sl-inp" placeholder="Ім'я клієнта" value="${esc(order?.clientName||'')}" list="slRcpClientsList">
+            <label class="sl-label">${_tg("Клієнт (необов'язково)", 'Клиент (необязательно)')}</label>
+            <input id="slRcpClient" class="sl-inp" placeholder="${_tg("Ім'я клієнта", 'Имя клиента')}" value="${esc(order?.clientName||'')}" list="slRcpClientsList">
             <datalist id="slRcpClientsList">${S.clients.map(c=>`<option value="${esc(c.name||c.fullName||'')}">`).join('')}</datalist>
           </div>
           <div>
@@ -738,7 +738,7 @@
     renderReceiptItems();
   };
   window._salesAddCatalogItemRcp = function() {
-    if (!S.products.length) { toast('Каталог порожній', 'info'); return; }
+    if (!S.products.length) { toast(_tg('Каталог порожній', 'Каталог пуст'), 'info'); return; }
     // reuse same catalog overlay but pick into receipt
     const html = `
       <div id="slCatalogOverlay2" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10001;display:flex;align-items:center;justify-content:center">
@@ -766,7 +766,7 @@
 
   window._salesSaveReceipt = async function() {
     const items = (S._receiptItems || []).filter(i => i.name && i.price > 0);
-    if (!items.length) { toast('Додайте позиції з ціною', 'warn'); return; }
+    if (!items.length) { toast(_tg('Додайте позиції з ціною', 'Добавьте позиции с ценой'), 'warn'); return; }
     let total = 0;
     items.forEach(i => { i.total = Math.round(i.qty * i.price * (1-(i.discount||0)/100)*100)/100; total += i.total; });
     const number = S.editingOrder?.number || await generateOrderNumber('receipt');
@@ -807,7 +807,7 @@
         <b>${_tg('Каталог товарів та послуг','Каталог товаров и услуг')}</b>
         <button onclick="window._salesOpenProductForm(null)" class="sl-btn" style="background:#6366f1;color:#fff">+ Додати</button>
       </div>
-      ${!S.products.length ? '<div style="text-align:center;padding:2rem;color:#9ca3af">Каталог порожній</div>' :
+      ${!S.products.length ? `<div style="text-align:center;padding:2rem;color:#9ca3af">${_tg('Каталог порожній', 'Каталог пуст')}</div>` :
       `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem">
         <thead><tr style="background:#f8fafc">
           <th style="padding:8px;text-align:left">Назва</th>
@@ -867,7 +867,7 @@
 
   window._salesSaveProduct = async function(productId) {
     const name = el('slProdName')?.value?.trim();
-    if (!name) { toast('Вкажіть назву', 'warn'); return; }
+    if (!name) { toast(_tg('Вкажіть назву', 'Укажите название'), 'warn'); return; }
     const data = {
       name, description: el('slProdDesc')?.value?.trim()||'',
       price: parseFloat(el('slProdPrice')?.value)||0,
@@ -1036,10 +1036,10 @@
     else if (type === 'receipt') openReceiptForm(null);
     else if (type === 'work_order') {
       if (typeof window._salesOpenWorkOrder === 'function') window._salesOpenWorkOrder(null, null);
-      else toast('Модуль Нарядів завантажується...', 'info');
+      else toast(_tg('Модуль Нарядів завантажується...', 'Модуль Нарядов загружается...'), 'info');
     } else if (type === 'route') {
       if (typeof window._salesOpenRouteForm === 'function') window._salesOpenRouteForm(null);
-      else toast('Модуль Рейсів завантажується...', 'info');
+      else toast(_tg('Модуль Рейсів завантажується...', 'Модуль Рейсов загружается...'), 'info');
     }
   };
 

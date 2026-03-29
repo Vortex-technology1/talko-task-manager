@@ -2,6 +2,7 @@
   'use strict';
 
   // ─── helpers ────────────────────────────────────────────────────────────────
+  var _tg = function(ua,ru){return window.currentLang==='ru'?ru:ua;};
   function getDb() { return window.db || (window.firebase && firebase.firestore()); }
   function getCid() { return window.currentCompanyId || window.currentCompany || null; }
   function col(name) {
@@ -89,26 +90,26 @@
         <!-- Header fields -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1rem">
           <div style="grid-column:1/3">
-            <label class="fp-label">Назва страви / продукту *</label>
-            <input id="fpRecipeName" class="fp-inp" value="${esc(recipe?.name||'')}" placeholder="Борщ український">
+            <label class="fp-label">${_tg('Назва страви / продукту *', 'Название блюда / продукта *')}</label>
+            <input id="fpRecipeName" class="fp-inp" value="${esc(recipe?.name||'')}" placeholder="${_tg('Борщ український', 'Борщ украинский')}">
           </div>
           <div>
-            <label class="fp-label">Категорія</label>
-            <input id="fpRecipeCat" class="fp-inp" value="${esc(recipe?.category||'')}" placeholder="Перші страви" list="fpCatList">
+            <label class="fp-label">${_tg('Категорія', 'Категория')}</label>
+            <input id="fpRecipeCat" class="fp-inp" value="${esc(recipe?.category||'')}" placeholder="${_tg('Перші страви', 'Первые блюда')}" list="fpCatList">
             <datalist id="fpCatList">
               ${[...new Set(FP.recipes.map(r=>r.category).filter(Boolean))].map(c=>`<option value="${esc(c)}">`).join('')}
             </datalist>
           </div>
           <div>
-            <label class="fp-label">Вихід (г / мл / шт)</label>
+            <label class="fp-label">${_tg('Вихід (г / мл / шт)', 'Выход (г / мл / шт)')}</label>
             <input id="fpRecipeYield" class="fp-inp" type="number" min="0" value="${recipe?.yield||100}" placeholder="1000">
           </div>
           <div>
-            <label class="fp-label">Кількість порцій</label>
+            <label class="fp-label">${_tg('Кількість порцій', 'Количество порций')}</label>
             <input id="fpRecipePortions" class="fp-inp" type="number" min="1" value="${recipe?.portions||1}" oninput="window._fpRecalc()">
           </div>
           <div>
-            <label class="fp-label">Ціна продажу (₴)</label>
+            <label class="fp-label">${_tg('Ціна продажу (₴)', 'Цена продажи (₴)')}</label>
             <input id="fpRecipeSalePrice" class="fp-inp" type="number" min="0" value="${recipe?.salePrice||''}" placeholder="0.00" oninput="window._fpRecalc()">
           </div>
         </div>
@@ -125,12 +126,12 @@
           <div style="overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:.82rem">
               <thead><tr style="background:#f8fafc">
-                <th style="padding:6px 8px;text-align:left;color:#6b7280;font-weight:600">Інгредієнт</th>
+                <th style="padding:6px 8px;text-align:left;color:#6b7280;font-weight:600">${_tg('Інгредієнт', 'Ингредиент')}</th>
                 <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">Брутто</th>
                 <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">Нетто</th>
                 <th style="width:60px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">Од.</th>
-                <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">Ціна/од</th>
-                <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">Вартість</th>
+                <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Ціна/од', 'Цена/ед')}</th>
+                <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${_tg('Вартість', 'Стоимость')}</th>
                 <th style="width:30px"></th>
               </tr></thead>
               <tbody id="fpIngrTbody"></tbody>
@@ -142,15 +143,15 @@
         <div style="display:flex;justify-content:flex-end;margin-bottom:1.25rem">
           <div style="min-width:260px;background:#f8fafc;border-radius:10px;padding:.85rem 1rem">
             <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem">
-              <span style="color:#6b7280">Собівартість (загальна):</span>
+              <span style="color:#6b7280">${_tg('Собівартість (загальна):', 'Себестоимость (общая):')}</span>
               <span id="fpTotalCost" style="font-weight:600">0.00 ₴</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem">
-              <span style="color:#6b7280">Собівартість порції:</span>
+              <span style="color:#6b7280">${_tg('Собівартість порції:', 'Себестоимость порции:')}</span>
               <span id="fpCostPerPortion" style="font-weight:600">0.00 ₴</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem">
-              <span style="color:#6b7280">Ціна продажу:</span>
+              <span style="color:#6b7280">${_tg('Ціна продажу:', 'Цена продажи:')}</span>
               <span id="fpSalePriceDisplay" style="font-weight:600">0.00 ₴</span>
             </div>
             <div style="display:flex;justify-content:space-between;padding-top:.5rem;border-top:2px solid #e5e7eb;font-size:.9rem">
@@ -161,12 +162,12 @@
         </div>
 
         <div style="margin-bottom:1rem">
-          <label class="fp-label">Технологія приготування</label>
-          <textarea id="fpRecipeTech" class="fp-inp" rows="3" placeholder="Опис процесу приготування...">${esc(recipe?.technology||'')}</textarea>
+          <label class="fp-label">${_tg('Технологія приготування', 'Технология приготовления')}</label>
+          <textarea id="fpRecipeTech" class="fp-inp" rows="3" placeholder="${_tg('Опис процесу приготування...', 'Описание процесса приготовления...')}">${esc(recipe?.technology||'')}</textarea>
         </div>
 
         <div style="display:flex;gap:.75rem;justify-content:flex-end;flex-wrap:wrap">
-          <button onclick="document.getElementById('fpRecipeOverlay').remove()" class="fp-btn" style="background:#f3f4f6;color:#374151">Скасувати</button>
+          <button onclick="document.getElementById('fpRecipeOverlay').remove()" class="fp-btn" style="background:#f3f4f6;color:#374151">${_tg('Скасувати', 'Отмена')}</button>
           ${recipe ? `<button onclick="window._fpPrintOP1('${recipe.id}')" class="fp-btn" style="background:#f59e0b;color:#fff"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>ОП-1</button>` : ''}
           <button onclick="window._fpSaveRecipe('${recipeId||''}')" class="fp-btn" style="background:#6366f1;color:#fff"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Зберегти</button>
         </div>
@@ -182,7 +183,7 @@
     if (!tbody) return;
     const items = FP.editingIngredients;
     if (!items.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:1rem;color:#9ca3af;font-size:.82rem">Додайте інгредієнти зі складу або вручну</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:1rem;color:#9ca3af;font-size:.82rem">${_tg('Додайте інгредієнти зі складу або вручну', 'Добавьте ингредиенты со склада или вручную')}</td></tr>`;
       window._fpRecalc();
       return;
     }
@@ -243,15 +244,15 @@
   };
 
   window._fpAddIngredientFromWarehouse = function() {
-    if (!FP.warehouseItems.length) { toast('Склад порожній. Додайте товари в розділ Склад.', 'info'); return; }
+    if (!FP.warehouseItems.length) { toast(_tg('Склад порожній. Додайте товари в розділ Склад.', 'Склад пуст. Добавьте товары в раздел Склад.'), 'info'); return; }
     const html = `
       <div id="fpWhPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10001;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:12px;padding:1.25rem;width:min(440px,95vw);max-height:80vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
-            <b>Вибір зі складу</b>
+            <b>${_tg('Вибір зі складу', 'Выбор со склада')}</b>
             <button onclick="document.getElementById('fpWhPicker').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem">✕</button>
           </div>
-          <input class="fp-inp" placeholder="Пошук..." oninput="window._fpWhSearch(this.value)" style="margin-bottom:.75rem">
+          <input class="fp-inp" placeholder="${_tg('Пошук...', 'Поиск...')}" oninput="window._fpWhSearch(this.value)" style="margin-bottom:.75rem">
           <div id="fpWhList">
             ${FP.warehouseItems.map(w=>`
               <div onclick="window._fpPickWarehouseItem('${w.id}')" class="fp-wh-row" style="padding:.5rem .75rem;border:1px solid #f3f4f6;border-radius:7px;cursor:pointer;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center">
@@ -325,7 +326,7 @@
   // ─── save recipe ──────────────────────────────────────────────────────────────
   window._fpSaveRecipe = async function(recipeId) {
     const name = el('fpRecipeName')?.value?.trim();
-    if (!name) { toast('Вкажіть назву', 'warn'); return; }
+    if (!name) { toast(_tg('Вкажіть назву', 'Укажите название'), 'warn'); return; }
 
     const portions = parseInt(el('fpRecipePortions')?.value) || 1;
     const salePrice = parseFloat(el('fpRecipeSalePrice')?.value) || 0;
@@ -363,7 +364,7 @@
         data.createdBy = window.currentUser?.uid || '';
         await col('fp_recipes').add(data);
       }
-      toast('Рецептуру збережено');
+      toast(_tg('Рецептуру збережено', 'Рецептура сохранена'));
       document.getElementById('fpRecipeOverlay')?.remove();
       await loadRecipes();
       renderRecipesList();
@@ -379,7 +380,7 @@
         if (d.exists) recipe = { id: d.id, ...d.data() };
       } catch(e) {}
     }
-    if (!recipe) { toast('Рецептуру не знайдено', 'error'); return; }
+    if (!recipe) { toast(_tg('Рецептуру не знайдено', 'Рецептура не найдена'), 'error'); return; }
 
     const company = window.currentCompanyData || {};
     const today = new Date().toLocaleDateString('uk-UA');
@@ -562,7 +563,7 @@
 
   window._fpAddToPlan = async function() {
     await loadRecipes();
-    if (!FP.recipes.length) { toast('Немає рецептур. Спочатку створіть рецептуру.', 'info'); return; }
+    if (!FP.recipes.length) { toast(_tg('Немає рецептур. Спочатку створіть рецептуру.', 'Нет рецептур. Сначала создайте рецептуру.'), 'info'); return; }
 
     const html = `
       <div id="fpPlanPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center">
@@ -572,18 +573,18 @@
             <button onclick="document.getElementById('fpPlanPicker').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem">✕</button>
           </div>
           <div style="margin-bottom:.75rem">
-            <label class="fp-label">Страва / продукт</label>
+            <label class="fp-label">${_tg('Страва / продукт', 'Блюдо / продукт')}</label>
             <select id="fpPlanRecipe" class="fp-inp" onchange="window._fpUpdatePlanCost()">
-              <option value="">Оберіть рецептуру...</option>
+              <option value="">${_tg('Оберіть рецептуру...', 'Выберите рецептуру...')}</option>
               ${FP.recipes.map(r=>`<option value="${r.id}" data-cost="${r.costPerPortion||0}" data-portions="${r.portions||1}">${esc(r.name)} (${esc(r.category||'')})</option>`).join('')}
             </select>
           </div>
           <div style="margin-bottom:.75rem">
-            <label class="fp-label">Кількість порцій для виробництва</label>
+            <label class="fp-label">${_tg('Кількість порцій для виробництва', 'Количество порций для производства')}</label>
             <input id="fpPlanPortions" class="fp-inp" type="number" min="1" value="10" oninput="window._fpUpdatePlanCost()">
           </div>
           <div id="fpPlanCostPreview" style="background:#f8fafc;border-radius:8px;padding:.6rem .75rem;font-size:.82rem;margin-bottom:1rem;display:none">
-            Собівартість: <b id="fpPlanTotalCost">—</b>
+            ${_tg('Собівартість:', 'Себестоимость:')} <b id="fpPlanTotalCost">—</b>
           </div>
           <div style="display:flex;gap:.5rem;justify-content:flex-end">
             <button onclick="document.getElementById('fpPlanPicker').remove()" class="fp-btn" style="background:#f3f4f6;color:#374151">Скасувати</button>
@@ -612,7 +613,7 @@
   window._fpConfirmAddToPlan = async function() {
     const recipeId = el('fpPlanRecipe')?.value;
     const portions = parseInt(el('fpPlanPortions')?.value) || 1;
-    if (!recipeId) { toast('Оберіть рецептуру', 'warn'); return; }
+    if (!recipeId) { toast(_tg('Оберіть рецептуру', 'Выберите рецептуру'), 'warn'); return; }
     const recipe = FP.recipes.find(r => r.id === recipeId);
     try {
       await col('fp_production_plan').add({
@@ -624,7 +625,7 @@
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: window.currentUser?.uid || '',
       });
-      toast('Додано в план');
+      toast(_tg('Додано в план', 'Добавлено в план'));
       document.getElementById('fpPlanPicker')?.remove();
       await loadProductionPlan();
       renderProductionPlanTab();
@@ -637,7 +638,7 @@
         status: 'in_progress',
         startedAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
-      toast('Виробництво розпочато');
+      toast(_tg('Виробництво розпочато', 'Производство начато'));
       await loadProductionPlan();
       renderProductionPlanTab();
     } catch(e) { toast('Помилка: ' + e.message, 'error'); }
@@ -647,7 +648,7 @@
     const plan = FP.productionPlan.find(p => p.id === planId);
     if (!plan) return;
     const recipe = FP.recipes.find(r => r.id === plan.recipeId);
-    if (!recipe) { toast('Рецептуру не знайдено', 'error'); return; }
+    if (!recipe) { toast(_tg('Рецептуру не знайдено', 'Рецептура не найдена'), 'error'); return; }
 
     // Write off ingredients from warehouse
     const errors = [];
@@ -672,9 +673,9 @@
     }
 
     if (errors.length) {
-      toast('Частково списано. Помилки: ' + errors.join('; '), 'warn');
+      toast(_tg('Частково списано. Помилки: ', 'Частично списано. Ошибки: ') + errors.join('; '), 'warn');
     } else {
-      toast(`✓ Виробництво завершено. Зі складу списано інгредієнти для ${plan.portions} порц.`);
+      toast(_tg(`✓ Виробництво завершено. Зі складу списано інгредієнти для ${plan.portions} порц.`, `✓ Производство завершено. Со склада списаны ингредиенты для ${plan.portions} порц.`));
     }
 
     await col('fp_production_plan').doc(planId).update({
@@ -754,10 +755,10 @@
   window._fpOpenRecipe = function(recipeId) { openRecipeForm(recipeId); };
 
   window._fpDeleteRecipe = async function(recipeId) {
-    if (!confirm('Видалити рецептуру?')) return;
+    if (!confirm(_tg('Видалити рецептуру?', 'Удалить рецептуру?'))) return;
     try {
       await col('fp_recipes').doc(recipeId).delete();
-      toast('Рецептуру видалено');
+      toast(_tg('Рецептуру видалено', 'Рецептура удалена'));
       await loadRecipes();
       renderRecipesList();
     } catch(e) { toast('Помилка: ' + e.message, 'error'); }
@@ -766,10 +767,10 @@
   window._fpPlanFromRecipe = async function(recipeId) {
     const recipe = FP.recipes.find(r => r.id === recipeId);
     if (!recipe) return;
-    const portionsStr = prompt(`Скільки порцій "${recipe.name}" виробити?`, '10');
+    const portionsStr = prompt(_tg(`Скільки порцій "${recipe.name}" виробити?`, `Сколько порций "${recipe.name}" произвести?`), '10');
     if (!portionsStr) return;
     const portions = parseInt(portionsStr);
-    if (!portions || portions < 1) { toast('Вкажіть кількість порцій', 'warn'); return; }
+    if (!portions || portions < 1) { toast(_tg('Вкажіть кількість порцій', 'Укажите количество порций'), 'warn'); return; }
     try {
       await col('fp_production_plan').add({
         recipeId, recipeName: recipe.name, portions,
@@ -777,7 +778,7 @@
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: window.currentUser?.uid || '',
       });
-      toast(`${recipe.name}: ${portions} порц. додано в план`);
+      toast(_tg(`${recipe.name}: ${portions} порц. додано в план`, `${recipe.name}: ${portions} порц. добавлено в план`));
     } catch(e) { toast('Помилка: ' + e.message, 'error'); }
   };
 
