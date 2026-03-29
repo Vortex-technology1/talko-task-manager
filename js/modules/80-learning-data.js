@@ -16377,6 +16377,259 @@ Bist du dabei?</div>
             homeworkLinkName: null,
             homeworkLinkName_ru: null,
         },
+        {
+            id: 302,
+            category: 'strategy',
+            title: 'ВИБІР НІШІ: від хаосу до прибуткового напряму',
+            title_ru: 'ВЫБОР НИШИ: от хаоса к прибыльному направлению',
+            title_en: 'NICHE SELECTION: from chaos to a profitable direction',
+            subtitle: 'Покроковий AI-процес: знайди свою нішу під ресурси, цілі та навички за 30 хвилин',
+            subtitle_ru: 'Пошаговый AI-процесс: найди свою нишу под ресурсы, цели и навыки за 30 минут',
+            subtitle_en: 'Step-by-step AI process: find your niche based on resources, goals and skills in 30 minutes',
+            duration: 30,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s302-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s302-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s302-card p+p{margin-top:.65rem}
+.s302-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s302-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s302-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s302-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s302-snum{width:28px;height:28px;background:#f59e0b;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s302-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s302-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s302-benefit{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;margin-bottom:.35rem}
+.s302-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.s302-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s302-ticon{width:40px;height:40px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s302-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s302-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s302-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#f59e0b;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s302-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#fff7ed,#fef3c7);border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;font-size:.875rem;color:#92400e;font-style:italic;line-height:1.6}
+.s302-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-bottom:.3rem}
+</style>
+
+<div class="s302-lbl">Вступ</div>
+<div class="s302-title">Чому більшість бізнесів застряє ще до старту</div>
+<div class="s302-card">
+<p>Найпоширеніша причина провалу на старті — не брак грошей і не погана команда. Це <strong>неправильно обрана ніша</strong>. Людина починає бізнес «бо так роблять інші», «бо здається що є попит», або просто бо «хочеться спробувати».</p>
+<p>Результат: 6–12 місяців витраченого часу, зливу бюджету і розчарування. А потім висновок: «Бізнес — це не для мене».</p>
+<p>Ніша — це не просто «галузь». Це перетин твоїх ресурсів, навичок, ринкового попиту і цілей. Коли всі чотири елементи збіглися — бізнес злітає. Якщо хоч один відсутній — застряєш.</p>
+</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Що дає правильна ніша</div>
+<div class="s302-title">4 конкретні результати замість «спробуємо»</div>
+<div class="s302-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Ти знаєш свого клієнта і де його знайти — без гадань</div>
+<div class="s302-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Є конкретні цифри: скільки можна заробити і за який термін</div>
+<div class="s302-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Є план тестування на 14 днів — без великих вкладень</div>
+<div class="s302-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Менший ризик вбити рік на слабку ідею</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Як працює AI-асистент</div>
+<div class="s302-title">8 кроків від хаосу до готового плану</div>
+
+<div class="s302-step">
+<div class="s302-snum">1</div>
+<div><div class="s302-stitle">Збирає твої вихідні дані</div>
+<div class="s302-stext">Бажаний місячний прибуток, стартовий капітал, термін, досвід, навички, обмеження та побажання. Не переходить далі поки не отримає чітку відповідь.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">2</div>
+<div><div class="s302-stitle">Генерує 5 ніш під твою ситуацію</div>
+<div class="s302-stext">Не абстрактні ідеї — конкретні напрями з цифрами, прикладами і поясненням чому саме вони підходять тобі.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">3</div>
+<div><div class="s302-stitle">Для кожної ніші — повна картина</div>
+<div class="s302-stext">Опис, чому підходить, реальні цифри, приклад підприємця, перші кроки тесту на 14 днів, бюджет на тест.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">4</div>
+<div><div class="s302-stitle">Ти обираєш нішу</div>
+<div class="s302-stext">Обираєш ту, що зацікавила найбільше — і переходиш до глибокого аналізу.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">5</div>
+<div><div class="s302-stitle">Глибокий аналіз обраної ніші</div>
+<div class="s302-stext">Твоя унікальність, ідеальний клієнт, канали залучення. Не теорія — конкретика під тебе.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">6</div>
+<div><div class="s302-stitle">Покроковий план запуску</div>
+<div class="s302-stext">Що робити першого тижня, другого, до кінця першого місяця. Зрозумілі дії, а не розмиті рекомендації.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">7</div>
+<div><div class="s302-stitle">KPI на перший місяць</div>
+<div class="s302-stext">Конкретні метрики: скільки контактів, яка конверсія, коли перші гроші. Щоб ти знав чи рухаєшся в правильному напрямі.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">8</div>
+<div><div class="s302-stitle">Сигнали масштабування або зміни</div>
+<div class="s302-stext">Коли масштабуватись, коли корегувати, коли змінювати нішу. Список інструментів та автоматизації.</div></div>
+</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Ключова цінність</div>
+<div class="s302-quote">Асистент не дає абстрактні поради — він будує структуру дій під твої реальні можливості. Вибір ніші перетворюється з довгих роздумів у швидке тестування.</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Результат сесії</div>
+<div class="s302-title">Що ти отримаєш на виході</div>
+<div class="s302-benefit"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Звужений список до 1–3 конкретних ніш під тебе</div>
+<div class="s302-benefit"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Цифри: скільки можна заробити і за який термін реально</div>
+<div class="s302-benefit"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>14-денний тест з мінімальним бюджетом</div>
+<div class="s302-benefit"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Готовий план запуску який можна зберегти і використовувати як робочий документ</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Інструмент</div>
+<div class="s302-tool">
+<div class="s302-thdr">
+<div class="s302-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+<div>
+<div class="s302-ttitle">AI Асистент вибору ніші</div>
+<div class="s302-tdesc">Проводить тебе покроково: збирає дані → генерує 5 ніш з цифрами → глибокий аналіз обраної → план запуску + KPI + сигнали масштабування. Виходиш з готовим робочим документом.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-68b54d8809608191bb59771949828845-choosing-a-niche" target="_blank" class="s302-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Розпочати вибір ніші
+</a>
+</div>`,
+
+            lessonContent_ru: `<style>
+.s302-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.s302-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.s302-card p+p{margin-top:.65rem}
+.s302-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.s302-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.s302-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.s302-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.5rem}
+.s302-snum{width:28px;height:28px;background:#f59e0b;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.s302-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.s302-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.s302-benefit{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#166534;margin-bottom:.35rem}
+.s302-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.s302-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.s302-ticon{width:40px;height:40px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s302-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.s302-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.s302-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#f59e0b;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.s302-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#fff7ed,#fef3c7);border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;font-size:.875rem;color:#92400e;font-style:italic;line-height:1.6}
+.s302-result{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:#f0fdf4;border-radius:8px;font-size:.85rem;color:#166534;margin-bottom:.3rem}
+</style>
+
+<div class="s302-lbl">Введение</div>
+<div class="s302-title">Почему большинство бизнесов застревает ещё до старта</div>
+<div class="s302-card">
+<p>Самая распространённая причина провала на старте — не нехватка денег и не плохая команда. Это <strong>неправильно выбранная ниша</strong>. Человек начинает бизнес «потому что так делают другие», «кажется есть спрос», или просто «хочется попробовать».</p>
+<p>Результат: 6–12 месяцев потраченного времени, слитого бюджета и разочарования. А потом вывод: «Бизнес — это не для меня».</p>
+<p>Ниша — это не просто «отрасль». Это пересечение твоих ресурсов, навыков, рыночного спроса и целей. Когда все четыре элемента совпали — бизнес взлетает. Если хоть один отсутствует — застреваешь.</p>
+</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Что даёт правильная ниша</div>
+<div class="s302-title">4 конкретных результата вместо «попробуем»</div>
+<div class="s302-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Ты знаешь своего клиента и где его найти — без гаданий</div>
+<div class="s302-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Есть конкретные цифры: сколько можно заработать и за какой срок</div>
+<div class="s302-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Есть план тестирования на 14 дней — без больших вложений</div>
+<div class="s302-result"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Меньший риск убить год на слабую идею</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Как работает AI-ассистент</div>
+<div class="s302-title">8 шагов от хаоса до готового плана</div>
+
+<div class="s302-step">
+<div class="s302-snum">1</div>
+<div><div class="s302-stitle">Собирает твои исходные данные</div>
+<div class="s302-stext">Желаемый месячный доход, стартовый капитал, срок, опыт, навыки, ограничения и пожелания. Не переходит дальше пока не получит чёткий ответ.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">2</div>
+<div><div class="s302-stitle">Генерирует 5 ниш под твою ситуацию</div>
+<div class="s302-stext">Не абстрактные идеи — конкретные направления с цифрами, примерами и объяснением почему именно они подходят тебе.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">3</div>
+<div><div class="s302-stitle">Для каждой ниши — полная картина</div>
+<div class="s302-stext">Описание, почему подходит, реальные цифры, пример предпринимателя, первые шаги теста на 14 дней, бюджет на тест.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">4</div>
+<div><div class="s302-stitle">Ты выбираешь нишу</div>
+<div class="s302-stext">Выбираешь ту, что заинтересовала больше всего — и переходишь к глубокому анализу.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">5</div>
+<div><div class="s302-stitle">Глубокий анализ выбранной ниши</div>
+<div class="s302-stext">Твоя уникальность, идеальный клиент, каналы привлечения. Не теория — конкретика под тебя.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">6</div>
+<div><div class="s302-stitle">Пошаговый план запуска</div>
+<div class="s302-stext">Что делать в первую неделю, вторую, до конца первого месяца. Понятные действия, а не размытые рекомендации.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">7</div>
+<div><div class="s302-stitle">KPI на первый месяц</div>
+<div class="s302-stext">Конкретные метрики: сколько контактов, какая конверсия, когда первые деньги. Чтобы ты знал, движешься ли в правильном направлении.</div></div>
+</div>
+
+<div class="s302-step">
+<div class="s302-snum">8</div>
+<div><div class="s302-stitle">Сигналы масштабирования или смены</div>
+<div class="s302-stext">Когда масштабировать, когда корректировать, когда менять нишу. Список инструментов и автоматизации.</div></div>
+</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Ключевая ценность</div>
+<div class="s302-quote">Ассистент не даёт абстрактные советы — он строит структуру действий под твои реальные возможности. Выбор ниши превращается из долгих раздумий в быстрое тестирование.</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Результат сессии</div>
+<div class="s302-title">Что ты получишь на выходе</div>
+<div class="s302-benefit"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Суженный список до 1–3 конкретных ниш под тебя</div>
+<div class="s302-benefit"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Цифры: сколько можно заработать и за какой срок реально</div>
+<div class="s302-benefit"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>14-дневный тест с минимальным бюджетом</div>
+<div class="s302-benefit"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>Готовый план запуска который можно сохранить и использовать как рабочий документ</div>
+
+<div class="s302-div"></div>
+<div class="s302-lbl">Инструмент</div>
+<div class="s302-tool">
+<div class="s302-thdr">
+<div class="s302-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+<div>
+<div class="s302-ttitle">AI Ассистент выбора ниши</div>
+<div class="s302-tdesc">Проводит тебя пошагово: собирает данные → генерирует 5 ниш с цифрами → глубокий анализ выбранной → план запуска + KPI + сигналы масштабирования. Выходишь с готовым рабочим документом.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-68b54d8809608191bb59771949828845-choosing-a-niche" target="_blank" class="s302-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Начать выбор ниши
+</a>
+</div>`,
+
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
     ];
     if (window.learningCourseData) {
         window.learningCourseData = window.learningCourseData.concat(strategyCourseData);
