@@ -302,9 +302,14 @@ async function handleAiProxy(request, env) {
 
     if (!apiKey) return json({error:'No AI API key configured'},500);
 
+    // Clean messages — remove null content
+    const cleanMessages = messages
+        .filter(m => m && m.role && m.content != null && m.content !== '')
+        .map(m => ({ role: m.role, content: String(m.content) }));
+
     const finalMessages = finalSystemPrompt
-        ? [{ role:'system', content: finalSystemPrompt }, ...messages.filter(m=>m.role!=='system')]
-        : messages;
+        ? [{ role:'system', content: String(finalSystemPrompt) }, ...cleanMessages.filter(m=>m.role!=='system')]
+        : cleanMessages;
 
     try {
         let aiResp;
