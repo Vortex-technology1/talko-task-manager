@@ -726,10 +726,10 @@ const OB_STEPS = [
     description: '<b>Навіщо це потрібно:</b> P&L без поділу витрат — це просто «доходи мінус витрати». Справжній P&L показує де втрачається маржа.<br><br>'
       + '<div style="display:grid;gap:8px;margin:8px 0;">'
       + '<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;">'
-      + '<b style="color:#c2410c;">🏭 COGS (Собівартість)</b> — прямі витрати на виробництво або надання послуги.<br>'
+      + '<b style="color:#c2410c;">COGS (Собівартість)</b> — прямі витрати на виробництво або надання послуги.<br>'
       + '<span style="font-size:0.8rem;color:#6b7280;">Приклади: матеріали, зарплата майстрів, підрядники, компоненти.</span></div>'
       + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;">'
-      + '<b style="color:#16a34a;">💼 OPEX (Операційні)</b> — витрати на утримання бізнесу незалежно від обсягу.<br>'
+      + '<b style="color:#16a34a;">OPEX (Операційні)</b> — витрати на утримання бізнесу незалежно від обсягу.<br>'
       + '<span style="font-size:0.8rem;color:#6b7280;">Приклади: оренда, маркетинг, зарплата адмін, програми, податки.</span></div>'
       + '</div>'
       + '<b>Як це впливає на P&L:</b><br>'
@@ -754,11 +754,11 @@ const OB_STEPS = [
       + '<b>Що дають зв\'язки між модулями:</b><br>'
       + '<div style="display:grid;gap:6px;margin:8px 0;">'
       + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;">'
-      + '✅ <b>CRM → Фінанси:</b> угода переходить у статус «Виграно» → система запитує підтвердження → дохід автоматично записується у фінанси з правильною категорією і рахунком.</div>'
+      + '<b>CRM → Фінанси:</b> угода переходить у статус «Виграно» → система запитує підтвердження → дохід автоматично записується у фінанси з правильною категорією і рахунком.</div>'
       + '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:0.82rem;">'
-      + '✅ <b>Booking → Фінанси:</b> запис завершено і оплачено → оплата автоматично йде у фінанси.</div>'
+      + '<b>Booking → Фінанси:</b> запис завершено і оплачено → оплата автоматично йде у фінанси.</div>'
       + '<div style="background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:0.82rem;">'
-      + '✅ <b>Склад → Фінанси:</b> закупівля товару → витрата у фінансах. Списання → собівартість у P&L.</div>'
+      + '<b>Склад → Фінанси:</b> закупівля товару → витрата у фінансах. Списання → собівартість у P&L.</div>'
       + '</div>'
       + '<b>Де налаштувати:</b> Система → Налаштування → Зв\'язки між модулями (toggles).<br><br>'
       + AI_BTN,
@@ -780,11 +780,11 @@ const OB_STEPS = [
       + '<b>Що показує тижневий план:</b><br>'
       + '<div style="display:grid;gap:6px;margin:8px 0;">'
       + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;">'
-      + '📊 <b>Стовпчиковий графік:</b> зелені бари = дохід, червоні = витрати по кожному тижню. Факт накладається поверх плану де вже є дані.</div>'
+      + '<b>Стовпчиковий графік:</b> зелені бари = дохід, червоні = витрати по кожному тижню. Факт накладається поверх плану де вже є дані.</div>'
       + '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:0.82rem;">'
-      + '📈 <b>Cashflow лінія (синя):</b> накопичувальний залишок грошей. Якщо лінія йде нижче нуля — ⚠️ касовий розрив.</div>'
+      + '<b>Cashflow лінія (синя):</b> накопичувальний залишок грошей. Якщо лінія йде нижче нуля — касовий розрив.</div>'
       + '<div style="background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:0.82rem;">'
-      + '📋 <b>Таблиця по місяцях:</b> кожен тиждень — план/факт доходів, план/факт витрат, відхилення Δ, залишок CF. Планові суми редагуються прямо в таблиці.</div>'
+      + '<b>Таблиця по місяцях:</b> кожен тиждень — план/факт доходів, план/факт витрат, відхилення Δ, залишок CF. Планові суми редагуються прямо в таблиці.</div>'
       + '</div>'
       + '<b>Де знайти:</b> Фінанси → Планування → кнопка «Тижневий план 6M».<br><br>'
       + AI_BTN,
@@ -798,6 +798,85 @@ const OB_STEPS = [
     ],
     action: { label:'Відкрити планування', tab:'finance' },
     tip: INFO_ICON + ' Тижневий план — це не прогноз погоди. Це ваш намір. Навіть якщо факт відрізняється від плану на 30% — це вже краще ніж планувати «в голові».',
+},
+
+
+
+{
+    id: 'finance_intro_what', block: 'finance', color: '#10b981',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
+    title: 'Фінанси: з чого почати', subtitle: 'Блок 7 · Фінанси', est: '10 хв',
+    description: '<b>Фінансовий модуль — це не бухгалтерія.</b> Це інструмент управлінського контролю для власника.<br><br>Головний принцип: <b>дані вносяться один раз → автоматично з\'являються у звітах, P&L, Cash Flow і дашборді.</b><br><br><div style="display:grid;gap:6px;margin:8px 0;"><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Дашборд</b> — 4 KPI: Дохід / Витрати / Прибуток / Маржа. Оновлюється при кожній транзакції.</div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Транзакції</b> — основа всього. Кожен дохід і витрата з категорією.</div><div style="background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Рахунки клієнтам</b> — створюєте з CRM, PDF за 2 хвилини, при оплаті автоматично йде в доходи.</div><div style="background:#fce7f3;border:1px solid #fbcfe8;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Аналітика</b> — P&L, Cash Flow, Баланс, тижневий план 6M.</div><div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Регулярні платежі</b> — оренда, зарплати, підписки — налаштовуєте один раз.</div></div><b>З чого почати:</b> налаштуйте рахунки → додайте категорії → внесіть перші транзакції → дашборд одразу оживе.'
+      + AI_BTN,
+    tasks: [
+        { id:'fi0', text:'Відкрити розділ Фінанси в головному меню', detail:'Фінанси — вкладка у верхньому меню. На мобільному — в нижньому меню.' },
+        { id:'fi1', text:'Переглянути дашборд — зрозуміти структуру розділів', detail:'Дашборд → Транзакції → Рахунки → Планування → Аналітика. Витратьте 5 хвилин щоб зрозуміти де що знаходиться.' },
+        { id:'fi2', text:'Відкрити Налаштування → Рахунки і перевірити список рахунків', detail:'За замовчуванням є «Основний рахунок». Додайте свої: готівка, розрахунковий рахунок, каса.' },
+        { id:'fi3', text:'Відкрити Налаштування → Категорії і додати основні категорії доходів', detail:'Наприклад: «Послуги», «Товари», «Абонементи». Без категорій аналітика не працює.' },
+        { id:'fi4', text:'Внести першу транзакцію доходу', detail:'Фінанси → Транзакції → «+ Транзакція» → тип «Дохід» → сума, категорія, рахунок, дата → зберегти. Дашборд оновиться.' },
+    ],
+    action: { label:'Відкрити фінанси', tab:'finance' },
+    tip: INFO_ICON + ' Найшвидший старт: 5 реальних транзакцій цього місяця — і дашборд вже показує картину. Не чекайте «ідеального моменту».',
+},
+{
+    id: 'finance_accounts', block: 'finance', color: '#10b981',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>',
+    title: 'Рахунки: налаштування і структура', subtitle: 'Блок 7 · Фінанси', est: '10 хв',
+    description: '<b>Рахунки</b> — це гаманці вашого бізнесу. Кожна транзакція прив\'язана до конкретного рахунку.<br><br><b>Навіщо розділяти рахунки:</b><br><div style="display:grid;gap:6px;margin:8px 0;"><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;">Бачите скільки грошей на кожному рахунку в реальному часі</div><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;">Cashflow рахується по всіх рахунках разом — реальний залишок бізнесу</div><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;">Перекази між рахунками не впливають на прибуток — тільки на розподіл</div></div><b>Типова структура:</b><br>Розрахунковий рахунок (банк) + Каса (готівка) + Картка (корпоративна) + Stripe/LiqPay (онлайн-оплати)<br><br><b>Початковий залишок</b> — введіть реальну суму на кожному рахунку на дату початку роботи з системою.'
+      + AI_BTN,
+    tasks: [
+        { id:'fa1', text:'Відкрити Фінанси → Налаштування → Рахунки', detail:'Бачите список рахунків. За замовчуванням є «Основний рахунок».' },
+        { id:'fa2', text:'Додати рахунки які реально використовуєте', detail:'Готівка, розрахунковий рахунок, картка, онлайн-каса. Вкажіть назву і валюту.' },
+        { id:'fa3', text:'Внести початковий залишок для кожного рахунку', detail:'Редагуйте рахунок → поле «Початковий залишок» → реальна сума на сьогодні.' },
+        { id:'fa4', text:'Перевірити що сума всіх початкових залишків = реальні гроші бізнесу', detail:'Дашборд → блок «Залишок по рахунках» має співпадати з реальністю.' },
+    ],
+    action: { label:'Відкрити налаштування', tab:'finance' },
+    tip: INFO_ICON + ' Не створюйте забагато рахунків. 2-4 рахунки — оптимально. Важливо щоб ви реально вносили транзакції на правильний рахунок.',
+},
+{
+    id: 'finance_transactions', block: 'finance', color: '#10b981',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+    title: 'Транзакції: як правильно вносити', subtitle: 'Блок 7 · Фінанси', est: '15 хв',
+    description: '<b>Транзакція</b> — основний елемент фінансового обліку. Кожен дохід і витрата = одна транзакція.<br><br><b>Поля транзакції:</b><br><div style="display:grid;gap:6px;margin:8px 0;"><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Тип</b> — Дохід / Витрата / Переказ між рахунками</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Сума і рахунок</b> — скільки і на якому рахунку</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Категорія</b> — для групування в P&L і аналітиці</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Дата оплати</b> — коли реально пройшли гроші (для Cash Flow)</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Дата нарахування</b> — коли надана послуга (для P&L). Можна не заповнювати якщо збігається з датою оплати</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Прив\'язка до угоди</b> — з CRM. Тоді видно маржу кожного замовлення</div></div><b>Регулярні платежі</b> — оренда, зарплата, підписки — налаштовуйте один раз.'
+      + AI_BTN,
+    tasks: [
+        { id:'ft1', text:'Внести 3 реальних доходи цього місяця', detail:'Фінанси → Транзакції → «+ Транзакція» → Дохід → заповніть всі поля → зберегти.' },
+        { id:'ft2', text:'Внести 3 реальних витрати з правильними категоріями', detail:'Витрати → вкажіть тип COGS або OPEX якщо налаштували категорії.' },
+        { id:'ft3', text:'Налаштувати 1 регулярний платіж (наприклад оренда)', detail:'Фінанси → Налаштування → Регулярні платежі → «+ Новий» → сума, категорія, день місяця, рахунок.' },
+        { id:'ft4', text:'Перевірити дашборд після внесення транзакцій', detail:'Дашборд має показати зміни в KPI: Дохід, Витрати, Прибуток, Маржа.' },
+    ],
+    action: { label:'Відкрити фінанси', tab:'finance' },
+    tip: INFO_ICON + ' Головне правило: вносити транзакції регулярно — хоча б раз на тиждень. 15 хвилин на тиждень = повна фінансова картина місяця.',
+},
+{
+    id: 'finance_invoices', block: 'finance', color: '#10b981',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    title: 'Рахунки клієнтам (Invoices)', subtitle: 'Блок 7 · Фінанси', est: '10 хв',
+    description: '<b>Біль без цього:</b> рахунок вручну в Word. 20 хвилин на один рахунок. 30 клієнтів = 10 годин на місяць.<br><br><b>Як працює Invoice в TALKO:</b><br><div style="display:grid;gap:6px;margin:8px 0;"><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Створення з угоди CRM:</b> кнопка «Рахунок» в картці угоди → клієнт і сума підставляються автоматично → додаєте позиції → PDF за 2 хвилини</div><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Статуси:</b> Чернетка → Відправлений → Оплачений. При статусі «Оплачений» → транзакція доходу створюється автоматично</div><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;"><b>Відстеження:</b> бачите які рахунки очікують оплати і на яку суму — дебіторська заборгованість</div></div><b>Реквізити компанії</b> для рахунків: Система → Налаштування → Реквізити компанії. Заповніть один раз — підставляються в кожен рахунок.'
+      + AI_BTN,
+    tasks: [
+        { id:'inv1', text:'Заповнити реквізити компанії для рахунків', detail:'Система → Налаштування → Реквізити компанії: назва, адреса, ЄДРПОУ, банківські реквізити.' },
+        { id:'inv2', text:'Створити тестовий рахунок з картки CRM-угоди', detail:'Відкрийте будь-яку угоду → кнопка «Рахунок» → додайте 1-2 позиції → перегляд PDF → зберегти.' },
+        { id:'inv3', text:'Відмітити рахунок як «Оплачений» і перевірити що транзакція створилась', detail:'Фінанси → Рахунки → знайдіть тестовий рахунок → статус «Оплачений» → перевірте Транзакції — має з\'явитись дохід.' },
+        { id:'inv4', text:'Перевірити список несплачених рахунків (дебіторка)', detail:'Фінанси → Рахунки → фільтр «Відправлений». Це ваша поточна дебіторська заборгованість.' },
+    ],
+    action: { label:'Відкрити фінанси', tab:'finance' },
+    tip: INFO_ICON + ' Рахунок з системи = автоматична транзакція при оплаті. Жодного подвійного введення. Це економить 3-5 годин на місяць.',
+},
+{
+    id: 'finance_analytics', block: 'finance', color: '#10b981',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+    title: 'Аналітика: P&L, Cash Flow і прогноз', subtitle: 'Блок 7 · Фінанси', est: '15 хв',
+    description: '<b>Три звіти які має знати кожен власник:</b><br><br><div style="display:grid;gap:8px;margin:8px 0;"><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;"><b style="color:#1d4ed8;">P&L (Прибутки і збитки)</b><br><span style="font-size:0.82rem;color:#374151;">Показує: чи заробляєте ви. Виручка − Собівартість = Валовий прибуток − OPEX = Чистий прибуток. Відповідає на питання: «Чи прибутковий мій бізнес?»</span></div><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;"><b style="color:#15803d;">Cash Flow (Рух грошей)</b><br><span style="font-size:0.82rem;color:#374151;">Показує: де гроші зараз і коли вони прийдуть. Бізнес може бути прибутковим але без грошей на рахунку. Відповідає на питання: «Чи є гроші прямо зараз?»</span></div><div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:10px 12px;"><b style="color:#7c3aed;">Баланс</b><br><span style="font-size:0.82rem;color:#374151;">Показує: що у вас є і скільки ви винні. Активи, зобов\'язання, капітал. Відповідає на питання: «Скільки коштує мій бізнес?»</span></div></div><b>Тижневий план 6M</b> — прогноз cashflow на півроку вперед. Видно коли буде касовий розрив — до того як він станеться.'
+      + AI_BTN,
+    tasks: [
+        { id:'fan1', text:'Відкрити Фінанси → Аналітика → Cash Flow', detail:'Графік руху грошей по місяцях. Якщо даних немає — спочатку внесіть транзакції.' },
+        { id:'fan2', text:'Відкрити P&L звіт за поточний місяць', detail:'Аналітика → P&L → поточний місяць. Перевірте валову маржу і чистий прибуток.' },
+        { id:'fan3', text:'Відкрити Баланс і перевірити поточні активи', detail:'Аналітика → Баланс. Дебіторка (несплачені рахунки) + гроші на рахунках = ваші активи.' },
+        { id:'fan4', text:'Задати питання AI-аналітику в розділі Аналітика', detail:'«Які категорії витрат зросли цього місяця?» або «Порівняй прибуток з минулим місяцем». AI відповідає на основі ваших реальних даних.' },
+    ],
+    action: { label:'Відкрити аналітику', tab:'finance' },
+    tip: INFO_ICON + ' Дивіться P&L раз на тиждень. 10 хвилин — і ви розумієте стан бізнесу краще ніж більшість власників.',
 },
 
 
