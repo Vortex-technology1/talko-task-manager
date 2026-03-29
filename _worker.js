@@ -352,7 +352,8 @@ async function handleAiProxy(request, env) {
                 throw e;
             }
         }
-        return json(aiResp);
+        const text = aiResp?.choices?.[0]?.message?.content || '';
+        return json({ ...aiResp, text });
     } catch(e) { return json({error:e.message},500); }
 }
 
