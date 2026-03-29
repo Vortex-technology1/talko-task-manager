@@ -1042,17 +1042,17 @@ function _saRenderSystem() {
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                     Firebase Console
                 </a>
-                <a href="https://vercel.com/dashboard" target="_blank"
-                    style="padding:0.4rem 0.85rem;background:#f8fafc;border:1px solid #e2e8f0;color:#374151;border-radius:7px;font-size:0.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+                <a href="https://dash.cloudflare.com/12d5ceff4d93e06ad7f00aceb903447d/pages/view/talko-task-manager" target="_blank"
+                    style="padding:0.4rem 0.85rem;background:#fff7ed;border:1px solid #fed7aa;color:#c2410c;border-radius:7px;font-size:0.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    Vercel Dashboard
+                    Cloudflare Dashboard
                 </a>
                 <a href="https://github.com/Vortex-technology1/talko-task-manager" target="_blank"
                     style="padding:0.4rem 0.85rem;background:#f8fafc;border:1px solid #e2e8f0;color:#374151;border-radius:7px;font-size:0.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
                     GitHub Repo
                 </a>
-                <a href="https://taskmanagerai-vert.vercel.app" target="_blank"
+                <a href="https://apptalko.com" target="_blank"
                     style="padding:0.4rem 0.85rem;background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;border-radius:7px;font-size:0.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                     Відкрити Prod

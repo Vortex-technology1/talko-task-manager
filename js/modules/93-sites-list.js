@@ -563,7 +563,7 @@ window.sitesTogglePublish = async function (siteId, currentStatus) {
     try {
         const BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
             ? `${location.origin}`
-            : 'https://taskmanagerai-vert.vercel.app';
+            : 'https://apptalko.com';
         const cid = window.currentCompanyId || window.currentCompany || '';
         const publicUrl = newStatus === 'published'
             ? `${BASE}/api/site?id=${siteId}&cid=${cid}`
