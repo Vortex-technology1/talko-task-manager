@@ -311,6 +311,7 @@ document.addEventListener('mousedown', function(e) {
         });
     }
     window.applyNavTranslations = function applyNavTranslations(lang) {
+        lang = lang || window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || 'ua';
         _patchTranslations();
         // By data-i18n attr
         Object.keys(_navKeyMap).forEach(function(key) {
@@ -331,6 +332,11 @@ document.addEventListener('mousedown', function(e) {
         Object.keys(_byId).forEach(function(id) {
             var k = _byId[id]; var el = document.getElementById(id);
             if (el && _navKeyMap[k] && _navKeyMap[k][lang]) el.textContent = _navKeyMap[k][lang];
+        });
+        // DIRECT FORCE: також шукаємо по всьому документу через querySelectorAll
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n');
+            if (_navKeyMap[key] && _navKeyMap[key][lang]) el.textContent = _navKeyMap[key][lang];
         });
         // FIX: також застосовуємо через window.translations якщо є
         if (typeof window.translations !== 'undefined' && window.translations[lang]) {
