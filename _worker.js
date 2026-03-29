@@ -125,7 +125,7 @@ async function verifyIdToken(token, env) {
 function esc(s)   { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function cssVal(v,fb) {
     const s=String(v||fb||'');
-    if(/[^a-zA-Z0-9#%.\\-(),\s]/.test(s)) return fb||'';
+    if(/[^a-zA-Z0-9#%.() ,-]/.test(s)) return fb||'';
     if(/expression|javascript|url\s*\(|import|@/i.test(s)) return fb||'';
     return s;
 }
