@@ -16274,6 +16274,510 @@ Bist du dabei?</div>
             homeworkLinkName: 'Перейти до Sales Page Master',
             homeworkLinkName_ru: 'Перейти к Sales Page Master',
         },
+        {
+            id: 106,
+            category: 'marketing',
+            title: '14 ПУНКТІВ АНАЛІЗУ: чи продає твій текст',
+            title_ru: '14 ПУНКТОВ АНАЛИЗА: продаёт ли твой текст',
+            title_en: '14 POINTS ANALYSIS: does your text sell',
+            subtitle: 'Оціни текст із попереднього уроку — кожен пункт має бути ≥ 7/10, інакше повертаєшся допрацьовувати',
+            subtitle_ru: 'Оцени текст из предыдущего урока — каждый пункт должен быть ≥ 7/10, иначе возвращаешься дорабатывать',
+            subtitle_en: 'Evaluate text from previous lesson — each point must be ≥ 7/10, otherwise go back to improve',
+            duration: 35,
+            videoLink: null,
+            materialsLink: null,
+            lessonContent: `<style>
+.l106-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.l106-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l106-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.l106-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l106-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
+.l106-card p+p{margin-top:.55rem}
+.l106-flow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.75rem 0}
+.l106-fbox{padding:.45rem .85rem;border-radius:8px;font-size:.82rem;font-weight:600;text-align:center}
+.l106-farr{color:#9ca3af;font-size:1.1rem}
+.l106-rule{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #22c55e;border-radius:12px;padding:1rem 1.1rem;margin:.75rem 0;text-align:center}
+.l106-rule-num{font-size:2rem;font-weight:800;color:#16a34a;margin-bottom:.25rem}
+.l106-rule-text{font-size:.875rem;color:#166534;font-weight:600}
+.l106-rule-sub{font-size:.8rem;color:#15803d;margin-top:.2rem}
+.l106-item{border-radius:10px;padding:.8rem .95rem;margin-bottom:.45rem;border:1px solid #e2e8f0;background:#fff}
+.l106-ihdr{display:flex;align-items:flex-start;gap:.6rem}
+.l106-inum{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:white;flex-shrink:0;margin-top:2px}
+.l106-iblock{flex:1}
+.l106-ititle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.15rem}
+.l106-ifor{font-size:.78rem;color:#6b7280;margin-bottom:.3rem}
+.l106-idialog{font-size:.8rem;font-style:italic;color:#7f1d1d;background:#fef2f2;border-left:3px solid #fca5a5;padding:.4rem .65rem;border-radius:0 7px 7px 0;margin-bottom:.3rem;line-height:1.45}
+.l106-iimpact{font-size:.78rem;color:#374151;line-height:1.4;margin-bottom:.25rem}
+.l106-score{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;background:#fef2f2;border-radius:6px;font-size:.75rem;font-weight:700;color:#dc2626}
+.l106-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:.5rem}
+.l106-table th{background:#f1f5f9;padding:.5rem .7rem;text-align:left;font-weight:700;color:#374151;border:1px solid #e2e8f0}
+.l106-table td{padding:.5rem .7rem;border:1px solid #e2e8f0;color:#374151;vertical-align:top;line-height:1.4}
+.l106-table tr:nth-child(even) td{background:#f8fafc}
+.l106-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.l106-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.l106-ticon{width:40px;height:40px;background:#fdf4ff;border:1px solid #e9d5ff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l106-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l106-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.l106-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#7c3aed;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.l106-hw{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem;margin-top:.75rem}
+.l106-hw-title{font-weight:700;color:#166534;font-size:.95rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.l106-hw-step{display:flex;gap:.65rem;padding:.75rem .9rem;background:white;border-radius:9px;border:1px solid #d1fae5;margin-bottom:.4rem}
+.l106-hw-num{width:24px;height:24px;background:#22c55e;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.l106-hw-stitle{font-weight:700;color:#166534;font-size:.85rem;margin-bottom:.15rem}
+.l106-hw-stext{font-size:.8rem;color:#374151;line-height:1.45}
+.l106-warn{display:flex;align-items:flex-start;gap:.6rem;padding:.65rem .9rem;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;font-size:.83rem;color:#92400e;margin:.5rem 0}
+</style>
+
+<div class="l106-lbl">Зв'язок з попереднім уроком</div>
+<div class="l106-title">Цей урок — продовження. Не можна пропускати</div>
+<div class="l106-card">
+<p>В уроці 105 ти створив текст продаючого сайту через AI-асистент. Тепер цей текст потрібно <strong>перевірити по 14 пунктах</strong>. Без цього кроку — трафік на сайт = злитий бюджет.</p>
+<p>Правило: <strong>кожен пункт має отримати ≥ 7 балів з 10</strong>. Якщо якийсь нижче — повертаєшся в Sales Page Master, допрацьовуєш конкретний блок, і перевіряєш знову.</p>
+</div>
+<div class="l106-flow">
+<div class="l106-fbox" style="background:#ede9fe;color:#5b21b6">Урок 105<br>Створив текст</div>
+<div class="l106-farr">→</div>
+<div class="l106-fbox" style="background:#fdf4ff;color:#7c3aed;border:1.5px solid #7c3aed">Урок 106<br>Аналізуєш</div>
+<div class="l106-farr">→</div>
+<div class="l106-fbox" style="background:#fef2f2;color:#dc2626">Пункт &lt;7?<br>Допрацювати</div>
+<div class="l106-farr">→</div>
+<div class="l106-fbox" style="background:#f0fdf4;color:#166534">Всі ≥7<br>Публікуй</div>
+</div>
+<div class="l106-rule">
+<div class="l106-rule-num">≥ 7/10</div>
+<div class="l106-rule-text">Мінімальний бал по кожному пункту</div>
+<div class="l106-rule-sub">Якщо хоч один нижче 7 — текст не готовий до запуску реклами</div>
+</div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Рівень 1 — Стратегічний (1–4)</div>
+<div class="l106-title">Правильна ідея, правильній людині</div>
+<div class="l106-card"><p>Якщо тут помилка — людина не доходить до офферу. Весь інший текст не читається.</p></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">1</div><div class="l106-iblock">
+<div class="l106-ititle">Велика ідея тексту</div>
+<div class="l106-ifor">За що відповідає: головна думка яка тримає весь текст і чіпляє за 3 секунди</div>
+<div class="l106-idialog">💭 «Про що взагалі цей сайт? Незрозуміло що вони роблять...»</div>
+<div class="l106-iimpact">→ Людина закриває сторінку за 3–5 секунд. Навіть не доходить до офферу. Трафік злитий.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → переформулюй головну думку в 1 речення</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">2</div><div class="l106-iblock">
+<div class="l106-ititle">Оффер (основна пропозиція)</div>
+<div class="l106-ifor">За що відповідає: що отримає людина, за скільки, і чому зараз</div>
+<div class="l106-idialog">💭 «Ну окей, цікаво... але що конкретно вони пропонують? Що я отримаю? Скільки це коштує?»</div>
+<div class="l106-iimpact">→ Людина читає весь текст але не розуміє що робити далі. Іде «подумати» — і не повертається.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → додай конкретику: що, за скільки, що отримає</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">3</div><div class="l106-iblock">
+<div class="l106-ititle">Аудиторія</div>
+<div class="l106-ifor">За що відповідає: чи текст говорить з потрібною людиною</div>
+<div class="l106-idialog">💭 «Це не про мене... вони говорять про якихось інших людей з іншими проблемами»</div>
+<div class="l106-iimpact">→ Людина не ідентифікує себе з текстом. Немає відчуття «це для мене» — немає мотивації залишати контакт.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → уточни для кого: хто конкретно, яка ситуація</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">4</div><div class="l106-iblock">
+<div class="l106-ititle">Опис проблеми</div>
+<div class="l106-ifor">За що відповідає: чи текст показує що розуміє біль клієнта</div>
+<div class="l106-idialog">💭 «Вони не розуміють моєї ситуації. Описують щось поверхово, не те що я реально відчуваю»</div>
+<div class="l106-iimpact">→ Немає довіри з першого блоку. Людина не відчуває що її розуміють — значить не вірить що допоможуть.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → опиши проблему детальніше, від першої особи клієнта</div>
+</div></div></div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Рівень 2 — Структурний (5–10)</div>
+<div class="l106-title">Правильна подача і логіка</div>
+<div class="l106-card"><p>Людина зацікавилась — але текст її губить. Ці пункти відповідають за те, чи дійде вона від початку до кнопки «залишити заявку».</p></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">5</div><div class="l106-iblock">
+<div class="l106-ititle">Заголовок</div>
+<div class="l106-ifor">За що відповідає: перше враження. Читати чи ні</div>
+<div class="l106-idialog">💭 «Ще один сайт про "ефективний бізнес"... нічого нового»</div>
+<div class="l106-iimpact">→ 80% людей не йдуть далі заголовку. Слабкий заголовок = весь інший текст читають одиниці незалежно від якості.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → заголовок має містити: результат + для кого + чим відрізняється</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">6</div><div class="l106-iblock">
+<div class="l106-ititle">Підзаголовок</div>
+<div class="l106-ifor">За що відповідає: утримує увагу після заголовку, розкриває суть</div>
+<div class="l106-idialog">💭 «Заголовок зачепив, але далі — знову розмито. Що конкретно? Для кого?»</div>
+<div class="l106-iimpact">→ Людина «охолоджується» одразу після першого інтересу. Не доходить до тіла тексту. Втрачаємо тих кого зачепили.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → підзаголовок має пояснити суть і дати причину читати далі</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">7</div><div class="l106-iblock">
+<div class="l106-ititle">Пропозиція що вирішує проблему</div>
+<div class="l106-ifor">За що відповідає: як саме продукт закриває біль клієнта</div>
+<div class="l106-idialog">💭 «Ну добре, проблема є — але як конкретно ви її вирішите? Що ви будете робити? Чому це спрацює саме у мене?»</div>
+<div class="l106-iimpact">→ Людина не розуміє механіку рішення. Без розуміння механіки немає впевненості в результаті. Не залишає заявку.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → поясни конкретні кроки: що ти робиш → що людина отримує</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">8</div><div class="l106-iblock">
+<div class="l106-ititle">Де текст перевантажений</div>
+<div class="l106-ifor">За що відповідає: місця де читач «зависає» або втомлюється</div>
+<div class="l106-idialog">💭 «Боже, скільки тексту... дай хоч щось знайду головне... та ну його»</div>
+<div class="l106-iimpact">→ Людина скролить по діагоналі або просто закриває. Конверсія падає пропорційно до перевантаженості.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → скороти абзаци до 3–4 речень, розбий на блоки з підзаголовками</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">9</div><div class="l106-iblock">
+<div class="l106-ititle">Де складно читати / розуміти</div>
+<div class="l106-ifor">За що відповідає: технічні слова, довгі речення, незрозумілі терміни</div>
+<div class="l106-idialog">💭 «Що вони мають на увазі? Перечитаю... знову незрозуміло. Мабуть це не для мене»</div>
+<div class="l106-iimpact">→ Роздратування = недовіра. Якщо людина не розуміє текст — вирішує що не зрозуміє і продукт. Йде до конкурента де «простіше».</div>
+<div class="l106-score">⚠ Якщо &lt;7 → заміни терміни на прості слова, речення до 15–20 слів</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">10</div><div class="l106-iblock">
+<div class="l106-ititle">Логіка і переходи між блоками</div>
+<div class="l106-ifor">За що відповідає: чи текст веде людину по логічному шляху до покупки</div>
+<div class="l106-idialog">💭 «Стоп, а чому вони тепер говорять про це? Ми ж щойно були про інше... загубився»</div>
+<div class="l106-iimpact">→ Людина «випадає» з потоку читання. Як тільки зупинилась і задумалась — магія тексту зламана. Повернути увагу майже неможливо.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → перевір: кожен блок логічно випливає з попереднього? Є зв'язки між секціями?</div>
+</div></div></div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Рівень 3 — Психологічний (11–14)</div>
+<div class="l106-title">Довіра, цінність, відмінність</div>
+<div class="l106-card"><p>Людина все зрозуміла — але не повірила. Ці пункти відповідають за те, чи є підстави купити саме у тебе, саме зараз.</p></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">11</div><div class="l106-iblock">
+<div class="l106-ititle">Стиль і тональність</div>
+<div class="l106-ifor">За що відповідає: чи мова тексту відповідає аудиторії</div>
+<div class="l106-idialog">💭 «Вони говорять зі мною як з дитиною / як з корпоративним менеджером / занадто пафосно / занадто по-вуличному»</div>
+<div class="l106-iimpact">→ Невідповідний тон створює психологічну дистанцію. Людина не відчуває «свою» компанію. Довіри немає — заявки немає.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → перечитай текст вголос. Так говорять твої клієнти між собою?</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">12</div><div class="l106-iblock">
+<div class="l106-ititle">Цінність пропозиції для ЦА</div>
+<div class="l106-ifor">За що відповідає: чи розуміє читач що він виграє від покупки</div>
+<div class="l106-idialog">💭 «І що? Ну є така послуга. І що я з цього маю? Навіщо мені це?»</div>
+<div class="l106-iimpact">→ Людина не бачить особистої вигоди. Ціна автоматично здається завищеною — бо незрозуміло за що платити. Не купує навіть якщо може дозволити.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → додай конкретні результати: що зміниться в житті клієнта після покупки</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">13</div><div class="l106-iblock">
+<div class="l106-ititle">Конкурентоспроможність</div>
+<div class="l106-ifor">За що відповідає: чи є причина купити саме тут</div>
+<div class="l106-idialog">💭 «Таких пропозицій повно. Чим вони кращі? Піду порівняю ціни...»</div>
+<div class="l106-iimpact">→ Людина йде «порівнювати» і купує там де дешевше або де краще пояснили відмінність. Ви отримуєте трафік — але віддаєте продажі конкурентам.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → сформулюй 1–2 конкретні причини «чому саме ми, а не інші»</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">14</div><div class="l106-iblock">
+<div class="l106-ititle">Де текст викликає скептицизм</div>
+<div class="l106-ifor">За що відповідає: необґрунтовані обіцянки, відсутність доказів</div>
+<div class="l106-idialog">💭 «"Подвоїмо ваш прибуток"... звісно. Всі так кажуть. Де докази? Це звичайна реклама»</div>
+<div class="l106-iimpact">→ Скептицизм — це стіна між текстом і покупкою. Одна фраза що викликає недовіру може знищити ефект всього попереднього тексту.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → підкріпи кожну обіцянку: факт, кейс, цифра, відгук</div>
+</div></div></div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Підсумок</div>
+<div class="l106-title">3 рівні — 3 причини чому текст не продає</div>
+<table class="l106-table">
+<thead><tr><th>Рівень</th><th>Пункти</th><th>Що вбиває</th></tr></thead>
+<tbody>
+<tr><td><strong>Стратегічний</strong></td><td>1–4</td><td>Людина не доходить до читання</td></tr>
+<tr><td><strong>Структурний</strong></td><td>5–10</td><td>Людина читає але губиться</td></tr>
+<tr><td><strong>Психологічний</strong></td><td>11–14</td><td>Людина все зрозуміла але не повірила</td></tr>
+</tbody>
+</table>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Інструмент</div>
+<div class="l106-tool">
+<div class="l106-thdr">
+<div class="l106-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="20" height="20"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+<div>
+<div class="l106-ttitle">AI Website & Social Media Analysis</div>
+<div class="l106-tdesc">Вставляєш текст зі свого сайту або посту → асистент оцінює кожен з 14 пунктів від 1 до 10 → вказує де конкретно слабке місце і що виправити → якщо пункт &lt;7 — повертаєшся в Sales Page Master і допрацьовуєш.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-687d2db4d6548191b7c0d26e91d77dfe-ai-website-and-social-media-analysis" target="_blank" class="l106-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Проаналізувати текст
+</a>
+</div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Домашнє завдання</div>
+<div class="l106-hw">
+<div class="l106-hw-title"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="18" height="18"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Доведи кожен пункт до ≥ 7/10</div>
+<div class="l106-hw-step"><div class="l106-hw-num">1</div><div>
+<div class="l106-hw-stitle">Відкрий текст з уроку 105</div>
+<div class="l106-hw-stext">Візьми текст продаючого сайту який ти створив в Sales Page Master. Скопіюй його повністю.</div>
+</div></div>
+<div class="l106-hw-step"><div class="l106-hw-num">2</div><div>
+<div class="l106-hw-stitle">Вставив в AI-аналізатор і отримай оцінку</div>
+<div class="l106-hw-stext">Відкрий асистент вище → вставте текст → попроси: «Оціни по 14 пунктах від 1 до 10 і вкажи що конкретно слабке в кожному пункті нижче 7».</div>
+</div></div>
+<div class="l106-hw-step"><div class="l106-hw-num">3</div><div>
+<div class="l106-hw-stitle">Занотуй всі пункти &lt;7</div>
+<div class="l106-hw-stext">Зроби список: які пункти не пройшли поріг. Для кожного — конкретна причина від асистента.</div>
+</div></div>
+<div class="l106-hw-step"><div class="l106-hw-num">4</div><div>
+<div class="l106-hw-stitle">Повернись в Sales Page Master і виправ</div>
+<div class="l106-hw-stext">Для кожного слабкого пункту — попроси Sales Page Master переписати цей конкретний блок. Копіюй діагноз від аналізатора щоб асистент розумів що саме не так.</div>
+</div></div>
+<div class="l106-hw-step"><div class="l106-hw-num">5</div><div>
+<div class="l106-hw-stitle">Перевір знову — всі пункти мають бути ≥7</div>
+<div class="l106-hw-stext">Вставляєш оновлений текст назад в аналізатор. Повторюєш до тих пір поки всі 14 пунктів ≥7. Тільки після цього — публікуєш і запускаєш рекламу.</div>
+</div></div>
+<div class="l106-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div>Не запускай рекламу на текст де є пункти нижче 7. Кожна гривня трафіку на «кривий» текст — це гривня в сміттєвий кошик.</div></div>
+</div>`,
+            lessonContent_ru: `<style>
+.l106-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.l106-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l106-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.l106-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l106-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
+.l106-card p+p{margin-top:.55rem}
+.l106-flow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.75rem 0}
+.l106-fbox{padding:.45rem .85rem;border-radius:8px;font-size:.82rem;font-weight:600;text-align:center}
+.l106-farr{color:#9ca3af;font-size:1.1rem}
+.l106-rule{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #22c55e;border-radius:12px;padding:1rem 1.1rem;margin:.75rem 0;text-align:center}
+.l106-rule-num{font-size:2rem;font-weight:800;color:#16a34a;margin-bottom:.25rem}
+.l106-rule-text{font-size:.875rem;color:#166534;font-weight:600}
+.l106-rule-sub{font-size:.8rem;color:#15803d;margin-top:.2rem}
+.l106-item{border-radius:10px;padding:.8rem .95rem;margin-bottom:.45rem;border:1px solid #e2e8f0;background:#fff}
+.l106-ihdr{display:flex;align-items:flex-start;gap:.6rem}
+.l106-inum{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:white;flex-shrink:0;margin-top:2px}
+.l106-iblock{flex:1}
+.l106-ititle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.15rem}
+.l106-ifor{font-size:.78rem;color:#6b7280;margin-bottom:.3rem}
+.l106-idialog{font-size:.8rem;font-style:italic;color:#7f1d1d;background:#fef2f2;border-left:3px solid #fca5a5;padding:.4rem .65rem;border-radius:0 7px 7px 0;margin-bottom:.3rem;line-height:1.45}
+.l106-iimpact{font-size:.78rem;color:#374151;line-height:1.4;margin-bottom:.25rem}
+.l106-score{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;background:#fef2f2;border-radius:6px;font-size:.75rem;font-weight:700;color:#dc2626}
+.l106-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:.5rem}
+.l106-table th{background:#f1f5f9;padding:.5rem .7rem;text-align:left;font-weight:700;color:#374151;border:1px solid #e2e8f0}
+.l106-table td{padding:.5rem .7rem;border:1px solid #e2e8f0;color:#374151;vertical-align:top;line-height:1.4}
+.l106-table tr:nth-child(even) td{background:#f8fafc}
+.l106-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.l106-thdr{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.75rem}
+.l106-ticon{width:40px;height:40px;background:#fdf4ff;border:1px solid #e9d5ff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l106-ttitle{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l106-tdesc{font-size:.82rem;color:#525252;line-height:1.5}
+.l106-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.05rem;background:#7c3aed;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+.l106-hw{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:1.25rem;margin-top:.75rem}
+.l106-hw-title{font-weight:700;color:#166534;font-size:.95rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.l106-hw-step{display:flex;gap:.65rem;padding:.75rem .9rem;background:white;border-radius:9px;border:1px solid #d1fae5;margin-bottom:.4rem}
+.l106-hw-num{width:24px;height:24px;background:#22c55e;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.l106-hw-stitle{font-weight:700;color:#166534;font-size:.85rem;margin-bottom:.15rem}
+.l106-hw-stext{font-size:.8rem;color:#374151;line-height:1.45}
+.l106-warn{display:flex;align-items:flex-start;gap:.6rem;padding:.65rem .9rem;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;font-size:.83rem;color:#92400e;margin:.5rem 0}
+</style>
+
+<div class="l106-lbl">Связь с предыдущим уроком</div>
+<div class="l106-title">Этот урок — продолжение. Нельзя пропускать</div>
+<div class="l106-card">
+<p>В уроке 105 ты создал текст продающего сайта через AI-ассистент. Теперь этот текст нужно <strong>проверить по 14 пунктам</strong>. Без этого шага — трафик на сайт = слитый бюджет.</p>
+<p>Правило: <strong>каждый пункт должен получить ≥ 7 баллов из 10</strong>. Если какой-то ниже — возвращаешься в Sales Page Master, дорабатываешь конкретный блок, и проверяешь снова.</p>
+</div>
+<div class="l106-flow">
+<div class="l106-fbox" style="background:#ede9fe;color:#5b21b6">Урок 105<br>Создал текст</div>
+<div class="l106-farr">→</div>
+<div class="l106-fbox" style="background:#fdf4ff;color:#7c3aed;border:1.5px solid #7c3aed">Урок 106<br>Анализируешь</div>
+<div class="l106-farr">→</div>
+<div class="l106-fbox" style="background:#fef2f2;color:#dc2626">Пункт &lt;7?<br>Доработать</div>
+<div class="l106-farr">→</div>
+<div class="l106-fbox" style="background:#f0fdf4;color:#166534">Все ≥7<br>Публикуй</div>
+</div>
+<div class="l106-rule">
+<div class="l106-rule-num">≥ 7/10</div>
+<div class="l106-rule-text">Минимальный балл по каждому пункту</div>
+<div class="l106-rule-sub">Если хоть один ниже 7 — текст не готов к запуску рекламы</div>
+</div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Уровень 1 — Стратегический (1–4)</div>
+<div class="l106-title">Правильная идея, правильному человеку</div>
+<div class="l106-card"><p>Если здесь ошибка — человек не доходит до оффера. Весь остальной текст не читается.</p></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">1</div><div class="l106-iblock">
+<div class="l106-ititle">Велика ідея тексту</div>
+<div class="l106-ifor">За що відповідає: головна думка яка тримає весь текст і чіпляє за 3 секунди</div>
+<div class="l106-idialog">💭 «Про що взагалі цей сайт? Незрозуміло що вони роблять...»</div>
+<div class="l106-iimpact">→ Людина закриває сторінку за 3–5 секунд. Навіть не доходить до офферу. Трафік злитий.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → переформулюй головну думку в 1 речення</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">2</div><div class="l106-iblock">
+<div class="l106-ititle">Оффер (основна пропозиція)</div>
+<div class="l106-ifor">За що відповідає: що отримає людина, за скільки, і чому зараз</div>
+<div class="l106-idialog">💭 «Ну окей, цікаво... але що конкретно вони пропонують? Що я отримаю? Скільки це коштує?»</div>
+<div class="l106-iimpact">→ Людина читає весь текст але не розуміє що робити далі. Іде «подумати» — і не повертається.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → додай конкретику: що, за скільки, що отримає</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">3</div><div class="l106-iblock">
+<div class="l106-ititle">Аудиторія</div>
+<div class="l106-ifor">За що відповідає: чи текст говорить з потрібною людиною</div>
+<div class="l106-idialog">💭 «Це не про мене... вони говорять про якихось інших людей з іншими проблемами»</div>
+<div class="l106-iimpact">→ Людина не ідентифікує себе з текстом. Немає відчуття «це для мене» — немає мотивації залишати контакт.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → уточни для кого: хто конкретно, яка ситуація</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#7c3aed">4</div><div class="l106-iblock">
+<div class="l106-ititle">Опис проблеми</div>
+<div class="l106-ifor">За що відповідає: чи текст показує що розуміє біль клієнта</div>
+<div class="l106-idialog">💭 «Вони не розуміють моєї ситуації. Описують щось поверхово, не те що я реально відчуваю»</div>
+<div class="l106-iimpact">→ Немає довіри з першого блоку. Людина не відчуває що її розуміють — значить не вірить що допоможуть.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → опиши проблему детальніше, від першої особи клієнта</div>
+</div></div></div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Уровень 2 — Структурный (5–10)</div>
+<div class="l106-title">Правильная подача и логика</div>
+<div class="l106-card"><p>Человек заинтересовался — но текст его теряет. Эти пункты отвечают за то, дойдёт ли он от начала до кнопки «оставить заявку».</p></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">5</div><div class="l106-iblock">
+<div class="l106-ititle">Заголовок</div>
+<div class="l106-ifor">За що відповідає: перше враження. Читати чи ні</div>
+<div class="l106-idialog">💭 «Ще один сайт про "ефективний бізнес"... нічого нового»</div>
+<div class="l106-iimpact">→ 80% людей не йдуть далі заголовку. Слабкий заголовок = весь інший текст читають одиниці незалежно від якості.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → заголовок має містити: результат + для кого + чим відрізняється</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">6</div><div class="l106-iblock">
+<div class="l106-ititle">Підзаголовок</div>
+<div class="l106-ifor">За що відповідає: утримує увагу після заголовку, розкриває суть</div>
+<div class="l106-idialog">💭 «Заголовок зачепив, але далі — знову розмито. Що конкретно? Для кого?»</div>
+<div class="l106-iimpact">→ Людина «охолоджується» одразу після першого інтересу. Не доходить до тіла тексту. Втрачаємо тих кого зачепили.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → підзаголовок має пояснити суть і дати причину читати далі</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">7</div><div class="l106-iblock">
+<div class="l106-ititle">Пропозиція що вирішує проблему</div>
+<div class="l106-ifor">За що відповідає: як саме продукт закриває біль клієнта</div>
+<div class="l106-idialog">💭 «Ну добре, проблема є — але як конкретно ви її вирішите? Що ви будете робити? Чому це спрацює саме у мене?»</div>
+<div class="l106-iimpact">→ Людина не розуміє механіку рішення. Без розуміння механіки немає впевненості в результаті. Не залишає заявку.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → поясни конкретні кроки: що ти робиш → що людина отримує</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">8</div><div class="l106-iblock">
+<div class="l106-ititle">Де текст перевантажений</div>
+<div class="l106-ifor">За що відповідає: місця де читач «зависає» або втомлюється</div>
+<div class="l106-idialog">💭 «Боже, скільки тексту... дай хоч щось знайду головне... та ну його»</div>
+<div class="l106-iimpact">→ Людина скролить по діагоналі або просто закриває. Конверсія падає пропорційно до перевантаженості.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → скороти абзаци до 3–4 речень, розбий на блоки з підзаголовками</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">9</div><div class="l106-iblock">
+<div class="l106-ititle">Де складно читати / розуміти</div>
+<div class="l106-ifor">За що відповідає: технічні слова, довгі речення, незрозумілі терміни</div>
+<div class="l106-idialog">💭 «Що вони мають на увазі? Перечитаю... знову незрозуміло. Мабуть це не для мене»</div>
+<div class="l106-iimpact">→ Роздратування = недовіра. Якщо людина не розуміє текст — вирішує що не зрозуміє і продукт. Йде до конкурента де «простіше».</div>
+<div class="l106-score">⚠ Якщо &lt;7 → заміни терміни на прості слова, речення до 15–20 слів</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#2563eb">10</div><div class="l106-iblock">
+<div class="l106-ititle">Логіка і переходи між блоками</div>
+<div class="l106-ifor">За що відповідає: чи текст веде людину по логічному шляху до покупки</div>
+<div class="l106-idialog">💭 «Стоп, а чому вони тепер говорять про це? Ми ж щойно були про інше... загубився»</div>
+<div class="l106-iimpact">→ Людина «випадає» з потоку читання. Як тільки зупинилась і задумалась — магія тексту зламана. Повернути увагу майже неможливо.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → перевір: кожен блок логічно випливає з попереднього? Є зв'язки між секціями?</div>
+</div></div></div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Уровень 3 — Психологический (11–14)</div>
+<div class="l106-title">Доверие, ценность, отличие</div>
+<div class="l106-card"><p>Человек всё понял — но не поверил. Эти пункты отвечают за то, есть ли основания купить именно у тебя, именно сейчас.</p></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">11</div><div class="l106-iblock">
+<div class="l106-ititle">Стиль і тональність</div>
+<div class="l106-ifor">За що відповідає: чи мова тексту відповідає аудиторії</div>
+<div class="l106-idialog">💭 «Вони говорять зі мною як з дитиною / як з корпоративним менеджером / занадто пафосно / занадто по-вуличному»</div>
+<div class="l106-iimpact">→ Невідповідний тон створює психологічну дистанцію. Людина не відчуває «свою» компанію. Довіри немає — заявки немає.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → перечитай текст вголос. Так говорять твої клієнти між собою?</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">12</div><div class="l106-iblock">
+<div class="l106-ititle">Цінність пропозиції для ЦА</div>
+<div class="l106-ifor">За що відповідає: чи розуміє читач що він виграє від покупки</div>
+<div class="l106-idialog">💭 «І що? Ну є така послуга. І що я з цього маю? Навіщо мені це?»</div>
+<div class="l106-iimpact">→ Людина не бачить особистої вигоди. Ціна автоматично здається завищеною — бо незрозуміло за що платити. Не купує навіть якщо може дозволити.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → додай конкретні результати: що зміниться в житті клієнта після покупки</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">13</div><div class="l106-iblock">
+<div class="l106-ititle">Конкурентоспроможність</div>
+<div class="l106-ifor">За що відповідає: чи є причина купити саме тут</div>
+<div class="l106-idialog">💭 «Таких пропозицій повно. Чим вони кращі? Піду порівняю ціни...»</div>
+<div class="l106-iimpact">→ Людина йде «порівнювати» і купує там де дешевше або де краще пояснили відмінність. Ви отримуєте трафік — але віддаєте продажі конкурентам.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → сформулюй 1–2 конкретні причини «чому саме ми, а не інші»</div>
+</div></div></div>
+
+<div class="l106-item"><div class="l106-ihdr"><div class="l106-inum" style="background:#dc2626">14</div><div class="l106-iblock">
+<div class="l106-ititle">Де текст викликає скептицизм</div>
+<div class="l106-ifor">За що відповідає: необґрунтовані обіцянки, відсутність доказів</div>
+<div class="l106-idialog">💭 «"Подвоїмо ваш прибуток"... звісно. Всі так кажуть. Де докази? Це звичайна реклама»</div>
+<div class="l106-iimpact">→ Скептицизм — це стіна між текстом і покупкою. Одна фраза що викликає недовіру може знищити ефект всього попереднього тексту.</div>
+<div class="l106-score">⚠ Якщо &lt;7 → підкріпи кожну обіцянку: факт, кейс, цифра, відгук</div>
+</div></div></div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Итог</div>
+<div class="l106-title">3 уровня — 3 причины почему текст не продаёт</div>
+<table class="l106-table">
+<thead><tr><th>Уровень</th><th>Пункты</th><th>Что убивает</th></tr></thead>
+<tbody>
+<tr><td><strong>Стратегический</strong></td><td>1–4</td><td>Человек не доходит до чтения</td></tr>
+<tr><td><strong>Структурный</strong></td><td>5–10</td><td>Человек читает но теряется</td></tr>
+<tr><td><strong>Психологический</strong></td><td>11–14</td><td>Человек всё понял но не поверил</td></tr>
+</tbody>
+</table>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Інструмент</div>
+<div class="l106-tool">
+<div class="l106-thdr">
+<div class="l106-ticon"><svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="20" height="20"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+<div>
+<div class="l106-ttitle">AI Website & Social Media Analysis</div>
+<div class="l106-tdesc">Вставляешь текст со своего сайта или поста → ассистент оценивает каждый из 14 пунктов от 1 до 10 → указывает где конкретно слабое место и что исправить → если пункт &lt;7 — возвращаешься в Sales Page Master и дорабатываешь.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-687d2db4d6548191b7c0d26e91d77dfe-ai-website-and-social-media-analysis" target="_blank" class="l106-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Проанализировать текст
+</a>
+</div>
+
+<div class="l106-div"></div>
+<div class="l106-lbl">Домашнее задание</div>
+<div class="l106-hw">
+<div class="l106-hw-title"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="18" height="18"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Доведи каждый пункт до ≥ 7/10</div>
+<div class="l106-hw-step"><div class="l106-hw-num">1</div><div>
+<div class="l106-hw-stitle">Открой текст из урока 105</div>
+<div class="l106-hw-stext">Возьми текст продающего сайта который ты создал в Sales Page Master. Скопируй его полностью.</div>
+</div></div>
+<div class="l106-hw-step"><div class="l106-hw-num">2</div><div>
+<div class="l106-hw-stitle">Вставь в AI-анализатор и получи оценку</div>
+<div class="l106-hw-stext">Открой ассистент выше → вставь текст → попроси: «Оцени по 14 пунктам от 1 до 10 и укажи что конкретно слабое в каждом пункте ниже 7».</div>
+</div></div>
+<div class="l106-hw-step"><div class="l106-hw-num">3</div><div>
+<div class="l106-hw-stitle">Запиши все пункты &lt;7</div>
+<div class="l106-hw-stext">Сделай список: какие пункты не прошли порог. Для каждого — конкретная причина от ассистента.</div>
+</div></div>
+<div class="l106-hw-step"><div class="l106-hw-num">4</div><div>
+<div class="l106-hw-stitle">Вернись в Sales Page Master и исправь</div>
+<div class="l106-hw-stext">Для каждого слабого пункта — попроси Sales Page Master переписать этот конкретный блок. Копируй диагноз от анализатора чтобы ассистент понимал что именно не так.</div>
+</div></div>
+<div class="l106-hw-step"><div class="l106-hw-num">5</div><div>
+<div class="l106-hw-stitle">Проверь снова — все пункты должны быть ≥7</div>
+<div class="l106-hw-stext">Вставляешь обновлённый текст обратно в анализатор. Повторяешь до тех пор пока все 14 пунктов ≥7. Только после этого — публикуешь и запускаешь рекламу.</div>
+</div></div>
+<div class="l106-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div>Не запускай рекламу на текст где есть пункты ниже 7. Каждая гривна трафика на «кривой» текст — это гривна в мусорный бак.</div></div>
+</div>`,
+            homeworkLink: 'https://chatgpt.com/g/g-687d2db4d6548191b7c0d26e91d77dfe-ai-website-and-social-media-analysis',
+            homeworkLinkName: 'Проаналізувати текст',
+            homeworkLinkName_ru: 'Проанализировать текст',
+        },
     ];
 
     // Merge into main course data
