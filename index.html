@@ -3,23 +3,37 @@
 <html lang="uk">
 <head>
 <script>
-// CRITICAL FIX: Kill old Service Worker that was intercepting navigation with /api/app
+// CRITICAL FIX: Kill old SW + register new correct SW
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    var hadOld = false;
     for (var r of registrations) {
-      r.unregister();
-      console.log('[TALKO] Old SW unregistered:', r.scope);
+      // Kill any SW that used old /api/app pattern (registered with old version)
+      if (r.active && r.active.scriptURL && r.active.scriptURL.includes('sw.js')) {
+        var isOld = !r.active.scriptURL.includes('v=20260330');
+        if (isOld) {
+          r.unregister();
+          hadOld = true;
+          console.log('[TALKO] Old SW unregistered:', r.scope);
+        }
+      } else {
+        r.unregister();
+        hadOld = true;
+        console.log('[TALKO] Old SW unregistered:', r.scope);
+      }
+    }
+    // Clear all caches
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        for (var name of names) {
+          if (!name.includes('2026-03-30')) {
+            caches.delete(name);
+            console.log('[TALKO] Cache cleared:', name);
+          }
+        }
+      });
     }
   });
-  // Also clear all caches
-  if ('caches' in window) {
-    caches.keys().then(function(names) {
-      for (var name of names) {
-        caches.delete(name);
-        console.log('[TALKO] Cache cleared:', name);
-      }
-    });
-  }
 }
 </script>
     <meta charset="UTF-8">
