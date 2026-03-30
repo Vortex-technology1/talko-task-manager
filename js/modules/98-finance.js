@@ -4553,6 +4553,11 @@ window._aiFinSend = async function() {
     const niche = _state.niche || 'general';
     const bench = BENCHMARKS[niche] || { marginMin:15, marginMax:35, labourPct:35, adminPct:10, name:window.t('nicheBusinessWord') };
 
+    // FP1 benchmarks context for AI
+    const fp1BenchContext = Object.entries(_FP1_BENCHMARKS).map(([k,b]) =>
+      `- ${b.label()}: ${b.pctMin}–${b.pctMax}% від приходу`
+    ).join('\n');
+
     const systemPrompt = `Ти стратегічний фінансовий аналітик для малого та середнього бізнесу.
 Ніша клієнта: ${bench.name}. Регіон: ${_state.region==='EU'?window.t('europeWord'):window.t('ukraineWord')}. Валюта: ${_state.currency||'EUR'}.
 
@@ -4560,6 +4565,10 @@ window._aiFinSend = async function() {
 - Нормальна маржа: ${bench.marginMin}–${bench.marginMax}%
 - ФОП/зарплата від виручки: до ${bench.labourPct}%
 - Адміністративні від виручки: до ${bench.adminPct}%
+
+БЕНЧМАРКИ ФП №1 (розподіл витрат по 8 функціях):
+${fp1BenchContext}
+Якщо якась функція виходить за межі діапазону — це аномалія що потребує уваги.
 
 ПОТОЧНІ ДАНІ КОМПАНІЇ:
 ${context}
