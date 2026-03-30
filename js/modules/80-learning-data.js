@@ -19105,6 +19105,566 @@ GOOGLE — тёплая аудитория, уже ищет
             homeworkLinkName: null,
             homeworkLinkName_ru: null,
         },
+        {
+            id: 404,
+            category: 'finance',
+            title: 'ТИЖНЕВЕ ПЛАНУВАННЯ ФП №1: як знати скільки грошей потрібно щотижня',
+            title_ru: 'ЕЖЕНЕДЕЛЬНОЕ ПЛАНИРОВАНИЕ ФП №1: как знать сколько денег нужно каждую неделю',
+            subtitle: 'Система яка показує точку беззбитковості, розподіл по функціях і де ховаються гроші — на прикладі медичної клініки',
+            subtitle_ru: 'Система которая показывает точку безубыточности, распределение по функциям и где прячутся деньги — на примере медицинской клиники',
+            duration: 40,
+            videoLink: null,
+            materialsLink: null,
+            lessonContent: `<style>
+.l404-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.l404-h{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l404-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.l404-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l404-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
+.l404-card p+p{margin-top:.55rem}
+.l404-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.45rem}
+.l404-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.l404-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.l404-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.l404-dept{border-radius:12px;padding:.85rem 1rem;margin-bottom:.5rem}
+.l404-dept-h{font-size:.82rem;font-weight:700;margin-bottom:.4rem;display:flex;align-items:center;justify-content:space-between}
+.l404-dept-pct{font-size:.75rem;font-weight:800;padding:.15rem .55rem;border-radius:8px}
+.l404-dept-items{font-size:.78rem;color:#525252;line-height:1.7}
+.l404-warn{display:flex;gap:.6rem;align-items:flex-start;padding:.75rem .9rem;background:#fef9c3;border:1px solid #fde68a;border-radius:9px;font-size:.82rem;color:#854d0e;margin-bottom:.5rem}
+.l404-good{display:flex;gap:.6rem;align-items:flex-start;padding:.75rem .9rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.82rem;color:#14532d;margin-bottom:.5rem}
+.l404-bad{display:flex;gap:.6rem;align-items:flex-start;padding:.75rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.82rem;color:#7f1d1d;margin-bottom:.5rem}
+.l404-table{width:100%;border-collapse:collapse;font-size:.78rem;margin:.75rem 0}
+.l404-table th{padding:.5rem .7rem;font-weight:700;text-align:left;border:1px solid #e5e7eb}
+.l404-table td{padding:.45rem .7rem;border:1px solid #e5e7eb;color:#374151}
+.l404-table tr:nth-child(even) td{background:#f9fafb}
+.l404-signal{display:flex;align-items:center;gap:.5rem;padding:.55rem .8rem;border-radius:8px;font-size:.8rem;font-weight:600;margin-bottom:.35rem}
+.l404-formula{background:#0f172a;border-radius:10px;padding:.85rem 1.1rem;font-family:monospace;font-size:.85rem;color:#e2e8f0;margin:.75rem 0;line-height:1.7}
+.l404-week{border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;margin:.75rem 0}
+.l404-week-head{background:#1e293b;color:white;padding:.6rem 1rem;font-size:.82rem;font-weight:700;display:flex;justify-content:space-between}
+.l404-week-row{display:flex;align-items:center;padding:.45rem 1rem;border-bottom:1px solid #f1f5f9;font-size:.8rem}
+.l404-week-row:last-child{border-bottom:none}
+.l404-week-dept{flex:2;color:#374151;font-weight:500}
+.l404-week-plan{flex:1;text-align:right;color:#6b7280}
+.l404-week-fact{flex:1;text-align:right;font-weight:700}
+.l404-week-delta{flex:1;text-align:right;font-size:.75rem;font-weight:700}
+</style>
+
+<div class="l404-lbl">Навіщо це взагалі потрібно</div>
+<div class="l404-h">Уяви: у тебе є ресторан</div>
+<div class="l404-card">
+<p>Щопонеділка тобі треба вирішити: скільки грошей витратити цього тижня. На зарплати, продукти, рекламу, оренду. Ти можеш робити це "на відчуття" — і часто помилятися. Або можеш мати <strong>чіткий список</strong> скільки що коштує кожного тижня.</p>
+<p>Програма ФП №1 — це і є той список. Простими словами: <strong>скільки грошей потрібно щотижня щоб бізнес просто вижив</strong>. Не заробив. Саме вижив — покрив усі витрати.</p>
+</div>
+
+<div class="l404-bad">
+<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+<div><strong>Без ФП №1:</strong> "Цього тижня прийшло 200 000 грн. Добре чи погано?" — не знаєш відповіді.</div>
+</div>
+<div class="l404-good">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+<div><strong>З ФП №1:</strong> "Нам потрібно 180 000 грн щотижня щоб виживати. Прийшло 200 000 — ми в плюсі на 20 000. Добре."</div>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Крок 1 — розуміємо структуру</div>
+<div class="l404-h">8 відер куди йдуть гроші</div>
+<div class="l404-card"><p>Уяви що всі гроші клініки — це вода. Вона розтікається по 8 відрах. Кожне відро — це <strong>функція (департамент)</strong>. У кожного відра є норма: скільки відсотків від загального приходу воно має отримувати.</p></div>
+
+<div class="l404-dept" style="background:#eff6ff;border:1px solid #bfdbfe">
+<div class="l404-dept-h" style="color:#1e40af">
+<span>1️⃣ Управління — зарплата директора, консультанти, програми</span>
+<span class="l404-dept-pct" style="background:#dbeafe;color:#1e40af">8–10%</span>
+</div>
+<div class="l404-dept-items">Зарплата керівного складу · Навчання керівників · Консультації · ПЗ для управління</div>
+</div>
+
+<div class="l404-dept" style="background:#faf5ff;border:1px solid #e9d5ff">
+<div class="l404-dept-h" style="color:#6b21a8">
+<span>2️⃣ HR — найм, навчання, мотивація персоналу</span>
+<span class="l404-dept-pct" style="background:#ede9fe;color:#6b21a8">4–6%</span>
+</div>
+<div class="l404-dept-items">Зарплата HR · Рекрутинг і онбординг · Навчання персоналу · Мотиваційні програми</div>
+</div>
+
+<div class="l404-dept" style="background:#fff7ed;border:1px solid #fed7aa">
+<div class="l404-dept-h" style="color:#9a3412">
+<span>3️⃣ Комерція — маркетинг + продажі + рецепція</span>
+<span class="l404-dept-pct" style="background:#ffedd5;color:#9a3412">15–18%</span>
+</div>
+<div class="l404-dept-items">Онлайн-реклама · SMM · Сайт · Зарплата адміністраторів · Бонуси за продажі · CRM</div>
+</div>
+
+<div class="l404-dept" style="background:#f0fdf4;border:1px solid #bbf7d0">
+<div class="l404-dept-h" style="color:#166534">
+<span>4️⃣ Фінанси — бухгалтерія, юрист, банк, податки</span>
+<span class="l404-dept-pct" style="background:#dcfce7;color:#166534">4–6%</span>
+</div>
+<div class="l404-dept-items">Зарплата бухгалтерії · Юридичний супровід · Банківське обслуговування · Податки</div>
+</div>
+
+<div class="l404-dept" style="background:#fef2f2;border:1px solid #fecaca">
+<div class="l404-dept-h" style="color:#991b1b">
+<span>5️⃣ Медицина — лікарі + матеріали + обладнання</span>
+<span class="l404-dept-pct" style="background:#fee2e2;color:#991b1b">38–42%</span>
+</div>
+<div class="l404-dept-items">Зарплати лікарів і асистентів · Медматеріали · Обслуговування обладнання · Амортизація</div>
+</div>
+
+<div class="l404-dept" style="background:#f9fafb;border:1px solid #e5e7eb">
+<div class="l404-dept-h" style="color:#374151">
+<span>6️⃣ АХВ — оренда, комуналка, прибирання, охорона</span>
+<span class="l404-dept-pct" style="background:#f3f4f6;color:#374151">8–10%</span>
+</div>
+<div class="l404-dept-items">Оренда · Комунальні платежі · Прибирання · Охорона · Ремонт</div>
+</div>
+
+<div class="l404-dept" style="background:#fefce8;border:1px solid #fde68a">
+<div class="l404-dept-h" style="color:#854d0e">
+<span>7️⃣ Резервний фонд — подушка безпеки + розвиток</span>
+<span class="l404-dept-pct" style="background:#fef9c3;color:#854d0e">12–15%</span>
+</div>
+<div class="l404-dept-items">Фонд непередбачених витрат · Фонд розвитку · Інвестиції в обладнання</div>
+</div>
+
+<div class="l404-dept" style="background:#fdf4ff;border:1px solid #f0abfc">
+<div class="l404-dept-h" style="color:#701a75">
+<span>8️⃣ Дивіденди власника — твоя зарплата</span>
+<span class="l404-dept-pct" style="background:#fae8ff;color:#701a75">5–8%</span>
+</div>
+<div class="l404-dept-items">Регулярні виплати власнику · Преміальні при досягненні KPI</div>
+</div>
+
+<div class="l404-card" style="margin-top:.75rem">
+<p><strong>Разом: 100%</strong> від приходу. Якщо ці 8 відер заповнені в норму — бізнес здоровий. Якщо якесь відро "переповнилось" — десь є проблема.</p>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Крок 2 — головна формула</div>
+<div class="l404-h">Три числа які вирішують все</div>
+
+<div class="l404-formula">
+<span style="color:#60a5fa">ПРИХІД ФАКТ</span>  —  скільки реально прийшло грошей цього тижня
+<span style="color:#f87171">ЗАПЛАНОВАНІ ВИТРАТИ</span>  —  сума всіх 8 відер на цей тиждень
+<span style="color:#4ade80">РІЗНИЦЯ</span>  =  Прихід − Витрати  →  <span style="color:#4ade80">+</span> добре, <span style="color:#f87171">−</span> погано
+</div>
+
+<div class="l404-card">
+<p><strong>Приклад:</strong> Клініка. Тиждень 1 (16-22 червня).</p>
+<p>Прийшло: 320 000 грн. Заплановані витрати: 285 000 грн. Різниця: <strong>+35 000 грн</strong> ✅</p>
+<p>Наступного тижня прийшло: 210 000 грн. Витрати: 285 000 грн. Різниця: <strong>−75 000 грн</strong> ❌ — це сигнал: або збільшити прихід або різати витрати.</p>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Крок 3 — як виглядає тижневий дашборд</div>
+<div class="l404-h">Один погляд — вся картина</div>
+
+<div class="l404-week">
+<div class="l404-week-head">
+<span>📅 Тиждень 1 (16–22 червня)</span>
+<span>Прихід: 320 000 грн &nbsp;|&nbsp; Різниця: <span style="color:#4ade80">+35 000</span></span>
+</div>
+<div class="l404-week-row" style="background:#f8fafc;font-weight:700;font-size:.75rem;color:#9ca3af">
+<div class="l404-week-dept">Функція</div>
+<div class="l404-week-plan">Бенчмарк</div>
+<div class="l404-week-plan">План</div>
+<div class="l404-week-fact">Факт</div>
+<div class="l404-week-delta">Δ відхилення</div>
+</div>
+<div class="l404-week-row">
+<div class="l404-week-dept">🔵 Управління</div>
+<div class="l404-week-plan" style="color:#9ca3af">8–10%</div>
+<div class="l404-week-plan">28 800</div>
+<div class="l404-week-fact" style="color:#374151">27 200</div>
+<div class="l404-week-delta" style="color:#22c55e">−1 600 ✓</div>
+</div>
+<div class="l404-week-row">
+<div class="l404-week-dept">🟣 HR</div>
+<div class="l404-week-plan" style="color:#9ca3af">4–6%</div>
+<div class="l404-week-plan">16 000</div>
+<div class="l404-week-fact" style="color:#374151">15 500</div>
+<div class="l404-week-delta" style="color:#22c55e">−500 ✓</div>
+</div>
+<div class="l404-week-row">
+<div class="l404-week-dept">🟠 Комерція</div>
+<div class="l404-week-plan" style="color:#9ca3af">15–18%</div>
+<div class="l404-week-plan">51 200</div>
+<div class="l404-week-fact" style="color:#374151">62 400</div>
+<div class="l404-week-delta" style="color:#ef4444">+11 200 ⚠️</div>
+</div>
+<div class="l404-week-row">
+<div class="l404-week-dept">🟢 Фінанси</div>
+<div class="l404-week-plan" style="color:#9ca3af">4–6%</div>
+<div class="l404-week-plan">16 000</div>
+<div class="l404-week-fact" style="color:#374151">15 800</div>
+<div class="l404-week-delta" style="color:#22c55e">−200 ✓</div>
+</div>
+<div class="l404-week-row">
+<div class="l404-week-dept">🔴 Медицина</div>
+<div class="l404-week-plan" style="color:#9ca3af">38–42%</div>
+<div class="l404-week-plan">128 000</div>
+<div class="l404-week-fact" style="color:#374151">124 800</div>
+<div class="l404-week-delta" style="color:#22c55e">−3 200 ✓</div>
+</div>
+<div class="l404-week-row">
+<div class="l404-week-dept">⚫ АХВ</div>
+<div class="l404-week-plan" style="color:#9ca3af">8–10%</div>
+<div class="l404-week-plan">28 800</div>
+<div class="l404-week-fact" style="color:#374151">28 100</div>
+<div class="l404-week-delta" style="color:#22c55e">−700 ✓</div>
+</div>
+<div class="l404-week-row">
+<div class="l404-week-dept">🟡 Резерв</div>
+<div class="l404-week-plan" style="color:#9ca3af">12–15%</div>
+<div class="l404-week-plan">41 600</div>
+<div class="l404-week-fact" style="color:#374151">41 600</div>
+<div class="l404-week-delta" style="color:#22c55e">0 ✓</div>
+</div>
+<div class="l404-week-row">
+<div class="l404-week-dept">🟤 Дивіденди</div>
+<div class="l404-week-plan" style="color:#9ca3af">5–8%</div>
+<div class="l404-week-plan">20 800</div>
+<div class="l404-week-fact" style="color:#374151">20 800</div>
+<div class="l404-week-delta" style="color:#22c55e">0 ✓</div>
+</div>
+<div class="l404-week-row" style="background:#f0fdf4;font-weight:700">
+<div class="l404-week-dept">💰 РАЗОМ</div>
+<div class="l404-week-plan" style="color:#9ca3af">100%</div>
+<div class="l404-week-plan">331 200</div>
+<div class="l404-week-fact" style="color:#374151">336 200</div>
+<div class="l404-week-delta" style="color:#ef4444">+5 000</div>
+</div>
+</div>
+
+<div class="l404-warn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<div><strong>Сигнал:</strong> Комерція вийшла за межі бенчмарку — витрачено 62 400 замість планових 51 200. Потрібно з'ясувати: що злетіло? Реклама? Бонуси? Чи це разова витрата?</div>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Крок 4 — "приховані діри"</div>
+<div class="l404-h">Гроші що зникають непомітно</div>
+<div class="l404-card"><p>У кожній функції є витрати які не видно в звичайній бухгалтерії. Вони не в рахунках-фактурах. Але вони реально забирають гроші.</p></div>
+
+<div class="l404-step">
+<div class="l404-snum" style="background:#ef4444">!</div>
+<div>
+<div class="l404-stitle">Медицина: робота "в кишеню"</div>
+<div class="l404-stext">Лікар прийняв пацієнта, взяв готівку — в систему не вніс. Клініка не знає про цей дохід і не враховує матеріали. Без системи контролю послуг — це невидима діра.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum" style="background:#ef4444">!</div>
+<div>
+<div class="l404-stitle">Рецепція: "вікна" в розкладі</div>
+<div class="l404-stext">Крісло простоює 2 години в день = 2 год × 500 грн/год = 1 000 грн в день = 7 000 грн в тиждень втраченого доходу. Це не витрата — але це гроші які ти міг заробити і не заробив.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum" style="background:#ef4444">!</div>
+<div>
+<div class="l404-stitle">Управління: час власника на операційку</div>
+<div class="l404-stext">Якщо власник 20 годин на тиждень вирішує дрібні питання замість стратегічних — це коштує дорого. Ці 20 годин потрібно рахувати як витрату на "дорогого менеджера".</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum" style="background:#ef4444">!</div>
+<div>
+<div class="l404-stitle">Закупівлі: матеріали що псуються</div>
+<div class="l404-stext">Закупили матеріалів на 3 місяці — 30% прострочило. Це 30% бюджету закупівель = пряма втрата. Без контролю термінів — повторюється щомісяця.</div>
+</div>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Крок 5 — як AI знаходить аномалії</div>
+<div class="l404-h">Коли цифри "кричать" але ти не чуєш</div>
+<div class="l404-card"><p>Людина бачить числа і думає "ну і що". AI бачить числа і порівнює з бенчмарком, з минулими тижнями, з нормою галузі — і каже: <strong>"Тут щось не так"</strong>.</p></div>
+
+<table class="l404-table">
+<tr><th style="background:#f1f5f9">Що AI перевіряє</th><th style="background:#f1f5f9">Норма</th><th style="background:#f1f5f9">Сигнал</th></tr>
+<tr><td>Медицина % від приходу</td><td>38–42%</td><td>⚠️ якщо &gt;45% або &lt;35%</td></tr>
+<tr><td>Комерція % від приходу</td><td>15–18%</td><td>⚠️ якщо &gt;22% або &lt;10%</td></tr>
+<tr><td>Резерв відрахований?</td><td>12–15%</td><td>🔴 якщо 0 (пропущено)</td></tr>
+<tr><td>Зростання витрат тиждень до тижня</td><td>&lt;5%</td><td>⚠️ якщо &gt;15% раптово</td></tr>
+<tr><td>Прихід нижче точки беззбитковості</td><td>вище нуля</td><td>🔴 негайний сигнал</td></tr>
+<tr><td>Дивіденди без прибутку</td><td>тільки з прибутку</td><td>🔴 власник їсть резерв</td></tr>
+</table>
+
+<div class="l404-good">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:1px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+<div>В TALKO: AI-аналітик в розділі Фінанси має доступ до всіх транзакцій і може відповісти: "Де цього тижня перевитрати?" — базуючись на реальних даних твоєї компанії.</div>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Крок 6 — як запустити в TALKO</div>
+<div class="l404-h">4 кроки від нуля до системи</div>
+
+<div class="l404-step">
+<div class="l404-snum">1</div>
+<div>
+<div class="l404-stitle">Налаштувати 8 Функцій</div>
+<div class="l404-stext">Система → Структура → Функції. Створити 8 функцій відповідно до твоїх департаментів. Кожна функція = одне "відро" для витрат.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum">2</div>
+<div>
+<div class="l404-stitle">Прив'язати категорії витрат до функцій</div>
+<div class="l404-stext">Фінанси → Налаштування → Категорії. Кожна категорія (зарплата медперсоналу, реклама, оренда) прив'язується до відповідної функції. Тоді система сама сортує витрати по відрах.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum">3</div>
+<div>
+<div class="l404-stitle">Встановити бюджет по функціях</div>
+<div class="l404-stext">Фінанси → Планування → Бюджет по функціях. Ввести плановий % від приходу для кожної функції. Система автоматично рахуватиме план на основі фактичного приходу.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum">4</div>
+<div>
+<div class="l404-stitle">Запитати AI кожного тижня</div>
+<div class="l404-stext">Фінанси → AI-аналітик. Натиснути "Аналіз поточного тижня" — AI покаже де перевитрати, де аномалії і що робити. Без Excel. Без ручного рахування.</div>
+</div>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Підсумок</div>
+<div class="l404-h">ФП №1 — це не таблиця. Це звичка.</div>
+<div class="l404-card">
+<p>Щопонеділка — 15 хвилин. Відкрив систему, подивився три числа: прихід, витрати, різниця. Перевірив чи всі 8 відер в нормі. Запитав AI "де аномалії". Закрив. Пішов керувати.</p>
+<p><strong>Мета не в тому щоб мати красиві таблиці. Мета в тому щоб ніколи не дивуватись "куди зникли гроші".</strong></p>
+</div>`,
+
+            lessonContent_ru: `<style>
+.l404-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.l404-h{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l404-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.l404-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l404-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
+.l404-card p+p{margin-top:.55rem}
+.l404-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.45rem}
+.l404-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.l404-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.l404-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.l404-dept{border-radius:12px;padding:.85rem 1rem;margin-bottom:.5rem}
+.l404-dept-h{font-size:.82rem;font-weight:700;margin-bottom:.4rem;display:flex;align-items:center;justify-content:space-between}
+.l404-dept-pct{font-size:.75rem;font-weight:800;padding:.15rem .55rem;border-radius:8px}
+.l404-dept-items{font-size:.78rem;color:#525252;line-height:1.7}
+.l404-warn{display:flex;gap:.6rem;align-items:flex-start;padding:.75rem .9rem;background:#fef9c3;border:1px solid #fde68a;border-radius:9px;font-size:.82rem;color:#854d0e;margin-bottom:.5rem}
+.l404-good{display:flex;gap:.6rem;align-items:flex-start;padding:.75rem .9rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.82rem;color:#14532d;margin-bottom:.5rem}
+.l404-bad{display:flex;gap:.6rem;align-items:flex-start;padding:.75rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.82rem;color:#7f1d1d;margin-bottom:.5rem}
+.l404-table{width:100%;border-collapse:collapse;font-size:.78rem;margin:.75rem 0}
+.l404-table th{padding:.5rem .7rem;font-weight:700;text-align:left;border:1px solid #e5e7eb}
+.l404-table td{padding:.45rem .7rem;border:1px solid #e5e7eb;color:#374151}
+.l404-table tr:nth-child(even) td{background:#f9fafb}
+.l404-formula{background:#0f172a;border-radius:10px;padding:.85rem 1.1rem;font-family:monospace;font-size:.85rem;color:#e2e8f0;margin:.75rem 0;line-height:1.7}
+.l404-week{border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;margin:.75rem 0}
+.l404-week-head{background:#1e293b;color:white;padding:.6rem 1rem;font-size:.82rem;font-weight:700;display:flex;justify-content:space-between}
+.l404-week-row{display:flex;align-items:center;padding:.45rem 1rem;border-bottom:1px solid #f1f5f9;font-size:.8rem}
+.l404-week-row:last-child{border-bottom:none}
+.l404-week-dept{flex:2;color:#374151;font-weight:500}
+.l404-week-plan{flex:1;text-align:right;color:#6b7280}
+.l404-week-fact{flex:1;text-align:right;font-weight:700}
+.l404-week-delta{flex:1;text-align:right;font-size:.75rem;font-weight:700}
+</style>
+
+<div class="l404-lbl">Зачем это вообще нужно</div>
+<div class="l404-h">Представь: у тебя есть ресторан</div>
+<div class="l404-card">
+<p>Каждый понедельник тебе нужно решить: сколько денег потратить на этой неделе. На зарплаты, продукты, рекламу, аренду. Ты можешь делать это "на ощущение" — и часто ошибаться. Или можешь иметь <strong>чёткий список</strong> сколько что стоит каждую неделю.</p>
+<p>Программа ФП №1 — это и есть тот список. Простыми словами: <strong>сколько денег нужно каждую неделю чтобы бизнес просто выжил</strong>. Не заработал. Именно выжил — покрыл все расходы.</p>
+</div>
+
+<div class="l404-bad">
+<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+<div><strong>Без ФП №1:</strong> "На этой неделе пришло 200 000 грн. Хорошо или плохо?" — не знаешь ответа.</div>
+</div>
+<div class="l404-good">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+<div><strong>С ФП №1:</strong> "Нам нужно 180 000 грн в неделю чтобы выживать. Пришло 200 000 — мы в плюсе на 20 000. Хорошо."</div>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Шаг 1 — понимаем структуру</div>
+<div class="l404-h">8 вёдер куда уходят деньги</div>
+<div class="l404-card"><p>Представь что все деньги клиники — это вода. Она растекается по 8 вёдрам. Каждое ведро — это <strong>функция (департамент)</strong>. У каждого ведра есть норма: сколько процентов от общего дохода оно должно получать.</p></div>
+
+<div class="l404-dept" style="background:#eff6ff;border:1px solid #bfdbfe">
+<div class="l404-dept-h" style="color:#1e40af">
+<span>1️⃣ Управление — зарплата директора, консультанты, программы</span>
+<span class="l404-dept-pct" style="background:#dbeafe;color:#1e40af">8–10%</span>
+</div>
+<div class="l404-dept-items">Зарплата руководства · Обучение руководителей · Консультации · ПО для управления</div>
+</div>
+
+<div class="l404-dept" style="background:#faf5ff;border:1px solid #e9d5ff">
+<div class="l404-dept-h" style="color:#6b21a8">
+<span>2️⃣ HR — найм, обучение, мотивация персонала</span>
+<span class="l404-dept-pct" style="background:#ede9fe;color:#6b21a8">4–6%</span>
+</div>
+<div class="l404-dept-items">Зарплата HR · Рекрутинг и онбординг · Обучение персонала · Мотивационные программы</div>
+</div>
+
+<div class="l404-dept" style="background:#fff7ed;border:1px solid #fed7aa">
+<div class="l404-dept-h" style="color:#9a3412">
+<span>3️⃣ Коммерция — маркетинг + продажи + ресепшн</span>
+<span class="l404-dept-pct" style="background:#ffedd5;color:#9a3412">15–18%</span>
+</div>
+<div class="l404-dept-items">Онлайн-реклама · SMM · Сайт · Зарплата администраторов · Бонусы за продажи · CRM</div>
+</div>
+
+<div class="l404-dept" style="background:#f0fdf4;border:1px solid #bbf7d0">
+<div class="l404-dept-h" style="color:#166534">
+<span>4️⃣ Финансы — бухгалтерия, юрист, банк, налоги</span>
+<span class="l404-dept-pct" style="background:#dcfce7;color:#166534">4–6%</span>
+</div>
+<div class="l404-dept-items">Зарплата бухгалтерии · Юридическое сопровождение · Банковское обслуживание · Налоги</div>
+</div>
+
+<div class="l404-dept" style="background:#fef2f2;border:1px solid #fecaca">
+<div class="l404-dept-h" style="color:#991b1b">
+<span>5️⃣ Медицина — врачи + материалы + оборудование</span>
+<span class="l404-dept-pct" style="background:#fee2e2;color:#991b1b">38–42%</span>
+</div>
+<div class="l404-dept-items">Зарплаты врачей и ассистентов · Медматериалы · Обслуживание оборудования · Амортизация</div>
+</div>
+
+<div class="l404-dept" style="background:#f9fafb;border:1px solid #e5e7eb">
+<div class="l404-dept-h" style="color:#374151">
+<span>6️⃣ АХЧ — аренда, коммуналка, уборка, охрана</span>
+<span class="l404-dept-pct" style="background:#f3f4f6;color:#374151">8–10%</span>
+</div>
+<div class="l404-dept-items">Аренда · Коммунальные платежи · Уборка · Охрана · Ремонт</div>
+</div>
+
+<div class="l404-dept" style="background:#fefce8;border:1px solid #fde68a">
+<div class="l404-dept-h" style="color:#854d0e">
+<span>7️⃣ Резервный фонд — подушка безопасности + развитие</span>
+<span class="l404-dept-pct" style="background:#fef9c3;color:#854d0e">12–15%</span>
+</div>
+<div class="l404-dept-items">Фонд непредвиденных расходов · Фонд развития · Инвестиции в оборудование</div>
+</div>
+
+<div class="l404-dept" style="background:#fdf4ff;border:1px solid #f0abfc">
+<div class="l404-dept-h" style="color:#701a75">
+<span>8️⃣ Дивиденды владельца — твоя зарплата</span>
+<span class="l404-dept-pct" style="background:#fae8ff;color:#701a75">5–8%</span>
+</div>
+<div class="l404-dept-items">Регулярные выплаты владельцу · Премиальные при достижении KPI</div>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Шаг 2 — главная формула</div>
+<div class="l404-h">Три числа которые решают всё</div>
+
+<div class="l404-formula">
+<span style="color:#60a5fa">ПРИХОД ФАКТ</span>  —  сколько реально пришло денег на этой неделе
+<span style="color:#f87171">ЗАПЛАНИРОВАННЫЕ РАСХОДЫ</span>  —  сумма всех 8 вёдер на эту неделю
+<span style="color:#4ade80">РАЗНИЦА</span>  =  Приход − Расходы  →  <span style="color:#4ade80">+</span> хорошо, <span style="color:#f87171">−</span> плохо
+</div>
+
+<div class="l404-card">
+<p><strong>Пример:</strong> Клиника. Неделя 1 (16-22 июня).</p>
+<p>Пришло: 320 000 грн. Запланированные расходы: 285 000 грн. Разница: <strong>+35 000 грн</strong> ✅</p>
+<p>Следующая неделя: пришло 210 000 грн. Расходы: 285 000 грн. Разница: <strong>−75 000 грн</strong> ❌ — сигнал: либо увеличить доход либо резать расходы.</p>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Шаг 3 — "скрытые дыры"</div>
+<div class="l404-h">Деньги которые исчезают незаметно</div>
+
+<div class="l404-step">
+<div class="l404-snum" style="background:#ef4444">!</div>
+<div>
+<div class="l404-stitle">Медицина: работа "в карман"</div>
+<div class="l404-stext">Врач принял пациента, взял наличные — в систему не внёс. Клиника не знает об этом доходе и не учитывает материалы. Без системы контроля услуг — это невидимая дыра.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum" style="background:#ef4444">!</div>
+<div>
+<div class="l404-stitle">Ресепшн: "окна" в расписании</div>
+<div class="l404-stext">Кресло простаивает 2 часа в день = 2 ч × 500 грн/ч = 1 000 грн в день = 7 000 грн в неделю потерянного дохода. Это не расход — но это деньги которые ты мог заработать и не заработал.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum" style="background:#ef4444">!</div>
+<div>
+<div class="l404-stitle">Управление: время владельца на операционку</div>
+<div class="l404-stext">Если владелец 20 часов в неделю решает мелкие вопросы вместо стратегических — это дорого стоит. Эти 20 часов нужно считать как расход на "дорогого менеджера".</div>
+</div>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Шаг 4 — как запустить в TALKO</div>
+<div class="l404-h">4 шага от нуля до системы</div>
+
+<div class="l404-step">
+<div class="l404-snum">1</div>
+<div>
+<div class="l404-stitle">Настроить 8 Функций</div>
+<div class="l404-stext">Система → Структура → Функции. Создать 8 функций согласно твоим департаментам. Каждая функция = одно "ведро" для расходов.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum">2</div>
+<div>
+<div class="l404-stitle">Привязать категории расходов к функциям</div>
+<div class="l404-stext">Финансы → Настройки → Категории. Каждая категория (зарплата медперсонала, реклама, аренда) привязывается к соответствующей функции. Система сама сортирует расходы по вёдрам.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum">3</div>
+<div>
+<div class="l404-stitle">Установить бюджет по функциям</div>
+<div class="l404-stext">Финансы → Планирование → Бюджет по функциям. Ввести плановый % от дохода для каждой функции. Система автоматически считает план на основе фактического дохода.</div>
+</div>
+</div>
+
+<div class="l404-step">
+<div class="l404-snum">4</div>
+<div>
+<div class="l404-stitle">Спрашивать AI каждую неделю</div>
+<div class="l404-stext">Финансы → AI-аналитик. Нажать "Анализ текущей недели" — AI покажет где перерасход, где аномалии и что делать. Без Excel. Без ручного счёта.</div>
+</div>
+</div>
+
+<div class="l404-div"></div>
+
+<div class="l404-lbl">Итог</div>
+<div class="l404-h">ФП №1 — это не таблица. Это привычка.</div>
+<div class="l404-card">
+<p>Каждый понедельник — 15 минут. Открыл систему, посмотрел три числа: доход, расходы, разница. Проверил все ли 8 вёдер в норме. Спросил AI "где аномалии". Закрыл. Пошёл управлять.</p>
+<p><strong>Цель не в том чтобы иметь красивые таблицы. Цель в том чтобы никогда не удивляться "куда исчезли деньги".</strong></p>
+</div>`,
+
+            homework: 'Зайди в Фінанси → Налаштування → Функції. Перевір чи є у тебе 8 функцій (або скільки департаментів у твоєму бізнесі). Якщо немає — створи їх прямо зараз за прикладом з уроку. Потім перейди до Фінанси → Планування → Бюджет по функціях і встанови плановий % для кожної функції.',
+            homework_ru: 'Зайди в Финансы → Настройки → Функции. Проверь есть ли у тебя 8 функций (или сколько департаментов в твоём бизнесе). Если нет — создай их прямо сейчас по примеру из урока. Затем перейди в Финансы → Планирование → Бюджет по функциям и установи плановый % для каждой функции.',
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
     ];
     if (window.learningCourseData) {
         window.learningCourseData = window.learningCourseData.concat(financeCourseData);
