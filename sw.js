@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-03-26-v23.0';
+const CACHE_VERSION = '2026-03-30-v24.0';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache — core shell only (JS modules via network-first)
@@ -236,7 +236,7 @@ self.addEventListener('fetch', (event) => {
   const isSubPage = url.pathname.endsWith('.html') || url.pathname.startsWith('/book/') || url.pathname.startsWith('/s/') || url.pathname.startsWith('/p/');
   if (event.request.mode === 'navigate' && isRootApp) {
     event.respondWith(
-      fetch('/api/app', { cache: 'no-store' })
+      fetch('/', { cache: 'no-store' })
         .then(r => r)
         .catch(() => new Response('<h2>Offline</h2><p>Перевірте підключення до інтернету</p>', { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } }))
     );
