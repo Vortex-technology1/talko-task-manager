@@ -246,13 +246,10 @@
                         }
                     });
                 });
-                // Коли новий SW взяв контроль — перезавантажуємо сторінку
-                navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    if (!window._swReloading) {
-                        window._swReloading = true;
-                        window.location.reload();
-                    }
-                });
+                // controllerchange reload disabled - causes infinite loop
+                // navigator.serviceWorker.addEventListener('controllerchange', () => {
+                //     window.location.reload();
+                // });
             }).catch(err => {
                 window.dbg&&dbg('[SW] Registration skipped:', err.message);
             });
