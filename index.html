@@ -2,6 +2,26 @@
 <!-- TALKO v2026.03.15.1 -->
 <html lang="uk">
 <head>
+<script>
+// CRITICAL FIX: Kill old Service Worker that was intercepting navigation with /api/app
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for (var r of registrations) {
+      r.unregister();
+      console.log('[TALKO] Old SW unregistered:', r.scope);
+    }
+  });
+  // Also clear all caches
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      for (var name of names) {
+        caches.delete(name);
+        console.log('[TALKO] Cache cleared:', name);
+      }
+    });
+  }
+}
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#22c55e">
