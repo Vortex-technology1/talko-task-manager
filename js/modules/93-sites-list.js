@@ -99,7 +99,7 @@ function _renderList() {
     </div>
 
     <!-- Картки сайтів -->
-    <div style="display:flex;flex-direction:column;gap:0.6rem;">
+    <div style="display:flex;flex-direction:column;gap:0.35rem;">
         ${sl.sites.map(site => _siteCard(site)).join('')}
     </div>`;
 }
@@ -117,8 +117,8 @@ function _siteCard(site) {
     const nicheColor = nicheColors[site.nicheKey] || '#6b7280';
 
     return `
-    <div style="background:white;border-radius:14px;padding:1rem;
-        box-shadow:0 1px 6px rgba(0,0,0,0.07);border:1.5px solid #f1f5f9;
+    <div style="background:white;border-radius:10px;padding:0.5rem 0.9rem;
+        box-shadow:0 1px 4px rgba(0,0,0,0.06);border:1px solid #f1f5f9;
         transition:all 0.15s;"
         onmouseenter="this.style.borderColor='#bbf7d0';this.style.boxShadow='0 4px 14px rgba(34,197,94,0.12)'"
         onmouseleave="this.style.borderColor='#f1f5f9';this.style.boxShadow='0 1px 6px rgba(0,0,0,0.07)'">
@@ -126,7 +126,7 @@ function _siteCard(site) {
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
             <!-- Ліво: info -->
             <div style="flex:1;min-width:0;">
-                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.1rem;flex-wrap:wrap;">
                     <span style="font-weight:700;font-size:0.92rem;color:#1a1a1a;">${_esc(site.name || window.t('botsNoTitle'))}</span>
                     <span style="font-size:0.65rem;padding:1px 7px;border-radius:8px;font-weight:600;
                         background:${isPublished ? '#f0fdf4' : '#f9fafb'};
@@ -137,11 +137,11 @@ function _siteCard(site) {
                         background:#f1f5f9;color:${nicheColor};font-weight:600;">${_esc(niche)}</span>` : ''}
                 </div>
 
-                ${site.description ? `<div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.4rem;
+                ${site.description ? `<div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.15rem;
                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(site.description)}</div>` : ''}
 
                 ${isPublished && (site.customDomain || site.publicUrl) ? `
-                <div style="display:flex;align-items:center;gap:5px;margin-bottom:0.4rem;">
+                <div style="display:flex;align-items:center;gap:5px;margin-bottom:0.15rem;">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                     <span style="font-size:0.72rem;color:#0ea5e9;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;"
                         title="${site.customDomain ? 'https://'+_esc(site.customDomain) : _esc(site.publicUrl||'')}">
@@ -162,7 +162,7 @@ function _siteCard(site) {
             </div>
 
             <!-- Право: кнопки -->
-            <div style="display:flex;flex-direction:column;gap:0.35rem;flex-shrink:0;">
+            <div style="display:flex;flex-direction:column;gap:0.2rem;flex-shrink:0;">
                 ${site.mode === 'html' ? `
                 <button onclick="sitesEditHtml('${site.id}')"
                     style="padding:0.4rem 0.7rem;background:#8b5cf6;color:white;border:none;
