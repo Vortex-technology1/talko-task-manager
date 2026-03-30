@@ -36,34 +36,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>
-// EARLY ERROR TRAP — catches the Unexpected end of input before modules load
-window.addEventListener('error', function _earlyErr(e) {
-  var info = 'src=' + (e.filename||'?') + ' line=' + e.lineno + ' col=' + e.colno + ' msg=' + e.message;
-  // Show in red banner immediately
-  document.addEventListener('DOMContentLoaded', function() {
-    var d = document.createElement('div');
-    d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;padding:8px;z-index:99999;font-size:11px;word-break:break-all;';
-    d.textContent = 'EARLY ERR: ' + info;
-    document.body && document.body.appendChild(d);
-  });
-  console.error('[EARLY ERR]', info);
-  // Try to identify which script failed
-  document.querySelectorAll('script[src]').forEach(function(s) {
-    if (!s._loaded && !s._error) console.warn('[EARLY ERR] Unloaded script:', s.src);
-  });
-}, true); // capture phase
-// Track script load status
-document.addEventListener('load', function(e) {
-  if (e.target && e.target.tagName === 'SCRIPT') e.target._loaded = true;
-}, true);
-document.addEventListener('error', function(e) {
-  if (e.target && e.target.tagName === 'SCRIPT') {
-    e.target._error = true;
-    console.error('[SCRIPT FAIL]', e.target.src);
-  }
-}, true);
-</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#22c55e">
@@ -247,9 +220,27 @@ document.addEventListener('mousedown', function(e) {
             setTimeout(window._initLucide, 1500);
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.468.0/umd/lucide.min.js"
-        onload="window._initLucide && window._initLucide()"
-        onerror="var s=document.createElement('script');s.src='https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js';s.onload=function(){window._initLucide&&window._initLucide()};document.head.appendChild(s)">
+    <script>
+    // Load lucide with multiple fallbacks
+    (function() {
+        var LUCIDE_VERSION = '0.468.0';
+        var urls = [
+            'https://unpkg.com/lucide@' + LUCIDE_VERSION + '/dist/umd/lucide.min.js',
+            'https://cdn.jsdelivr.net/npm/lucide@' + LUCIDE_VERSION + '/dist/umd/lucide.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/lucide/' + LUCIDE_VERSION + '/umd/lucide.min.js'
+        ];
+        var idx = 0;
+        function tryLoad() {
+            if (idx >= urls.length) { console.warn('[lucide] All CDNs failed'); return; }
+            var s = document.createElement('script');
+            s.src = urls[idx];
+            s.onload = function() { window._initLucide && window._initLucide(); };
+            s.onerror = function() { idx++; tryLoad(); };
+            document.head.appendChild(s);
+            idx++;
+        }
+        tryLoad();
+    })();
     </script>
     <script src="https://accounts.google.com/gsi/client"></script>
     <script src="https://apis.google.com/js/api.js"></script>
