@@ -781,6 +781,7 @@ function _safeMakeCondition(conditionStr) {
         console.warn('[EventBus] condition blocked'); return null;
     }
     try {
+        if (!conditionStr || !conditionStr.trim()) return null;
         // eslint-disable-next-line no-new-func
         return new Function('e', conditionStr);
     } catch(err) {
