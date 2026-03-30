@@ -16984,6 +16984,596 @@ Bist du dabei?</div>
             homeworkLinkName: 'Проаналізувати текст',
             homeworkLinkName_ru: 'Проанализировать текст',
         },
+
+        {
+            id: 107,
+            category: 'marketing',
+            title: 'Заголовок, оголошення і картинка: як зупинити людину за 2 секунди',
+            title_ru: 'Заголовок, объявление и картинка: как остановить человека за 2 секунды',
+            title_en: 'Headline, ad and image: how to stop a person in 2 seconds',
+            subtitle: 'Структура рекламного оголошення, текст на картинці і як отримати готові тексти за 5 хвилин через AI',
+            subtitle_ru: 'Структура рекламного объявления, текст на картинке и как получить готовые тексты за 5 минут через AI',
+            subtitle_en: 'Ad structure, image copy and how to get ready-made texts in 5 minutes via AI',
+            duration: 30,
+            videoLink: null,
+            materialsLink: null,
+            lessonContent: `<style>
+.l107-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.l107-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l107-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.l107-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l107-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
+.l107-card p+p{margin-top:.55rem}
+.l107-bad{display:flex;align-items:flex-start;gap:.6rem;padding:.75rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;margin-bottom:.45rem}
+.l107-good{display:flex;align-items:flex-start;gap:.6rem;padding:.75rem .9rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#14532d;margin-bottom:.45rem}
+.l107-rule{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #22c55e;border-radius:12px;padding:1rem 1.1rem;margin:.75rem 0;text-align:center}
+.l107-rule-num{font-size:2rem;font-weight:800;color:#16a34a;margin-bottom:.25rem}
+.l107-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.45rem}
+.l107-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.l107-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.l107-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.l107-imgzone{display:grid;gap:4px;background:#1a1a1a;border-radius:12px;padding:12px;margin:.75rem 0}
+.l107-zone{padding:8px 12px;border-radius:8px;font-size:.8rem;font-weight:600;text-align:center}
+.l107-zone-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin-bottom:2px}
+.l107-platform{background:#f0fdf4;border:1.5px solid #22c55e;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l107-ptitle{font-size:.875rem;font-weight:700;color:#166534;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.l107-pfield{background:white;border:1px solid #bbf7d0;border-radius:8px;padding:.6rem .8rem;margin-bottom:.4rem;font-size:.8rem;color:#374151}
+.l107-pfname{font-size:.65rem;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.15rem}
+.l107-niche{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:.9rem 1rem;margin-bottom:.5rem}
+.l107-niche-title{font-size:.75rem;font-weight:700;color:#1e40af;margin-bottom:.4rem;display:flex;align-items:center;gap:.35rem}
+.l107-flow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.75rem 0}
+.l107-fbox{padding:.45rem .85rem;border-radius:8px;font-size:.82rem;font-weight:600;text-align:center}
+.l107-farr{color:#9ca3af;font-size:1.1rem}
+.l107-ai-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.25rem;background:#22c55e;color:white;border-radius:9px;font-size:.88rem;font-weight:700;text-decoration:none;margin-top:.75rem}
+.l107-code{background:#0f172a;border-radius:10px;padding:.9rem 1.1rem;font-family:monospace;font-size:.82rem;color:#e2e8f0;line-height:1.8;margin:.75rem 0}
+.l107-code .arr{color:#22c55e}
+</style>
+
+<div class="l107-lbl">Основи</div>
+<div class="l107-title">Заголовок vs Оголошення — в чому різниця</div>
+<div class="l107-card">
+<p><strong>Заголовок</strong> — це перший рядок, який людина бачить у рекламі. Його завдання одне: зупинити і змусити читати далі. Не продати, не пояснити — просто зупинити.</p>
+<p><strong>Оголошення</strong> — це весь текст реклами: заголовок + опис + заклик до дії. Оголошення вже пояснює, переконує і веде до дії.</p>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Головна помилка</div>
+<div class="l107-title">Розмитість — коли заголовок підходить всім і нікому</div>
+<div class="l107-card"><p>Типова помилка — заголовок без фільтру. Він може бути про стоматологію, салон краси, будівництво, IT — будь-що. Людина читає і думає: "Ну і що? Це взагалі про мене?" — і гортає далі.</p></div>
+
+<div class="l107-bad">
+<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+<div><strong>Погано:</strong> "Втомились від хаосу в бізнесі?" — підходить абсолютно всім, тому не зупиняє нікого конкретно</div>
+</div>
+<div class="l107-good">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+<div><strong>Добре:</strong> "Для власників стоматологій: графік лікарів заповнений на 40%?" — одразу ясно хто це читає</div>
+</div>
+
+<div class="l107-card" style="margin-top:.75rem"><p>Людина за 0.5 секунди вирішує: <em>моє чи не моє</em>. Якщо твоє — читає далі. Якщо ні — гортає. І це добре: тобі не потрібні всі, тобі потрібні свої.</p></div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Структура</div>
+<div class="l107-title">4 елементи нормального оголошення</div>
+
+<div class="l107-flow">
+<div class="l107-fbox" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe">Фільтр</div>
+<div class="l107-farr">→</div>
+<div class="l107-fbox" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca">Біль</div>
+<div class="l107-farr">→</div>
+<div class="l107-fbox" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0">Результат</div>
+<div class="l107-farr">→</div>
+<div class="l107-fbox" style="background:#fef9c3;color:#854d0e;border:1px solid #fde68a">Дія</div>
+</div>
+
+<div class="l107-step">
+<div class="l107-snum">1</div>
+<div><div class="l107-stitle">Фільтр — хто ця людина</div>
+<div class="l107-stext">"Для власників стоматологій" / "Для тих, хто будує будинок" / "Власники салонів краси — читайте"</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">2</div>
+<div><div class="l107-stitle">Біль — що її дратує прямо зараз</div>
+<div class="l107-stext">"Графік лікарів заповнений на 40%?" / "Ціна змінилася після підписання договору?" — конкретна ситуація, яку людина впізнає</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">3</div>
+<div><div class="l107-stitle">Результат — що вона отримає конкретно</div>
+<div class="l107-stext">"80% запису без вашої участі за 65 днів" — не "покращимо бізнес", а конкретна цифра і термін</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">4</div>
+<div><div class="l107-stitle">Дія — що зробити далі</div>
+<div class="l107-stext">"Натисніть — залишіть заявку" / "Записуйтесь — консультація безкоштовно" — одна конкретна дія, не три</div></div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Картинка</div>
+<div class="l107-title">Що писати на картинці — 3 зони</div>
+<div class="l107-card"><p>Людина не читає картинку — вона сканує за 1-2 секунди. Тому максимум 10-12 слів, одна думка, жодних "авторських методик і нових парадигм".</p></div>
+
+<div class="l107-imgzone">
+<div class="l107-zone" style="background:#374151">
+<div class="l107-zone-label" style="color:#9ca3af">Зона 1 — фільтр вгорі</div>
+<div style="color:#e5e7eb;font-size:.82rem">Для власників стоматологій | TALKO System</div>
+</div>
+<div class="l107-zone" style="background:#111827;padding:16px 12px">
+<div class="l107-zone-label" style="color:#6b7280">Зона 2 — головний текст (найбільший)</div>
+<div style="color:white;font-size:1rem;font-weight:700;line-height:1.4">Графік лікарів на 80%<br>без вашого контролю</div>
+</div>
+<div class="l107-zone" style="background:#1f2937">
+<div class="l107-zone-label" style="color:#9ca3af">Зона 3 — підзаголовок</div>
+<div style="color:#d1fae5;font-size:.82rem">За 65 днів — навіть якщо зараз повний хаос</div>
+</div>
+</div>
+
+<div class="l107-step">
+<div class="l107-snum" style="background:#3b82f6">1</div>
+<div><div class="l107-stitle">Заголовок — найбільший текст</div>
+<div class="l107-stext">Одна думка. Конкретний біль або результат. Цифра краща ніж слово: "80% запису без вашої участі" — не "збільшимо запис"</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum" style="background:#8b5cf6">2</div>
+<div><div class="l107-stitle">Підзаголовок — знімає скептицизм</div>
+<div class="l107-stext">Уточнює заголовок або додає конкретику: "За 65 днів — навіть якщо зараз повний хаос" / "Ціна фіксована. Письмова гарантія"</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum" style="background:#f59e0b">3</div>
+<div><div class="l107-stitle">Фільтр + бренд — вгорі або внизу</div>
+<div class="l107-stext">Хто це для + назва або ім'я. Коротко: "Для власників МСБ | TALKO System" або "Стоматологія Луцьк | Клініка [Назва]"</div></div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Чому текст на картинці</div>
+<div class="l107-title">4 причини чому картинка з текстом конвертує краще</div>
+
+<div class="l107-step">
+<div class="l107-snum">1</div>
+<div><div class="l107-stitle">Стрічка — це швидкість</div>
+<div class="l107-stext">Людина гортає за секунди. Картинка зупиняє. Але якщо на ній немає тексту — вона не розуміє що це і гортає далі. Текст на картинці дає контекст миттєво — ще до того як людина читає підпис.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">2</div>
+<div><div class="l107-stitle">Частина людей не читає підпис взагалі</div>
+<div class="l107-stext">Особливо в Facebook і Instagram. Вони бачать картинку → якщо зрозуміло → клікають. Якщо ні — гортають. Ти залежиш від того чи є текст на картинці.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">3</div>
+<div><div class="l107-stitle">Подвійний удар по сприйняттю</div>
+<div class="l107-stext">Картинка чіпляє емоційно. Текст пояснює раціонально. Разом вони закривають обидва рівні — і серце, і голову. Красивий візуал без тексту закриває тільки один.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">4</div>
+<div><div class="l107-stitle">Coca-Cola може без тексту — ти ні</div>
+<div class="l107-stext">Красивий візуал без тексту — це реклама бренду. Для цього потрібні мільйони і роки. У тебе є 300-500 грн на тест. Текст з болем або цифрою дає людині зрозуміти що їй пропонують щось конкретне.</div></div>
+</div>
+
+<div class="l107-rule">
+<div class="l107-rule-num">= Конверсія</div>
+<div style="font-size:.85rem;color:#166534;font-weight:600">Візуал зупиняє · Текст пояснює · Разом — конвертують</div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Де розміщати</div>
+<div class="l107-title">Meta vs Google: різна логіка → різний текст</div>
+
+<div class="l107-platform">
+<div class="l107-ptitle">
+<svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+META (Facebook + Instagram) — перебиваєш людину
+</div>
+<div class="l107-pfield"><div class="l107-pfname">Основний текст</div>Повне оголошення 3-5 речень: фільтр + біль + результат + заклик</div>
+<div class="l107-pfield"><div class="l107-pfname">Заголовок (під картинкою)</div>5-7 слів. Або біль або результат — одна думка: "Запис на 80% без вашої участі"</div>
+<div class="l107-pfield"><div class="l107-pfname">Опис</div>Підсилення або знімач бар'єру: "Безкоштовно. Без зобов'язань" / "170+ клінік вже впровадили"</div>
+<div class="l107-pfield"><div class="l107-pfname">CTA кнопка</div>"Дізнатись більше" або "Зареєструватись" — для консалтингу і медицини краще за "Купити зараз"</div>
+</div>
+
+<div class="l107-platform" style="background:#fefce8;border-color:#fde68a">
+<div class="l107-ptitle" style="color:#854d0e">
+<svg viewBox="0 0 24 24" fill="none" stroke="#854d0e" stroke-width="1.75" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+GOOGLE — людина вже шукає тебе
+</div>
+<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#854d0e">Заголовки (до 15 штук × 30 символів)</div>Заголовок 1 → ключове слово: "Імплантація зубів Луцьк"<br>Заголовок 2 → перевага: "Від 8 900 грн. Гарантія 5 років"<br>Заголовок 3 → знімач бар'єру: "Безкоштовна консультація"</div>
+<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#854d0e">Описи (до 4 штук × 90 символів)</div>"Система управління бізнесом за 65 днів. 170+ клінік. Перша консультація — безкоштовно"</div>
+<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#854d0e">Розширення (Assets)</div>Уточнення: "Гарантія результату", "Без прихованих платежів"<br>Посилання: "Ціни", "Відгуки", "Записатись"</div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Приклади по нішах</div>
+<div class="l107-title">Як виглядає готове оголошення</div>
+
+<div class="l107-niche">
+<div class="l107-niche-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="1.75" width="14" height="14"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+Медицина / Стоматологія
+</div>
+<div style="font-size:.8rem;color:#1e3a8a;line-height:1.7">
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin-bottom:.3rem">Фільтр</div>
+Для власників стоматологій<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Біль</div>
+Графік лікарів заповнений на 40-50% — і ви самі тягнете весь запис?<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Результат</div>
+На майстер-класі покажу систему, де адміністратори заповнюють графік на 80-90% самостійно.<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Дія + знімач бар'єру</div>
+65 днів. Без хаосу. Реєструйтесь — безкоштовно.
+</div>
+</div>
+
+<div class="l107-niche">
+<div class="l107-niche-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="1.75" width="14" height="14"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+Будівництво
+</div>
+<div style="font-size:.8rem;color:#1e3a8a;line-height:1.7">
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin-bottom:.3rem">Фільтр</div>
+Плануєте будувати будинок?<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Біль</div>
+Ціна зростає поки ви думаєте<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Результат + знімач бар'єру</div>
+Фіксуємо вартість на етапі договору. Точний кошторис за 24 години — безкоштовно<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Довіра</div>
+[Компанія] | 120+ об'єктів | Гарантія письмово
+</div>
+</div>
+
+<div class="l107-niche">
+<div class="l107-niche-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="1.75" width="14" height="14"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+Консалтинг / Систематизація бізнесу
+</div>
+<div style="font-size:.8rem;color:#1e3a8a;line-height:1.7">
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin-bottom:.3rem">Фільтр</div>
+Для власників МСБ<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Біль</div>
+Бізнес тримається тільки на вас?<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Результат</div>
+Система, де 80% процесів працює без вашої участі<br>
+<div style="color:#9ca3af;font-size:.72nm;font-weight:700;text-transform:uppercase;margin:.3rem 0">Докази</div>
+65 днів. 170+ клінік. TALKO System
+</div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Готові тексти за 5 хвилин</div>
+<div class="l107-title">Як отримати тексти через AI — крок за кроком</div>
+
+<div class="l107-code">
+<span style="color:#9ca3af">Твій текст про послугу</span><br>
+<span class="arr">        ↓</span><br>
+<span style="color:#e2e8f0">Вставляєш в AI-асистент</span><br>
+<span class="arr">        ↓</span><br>
+<span style="color:#e2e8f0">Отримуєш готові тексти для реклами</span><br>
+<span class="arr">        ↓</span><br>
+<span style="color:#e2e8f0">Вставляєш в Meta Ads або Google Ads</span><br>
+<span class="arr">        ↓</span><br>
+<span style="color:#e2e8f0">Запускаєш рекламу</span>
+</div>
+
+<div class="l107-step">
+<div class="l107-snum">1</div>
+<div><div class="l107-stitle">Підготуй свій продаючий текст</div>
+<div class="l107-stext">Опис послуги, текст з сайту або Instagram, те що пишеш клієнту в месенджері, або просто кілька речень про що ти робиш і для кого. Не має бути ідеально — AI розбереться.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">2</div>
+<div><div class="l107-stitle">Відкрий AI-асистент і встав текст</div>
+<div class="l107-stext">Спеціально налаштований AI під рекламні оголошення. Напиши: "Ось мій продаючий текст. Зроби на його основі тексти для реклами в Meta та Google"</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">3</div>
+<div><div class="l107-stitle">Отримуєш готові: текст, заголовки, описи, варіанти для аудиторій</div>
+<div class="l107-stext">Тексти від AI — це заготовка, не фінал. Після отримання: перечитай чи звучить як ти говориш, додай конкретні цифри зі свого бізнесу, вкажи своє місто або нішу якщо не вказував.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">4</div>
+<div><div class="l107-stitle">Вставляй в Meta Ads або Google Ads і запускай</div>
+<div class="l107-stext">Meta Ads Manager: основний текст, заголовок, опис, картинка або відео. Google Ads: заголовки та описи у відповідні поля, Google сам тестує комбінації.</div></div>
+</div>
+
+<a href="https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads" target="_blank" class="l107-ai-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="16" height="16"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Відкрити Master of Selling Copy for Ads
+</a>`,
+
+            lessonContent_ru: `<style>
+.l107-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
+.l107-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l107-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
+.l107-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l107-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
+.l107-card p+p{margin-top:.55rem}
+.l107-bad{display:flex;align-items:flex-start;gap:.6rem;padding:.75rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.85rem;color:#7f1d1d;margin-bottom:.45rem}
+.l107-good{display:flex;align-items:flex-start;gap:.6rem;padding:.75rem .9rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.85rem;color:#14532d;margin-bottom:.45rem}
+.l107-rule{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #22c55e;border-radius:12px;padding:1rem 1.1rem;margin:.75rem 0;text-align:center}
+.l107-rule-num{font-size:2rem;font-weight:800;color:#16a34a;margin-bottom:.25rem}
+.l107-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.45rem}
+.l107-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.l107-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
+.l107-stext{font-size:.82rem;color:#525252;line-height:1.5}
+.l107-imgzone{display:grid;gap:4px;background:#1a1a1a;border-radius:12px;padding:12px;margin:.75rem 0}
+.l107-zone{padding:8px 12px;border-radius:8px;font-size:.8rem;font-weight:600;text-align:center}
+.l107-zone-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin-bottom:2px}
+.l107-platform{background:#f0fdf4;border:1.5px solid #22c55e;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l107-ptitle{font-size:.875rem;font-weight:700;color:#166534;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.l107-pfield{background:white;border:1px solid #bbf7d0;border-radius:8px;padding:.6rem .8rem;margin-bottom:.4rem;font-size:.8rem;color:#374151}
+.l107-pfname{font-size:.65rem;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.15rem}
+.l107-niche{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:.9rem 1rem;margin-bottom:.5rem}
+.l107-niche-title{font-size:.75rem;font-weight:700;color:#1e40af;margin-bottom:.4rem;display:flex;align-items:center;gap:.35rem}
+.l107-flow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.75rem 0}
+.l107-fbox{padding:.45rem .85rem;border-radius:8px;font-size:.82rem;font-weight:600;text-align:center}
+.l107-farr{color:#9ca3af;font-size:1.1rem}
+.l107-ai-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.25rem;background:#22c55e;color:white;border-radius:9px;font-size:.88rem;font-weight:700;text-decoration:none;margin-top:.75rem}
+.l107-code{background:#0f172a;border-radius:10px;padding:.9rem 1.1rem;font-family:monospace;font-size:.82rem;color:#e2e8f0;line-height:1.8;margin:.75rem 0}
+.l107-code .arr{color:#22c55e}
+</style>
+
+<div class="l107-lbl">Основы</div>
+<div class="l107-title">Заголовок vs Объявление — в чём разница</div>
+<div class="l107-card">
+<p><strong>Заголовок</strong> — это первая строка, которую человек видит в рекламе. Его задача одна: остановить и заставить читать дальше. Не продать, не объяснить — просто остановить.</p>
+<p><strong>Объявление</strong> — это весь текст рекламы: заголовок + описание + призыв к действию. Объявление уже объясняет, убеждает и ведёт к действию.</p>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Главная ошибка</div>
+<div class="l107-title">Размытость — когда заголовок подходит всем и никому</div>
+<div class="l107-card"><p>Типичная ошибка — заголовок без фильтра. Он может быть про стоматологию, салон красоты, строительство, IT — что угодно. Человек читает и думает: "Ну и что? Это вообще про меня?" — и листает дальше.</p></div>
+
+<div class="l107-bad">
+<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+<div><strong>Плохо:</strong> "Устали от хаоса в бизнесе?" — подходит абсолютно всем, поэтому не останавливает никого конкретно</div>
+</div>
+<div class="l107-good">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+<div><strong>Хорошо:</strong> "Для владельцев стоматологий: график врачей заполнен на 40%?" — сразу ясно кто это читает</div>
+</div>
+
+<div class="l107-card" style="margin-top:.75rem"><p>Человек за 0.5 секунды решает: <em>моё или не моё</em>. Если твоё — читает дальше. Если нет — листает. И это хорошо: тебе не нужны все, тебе нужны свои.</p></div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Структура</div>
+<div class="l107-title">4 элемента нормального объявления</div>
+
+<div class="l107-flow">
+<div class="l107-fbox" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe">Фильтр</div>
+<div class="l107-farr">→</div>
+<div class="l107-fbox" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca">Боль</div>
+<div class="l107-farr">→</div>
+<div class="l107-fbox" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0">Результат</div>
+<div class="l107-farr">→</div>
+<div class="l107-fbox" style="background:#fef9c3;color:#854d0e;border:1px solid #fde68a">Действие</div>
+</div>
+
+<div class="l107-step">
+<div class="l107-snum">1</div>
+<div><div class="l107-stitle">Фильтр — кто этот человек</div>
+<div class="l107-stext">"Для владельцев стоматологий" / "Для тех, кто строит дом" / "Владельцы салонов красоты — читайте"</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">2</div>
+<div><div class="l107-stitle">Боль — что её раздражает прямо сейчас</div>
+<div class="l107-stext">"График врачей заполнен на 40%?" / "Цена изменилась после подписания договора?" — конкретная ситуация, которую человек узнаёт</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">3</div>
+<div><div class="l107-stitle">Результат — что она получит конкретно</div>
+<div class="l107-stext">"80% записи без вашего участия за 65 дней" — не "улучшим бизнес", а конкретная цифра и срок</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">4</div>
+<div><div class="l107-stitle">Действие — что сделать дальше</div>
+<div class="l107-stext">"Нажмите — оставьте заявку" / "Записывайтесь — консультация бесплатно" — одно конкретное действие, не три</div></div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Картинка</div>
+<div class="l107-title">Что писать на картинке — 3 зоны</div>
+<div class="l107-card"><p>Человек не читает картинку — он сканирует за 1-2 секунды. Поэтому максимум 10-12 слов, одна мысль, никаких "авторских методик и новых парадигм".</p></div>
+
+<div class="l107-imgzone">
+<div class="l107-zone" style="background:#374151">
+<div class="l107-zone-label" style="color:#9ca3af">Зона 1 — фильтр вверху</div>
+<div style="color:#e5e7eb;font-size:.82rem">Для владельцев стоматологий | TALKO System</div>
+</div>
+<div class="l107-zone" style="background:#111827;padding:16px 12px">
+<div class="l107-zone-label" style="color:#6b7280">Зона 2 — главный текст (самый большой)</div>
+<div style="color:white;font-size:1rem;font-weight:700;line-height:1.4">График врачей на 80%<br>без вашего контроля</div>
+</div>
+<div class="l107-zone" style="background:#1f2937">
+<div class="l107-zone-label" style="color:#9ca3af">Зона 3 — подзаголовок</div>
+<div style="color:#d1fae5;font-size:.82rem">За 65 дней — даже если сейчас полный хаос</div>
+</div>
+</div>
+
+<div class="l107-step">
+<div class="l107-snum" style="background:#3b82f6">1</div>
+<div><div class="l107-stitle">Заголовок — самый большой текст</div>
+<div class="l107-stext">Одна мысль. Конкретная боль или результат. Цифра лучше слова: "80% записи без вашего участия" — не "увеличим запись"</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum" style="background:#8b5cf6">2</div>
+<div><div class="l107-stitle">Подзаголовок — снимает скептицизм</div>
+<div class="l107-stext">Уточняет заголовок или добавляет конкретику: "За 65 дней — даже если сейчас полный хаос" / "Цена фиксированная. Письменная гарантия"</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum" style="background:#f59e0b">3</div>
+<div><div class="l107-stitle">Фильтр + бренд — вверху или внизу</div>
+<div class="l107-stext">Кто это для + название или имя. Коротко: "Для владельцев МСБ | TALKO System" или "Стоматология Луцк | Клиника [Название]"</div></div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Почему текст на картинке</div>
+<div class="l107-title">4 причины почему картинка с текстом конвертирует лучше</div>
+
+<div class="l107-step">
+<div class="l107-snum">1</div>
+<div><div class="l107-stitle">Лента — это скорость</div>
+<div class="l107-stext">Человек листает за секунды. Картинка останавливает. Но если на ней нет текста — он не понимает что это и листает дальше. Текст на картинке даёт контекст мгновенно — ещё до того как человек читает подпись.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">2</div>
+<div><div class="l107-stitle">Часть людей не читает подпись вообще</div>
+<div class="l107-stext">Особенно в Facebook и Instagram. Они видят картинку → если понятно → кликают. Если нет — листают. Ты зависишь от того есть ли текст на картинке.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">3</div>
+<div><div class="l107-stitle">Двойной удар по восприятию</div>
+<div class="l107-stext">Картинка цепляет эмоционально. Текст объясняет рационально. Вместе они закрывают оба уровня — и сердце, и голову. Красивый визуал без текста закрывает только один.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">4</div>
+<div><div class="l107-stitle">Coca-Cola может без текста — ты нет</div>
+<div class="l107-stext">Красивый визуал без текста — это реклама бренда. Для этого нужны миллионы и годы. У тебя есть 300-500 грн на тест. Текст с болью или цифрой даёт человеку понять что ему предлагают что-то конкретное.</div></div>
+</div>
+
+<div class="l107-rule">
+<div class="l107-rule-num">= Конверсия</div>
+<div style="font-size:.85rem;color:#166534;font-weight:600">Визуал останавливает · Текст объясняет · Вместе — конвертируют</div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Где размещать</div>
+<div class="l107-title">Meta vs Google: разная логика → разный текст</div>
+
+<div class="l107-platform">
+<div class="l107-ptitle">
+<svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+META (Facebook + Instagram) — перебиваешь человека
+</div>
+<div class="l107-pfield"><div class="l107-pfname">Основной текст</div>Полное объявление 3-5 предложений: фильтр + боль + результат + призыв к действию</div>
+<div class="l107-pfield"><div class="l107-pfname">Заголовок (под картинкой)</div>5-7 слов. Или боль или результат — одна мысль: "Запись на 80% без вашего участия"</div>
+<div class="l107-pfield"><div class="l107-pfname">Описание</div>Усиление или снятие барьера: "Бесплатно. Без обязательств" / "170+ клиник уже внедрили"</div>
+<div class="l107-pfield"><div class="l107-pfname">CTA кнопка</div>"Узнать больше" или "Зарегистрироваться" — для консалтинга и медицины лучше чем "Купить сейчас"</div>
+</div>
+
+<div class="l107-platform" style="background:#fefce8;border-color:#fde68a">
+<div class="l107-ptitle" style="color:#854d0e">
+<svg viewBox="0 0 24 24" fill="none" stroke="#854d0e" stroke-width="1.75" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+GOOGLE — человек уже ищет тебя
+</div>
+<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#854d0e">Заголовки (до 15 штук × 30 символов)</div>Заголовок 1 → ключевое слово: "Имплантация зубов Луцк"<br>Заголовок 2 → преимущество: "От 8 900 грн. Гарантия 5 лет"<br>Заголовок 3 → снятие барьера: "Бесплатная консультация"</div>
+<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#854d0e">Описания (до 4 штук × 90 символов)</div>"Система управления бизнесом за 65 дней. 170+ клиник. Первая консультация — бесплатно"</div>
+<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#854d0e">Расширения (Assets)</div>Уточнения: "Гарантия результата", "Без скрытых платежей"<br>Ссылки: "Цены", "Отзывы", "Записаться"</div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Примеры по нишам</div>
+<div class="l107-title">Как выглядит готовое объявление</div>
+
+<div class="l107-niche">
+<div class="l107-niche-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="1.75" width="14" height="14"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+Медицина / Стоматология
+</div>
+<div style="font-size:.8rem;color:#1e3a8a;line-height:1.7">
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin-bottom:.3rem">Фильтр</div>
+Для владельцев стоматологий<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Боль</div>
+График врачей заполнен на 40-50% — и вы сами тянете всю запись?<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Результат</div>
+На мастер-классе покажу систему, где администраторы заполняют график на 80-90% самостоятельно.<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Действие + снятие барьера</div>
+65 дней. Без хаоса. Регистрируйтесь — бесплатно.
+</div>
+</div>
+
+<div class="l107-niche">
+<div class="l107-niche-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="1.75" width="14" height="14"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+Строительство
+</div>
+<div style="font-size:.8rem;color:#1e3a8a;line-height:1.7">
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin-bottom:.3rem">Фильтр</div>
+Планируете строить дом?<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Боль</div>
+Цена растёт пока вы думаете<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Результат + снятие барьера</div>
+Фиксируем стоимость на этапе договора. Точная смета за 24 часа — бесплатно<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Доверие</div>
+[Компания] | 120+ объектов | Гарантия письменно
+</div>
+</div>
+
+<div class="l107-niche">
+<div class="l107-niche-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="1.75" width="14" height="14"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+Консалтинг / Систематизация бизнеса
+</div>
+<div style="font-size:.8rem;color:#1e3a8a;line-height:1.7">
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin-bottom:.3rem">Фильтр</div>
+Для владельцев МСБ<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Боль</div>
+Бизнес держится только на вас?<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Результат</div>
+Система, где 80% процессов работает без вашего участия<br>
+<div style="color:#9ca3af;font-size:.72rem;font-weight:700;text-transform:uppercase;margin:.3rem 0">Доказательства</div>
+65 дней. 170+ клиник. TALKO System
+</div>
+</div>
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Готовые тексты за 5 минут</div>
+<div class="l107-title">Как получить тексты через AI — шаг за шагом</div>
+
+<div class="l107-code">
+<span style="color:#9ca3af">Твой текст об услуге</span><br>
+<span class="arr">        ↓</span><br>
+<span style="color:#e2e8f0">Вставляешь в AI-ассистент</span><br>
+<span class="arr">        ↓</span><br>
+<span style="color:#e2e8f0">Получаешь готовые тексты для рекламы</span><br>
+<span class="arr">        ↓</span><br>
+<span style="color:#e2e8f0">Вставляешь в Meta Ads или Google Ads</span><br>
+<span class="arr">        ↓</span><br>
+<span style="color:#e2e8f0">Запускаешь рекламу</span>
+</div>
+
+<div class="l107-step">
+<div class="l107-snum">1</div>
+<div><div class="l107-stitle">Подготовь свой продающий текст</div>
+<div class="l107-stext">Описание услуги, текст с сайта или Instagram, то что пишешь клиенту в мессенджере, или просто несколько предложений о том что ты делаешь и для кого. Не должно быть идеально — AI разберётся.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">2</div>
+<div><div class="l107-stitle">Открой AI-ассистент и вставь текст</div>
+<div class="l107-stext">Специально настроенный AI под рекламные объявления. Напиши: "Вот мой продающий текст. Сделай на его основе тексты для рекламы в Meta и Google"</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">3</div>
+<div><div class="l107-stitle">Получаешь готовые: текст, заголовки, описания, варианты для аудиторий</div>
+<div class="l107-stext">Тексты от AI — это заготовка, не финал. После получения: перечитай звучит ли как ты говоришь, добавь конкретные цифры из своего бизнеса, укажи свой город или нишу если не указывал.</div></div>
+</div>
+<div class="l107-step">
+<div class="l107-snum">4</div>
+<div><div class="l107-stitle">Вставляй в Meta Ads или Google Ads и запускай</div>
+<div class="l107-stext">Meta Ads Manager: основной текст, заголовок, описание, картинка или видео. Google Ads: заголовки и описания в соответствующие поля, Google сам тестирует комбинации.</div></div>
+</div>
+
+<a href="https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads" target="_blank" class="l107-ai-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="16" height="16"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Открыть Master of Selling Copy for Ads
+</a>`,
+
+            homework: 'Напиши продаючий текст про свою послугу або бізнес (3-5 речень). Відкрий AI-асистент за посиланням, встав текст і попроси: "Зроби тексти для реклами в Meta та Google". Збережи готові тексти — вони знадобляться для наступного кроку: створення креативів і запуску реклами.',
+            homework_ru: 'Напиши продающий текст о своей услуге или бизнесе (3-5 предложений). Открой AI-ассистент по ссылке, вставь текст и попроси: "Сделай тексты для рекламы в Meta и Google". Сохрани готовые тексты — они понадобятся для следующего шага: создания креативов и запуска рекламы.',
+            homeworkLink: 'https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads',
+            homeworkLinkName: 'Відкрити AI-асистент копірайтингу',
+            homeworkLinkName_ru: 'Открыть AI-ассистент копирайтинга',
+        },
+
     ];
 
     // Merge into main course data
