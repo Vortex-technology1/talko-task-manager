@@ -17273,6 +17273,62 @@ GOOGLE — тепла аудиторія, вже шукає
 
 <a href="https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads" target="_blank" class="l107-ai-btn">
 <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="16" height="16"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Крок 5 — Бонус</div>
+<div class="l107-h">Прогріваюча воронка перед консультацією</div>
+
+<div class="l107-card">
+<p>Той самий AI-асистент зробить тобі ще одну річ — прогріваючу воронку.</p>
+<p><strong>Простими словами:</strong> людина побачила рекламу → клікнула → і замість того щоб одразу записатись вона "холодна". Їй потрібен час і причина.</p>
+<p>Воронка — це серія питань або повідомлень, які розігрівають людину, показують що ти розумієш її проблему і підштовхують до запису. Не "купи зараз" — а "давай розберемось разом".</p>
+</div>
+
+<div class="l107-step">
+<div class="l107-snum" style="background:#8b5cf6">5</div>
+<div><div class="l107-stitle">Як отримати воронку — один запит</div>
+<div class="l107-stext">Після того як отримав рекламні тексти — напиши асистенту:<br><br>
+<span style="background:#0f172a;color:#60a5fa;padding:.3rem .6rem;border-radius:6px;font-family:monospace;font-size:.8rem;display:inline-block;line-height:1.5">"Тепер зроби прогріваючу воронку з питань для месенджера — щоб після кліку на рекламу людина прийшла на консультацію підготовленою"</span><br><br>
+Асистент сформує послідовність повідомлень і питань під твою нішу.</div>
+</div>
+</div>
+
+<div style="overflow-x:auto;margin:.75rem 0">
+<table style="width:100%;border-collapse:collapse;font-size:.8rem">
+<tr>
+<th style="padding:.5rem .75rem;background:#fef2f2;color:#dc2626;font-weight:700;border:1px solid #fecaca;text-align:left">Без воронки</th>
+<th style="padding:.5rem .75rem;background:#f0fdf4;color:#16a34a;font-weight:700;border:1px solid #bbf7d0;text-align:left">З воронкою</th>
+</tr>
+<tr>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Людина клікнула — і тиша</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Людина одразу отримує повідомлення</td>
+</tr>
+<tr style="background:#f9fafb">
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Ти чекаєш поки вона напише</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Вона відповідає на питання сама</td>
+</tr>
+<tr>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">На консультацію приходить "холодна"</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Приходить вже підготовленою</td>
+</tr>
+<tr style="background:#f9fafb">
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Ти витрачаєш 40-60 хв на з'ясування</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Консультація займає 20-30 хв</td>
+</tr>
+<tr>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Конверсія в оплату нижча</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Конверсія вища — людина вже "своя"</td>
+</tr>
+</table>
+</div>
+
+<div style="background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:12px;padding:.9rem 1rem;margin:.75rem 0;display:flex;gap:.6rem;align-items:flex-start">
+<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+<div style="font-size:.82rem;color:#374151"><strong style="color:#7c3aed">Як технічно запустити воронку в месенджері</strong> — розберемо окремо в розділі "Боти та AI ланцюги". Там покажу як автоматизувати так, щоб воронка працювала без твоєї участі — 24/7.</div>
+</div>
+
 Відкрити Master of Selling Copy for Ads
 </a>`,
 
@@ -17513,11 +17569,67 @@ GOOGLE — тёплая аудитория, уже ищет
 
 <a href="https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads" target="_blank" class="l107-ai-btn">
 <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="16" height="16"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+
+
+<div class="l107-div"></div>
+
+<div class="l107-lbl">Шаг 5 — Бонус</div>
+<div class="l107-h">Прогревающая воронка перед консультацией</div>
+
+<div class="l107-card">
+<p>Тот же AI-ассистент сделает тебе ещё одну вещь — прогревающую воронку.</p>
+<p><strong>Простыми словами:</strong> человек увидел рекламу → кликнул → и вместо того чтобы сразу записаться он "холодный". Ему нужно время и причина.</p>
+<p>Воронка — это серия вопросов или сообщений, которые разогревают человека, показывают что ты понимаешь его проблему и подталкивают к записи. Не "купи сейчас" — а "давай разберёмся вместе".</p>
+</div>
+
+<div class="l107-step">
+<div class="l107-snum" style="background:#8b5cf6">5</div>
+<div><div class="l107-stitle">Как получить воронку — один запрос</div>
+<div class="l107-stext">После того как получил рекламные тексты — напиши ассистенту:<br><br>
+<span style="background:#0f172a;color:#60a5fa;padding:.3rem .6rem;border-radius:6px;font-family:monospace;font-size:.8rem;display:inline-block;line-height:1.5">"Теперь сделай прогревающую воронку из вопросов для мессенджера — чтобы после клика на рекламу человек пришёл на консультацию подготовленным"</span><br><br>
+Ассистент сформирует последовательность сообщений и вопросов под твою нишу.</div>
+</div>
+</div>
+
+<div style="overflow-x:auto;margin:.75rem 0">
+<table style="width:100%;border-collapse:collapse;font-size:.8rem">
+<tr>
+<th style="padding:.5rem .75rem;background:#fef2f2;color:#dc2626;font-weight:700;border:1px solid #fecaca;text-align:left">Без воронки</th>
+<th style="padding:.5rem .75rem;background:#f0fdf4;color:#16a34a;font-weight:700;border:1px solid #bbf7d0;text-align:left">С воронкой</th>
+</tr>
+<tr>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Человек кликнул — и тишина</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Человек сразу получает сообщение</td>
+</tr>
+<tr style="background:#f9fafb">
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Ты ждёшь пока он напишет</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Он отвечает на вопросы сам</td>
+</tr>
+<tr>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">На консультацию приходит "холодным"</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Приходит уже подготовленным</td>
+</tr>
+<tr style="background:#f9fafb">
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Ты тратишь 40-60 мин на выяснение</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Консультация занимает 20-30 мин</td>
+</tr>
+<tr>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Конверсия в оплату ниже</td>
+<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Конверсия выше — человек уже "свой"</td>
+</tr>
+</table>
+</div>
+
+<div style="background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:12px;padding:.9rem 1rem;margin:.75rem 0;display:flex;gap:.6rem;align-items:flex-start">
+<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+<div style="font-size:.82rem;color:#374151"><strong style="color:#7c3aed">Как технически запустить воронку в мессенджере</strong> — разберём отдельно в разделе "Боты и AI цепочки". Там покажу как автоматизировать так, чтобы воронка работала без твоего участия — 24/7.</div>
+</div>
+
 Открыть Master of Selling Copy for Ads
 </a>`,
 
-            homework: 'Напиши продаючий текст про свою послугу (3-5 речень). Відкрий AI-асистент, встав текст і попроси: "Зроби тексти для реклами в Meta та Google". Збережи готові тексти — вони знадобляться для наступного кроку: створення креативів і запуску реклами.',
-            homework_ru: 'Напиши продающий текст о своей услуге (3-5 предложений). Открой AI-ассистент, вставь текст и попроси: "Сделай тексты для рекламы в Meta и Google". Сохрани готовые тексты — они понадобятся для следующего шага: создания креативов и запуска рекламы.',
+            homework: 'Напиши продаючий текст про свою послугу (3-5 речень). Відкрий AI-асистент, встав текст і попроси: "Зроби тексти для реклами в Meta та Google". Потім попроси: "Зроби прогріваючу воронку для месенджера". Збережи обидва результати — вони знадобляться для наступного кроку.',
+            homework_ru: 'Напиши продающий текст о своей услуге (3-5 предложений). Открой AI-ассистент, вставь текст и попроси: "Сделай тексты для рекламы в Meta и Google". Затем попроси: "Сделай прогревающую воронку для мессенджера". Сохрани оба результата — они понадобятся для следующего шага.',
             homeworkLink: 'https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads',
             homeworkLinkName: 'Відкрити AI-асистент копірайтингу',
             homeworkLinkName_ru: 'Открыть AI-ассистент копирайтинга',
