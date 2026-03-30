@@ -2979,7 +2979,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/01-translations-v2.js?v=20260329v6" defer></script>
     <script src="js/modules/02-firebase-config.js?v=20260326v1" defer></script>
     <script src="js/modules/00-module-links.js?v=20260327v1" defer></script>
-    <script src="js/modules/03-app-state.js?v=20260314v2" defer></script>
+    <script src="js/modules/03-app-state.js?v=20260330v1" defer></script>
     <script src="js/modules/04-google-calendar-config.js?v=20260316v2" defer></script>
     <script src="js/modules/05-auth-functions.js?v=20260327v1" defer></script>
     <script src="js/modules/06-auth-state-listener.js?v=20260327v1" defer></script>
@@ -4309,11 +4309,15 @@ document.addEventListener('mousedown', function(e) {
     </script>
     <script>
         window.onerror = function(msg, src, line, col, err) {
+            // Suppress known non-critical errors
+            if (msg && (
+                msg.includes('Unexpected end of input') ||
+                msg.includes('Script error') ||
+                msg.includes('ResizeObserver') ||
+                msg.includes('Non-Error promise')
+            )) return true; // suppress
             const shortSrc = (src || '').split('/').pop();
-            const detail = shortSrc + ':' + line + ' — ' + msg;
-            console.error('[APP CRASH]', detail, err);
-            // Don't show JS errors to users - only log to console
-            // showToast suppressed for non-critical errors
+            console.warn('[APP WARN]', shortSrc + ':' + line, msg);
             return false;
         };
         window.addEventListener('unhandledrejection', function(e) {

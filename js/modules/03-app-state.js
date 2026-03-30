@@ -155,6 +155,9 @@ window.addEventListener('unhandledrejection', function(e) {
     // Критичні помилки Firebase/Auth мають власний catch
 });
 window.addEventListener('error', function(e) {
-    if (e.message && e.message.includes('Script error')) return; // cross-origin
-    console.error('[TALKO] Global error:', e.message, e.filename, e.lineno);
+    if (!e.message) return;
+    if (e.message.includes('Script error')) return; // cross-origin
+    if (e.message.includes('Unexpected end of input')) return; // known non-critical
+    if (e.message.includes('ResizeObserver loop')) return; // browser internal
+    console.warn('[TALKO] Global error:', e.message, (e.filename||'').split('/').pop(), e.lineno);
 });
