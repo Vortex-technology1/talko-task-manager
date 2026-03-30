@@ -2741,6 +2741,11 @@ function renderPlanning(el) {
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           ${_tg('Тижневий план 6M','Недельный план 6M')}
         </button>
+        <button onclick="window._planMode('fp1')" id="planModeBtn_fp1"
+          style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          ${_tg('ФП №1 Тижневий','ФП №1 Еженедельный')}
+        </button>
       </div>
 
       <!-- 2 колонки: бюджет + cashflow -->
@@ -2806,6 +2811,12 @@ function renderPlanning(el) {
           <div style="text-align:center;color:#9ca3af;padding:2rem;">${_tg('Завантаження...','Загрузка...')}</div>
         </div>
       </div>
+      <!-- ФП №1 Тижневий дашборд -->
+      <div id="planModeView_fp1" style="display:none;">
+        <div id="fp1WeeklyRoot">
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">${_tg('Завантаження...','Загрузка...')}</div>
+        </div>
+      </div>
 
     </div>
   `;
@@ -2822,7 +2833,7 @@ window._planMonthChange = function(val) {
 let _planCurrentMode = 'budget';
 window._planMode = function(mode) {
   _planCurrentMode = mode;
-  ['budget','functions','cashflow','weekly'].forEach(m => {
+  ['budget','functions','cashflow','weekly','fp1'].forEach(m => {
     const view = document.getElementById('planModeView_' + m);
     const btn  = document.getElementById('planModeBtn_' + m);
     if (view) view.style.display = m === mode ? (m === 'budget' ? 'grid' : 'block') : 'none';
@@ -2837,6 +2848,7 @@ window._planMode = function(mode) {
   if (mode === 'functions') _renderFunctionsBudget(_planMonth);
   if (mode === 'cashflow')  _renderCashflowForecast();
   if (mode === 'weekly' && typeof window.renderWeeklyPlan === 'function') window.renderWeeklyPlan('weeklyPlanRoot');
+  if (mode === 'fp1') _renderFP1Weekly();
 };
 
 window._savePlanBudget = async function() {
@@ -3077,6 +3089,250 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
 }
 
 // ── Бюджет по функціях ────────────────────────────────────
+// ── ФП №1 Тижневий дашборд ────────────────────────────────
+const _FP1_BENCHMARKS = {
+  management: { label: () => _tg('Управління','Управление'), pctMin: 8,  pctMax: 10, color: '#3b82f6', icon: '🔵' },
+  hr:         { label: () => _tg('HR','HR'),                  pctMin: 4,  pctMax: 6,  color: '#8b5cf6', icon: '🟣' },
+  commercial: { label: () => _tg('Комерція','Коммерция'),     pctMin: 15, pctMax: 18, color: '#f97316', icon: '🟠' },
+  finance:    { label: () => _tg('Фінанси','Финансы'),        pctMin: 4,  pctMax: 6,  color: '#22c55e', icon: '🟢' },
+  medical:    { label: () => _tg('Медицина','Медицина'),      pctMin: 38, pctMax: 42, color: '#ef4444', icon: '🔴' },
+  admin:      { label: () => _tg('АХВ','АХЧ'),               pctMin: 8,  pctMax: 10, color: '#6b7280', icon: '⚫' },
+  reserve:    { label: () => _tg('Резерв','Резерв'),         pctMin: 12, pctMax: 15, color: '#f59e0b', icon: '🟡' },
+  dividends:  { label: () => _tg('Дивіденди','Дивиденды'),   pctMin: 5,  pctMax: 8,  color: '#a855f7', icon: '🟤' },
+};
+
+async function _renderFP1Weekly() {
+  const el = document.getElementById('fp1WeeklyRoot');
+  if (!el) return;
+  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${_tg('Завантаження...','Загрузка...')}</div>`;
+
+  try {
+    const currency = _state.currency || 'UAH';
+    const now = new Date();
+    const funcs = _state.functions || [];
+
+    // Завантажуємо FP1 налаштування (яка функція → який бенчмарк)
+    const cid = window.currentCompanyId;
+    const db = window.db || firebase.firestore();
+    let fp1Config = {};
+    try {
+      const cfgSnap = await db.collection('companies').doc(cid).collection('finance_settings').doc('fp1_config').get();
+      if (cfgSnap.exists) fp1Config = cfgSnap.data();
+    } catch(e) { /* використаємо дефолт */ }
+
+    // Будуємо 4 тижні назад + поточний
+    const weeks = [];
+    for (let w = 3; w >= 0; w--) {
+      const endDate = new Date(now);
+      endDate.setDate(now.getDate() - w * 7);
+      const startDate = new Date(endDate);
+      startDate.setDate(endDate.getDate() - 6);
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(23, 59, 59, 999);
+      const label = `${startDate.getDate()}.${String(startDate.getMonth()+1).padStart(2,'0')} – ${endDate.getDate()}.${String(endDate.getMonth()+1).padStart(2,'0')}`;
+      weeks.push({ startDate, endDate, label });
+    }
+
+    // Завантажуємо транзакції за 4 тижні
+    const from4w = firebase.firestore.Timestamp.fromDate(weeks[0].startDate);
+    const to4w   = firebase.firestore.Timestamp.fromDate(weeks[3].endDate);
+    const txSnap = await db.collection('companies').doc(cid)
+      .collection('finance_transactions')
+      .where('date', '>=', from4w)
+      .where('date', '<=', to4w)
+      .get();
+    const allTxs = txSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Розраховуємо дані по кожному тижню
+    const weekData = weeks.map(w => {
+      const txs = allTxs.filter(tx => {
+        const d = tx.date?.toDate ? tx.date.toDate() : new Date(tx.date);
+        return d >= w.startDate && d <= w.endDate;
+      });
+      const income   = txs.filter(t => t.type === 'income').reduce((s, t) => s + txAmt(t), 0);
+      const expenses = txs.filter(t => t.type === 'expense').reduce((s, t) => s + txAmt(t), 0);
+      const diff     = income - expenses;
+
+      // По функціях
+      const byFunc = {};
+      txs.filter(t => t.type === 'expense').forEach(t => {
+        const fid = t.functionId || '__none__';
+        byFunc[fid] = (byFunc[fid] || 0) + txAmt(t);
+      });
+
+      return { ...w, income, expenses, diff, byFunc, txCount: txs.length };
+    });
+
+    // Поточний тиждень — останній
+    const cur = weekData[weekData.length - 1];
+
+    // Аномалії
+    const anomalies = [];
+    funcs.forEach(f => {
+      const bKey = fp1Config['func_benchmark_' + f.id] || f.benchmarkKey;
+      const bench = _FP1_BENCHMARKS[bKey];
+      if (!bench || !cur.income) return;
+      const fact = cur.byFunc[f.id] || 0;
+      const factPct = Math.round(fact / cur.income * 100);
+      if (factPct > bench.pctMax + 3) {
+        anomalies.push({ type: 'over', func: f.name, fact: factPct, max: bench.pctMax, color: '#ef4444' });
+      } else if (bKey === 'reserve' && factPct === 0) {
+        anomalies.push({ type: 'zero', func: f.name, color: '#ef4444' });
+      } else if (factPct < bench.pctMin - 3 && fact > 0) {
+        anomalies.push({ type: 'under', func: f.name, fact: factPct, min: bench.pctMin, color: '#f59e0b' });
+      }
+    });
+
+    // ─── Рендер ───────────────────────────────────────────────
+    el.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+
+      <!-- Заголовок з аномаліями -->
+      ${anomalies.length > 0 ? `
+      <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:.9rem 1rem;">
+        <div style="font-size:.75rem;font-weight:700;color:#dc2626;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          ${_tg('Аномалії поточного тижня','Аномалии текущей недели')} (${anomalies.length})
+        </div>
+        ${anomalies.map(a => `
+          <div style="font-size:.8rem;color:#374151;padding:.2rem 0;">
+            ${a.type === 'over' ? `⚠️ <b>${escHtml(a.func)}</b>: ${_tg('перевитрата','перерасход')} ${a.fact}% (${_tg('норма','норма')}: ${a.max}%)` : ''}
+            ${a.type === 'zero' ? `🔴 <b>${escHtml(a.func)}</b>: ${_tg('не відраховано (0%)','не отчислено (0%)')}` : ''}
+            ${a.type === 'under' ? `🟡 <b>${escHtml(a.func)}</b>: ${_tg('недовитрата','недорасход')} ${a.fact}% (${_tg('норма','норма')}: ${a.min}%)` : ''}
+          </div>
+        `).join('')}
+      </div>` : `
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.75rem 1rem;font-size:.82rem;color:#166534;display:flex;align-items:center;gap:.5rem;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ${_tg('Аномалій не виявлено — всі функції в межах бенчмарків','Аномалий не обнаружено — все функции в пределах бенчмарков')}
+      </div>`}
+
+      <!-- 4 тижні: прихід / витрати / різниця -->
+      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
+        <div style="background:#1e293b;color:#fff;padding:.65rem 1rem;font-size:.75rem;font-weight:700;display:grid;grid-template-columns:120px repeat(4,1fr);">
+          <div>${_tg('Показник','Показатель')}</div>
+          ${weekData.map(w => `<div style="text-align:right;">${w.label}</div>`).join('')}
+        </div>
+        ${[
+          { label: _tg('Прихід','Приход'), key: 'income', color: '#22c55e' },
+          { label: _tg('Витрати','Расходы'), key: 'expenses', color: '#ef4444' },
+          { label: _tg('Різниця','Разница'), key: 'diff', isDiff: true },
+        ].map((row, ri) => `
+        <div style="display:grid;grid-template-columns:120px repeat(4,1fr);padding:.5rem 1rem;border-bottom:1px solid #f1f5f9;font-size:.8rem;background:${ri%2===0?'#fff':'#fafafa'};">
+          <div style="font-weight:600;color:#374151;">${row.label}</div>
+          ${weekData.map(w => {
+            const val = w[row.key];
+            const color = row.isDiff ? (val >= 0 ? '#22c55e' : '#ef4444') : row.color;
+            return `<div style="text-align:right;font-weight:600;color:${color};">${val >= 0 ? '' : '−'}${fmt(Math.abs(val), currency)}</div>`;
+          }).join('')}
+        </div>`).join('')}
+      </div>
+
+      <!-- Тижневий розріз по функціях -->
+      ${funcs.length > 0 ? `
+      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
+        <div style="background:#1e293b;color:#fff;padding:.65rem 1rem;font-size:.75rem;font-weight:700;">
+          ${_tg('Витрати по функціях (поточний тиждень)','Расходы по функциям (текущая неделя)')}
+          <span style="font-size:.7rem;opacity:.6;margin-left:.5rem;">${_tg('від приходу','от прихода')}: ${fmt(cur.income, currency)}</span>
+        </div>
+        <!-- Header -->
+        <div style="display:grid;grid-template-columns:1fr 90px 90px 70px 90px;padding:.5rem 1rem;background:#f8fafc;font-size:.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;">
+          <div>${_tg('Функція','Функция')}</div>
+          <div style="text-align:right;">${_tg('Бенчмарк','Бенчмарк')}</div>
+          <div style="text-align:right;">${_tg('Факт грн','Факт грн')}</div>
+          <div style="text-align:right;">${_tg('Факт %','Факт %')}</div>
+          <div style="text-align:right;">${_tg('Статус','Статус')}</div>
+        </div>
+        ${funcs.map((f, i) => {
+          const bKey = fp1Config['func_benchmark_' + f.id] || f.benchmarkKey;
+          const bench = _FP1_BENCHMARKS[bKey];
+          const fact = cur.byFunc[f.id] || 0;
+          const factPct = cur.income > 0 ? Math.round(fact / cur.income * 100) : 0;
+          const benchRange = bench ? `${bench.pctMin}–${bench.pctMax}%` : '—';
+          let status = '—', statusColor = '#9ca3af';
+          if (bench) {
+            if (factPct > bench.pctMax + 3) { status = `+${factPct - bench.pctMax}% ⚠️`; statusColor = '#ef4444'; }
+            else if (factPct >= bench.pctMin && factPct <= bench.pctMax) { status = '✓ норма'; statusColor = '#22c55e'; }
+            else if (factPct > 0 && factPct < bench.pctMin - 2) { status = '↓ низько'; statusColor = '#f59e0b'; }
+            else if (factPct === 0) { status = '—'; statusColor = '#9ca3af'; }
+          }
+          const barPct = bench ? Math.min(100, Math.round(factPct / bench.pctMax * 100)) : 0;
+          const barColor = statusColor;
+          return `
+          <div style="display:grid;grid-template-columns:1fr 90px 90px 70px 90px;padding:.45rem 1rem;border-bottom:1px solid #f9fafb;align-items:center;font-size:.8rem;background:${i%2===0?'#fff':'#fafafa'};">
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <span style="font-weight:500;color:#1f2937;">${bench ? bench.icon+' ' : ''}${escHtml(f.name)}</span>
+              <div style="height:3px;background:#f1f5f9;border-radius:2px;width:80px;overflow:hidden;">
+                <div style="height:3px;background:${barColor};border-radius:2px;width:${barPct}%;transition:width .3s;"></div>
+              </div>
+            </div>
+            <div style="text-align:right;color:#9ca3af;font-size:.75rem;">${benchRange}</div>
+            <div style="text-align:right;font-weight:600;color:#374151;">${fmt(fact, currency)}</div>
+            <div style="text-align:right;font-weight:700;color:${barColor};">${factPct}%</div>
+            <div style="text-align:right;font-size:.75rem;font-weight:600;color:${statusColor};">${status}</div>
+          </div>`;
+        }).join('')}
+        <!-- Підсумок -->
+        <div style="display:grid;grid-template-columns:1fr 90px 90px 70px 90px;padding:.55rem 1rem;background:#f0fdf4;font-size:.8rem;font-weight:700;border-top:2px solid #bbf7d0;">
+          <div style="color:#166534;">${_tg('РАЗОМ витрати','ИТОГО расходы')}</div>
+          <div style="text-align:right;color:#9ca3af;">100%</div>
+          <div style="text-align:right;color:#374151;">${fmt(cur.expenses, currency)}</div>
+          <div style="text-align:right;color:${cur.income > 0 ? (Math.round(cur.expenses/cur.income*100) <= 92 ? '#22c55e' : '#ef4444') : '#9ca3af'};">
+            ${cur.income > 0 ? Math.round(cur.expenses / cur.income * 100) + '%' : '—'}
+          </div>
+          <div style="text-align:right;color:${cur.diff >= 0 ? '#22c55e' : '#ef4444'};">
+            ${cur.diff >= 0 ? '✓ +' : '✗ −'}${fmt(Math.abs(cur.diff), currency)}
+          </div>
+        </div>
+      </div>` : `
+      <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:1.5rem;text-align:center;color:#9ca3af;font-size:.85rem;">
+        ${_tg('Функції не налаштовані. Перейдіть в Система → Структура → Функції і створіть 8 функцій.','Функции не настроены. Перейдите в Система → Структура → Функции и создайте 8 функций.')}
+      </div>`}
+
+      <!-- Налаштування бенчмарків -->
+      <details style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+        <summary style="padding:.75rem 1rem;font-size:.82rem;font-weight:600;color:#374151;cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between;">
+          <span>⚙️ ${_tg('Налаштування бенчмарків по функціях','Настройка бенчмарков по функциям')}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div style="padding:1rem;border-top:1px solid #f1f5f9;">
+          <div style="font-size:.78rem;color:#6b7280;margin-bottom:.75rem;">
+            ${_tg('Привяжіть кожну функцію до бенчмарку відповідно до структури вашого бізнесу','Привяжите каждую функцию к бенчмарку согласно структуре вашего бизнеса')}
+          </div>
+          ${funcs.map(f => `
+          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;font-size:.8rem;">
+            <div style="flex:1;font-weight:500;color:#374151;">${escHtml(f.name)}</div>
+            <select onchange="window._fp1SaveBenchmark('${f.id}', this.value)"
+              style="padding:.3rem .6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:.78rem;color:#374151;">
+              <option value="">— ${_tg('не вказано','не указано')} —</option>
+              ${Object.entries(_FP1_BENCHMARKS).map(([key, b]) =>
+                `<option value="${key}" ${(fp1Config['func_benchmark_' + f.id] || f.benchmarkKey) === key ? 'selected' : ''}>${b.label()} (${b.pctMin}–${b.pctMax}%)</option>`
+              ).join('')}
+            </select>
+          </div>`).join('')}
+        </div>
+      </details>
+
+    </div>`;
+  } catch(err) {
+    console.error('[FP1Weekly]', err);
+    el.innerHTML = `<div style="text-align:center;color:#ef4444;padding:2rem;font-size:.85rem;">${_tg('Помилка завантаження','Ошибка загрузки')}: ${escHtml(err.message)}</div>`;
+  }
+}
+
+window._fp1SaveBenchmark = async function(funcId, benchKey) {
+  if (!window.currentCompanyId) return;
+  const db = window.db || firebase.firestore();
+  try {
+    await db.collection('companies').doc(window.currentCompanyId)
+      .collection('finance_settings').doc('fp1_config')
+      .set({ ['func_benchmark_' + funcId]: benchKey }, { merge: true });
+    if (typeof showToast === 'function') showToast(_tg('Бенчмарк збережено','Бенчмарк сохранён'), 'success');
+  } catch(e) {
+    if (typeof showToast === 'function') showToast(_tg('Помилка збереження','Ошибка сохранения'), 'error');
+  }
+};
+
 async function _renderFunctionsBudget(monthVal) {
   const el = document.getElementById('planFunctionsBody');
   if (!el) return;
