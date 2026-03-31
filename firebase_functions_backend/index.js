@@ -3684,3 +3684,121 @@ exports.checkStaleCrmDeals = functions
         console.log(`[checkStaleCrmDeals] Done. Checked: ${totalDealsChecked} deals, triggered: ${totalTriggered}`);
         return null;
     });
+
+// ===========================
+// CRM CONTACT REMINDERS (9:15)
+// Нагадування менеджерам про угоди де nextContactDate === сьогодні або прострочено
+// ===========================
+exports.crmContactReminders = functions
+    .region(REGION)
+    .runWith({ timeoutSeconds: 300, memory: '256MB' })
+    .pubsub.schedule('15 9 * * *')
+    .timeZone('Europe/Kyiv')
+    .onRun(async (context) => {
+        const now = new Date();
+        const todayStr = now.toLocaleDateString('sv-SE', { timeZone: 'Europe/Kyiv' });
+        // Прострочені — за останні 7 днів (не флудимо старим)
+        const weekAgoDate = new Date(now);
+        weekAgoDate.setDate(weekAgoDate.getDate() - 7);
+        const weekAgoStr = weekAgoDate.toLocaleDateString('sv-SE', { timeZone: 'Europe/Kyiv' });
+
+        console.log('[crmContactReminders] Starting for date:', todayStr);
+
+        const companiesSnap = await db.collection('companies').limit(100).get();
+        let totalSent = 0;
+
+        for (const companyDoc of companiesSnap.docs) {
+            const companyId = companyDoc.id;
+            try {
+                // Угоди з nextContactDate сьогодні або прострочені (за тиждень)
+                const [todaySnap, overdueSnap] = await Promise.all([
+                    companyDoc.ref.collection('crm_deals')
+                        .where('nextContactDate', '==', todayStr)
+                        .where('stage', 'not-in', ['won', 'lost'])
+                        .limit(100)
+                        .get(),
+                    companyDoc.ref.collection('crm_deals')
+                        .where('nextContactDate', '>=', weekAgoStr)
+                        .where('nextContactDate', '<', todayStr)
+                        .where('stage', 'not-in', ['won', 'lost'])
+                        .limit(100)
+                        .get(),
+                ]);
+
+                const todayDeals = todaySnap.docs.map(d => ({ id: d.id, ...d.data(), _isOverdue: false }));
+                const overdueDeals = overdueSnap.docs.map(d => ({ id: d.id, ...d.data(), _isOverdue: true }));
+                const allDeals = [...todayDeals, ...overdueDeals];
+
+                if (!allDeals.length) continue;
+
+                // Групуємо по assigneeId
+                const byAssignee = {};
+                for (const deal of allDeals) {
+                    const uid = deal.assigneeId || deal.responsibleId || '_owner';
+                    if (!byAssignee[uid]) byAssignee[uid] = [];
+                    byAssignee[uid].push(deal);
+                }
+
+                // Завантажуємо юзерів компанії один раз
+                const usersSnap = await companyDoc.ref.collection('users').get();
+                const usersMap = {};
+                usersSnap.docs.forEach(d => { usersMap[d.id] = { id: d.id, ...d.data() }; });
+
+                // Знаходимо owner для fallback
+                const owner = Object.values(usersMap).find(u => u.role === 'owner');
+
+                for (const [assigneeId, deals] of Object.entries(byAssignee)) {
+                    // Визначаємо отримувача
+                    let recipient = assigneeId === '_owner'
+                        ? owner
+                        : usersMap[assigneeId] || owner;
+
+                    if (!recipient?.telegramChatId) continue;
+
+                    const lang = await getUserLang(companyId, recipient.id);
+
+                    const todayList  = deals.filter(d => !d._isOverdue);
+                    const overdueList = deals.filter(d => d._isOverdue);
+
+                    let msg = `📞 <b>Контакти на сьогодні</b>\n`;
+                    if (assigneeId !== '_owner' && recipient.name) {
+                        msg = `📞 <b>Контакти на сьогодні</b> — ${recipient.name}\n`;
+                    }
+                    msg += `📅 ${todayStr}\n\n`;
+
+                    if (todayList.length) {
+                        msg += `✅ <b>Запланований контакт (${todayList.length}):</b>\n`;
+                        todayList.slice(0, 10).forEach(d => {
+                            const time = d.nextContactTime ? ` о ${d.nextContactTime}` : '';
+                            const amount = d.amount ? ` · ${Number(d.amount).toLocaleString()} ₴` : '';
+                            const phone = d.phone ? ` · ${d.phone}` : '';
+                            msg += `• <b>${d.clientName || d.title || '—'}</b>${time}${amount}${phone}\n`;
+                            if (d.note) msg += `  📝 ${d.note.slice(0, 80)}${d.note.length > 80 ? '...' : ''}\n`;
+                        });
+                        if (todayList.length > 10) msg += `  ...ще ${todayList.length - 10}\n`;
+                        msg += '\n';
+                    }
+
+                    if (overdueList.length) {
+                        msg += `⚠️ <b>Прострочений контакт (${overdueList.length}):</b>\n`;
+                        overdueList.slice(0, 5).forEach(d => {
+                            const amount = d.amount ? ` · ${Number(d.amount).toLocaleString()} ₴` : '';
+                            msg += `• <b>${d.clientName || d.title || '—'}</b> — мав бути ${d.nextContactDate}${amount}\n`;
+                        });
+                        if (overdueList.length > 5) msg += `  ...ще ${overdueList.length - 5}\n`;
+                        msg += '\n';
+                    }
+
+                    msg += `🔗 Відкрити CRM: https://apptalko.com`;
+
+                    await sendTelegramMessage(recipient.telegramChatId, msg);
+                    totalSent++;
+                }
+            } catch(companyErr) {
+                console.error('[crmContactReminders] company error:', companyId, companyErr.message);
+            }
+        }
+
+        console.log(`[crmContactReminders] Done. Sent ${totalSent} messages.`);
+        return null;
+    });

@@ -2160,6 +2160,10 @@ function _renderDealDetails(deal) {
             <input id="dd_close" type="date" value="${deal.expectedClose||''}" style="${inp}">
         </div>
         <div>
+            <label style="${lbl}">Ймовірність закриття, %</label>
+            <input id="dd_probability" type="number" min="0" max="100" value="${deal.probability ?? ''}" placeholder="10" style="${inp}">
+        </div>
+        <div>
             <label style="${lbl}">Следующий контакт</label>
             <div style="display:flex;gap:0.35rem;">
                 <input id="dd_nextContact" type="date" value="${deal.nextContactDate||''}" style="${inp}${deal.nextContactDate && deal.nextContactDate < _crmToday() ? 'border-color:#ef4444;' : ''}flex:1;min-width:0;">
@@ -2566,6 +2570,7 @@ window.crmSaveDeal = async function(dealId) {
     const niche  = document.getElementById('dd_niche')?.value.trim();
     const note   = document.getElementById('dd_note')?.value.trim();
     const expClose    = document.getElementById('dd_close')?.value || null;
+    const probability = parseInt(document.getElementById('dd_probability')?.value) || null;
     const nextContact = document.getElementById('dd_nextContact')?.value || null;
     const assigneeId  = document.getElementById('dd_assignee')?.value || null;
     const phone    = document.getElementById('dd_phone')?.value.trim() || deal.phone || '';
@@ -2604,6 +2609,7 @@ window.crmSaveDeal = async function(dealId) {
             ttn: ttn || null, payStatus: payStatus || null,
             expectedClose: expClose||null, nextContactDate: nextContact||null,
             nextContactTime: document.getElementById('dd_nextContactTime')?.value || null,
+            probability: probability ?? deal.probability ?? null,
             assigneeId: assigneeId||deal.assigneeId||null,
             // ── Поля замовлення (штори) ──
             branch: branch || null,
