@@ -20,8 +20,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 def main():
-    ref = db.collection('companies').doc(COMPANY_ID)
-    deals_ref = ref.collection('crm_deals')
+    deals_ref = db.collection('companies').document(COMPANY_ID).collection('crm_deals')
 
     # Тільки імпортовані з LBS Cloud
     snap = deals_ref.where('importedFrom', '==', 'LBS Cloud').stream()
