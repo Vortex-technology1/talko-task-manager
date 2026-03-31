@@ -228,13 +228,14 @@ window.renderCrmTodo = function() {
 
     // FIX: Відновлюємо фокус і позицію курсора після рендеру
     if (hadFocus) {
-        requestAnimationFrame(() => {
+        // Використовуємо setTimeout замість requestAnimationFrame для більшої надійності
+        setTimeout(() => {
             const newInput = document.getElementById('crm-todo-search');
-            if (newInput) {
+            if (newInput && document.body.contains(newInput)) {
                 newInput.focus();
                 newInput.setSelectionRange(cursorPos, cursorPos);
             }
-        });
+        }, 0);
     }
 };
 
