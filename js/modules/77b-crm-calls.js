@@ -131,11 +131,27 @@ function _crmShowCallLogModal() {
         </div>
 
         <!-- Нотатка -->
-        <div style="margin-bottom:1rem;">
+        <div style="margin-bottom:0.75rem;">
             <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.3rem;">${window.t('callNote')||'Нотатка по дзвінку'}</div>
             <textarea id="crmCallNote" rows="2" placeholder="Що обговорили, домовились..."
                 style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;
                 font-size:0.82rem;font-family:inherit;resize:none;box-sizing:border-box;"></textarea>
+        </div>
+
+        <!-- Прикріпити файл -->
+        <div style="margin-bottom:1rem;">
+            <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.3rem;">Звіт або файл</div>
+            <div style="display:flex;gap:0.4rem;align-items:center;">
+                <input type="file" id="crmCallFile" accept="*/*" style="display:none;"
+                    onchange="window._crmCallFileSelected(this)">
+                <button onclick="document.getElementById('crmCallFile').click()"
+                    style="padding:0.4rem 0.6rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
+                    border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.3rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                    Прикріпити файл
+                </button>
+                <div id="crmCallFileName" style="flex:1;font-size:0.75rem;color:#6b7280;"></div>
+            </div>
         </div>
 
         <!-- Кнопки -->
@@ -217,8 +233,20 @@ window.crmSaveCallLog = async function () {
         const ref     = compRef.collection(dealCol).doc(dealId);
         const now     = firebase.firestore.FieldValue.serverTimestamp();
 
+        // Завантажуємо файл якщо є
+        let fileData = null;
+        try {
+            fileData = await _crmUploadCallFile(dealId);
+            if (fileData && saveBtn) {
+                saveBtn.textContent = 'Збереження запису...';
+            }
+        } catch (fileErr) {
+            if (window.showToast) showToast('⚠️ Файл не завантажено: ' + fileErr.message, 'warning');
+            // Продовжуємо без файлу
+        }
+
         // Лог в history
-        await ref.collection('history').add({
+        const historyData = {
             type:     'call',
             result:   result,
             text:     resultLabels[result] + (note ? ': ' + note : ''),
@@ -227,7 +255,17 @@ window.crmSaveCallLog = async function () {
             note:     note,
             by:       window.currentUser?.email || 'manager',
             at:       now,
-        });
+        };
+
+        // Додаємо файл якщо завантажено
+        if (fileData) {
+            historyData.fileUrl  = fileData.url;
+            historyData.fileName = fileData.name;
+            historyData.fileSize = fileData.size;
+            historyData.fileType = fileData.type;
+        }
+
+        await ref.collection('history').add(historyData);
 
         // Оновлення угоди
         const upd = {
@@ -279,6 +317,58 @@ window.crmLogCallManual = function (dealId, clientName, phone) {
     window._crmActiveCall = { dealId, phone: phone || '', clientName: clientName || '', startTime: Date.now() };
     _crmShowCallLogModal();
 };
+
+// ── Робота з файлами ───────────────────────────────────────
+window._crmCallFileSelected = function(input) {
+    const file = input.files?.[0];
+    const fileNameEl = document.getElementById('crmCallFileName');
+    if (!fileNameEl) return;
+
+    if (file) {
+        // Показуємо ім'я файлу та розмір
+        const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+        fileNameEl.innerHTML = `<span style="color:#16a34a;font-weight:600;">${_escStr(file.name)}</span> <span style="color:#9ca3af;">(${sizeMB} MB)</span>`;
+    } else {
+        fileNameEl.textContent = '';
+    }
+};
+
+// Завантаження файлу в Firebase Storage
+async function _crmUploadCallFile(dealId) {
+    const fileInput = document.getElementById('crmCallFile');
+    const file = fileInput?.files?.[0];
+    if (!file) return null; // Немає файлу — не завантажуємо
+
+    try {
+        if (!firebase.storage) {
+            throw new Error('Firebase Storage не ініціалізовано');
+        }
+
+        const compId = window.currentCompanyData?.id || 'unknown';
+        const timestamp = Date.now();
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = `companies/${compId}/crm_calls/${dealId}/${timestamp}_${safeName}`;
+
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(path);
+
+        // Завантажуємо файл
+        const uploadTask = await fileRef.put(file);
+
+        // Отримуємо публічний URL
+        const downloadURL = await fileRef.getDownloadURL();
+
+        return {
+            url: downloadURL,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+        };
+    } catch (e) {
+        console.error('[CRM] File upload error:', e);
+        throw new Error('Помилка завантаження файлу: ' + e.message);
+    }
+}
 
 // ── Хелпер ─────────────────────────────────────────────────
 // Використовуємо глобальний _crmEsc якщо доступний, інакше локальний fallback

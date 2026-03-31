@@ -2923,6 +2923,24 @@ async function _loadActivityTab(deal) {
                 let text = ev.text || '';
                 if (ev.type === 'stage_changed') text = _stageLabel(ev.from) + ' → ' + _stageLabel(ev.to);
                 if (ev.type === 'created') text = window.t('crmDealCreated');
+
+                // Якщо є прикріплений файл — показуємо посилання
+                let fileHtml = '';
+                if (ev.fileUrl && ev.fileName) {
+                    const fileSizeKB = ev.fileSize ? Math.round(ev.fileSize / 1024) : 0;
+                    const sizeText = fileSizeKB > 1024 ? (fileSizeKB / 1024).toFixed(1) + ' MB' : fileSizeKB + ' KB';
+                    fileHtml = `<div style="margin-top:0.4rem;">
+                        <a href="${_esc(ev.fileUrl)}" target="_blank" rel="noopener noreferrer"
+                            style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.3rem 0.5rem;
+                            background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;
+                            font-size:0.72rem;color:#16a34a;text-decoration:none;font-weight:600;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                            ${_esc(ev.fileName)}
+                            <span style="color:#9ca3af;font-weight:400;">(${sizeText})</span>
+                        </a>
+                    </div>`;
+                }
+
                 return `
                 <div style="display:flex;gap:0.65rem;align-items:flex-start;">
                     <div style="width:28px;height:28px;border-radius:50%;background:#f0fdf4;
@@ -2932,6 +2950,7 @@ async function _loadActivityTab(deal) {
                     <div style="flex:1;">
                         <div style="font-size:0.8rem;color:#374151;">${_esc(text)}</div>
                         <div style="font-size:0.68rem;color:#9ca3af;margin-top:2px;">${_esc(ev.by||'')} · ${time}</div>
+                        ${fileHtml}
                     </div>
                 </div>`;
             }).join('')}
