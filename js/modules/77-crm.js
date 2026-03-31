@@ -1956,6 +1956,13 @@ window.crmOpenDeal = function(dealId) {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                     ${deal.linkedProjectId ? 'Відкрити проєкт →' : 'В проєкт'}
                 </button>
+                <button onclick="crmDealLaunchProcess('${deal.id}')"
+                    style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
+                    border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
+                    title="Запустити бізнес-процес для угоди">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M16.95 16.95l1.41 1.41M4.93 4.93l1.41 1.41M7.05 16.95l-1.41 1.41M21 12h-2M5 12H3M12 21v-2M12 5V3"/></svg>
+                    ${_tg('Процес','Процесс')}
+                </button>
                 <button onclick="crmCreateTaskFromDeal('${deal.id}')"
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
@@ -3931,6 +3938,117 @@ window.crmClientToProject = async function(clientId) {
 };
 
 // ── Запуск бізнес-процесу з картки клієнта ────────────────
+window.crmDealLaunchProcess = async function(dealId) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+
+    let templates = [];
+    try {
+        const snap = await window.companyRef().collection('processTemplates').orderBy('name').get();
+        templates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) {
+        if (window.showToast) showToast('Помилка завантаження шаблонів: ' + e.message, 'error');
+        return;
+    }
+
+    if (!templates.length) {
+        if (window.showToast) showToast(_tg('Шаблони процесів не знайдено. Створіть їх в розділі Процеси.','Шаблоны процессов не найдены. Создайте их в разделе Процессы.'), 'warning');
+        return;
+    }
+
+    const label = deal.clientName || deal.title || 'угода';
+    const overlay = document.createElement('div');
+    overlay.id = 'crmDealProcessOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10030;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    overlay.innerHTML = `
+    <div style="background:white;border-radius:12px;padding:1.25rem;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <div style="font-weight:700;font-size:0.95rem;color:#111827;">${_tg('Запустити процес','Запустить процесс')}</div>
+            <button onclick="document.getElementById('crmDealProcessOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.1rem;">✕</button>
+        </div>
+        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.75rem;">${_tg('Угода:','Сделка:')} <strong>${_esc(label)}</strong></div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+            ${templates.map(t => `
+            <button onclick="crmDealStartProcess('${dealId}','${t.id}')"
+                style="text-align:left;padding:0.65rem 0.75rem;background:white;border:1.5px solid #e8eaed;border-radius:8px;cursor:pointer;font-size:0.82rem;"
+                onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='#e8eaed'">
+                <div style="font-weight:600;color:#111827;">${_esc(t.name)}</div>
+                ${t.description ? `<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">${_esc(t.description.slice(0,80))}</div>` : ''}
+                ${t.steps ? `<div style="font-size:0.68rem;color:#6b7280;margin-top:2px;">${t.steps.length} ${_tg('кроків','шагов')}</div>` : ''}
+            </button>`).join('')}
+        </div>
+    </div>`;
+    document.body.appendChild(overlay);
+};
+
+window.crmDealStartProcess = async function(dealId, templateId) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+    document.getElementById('crmDealProcessOverlay')?.remove();
+
+    try {
+        const compRef = window.companyRef();
+        const uid = window.currentUser?.uid || '';
+        const tSnap = await compRef.collection('processTemplates').doc(templateId).get();
+        if (!tSnap.exists) { if(window.showToast) showToast('Шаблон не знайдено', 'error'); return; }
+        const template = { id: tSnap.id, ...tSnap.data() };
+
+        const processData = {
+            templateId,
+            name: template.name,
+            objectName: deal.clientName || deal.title || '',
+            dealId,
+            clientName: deal.clientName || '',
+            clientPhone: deal.phone || '',
+            deadline: null,
+            status: 'active',
+            currentStep: 0,
+            stepResults: [],
+            history: [],
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdBy: uid,
+        };
+
+        const processRef = await compRef.collection('processes').add(processData);
+
+        await compRef.collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(dealId).update({
+            activeProcessId: processRef.id,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        deal.activeProcessId = processRef.id;
+
+        // Перша задача
+        const firstStep = template.steps?.[0];
+        if (firstStep) {
+            const users = window.companyUsers || window.users || [];
+            const functions = window.functions || [];
+            const func = functions.find(f => f.name === firstStep.function);
+            const assigneeId = func?.assigneeIds?.[0] || uid;
+            const assignee = users.find(u => u.id === assigneeId);
+            const today = new Date().toISOString().split('T')[0];
+            await compRef.collection('tasks').add({
+                title: `[${template.name}] ${firstStep.title || firstStep.name || 'Крок 1'} — ${deal.clientName || deal.title}`,
+                instruction: `[${deal.clientName || deal.title}${deal.phone ? ', ' + deal.phone : ''}]
+${firstStep.instruction || ''}`,
+                assigneeId,
+                assigneeName: assignee?.name || assignee?.email || '',
+                processId: processRef.id,
+                dealId,
+                status: 'new',
+                priority: 'medium',
+                deadlineDate: today,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                creatorId: uid,
+            });
+        }
+
+        if (window.showToast) showToast(_tg(`Процес «${template.name}» запущено`,`Процесс «${template.name}» запущен`), 'success');
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        console.error('[crmDealStartProcess]', e);
+    }
+};
+
 window.crmClientLaunchProcess = async function(clientId) {
     const cl = crm.clients.find(c => c.id === clientId);
     if (!cl) return;
