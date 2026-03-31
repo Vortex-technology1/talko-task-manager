@@ -74,7 +74,7 @@ function _priority(d) {
 function _getActiveDeals() {
     if (!window.crm || !window.crm.deals) return [];
     return window.crm.deals
-        .filter(d => d.stage !== 'lost' && d.stage !== 'won')
+        .filter(d => d.stage !== 'lost') // Показуємо всі крім 'lost', включаючи 'won' (Звіт відправлено)
         .sort((a, b) => {
             const pa = _priority(a), pb = _priority(b);
             if (pa !== pb) return pa - pb;
@@ -120,6 +120,11 @@ window.renderCrmTodo = function() {
     if (!el) return;
     // Зберігаємо позицію скролу щоб не скидати після збереження
     const scrollTop = el.scrollTop || 0;
+
+    // FIX: Зберігаємо фокус і позицію курсора в input пошуку
+    const searchInput = document.getElementById('crm-todo-search');
+    const hadFocus = searchInput && document.activeElement === searchInput;
+    const cursorPos = hadFocus ? searchInput.selectionStart : 0;
 
     // Якщо дані ще завантажуються — показуємо spinner і чекаємо
     if (window.crm && window.crm.loading) {
@@ -220,6 +225,17 @@ window.renderCrmTodo = function() {
         }
       </div>
     </div>`;
+
+    // FIX: Відновлюємо фокус і позицію курсора після рендеру
+    if (hadFocus) {
+        requestAnimationFrame(() => {
+            const newInput = document.getElementById('crm-todo-search');
+            if (newInput) {
+                newInput.focus();
+                newInput.setSelectionRange(cursorPos, cursorPos);
+            }
+        });
+    }
 };
 
 function _renderRow(d, i) {
