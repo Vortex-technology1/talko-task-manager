@@ -1355,7 +1355,71 @@ exports.telegramWebhook = functions
                     await sendTelegramMessage(chatId, tg('ua', 'notConnected'));
                 }
             } else if (text === '/team') {
-                await sendTelegramMessage(chatId, tg('ua', 'teamOnlyForManagers'));
+                // Знаходимо юзера
+                let tCompanyId = null, tUid = null;
+                const tIdx = await db.collection('telegramIndex').doc('chat_' + chatId.toString()).get();
+                if (tIdx.exists) { const d = tIdx.data(); tCompanyId = d.companyId; tUid = d.userId; }
+                if (!tCompanyId) {
+                    const ts = await db.collectionGroup('users').where('telegramChatId', '==', chatId.toString()).limit(1).get();
+                    if (!ts.empty) { tUid = ts.docs[0].id; tCompanyId = ts.docs[0].ref.parent.parent.id; }
+                }
+                if (!tCompanyId || !tUid) {
+                    await sendTelegramMessage(chatId, tg('ua', 'notConnected'));
+                } else {
+                    const tUserDoc = await db.collection('companies').doc(tCompanyId).collection('users').doc(tUid).get();
+                    const tUserData = tUserDoc.exists ? tUserDoc.data() : {};
+                    const tLang = await getUserLang(tCompanyId, tUid);
+                    // Перевіряємо роль — owner або manager
+                    if (!['owner', 'manager'].includes(tUserData.role)) {
+                        await sendTelegramMessage(chatId, tg(tLang, 'teamOnlyForManagers'));
+                    } else {
+                        const todayStr = new Date().toISOString().split('T')[0];
+                        // Завантажуємо всіх юзерів компанії
+                        const usersSnap = await db.collection('companies').doc(tCompanyId).collection('users').get();
+                        const teamUsers = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+                            .filter(u => ['owner','manager','employee'].includes(u.role));
+
+                        // Завантажуємо задачі компанії
+                        const tasksSnap = await db.collection('companies').doc(tCompanyId).collection('tasks')
+                            .where('status', 'in', ['new', 'progress', 'review', 'done'])
+                            .limit(500).get();
+
+                        // Статистика по кожному юзеру
+                        const stats = {};
+                        teamUsers.forEach(u => {
+                            stats[u.id] = { name: u.name || u.email || u.id, done: 0, inProgress: 0, overdue: 0, review: 0 };
+                        });
+                        tasksSnap.docs.forEach(d => {
+                            const t = d.data();
+                            if (!t.assigneeId || !stats[t.assigneeId]) return;
+                            const s = stats[t.assigneeId];
+                            if (t.status === 'done') s.done++;
+                            else if (t.status === 'progress') s.inProgress++;
+                            else if (t.status === 'review') s.review++;
+                            if (t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review') s.overdue++;
+                        });
+
+                        const rows = Object.values(stats)
+                            .filter(s => s.done + s.inProgress + s.overdue + s.review > 0)
+                            .sort((a, b) => b.done - a.done);
+
+                        let msg = `${tg(tLang, 'teamReport')}\n📅 ${todayStr}\n\n`;
+                        if (!rows.length) {
+                            msg += 'Задач немає.';
+                        } else {
+                            rows.forEach(s => {
+                                const status = s.overdue > 0 ? '🔴' : s.inProgress > 0 ? '🟡' : '🟢';
+                                msg += `${status} <b>${s.name}</b>\n`;
+                                if (s.done)       msg += `  ✅ Виконано: ${s.done}\n`;
+                                if (s.inProgress) msg += `  🔄 В роботі: ${s.inProgress}\n`;
+                                if (s.review)     msg += `  🔍 На перевірці: ${s.review}\n`;
+                                if (s.overdue)    msg += `  ⚠️ Прострочено: ${s.overdue}\n`;
+                                msg += '\n';
+                            });
+                        }
+                        await sendTelegramMessage(chatId, msg.trim());
+                    }
+                }
             } else if (text.startsWith('/task') || text.startsWith('/завдання')) {
                 // Lookup відправника
                 let senderCid = null, senderUid = null;
