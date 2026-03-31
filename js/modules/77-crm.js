@@ -3581,11 +3581,21 @@ window.crmOpenClient = function(clientId) {
         }).join('') : '<div style="font-size:0.78rem;color:#d1d5db;text-align:center;padding:0.75rem;">' + _tg('Угод немає','Сделок нет') + '</div>'}
 
         <!-- Кнопки дій -->
-        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;">
             <button onclick="crmNewDealFromClient('${_esc(cl.name||'')}','${cl.id}')"
                 style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;
                 border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">
                 ${_tg('+ Угода','+ Сделка')}
+            </button>
+            <button id="crmClientProjectBtn_${cl.id}" onclick="crmClientToProject('${cl.id}')"
+                style="flex:1;padding:0.45rem;background:${cl.linkedProjectId ? '#f0fdf4' : '#f8fafc'};color:${cl.linkedProjectId ? '#16a34a' : '#374151'};border:1px solid ${cl.linkedProjectId ? '#bbf7d0' : '#e8eaed'};border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                ${cl.linkedProjectId ? _tg('Відкрити проєкт →','Открыть проект →') : _tg('В проєкт','В проект')}
+            </button>
+            <button onclick="crmClientLaunchProcess('${cl.id}')"
+                style="flex:1;padding:0.45rem;background:#f8fafc;color:#374151;border:1px solid #e8eaed;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                ${_tg('Процес','Процесс')}
             </button>
             ${cl.botContactId || cl.senderId ? `
             <button onclick="crmClientToggleChat('${cl.botContactId || ((cl.channel||'telegram')+'_'+cl.senderId)}')"
@@ -3815,6 +3825,224 @@ window.crmDeleteClient = async function(clientId) {
         _renderClients();
         if (window.showToast) showToast(window.t('crmClientDeleted'), 'success');
     } catch(e) { if (window.showToast) showToast(window.t('errPrefix') + e.message, 'error'); }
+};
+
+// ── Конвертація клієнта в проєкт ──────────────────────────
+window.crmClientToProject = async function(clientId) {
+    const cl = crm.clients.find(c => c.id === clientId);
+    if (!cl) return;
+
+    // Якщо вже є проєкт — відкриваємо
+    if (cl.linkedProjectId) {
+        document.getElementById('crmClientCard').style.display = 'none';
+        if (typeof window.switchTab === 'function') window.switchTab('projects');
+        setTimeout(() => {
+            if (typeof window.openProjectDetail === 'function') window.openProjectDetail(cl.linkedProjectId);
+        }, 300);
+        return;
+    }
+
+    // Шукаємо активну угоду клієнта
+    const clientDeals = crm.deals.filter(d =>
+        d.clientId === cl.id || (!d.clientId && d.clientName === cl.name)
+    ).filter(d => d.stage !== 'won' && d.stage !== 'lost');
+
+    let confirmed = false;
+    let dealToConvert = null;
+
+    if (clientDeals.length > 0) {
+        // Є активна угода — пропонуємо конвертувати її
+        const deal = clientDeals[0];
+        confirmed = typeof showConfirmModal === 'function'
+            ? await showConfirmModal(_tg(`Конвертувати угоду «${deal.title || deal.clientName}» в проєкт?`, `Конвертировать сделку «${deal.title || deal.clientName}» в проект?`))
+            : confirm(`Конвертувати угоду в проєкт?`);
+        if (confirmed) dealToConvert = deal;
+    } else {
+        confirmed = typeof showConfirmModal === 'function'
+            ? await showConfirmModal(_tg(`Створити проєкт для «${cl.name}»?`, `Создать проект для «${cl.name}»?`))
+            : confirm(`Створити проєкт для «${cl.name}»?`);
+    }
+    if (!confirmed) return;
+
+    try {
+        const compRef = window.companyRef();
+        const uid = window.currentUser?.uid || '';
+        const today = new Date().toISOString().split('T')[0];
+
+        const projectData = {
+            name:        cl.name || 'Новий проєкт',
+            status:      'active',
+            color:       '#22c55e',
+            clientId:    clientId,
+            clientName:  cl.name || '',
+            clientPhone: cl.phone || '',
+            clientEmail: cl.email || '',
+            note:        cl.note || '',
+            creatorId:   uid,
+            startDate:   today,
+            createdAt:   firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt:   firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        // Якщо є угода — додаємо її дані
+        if (dealToConvert) {
+            projectData.dealId  = dealToConvert.id;
+            projectData.amount  = dealToConvert.amount || 0;
+        }
+
+        const projRef = await compRef.collection('projects').add(projectData);
+
+        // Зворотній зв'язок — записуємо linkedProjectId в клієнта
+        await compRef.collection(window.DB_COLS.CRM_CLIENTS).doc(clientId).update({
+            linkedProjectId: projRef.id,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        cl.linkedProjectId = projRef.id;
+
+        // Якщо конвертували угоду — також оновлюємо її
+        if (dealToConvert) {
+            await compRef.collection(window.DB_COLS.CRM_DEALS).doc(dealToConvert.id).update({
+                linkedProjectId: projRef.id,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            dealToConvert.linkedProjectId = projRef.id;
+        }
+
+        // Оновлюємо кнопку
+        const btn = document.getElementById('crmClientProjectBtn_' + clientId);
+        if (btn) {
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> ' + _tg('Відкрити проєкт →','Открыть проект →');
+            btn.style.background = '#f0fdf4';
+            btn.style.color = '#16a34a';
+            btn.style.borderColor = '#bbf7d0';
+        }
+
+        if (typeof window.projects !== 'undefined') window.projects.unshift({ id: projRef.id, ...projectData });
+        if (window.showToast) showToast(_tg('Проєкт створено','Проект создан'), 'success');
+
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        console.error('[crmClientToProject]', e);
+    }
+};
+
+// ── Запуск бізнес-процесу з картки клієнта ────────────────
+window.crmClientLaunchProcess = async function(clientId) {
+    const cl = crm.clients.find(c => c.id === clientId);
+    if (!cl) return;
+
+    // Завантажуємо шаблони процесів
+    let templates = [];
+    try {
+        const snap = await window.companyRef().collection('processTemplates').orderBy('name').get();
+        templates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) {
+        if (window.showToast) showToast('Помилка завантаження шаблонів: ' + e.message, 'error');
+        return;
+    }
+
+    if (!templates.length) {
+        if (window.showToast) showToast(_tg('Шаблони процесів не знайдено. Створіть їх в розділі Процеси.','Шаблоны процессов не найдены. Создайте их в разделе Процессы.'), 'warning');
+        return;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'crmLaunchProcessOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10030;display:flex;align-items:center;justify-content:center;padding:1rem;';
+
+    overlay.innerHTML = `
+    <div style="background:white;border-radius:12px;padding:1.25rem;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <div style="font-weight:700;font-size:0.95rem;color:#111827;">${_tg('Запустити процес','Запустить процесс')}</div>
+            <button onclick="document.getElementById('crmLaunchProcessOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.1rem;">✕</button>
+        </div>
+        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.75rem;">${_tg('Клієнт:','Клиент:')} <strong>${_esc(cl.name||'')}</strong></div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+            ${templates.map(t => `
+            <button onclick="crmClientStartProcess('${clientId}','${t.id}')"
+                style="text-align:left;padding:0.65rem 0.75rem;background:white;border:1.5px solid #e8eaed;border-radius:8px;cursor:pointer;font-size:0.82rem;transition:border-color 0.15s;"
+                onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='#e8eaed'">
+                <div style="font-weight:600;color:#111827;">${_esc(t.name)}</div>
+                ${t.description ? `<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">${_esc(t.description.slice(0,80))}</div>` : ''}
+                ${t.steps ? `<div style="font-size:0.68rem;color:#6b7280;margin-top:2px;">${t.steps.length} ${_tg('кроків','шагов')}</div>` : ''}
+            </button>`).join('')}
+        </div>
+    </div>`;
+    document.body.appendChild(overlay);
+};
+
+window.crmClientStartProcess = async function(clientId, templateId) {
+    const cl = crm.clients.find(c => c.id === clientId);
+    if (!cl) return;
+    document.getElementById('crmLaunchProcessOverlay')?.remove();
+
+    try {
+        const compRef = window.companyRef();
+        const uid = window.currentUser?.uid || '';
+
+        // Завантажуємо шаблон
+        const tSnap = await compRef.collection('processTemplates').doc(templateId).get();
+        if (!tSnap.exists) { if(window.showToast) showToast('Шаблон не знайдено', 'error'); return; }
+        const template = { id: tSnap.id, ...tSnap.data() };
+
+        const processData = {
+            templateId,
+            name: template.name,
+            objectName: cl.name || '',
+            clientId,
+            clientName: cl.name || '',
+            clientPhone: cl.phone || '',
+            deadline: null,
+            status: 'active',
+            currentStep: 0,
+            stepResults: [],
+            history: [],
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdBy: uid,
+        };
+
+        const processRef = await compRef.collection('processes').add(processData);
+
+        // Зберігаємо activeProcessId в клієнті
+        await compRef.collection(window.DB_COLS.CRM_CLIENTS).doc(clientId).update({
+            activeProcessId: processRef.id,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        cl.activeProcessId = processRef.id;
+
+        // Створюємо першу задачу якщо є кроки
+        const firstStep = template.steps?.[0];
+        if (firstStep) {
+            const users = window.companyUsers || window.users || [];
+            const functions = window.functions || [];
+            const func = functions.find(f => f.name === firstStep.function);
+            const assigneeId = func?.assigneeIds?.[0] || uid;
+            const assignee = users.find(u => u.id === assigneeId);
+            const today = new Date().toISOString().split('T')[0];
+
+            await compRef.collection('tasks').add({
+                title: `[${template.name}] ${firstStep.title || firstStep.name || firstStep.function || 'Крок 1'} — ${cl.name}`,
+                instruction: `[${cl.name}${cl.phone ? ', ' + cl.phone : ''}]
+${firstStep.instruction || ''}`,
+                description: firstStep.instruction || '',
+                assigneeId,
+                assigneeName: assignee?.name || assignee?.email || '',
+                processId: processRef.id,
+                clientId,
+                status: 'new',
+                priority: 'medium',
+                deadlineDate: today,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                creatorId: uid,
+            });
+        }
+
+        if (window.showToast) showToast(_tg(`Процес «${template.name}» запущено`,`Процесс «${template.name}» запущен`), 'success');
+
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        console.error('[crmClientStartProcess]', e);
+    }
 };
 
 window.crmOpenCreateClient = function() {
