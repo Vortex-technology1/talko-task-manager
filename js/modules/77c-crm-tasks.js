@@ -84,129 +84,144 @@ function _calcDueDate(days) {
 window.crmRenderDealTasks = async function (dealId) {
     const c = document.getElementById('crmDealTasksList');
     if (!c) return;
-    c.innerHTML = '<div style="text-align:center;padding:1rem;color:#9ca3af;font-size:0.8rem;">Загрузка...</div>';
-
+    c.innerHTML = '<div style="text-align:center;padding:1rem;color:#9ca3af;font-size:0.8rem;">Завантаження...</div>';
     try {
         const snap = await window.companyRef()
-            .collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
-            .doc(dealId).collection('tasks')
-            .orderBy('createdAt', 'desc').limit(200).get(); // safety limit
-
+            .collection(window.DB_COLS?.TASKS || 'tasks')
+            .where('dealId', '==', dealId)
+            .orderBy('createdAt', 'desc')
+            .limit(100).get();
         const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         _crmRenderTasksList(c, tasks, dealId);
     } catch (e) {
-        c.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;padding:0.5rem;">Ошибка: ${e.message}</div>`;
+        try {
+            const snap2 = await window.companyRef()
+                .collection(window.DB_COLS?.TASKS || 'tasks')
+                .where('dealId', '==', dealId).limit(100).get();
+            _crmRenderTasksList(c, snap2.docs.map(d => ({ id: d.id, ...d.data() })), dealId);
+        } catch(e2) {
+            c.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;padding:0.5rem;">Помилка: ${e2.message}</div>`;
+        }
     }
 };
 
 function _crmRenderTasksList(container, tasks, dealId) {
-    const open   = tasks.filter(t => t.status !== 'done');
-    const done   = tasks.filter(t => t.status === 'done');
-    const users  = window.users || [];
-    const today  = new Date().toISOString().split('T')[0];
+    const open = tasks.filter(t => t.status !== 'done');
+    const done = tasks.filter(t => t.status === 'done');
+    const users = window.users || [];
+    const today = new Date().toISOString().split('T')[0];
+    const _esc = s => String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
     const taskHtml = (t) => {
-        const overdue  = t.status !== 'done' && t.dueDate && t.dueDate < today;
+        const dl = t.deadlineDate || t.dueDate || '';
+        const overdue = t.status !== 'done' && dl && dl < today;
         const assignee = users.find(u => u.id === t.assigneeId);
-        return `
-        <div style="display:flex;align-items:flex-start;gap:0.5rem;padding:0.5rem 0.6rem;
-            border-radius:7px;background:${t.status==='done'?'#f8fafc':'white'};
-            border:1px solid ${overdue?'#fecaca':t.status==='done'?'#f1f5f9':'#e8eaed'};
-            margin-bottom:0.3rem;opacity:${t.status==='done'?'0.6':'1'};">
-            <input type="checkbox" ${t.status==='done'?'checked':''}
-                onchange="crmToggleDealTask('${dealId}','${t.id}',this.checked)"
-                style="margin-top:2px;accent-color:#22c55e;flex-shrink:0;">
+        const pc = t.priority === 'high' ? '#ef4444' : t.priority === 'low' ? '#22c55e' : '#f59e0b';
+        return `<div style="display:flex;align-items:flex-start;gap:0.5rem;padding:0.5rem 0.6rem;border-radius:7px;background:${t.status==='done'?'#f8fafc':'white'};border:1px solid ${overdue?'#fecaca':t.status==='done'?'#f1f5f9':'#e8eaed'};margin-bottom:0.3rem;opacity:${t.status==='done'?'0.65':'1'};">
+            <input type="checkbox" ${t.status==='done'?'checked':''} onchange="crmToggleDealTask('${dealId}','${t.id}',this.checked)" style="margin-top:3px;accent-color:#22c55e;flex-shrink:0;">
             <div style="flex:1;min-width:0;">
-                <div style="font-size:0.8rem;color:#111827;font-weight:500;
-                    text-decoration:${t.status==='done'?'line-through':'none'};
-                    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                    ${(window.htmlEsc ? window.htmlEsc(t.title) : String(t.title||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')) || '—'}
-                </div>
-                <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:2px;">
-                    ${t.dueDate ? `<span style="font-size:0.68rem;color:${overdue?'#ef4444':'#9ca3af'};">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${t.dueDate}${overdue?' <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️':''}</span>` : ''}
-                    ${assignee ? `<span style="font-size:0.68rem;color:#6b7280;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${window.htmlEsc ? window.htmlEsc(assignee.name||assignee.email||'') : String(assignee.name||assignee.email||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>` : ''}
-                    ${t.autoCreated ? `<span style="font-size:0.65rem;background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:3px;">авто</span>` : ''}
+                <div style="font-size:0.8rem;color:#111827;font-weight:500;text-decoration:${t.status==='done'?'line-through':'none'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${_esc(t.title)}</div>
+                <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:2px;align-items:center;">
+                    ${dl?`<span style="font-size:0.68rem;color:${overdue?'#ef4444':'#9ca3af'};display:flex;align-items:center;gap:2px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${dl}</span>`:''}
+                    ${assignee?`<span style="font-size:0.68rem;color:#6b7280;display:flex;align-items:center;gap:2px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${_esc(assignee.name||assignee.email||'')}</span>`:''}
+                    ${t.priority?`<span style="font-size:0.62rem;background:${pc}18;color:${pc};padding:1px 5px;border-radius:3px;font-weight:600;">${t.priority==='high'?'Висок.':t.priority==='low'?'Низьк.':'Середн.'}</span>`:''}
+                    ${t.autoCreated?`<span style="font-size:0.62rem;background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:3px;">авто</span>`:''}
+                    ${t.status==='review'?`<span style="font-size:0.62rem;background:#eef2ff;color:#6366f1;padding:1px 5px;border-radius:3px;">перевірка</span>`:''}
                 </div>
             </div>
-            <button onclick="crmDeleteDealTask('${dealId}','${t.id}')"
-                style="background:none;border:none;cursor:pointer;color:#d1d5db;font-size:0.8rem;
-                flex-shrink:0;padding:2px;" title="Удалить"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <div style="display:flex;gap:3px;flex-shrink:0;">
+                <button onclick="crmOpenDealTask('${t.id}')" title="Відкрити повну задачу" style="background:none;border:1px solid #e5e7eb;cursor:pointer;color:#6b7280;padding:3px 6px;border-radius:5px;display:flex;align-items:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button>
+                <button onclick="crmDeleteDealTask('${dealId}','${t.id}')" style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:3px;" title="Видалити"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
         </div>`;
     };
 
     container.innerHTML = `
-    <!-- Додати задачу -->
-    <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
-        <input id="crmNewTaskInput_${dealId}" placeholder="Новая задача..."
-            onkeydown="if(event.key==='Enter')crmAddDealTask('${dealId}')"
-            style="flex:1;padding:0.4rem 0.6rem;border:1px solid #e8eaed;border-radius:7px;
-            font-size:0.8rem;outline:none;">
-        <input type="date" id="crmNewTaskDue_${dealId}" value="${today}"
-            style="padding:0.4rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.78rem;width:130px;">
-        <button onclick="crmAddDealTask('${dealId}')"
-            style="padding:0.4rem 0.7rem;background:#22c55e;color:white;border:none;
-            border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">+</button>
-    </div>
-
-    <!-- Відкриті задачі -->
-    ${open.length ? open.map(taskHtml).join('') : '<div style="font-size:0.78rem;color:#9ca3af;padding:0.25rem;">Задач нет</div>'}
-
-    <!-- Виконані -->
-    ${done.length ? `
-    <div style="margin-top:0.75rem;">
-        <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.4rem;font-weight:600;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Выполненные (${done.length})
+    <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.6rem;margin-bottom:0.75rem;">
+        <input id="crmNewTaskInput_${dealId}" placeholder="Назва завдання..." onkeydown="if(event.key===\'Enter\')crmAddDealTask(\'${dealId}\')"
+            style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.8rem;outline:none;box-sizing:border-box;margin-bottom:0.4rem;">
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+            <input type="date" id="crmNewTaskDue_${dealId}" value="${today}" style="flex:1;min-width:100px;padding:0.35rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.75rem;">
+            <select id="crmNewTaskAssignee_${dealId}" style="flex:1;min-width:100px;padding:0.35rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.75rem;">
+                <option value="${window.currentUser?.uid||''}">${_esc(window.currentUserData?.name||'Я')}</option>
+                ${(window.users||[]).filter(u=>u.id!==window.currentUser?.uid).map(u=>`<option value="${u.id}">${_esc(u.name||u.email)}</option>`).join('')}
+            </select>
+            <select id="crmNewTaskPriority_${dealId}" style="padding:0.35rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.75rem;">
+                <option value="medium">Середній</option><option value="high">Високий</option><option value="low">Низький</option>
+            </select>
+            <button onclick="crmAddDealTask(\'${dealId}\')" style="padding:0.35rem 0.75rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">+ Задача</button>
         </div>
-        ${done.map(taskHtml).join('')}
-    </div>` : ''}`;
+    </div>
+    ${open.length ? open.map(taskHtml).join('') : '<div style="font-size:0.78rem;color:#9ca3af;padding:0.25rem 0;">Задач немає</div>'}
+    ${done.length ? `<div style="margin-top:0.75rem;"><div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.4rem;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Виконані (${done.length})</div>${done.map(taskHtml).join('')}</div>` : ''}`;
 }
 
-// ── CRUD задач угоди ────────────────────────────────────────
 window.crmAddDealTask = async function (dealId) {
     const inp = document.getElementById(`crmNewTaskInput_${dealId}`);
     const due = document.getElementById(`crmNewTaskDue_${dealId}`);
+    const assignSel = document.getElementById(`crmNewTaskAssignee_${dealId}`);
+    const priorSel = document.getElementById(`crmNewTaskPriority_${dealId}`);
     const title = inp?.value.trim();
-    if (!title) return;
-
+    if (!title) { inp?.focus(); return; }
+    const assigneeId = assignSel?.value || window.currentUser?.uid || '';
+    const assigneeName = (window.users||[]).find(u=>u.id===assigneeId)?.name || window.currentUserData?.name || '';
+    const priority = priorSel?.value || 'medium';
+    const deadlineDate = due?.value || new Date().toISOString().split('T')[0];
+    const deal = window.crm?.deals?.find(d => d.id === dealId);
     inp.disabled = true;
     try {
-        await window.companyRef()
-            .collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
-            .doc(dealId).collection('tasks').add({
-                title,
-                dueDate:    due?.value || '',
-                assigneeId: window.currentUser?.uid || '',
-                status:     'open',
+        const taskRef = await window.companyRef()
+            .collection(window.DB_COLS?.TASKS || 'tasks').add({
+                title, status: 'new', priority, assigneeId, assigneeName,
+                creatorId: window.currentUser?.uid || '',
+                creatorName: window.currentUserData?.name || window.currentUser?.email || '',
+                deadlineDate, deadlineTime: '18:00',
+                deadline: deadlineDate + 'T18:00',
+                createdDate: new Date().toISOString().split('T')[0],
+                pinned: false,
+                dealId, crmDealId: dealId,
+                source: 'crm_manual',
+                clientName: deal?.clientName || deal?.title || '',
+                clientPhone: deal?.phone || '',
                 autoCreated: false,
-                createdAt:  firebase.firestore.FieldValue.serverTimestamp(),
-                createdBy:  window.currentUser?.email || '',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
         inp.value = '';
+        if (window.showToast) showToast('Задачу створено і додано в "Мій день"', 'success');
+        if (window.tasks && Array.isArray(window.tasks)) {
+            window.tasks.push({ id: taskRef.id, title, status: 'new', priority, assigneeId, assigneeName, deadlineDate, dealId, crmDealId: dealId, source: 'crm_manual', clientName: deal?.clientName || '' });
+        }
         window.crmRenderDealTasks(dealId);
     } catch (e) {
         if (window.showToast) showToast('Помилка: ' + e.message, 'error');
-    } finally {
-        inp.disabled = false;
-        inp?.focus();
-    }
+    } finally { inp.disabled = false; inp?.focus(); }
+};
+
+window.crmOpenDealTask = function(taskId) {
+    if (typeof openTaskModal === 'function') openTaskModal(taskId);
+    else if (typeof window.openTaskModal === 'function') window.openTaskModal(taskId);
+    else if (window.showToast) showToast('Відкрийте вкладку "Задачі" для деталей', 'info');
 };
 
 window.crmToggleDealTask = async function (dealId, taskId, done) {
-    await window.companyRef()
-        .collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
-        .doc(dealId).collection('tasks').doc(taskId)
-        .update({ status: done ? 'done' : 'open', updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
-        .catch(e => console.warn('[CRM task toggle]', e));
-    window.crmRenderDealTasks(dealId);
+    try {
+        await window.companyRef().collection(window.DB_COLS?.TASKS || 'tasks').doc(taskId).update({
+            status: done ? 'done' : 'new',
+            ...(done ? { completedAt: firebase.firestore.FieldValue.serverTimestamp() } : {}),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        if (window.tasks) { const t = window.tasks.find(t=>t.id===taskId); if(t) t.status = done?'done':'new'; }
+        window.crmRenderDealTasks(dealId);
+    } catch(e) { console.warn('[CRM task toggle]', e); }
 };
 
 window.crmDeleteDealTask = async function (dealId, taskId) {
-    await window.companyRef()
-        .collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
-        .doc(dealId).collection('tasks').doc(taskId).delete()
-        .catch(e => console.warn('[CRM task delete]', e));
-    window.crmRenderDealTasks(dealId);
+    try {
+        await window.companyRef().collection(window.DB_COLS?.TASKS || 'tasks').doc(taskId).delete();
+        if (window.tasks) window.tasks = window.tasks.filter(t=>t.id!==taskId);
+        window.crmRenderDealTasks(dealId);
+    } catch(e) { console.warn('[CRM task delete]', e); }
 };
 
 // ── Налаштування шаблонів задач в Settings ─────────────────
