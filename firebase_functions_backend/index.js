@@ -1202,31 +1202,47 @@ exports.telegramWebhook = functions
                         if (text === '/overdue' && t.deadlineDate && t.deadlineDate < todayStr) filtered.push(t);
                     });
 
-                    // ── CRM: угоди на сьогоднішній контакт ──────────────
+                    // ── CRM: угоди на сьогоднішній або прострочений контакт ──
                     let crmDealsToday = [];
-                    if (text === '/today') {
+                    if (text === '/today' || text === '/overdue') {
                         try {
-                            const crmSnap = await db.collection('companies').doc(companyId)
-                                .collection('crm_deals')
-                                .where('nextContactDate', '==', todayStr)
-                                .where('assigneeId', '==', uid)
-                                .get();
-                            // Також додаємо прострочені nextContactDate за останні 3 дні
-                            const yesterday = new Date();
-                            yesterday.setDate(yesterday.getDate() - 1);
-                            const yesterdayStr = yesterday.toISOString().split('T')[0];
-                            const overdueSnap = await db.collection('companies').doc(companyId)
-                                .collection('crm_deals')
-                                .where('nextContactDate', '>=', yesterdayStr)
-                                .where('nextContactDate', '<', todayStr)
-                                .where('assigneeId', '==', uid)
-                                .get();
-                            const allDealDocs = [...crmSnap.docs, ...overdueSnap.docs];
-                            crmDealsToday = allDealDocs
-                                .map(d => ({ id: d.id, ...d.data() }))
-                                .filter(d => d.stage !== 'won' && d.stage !== 'lost');
+                            const weekAgoDate = new Date();
+                            weekAgoDate.setDate(weekAgoDate.getDate() - 7);
+                            const weekAgoStr = weekAgoDate.toISOString().split('T')[0];
+
+                            if (text === '/today') {
+                                const crmSnap = await db.collection('companies').doc(companyId)
+                                    .collection('crm_deals')
+                                    .where('nextContactDate', '==', todayStr)
+                                    .where('assigneeId', '==', uid)
+                                    .get();
+                                const yesterday = new Date();
+                                yesterday.setDate(yesterday.getDate() - 1);
+                                const yesterdayStr = yesterday.toISOString().split('T')[0];
+                                const overdueSnap = await db.collection('companies').doc(companyId)
+                                    .collection('crm_deals')
+                                    .where('nextContactDate', '>=', yesterdayStr)
+                                    .where('nextContactDate', '<', todayStr)
+                                    .where('assigneeId', '==', uid)
+                                    .get();
+                                const allDealDocs = [...crmSnap.docs, ...overdueSnap.docs];
+                                crmDealsToday = allDealDocs
+                                    .map(d => ({ id: d.id, ...d.data() }))
+                                    .filter(d => d.stage !== 'won' && d.stage !== 'lost');
+                            } else {
+                                // /overdue — прострочені контакти за останній тиждень
+                                const overdueSnap = await db.collection('companies').doc(companyId)
+                                    .collection('crm_deals')
+                                    .where('nextContactDate', '>=', weekAgoStr)
+                                    .where('nextContactDate', '<', todayStr)
+                                    .where('assigneeId', '==', uid)
+                                    .get();
+                                crmDealsToday = overdueSnap.docs
+                                    .map(d => ({ id: d.id, ...d.data() }))
+                                    .filter(d => d.stage !== 'won' && d.stage !== 'lost');
+                            }
                         } catch(crmErr) {
-                            console.warn('[TG /today] CRM fetch error:', crmErr.message);
+                            console.warn('[TG /today /overdue] CRM fetch error:', crmErr.message);
                         }
                     }
 
@@ -1338,19 +1354,38 @@ exports.telegramWebhook = functions
                     const now = new Date();
                     const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
                     const todayStr = now.toISOString().split('T')[0];
+                    // FIX: фільтруємо тільки задачі за тиждень (done за тиждень, active з дедлайном за тиждень)
                     const snap = await db.collection('companies').doc(wCompanyId).collection('tasks')
-                        .where('assigneeId', '==', wUid).where('status', 'in', ['done', 'new', 'progress']).get();
-                    let done = 0, inProgress = 0, overdue = 0;
+                        .where('assigneeId', '==', wUid)
+                        .where('status', 'in', ['done', 'new', 'progress', 'review'])
+                        .get();
+                    let done = 0, inProgress = 0, overdue = 0, review = 0;
                     snap.docs.forEach(d => {
                         const t = d.data();
-                        if (t.status === 'done') done++;
-                        else if (t.status === 'progress') inProgress++;
-                        if (t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done') overdue++;
+                        // Done за тиждень — по completedAt або deadlineDate
+                        if (t.status === 'done') {
+                            const cd = t.completedAt?.toDate ? t.completedAt.toDate().toISOString().split('T')[0]
+                                : (t.completedAt ? new Date(t.completedAt).toISOString().split('T')[0] : t.deadlineDate);
+                            if (cd && cd >= weekAgo) done++;
+                        } else if (t.status === 'review') {
+                            review++;
+                        } else if (t.status === 'progress') {
+                            inProgress++;
+                        }
+                        // Прострочені — дедлайн в межах тижня або раніше
+                        if (t.deadlineDate && t.deadlineDate < todayStr && t.deadlineDate >= weekAgo
+                            && t.status !== 'done' && t.status !== 'review') overdue++;
                     });
-                    const wUserDoc = await db.collection('companies').doc(wCompanyId).collection('users').doc(wUid).get();
                     const wLang = await getUserLang(wCompanyId, wUid);
+                    const weekAgoFormatted = weekAgo.split('-').reverse().join('.');
+                    const todayFormatted = todayStr.split('-').reverse().join('.');
                     await sendTelegramMessage(chatId,
-                        `${tg(wLang, 'weeklyReport')}: ${done}\n${tg(wLang, 'weeklyInProgress')}: ${inProgress}\n${tg(wLang, 'weeklyOverdue')}: ${overdue}`);
+                        `${tg(wLang, 'weeklyReport')} (${weekAgoFormatted} — ${todayFormatted})\n\n` +
+                        `✅ Виконано: <b>${done}</b>\n` +
+                        `🔄 В роботі: <b>${inProgress}</b>\n` +
+                        (review > 0 ? `🔍 На перевірці: <b>${review}</b>\n` : '') +
+                        (overdue > 0 ? `⚠️ Прострочено: <b>${overdue}</b>\n` : '✅ Прострочених немає\n')
+                    );
                 } else {
                     await sendTelegramMessage(chatId, tg('ua', 'notConnected'));
                 }
