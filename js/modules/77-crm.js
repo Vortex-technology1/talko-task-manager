@@ -3580,40 +3580,44 @@ window.crmOpenClient = function(clientId) {
             </div>`;
         }).join('') : '<div style="font-size:0.78rem;color:#d1d5db;text-align:center;padding:0.75rem;">' + _tg('Угод немає','Сделок нет') + '</div>'}
 
-        <!-- Кнопки дій -->
-        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;">
+        <!-- Кнопки дій — ряд 1: основні -->
+        <div style="display:flex;gap:0.4rem;margin-top:0.75rem;">
             <button onclick="crmNewDealFromClient('${_esc(cl.name||'')}','${cl.id}')"
-                style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;
-                border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">
+                style="flex:1;padding:0.42rem;background:#22c55e;color:white;border:none;
+                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;">
                 ${_tg('+ Угода','+ Сделка')}
-            </button>
-            <button id="crmClientProjectBtn_${cl.id}" onclick="crmClientToProject('${cl.id}')"
-                style="flex:1;padding:0.45rem;background:${cl.linkedProjectId ? '#f0fdf4' : '#f8fafc'};color:${cl.linkedProjectId ? '#16a34a' : '#374151'};border:1px solid ${cl.linkedProjectId ? '#bbf7d0' : '#e8eaed'};border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:4px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                ${cl.linkedProjectId ? _tg('Відкрити проєкт →','Открыть проект →') : _tg('В проєкт','В проект')}
-            </button>
-            <button onclick="crmClientLaunchProcess('${cl.id}')"
-                style="flex:1;padding:0.45rem;background:#f8fafc;color:#374151;border:1px solid #e8eaed;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:4px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
-                ${_tg('Процес','Процесс')}
             </button>
             ${cl.botContactId || cl.senderId ? `
             <button onclick="crmClientToggleChat('${cl.botContactId || ((cl.channel||'telegram')+'_'+cl.senderId)}')"
                 id="crmChatToggleBtn_${cl.id}"
-                style="padding:0.45rem 0.65rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;
-                border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:4px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                style="padding:0.42rem 0.6rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;
+                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:3px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 Чат
             </button>` : ''}
             <button onclick="crmEditClient('${cl.id}')"
-                style="padding:0.45rem 0.65rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:4px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                style="padding:0.42rem 0.6rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:3px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 ${_tg('Ред.','Ред.')}
             </button>
             <button onclick="crmDeleteClient('${cl.id}')"
-                style="padding:0.45rem 0.65rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;
-                border-radius:7px;cursor:pointer;font-size:0.78rem;">
+                style="padding:0.42rem 0.6rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;
+                border-radius:7px;cursor:pointer;font-size:0.75rem;">
                 Видалити
+            </button>
+        </div>
+
+        <!-- Кнопки дій — ряд 2: конвертація -->
+        <div style="display:flex;gap:0.4rem;margin-top:0.4rem;">
+            <button id="crmClientProjectBtn_${cl.id}" onclick="crmClientToProject('${cl.id}')"
+                style="flex:1;padding:0.42rem;background:${cl.linkedProjectId ? '#f0fdf4' : '#f8fafc'};color:${cl.linkedProjectId ? '#16a34a' : '#374151'};border:1px solid ${cl.linkedProjectId ? '#bbf7d0' : '#e8eaed'};border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:3px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                ${cl.linkedProjectId ? _tg('Відкрити проєкт →','Открыть проект →') : _tg('В проєкт','В проект')}
+            </button>
+            <button onclick="crmClientLaunchProcess('${cl.id}')"
+                style="flex:1;padding:0.42rem;background:#f8fafc;color:#374151;border:1px solid #e8eaed;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:3px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M16.95 16.95l1.41 1.41M4.93 4.93l1.41 1.41M7.05 16.95l-1.41 1.41M21 12h-2M5 12H3M12 21v-2M12 5V3"/></svg>
+                ${_tg('Процес','Процесс')}
             </button>
         </div>
 
