@@ -303,3 +303,229 @@ window.crmSaveTaskTemplates = async function () {
         if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
 };
+
+// ── Конвертація угоди в проєкт ──────────────────────────────
+window.crmConvertDealToProject = async function(dealId) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+
+    // Якщо вже є проєкт — відкриваємо його
+    if (deal.linkedProjectId) {
+        crmCloseDeal();
+        if (typeof window.openProjectDetail === 'function') {
+            window.openProjectDetail(deal.linkedProjectId);
+        } else if (typeof window.switchTab === 'function') {
+            window.switchTab('projects');
+        }
+        return;
+    }
+
+    const confirmed = typeof showConfirmModal === 'function'
+        ? await showConfirmModal(`Створити проєкт для «${deal.clientName || deal.title || 'угоди'}»?`)
+        : confirm(`Створити проєкт для «${deal.clientName || deal.title || 'угоди'}»?`);
+    if (!confirmed) return;
+
+    try {
+        const compRef = window.companyRef();
+        const uid = window.currentUser?.uid || '';
+        const today = new Date().toISOString().split('T')[0];
+
+        const projectData = {
+            name:        deal.clientName || deal.title || 'Новий проєкт',
+            status:      'active',
+            color:       '#22c55e',
+            dealId:      dealId,
+            clientName:  deal.clientName || '',
+            clientPhone: deal.phone || '',
+            amount:      deal.amount || 0,
+            creatorId:   uid,
+            startDate:   today,
+            createdAt:   firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt:   firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        const projRef = await compRef.collection('projects').add(projectData);
+
+        // Зберігаємо зворотній зв'язок в угоді
+        await compRef.collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
+            .doc(dealId).update({
+                linkedProjectId: projRef.id,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+
+        deal.linkedProjectId = projRef.id;
+
+        // Логуємо в history
+        await compRef.collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
+            .doc(dealId).collection('history').add({
+                type: 'project_created',
+                projectId: projRef.id,
+                by: window.currentUser?.email || '',
+                at: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+
+        if (window.showToast) showToast('Проєкт створено ✓', 'success');
+
+        // Оновлюємо кнопку в карточці
+        const btn = document.getElementById('crmConvertProjectBtn_' + dealId);
+        if (btn) {
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Відкрити проєкт →';
+            btn.style.background = '#f0fdf4';
+            btn.style.color = '#16a34a';
+            btn.style.borderColor = '#bbf7d0';
+        }
+
+        // Додаємо проєкт в локальний масив якщо є
+        if (typeof window.projects !== 'undefined') {
+            window.projects.unshift({ id: projRef.id, ...projectData });
+        }
+
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        console.error('[CRM convertToProject]', e);
+    }
+};
+
+// ── Файлові вкладення в карточці угоди ──────────────────────
+window.crmRenderDealFiles = async function(dealId) {
+    const c = document.getElementById('crmDealFilesList');
+    if (!c) return;
+    c.innerHTML = '<div style="text-align:center;padding:0.75rem;color:#9ca3af;font-size:0.78rem;">Завантаження...</div>';
+
+    try {
+        const snap = await window.companyRef()
+            .collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
+            .doc(dealId).collection('files')
+            .orderBy('createdAt', 'desc').limit(100).get();
+
+        const files = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        _crmRenderFilesUI(c, files, dealId);
+    } catch(e) {
+        c.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;padding:0.5rem;">Помилка: ${e.message}</div>`;
+    }
+};
+
+function _crmRenderFilesUI(container, files, dealId) {
+    const iconForExt = (name) => {
+        const ext = (name || '').split('.').pop().toLowerCase();
+        if (['jpg','jpeg','png','gif','webp','svg'].includes(ext)) return '🖼️';
+        if (['pdf'].includes(ext)) return '📄';
+        if (['doc','docx'].includes(ext)) return '📝';
+        if (['xls','xlsx','csv'].includes(ext)) return '📊';
+        if (['zip','rar','7z'].includes(ext)) return '📦';
+        return '📎';
+    };
+
+    const fileRows = files.map(f => `
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.5rem;
+            border:1px solid #f1f5f9;border-radius:7px;background:white;margin-bottom:0.3rem;">
+            <span style="font-size:1.1rem;flex-shrink:0;">${iconForExt(f.name)}</span>
+            <div style="flex:1;min-width:0;">
+                <div style="font-size:0.78rem;font-weight:500;color:#111827;
+                    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name || 'Файл'}</div>
+                <div style="font-size:0.65rem;color:#9ca3af;">${f.sizeTxt || ''} ${f.uploadedByName ? '· ' + f.uploadedByName : ''}</div>
+            </div>
+            <a href="${f.url}" target="_blank" rel="noopener"
+                style="color:#6b7280;padding:3px;display:flex;align-items:center;" title="Завантажити">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </a>
+            <button onclick="crmDeleteDealFile('${dealId}','${f.id}','${(f.storagePath||'').replace(/'/g,"\\'")}')"
+                style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:3px;" title="Видалити">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>`).join('');
+
+    container.innerHTML = `
+        <!-- Upload zone -->
+        <div id="crmFileDropZone_${dealId}"
+            ondragover="event.preventDefault();this.style.borderColor='#22c55e';"
+            ondragleave="this.style.borderColor='#e8eaed';"
+            ondrop="event.preventDefault();this.style.borderColor='#e8eaed';crmUploadDealFiles('${dealId}',event.dataTransfer.files);"
+            style="border:2px dashed #e8eaed;border-radius:8px;padding:0.6rem;text-align:center;
+            margin-bottom:0.6rem;cursor:pointer;transition:border-color 0.15s;"
+            onclick="document.getElementById('crmFileInput_${dealId}').click()">
+            <input type="file" id="crmFileInput_${dealId}" multiple style="display:none;"
+                onchange="crmUploadDealFiles('${dealId}',this.files)">
+            <div style="font-size:0.75rem;color:#9ca3af;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Перетягніть файл або натисніть для вибору
+            </div>
+            <div id="crmFileUploadProgress_${dealId}" style="font-size:0.72rem;color:#16a34a;margin-top:4px;display:none;"></div>
+        </div>
+        ${files.length ? fileRows : '<div style="font-size:0.75rem;color:#9ca3af;text-align:center;padding:0.4rem;">Файлів немає</div>'}`;
+}
+
+window.crmUploadDealFiles = async function(dealId, fileList) {
+    if (!fileList || !fileList.length) return;
+    const progressEl = document.getElementById(`crmFileUploadProgress_${dealId}`);
+    if (progressEl) { progressEl.style.display = ''; progressEl.textContent = 'Завантаження...'; }
+
+    const compRef = window.companyRef();
+    const uid = window.currentUser?.uid || '';
+    const uName = window.currentUserData?.name || window.currentUser?.email || '';
+    const compId = window.currentCompanyId || window.companyId;
+
+    const ALLOWED_EXT = ['jpg','jpeg','png','gif','webp','pdf','doc','docx','xls','xlsx','csv','txt','zip','rar'];
+    const MAX_SIZE = 20 * 1024 * 1024; // 20MB
+
+    let uploaded = 0;
+    for (const file of Array.from(fileList)) {
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!ALLOWED_EXT.includes(ext)) {
+            if (window.showToast) showToast(`Формат .${ext} не підтримується`, 'warning');
+            continue;
+        }
+        if (file.size > MAX_SIZE) {
+            if (window.showToast) showToast(`${file.name}: файл більше 20MB`, 'warning');
+            continue;
+        }
+        if (progressEl) progressEl.textContent = `Завантажую ${file.name}...`;
+        try {
+            const ts = Date.now();
+            const safeName = file.name.replace(/[^a-zA-Z0-9._\-а-яА-ЯёЁіІїЇєЄ]/g, '_');
+            const storagePath = `companies/${compId}/crm_deals/${dealId}/${ts}_${safeName}`;
+            const storageRef = firebase.storage().ref(storagePath);
+            await storageRef.put(file);
+            const url = await storageRef.getDownloadURL();
+
+            const bytes = file.size;
+            const sizeTxt = bytes < 1024 ? bytes + ' B'
+                : bytes < 1024*1024 ? (bytes/1024).toFixed(1) + ' KB'
+                : (bytes/(1024*1024)).toFixed(1) + ' MB';
+
+            await compRef.collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
+                .doc(dealId).collection('files').add({
+                    name: file.name,
+                    url, storagePath,
+                    size: file.size,
+                    sizeTxt,
+                    ext,
+                    uploadedBy: uid,
+                    uploadedByName: uName,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+            uploaded++;
+        } catch(e) {
+            if (window.showToast) showToast('Помилка завантаження: ' + e.message, 'error');
+            console.error('[CRM file upload]', e);
+        }
+    }
+
+    if (progressEl) { progressEl.textContent = uploaded ? `Завантажено: ${uploaded}` : ''; setTimeout(() => { if(progressEl) progressEl.style.display='none'; }, 2000); }
+    if (uploaded) window.crmRenderDealFiles(dealId);
+};
+
+window.crmDeleteDealFile = async function(dealId, fileId, storagePath) {
+    const confirmed = typeof showConfirmModal === 'function'
+        ? await showConfirmModal('Видалити файл?', { danger: true })
+        : confirm('Видалити файл?');
+    if (!confirmed) return;
+    try {
+        if (storagePath) await firebase.storage().ref(storagePath).delete().catch(() => {});
+        await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
+            .doc(dealId).collection('files').doc(fileId).delete();
+        window.crmRenderDealFiles(dealId);
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
+};

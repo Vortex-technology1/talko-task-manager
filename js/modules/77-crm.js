@@ -1910,7 +1910,7 @@ window.crmOpenDeal = function(dealId) {
 
             <!-- Sub-tabs -->
             <div style="display:flex;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
-                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['tasks','Задачі'],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','💅 Beauty']]:
+                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['tasks','Завдання'],['files','📎 Файли'],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','💅 Beauty']]:
                         (window.currentCompanyData?.niche==='autoservice'?[['vehicles','🔧 Авто/Наряди']]:
                         (window.currentCompanyData?.niche==='horeca'?[['pos_history','🧾 Чеки']]:
                         (window.currentCompanyData?.niche==='logistics'?[['routes_history','🚛 Рейси']]:
@@ -1928,10 +1928,17 @@ window.crmOpenDeal = function(dealId) {
             <!-- Footer -->
             <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;flex-shrink:0;
                 display:flex;gap:0.5rem;justify-content:flex-end;">
+                <button id="crmConvertProjectBtn_${deal.id}" onclick="crmConvertDealToProject('${deal.id}')"
+                    style="padding:0.5rem 1rem;background:${deal.linkedProjectId?'#f0fdf4':'white'};color:${deal.linkedProjectId?'#16a34a':'#374151'};border:1px solid ${deal.linkedProjectId?'#bbf7d0':'#e8eaed'};
+                    border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
+                    title="Конвертувати угоду в проєкт">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    ${deal.linkedProjectId ? 'Відкрити проєкт →' : 'В проєкт'}
+                </button>
                 <button onclick="crmCreateTaskFromDeal('${deal.id}')"
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
-                    title="Создать задачу в Task Manager">
+                    title="Створити задачу в таск-менеджері">
                     ${I.check} Задача
                 </button>
                 <button onclick="window.crmCreateInvoiceForDeal('${deal.id}')"
@@ -1974,7 +1981,7 @@ window.crmOpenDeal = function(dealId) {
 window.crmDealTab = function(dealId, tab) {
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;
-    const allTabs = ['details','activity','tasks','ai','beauty','vehicles','pos_history','routes_history'];
+    const allTabs = ['details','activity','tasks','files','ai','beauty','vehicles','pos_history','routes_history'];
     allTabs.forEach(t => {
         const btn = document.getElementById('cdt_' + t);
         if (btn) {
@@ -1986,6 +1993,7 @@ window.crmDealTab = function(dealId, tab) {
     if (tab === 'details')  _renderDealDetails(deal);
     if (tab === 'activity') _loadActivityTab(deal);
     if (tab === 'tasks')    _loadTasksTab(deal);
+    if (tab === 'files')    _loadFilesTab(deal);
     if (tab === 'ai')       _loadAITab(deal);
     if (tab === 'beauty')    window._renderBeautyTab && window._renderBeautyTab(deal);
     if (tab === 'vehicles')  window._renderVehiclesTab && window._renderVehiclesTab(deal);
@@ -2780,73 +2788,115 @@ window.crmToggleHot = async function(dealId) {
 async function _loadTasksTab(deal) {
     const cnt = document.getElementById('crmDealContent');
     if (!cnt) return;
-    cnt.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Загрузка...</div>';
+    cnt.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
     try {
+        // Завантажуємо повноцінні завдання платформи прив'язані до цієї угоди
         let dealTasks = [];
         try {
             const snap = await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks')
                 .where('crmDealId','==', deal.id).orderBy('createdAt','desc').get();
             dealTasks = snap.docs.map(d => ({ id:d.id, ...d.data() }));
         } catch(qErr) {
-            // Fallback на локальний масив — з захистом від undefined і порожнього масиву
-            console.warn('[CRM] tasks query failed (можливо немає composite index):', qErr.message);
+            console.warn('[CRM] tasks query fallback:', qErr.message);
             if (typeof tasks !== 'undefined' && Array.isArray(tasks)) {
                 dealTasks = tasks.filter(t => t.crmDealId === deal.id);
             }
         }
-        const statusColors = { new:'#6b7280', in_progress:'#3b82f6', done:'#22c55e', overdue:'#ef4444' };
-        const statusLabels = { new:window.t('crmTaskStatusNew'), in_progress:window.t('crmTaskStatusWork'), done:window.t('crmTaskStatusDone'), overdue:window.t('crmTaskStatusOver') };
+
         const today = _crmToday();
         const usersArr = (typeof users !== 'undefined') ? users : [];
+        const statusColors = { new:'#6b7280', in_progress:'#3b82f6', review:'#f59e0b', done:'#22c55e' };
+        const statusLabels = { new:'Нове', in_progress:'В роботі', review:'На перевірці', done:'Виконано' };
 
-        let rows = '';
-        if (!dealTasks.length) {
-            rows = '<div style="text-align:center;padding:2rem;background:#f8fafc;border-radius:10px;border:2px dashed #e8eaed;"><div style="color:#9ca3af;font-size:0.82rem;">'+window.t('noTasksYet3')+'</div></div>';
-        } else {
-            rows = dealTasks.map(function(task) {
-                const isOverdue = task.deadlineDate && task.deadlineDate < today && task.status !== 'done' && task.status !== 'review';
-                const eff = isOverdue ? 'overdue' : (task.status || 'new');
-                const col = statusColors[eff] || '#6b7280';
-                const asgn = usersArr.find(function(u){return u.id===task.assigneeId;});
-                const deadlinePart = task.deadlineDate ? '<span style="font-size:0.68rem;color:' + (isOverdue?'#ef4444':'#6b7280') + ';">' + task.deadlineDate + '</span>' : '';
-                const asgnPart = asgn ? '<span style="font-size:0.68rem;color:#9ca3af;">' + _esc(asgn.name||asgn.email) + '</span>' : '';
-                // FIX H: data-taskid замість inline onclick
-                const donePart = task.status !== 'done' ? '<button data-taskid="' + task.id + '" class="crm-task-done-btn" style="padding:4px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.72rem;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Готово</button>' : '';
-                const notePart = task.note ? '<div style="font-size:0.74rem;color:#9ca3af;margin-top:4px;">' + _esc((task.note||'').slice(0,100)) + '</div>' : '';
-                return '<div style="background:white;border:1px solid #e8eaed;border-left:3px solid ' + col + ';border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.5rem;">' +
-                    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">' +
-                        '<div style="flex:1;">' +
-                            '<div style="font-size:0.8rem;font-weight:600;color:' + (task.status==='done'?'#9ca3af':'#111827') + ';text-decoration:' + (task.status==='done'?'line-through':'none') + ';">' + _esc(task.title||'') + '</div>' +
-                            '<div style="display:flex;gap:0.5rem;margin-top:4px;flex-wrap:wrap;">' +
-                                '<span style="font-size:0.68rem;padding:1px 6px;border-radius:8px;font-weight:600;background:' + col + '18;color:' + col + ';">' + (statusLabels[eff]||eff) + '</span>' +
-                                deadlinePart + asgnPart +
-                            '</div>' +
-                        '</div>' +
-                        donePart +
-                    '</div>' + notePart + '</div>';
-            }).join('');
-        }
+        const taskRow = (task) => {
+            const isOverdue = task.deadlineDate && task.deadlineDate < today && task.status !== 'done' && task.status !== 'review';
+            const eff = isOverdue ? 'overdue' : (task.status || 'new');
+            const col = isOverdue ? '#ef4444' : (statusColors[task.status] || '#6b7280');
+            const asgn = usersArr.find(u => u.id === task.assigneeId);
+            const isDone = task.status === 'done';
+            return `<div style="background:white;border:1px solid #e8eaed;border-left:3px solid ${col};
+                border-radius:8px;padding:0.65rem 0.85rem;margin-bottom:0.4rem;
+                cursor:pointer;transition:box-shadow 0.15s;"
+                onclick="crmOpenFullTask('${task.id}')"
+                onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'"
+                onmouseout="this.style.boxShadow='none'">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:0.82rem;font-weight:600;color:${isDone?'#9ca3af':'#111827'};
+                            text-decoration:${isDone?'line-through':'none'};
+                            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            ${_esc(task.title||'')}
+                        </div>
+                        <div style="display:flex;gap:0.4rem;margin-top:4px;flex-wrap:wrap;align-items:center;">
+                            <span style="font-size:0.67rem;padding:1px 6px;border-radius:6px;font-weight:600;
+                                background:${col}18;color:${col};">${isOverdue?'Прострочено':(statusLabels[task.status]||task.status)}</span>
+                            ${task.deadlineDate?`<span style="font-size:0.68rem;color:${isOverdue?'#ef4444':'#9ca3af'};">📅 ${task.deadlineDate}</span>`:''}
+                            ${asgn?`<span style="font-size:0.68rem;color:#6b7280;">👤 ${_esc(asgn.name||asgn.email||'')}</span>`:''}
+                            ${task.priority==='high'?'<span style="font-size:0.67rem;color:#ef4444;font-weight:600;">🔴 Висока</span>':''}
+                            ${task.checklistTotal>0?`<span style="font-size:0.67rem;color:#6b7280;">✓ ${task.checklistDone||0}/${task.checklistTotal}</span>`:''}
+                        </div>
+                    </div>
+                    ${!isDone?`<button onclick="event.stopPropagation();crmMarkTaskDone('${task.id}')"
+                        style="padding:3px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
+                        border-radius:6px;cursor:pointer;font-size:0.7rem;font-weight:600;flex-shrink:0;white-space:nowrap;">
+                        ✓ Готово</button>`:''}
+                </div>
+                ${task.note?`<div style="font-size:0.72rem;color:#9ca3af;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${_esc((task.note||'').slice(0,100))}</div>`:''}
+            </div>`;
+        };
 
-        cnt.innerHTML = '<div style="display:flex;flex-direction:column;gap:0.75rem;">' +
-            // CRM-специфічні задачі (авто + ручні всередині угоди)
-            '<div style="background:white;border:1px solid #e8eaed;border-radius:10px;padding:0.75rem;">' +
-                '<div style="font-size:0.78rem;font-weight:700;color:#374151;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Задачі угоди</div>' +
-                '<div id="crmDealTasksList"></div>' +
-            '</div>' +
-            // Загальні задачі з таск-менеджера
-            '<div style="background:white;border:1px solid #e8eaed;border-radius:10px;padding:0.75rem;">' +
-                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">' +
-                    '<div style="font-size:0.78rem;font-weight:700;color:#374151;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Задачі з менеджера (' + dealTasks.length + ')</div>' +
-                    '<button onclick="crmCreateTaskFromDeal(\'' + deal.id + '\')" style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.6rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;">' +
-                        I.plus + ' Задача</button></div>' + rows +
-            '</div>' +
-        '</div>';
-        cnt.onclick = function(e) { const b = e.target.closest('.crm-task-done-btn'); if (b) crmMarkTaskDone(b.dataset.taskid); };
-        // Завантажуємо CRM-специфічні задачі
-        window._crmActiveDealId = deal.id;
-        if (typeof window.crmRenderDealTasks === 'function') window.crmRenderDealTasks(deal.id);
+        const openTasks = dealTasks.filter(t => t.status !== 'done');
+        const doneTasks = dealTasks.filter(t => t.status === 'done');
+
+        cnt.innerHTML = `
+            <div style="margin-bottom:0.85rem;display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-size:0.85rem;font-weight:700;color:#111827;">
+                    Завдання по угоді <span style="color:#16a34a;">${_esc(deal.clientName||deal.title||'')}</span>
+                    <span style="font-size:0.72rem;font-weight:400;color:#9ca3af;margin-left:6px;">(${dealTasks.length})</span>
+                </div>
+                <button onclick="crmCreateFullTaskForDeal('${deal.id}')"
+                    style="display:flex;align-items:center;gap:0.35rem;padding:0.45rem 0.85rem;
+                    background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;
+                    font-size:0.8rem;font-weight:600;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Нове завдання
+                </button>
+            </div>
+            <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.6rem;background:#f0fdf4;
+                border:1px solid #bbf7d0;border-radius:6px;padding:0.4rem 0.6rem;">
+                💡 Завдання автоматично з'являються в «Мій день» виконавця і в загальному списку завдань
+            </div>
+            ${openTasks.length ? openTasks.map(taskRow).join('') : '<div style="text-align:center;padding:1.5rem;background:#f8fafc;border-radius:8px;border:2px dashed #e8eaed;color:#9ca3af;font-size:0.8rem;">Завдань немає — натисніть «Нове завдання»</div>'}
+            ${doneTasks.length ? `
+            <div style="margin-top:0.75rem;">
+                <div style="font-size:0.72rem;color:#9ca3af;font-weight:600;margin-bottom:0.4rem;">
+                    ✓ Виконані (${doneTasks.length})
+                </div>
+                ${doneTasks.map(taskRow).join('')}
+            </div>` : ''}`;
+
+        cnt.onclick = function(e) {
+            const b = e.target.closest('.crm-task-done-btn');
+            if (b) crmMarkTaskDone(b.dataset.taskid);
+        };
+
     } catch(e) {
-        if (cnt) cnt.innerHTML = '<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ' + _esc(e.message) + '</div>';
+        if (cnt) cnt.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ${_esc(e.message)}</div>`;
+    }
+}
+
+// ── Таб "Файли" в карточці угоди ───────────────────────────
+function _loadFilesTab(deal) {
+    const cnt = document.getElementById('crmDealContent');
+    if (!cnt) return;
+    cnt.innerHTML = `
+        <div style="margin-bottom:0.75rem;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:0.85rem;font-weight:700;color:#111827;">📎 Файли угоди</div>
+            <div style="font-size:0.72rem;color:#9ca3af;">PDF, DOC, XLSX, зображення — до 20 MB</div>
+        </div>
+        <div id="crmDealFilesList"></div>`;
+    if (typeof window.crmRenderDealFiles === 'function') {
+        window.crmRenderDealFiles(deal.id);
     }
 }
 
@@ -5463,6 +5513,62 @@ window.crmSaveTaskFromDeal = async function(dealId) {
     } catch(e) {
         if(window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
         console.error('[CRM] crmSaveTaskFromDeal:', e.message);
+    }
+};
+
+// ── Повноцінне завдання платформи з контекстом угоди ───────
+// Відкриває стандартний openAddTask() і передає crmDealId + clientName
+// Завдання автоматично потрапляє в "Мій день" виконавця
+window.crmCreateFullTaskForDeal = function(dealId) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+
+    if (typeof openAddTask !== 'function') {
+        // Fallback якщо openAddTask не доступна — використовуємо старий метод
+        if (typeof window.crmCreateTaskFromDeal === 'function') {
+            window.crmCreateTaskFromDeal(dealId);
+        }
+        return;
+    }
+
+    // Зберігаємо контекст угоди — openAddTask зчитає ці дані
+    window._crmTaskContext = {
+        dealId,
+        dealTitle:  deal.title || deal.clientName || '',
+        clientName: deal.clientName || '',
+    };
+
+    // Закриваємо панель угоди щоб модал задачі не перекривався
+    crmCloseDeal();
+
+    // Відкриваємо повний модал завдання
+    openAddTask();
+
+    // Через 200ms заповнюємо поля якщо вони порожні
+    if (window._crmTaskFillTimer) clearTimeout(window._crmTaskFillTimer);
+    window._crmTaskFillTimer = setTimeout(() => {
+        window._crmTaskFillTimer = null;
+        if (window._crmTaskContext?.dealId !== dealId) return;
+
+        const titleEl = document.getElementById('taskTitle') || document.getElementById('newTaskTitle');
+        if (titleEl && !titleEl.value) {
+            const stageName = (crm.pipeline?.stages||[]).find(s => s.id === deal.stage)?.label || '';
+            titleEl.value = `[${deal.clientName || deal.title || 'CRM'}]${stageName ? ' — ' + stageName : ''}`;
+        }
+
+        const noteEl = document.getElementById('taskNote') || document.getElementById('taskDescription');
+        if (noteEl && !noteEl.value && deal.note) {
+            noteEl.value = deal.note;
+        }
+    }, 200);
+};
+
+// Відкриває існуюче завдання через openTaskModal якщо доступно
+window.crmOpenFullTask = function(taskId) {
+    if (typeof openTaskModal === 'function') {
+        openTaskModal(taskId);
+    } else if (typeof window.openTask === 'function') {
+        window.openTask(taskId);
     }
 };
 
