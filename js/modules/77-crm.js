@@ -3106,7 +3106,7 @@ async function _loadAITab(deal) {
             Вероятность закрытия • Риски • Следующий шаг • Текст сообщения
         </div>
         ${ctx.length ? `<div style="background:#f8fafc;border-radius:8px;padding:0.65rem;margin-bottom:1rem;text-align:left;">
-            ${ctx.map(c=>`<div style="font-size:0.75rem;color:#6b7280;margin-bottom:3px;">${_esc(c)}</div>`).join('')}
+            ${ctx.map(c=>`<div style="font-size:0.75rem;color:#6b7280;margin-bottom:3px;">${c}</div>`).join('')}
         </div>` : ''}
         <button onclick="crmRunAI('${deal.id}')"
             style="padding:0.65rem 1.75rem;background:#22c55e;color:white;border:none;
