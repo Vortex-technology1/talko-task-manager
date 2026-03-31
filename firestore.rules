@@ -439,6 +439,11 @@ service cloud.firestore {
             (isCompanyMember(companyId) && resource.data.assigneeId == userId());
           allow delete: if isManagerOrOwner(companyId);
         }
+        match /files/{fileId} {
+          allow read: if isCompanyMember(companyId);
+          allow create: if isCompanyMember(companyId);
+          allow delete: if isManagerOrOwner(companyId);
+        }
       }
 
       // CRM — PIPELINES
