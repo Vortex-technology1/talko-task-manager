@@ -307,6 +307,16 @@ async function handleAiProxy(request, env) {
 
     if (!apiKey) return json({error:'No AI API key configured'},500);
 
+    // FIX: нормалізуємо модель під провайдера — не можна відправити gpt-* на Anthropic
+    const isGptModel = finalModel && finalModel.startsWith('gpt');
+    const isClaudeModel = finalModel && finalModel.startsWith('claude');
+    if (provider === 'anthropic' && isGptModel) {
+        finalModel = 'claude-haiku-4-5-20251001'; // fallback для Anthropic
+    }
+    if (provider === 'openai' && isClaudeModel) {
+        finalModel = 'gpt-4o-mini'; // fallback для OpenAI
+    }
+
     // Clean messages — remove null content
     const cleanMessages = messages
         .filter(m => m && m.role && m.content != null && m.content !== '')

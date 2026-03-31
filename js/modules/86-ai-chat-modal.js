@@ -9,13 +9,15 @@ let _chatHistory = [];       // [{role, content}]
 let _chatModule  = '';       // 'statistics' | 'coordination'
 let _chatContext = '';       // початковий контекст (метрики / патерни)
 let _chatSystemPrompt = null;
+let _chatMaxTokens = 1200;   // FIX: зберігаємо maxTokens між викликами
 
 // ── Відкрити чат ─────────────────────────────────────────────
-window.openAiChat = function({ module, contextText, systemPrompt, title, initialMessage }) {
+window.openAiChat = function({ module, contextText, systemPrompt, title, initialMessage, maxTokens }) {
     _chatHistory    = [];
     _chatModule     = module;
     _chatContext    = contextText || '';
     _chatSystemPrompt = systemPrompt || null;
+    _chatMaxTokens  = maxTokens || 1200; // FIX: зберігаємо для всіх наступних викликів
 
     // Видаляємо старий якщо є
     document.getElementById('aiChatOverlay')?.remove();
@@ -107,8 +109,8 @@ async function _callAI() {
         const reply = await window.aiProxy({
             messages:     messages,
             systemPrompt: _chatSystemPrompt,
-            model:        'gpt-4o-mini',
-            maxTokens:    1200,
+            model:        'claude-haiku-4-5-20251001', // FIX: Anthropic модель замість gpt-4o-mini
+            maxTokens:    _chatMaxTokens,              // FIX: передаємо збережений maxTokens
             module:       _chatModule,
         });
 

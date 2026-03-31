@@ -1448,9 +1448,26 @@
     //  AI ANALYSIS — FULL MULTI-PERIOD
     // ========================
     async function runAIAnalysis() {
+        // FIX: перевіряємо що метрики завантажені
+        if (!Array.isArray(statsMetrics)) {
+            showToast('Дані метрик ще завантажуються. Зачекайте секунду.', 'warning');
+            return;
+        }
+
         let vis = statsMetrics.filter(m => canViewMetric(m));
         if (!vis.length) vis = statsMetrics;
-        if (!vis.length) { showToast('Немає метрик для аналізу. Спочатку додайте метрики.', 'error'); return; }
+        if (!vis.length) {
+            showToast('Немає метрик для аналізу. Спочатку додайте метрики в розділі «Статистика».', 'error');
+            return;
+        }
+
+        // FIX: показуємо індикатор завантаження на кнопці
+        const aiBtn = document.querySelector('button[onclick*="runAIAnalysis"]');
+        const origBtnText = aiBtn?.innerHTML;
+        if (aiBtn) {
+            aiBtn.disabled = true;
+            aiBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Аналізую...';
+        }
 
         // Збираємо дані по ВСІХ частотах і ВСІХ доступних періодах
         const freqs = ['monthly', 'weekly', 'daily'];
@@ -1533,14 +1550,22 @@
             'Визнач вузькі місця, причинно-наслідкові зв\'язки, передбач майбутні ризики, ' +
             'запропонуй 3 варіанти рішень з плюсами/мінусами та сценарним плануванням рентабельності.';
 
-        window.openAiChat({
-            module:         'statistics',
-            title:          window.t('aiMetricsAnalysis'),
-            contextText:    contextText,
-            systemPrompt:   null,
-            initialMessage: initialMessage,
-            maxTokens:      4000,
-        });
+        try {
+            window.openAiChat({
+                module:         'statistics',
+                title:          window.t('aiMetricsAnalysis') || 'AI Аналіз метрик',
+                contextText:    contextText,
+                systemPrompt:   null,
+                initialMessage: initialMessage,
+                maxTokens:      4000,
+            });
+        } finally {
+            // Відновлюємо кнопку
+            if (aiBtn && origBtnText) {
+                aiBtn.disabled = false;
+                aiBtn.innerHTML = origBtnText;
+            }
+        }
     }
 
     // ========================
