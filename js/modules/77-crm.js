@@ -1847,7 +1847,7 @@ window.crmOpenDeal = function(dealId) {
         <div id="crmDealChatPane" style="display:none;${_isMob
             ? 'width:100%;height:65vh;border-top:1px solid #e8eaed;flex-shrink:0;'
             : 'width:380px;min-width:320px;max-width:45vw;border-left:1px solid #e8eaed;flex-shrink:0;'}
-            background:#f8fafc;display:flex;flex-direction:column;overflow:hidden;">
+            background:#f8fafc;flex-direction:column;overflow:hidden;">
             <div id="chatMsgHeader_crmdeal"
                 style="padding:0.75rem 1rem;border-bottom:1px solid #e8eaed;
                 display:flex;align-items:center;gap:0.5rem;background:white;flex-shrink:0;min-height:56px;"></div>
