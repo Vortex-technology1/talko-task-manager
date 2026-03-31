@@ -3595,6 +3595,11 @@ window.crmOpenClient = function(clientId) {
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 Чат
             </button>` : ''}
+            <button onclick="crmEditClient('${cl.id}')"
+                style="padding:0.45rem 0.65rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                ${_tg('Ред.','Ред.')}
+            </button>
             <button onclick="crmDeleteClient('${cl.id}')"
                 style="padding:0.45rem 0.65rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;
                 border-radius:7px;cursor:pointer;font-size:0.78rem;">
@@ -3679,6 +3684,122 @@ window.crmNewDealFromClient = function(clientName, clientId) {
         if (lnkN) lnkN.textContent = clientName;
         if (lnk)  lnk.style.display = 'block';
     }, 50);
+};
+
+window.crmEditClient = function(clientId) {
+    const cl = crm.clients.find(c => c.id === clientId);
+    if (!cl) return;
+
+    document.getElementById('crmEditClientOverlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'crmEditClientOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10050;display:flex;align-items:center;justify-content:center;padding:1rem;';
+
+    const inp = 'width:100%;padding:0.5rem 0.65rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;font-family:inherit;outline:none;';
+
+    overlay.innerHTML = `
+        <div style="background:white;border-radius:14px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;">
+                <div style="font-size:0.95rem;font-weight:700;color:#111827;">${_tg('Редагувати контакт','Редактировать контакт')}</div>
+                <button onclick="document.getElementById('crmEditClientOverlay').remove()"
+                    style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;padding:0.25rem;">✕</button>
+            </div>
+            <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
+                <div>
+                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg("Ім'я *","Имя *")}</label>
+                    <input id="eci_name" style="${inp}" value="${_esc(cl.name||'')}" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Телефон','Телефон')}</label>
+                    <input id="eci_phone" style="${inp}" value="${_esc(cl.phone||'')}" placeholder="+380..." onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Email</label>
+                    <input id="eci_email" style="${inp}" value="${_esc(cl.email||'')}" placeholder="email@example.com" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Telegram</label>
+                    <input id="eci_telegram" style="${inp}" value="${_esc(cl.telegram||'')}" placeholder="@username" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Ніша / Сфера','Ниша / Сфера')}</label>
+                    <input id="eci_niche" style="${inp}" value="${_esc(cl.niche||cl.clientNiche||'')}" placeholder="${_tg('Наприклад: будівництво','Например: строительство')}" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Нотатка','Заметка')}</label>
+                    <textarea id="eci_note" rows="3" style="${inp}resize:vertical;" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">${_esc(cl.note||'')}</textarea>
+                </div>
+                <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
+                    <button onclick="document.getElementById('crmEditClientOverlay').remove()"
+                        style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;color:#6b7280;">
+                        ${_tg('Скасувати','Отменить')}
+                    </button>
+                    <button onclick="crmSaveClientEdit('${clientId}')"
+                        style="flex:2;padding:0.6rem;border:none;border-radius:8px;background:#22c55e;color:white;cursor:pointer;font-size:0.85rem;font-weight:700;">
+                        ${_tg('Зберегти','Сохранить')}
+                    </button>
+                </div>
+            </div>
+        </div>`;
+
+    document.body.appendChild(overlay);
+    setTimeout(() => document.getElementById('eci_name')?.focus(), 100);
+};
+
+window.crmSaveClientEdit = async function(clientId) {
+    const name  = document.getElementById('eci_name')?.value.trim();
+    const phone = document.getElementById('eci_phone')?.value.trim();
+    const email = document.getElementById('eci_email')?.value.trim();
+    const telegram = document.getElementById('eci_telegram')?.value.trim();
+    const niche = document.getElementById('eci_niche')?.value.trim();
+    const note  = document.getElementById('eci_note')?.value.trim();
+
+    if (!name && !phone) {
+        if (window.showToast) showToast(_tg("Введіть ім'я або телефон", 'Введите имя или телефон'), 'error');
+        return;
+    }
+
+    const btn = document.querySelector('#crmEditClientOverlay button[onclick*="crmSaveClientEdit"]');
+    if (btn) { btn.disabled = true; btn.textContent = _tg('Збереження...', 'Сохранение...'); }
+
+    try {
+        const updates = {
+            name:    name  || '',
+            phone:   phone || '',
+            email:   email || '',
+            telegram: telegram || '',
+            niche:   niche || '',
+            clientNiche: niche || '',
+            note:    note  || '',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        // Прибираємо порожні поля
+        Object.keys(updates).forEach(k => {
+            if (updates[k] === '' && k !== 'name' && k !== 'phone') delete updates[k];
+        });
+
+        await window.companyRef()
+            .collection(window.DB_COLS.CRM_CLIENTS)
+            .doc(clientId)
+            .update(updates);
+
+        // Оновлюємо локально
+        const idx = crm.clients.findIndex(c => c.id === clientId);
+        if (idx >= 0) Object.assign(crm.clients[idx], updates);
+
+        document.getElementById('crmEditClientOverlay')?.remove();
+        if (window.showToast) showToast(_tg('Контакт оновлено', 'Контакт обновлён'), 'success');
+
+        // Оновлюємо карточку клієнта
+        if (typeof window.crmOpenClient === 'function') {
+            window.crmOpenClient(clientId);
+        }
+    } catch(e) {
+        if (window.showToast) showToast(_tg('Помилка: ', 'Ошибка: ') + e.message, 'error');
+        if (btn) { btn.disabled = false; btn.textContent = _tg('Зберегти', 'Сохранить'); }
+    }
 };
 
 window.crmDeleteClient = async function(clientId) {
