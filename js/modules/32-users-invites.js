@@ -712,19 +712,19 @@
 
             // Заповнюємо чекбокси allowedTabs
             const ALL_MODULES = [
-                { key: 'myday',       label: '📅 Мой день' },
-                { key: 'tasks',       label: '✅ Задачи' },
-                { key: 'projects',    label: '📁 Проекты' },
-                { key: 'processes',   label: '⚙️ Процессы' },
-                { key: 'warehouse',   label: '📦 Склад' },
-                { key: 'crm',         label: '🤝 CRM' },
-                { key: 'finance',     label: '💰 Финансы' },
-                { key: 'control',     label: '🎯 Контроль' },
-                { key: 'regular',     label: '🔁 Регулярные' },
-                { key: 'booking',     label: '📆 Запись' },
-                { key: 'sales',       label: '🚗 Продажи' },
-                { key: 'estimate',    label: '📋 Смета' },
-                { key: 'learning',    label: '🎓 Навчання' },
+                { key: 'myday',       label: 'Мій день' },
+                { key: 'tasks',       label: 'Задачі' },
+                { key: 'projects',    label: 'Проєкти' },
+                { key: 'processes',   label: 'Процеси' },
+                { key: 'warehouse',   label: 'Склад' },
+                { key: 'crm',         label: 'CRM' },
+                { key: 'finance',     label: 'Фінанси' },
+                { key: 'control',     label: 'Контроль' },
+                { key: 'regular',     label: 'Регулярні' },
+                { key: 'booking',     label: 'Запис' },
+                { key: 'sales',       label: 'Продажі' },
+                { key: 'estimate',    label: 'Кошторис' },
+                { key: 'learning',    label: 'Навчання' },
             ];
             const tabsContainer = document.getElementById('allowedTabsCheckboxes');
             const tabsGroup = document.getElementById('allowedTabsGroup');
