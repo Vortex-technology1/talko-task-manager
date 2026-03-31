@@ -4467,14 +4467,44 @@ function _renderActivitiesUI(c, allActivities) {
 function _renderAnalytics() {
     const c = document.getElementById('crmViewAnalytics');
     if (!c) return;
-    const stages   = crm.pipeline?.stages || [];
-    const total    = crm.deals.length;
+    const stages = crm.pipeline?.stages || [];
+
+    // ── Фільтри аналітики ─────────────────────────────────
+    const _af = crm._analyticsFilters || {};
+    const _afFrom     = _af.dateFrom || '';
+    const _afTo       = _af.dateTo   || '';
+    const _afManager  = _af.manager  || '';
+    const _afPeriod   = _af.period   || 'all';
+
+    // Застосовуємо фільтри до ВСІХ угод (не тільки leads report)
+    const _now = Date.now();
+    const _periodMs = { '7': 7*86400000, '30': 30*86400000, '90': 90*86400000, '365': 365*86400000 };
+    const _deals = crm.deals.filter(d => {
+        // Фільтр менеджера
+        if (_afManager && d.assigneeId !== _afManager) return false;
+        // Фільтр дати (по createdAt)
+        if (_afPeriod !== 'all' && _afPeriod !== 'custom') {
+            const ms = _periodMs[_afPeriod];
+            if (ms) {
+                const ts = d.createdAt?.toMillis?.() || (d.createdAt ? new Date(d.createdAt).getTime() : 0);
+                if (ts && ts < _now - ms) return false;
+            }
+        }
+        if (_afPeriod === 'custom') {
+            const ts = d.createdAt?.toMillis?.() || (d.createdAt ? new Date(d.createdAt).getTime() : 0);
+            if (_afFrom && ts < new Date(_afFrom).getTime()) return false;
+            if (_afTo   && ts > new Date(_afTo).getTime() + 86400000) return false;
+        }
+        return true;
+    });
+
+    const total = _deals.length;
 
     // PERF FIX: один прохід замість 4 окремих filter/reduce для won/lost/revenue/byStage
     const _stageCountMap = {}; // { stageId: { count, amount } }
     stages.forEach(s => { _stageCountMap[s.id] = { count: 0, amount: 0 }; });
     let won = 0, lost = 0, revenue = 0;
-    crm.deals.forEach(d => {
+    _deals.forEach(d => {
         if (d.stage === 'won')  { won++;  revenue += d.amount || 0; }
         else if (d.stage === 'lost') { lost++; }
         if (_stageCountMap[d.stage]) {
@@ -4487,7 +4517,7 @@ function _renderAnalytics() {
     const conv     = closed > 0 ? Math.round(won/closed*100) : 0;
 
     // Deal Velocity — середній час від створення до виграшу (в днях)
-    const wonDeals = crm.deals.filter(d => d.stage === 'won' && d.createdAt && d.wonAt);
+    const wonDeals = _deals.filter(d => d.stage === 'won' && d.createdAt && d.wonAt);
     const avgVelocity = wonDeals.length > 0
         ? Math.round(wonDeals.reduce((s, d) => {
             const created = d.createdAt?.toMillis?.() || 0;
@@ -4496,15 +4526,15 @@ function _renderAnalytics() {
         }, 0) / wonDeals.length)
         : 0;
 
-    // Revenue Forecast — активні угоди × середня конверсія
-    const activeAmount = crm.deals
+    // Revenue Forecast — активні угоди × ймовірність
+    const activeAmount = _deals
         .filter(d => d.stage !== 'won' && d.stage !== 'lost')
         .reduce((s, d) => s + (d.amount || 0) * ((d.probability || 10) / 100), 0);
     const forecast = Math.round(activeAmount);
 
     // Source analytics
     const bySource = {};
-    crm.deals.forEach(d => {
+    _deals.forEach(d => {
         const src = d.source || 'manual';
         if (!bySource[src]) bySource[src] = { count: 0, won: 0, amount: 0 };
         bySource[src].count++;
@@ -4521,7 +4551,7 @@ function _renderAnalytics() {
         [_tg('Прогноз','Прогноз'), _fmt(forecast, true), '#f59e0b'],
     ];
 
-    // IMP 2 FIX: один прохід по crm.deals замість 4×6=24
+    // Місяці — один прохід
     const _dealDate = (dl, field) => {
         const ts = dl[field];
         return ts?.toDate ? ts.toDate() : (ts ? new Date(ts) : null);
@@ -4535,10 +4565,9 @@ function _renderAnalytics() {
             label: d.toLocaleString('uk-UA', { month: 'short' }),
         });
     }
-    // Один groupBy прохід
     const monthMap = {};
     monthKeys.forEach(({ key }) => { monthMap[key] = { newDeals:0, wonDeals:0, lostDeals:0, wonRevenue:0 }; });
-    crm.deals.forEach(dl => {
+    _deals.forEach(dl => {
         const createdKey = (_dealDate(dl,'createdAt') || new Date(0)).toISOString().slice(0,7);
         if (monthMap[createdKey]) monthMap[createdKey].newDeals++;
         if (dl.stage === 'won') {
@@ -4553,22 +4582,22 @@ function _renderAnalytics() {
     const maxBar = Math.max(...months.map(m => Math.max(m.newDeals, m.wonDeals, m.lostDeals)), 1);
     const maxRev = Math.max(...months.map(m => m.wonRevenue), 1);
 
-    // По стадіях — беремо з вже порахованого _stageCountMap (без повторних filter)
+    // По стадіях
     const byStage = stages.map(s => ({
         ...s,
         count:  (_stageCountMap[s.id] || {}).count  || 0,
         amount: (_stageCountMap[s.id] || {}).amount || 0,
     }));
 
-    // ${_tg('Джерела лідів','Источники лидов')} — для пай-чарту
-    const sources = crm.deals.reduce((acc, d) => { const src=d.source||'manual'; acc[src]=(acc[src]||0)+1; return acc; }, {});
+    // Джерела
+    const sources = _deals.reduce((acc, d) => { const src=d.source||'manual'; acc[src]=(acc[src]||0)+1; return acc; }, {});
     const srcColors = { telegram:'#3b82f6', instagram:'#e879f9', site_form:'#22c55e', manual:'#f59e0b' };
     const srcLabels = { telegram:'Telegram', instagram:'Instagram', site_form:window.t('sitesSite'), manual:window.t('crmManual') };
     const totalSrc = Object.values(sources).reduce((s,v)=>s+v, 0) || 1;
 
-    // KPI менеджерів — won, lost, active, conversion, revenue
+    // KPI менеджерів
     const byUser = {};
-    crm.deals.forEach(d => {
+    _deals.forEach(d => {
         const uid = d.assigneeId || d.creatorId || 'unknown';
         if (!byUser[uid]) byUser[uid] = { uid, amount:0, won:0, lost:0, active:0 };
         if (d.stage==='won')  { byUser[uid].amount += d.amount||0; byUser[uid].won++; }
@@ -4589,7 +4618,7 @@ function _renderAnalytics() {
     const maxMgr = topManagers[0]?.amount || 1;
 
     // Причини програшу
-    const lostDealsAll = crm.deals.filter(function(d){ return d.stage === 'lost'; });
+    const lostDealsAll = _deals.filter(function(d){ return d.stage === 'lost'; });
     const lostByReason = {};
     lostDealsAll.forEach(function(d) {
         const r = d.lostReasonLabel || d.lostReason || window.t('notSpecified');
@@ -4603,8 +4632,8 @@ function _renderAnalytics() {
     const _leadsReportPeriod = crm._leadsReportPeriod || '7';
     const _leadsReportFrom   = crm._leadsReportFrom   || '';
     const _leadsReportTo     = crm._leadsReportTo     || '';
-    const _now = Date.now();
-    const _periodMs = {
+    const _leadsNow = Date.now();
+    const _leadsPeriodMs = {
         '7':  7  * 86400000,
         '14': 14 * 86400000,
         '30': 30 * 86400000,
@@ -4615,10 +4644,10 @@ function _renderAnalytics() {
         const ts = d.createdAt?.toMillis?.() || new Date(d.createdAt).getTime() || 0;
         if (_leadsReportPeriod === 'custom') {
             const from = _leadsReportFrom ? new Date(_leadsReportFrom).getTime() : 0;
-            const to   = _leadsReportTo   ? new Date(_leadsReportTo).getTime() + 86400000 : _now;
+            const to   = _leadsReportTo   ? new Date(_leadsReportTo).getTime() + 86400000 : _leadsNow;
             return ts >= from && ts <= to;
         }
-        return ts >= _now - (_periodMs[_leadsReportPeriod] || 7 * 86400000);
+        return ts >= _leadsNow - (_leadsPeriodMs[_leadsReportPeriod] || 7 * 86400000);
     });
     // Групуємо по source + niche
     const _bySourceNiche = {};
@@ -4636,7 +4665,7 @@ function _renderAnalytics() {
     c.innerHTML = `
     <div style="padding-bottom:2rem;display:flex;flex-direction:column;gap:0.75rem;">
 
-        <!-- Sub-nav: Огляд | Зріз по нішах + Period picker -->
+        <!-- Sub-nav: Огляд | Зріз по нішах + Фільтри -->
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
           <div style="display:flex;gap:6px;background:#f4f5f7;border-radius:10px;padding:4px;">
             <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;background:#6366f1;color:white;">
@@ -4647,21 +4676,37 @@ function _renderAnalytics() {
               ${window.t('crmSliceByNiches')}
             </button>
           </div>
-          <!-- Фільтр: з ... до -->
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-size:.75rem;color:#6b7280;font-weight:600;">З</span>
-            <input type="date" value="${_leadsReportFrom}"
-              onchange="crm._leadsReportPeriod='custom';crm._leadsReportFrom=this.value;_renderAnalytics();"
+          <!-- Фільтри аналітики: менеджер + період -->
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <select onchange="crm._analyticsFilters=crm._analyticsFilters||{};crm._analyticsFilters.manager=this.value;_renderAnalytics();"
+              style="border:1.5px solid #e5e7eb;border-radius:7px;padding:4px 8px;font-size:.78rem;color:#374151;cursor:pointer;outline:none;background:white;">
+              <option value="">👤 Всі менеджери</option>
+              ${(window.users||[]).filter(u=>u.role!=='guest').map(u=>`<option value="${u.id}" ${_afManager===u.id?'selected':''}>${u.name||u.email}</option>`).join('')}
+            </select>
+            <select onchange="crm._analyticsFilters=crm._analyticsFilters||{};crm._analyticsFilters.period=this.value;if(this.value!=='custom'){crm._analyticsFilters.dateFrom='';crm._analyticsFilters.dateTo='';}; _renderAnalytics();"
+              style="border:1.5px solid #e5e7eb;border-radius:7px;padding:4px 8px;font-size:.78rem;color:#374151;cursor:pointer;outline:none;background:white;">
+              <option value="all"   ${_afPeriod==='all'   ?'selected':''}>📅 Весь час</option>
+              <option value="7"     ${_afPeriod==='7'     ?'selected':''}>7 днів</option>
+              <option value="30"    ${_afPeriod==='30'    ?'selected':''}>30 днів</option>
+              <option value="90"    ${_afPeriod==='90'    ?'selected':''}>90 днів</option>
+              <option value="365"   ${_afPeriod==='365'   ?'selected':''}>Рік</option>
+              <option value="custom"${_afPeriod==='custom'?'selected':''}>Свій діапазон</option>
+            </select>
+            ${_afPeriod === 'custom' ? `
+            <input type="date" value="${_afFrom}"
+              onchange="crm._analyticsFilters=crm._analyticsFilters||{};crm._analyticsFilters.dateFrom=this.value;_renderAnalytics();"
               style="border:1.5px solid #e5e7eb;border-radius:7px;padding:4px 8px;font-size:.78rem;color:#374151;cursor:pointer;outline:none;">
             <span style="font-size:.75rem;color:#9ca3af;">—</span>
-            <span style="font-size:.75rem;color:#6b7280;font-weight:600;">${_tg('До','До')}</span>
-            <input type="date" value="${_leadsReportTo}"
-              onchange="crm._leadsReportPeriod='custom';crm._leadsReportTo=this.value;_renderAnalytics();"
+            <input type="date" value="${_afTo}"
+              onchange="crm._analyticsFilters=crm._analyticsFilters||{};crm._analyticsFilters.dateTo=this.value;_renderAnalytics();"
               style="border:1.5px solid #e5e7eb;border-radius:7px;padding:4px 8px;font-size:.78rem;color:#374151;cursor:pointer;outline:none;">
-            ${(_leadsReportFrom||_leadsReportTo) ? `<button onclick="crm._leadsReportPeriod='7';crm._leadsReportFrom='';crm._leadsReportTo='';_renderAnalytics();"
-              style="padding:3px 8px;border:1px solid #fecaca;border-radius:6px;background:#fef2f2;color:#dc2626;font-size:.72rem;cursor:pointer;">×</button>` : ''}
+            ` : ''}
+            ${(_afManager||_afPeriod!=='all') ? `<button onclick="crm._analyticsFilters={};_renderAnalytics();"
+              style="padding:3px 8px;border:1px solid #fecaca;border-radius:6px;background:#fef2f2;color:#dc2626;font-size:.72rem;cursor:pointer;">× Скинути</button>` : ''}
           </div>
         </div>
+        ${(_afManager||_afPeriod!=='all') ? `<div style="font-size:0.75rem;color:#6366f1;background:#eef2ff;border-radius:7px;padding:4px 10px;margin-bottom:2px;">
+          Показано: <b>${total}</b> угод${_afManager ? ` · ${(window.users||[]).find(u=>u.id===_afManager)?.name||'менеджер'}` : ''}${_afPeriod!=='all'?` · ${_afPeriod==='custom'?`${_afFrom||'...'} — ${_afTo||'...'}`:_afPeriod+' дн'}`:''}</div>` : ''}
 
         <!-- KPI картки -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;">
@@ -4671,6 +4716,32 @@ function _renderAnalytics() {
                 <div style="font-size:0.69rem;color:#9ca3af;margin-top:2px;">${l}</div>
             </div>`).join('')}
         </div>
+
+        ${(() => {
+            const goal = window.currentCompanyData?.crmMonthlyGoal || 0;
+            if (!goal) return '';
+            const now2 = new Date();
+            const monthStart = new Date(now2.getFullYear(), now2.getMonth(), 1);
+            const monthRevenue = _deals.filter(d => {
+                if (d.stage !== 'won') return false;
+                const wt = d.wonAt?.toDate ? d.wonAt.toDate() : (d.wonAt ? new Date(d.wonAt) : null);
+                return wt && wt >= monthStart;
+            }).reduce((s, d) => s + (d.amount || 0), 0);
+            const pct = Math.min(Math.round(monthRevenue / goal * 100), 100);
+            const color = pct >= 100 ? '#22c55e' : pct >= 70 ? '#f59e0b' : '#ef4444';
+            return `<div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                    <span style="font-size:0.82rem;font-weight:700;color:#111827;">🎯 План місяця</span>
+                    <span style="font-size:0.82rem;font-weight:700;color:${color};">${_fmt(monthRevenue)} / ${_fmt(goal)} (${pct}%)</span>
+                </div>
+                <div style="background:#f3f4f6;border-radius:8px;height:10px;overflow:hidden;">
+                    <div style="height:100%;background:${color};border-radius:8px;width:${pct}%;transition:width 0.3s;"></div>
+                </div>
+                <div style="font-size:0.7rem;color:#9ca3af;margin-top:4px;">
+                    ${pct >= 100 ? '✅ План виконано!' : `Залишилось: ${_fmt(goal - monthRevenue)}`}
+                </div>
+            </div>`;
+        })()}
 
         <!-- Барчарт: Нових / Виграно / Програно по місяцях -->
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
@@ -5391,6 +5462,23 @@ function _renderCRMSettings() {
             }).join('')}
         </div>
 
+        <!-- Місячний план продажів -->
+        <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
+            <div style="${sectionTitle}">🎯 Місячний план продажів</div>
+            <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.75rem;">Встановіть план — в аналітиці з'явиться прогрес-бар "план vs факт"</div>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+                <input id="crmMonthlyGoalInput" type="number" min="0" step="1000"
+                    value="${window.currentCompanyData?.crmMonthlyGoal || ''}"
+                    placeholder="напр. 500000"
+                    style="flex:1;padding:0.5rem 0.65rem;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.85rem;">
+                <span style="font-size:0.85rem;color:#6b7280;">₴ / міс</span>
+                <button onclick="crmSaveMonthlyGoal()"
+                    style="padding:0.5rem 1rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
+                    Зберегти
+                </button>
+            </div>
+        </div>
+
         <!-- Права доступу менеджерів (lazy) -->
         <div id="crmSettingsAccessBlock"></div>
 
@@ -5690,6 +5778,17 @@ window.crmRemoveStage = async function(stageId) {
     }
     crm.pipeline.stages = crm.pipeline.stages.filter(s => s.id !== stageId);
     _renderCRMSettings();
+};
+
+window.crmSaveMonthlyGoal = async function() {
+    const val = parseInt(document.getElementById('crmMonthlyGoalInput')?.value) || 0;
+    try {
+        await window.companyRef().update({ crmMonthlyGoal: val });
+        if (window.currentCompanyData) window.currentCompanyData.crmMonthlyGoal = val;
+        if (typeof showToast === 'function') showToast('План збережено: ' + val.toLocaleString() + ' ₴', 'success');
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
 };
 
 window.crmSaveStages = async function() {
