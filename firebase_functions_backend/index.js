@@ -67,7 +67,7 @@ const TG_LANG = {
         crmContact: '📅 Контакт',
         crmMoreDeals: 'угод',
         crmOverdue: '⚠️ Прострочено (мав бути',
-        helpMenu: '📖 <b>TALKO Tasks — команди:</b>\n\n/today — завдання на сьогодні\n/overdue — прострочені завдання\n/weekly — звіт за тиждень\n/team — статус команди\n/lang — мова сповіщень\n/connect — підключити email\n/help — ця довідка',
+        helpMenu: '📖 <b>TALKO Tasks — команди:</b>\n\n/today — завдання на сьогодні\n/overdue — прострочені завдання\n/task @імя Назва | дата — поставити завдання\n/weekly — звіт за тиждень\n/team — статус команди\n/lang — мова сповіщень\n/help — ця довідка',
         langChanged: '✅ 🇺🇦 Українська — мову встановлено!\n\nВсі наступні сповіщення будуть українською.',
         weeklyReport: '📊 <b>Тижневий звіт</b>\n\n✅ Виконано',
         weeklyInProgress: '🔄 В роботі',
@@ -173,7 +173,7 @@ const TG_LANG = {
         crmContact: '📅 Контакт',
         crmMoreDeals: 'сделок',
         crmOverdue: '⚠️ Просрочено (должен был быть',
-        helpMenu: '📖 <b>TALKO Tasks — команды:</b>\n\n/today — задачи на сегодня\n/overdue — просроченные задачи\n/weekly — отчёт за неделю\n/team — статус команды\n/lang — язык уведомлений\n/connect — подключить email\n/help — эта справка',
+        helpMenu: '📖 <b>TALKO Tasks — команды:</b>\n\n/today — задачи на сегодня\n/overdue — просроченные задачи\n/task @имя Название | дата — поставить задачу\n/weekly — отчёт за неделю\n/team — статус команды\n/lang — язык уведомлений\n/help — эта справка',
         langChanged: '✅ 🇷🇺 Русский — язык установлен!\n\nВсе следующие уведомления будут на русском.',
         weeklyReport: '📊 <b>Недельный отчёт</b>\n\n✅ Выполнено',
         weeklyInProgress: '🔄 В работе',
@@ -279,7 +279,7 @@ const TG_LANG = {
         crmContact: '📅 Contact',
         crmMoreDeals: 'deals',
         crmOverdue: '⚠️ Overdue (was due',
-        helpMenu: '📖 <b>TALKO Tasks — commands:</b>\n\n/today — tasks for today\n/overdue — overdue tasks\n/weekly — weekly report\n/team — team status\n/lang — notification language\n/connect — connect email\n/help — this help',
+        helpMenu: '📖 <b>TALKO Tasks — commands:</b>\n\n/today — tasks for today\n/overdue — overdue tasks\n/task @name Title | date — create task\n/weekly — weekly report\n/team — team status\n/lang — notification language\n/help — this help',
         langChanged: '✅ 🇬🇧 English — language set!\n\nAll future notifications will be in English.',
         weeklyReport: '📊 <b>Weekly report</b>\n\n✅ Completed',
         weeklyInProgress: '🔄 In progress',
@@ -1356,6 +1356,113 @@ exports.telegramWebhook = functions
                 }
             } else if (text === '/team') {
                 await sendTelegramMessage(chatId, tg('ua', 'teamOnlyForManagers'));
+            } else if (text.startsWith('/task') || text.startsWith('/завдання')) {
+                // Lookup відправника
+                let senderCid = null, senderUid = null;
+                const sIdx = await db.collection('telegramIndex').doc('chat_' + chatId.toString()).get();
+                if (sIdx.exists) { const d = sIdx.data(); senderCid = d.companyId; senderUid = d.userId; }
+                if (!senderCid || !senderUid) {
+                    const snap = await db.collectionGroup('users').where('telegramChatId', '==', chatId.toString()).limit(1).get();
+                    if (!snap.empty) { senderUid = snap.docs[0].id; senderCid = snap.docs[0].ref.parent.parent.id; }
+                }
+                if (!senderCid || !senderUid) {
+                    await sendTelegramMessage(chatId, '⚠️ Ваш Telegram не підключений до системи.\n\nВідкрийте профіль у TALKO → «Підключити Telegram».');
+                } else {
+                    const cmdLang = await getUserLang(senderCid, senderUid).catch(() => 'ua');
+                    const cmd = text.replace(/^\/task\s*|^\/завдання\s*/i, '').trim();
+                    if (!cmd) {
+                        await sendTelegramMessage(chatId,
+                            '📝 <b>Формат команди:</b>\n\n' +
+                            '<code>/task @ім\'я Назва завдання | 10.04.2026</code>\n\n' +
+                            'Приклади:\n' +
+                            '<code>/task @Петренко Підготувати кошторис | 10.04.2026</code>\n' +
+                            '<code>/task @Іванов Зателефонувати клієнту</code>\n\n' +
+                            'Дата необов\'язкова. Без @ім\'я — ставиться собі.\n/help — всі команди');
+                    } else {
+                        // Парсинг: @assignee, назва, дата після |
+                        let assigneeQ = '', taskTitle = cmd, deadline = '';
+                        const pp = cmd.split('|');
+                        if (pp.length >= 2) {
+                            taskTitle = pp[0].trim();
+                            const rd = pp[1].trim();
+                            const dm = rd.match(/(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{2,4})/);
+                            if (dm) {
+                                const y = dm[3].length === 2 ? '20' + dm[3] : dm[3];
+                                deadline = `${y}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;
+                            } else if (/^\d{4}-\d{2}-\d{2}$/.test(rd)) deadline = rd;
+                        }
+                        const am = taskTitle.match(/^@(\S+)\s*(.*)/);
+                        if (am) { assigneeQ = am[1].toLowerCase(); taskTitle = am[2].trim() || am[1]; }
+
+                        if (!taskTitle) {
+                            await sendTelegramMessage(chatId, '❌ Вкажіть назву завдання.');
+                        } else {
+                            // Знаходимо виконавця
+                            let aId = senderUid, aName = 'Я';
+                            if (assigneeQ) {
+                                const usSnap = await db.collection('companies').doc(senderCid).collection('users').get();
+                                const found = usSnap.docs.find(d => {
+                                    const u = d.data();
+                                    const n = (u.name || u.email || '').toLowerCase();
+                                    const tg = (u.telegramUsername || '').toLowerCase().replace('@', '');
+                                    return n.includes(assigneeQ) || tg === assigneeQ || d.id === assigneeQ;
+                                });
+                                if (!found) {
+                                    await sendTelegramMessage(chatId, `❌ Співробітника <b>"${assigneeQ}"</b> не знайдено.\n\nПеревірте ім'я або спробуйте іншу частину імені.`);
+                                    return res.status(200).send('OK');
+                                }
+                                aId = found.id;
+                                const fd = found.data();
+                                aName = fd.name || fd.email || assigneeQ;
+                            }
+
+                            // Ім'я відправника
+                            let crName = 'Telegram';
+                            const crDoc = await db.collection('companies').doc(senderCid).collection('users').doc(senderUid).get();
+                            if (crDoc.exists) { const cd = crDoc.data(); crName = cd.name || cd.email || crName; }
+
+                            // Створюємо задачу
+                            const today = new Date().toISOString().split('T')[0];
+                            const taskData = {
+                                title: taskTitle,
+                                status: 'new',
+                                priority: 'medium',
+                                assigneeId: aId,
+                                assigneeName: aName,
+                                creatorId: senderUid,
+                                creatorName: crName,
+                                source: 'telegram',
+                                createdDate: today,
+                                pinned: false,
+                                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                            };
+                            if (deadline) {
+                                taskData.deadlineDate = deadline;
+                                taskData.deadline = deadline + 'T18:00';
+                                taskData.deadlineTime = '18:00';
+                            }
+                            const taskRef = await db.collection('companies').doc(senderCid).collection('tasks').add(taskData);
+
+                            // Підтвердження відправнику
+                            const dl = deadline ? `\n📅 Дедлайн: <b>${deadline}</b>` : '';
+                            await sendTelegramMessage(chatId,
+                                `✅ <b>Завдання створено!</b>\n\n📋 <b>${taskTitle}</b>\n👤 Виконавець: <b>${aName}</b>${dl}\n\nЗавдання з'явиться в «Мій день» виконавця.`);
+
+                            // Сповіщення виконавцю (якщо інший)
+                            if (aId !== senderUid) {
+                                const aDoc = await db.collection('companies').doc(senderCid).collection('users').doc(aId).get();
+                                if (aDoc.exists) {
+                                    const au = aDoc.data();
+                                    if (au.telegramChatId) {
+                                        await sendTelegramMessage(au.telegramChatId,
+                                            `📋 <b>Нове завдання від ${crName}:</b>\n\n<b>${taskTitle}</b>${dl}\n\nВідкрийте TALKO → «Мій день».`);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             } else if (text === '/connect') {
                 await sendTelegramMessage(chatId, tg('ua', 'connectHint'));
             }
