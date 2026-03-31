@@ -75,14 +75,18 @@ async function fsGet(path, token) {
     if (!r.ok) return null;
     return r.json();
 }
-async function fsQuery(collId, filters, token, limit=1) {
-    const body = { structuredQuery: {
+async function fsQuery(collId, filters, token, limit=200) {
+    // Якщо filters порожній — запит без where (повертає всі документи колекції)
+    const query = {
         from: [{ collectionId: collId, allDescendants: true }],
-        where: { compositeFilter: { op: 'AND', filters: filters.map(f=>({
-            fieldFilter: { field:{fieldPath:f.field}, op:'EQUAL', value:{stringValue:f.value} }
-        })) } },
         limit,
-    }};
+    };
+    if (filters && filters.length > 0) {
+        query.where = { compositeFilter: { op: 'AND', filters: filters.map(f=>({
+            fieldFilter: { field:{fieldPath:f.field}, op:'EQUAL', value:{stringValue:f.value} }
+        })) } };
+    }
+    const body = { structuredQuery: query };
     const r = await fetch(FS_QUERY, {
         method:'POST',
         headers:{ Authorization:`Bearer ${token}`, 'Content-Type':'application/json' },
@@ -416,43 +420,137 @@ async function handleWebhook(request, url, env) {
     } catch {}
 
     if (channel==='telegram') {
-        const msg   = body.message||body.callback_query?.message||{};
-        const chat  = msg.chat||body.callback_query?.from||{};
-        const text  = msg.text||body.callback_query?.data||'';
+        const msg    = body.message||body.callback_query?.message||{};
+        const chat   = msg.chat||body.callback_query?.from||{};
+        const text   = (msg.text||body.callback_query?.data||'').trim();
         const chatId = String(chat.id||'');
+        const from   = msg.from || body.callback_query?.from || {};
 
         if (!chatId||!cid) return json({ok:true});
 
-        // Get bot settings
         const settDoc = await fsGet(`companies/${cid}/settings/integrations`, token);
         if (!settDoc?.fields) return json({ok:true});
         const sett = fFields(settDoc.fields);
         const botToken = sett.telegramBotToken;
         if (!botToken) return json({ok:true});
 
-        // Simple echo / CRM save
-        const leadId  = `tg_${Date.now()}`;
-        const name    = `${chat.first_name||''} ${chat.last_name||''}`.trim() || chat.username || chatId;
-
-        await fsSet(`companies/${cid}/leads/${leadId}`, {
-            id:        { stringValue: leadId },
-            name:      { stringValue: name },
-            phone:     { stringValue: '' },
-            source:    { stringValue: 'telegram' },
-            telegramChatId: { stringValue: chatId },
-            message:   { stringValue: text },
-            status:    { stringValue: 'new' },
-            createdAt: { timestampValue: new Date().toISOString() },
-        }, token);
-
-        // Send ack
-        if (botToken && text) {
-            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body: JSON.stringify({ chat_id: chatId, text: '✅ Дякуємо! Ваша заявка прийнята. Ми зв\'яжемося з вами найближчим часом.' }),
+        const tgSend = (chat_id, txt) =>
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({ chat_id, text: txt, parse_mode:'HTML' }),
             }).catch(()=>{});
+
+        // /start {code} — підключення співробітника
+        if (text.startsWith('/start')) {
+            const code = text.split(' ')[1]||'';
+            if (code) {
+                const idxDoc = await fsGet(`telegramIndex/code_${code}`, token);
+                if (idxDoc?.fields) {
+                    const idx = fFields(idxDoc.fields);
+                    if (idx.companyId && idx.userId) {
+                        await fsPatch(`companies/${idx.companyId}/users/${idx.userId}`, {
+                            telegramChatId: { stringValue: chatId },
+                            telegramUserId: { stringValue: String(from.id||chatId) },
+                        }, token).catch(()=>{});
+                        await fsSet(`telegramIndex/chat_${chatId}`, {
+                            companyId: { stringValue: idx.companyId },
+                            userId:    { stringValue: idx.userId },
+                            chatId:    { stringValue: chatId },
+                            linkedAt:  { timestampValue: new Date().toISOString() },
+                        }, token).catch(()=>{});
+                        await tgSend(chatId, '✅ <b>Telegram підключено!</b>\n\nСповіщення про завдання будуть приходити сюди.\n\n📝 Поставити завдання:\n<code>/task @Іванов Назва | 2026-04-10</code>\n\n/help — всі команди');
+                        return json({ok:true});
+                    }
+                }
+            }
+            await tgSend(chatId, '👋 Вітаємо! Відкрийте профіль у TALKO → «Підключити Telegram».');
+            return json({ok:true});
         }
+
+        // /help
+        if (text === '/help' || text === '/допомога') {
+            await tgSend(chatId, '📖 <b>Команди TALKO:</b>\n\n<code>/task @імя Назва | дата</code> — поставити завдання\n\nПриклад:\n<code>/task @Петренко Кошторис | 10.04.2026</code>\n\nДата необовязкова. Якщо не вказати @імя — ставиться собі.');
+            return json({ok:true});
+        }
+
+        // /task — поставити завдання
+        if (text.startsWith('/task') || text.startsWith('/завдання')) {
+            const sDoc = await fsGet(`telegramIndex/chat_${chatId}`, token);
+            if (!sDoc?.fields) {
+                await tgSend(chatId, '⚠️ Telegram не підключений до системи. Відкрийте профіль → «Підключити Telegram».');
+                return json({ok:true});
+            }
+            const s   = fFields(sDoc.fields);
+            const sCid = s.companyId, sUid = s.userId;
+            const cmd = text.replace(/^\/task\s*|^\/завдання\s*/i,'').trim();
+            if (!cmd) { await tgSend(chatId, '📝 Формат: <code>/task @імя Назва | дата</code>  →  /help'); return json({ok:true}); }
+
+            let assigneeQ='', title=cmd, deadline='';
+            const pp = cmd.split('|');
+            if (pp.length>=2) {
+                title = pp[0].trim();
+                const rd = pp[1].trim();
+                const dm = rd.match(/(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{2,4})/);
+                if (dm) { const y=dm[3].length===2?'20'+dm[3]:dm[3]; deadline=`${y}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`; }
+                else if (/^\d{4}-\d{2}-\d{2}$/.test(rd)) deadline=rd;
+            }
+            const am = title.match(/^@(\S+)\s*(.*)/);
+            if (am) { assigneeQ=am[1].toLowerCase(); title=am[2].trim()||am[1]; }
+            if (!title) { await tgSend(chatId,'❌ Вкажіть назву завдання.'); return json({ok:true}); }
+
+            let aId=sUid, aName='Я';
+            if (assigneeQ) {
+                const rawUsers = await fsQuery(`companies/${sCid}/users`,[],token);
+                // fsQuery повертає Firestore doc objects — розпаковуємо через fFields
+                const us = rawUsers.map(d => ({ _docId: d.name?.split('/').pop(), ...fFields(d.fields||{}) }));
+                const fu = us.find(u=>{
+                    const n=(u.name||u.email||'').toLowerCase();
+                    const tg=(u.telegramUsername||'').toLowerCase().replace('@','');
+                    const docId=(u._docId||'').toLowerCase();
+                    return n.includes(assigneeQ)||tg===assigneeQ||docId===assigneeQ||u.id===assigneeQ;
+                });
+                if (!fu) { await tgSend(chatId,`❌ Співробітника "${assigneeQ}" не знайдено.`); return json({ok:true}); }
+                aId=fu.id||fu._docId; aName=fu.name||fu.email||assigneeQ;
+            }
+
+            let crName='Telegram';
+            const crDoc=await fsGet(`companies/${sCid}/users/${sUid}`,token);
+            if (crDoc?.fields){ const cr=fFields(crDoc.fields); crName=cr.name||cr.email||crName; }
+
+            const tid=`tg_${Date.now()}_${Math.random().toString(36).slice(2,6)}`;
+            const today=new Date().toISOString().split('T')[0];
+            const tObj={
+                id:{stringValue:tid},title:{stringValue:title},status:{stringValue:'new'},
+                priority:{stringValue:'medium'},assigneeId:{stringValue:aId},assigneeName:{stringValue:aName},
+                creatorId:{stringValue:sUid},creatorName:{stringValue:crName},
+                source:{stringValue:'telegram'},createdDate:{stringValue:today},
+                pinned:{booleanValue:false},
+                createdAt:{timestampValue:new Date().toISOString()},
+                updatedAt:{timestampValue:new Date().toISOString()},
+            };
+            if (deadline){ tObj.deadlineDate={stringValue:deadline}; tObj.deadline={stringValue:deadline+'T18:00'}; tObj.deadlineTime={stringValue:'18:00'}; }
+            await fsSet(`companies/${sCid}/tasks/${tid}`,tObj,token);
+
+            const dl=deadline?`\n📅 Дедлайн: <b>${deadline}</b>`:'';
+            await tgSend(chatId,`✅ <b>Завдання створено!</b>\n\n📋 <b>${title}</b>\n👤 Виконавець: <b>${aName}</b>${dl}`);
+
+            if (aId!==sUid) {
+                const adoc=await fsGet(`companies/${sCid}/users/${aId}`,token);
+                if (adoc?.fields){ const au=fFields(adoc.fields); if(au.telegramChatId) await tgSend(au.telegramChatId,`📋 <b>Нове завдання від ${crName}:</b>\n\n<b>${title}</b>${dl}\n\nВідкрийте TALKO → «Мій день».`); }
+            }
+            return json({ok:true});
+        }
+
+        // Звичайне повідомлення → лід у CRM
+        const leadId=`tg_${Date.now()}`;
+        const lname=`${from.first_name||''} ${from.last_name||''}`.trim()||from.username||chatId;
+        await fsSet(`companies/${cid}/leads/${leadId}`,{
+            id:{stringValue:leadId},name:{stringValue:lname},phone:{stringValue:''},
+            source:{stringValue:'telegram'},telegramChatId:{stringValue:chatId},
+            message:{stringValue:text},status:{stringValue:'new'},
+            createdAt:{timestampValue:new Date().toISOString()},
+        },token);
+        if (text) await tgSend(chatId,"✅ Дякуємо! Ваша заявка прийнята. Ми зв'яжемося з вами найближчим часом.");
         return json({ok:true});
     }
 
