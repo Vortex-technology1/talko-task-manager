@@ -574,7 +574,7 @@
                     <div style="display:flex;align-items:center;gap:0.5rem;">
                         <button class="btn btn-success btn-small" onclick="openTaskForProject('${escId(projectId)}')" style="min-height:36px;"><i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addTask') || window.t('permTsk2')}</button>
                         <button class="btn btn-small" onclick="openProjectMembers('${escId(projectId)}')" style="min-height:36px;display:flex;align-items:center;gap:4px;" title="Учасники проєкту"><i data-lucide="users" class="icon icon-sm"></i> Учасники</button>
-                        <button class="btn btn-small" onclick="toggleProjectMembersHelp('${escId(projectId)}')" style="min-height:36px;padding:0 8px;color:#9ca3af;" title="Як це працює?">?</button>
+                        <button class="btn btn-small" onclick="toggleProjectMembersHelp('${escId(projectId)}')" style="min-height:36px;width:36px;padding:0;color:#9ca3af;font-size:0.85rem;font-weight:600;border-radius:8px;" title="Як це працює?"><i data-lucide="help-circle" class="icon icon-sm"></i></button>
                         <select class="filter-select" onchange="updateProjectStatus('${escId(projectId)}', this.value)" style="font-size:0.8rem;padding:0.3rem;min-height:36px;">${statusOptions}</select>
                         <button class="btn btn-small" onclick="openProjectModal('${escId(projectId)}')" style="min-height:36px;" title="${window.t('edit') || window.t('flowEdt2')}" aria-label="${window.t('edit') || window.t('flowEdt2')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
                         <div style="width:1px;height:24px;background:#e5e7eb;margin:0 12px;"></div>
@@ -615,18 +615,18 @@
                 </div>
                 
                 <div id="projectMembersHelp_${escId(projectId)}" style="display:none;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:1rem;margin-bottom:1rem;font-size:0.82rem;color:#1e40af;line-height:1.6;">
-                    <div style="font-weight:700;margin-bottom:0.5rem;">👥 Як працюють учасники проєкту</div>
+                    <div style="font-weight:700;margin-bottom:0.5rem;">Як працюють учасники проєкту</div>
                     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.5rem;margin-bottom:0.5rem;">
                         <div style="background:white;border-radius:7px;padding:0.5rem 0.75rem;">
-                            <div style="font-weight:600;">👤 Учасник</div>
+                            <div style="font-weight:600;">Учасник</div>
                             <div style="color:#374151;font-size:0.78rem;">Бачить всі завдання проєкту. Для штатних співробітників.</div>
                         </div>
                         <div style="background:white;border-radius:7px;padding:0.5rem 0.75rem;">
-                            <div style="font-weight:600;">🔧 Виконавець</div>
+                            <div style="font-weight:600;">Виконавець</div>
                             <div style="color:#374151;font-size:0.78rem;">Бачить тільки свої завдання. Для підрядників з обмеженим доступом.</div>
                         </div>
                         <div style="background:white;border-radius:7px;padding:0.5rem 0.75rem;">
-                            <div style="font-weight:600;">👁️ Спостерігач</div>
+                            <div style="font-weight:600;">Спостерігач</div>
                             <div style="color:#374151;font-size:0.78rem;">Бачить всі завдання тільки для читання. Для клієнтів.</div>
                         </div>
                     </div>
@@ -2103,7 +2103,7 @@ window.openProjectMembers = async function(projectId) {
     overlay.innerHTML = `
     <div style="background:white;border-radius:14px;padding:1.5rem;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
-            <div style="font-weight:700;font-size:1rem;color:#111827;">👥 Учасники проєкту</div>
+            <div style="font-weight:700;font-size:1rem;color:#111827;">Учасники проєкту</div>
             <button onclick="document.getElementById('projectMembersOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">✕</button>
         </div>
         
