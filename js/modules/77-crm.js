@@ -1575,6 +1575,12 @@ async function _doStageChange(deal, newStage, oldStage) {
     }
     if (typeof window.crmAutoTasksOnStageChange === 'function')
         window.crmAutoTasksOnStageChange(deal, newStage);
+    // ── Тригери ──────────────────────────────────────────────
+    if (Array.isArray(window.crmTriggerHooks)) {
+        window.crmTriggerHooks.forEach(fn => {
+            try { fn(deal, newStage, oldStage); } catch(e) {}
+        });
+    }
     if (typeof window.trackAction === 'function') {
         window.trackAction('crm_stage', {
             dealId: deal.id,
@@ -3422,6 +3428,13 @@ window.crmCreateDeal = async function() {
         }
         if (typeof window.trackAction === 'function') {
             window.trackAction('crm_deal_created', { dealId:ref.id, clientName:client||title||'', stage, amount });
+        }
+        // Тригери — нова угода
+        if (Array.isArray(window.crmTriggerHooks)) {
+            const newDeal = { id: ref.id, title, clientName: client||title, stage, amount, pipelineId: crm.pipeline?.id };
+            setTimeout(() => {
+                if (typeof window.crmRunTriggers === 'function') window.crmRunTriggers(newDeal, 'deal_created');
+            }, 500);
         }
     } catch(e) {
         if (window.showToast) showToast(window.t('errPrefix') + e.message, 'error');
@@ -5371,6 +5384,9 @@ function _renderCRMSettings() {
 
         <div id="crmSettingsSaveTasksBlock"></div>
 
+        <!-- Тригери -->
+        <div id="crmSettingsTriggersBlock"></div>
+
     </div>`;
 
     // Lazy inject — модулі можуть завантажитись пізніше через defer
@@ -5384,6 +5400,8 @@ function _renderCRMSettings() {
         var el3 = document.getElementById('crmSettingsSaveTasksBlock');
         if (el3 && typeof window.crmSaveTaskTemplates === 'function')
             el3.innerHTML = '<button onclick="crmSaveTaskTemplates()" style="padding:0.55rem;width:100%;background:#3b82f6;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.83rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти шаблони задач</button>';
+        var el4 = document.getElementById('crmSettingsTriggersBlock');
+        if (el4) crmRenderTriggersSettings(el4);
     });
 }
 
