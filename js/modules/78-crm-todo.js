@@ -288,7 +288,12 @@ function _renderRow(d, i) {
                <button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-                ✏️</button>`
+                ✏️</button>
+               <button onclick="event.stopPropagation();_crmTodoCancelConsultation('${d.id}')"
+                title="Скасувати консультацію"
+                style="display:inline-flex;align-items:center;justify-content:center;padding:4px 7px;border-radius:6px;
+                background:#fef2f2;border:1px solid #fecaca;color:#dc2626;font-size:0.75rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                ×</button>`
             : `<button onclick="event.stopPropagation();_crmTodoConfirmConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
                 background:#fffbeb;border:1px solid #fde68a;color:#b45309;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
@@ -296,7 +301,12 @@ function _renderRow(d, i) {
                <button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-                ✏️</button>`
+                ✏️</button>
+               <button onclick="event.stopPropagation();_crmTodoCancelConsultation('${d.id}')"
+                title="Скасувати консультацію"
+                style="display:inline-flex;align-items:center;justify-content:center;padding:4px 7px;border-radius:6px;
+                background:#fef2f2;border:1px solid #fecaca;color:#dc2626;font-size:0.75rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                ×</button>`
         : `<button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
             style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
             background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
@@ -526,6 +536,46 @@ window.crmTodoOpenCard = async function(dealId) {
         </div>
         </div>
         </div>
+
+        <!-- Історія консультацій -->
+        ${!historyError && history.some(h=>h.type?.startsWith('consultation_'))?`
+        <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;">
+          <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em;margin-bottom:0.5rem;">📅 Історія консультацій</div>
+          ${history.filter(h=>h.type?.startsWith('consultation_')).slice(0,8).map(h=>{
+              const locale=window.getLocale?window.getLocale():'uk-UA';
+              const dt=h.at?(h.at.toDate?h.at.toDate():new Date(h.at)):null;
+              const dtStr=dt?dt.toLocaleDateString(locale,{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit'}):'—';
+              // Визначаємо статус консультації
+              let statusBadge='';
+              let statusColor='#9ca3af';
+              if(h.type==='consultation_scheduled'){
+                  statusBadge='<span style="background:#f0f9ff;color:#0369a1;padding:1px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;">Призначено</span>';
+                  statusColor='#0369a1';
+              } else if(h.type==='consultation_confirmed'){
+                  statusBadge='<span style="background:#f0fdf4;color:#16a34a;padding:1px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;">Підтверджено</span>';
+                  statusColor='#16a34a';
+              } else if(h.type==='consultation_cancelled'){
+                  statusBadge='<span style="background:#fef2f2;color:#dc2626;padding:1px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;">Скасовано</span>';
+                  statusColor='#dc2626';
+              } else if(h.type==='consultation_completed'){
+                  statusBadge='<span style="background:#f0fdf4;color:#16a34a;padding:1px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;">Проведено</span>';
+                  statusColor='#16a34a';
+              } else if(h.type==='consultation_missed'){
+                  statusBadge='<span style="background:#fffbeb;color:#b45309;padding:1px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;">Не прийшов</span>';
+                  statusColor='#b45309';
+              } else if(h.type==='consultation_rejected'){
+                  statusBadge='<span style="background:#fef2f2;color:#dc2626;padding:1px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;">Відмова</span>';
+                  statusColor='#dc2626';
+              }
+              return `<div style="display:flex;gap:0.5rem;align-items:center;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
+                <div style="font-size:0.68rem;color:#9ca3af;white-space:nowrap;min-width:80px;">${dtStr}</div>
+                <div style="flex:1;display:flex;align-items:center;gap:0.4rem;">
+                  ${statusBadge}
+                  <div style="font-size:0.73rem;color:#6b7280;">${_esc(h.text||'')}</div>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>`:''}
 
         <!-- Історія -->
         ${historyError?`
@@ -954,6 +1004,63 @@ window._crmTodoConfirmConsultation = async function(dealId) {
         if (d) d.consultationConfirmed = false;
         if (typeof renderCrmTodo === 'function') renderCrmTodo();
         if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+// ── Скасувати консультацію ──────────────────────────────
+window._crmTodoCancelConsultation = async function(dealId) {
+    if (!confirm('Скасувати консультацію? Дата і час будуть видалені.')) return;
+
+    const deal = window.crm?.deals?.find(x => x.id === dealId);
+    if (!deal) return;
+
+    // Зберігаємо taskId для видалення
+    const taskId = deal.consultationTaskId;
+
+    // Оптимістично очищуємо дані
+    deal.consultationDate = null;
+    deal.consultationTime = null;
+    deal.consultationNote = null;
+    deal.consultationConfirmed = false;
+    deal.consultationTaskId = null;
+
+    if (typeof renderCrmTodo === 'function') renderCrmTodo();
+
+    try {
+        const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
+        await ref.update({
+            consultationDate: firebase.firestore.FieldValue.delete(),
+            consultationTime: firebase.firestore.FieldValue.delete(),
+            consultationNote: firebase.firestore.FieldValue.delete(),
+            consultationConfirmed: firebase.firestore.FieldValue.delete(),
+            consultationTaskId: firebase.firestore.FieldValue.delete(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        await ref.collection('history').add({
+            type: 'consultation_cancelled',
+            text: 'Консультацію скасовано',
+            at: firebase.firestore.FieldValue.serverTimestamp(),
+            by: window.currentUser?.email || 'manager',
+        });
+
+        // Видаляємо пов'язане завдання якщо воно існує
+        if (taskId) {
+            try {
+                await window.companyRef().collection(window.DB_COLS?.TASKS || 'tasks').doc(taskId).delete();
+                // Оновлюємо локальний масив tasks якщо він існує
+                if (typeof tasks !== 'undefined' && Array.isArray(tasks)) {
+                    const idx = tasks.findIndex(t => t.id === taskId);
+                    if (idx >= 0) tasks.splice(idx, 1);
+                }
+            } catch(e) {
+                console.warn('[CRM] Failed to delete consultation task:', e.message);
+            }
+        }
+
+        if (window.showToast) showToast('Консультацію скасовано ✓', 'success');
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        // Не відкочуємо оптимістичне оновлення - дані вже видалені
     }
 };
 

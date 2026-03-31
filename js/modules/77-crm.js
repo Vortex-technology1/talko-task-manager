@@ -284,16 +284,23 @@ function _filteredDeals() {
 
     const f = crm.filters;
     if (f.search) {
-        const q = f.search.toLowerCase();
-        deals = deals.filter(d =>
-            (d.title||'').toLowerCase().includes(q) ||
-            (d.clientName||'').toLowerCase().includes(q) ||
-            (d.clientNiche||'').toLowerCase().includes(q) ||
-            (d.note||'').toLowerCase().includes(q) ||
-            (d.phone||'').replace(/\D/g,'').includes(q.replace(/\D/g,'')) ||
-            (d.email||'').toLowerCase().includes(q) ||
-            (d.telegram||'').toLowerCase().includes(q)
-        );
+        const q = f.search.toLowerCase().trim();
+        const qDigits = q.replace(/\D/g,'');
+        deals = deals.filter(d => {
+            // Пошук по текстових полях
+            if ((d.title||'').toLowerCase().includes(q)) return true;
+            if ((d.clientName||'').toLowerCase().includes(q)) return true;
+            if ((d.clientNiche||'').toLowerCase().includes(q)) return true;
+            if ((d.note||'').toLowerCase().includes(q)) return true;
+            if ((d.notes||'').toLowerCase().includes(q)) return true;
+            if ((d.email||'').toLowerCase().includes(q)) return true;
+            if ((d.telegram||'').toLowerCase().includes(q)) return true;
+            // Пошук по телефону - і по оригіналу і по цифрах
+            const phone = d.phone || '';
+            if (phone.toLowerCase().includes(q)) return true;
+            if (qDigits && phone.replace(/\D/g,'').includes(qDigits)) return true;
+            return false;
+        });
     }
     if (f.assignee) deals = deals.filter(d => d.assigneeId === f.assignee);
     if (f.stage)    deals = deals.filter(d => d.stage === f.stage);
