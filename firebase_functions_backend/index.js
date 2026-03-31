@@ -3412,3 +3412,80 @@ exports.restoreBackup = functions
             res.status(500).json({ error: e.message });
         }
     });
+// ===========================
+// REGISTER BOT COMMANDS (викликати один раз вручну)
+// ===========================
+exports.registerBotCommands = functions
+    .region(REGION)
+    .https.onRequest(async (req, res) => {
+        const token = getTelegramToken();
+        const api = `https://api.telegram.org/bot${token}/setMyCommands`;
+
+        const commandsByLang = {
+            uk: [
+                { command: 'today',   description: 'Завдання на сьогодні' },
+                { command: 'overdue', description: 'Прострочені завдання' },
+                { command: 'task',    description: 'Поставити завдання: /task @імя Назва | дата' },
+                { command: 'weekly',  description: 'Тижневий звіт' },
+                { command: 'team',    description: 'Статус команди' },
+                { command: 'help',    description: 'Довідка' },
+            ],
+            ru: [
+                { command: 'today',   description: 'Задачи на сегодня' },
+                { command: 'overdue', description: 'Просроченные задачи' },
+                { command: 'task',    description: 'Поставить задачу: /task @имя Название | дата' },
+                { command: 'weekly',  description: 'Отчёт за неделю' },
+                { command: 'team',    description: 'Статус команды' },
+                { command: 'help',    description: 'Справка' },
+            ],
+            en: [
+                { command: 'today',   description: 'Tasks for today' },
+                { command: 'overdue', description: 'Overdue tasks' },
+                { command: 'task',    description: 'Create task: /task @name Title | date' },
+                { command: 'weekly',  description: 'Weekly report' },
+                { command: 'team',    description: 'Team status' },
+                { command: 'help',    description: 'Help' },
+            ],
+            de: [
+                { command: 'today',   description: 'Aufgaben für heute' },
+                { command: 'overdue', description: 'Überfällige Aufgaben' },
+                { command: 'task',    description: 'Aufgabe erstellen: /task @name Titel | Datum' },
+                { command: 'weekly',  description: 'Wochenbericht' },
+                { command: 'team',    description: 'Teamstatus' },
+                { command: 'help',    description: 'Hilfe' },
+            ],
+            pl: [
+                { command: 'today',   description: 'Zadania na dziś' },
+                { command: 'overdue', description: 'Zaległe zadania' },
+                { command: 'task',    description: 'Utwórz zadanie: /task @imię Tytuł | data' },
+                { command: 'weekly',  description: 'Raport tygodniowy' },
+                { command: 'team',    description: 'Status zespołu' },
+                { command: 'help',    description: 'Pomoc' },
+            ],
+        };
+
+        const results = [];
+        for (const [lang, commands] of Object.entries(commandsByLang)) {
+            const r = await fetch(api, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    commands,
+                    language_code: lang,
+                }),
+            });
+            const d = await r.json();
+            results.push({ lang, ok: d.ok, description: d.description });
+        }
+
+        // Default (без мови — fallback для всіх інших)
+        const rDef = await fetch(api, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ commands: commandsByLang.uk }),
+        });
+        const dDef = await rDef.json();
+        results.push({ lang: 'default', ok: dDef.ok });
+
+        res.json({ success: true, results });
+    });
