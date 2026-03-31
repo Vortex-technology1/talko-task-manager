@@ -3489,3 +3489,198 @@ exports.registerBotCommands = functions
 
         res.json({ success: true, results });
     });
+
+// ===========================
+// CRM STALE DEALS — deal_stale trigger
+// Запускається щодня о 10:00 Kyiv
+// Перевіряє угоди, що не рухались N днів
+// ===========================
+exports.checkStaleCrmDeals = functions
+    .region(REGION)
+    .runWith({ timeoutSeconds: 300, memory: '256MB' })
+    .pubsub.schedule('0 10 * * *')
+    .timeZone('Europe/Kyiv')
+    .onRun(async (context) => {
+        const now = new Date();
+        console.log('[checkStaleCrmDeals] Starting at', now.toISOString());
+
+        // Отримуємо всі активні компанії
+        const companiesSnap = await db.collection('companies')
+            .where('status', 'in', ['active', 'trial'])
+            .limit(100)
+            .get()
+            .catch(() => db.collection('companies').limit(100).get());
+
+        let totalDealsChecked = 0;
+        let totalTriggered = 0;
+
+        for (const companyDoc of companiesSnap.docs) {
+            const companyId = companyDoc.id;
+
+            try {
+                // Завантажуємо активні тригери типу deal_stale для цієї компанії
+                const triggersSnap = await db.collection('companies').doc(companyId)
+                    .collection('crmTriggers')
+                    .where('isActive', '==', true)
+                    .where('event', '==', 'deal_stale')
+                    .get();
+
+                if (triggersSnap.empty) continue;
+
+                const triggers = triggersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                // Для кожного тригера знаходимо staleDays з умов
+                for (const trigger of triggers) {
+                    const staleDaysCondition = (trigger.conditions || [])
+                        .find(c => c.field === 'staleDays');
+                    const staleDays = parseInt(staleDaysCondition?.value) || 7;
+
+                    const cutoffDate = new Date(now);
+                    cutoffDate.setDate(cutoffDate.getDate() - staleDays);
+                    const cutoffTimestamp = admin.firestore.Timestamp.fromDate(cutoffDate);
+
+                    // Угоди що не рухались з cutoffDate
+                    // stageEnteredAt або updatedAt <= cutoff, stage не 'won' і не 'lost'
+                    const dealsSnap = await db.collection('companies').doc(companyId)
+                        .collection('crm_deals')
+                        .where('stage', 'not-in', ['won', 'lost'])
+                        .limit(100)
+                        .get();
+
+                    totalDealsChecked += dealsSnap.size;
+
+                    for (const dealDoc of dealsSnap.docs) {
+                        const deal = { id: dealDoc.id, ...dealDoc.data() };
+
+                        // Визначаємо дату останнього руху
+                        const lastMove = deal.stageEnteredAt
+                            ? (deal.stageEnteredAt.toDate ? deal.stageEnteredAt.toDate() : new Date(deal.stageEnteredAt))
+                            : deal.updatedAt
+                                ? (deal.updatedAt.toDate ? deal.updatedAt.toDate() : new Date(deal.updatedAt))
+                                : null;
+
+                        if (!lastMove) continue;
+                        if (lastMove > cutoffDate) continue; // рухалась недавно
+
+                        // Перевіряємо чи вже надсилали сьогодні для цієї угоди+тригера
+                        const todayStr = now.toISOString().split('T')[0];
+                        const logId = `stale_${trigger.id}_${todayStr}`;
+                        const logRef = db.collection('companies').doc(companyId)
+                            .collection('crmTriggers').doc(trigger.id)
+                            .collection('log').doc(`${dealDoc.id}_${todayStr}`);
+
+                        const logSnap = await logRef.get();
+                        if (logSnap.exists) continue; // вже відправляли сьогодні
+
+                        const actualStaleDays = Math.floor((now - lastMove) / (1000 * 60 * 60 * 24));
+
+                        // Перевіряємо решту умов тригера (крім staleDays)
+                        const otherConditions = (trigger.conditions || [])
+                            .filter(c => c.field !== 'staleDays');
+
+                        let conditionsOk = true;
+                        for (const cond of otherConditions) {
+                            const dealVal = String(deal[cond.field] || '');
+                            const condVal = String(cond.value || '');
+                            if (cond.op === 'eq'  && dealVal !== condVal) { conditionsOk = false; break; }
+                            if (cond.op === 'neq' && dealVal === condVal) { conditionsOk = false; break; }
+                        }
+                        if (!conditionsOk) continue;
+
+                        // Виконуємо дії тригера
+                        for (const action of (trigger.actions || [])) {
+                            try {
+                                if (action.type === 'create_task') {
+                                    const dueDays = parseInt(action.dueDays) || 1;
+                                    const deadline = new Date(now);
+                                    deadline.setDate(deadline.getDate() + dueDays);
+                                    await db.collection('companies').doc(companyId)
+                                        .collection('tasks').add({
+                                            title: `[${trigger.name}] ${action.title || 'Слідкувати за угодою'} — ${deal.clientName || deal.title || ''}`,
+                                            dealId: deal.id,
+                                            clientName: deal.clientName || '',
+                                            deadlineDate: deadline.toISOString().split('T')[0],
+                                            assigneeId: deal.assigneeId || null,
+                                            status: 'new',
+                                            priority: 'high',
+                                            source: 'crm_trigger',
+                                            triggerId: trigger.id,
+                                            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                                        });
+                                }
+
+                                if (action.type === 'send_telegram') {
+                                    const msg = (action.message || trigger.name) + '\n' +
+                                        `⏰ Угода не рухається ${actualStaleDays} днів\n` +
+                                        (deal.clientName ? `👤 ${deal.clientName}\n` : '') +
+                                        (deal.amount ? `💰 ${Number(deal.amount).toLocaleString()} грн` : '');
+
+                                    // Знаходимо chatId отримувача
+                                    let chatId = null;
+                                    if (action.to === 'owner') {
+                                        const ownersSnap = await db.collection('companies').doc(companyId)
+                                            .collection('users').where('role', '==', 'owner').limit(1).get();
+                                        if (!ownersSnap.empty) chatId = ownersSnap.docs[0].data().telegramChatId;
+                                    } else if (action.to === 'responsible' && deal.assigneeId) {
+                                        const userDoc = await db.collection('companies').doc(companyId)
+                                            .collection('users').doc(deal.assigneeId).get();
+                                        if (userDoc.exists) chatId = userDoc.data().telegramChatId;
+                                    } else if (action.to) {
+                                        chatId = action.to; // прямий chatId
+                                    }
+
+                                    if (chatId) {
+                                        await sendTelegramMessage(chatId,
+                                            `🤖 <b>TALKO Тригер — ${trigger.name}</b>\n\n${msg}`
+                                        );
+                                    }
+                                }
+
+                                if (action.type === 'change_assignee' && action.assigneeId) {
+                                    await db.collection('companies').doc(companyId)
+                                        .collection('crm_deals').doc(deal.id)
+                                        .update({ assigneeId: action.assigneeId, updatedAt: admin.firestore.FieldValue.serverTimestamp() });
+                                }
+
+                                if (action.type === 'add_tag' && action.tag) {
+                                    await db.collection('companies').doc(companyId)
+                                        .collection('crm_deals').doc(deal.id)
+                                        .update({ tags: admin.firestore.FieldValue.arrayUnion(action.tag) });
+                                }
+
+                                if (action.type === 'move_stage' && action.stage) {
+                                    await db.collection('companies').doc(companyId)
+                                        .collection('crm_deals').doc(deal.id)
+                                        .update({
+                                            stage: action.stage,
+                                            stageEnteredAt: admin.firestore.FieldValue.serverTimestamp(),
+                                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                                        });
+                                }
+                            } catch(actionErr) {
+                                console.error('[checkStaleCrmDeals] action error:', action.type, actionErr.message);
+                            }
+                        }
+
+                        // Пишемо лог — щоб не повторювати сьогодні
+                        await logRef.set({
+                            dealId: deal.id,
+                            dealTitle: deal.title || deal.clientName || '',
+                            triggerId: trigger.id,
+                            triggerName: trigger.name,
+                            staleDays: actualStaleDays,
+                            firedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        });
+
+                        totalTriggered++;
+                        console.log(`[checkStaleCrmDeals] fired trigger "${trigger.name}" for deal "${deal.clientName || deal.id}" (${actualStaleDays} days stale)`);
+                    }
+                }
+            } catch(companyErr) {
+                console.error('[checkStaleCrmDeals] company error:', companyId, companyErr.message);
+            }
+        }
+
+        console.log(`[checkStaleCrmDeals] Done. Checked: ${totalDealsChecked} deals, triggered: ${totalTriggered}`);
+        return null;
+    });
