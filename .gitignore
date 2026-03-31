@@ -1,3 +1,4 @@
 functions/
 firebase-functions/node_modules/
 node_modules/
+serviceAccount.json
