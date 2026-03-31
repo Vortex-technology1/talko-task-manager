@@ -5,7 +5,7 @@
   },
   "functions": [
     {
-      "source": "firebase-functions",
+      "source": "firebase_functions_backend",
       "codebase": "default",
       "disallowLegacyRuntimeConfig": true,
       "ignore": [
