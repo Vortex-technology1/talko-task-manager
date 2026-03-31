@@ -358,10 +358,13 @@
                     
                     // 1. Додаємо юзера в компанію
                     const companyUserRef = db.collection('companies').doc(companyId).collection('users').doc(userId);
+                    const isGuestInvite = inviteData.role === 'guest';
+                    const guestProjectId = inviteData.projectId || null;
                     batch.set(companyUserRef, {
                         name: inviteData.ownerName || inviteData.name || email.split('@')[0],
                         email: email.toLowerCase(),
                         role: inviteData.role || 'employee',
+                        ...(isGuestInvite && guestProjectId ? { guestProjects: [guestProjectId] } : {}),
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
@@ -394,6 +397,23 @@
                         showToast && showToast(window.t('savingError'), 'error');
                     }
                     dbg('[findUserCompany] Batch commit success, role:', inviteData.role);
+                    
+                    // Якщо guest — додаємо в projectMembers проєкту
+                    if (isGuestInvite && guestProjectId) {
+                        try {
+                            const member = {
+                                uid: userId,
+                                name: inviteData.name || email.split('@')[0],
+                                email: email.toLowerCase(),
+                                role: inviteData.projectRole || 'assignee',
+                                isGuest: true,
+                                addedAt: new Date().toISOString()
+                            };
+                            await db.collection('companies').doc(companyId)
+                                .collection('projects').doc(guestProjectId)
+                                .update({ projectMembers: firebase.firestore.FieldValue.arrayUnion(member) });
+                        } catch(gErr) { console.warn('[Guest] projectMembers update failed:', gErr); }
+                    }
                     
                     return companyId;
                 }

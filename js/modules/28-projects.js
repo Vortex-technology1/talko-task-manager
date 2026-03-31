@@ -573,6 +573,8 @@
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;">
                         <button class="btn btn-success btn-small" onclick="openTaskForProject('${escId(projectId)}')" style="min-height:36px;"><i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addTask') || window.t('permTsk2')}</button>
+                        <button class="btn btn-small" onclick="openProjectMembers('${escId(projectId)}')" style="min-height:36px;display:flex;align-items:center;gap:4px;" title="Учасники проєкту"><i data-lucide="users" class="icon icon-sm"></i> Учасники</button>
+                        <button class="btn btn-small" onclick="toggleProjectMembersHelp('${escId(projectId)}')" style="min-height:36px;padding:0 8px;color:#9ca3af;" title="Як це працює?">?</button>
                         <select class="filter-select" onchange="updateProjectStatus('${escId(projectId)}', this.value)" style="font-size:0.8rem;padding:0.3rem;min-height:36px;">${statusOptions}</select>
                         <button class="btn btn-small" onclick="openProjectModal('${escId(projectId)}')" style="min-height:36px;" title="${window.t('edit') || window.t('flowEdt2')}" aria-label="${window.t('edit') || window.t('flowEdt2')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
                         <div style="width:1px;height:24px;background:#e5e7eb;margin:0 12px;"></div>
@@ -611,6 +613,27 @@
                 <div class="project-progress-bar" style="height:8px;margin-bottom:1rem;">
                     <div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(project.color)};"></div>
                 </div>
+                
+                <div id="projectMembersHelp_${escId(projectId)}" style="display:none;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:1rem;margin-bottom:1rem;font-size:0.82rem;color:#1e40af;line-height:1.6;">
+                    <div style="font-weight:700;margin-bottom:0.5rem;">👥 Як працюють учасники проєкту</div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.5rem;margin-bottom:0.5rem;">
+                        <div style="background:white;border-radius:7px;padding:0.5rem 0.75rem;">
+                            <div style="font-weight:600;">👤 Учасник</div>
+                            <div style="color:#374151;font-size:0.78rem;">Бачить всі завдання проєкту. Для штатних співробітників.</div>
+                        </div>
+                        <div style="background:white;border-radius:7px;padding:0.5rem 0.75rem;">
+                            <div style="font-weight:600;">🔧 Виконавець</div>
+                            <div style="color:#374151;font-size:0.78rem;">Бачить тільки свої завдання. Для підрядників з обмеженим доступом.</div>
+                        </div>
+                        <div style="background:white;border-radius:7px;padding:0.5rem 0.75rem;">
+                            <div style="font-weight:600;">👁️ Спостерігач</div>
+                            <div style="color:#374151;font-size:0.78rem;">Бачить всі завдання тільки для читання. Для клієнтів.</div>
+                        </div>
+                    </div>
+                    <div style="font-size:0.75rem;color:#3b82f6;">Підрядник отримає запрошення на email і зайде тільки в цей проєкт.</div>
+                </div>
+                
+                <div id="projectMembersList_${escId(projectId)}" style="margin-bottom:0.75rem;"></div>
                 
                 ${s.deadlineConflicts.length > 0 ? `
                 <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:0.75rem 1rem;margin-bottom:1rem;display:flex;gap:0.5rem;align-items:flex-start;">
@@ -2034,3 +2057,191 @@ function _buildProcessHowto() {
 
     </div>`;
 }
+
+// ══════════════════════════════════════════════════════════
+// PROJECT MEMBERS — учасники та підрядники
+// ══════════════════════════════════════════════════════════
+
+window.toggleProjectMembersHelp = function(projectId) {
+    const el = document.getElementById('projectMembersHelp_' + projectId);
+    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+};
+
+window.openProjectMembers = async function(projectId) {
+    const db = window.db || firebase.firestore();
+    const cid = window.currentCompanyId;
+    const project = (typeof projects !== 'undefined' ? projects : []).find(p => p.id === projectId);
+    if (!project) return;
+
+    // Завантажуємо поточних учасників
+    const snap = await db.collection('companies').doc(cid).collection('projects').doc(projectId).get();
+    const members = snap.data()?.projectMembers || [];
+
+    // Список співробітників компанії
+    const compUsers = (window.companyUsers || window.users || []).filter(u => u.role !== 'guest');
+
+    const roleLabel = { member: 'Учасник', assignee: 'Виконавець', viewer: 'Спостерігач' };
+    const roleColor = { member: '#3b82f6', assignee: '#22c55e', viewer: '#9ca3af' };
+
+    const membersHTML = members.length ? members.map(m => `
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.6rem;background:white;border:1px solid #e8eaed;border-radius:7px;margin-bottom:0.3rem;">
+            <div style="width:28px;height:28px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#16a34a;flex-shrink:0;">${(m.name||'?').charAt(0).toUpperCase()}</div>
+            <div style="flex:1;min-width:0;">
+                <div style="font-size:0.82rem;font-weight:600;color:#111827;">${m.name||m.email||'—'}</div>
+                <div style="font-size:0.68rem;color:#9ca3af;">${m.email||''} ${m.isGuest ? '· підрядник' : ''}</div>
+            </div>
+            <span style="font-size:0.7rem;font-weight:600;color:${roleColor[m.role]||'#6b7280'};background:#f8fafc;padding:2px 8px;border-radius:8px;">${roleLabel[m.role]||m.role}</span>
+            <button onclick="removeProjectMember('${projectId}','${m.uid}')" style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px 4px;font-size:1rem;" title="Видалити">✕</button>
+        </div>`).join('') : '<div style="font-size:0.8rem;color:#9ca3af;padding:0.5rem;">Учасників ще немає</div>';
+
+    const usersOptions = compUsers.map(u => `<option value="${u.id}">${u.name||u.email}</option>`).join('');
+    const roleOptions = `<option value="member">Учасник — бачить всі задачі</option><option value="assignee">Виконавець — тільки свої задачі</option><option value="viewer">Спостерігач — тільки читання</option>`;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'projectMembersOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10020;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    overlay.innerHTML = `
+    <div style="background:white;border-radius:14px;padding:1.5rem;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+            <div style="font-weight:700;font-size:1rem;color:#111827;">👥 Учасники проєкту</div>
+            <button onclick="document.getElementById('projectMembersOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">✕</button>
+        </div>
+        
+        <!-- Поточні учасники -->
+        <div style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">Поточні учасники</div>
+        <div id="pmCurrentList">${membersHTML}</div>
+        
+        <!-- Додати співробітника -->
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #f1f5f9;">
+            <div style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">Додати співробітника</div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <select id="pmAddUser" style="flex:1;min-width:140px;padding:0.4rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
+                    <option value="">— оберіть співробітника —</option>
+                    ${usersOptions}
+                </select>
+                <select id="pmAddRole" style="flex:1;min-width:140px;padding:0.4rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">${roleOptions}</select>
+                <button onclick="addProjectMember('${projectId}')" style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.82rem;font-weight:600;">Додати</button>
+            </div>
+        </div>
+        
+        <!-- Запросити підрядника -->
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #f1f5f9;">
+            <div style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">Запросити підрядника</div>
+            <div style="display:grid;gap:0.4rem;">
+                <input id="pmGuestEmail" type="email" placeholder="Email підрядника" style="padding:0.4rem 0.55rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
+                <input id="pmGuestName" type="text" placeholder="Ім'я підрядника" style="padding:0.4rem 0.55rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
+                <select id="pmGuestRole" style="padding:0.4rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">${roleOptions}</select>
+                <button onclick="inviteGuestToProject('${projectId}')" style="padding:0.45rem;background:#3b82f6;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.82rem;font-weight:600;">Надіслати запрошення</button>
+            </div>
+            <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.4rem;">Підрядник отримає email і матиме доступ тільки до цього проєкту</div>
+        </div>
+    </div>`;
+    document.body.appendChild(overlay);
+};
+
+window.addProjectMember = async function(projectId) {
+    const uid = document.getElementById('pmAddUser')?.value;
+    const role = document.getElementById('pmAddRole')?.value || 'member';
+    if (!uid) { if(window.showToast) showToast('Оберіть співробітника', 'error'); return; }
+
+    const db = window.db || firebase.firestore();
+    const cid = window.currentCompanyId;
+    const user = (window.companyUsers || window.users || []).find(u => u.id === uid);
+    if (!user) return;
+
+    const member = { uid, name: user.name||user.email||'', email: user.email||'', role, isGuest: false, addedAt: new Date().toISOString() };
+
+    try {
+        const ref = db.collection('companies').doc(cid).collection('projects').doc(projectId);
+        await ref.update({ projectMembers: firebase.firestore.FieldValue.arrayUnion(member) });
+        if(window.showToast) showToast(`${user.name||user.email} додано як ${role}`, 'success');
+        document.getElementById('projectMembersOverlay')?.remove();
+        window.openProjectMembers(projectId);
+        window._renderProjectMembersBadge(projectId);
+    } catch(e) {
+        if(window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+window.removeProjectMember = async function(projectId, uid) {
+    const db = window.db || firebase.firestore();
+    const cid = window.currentCompanyId;
+    try {
+        const snap = await db.collection('companies').doc(cid).collection('projects').doc(projectId).get();
+        const members = (snap.data()?.projectMembers || []).filter(m => m.uid !== uid);
+        await db.collection('companies').doc(cid).collection('projects').doc(projectId).update({ projectMembers: members });
+        if(window.showToast) showToast('Учасника видалено', 'success');
+        document.getElementById('projectMembersOverlay')?.remove();
+        window.openProjectMembers(projectId);
+        window._renderProjectMembersBadge(projectId);
+    } catch(e) {
+        if(window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+window.inviteGuestToProject = async function(projectId) {
+    const email = document.getElementById('pmGuestEmail')?.value.trim();
+    const name  = document.getElementById('pmGuestName')?.value.trim();
+    const role  = document.getElementById('pmGuestRole')?.value || 'assignee';
+    if (!email) { if(window.showToast) showToast('Введіть email підрядника', 'error'); return; }
+
+    const db = window.db || firebase.firestore();
+    const cid = window.currentCompanyId;
+
+    try {
+        // Перевіряємо чи є такий user вже
+        const usersSnap = await db.collection('companies').doc(cid).collection('users').where('email','==',email).limit(1).get();
+
+        if (!usersSnap.empty) {
+            // Вже є — просто додаємо в projectMembers
+            const existingUser = usersSnap.docs[0];
+            const member = { uid: existingUser.id, name: name||existingUser.data().name||email, email, role, isGuest: true, addedAt: new Date().toISOString() };
+            await db.collection('companies').doc(cid).collection('projects').doc(projectId).update({
+                projectMembers: firebase.firestore.FieldValue.arrayUnion(member)
+            });
+            await existingUser.ref.update({
+                guestProjects: firebase.firestore.FieldValue.arrayUnion(projectId)
+            });
+            if(window.showToast) showToast(`${email} додано до проєкту`, 'success');
+        } else {
+            // Новий — створюємо invite
+            await db.collection('invites').add({
+                email, name: name||email, role: 'guest',
+                projectId, projectRole: role,
+                companyId: cid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                status: 'pending',
+                type: 'guest_project',
+            });
+            if(window.showToast) showToast(`Запрошення надіслано на ${email}`, 'success');
+        }
+        document.getElementById('projectMembersOverlay')?.remove();
+        window._renderProjectMembersBadge(projectId);
+    } catch(e) {
+        if(window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+window._renderProjectMembersBadge = async function(projectId) {
+    const listEl = document.getElementById('projectMembersList_' + projectId);
+    if (!listEl) return;
+    const db = window.db || firebase.firestore();
+    const cid = window.currentCompanyId;
+    try {
+        const snap = await db.collection('companies').doc(cid).collection('projects').doc(projectId).get();
+        const members = snap.data()?.projectMembers || [];
+        if (!members.length) { listEl.innerHTML = ''; return; }
+        const roleColor = { member: '#3b82f6', assignee: '#22c55e', viewer: '#9ca3af' };
+        const roleLabel = { member: 'Учасник', assignee: 'Виконавець', viewer: 'Спостерігач' };
+        listEl.innerHTML = `
+        <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+            <span style="font-size:0.72rem;color:#9ca3af;font-weight:600;">УЧАСНИКИ:</span>
+            ${members.map(m => `
+            <span style="font-size:0.72rem;background:white;border:1px solid #e8eaed;border-radius:10px;padding:2px 8px;display:flex;align-items:center;gap:4px;">
+                <span style="width:6px;height:6px;border-radius:50%;background:${roleColor[m.role]||'#6b7280'};display:inline-block;"></span>
+                ${m.name||m.email} <span style="color:${roleColor[m.role]||'#6b7280'}">${roleLabel[m.role]||m.role}</span>
+            </span>`).join('')}
+            <button onclick="openProjectMembers('${projectId}')" style="font-size:0.7rem;background:none;border:1px dashed #d1d5db;border-radius:10px;padding:2px 8px;cursor:pointer;color:#9ca3af;">+ додати</button>
+        </div>`;
+    } catch(e) { listEl.innerHTML = ''; }
+};

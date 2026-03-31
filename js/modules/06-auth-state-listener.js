@@ -143,6 +143,27 @@
                     });
                 }
 
+                // ── GUEST ROLE: підрядник бачить тільки проєкти ──
+                if (currentUserData.role === 'guest') {
+                    const guestAllowed = ['projects'];
+                    window._userAllowedTabs = guestAllowed;
+                    window._isGuestUser = true;
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        const match = (btn.getAttribute('onclick') || '').match(/switchTab\('(\w+)'\)/);
+                        const tab = match ? match[1] : null;
+                        if (tab && !guestAllowed.includes(tab)) btn.style.display = 'none';
+                    });
+                    document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+                        const tab = btn.dataset.tab;
+                        if (tab && tab !== 'more' && !guestAllowed.includes(tab)) btn.style.display = 'none';
+                    });
+                    ['analyticsTabBtn','sysTabBtn','bizNavBtn','tasksTabBtn','inviteBtn','adminTabBtn','ownerAiButtons','aiAssistantsBtnMenu'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.style.display = 'none';
+                    });
+                    setTimeout(() => { if (typeof switchTab === 'function') switchTab('projects'); }, 300);
+                }
+
                 // ── ALLOWED TABS: обмежений доступ до модулів ──
                 // Якщо у юзера є поле allowedTabs: ['warehouse', ...] — показуємо ТІЛЬКИ ці таби
                 const _allowedTabs = currentUserData.allowedTabs;

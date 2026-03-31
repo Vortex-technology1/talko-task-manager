@@ -63,12 +63,28 @@
                 
                 const TASKS_LOAD_LIMIT = 2000; // raised from 500
                 const isEmployeeRole = currentUserData?.role === 'employee';
+                const isGuestRole = currentUserData?.role === 'guest';
                 const uid = currentUser.uid;
                 
+                // Guest: load only tasks where assigneeId === uid AND projectId in guestProjects
                 // Employee: load only THEIR tasks (assigned + created + coExecutor + observer)
                 // Owner/Manager: load ALL tasks in parallel batches (up to TASKS_LOAD_LIMIT)
                 let tasksPromise;
-                if (isEmployeeRole) {
+                if (isGuestRole) {
+                    const guestProjects = currentUserData?.guestProjects || [];
+                    tasksPromise = base.collection('tasks')
+                        .where('assigneeId', '==', uid)
+                        .limit(500).get()
+                        .then(snap => {
+                            // Фільтруємо тільки задачі з дозволених проєктів
+                            const filtered = snap.docs.filter(d => {
+                                const pid = d.data().projectId;
+                                return !pid || guestProjects.includes(pid);
+                            });
+                            return { docs: filtered, size: filtered.length };
+                        })
+                        .catch(() => ({ docs: [], size: 0 }));
+                } else if (isEmployeeRole) {
                     tasksPromise = Promise.all([
                         base.collection('tasks').where('assigneeId', '==', uid).orderBy('createdAt', 'desc').limit(1000).get()
                             .catch(() => base.collection('tasks').where('assigneeId', '==', uid).limit(1000).get()),
