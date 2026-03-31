@@ -33,6 +33,14 @@ window.crmAutoTasksOnStageChange = async function (deal, newStage) {
 
         const _assignee = window.currentUserData?.name || email || '';
         const _today = new Date().toISOString().slice(0, 10);
+        // Формуємо вкладення якщо шаблон має файл
+        const attachments = tpl.fileUrl ? [{
+            url:  tpl.fileUrl,
+            name: tpl.fileName || 'file',
+            type: tpl.fileName?.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream',
+            isTemplate: true,
+        }] : [];
+
         await compRef.collection(window.DB_COLS?.TASKS || 'tasks').add({
             title:        tpl.title,
             dueDate:      dueDate,
@@ -50,8 +58,10 @@ window.crmAutoTasksOnStageChange = async function (deal, newStage) {
             autoCreated:  true,
             source:       'crm_stage',
             dealId:       deal.id,
+            crmDealId:    deal.id,
             clientName:   deal.clientName || deal.title || '',
             fromStage:    newStage,
+            ...(attachments.length ? { attachments } : {}),
             createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt:    firebase.firestore.FieldValue.serverTimestamp(),
         }).catch(e => console.warn('[CRM autoTask]', e.message));
@@ -233,6 +243,21 @@ window.crmRenderTaskTemplatesSettings = function () {
 
 function _taskTemplateRow(t, i, stages) {
     const selStyle = 'padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:5px;font-size:0.72rem;background:white;';
+    const fileInfo = t.fileName
+        ? `<span style="font-size:0.68rem;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;
+            border-radius:4px;padding:1px 6px;display:flex;align-items:center;gap:3px;">
+            📎 ${t.fileName.slice(0,18)}${t.fileName.length>18?'…':''}
+            <button onclick="crmRemoveTemplateFile(${i})" style="background:none;border:none;cursor:pointer;
+                color:#fca5a5;padding:0;font-size:0.75rem;" title="Видалити файл">×</button>
+          </span>`
+        : `<label title="Прикріпити PDF/DOC до автозадачі" style="cursor:pointer;
+            font-size:0.68rem;color:#6b7280;background:#f8fafc;border:1px solid #e8eaed;
+            border-radius:4px;padding:2px 6px;display:flex;align-items:center;gap:3px;white-space:nowrap;">
+            <input type="file" accept=".pdf,.doc,.docx,.xlsx,.xls"
+                onchange="crmUploadTemplateFile(${i},this.files[0])"
+                style="display:none;">
+            📎 Файл
+          </label>`;
     return `
     <div style="display:flex;align-items:center;gap:0.4rem;padding:0.5rem 0.6rem;
         background:#f8fafc;border:1px solid #e8eaed;border-radius:7px;flex-wrap:wrap;">
@@ -254,8 +279,9 @@ function _taskTemplateRow(t, i, stages) {
             <option value="creator"  ${t.assignTo==='creator'?'selected':''}>Автору угоди</option>
             <option value="me"       ${t.assignTo==='me'?'selected':''}>${window.t('toMe')||'Мені'}</option>
         </select>
+        ${fileInfo}
         <button onclick="crmRemoveTaskTemplate(${i})"
-            style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px;font-size:1rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>`;
 }
 
@@ -528,4 +554,61 @@ window.crmDeleteDealFile = async function(dealId, fileId, storagePath) {
     } catch(e) {
         if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
+};
+
+// ── PDF в шаблонах автозадач ──────────────────────────────
+window.crmUploadTemplateFile = async function(idx, file) {
+    if (!file) return;
+    const pipeline = window.crm?.pipeline;
+    if (!pipeline?.taskTemplates?.[idx]) return;
+
+    const MAX = 10 * 1024 * 1024; // 10MB
+    const ALLOWED = ['pdf','doc','docx','xlsx','xls'];
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!ALLOWED.includes(ext)) {
+        if (window.showToast) showToast(`Формат .${ext} не підтримується (тільки PDF, DOC, XLSX)`, 'warning');
+        return;
+    }
+    if (file.size > MAX) {
+        if (window.showToast) showToast(`Файл більше 10MB`, 'warning');
+        return;
+    }
+
+    try {
+        const compId = window.currentCompanyId || window.companyId;
+        const pipelineId = pipeline.id;
+        const stageId = pipeline.taskTemplates[idx].stageId || 'common';
+        const ts = Date.now();
+        const safeName = file.name.replace(/[^a-zA-Z0-9._\-а-яА-ЯёЁіІїЇєЄ]/g, '_');
+        const storagePath = `companies/${compId}/stage-templates/${pipelineId}/${stageId}/${ts}_${safeName}`;
+
+        if (window.showToast) showToast('Завантажую файл...', 'info');
+        const storageRef = firebase.storage().ref(storagePath);
+        await storageRef.put(file);
+        const url = await storageRef.getDownloadURL();
+
+        pipeline.taskTemplates[idx].fileUrl      = url;
+        pipeline.taskTemplates[idx].fileName     = file.name;
+        pipeline.taskTemplates[idx].storagePath  = storagePath;
+
+        if (window.showToast) showToast(`📎 ${file.name} прикріплено`, 'success');
+        _crmRefreshTaskTemplatesUI();
+    } catch(e) {
+        if (window.showToast) showToast('Помилка завантаження: ' + e.message, 'error');
+        console.error('[CRM templateFile]', e);
+    }
+};
+
+window.crmRemoveTemplateFile = function(idx) {
+    const pipeline = window.crm?.pipeline;
+    if (!pipeline?.taskTemplates?.[idx]) return;
+    const tpl = pipeline.taskTemplates[idx];
+    // Видаляємо з Storage асинхронно (не блокуємо UI)
+    if (tpl.storagePath) {
+        firebase.storage().ref(tpl.storagePath).delete().catch(() => {});
+    }
+    delete tpl.fileUrl;
+    delete tpl.fileName;
+    delete tpl.storagePath;
+    _crmRefreshTaskTemplatesUI();
 };

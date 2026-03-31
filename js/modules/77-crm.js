@@ -1525,6 +1525,15 @@ async function _doStageChange(deal, newStage, oldStage) {
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
     if (newStage === 'won') upd.wonAt = firebase.firestore.FieldValue.serverTimestamp();
+
+    // ── Автовідповідальний при переході стадії ──────────────
+    const targetStageObj = (crm.pipeline?.stages || []).find(s => s.id === newStage);
+    const prevAssigneeId = deal.assigneeId;
+    if (targetStageObj?.autoAssigneeId) {
+        upd.assigneeId = targetStageObj.autoAssigneeId;
+        deal.assigneeId = targetStageObj.autoAssigneeId; // локально одразу
+    }
+
     await ref.update(upd);
     deal.stageEnteredAt = { toMillis: () => Date.now() };
 
@@ -1533,6 +1542,18 @@ async function _doStageChange(deal, newStage, oldStage) {
         by: window.currentUser?.email || 'manager',
         at: firebase.firestore.FieldValue.serverTimestamp(),
     });
+
+    // ── Логуємо зміну відповідального якщо відбулась ────────
+    if (targetStageObj?.autoAssigneeId && targetStageObj.autoAssigneeId !== prevAssigneeId) {
+        await ref.collection('history').add({
+            type: 'assignee_changed',
+            to: targetStageObj.autoAssigneeId,
+            toName: targetStageObj.autoAssigneeName || '',
+            reason: 'auto_stage',
+            by: window.currentUser?.email || 'system',
+            at: firebase.firestore.FieldValue.serverTimestamp(),
+        }).catch(() => {});
+    }
 
     if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
         await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
@@ -4803,18 +4824,27 @@ function _renderCRMSettings() {
                 </button>
             </div>
             <div id="crmStageList" style="display:flex;flex-direction:column;gap:0.35rem;">
-                ${stages.map((s, i) => `
+                ${stages.map((s, i) => {
+                    const usersArr = (typeof users !== 'undefined' ? users : []).filter(u => u.role !== 'employee' || true);
+                    const assigneeOpts = `<option value="">${_tg('— без зміни —','— без изменения —')}</option>` +
+                        usersArr.map(u => `<option value="${u.id}" ${s.autoAssigneeId===u.id?'selected':''}>${_esc(u.name||u.email||u.id)}</option>`).join('');
+                    return `
                 <div id="crmStage_${s.id}" draggable="true"
                     ondragstart="crmStageDragStart(event,'${s.id}')"
                     ondragover="crmStageDragOver(event)"
                     ondrop="crmStageDrop(event,'${s.id}')"
                     style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.65rem;
                     background:#f8fafc;border:1px solid #e8eaed;border-radius:7px;cursor:grab;
-                    border-left:4px solid ${s.color};">
+                    border-left:4px solid ${s.color};flex-wrap:wrap;">
                     <span style="color:#d1d5db;font-size:0.75rem;cursor:grab;">⠿</span>
                     <input value="${_esc(s.label)}" onchange="crmUpdateStageLabel('${s.id}',this.value)"
-                        style="${inp}flex:1;background:transparent;border:none;padding:0;font-weight:500;color:#111827;"
+                        style="${inp}flex:1;min-width:100px;background:transparent;border:none;padding:0;font-weight:500;color:#111827;"
                         onclick="event.stopPropagation()">
+                    <select title="Відповідальний при переході на цю стадію"
+                        onchange="crmUpdateStageAutoAssignee('${s.id}',this.value)"
+                        style="${inp}font-size:0.72rem;color:#6b7280;max-width:140px;">
+                        ${assigneeOpts}
+                    </select>
                     <input type="color" value="${s.color}"
                         onchange="crmUpdateStageColor('${s.id}',this.value)"
                         style="width:26px;height:26px;border:none;border-radius:4px;cursor:pointer;padding:0;background:none;"
@@ -4823,7 +4853,7 @@ function _renderCRMSettings() {
                     <button onclick="crmRemoveStage('${s.id}')"
                         style="background:none;border:none;cursor:pointer;color:#fca5a5;
                         display:flex;align-items:center;padding:2px;" title="${window.t('crmDelete')}">${I.trash}</button>` : ''}
-                </div>`).join('')}
+                </div>`}).join('')}
             </div>
             <button onclick="crmSaveStages()"
                 style="margin-top:0.75rem;width:100%;padding:0.5rem;background:#22c55e;color:white;
@@ -5115,6 +5145,21 @@ window.crmUpdateStageLabel = function(stageId, label) {
 window.crmUpdateStageColor = function(stageId, color) {
     const s = crm.pipeline?.stages?.find(s => s.id === stageId);
     if (s) { s.color = color; _renderCRMSettings(); }
+};
+
+// Автовідповідальний при переході на стадію
+window.crmUpdateStageAutoAssignee = function(stageId, userId) {
+    const s = crm.pipeline?.stages?.find(s => s.id === stageId);
+    if (!s) return;
+    if (userId) {
+        s.autoAssigneeId = userId;
+        const u = (typeof users !== 'undefined' ? users : []).find(u => u.id === userId);
+        s.autoAssigneeName = u ? (u.name || u.email || '') : '';
+    } else {
+        delete s.autoAssigneeId;
+        delete s.autoAssigneeName;
+    }
+    // Не перерендеруємо — зберігається при crmSaveStages
 };
 
 window.crmRemoveStage = async function(stageId) {
