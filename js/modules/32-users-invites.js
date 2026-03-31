@@ -693,7 +693,7 @@
         
         let editingUserId = null;
         
-        function openUserModal(userId = null) {
+        async function openUserModal(userId = null) {
             editingUserId = userId;
             const modal = document.getElementById('userModal');
 
@@ -738,7 +738,17 @@
             }
             
             if (userId) {
-                const user = users.find(u => u.id === userId);
+                // Завжди читаємо свіжі дані з Firestore при відкритті
+                let user = users.find(u => u.id === userId);
+                try {
+                    const freshSnap = await db.collection('companies').doc(currentCompany).collection('users').doc(userId).get();
+                    if (freshSnap.exists) {
+                        user = { id: freshSnap.id, ...freshSnap.data() };
+                        // Оновлюємо локальний масив
+                        const idx = users.findIndex(u => u.id === userId);
+                        if (idx >= 0) users[idx] = user;
+                    }
+                } catch(e) { /* fallback to local */ }
                 if (user) {
                     document.getElementById('userName').value = user.name || '';
                     document.getElementById('userEmail').value = user.email || '';
@@ -906,7 +916,8 @@
                         functionIds: selectedFunctions,
                         primaryFunctionId,
                         functionRoles,
-                        allowedTabs: allowedTabs || null
+                        allowedTabs: allowedTabs || null,
+                        _savedAt: Date.now()
                     };
                 }
                 
