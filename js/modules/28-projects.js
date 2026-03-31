@@ -504,9 +504,22 @@
             renderProjects();
         }
         
+        // Повертає роль поточного юзера в проєкті: 'member'|'assignee'|'viewer'|'owner'|null
+        function _getMyProjectRole(project) {
+            const uid = currentUser?.uid;
+            if (!uid) return null;
+            const ownerRole = currentUserData?.role;
+            if (ownerRole === 'owner' || ownerRole === 'manager') return 'owner';
+            const members = project.projectMembers || [];
+            const me = members.find(m => m.uid === uid);
+            return me ? me.role : null;
+        }
+
         function renderProjectDetail(projectId) {
             const project = projects.find(p => p.id === projectId);
             if (!project) { closeProjectDetail(); return; }
+            const myProjectRole = _getMyProjectRole(project);
+            const isViewer = myProjectRole === 'viewer';
             
             // Load stages and materials async
             if (typeof window.loadProjectStages === 'function') {
@@ -551,8 +564,11 @@
                         ${colTasks.length === 0 ? '<div style="text-align:center;color:#ccc;font-size:0.8rem;padding:1rem;">—</div>' : ''}
                         ${colTasks.map(t => {
                             const assignee = t.assigneeName || '';
+                            const clickHandler = isViewer
+                                ? `if(window.showToast) showToast('Спостерігач — тільки читання', 'info')`
+                                : `openTaskModal('${escId(t.id)}')`;
                             return `
-                            <div class="project-task-card priority-${t.priority || 'medium'}" onclick="openTaskModal('${escId(t.id)}')">
+                            <div class="project-task-card priority-${t.priority || 'medium'}" onclick="${clickHandler}" style="${isViewer ? 'opacity:0.85;cursor:default;' : ''}">
                                 <div class="project-task-card-title">${esc(t.title)}</div>
                                 <div class="project-task-card-meta">
                                     ${assignee ? `<span><i data-lucide="user" class="icon icon-sm"></i> ${esc(assignee)}</span>` : ''}
@@ -572,13 +588,13 @@
                         ${esc(project.name)}
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;">
-                        <button class="btn btn-success btn-small" onclick="openTaskForProject('${escId(projectId)}')" style="min-height:36px;"><i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addTask') || window.t('permTsk2')}</button>
+                        ${!isViewer ? `<button class="btn btn-success btn-small" onclick="openTaskForProject('${escId(projectId)}')" style="min-height:36px;"><i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addTask') || window.t('permTsk2')}</button>` : ''}
                         <button class="btn btn-small" onclick="openProjectMembers('${escId(projectId)}')" style="min-height:36px;display:flex;align-items:center;gap:4px;" title="Учасники проєкту"><i data-lucide="users" class="icon icon-sm"></i> Учасники</button>
                         <button class="btn btn-small" onclick="toggleProjectMembersHelp('${escId(projectId)}')" style="min-height:36px;width:36px;padding:0;color:#9ca3af;font-size:0.85rem;font-weight:600;border-radius:8px;" title="Як це працює?"><i data-lucide="help-circle" class="icon icon-sm"></i></button>
                         <select class="filter-select" onchange="updateProjectStatus('${escId(projectId)}', this.value)" style="font-size:0.8rem;padding:0.3rem;min-height:36px;">${statusOptions}</select>
-                        <button class="btn btn-small" onclick="openProjectModal('${escId(projectId)}')" style="min-height:36px;" title="${window.t('edit') || window.t('flowEdt2')}" aria-label="${window.t('edit') || window.t('flowEdt2')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                        ${!isViewer ? `<button class="btn btn-small" onclick="openProjectModal('${escId(projectId)}')" style="min-height:36px;" title="${window.t('edit') || window.t('flowEdt2')}" aria-label="${window.t('edit') || window.t('flowEdt2')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
                         <div style="width:1px;height:24px;background:#e5e7eb;margin:0 12px;"></div>
-                        <button class="btn btn-small" onclick="deleteProject('${escId(projectId)}')" title="${window.t('deleteProject') || 'Видалити проєкт'} — незворотна дія" aria-label="${window.t('deleteProject') || 'Видалити проєкт'} — незворотна дія" style="background:#fee2e2;color:#dc2626;border-color:#fecaca;min-height:36px;margin-left:auto;"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                        <button class="btn btn-small" onclick="deleteProject('${escId(projectId)}')" title="${window.t('deleteProject') || 'Видалити проєкт'} — незворотна дія" aria-label="${window.t('deleteProject') || 'Видалити проєкт'} — незворотна дія" style="background:#fee2e2;color:#dc2626;border-color:#fecaca;min-height:36px;margin-left:auto;"><i data-lucide="trash-2" class="icon icon-sm"></i></button>` : `<span style="font-size:0.75rem;color:#9ca3af;background:#f3f4f6;padding:0.3rem 0.75rem;border-radius:8px;margin-left:auto;">👁 Спостерігач</span>`}
                     </div>
                 </div>
                 

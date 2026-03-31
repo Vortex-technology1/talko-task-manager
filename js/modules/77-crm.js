@@ -2703,6 +2703,15 @@ window.crmSaveDeal = async function(dealId) {
             }
         }
 
+        // amount_threshold trigger — якщо сума змінилась
+        const prevAmount = deal.amount || 0;
+        if (amount !== prevAmount && typeof window.crmRunTriggers === 'function') {
+            const updatedDeal = { ...deal, ...updates, id: dealId };
+            setTimeout(() => {
+                window.crmRunTriggers(updatedDeal, 'amount_threshold', { prevAmount, newAmount: amount });
+            }, 300);
+        }
+
         crmCloseDeal();
         if (typeof showToast === 'function') showToast(window.t('crmSaved'), 'success');
     } catch(e) {

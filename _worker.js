@@ -2,7 +2,8 @@
 // TALKO OS — Cloudflare Pages Worker
 // Routes: /s/:slug, /api/site, /api/ai-proxy, /api/webhook,
 //         /api/booking, /api/stripe, /api/crm-form,
-//         /api/crm-reminders, /api/warehouse, /api/funnel-ai
+//         /api/crm-reminders, /api/warehouse, /api/funnel-ai,
+//         /api/crm-trigger-notify
 // All others → static assets
 // ============================================================
 
@@ -190,6 +191,9 @@ export default {
         // ── /api/stripe ──────────────────────────────────────
         if (path.startsWith('/api/stripe')) return handleStripe(request, url, env);
 
+        // ── /api/crm-trigger-notify ──────────────────────────
+        if (path === '/api/crm-trigger-notify') return handleCrmTriggerNotify(request, env);
+
         // ── /api/ping ────────────────────────────────────────
         if (path === '/api/ping') return json({ ok:true, ts:Date.now() });
 
@@ -372,6 +376,96 @@ async function handleAiProxy(request, env) {
 }
 
 // ════════════════════════════════════════════════════════════
+// CRM TRIGGER NOTIFY — sends Telegram messages from CRM triggers
+// ════════════════════════════════════════════════════════════
+async function handleCrmTriggerNotify(request, env) {
+    if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+
+    let body;
+    try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
+
+    const { companyId, to, message, dealId, dealTitle } = body;
+    if (!companyId || !message) return json({ error: 'companyId and message required' }, 400);
+
+    let token;
+    try { token = await getToken(env); } catch(e) { return json({ error: 'Firebase error' }, 500); }
+
+    try {
+        // Отримуємо налаштування компанії (botToken)
+        const settDoc = await fsGet(`companies/${companyId}/settings/telegram`, token);
+        const sett = settDoc?.fields ? fFields(settDoc.fields) : {};
+        const botToken = sett.botToken || sett.telegramBotToken || env.TELEGRAM_BOT_TOKEN;
+        if (!botToken) return json({ ok: false, error: 'No bot token configured' });
+
+        const tgSend = (chatId, text) =>
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
+            }).catch(() => {});
+
+        const recipients = [];
+
+        if (to === 'owner') {
+            // Знаходимо owner компанії
+            const usersSnap = await fsQuery('users', [
+                { field: 'companyId', value: companyId },
+            ], token, 50);
+            const ownerDocs = usersSnap.filter(d => {
+                const u = fFields(d.fields || {});
+                return u.role === 'owner';
+            });
+            for (const d of ownerDocs) {
+                const u = fFields(d.fields || {});
+                if (u.telegramChatId) recipients.push(u.telegramChatId);
+            }
+            // Fallback: settings/general ownerChatId
+            if (!recipients.length) {
+                const genDoc = await fsGet(`companies/${companyId}/settings/general`, token);
+                const gen = genDoc?.fields ? fFields(genDoc.fields) : {};
+                if (gen.ownerTelegramChatId) recipients.push(gen.ownerTelegramChatId);
+            }
+        } else if (to === 'responsible' && dealId) {
+            // Відповідальний за угоду
+            const dealDoc = await fsGet(`companies/${companyId}/crm_deals/${dealId}`, token);
+            const deal = dealDoc?.fields ? fFields(dealDoc.fields) : {};
+            const assigneeId = deal.assigneeId || deal.responsibleId;
+            if (assigneeId) {
+                const userDoc = await fsGet(`companies/${companyId}/users/${assigneeId}`, token);
+                const user = userDoc?.fields ? fFields(userDoc.fields) : {};
+                if (user.telegramChatId) recipients.push(user.telegramChatId);
+            }
+        } else if (to && to !== 'owner' && to !== 'responsible') {
+            // Конкретний chatId переданий напряму
+            recipients.push(to);
+        }
+
+        if (!recipients.length) return json({ ok: false, error: 'No recipients with Telegram connected' });
+
+        // Формуємо повідомлення
+        const dealInfo = dealTitle ? `\n🔖 Угода: <b>${dealTitle}</b>` : '';
+        const fullMessage = `🤖 <b>TALKO Тригер</b>${dealInfo}\n\n${message}`;
+
+        await Promise.all(recipients.map(chatId => tgSend(chatId, fullMessage)));
+
+        // Логуємо в Firestore
+        if (dealId) {
+            const logId = `log_${Date.now()}`;
+            await fsSet(`companies/${companyId}/crmTriggers/_notify_log/entries/${logId}`, {
+                dealId:    { stringValue: dealId },
+                to:        { stringValue: to || '' },
+                message:   { stringValue: message },
+                sentAt:    { stringValue: new Date().toISOString() },
+                recipients:{ integerValue: recipients.length },
+            }, token);
+        }
+
+        return json({ ok: true, sent: recipients.length });
+    } catch(e) {
+        return json({ ok: false, error: e.message }, 500);
+    }
+}
+
 // CRM FORM — form submissions from landing pages
 // ════════════════════════════════════════════════════════════
 async function handleCrmForm(request, env) {

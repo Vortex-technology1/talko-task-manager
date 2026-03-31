@@ -504,4 +504,26 @@
         if (newStage === 'lost') await window.crmRunTriggers(deal, 'deal_lost');
     });
 
+    // ── Telegram-повідомлення з тригерів ───────────────────
+    // to: 'owner' | 'responsible' | конкретний chatId
+    window._sendTriggerTelegram = async function(to, message, deal) {
+        try {
+            const cid = window.currentCompanyId;
+            if (!cid) return;
+            await fetch('/api/crm-trigger-notify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    companyId: cid,
+                    to: to || 'owner',
+                    message,
+                    dealId:    deal?.id    || null,
+                    dealTitle: deal?.title || deal?.clientName || null,
+                }),
+            });
+        } catch(e) {
+            console.warn('[_sendTriggerTelegram]', e.message);
+        }
+    };
+
 })();
