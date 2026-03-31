@@ -93,7 +93,7 @@ window.initCRMModule = async function () {
         const c = document.getElementById('crmViewKanban') || document.getElementById('crmContainer');
         if (c) c.innerHTML = `<div style="padding:3rem 2rem;text-align:center;">
             <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-            <div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.4rem;">CRM не загрузилась</div>
+            <div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.4rem;">CRM не завантажилась</div>
             <div style="font-size:0.8rem;color:#6b7280;margin-bottom:1.25rem;line-height:1.5;">
                 ${window.htmlEsc ? window.htmlEsc(e.message) : e.message}
             </div>
@@ -1282,8 +1282,8 @@ window.crmBulkDelete = async function() {
     if (crm.selectedIds.size === 0) return;
     const count = crm.selectedIds.size;
     const confirmed = await (window.showConfirmModal
-        ? showConfirmModal('Удалить ' + count + ' сделок? Это действие нельзя отменить.', { danger: true })
-        : showConfirmModal('Удалить ' + count + ' сделок?', {danger:true}));
+        ? showConfirmModal(_tg('Видалити ' + count + ' угод(и)? Це незворотна дія.', 'Удалить ' + count + ' сделок? Это действие нельзя отменить.'), { danger: true })
+        : showConfirmModal(_tg('Видалити ' + count + ' угод(и)?', 'Удалить ' + count + ' сделок?'), {danger:true}));
     if (!confirmed) return;
     const ids = Array.from(crm.selectedIds);
     // Паралельне видалення chunks по 10 (не флудимо Firestore всіма одразу)
@@ -2332,7 +2332,7 @@ function _renderDealDetails(deal) {
             }).join('')}
         </div>
         <select id="dd_wh_select" onchange="window._crmWhAddItem('${deal.id}',this)" style="${inp}background:white;font-size:0.8rem;">
-            <option value="">+ Добавить товар со склада...</option>
+            <option value="">+ Додати товар зі складу...</option>
             ${window.whGetItems().map(i => {
                 const s = window.whGetStock ? window.whGetStock(i.id) : {qty:0};
                 return `<option value="${i.id}">${i.name} (${s.qty} ${i.unit||'шт'})</option>`;

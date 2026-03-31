@@ -2171,6 +2171,18 @@ document.addEventListener('mousedown', function(e) {
                         <div class="form-group"><label class="form-label" style="font-size:0.75rem;" data-i18n="clientWord">Клієнт</label><input type="text" id="projectClientName" class="form-input" placeholder="Ім'я клієнта" data-i18n-placeholder="clientNamePh"></div>
                     </div>
                     <input type="hidden" id="projectEditId" value="">
+                    <!-- Приватний проєкт -->
+                    <div class="form-group" style="margin-top:0.75rem;">
+                        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.85rem;font-weight:500;color:#374151;">
+                            <input type="checkbox" id="projectIsPrivate" onchange="toggleProjectPrivateUI(this.checked)"
+                                style="width:16px;height:16px;accent-color:#8b5cf6;cursor:pointer;">
+                            🔒 Приватний проєкт — видно тільки обраним учасникам
+                        </label>
+                        <div id="projectMembersBlock" style="display:none;margin-top:0.6rem;padding:0.75rem;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;">
+                            <div style="font-size:0.75rem;color:#7c3aed;font-weight:600;margin-bottom:0.4rem;">Учасники (крім вас завжди включені автоматично)</div>
+                            <div id="projectMembersList" style="display:flex;flex-wrap:wrap;gap:0.35rem;"></div>
+                        </div>
+                    </div>
                     <div class="form-actions" style="margin-top:1rem;">
                         <button type="button" class="btn" onclick="closeModal('projectModal')" data-i18n="cancel">Скасувати</button>
                         <button type="submit" class="btn btn-success"><i data-lucide="check" class="icon"></i> <span data-i18n="saveWord">Зберегти</span></button>
@@ -3004,7 +3016,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/25-functions.js?v=20260324vG" defer></script>
     <script src="js/modules/26-functions-structure-view.js?v=20260324vG" defer></script>
     <script src="js/modules/27-processes.js?v=20260324vG" defer></script>
-    <script src="js/modules/28-projects.js?v=20260329v1" defer></script>
+    <script src="js/modules/28-projects.js?v=20260331v2" defer></script>
     <script src="js/modules/29-auto-advance.js?v=20260314v2" defer></script>
     <script src="js/modules/30-regular-tasks.js?v=20260324v3" defer></script>
     <script src="js/modules/31-regular-calendar-view.js?v=20260324vG" defer></script>
@@ -4736,9 +4748,9 @@ document.addEventListener('mousedown', function(e) {
 
     // ── Групи модулів ──────────────────────────────────────────────────────
     window.LAZY_GROUPS = {
-        crm:          ["js/modules/77-crm.js?v=20260331v6", "js/modules/77b-crm-calls.js?v=20260328v1", "js/modules/77c-crm-tasks.js?v=20260331v3", "js/modules/77d-crm-import.js?v=20260328v1", "js/modules/77e-crm-access.js?v=20260313b", "js/modules/77f-crm-mobile.js?v=20260313b", "js/modules/77g-crm-forms.js?v=20260328v1", "js/modules/77h-crm-beauty.js?v=20260328v2", "js/modules/77i-crm-niches.js?v=20260328v2", "js/modules/78-crm-todo.js?v=20260322b1", "js/modules/90b-sales-deepgram.js?v=20260320v1", "js/modules/90-sales-assistant.js?v=20260320v1", "js/modules/77j-crm-finance-bridge.js?v=20260328v1", "js/modules/77k-crm-tasks-bridge.js?v=20260327v1"],
+        crm:          ["js/modules/77-crm.js?v=20260331v7", "js/modules/77b-crm-calls.js?v=20260328v1", "js/modules/77c-crm-tasks.js?v=20260331v3", "js/modules/77d-crm-import.js?v=20260328v1", "js/modules/77e-crm-access.js?v=20260313b", "js/modules/77f-crm-mobile.js?v=20260313b", "js/modules/77g-crm-forms.js?v=20260328v1", "js/modules/77h-crm-beauty.js?v=20260328v2", "js/modules/77i-crm-niches.js?v=20260328v2", "js/modules/78-crm-todo.js?v=20260322b1", "js/modules/90b-sales-deepgram.js?v=20260320v1", "js/modules/90-sales-assistant.js?v=20260320v1", "js/modules/77j-crm-finance-bridge.js?v=20260328v1", "js/modules/77k-crm-tasks-bridge.js?v=20260327v1"],
         bots:         ["js/modules/81-bots-flows.js?v=20260329v1", "js/modules/82-flow-canvas.js?v=20260317v1", "js/modules/83-bots-contacts.js?v=20260329v3"],
-        finance:      ["js/modules/98-finance.js?v=20260330v2", "js/modules/98-finance-weekly-plan.js?v=20260328v1", "js/modules/98-finance-balance.js?v=20260328v3"],
+        finance:      ["js/modules/98-finance.js?v=20260331v1", "js/modules/98-finance-weekly-plan.js?v=20260328v1", "js/modules/98-finance-balance.js?v=20260328v3"],
         warehouse:    ["js/modules/99-warehouse-core.js?v=20260317v1", "js/modules/99-warehouse-alerts.js?v=20260317v1", "js/modules/99-warehouse-ui.js?v=20260329v3", "js/modules/99c-warehouse-finance-bridge.js?v=20260327v1"],
         statistics:   ["js/modules/66-statistics.js?v=20260324vG"],
         coordination: ["js/modules/76-coordination.js?v=20260324v2"],

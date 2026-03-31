@@ -17,6 +17,14 @@
             document.getElementById('projectPlannedLaborCost').value = project?.plannedLaborCost || '';
             document.getElementById('projectClientName').value = project?.clientName || '';
 
+            // Приватний проєкт
+            const isPrivate = !!project?.isPrivate;
+            const privCb = document.getElementById('projectIsPrivate');
+            if (privCb) {
+                privCb.checked = isPrivate;
+                toggleProjectPrivateUI(isPrivate, project?.members || []);
+            }
+
             // Populate functionIds checkboxes
             const funcContainer = document.getElementById('projectFunctionIds');
             if (funcContainer) {
@@ -57,6 +65,14 @@
                 plannedLaborCost: parseFloat(document.getElementById('projectPlannedLaborCost')?.value) || 0,
                 clientName: document.getElementById('projectClientName')?.value?.trim() || '',
                 functionIds: Array.from(document.querySelectorAll('#projectFunctionIds input:checked')).map(cb => cb.value),
+                // Приватний проєкт
+                isPrivate: document.getElementById('projectIsPrivate')?.checked || false,
+                members: document.getElementById('projectIsPrivate')?.checked
+                    ? [
+                        currentUser.uid,
+                        ...Array.from(document.querySelectorAll('#projectMembersList input:checked')).map(cb => cb.value)
+                      ].filter((v, i, a) => a.indexOf(v) === i) // uniq
+                    : [],
             };
             if (!data.name) { isSavingProject = false; if (submitBtn) submitBtn.disabled = false; return; }
             
@@ -87,6 +103,32 @@
             }
         }
         
+        // Показуємо/приховуємо блок учасників при зміні чекбоксу "Приватний"
+        window.toggleProjectPrivateUI = function(checked, existingMembers) {
+            const block = document.getElementById('projectMembersBlock');
+            if (!block) return;
+            block.style.display = checked ? 'block' : 'none';
+            if (!checked) return;
+
+            const list = document.getElementById('projectMembersList');
+            if (!list) return;
+            const usersArr = (typeof users !== 'undefined' ? users : [])
+                .filter(u => u.id !== currentUser?.uid); // власника не показуємо — він завжди включений
+            const selectedMembers = existingMembers || [];
+
+            list.innerHTML = usersArr.length
+                ? usersArr.map(u => `
+                    <label style="display:flex;align-items:center;gap:4px;cursor:pointer;
+                        font-size:0.78rem;color:#374151;background:white;border:1px solid #e5e7eb;
+                        border-radius:6px;padding:3px 8px;">
+                        <input type="checkbox" value="${u.id}"
+                            ${selectedMembers.includes(u.id) ? 'checked' : ''}
+                            style="accent-color:#8b5cf6;">
+                        ${u.name || u.email || u.id}
+                    </label>`).join('')
+                : '<span style="font-size:0.75rem;color:#9ca3af;">Немає інших співробітників</span>';
+        };
+
         async function deleteProject(projectId) {
             if (currentUserData?.role === 'employee') { showToast(window.t('noPermissionTask'), 'error'); return; }
             const s = getProjectStats(projectId);
@@ -257,6 +299,15 @@
             const statusFilter = document.getElementById('projectStatusFilter')?.value || '';
             let filtered = projects;
             if (statusFilter) filtered = filtered.filter(p => p.status === statusFilter);
+
+            // Фільтр приватних проєктів — показуємо тільки якщо поточний user є учасником або власником
+            const uid = currentUser?.uid;
+            filtered = filtered.filter(p => {
+                if (!p.isPrivate) return true;                      // публічний — всім видно
+                if (p.creatorId === uid) return true;               // власник — завжди видить
+                if (Array.isArray(p.members) && p.members.includes(uid)) return true; // учасник
+                return false;
+            });
             
             const counter = document.getElementById('projectsCounter');
             const activeCount = projects.filter(p => p.status === 'active').length;
@@ -300,7 +351,7 @@
                 <div class="project-card" style="--pc:${safeColor(p.color)};" onclick="openProjectDetail('${escId(p.id)}')">
                     <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${safeColor(p.color)};border-radius:12px 12px 0 0;"></div>
                     <div class="project-card-header">
-                        <div class="project-card-title">${esc(p.name)}</div>
+                        <div class="project-card-title">${p.isPrivate ? '🔒 ' : ''}${esc(p.name)}</div>
                         <span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? window.t('projectActive') : p.status === 'completed' ? window.t('projectCompleted') : window.t('projectPaused')}</span>
                     </div>
                     ${p.description ? `<div class="project-card-desc">${esc(p.description)}</div>` : ''}
@@ -675,8 +726,13 @@
                 .filter(t => t.deadlineDate)
                 .map(t => new Date(t.deadlineDate));
             
-            if (dates.length === 0) return '<div style="text-align:center;color:#999;padding:2rem;">Задачи без дат — Gantt невозможен</div>';
+            if (dates.length === 0) return '<div style="text-align:center;color:#999;padding:2rem;">' + (window.t('noTasksForGantt') || 'Задачі без дат — Gantt недоступний') + '</div>';
             
+            // Включаємо startDate задач в діапазон — інакше смужки вилізуть за ліву межу
+            projectTasks.forEach(t => {
+                if (t.startDate) dates.push(new Date(t.startDate));
+            });
+
             // Add today to range
             dates.push(today);
             
@@ -709,10 +765,10 @@
             
             const statusLabels = { new: window.t('statusNew'), progress: window.t('statusProgress'), review: window.t('statusReview'), done: window.t('statusDone') };
             
-            // Sort tasks by date
+            // Sort tasks: спочатку по startDate, потім по deadlineDate
             const sorted = [...projectTasks].sort((a, b) => {
-                const da = a.deadlineDate || '9999';
-                const db = b.deadlineDate || '9999';
+                const da = a.startDate || a.deadlineDate || '9999';
+                const db = b.startDate || b.deadlineDate || '9999';
                 return da.localeCompare(db);
             });
             
@@ -738,26 +794,47 @@
                 if (!task.deadlineDate) {
                     return `<div style="display:flex;align-items:center;height:36px;border-bottom:1px solid #f3f4f6;">
                         <div style="width:100%;padding:0 8px;font-size:0.75rem;color:#d1d5db;font-style:italic;">
-                            ${esc(task.title)} — без даты
+                            ${esc(task.title)} — без дати
                         </div>
                     </div>`;
                 }
-                
-                const taskDate = new Date(task.deadlineDate);
-                const durationDays = Math.max(1, Math.ceil((parseInt(task.estimatedTime || task.duration || '60')) / 480)); // 8h workday
-                const startDate = new Date(taskDate);
-                startDate.setDate(startDate.getDate() - durationDays + 1);
-                
-                // Calculate position
-                const startOffset = Math.max(0, Math.round((startDate - minDate) / 86400000));
-                const barWidth = Math.max(1, durationDays);
+
+                // ── ВИПРАВЛЕНИЙ розрахунок smуги ──────────────────
+                const deadlineDate = new Date(task.deadlineDate);
+                let barStartDate;
+
+                if (task.startDate && task.startDate !== task.deadlineDate) {
+                    // Пріоритет 1: явна дата початку задачі
+                    barStartDate = new Date(task.startDate);
+                } else if (task.estimatedTime && parseInt(task.estimatedTime) > 0) {
+                    // Пріоритет 2: розраховуємо з estimatedTime (хвилини → дні, 480хв = 8год)
+                    const mins = parseInt(task.estimatedTime);
+                    const durationDays = Math.max(1, Math.ceil(mins / 480));
+                    barStartDate = new Date(deadlineDate);
+                    barStartDate.setDate(barStartDate.getDate() - durationDays + 1);
+                } else if (task.duration && parseInt(task.duration) > 0) {
+                    // Пріоритет 3: поле duration
+                    const durationDays = Math.max(1, Math.ceil(parseInt(task.duration) / 480));
+                    barStartDate = new Date(deadlineDate);
+                    barStartDate.setDate(barStartDate.getDate() - durationDays + 1);
+                } else {
+                    // Fallback: мінімум 1 день (сьогодні = початок = кінець, але видно смужку)
+                    barStartDate = new Date(deadlineDate);
+                }
+
+                // Кількість днів смужки (мінімум 1)
+                const durationDays = Math.max(1, Math.round((deadlineDate - barStartDate) / 86400000) + 1);
+
+                // Позиція і ширина в пікселях
+                const startOffset = Math.max(0, Math.round((barStartDate - minDate) / 86400000));
                 const leftPx = startOffset * dayWidth;
-                const widthPx = barWidth * dayWidth - 4;
+                const widthPx = Math.max(dayWidth - 4, durationDays * dayWidth - 4);
                 
                 const isOverdue = task.deadlineDate < todayStr && task.status !== 'done' && task.status !== 'review';
+                const hasStartDate = !!task.startDate;
                 
                 return `<div style="display:flex;align-items:center;height:36px;border-bottom:1px solid #f3f4f6;position:relative;">
-                    <div style="position:absolute;left:${leftPx + 2}px;width:${widthPx}px;height:24px;background:${color.bg};border:1.5px solid ${color.border};border-radius:4px;display:flex;align-items:center;padding:0 6px;cursor:pointer;overflow:hidden;${isOverdue ? 'border-color:#ef4444;background:#fef2f2;' : ''}" onclick="openTaskModal('${escId(task.id)}')" title="${esc(task.title)} — ${statusLabels[task.status] || task.status}${assignee ? ' (' + assignee + ')' : ''}">
+                    <div style="position:absolute;left:${leftPx + 2}px;width:${widthPx}px;height:24px;background:${color.bg};border:1.5px solid ${color.border};border-radius:4px;display:flex;align-items:center;padding:0 6px;cursor:pointer;overflow:hidden;${isOverdue ? 'border-color:#ef4444;background:#fef2f2;' : ''}" onclick="openTaskModal('${escId(task.id)}')" title="${esc(task.title)} — ${statusLabels[task.status] || task.status}${assignee ? ' (' + assignee + ')' : ''}${hasStartDate ? ' | ' + task.startDate + ' → ' + task.deadlineDate : ''}">
                         <span style="font-size:0.65rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${isOverdue ? '#ef4444' : '#374151'};">${esc(task.title)}</span>
                     </div>
                 </div>`;

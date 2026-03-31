@@ -1078,6 +1078,9 @@ async function loadAndRenderTxList(type) {
               ${tx.counterparty ? ' &bull; ' + escHtml(tx.counterparty) : ''}
               ${tx.functionId ? ' &bull; <span style="color:#16a34a;">Ф</span>' : ''}
               ${tx.projectId  ? ' &bull; <span style="color:#3b82f6;">П</span>' : ''}
+              ${tx.staffName  ? ' &bull; 👤 <b style="color:#7c3aed;">' + escHtml(tx.staffName) + '</b>' : ''}
+              ${tx.workType   ? ' &bull; <span style="color:#6b7280;">' + escHtml(tx.workType) + '</span>' : ''}
+              ${tx.paymentType === 'advance' ? ' &bull; <span style="color:#f59e0b;font-weight:600;">аванс</span>' : tx.paymentType === 'salary' ? ' &bull; <span style="color:#16a34a;font-weight:600;">зарплата</span>' : tx.paymentType === 'bonus' ? ' &bull; <span style="color:#8b5cf6;font-weight:600;">бонус</span>' : ''}
             </div>
           </div>
           <div style="font-size:0.95rem;font-weight:700;color:${color};flex-shrink:0;">
@@ -4887,6 +4890,7 @@ function addTransaction(forceType) {
         <div id="fmCatWrap">
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCategoryLbl')} *</label>
           <select id="fmCategory"
+            onchange="window._finToggleStaffBlock(this.value)"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             <option value="">${window.t('finSelectCategory')||'— Оберіть категорію —'}</option>
             ${cats.map(c => `<option value="${c.id}">${escHtml(c.name)}</option>`).join('')}
@@ -4934,6 +4938,37 @@ function addTransaction(forceType) {
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             ${projectsHtml}
           </select>
+        </div>
+
+        <!-- Виплата персоналу — показується тільки для категорій зарплати -->
+        <div id="fmStaffBlock" style="display:none;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:0.85rem;gap:0.65rem;flex-direction:column;">
+          <div style="font-size:0.75rem;font-weight:700;color:#7c3aed;margin-bottom:0.1rem;">👤 Виплата персоналу</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+            <div>
+              <label style="font-size:0.72rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.25rem;">Працівник</label>
+              <select id="fmStaffId" style="width:100%;padding:0.45rem 0.6rem;border:1px solid #ddd6fe;border-radius:7px;font-size:0.82rem;background:#fff;">
+                <option value="">— не вказано —</option>
+                ${(typeof users !== 'undefined' ? users : []).map(u =>
+                  `<option value="${u.id}">${(u.name || u.email || u.id).replace(/</g,'&lt;')}</option>`
+                ).join('')}
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.72rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.25rem;">Тип виплати</label>
+              <select id="fmPaymentType" style="width:100%;padding:0.45rem 0.6rem;border:1px solid #ddd6fe;border-radius:7px;font-size:0.82rem;background:#fff;">
+                <option value="">— не вказано —</option>
+                <option value="advance">Аванс</option>
+                <option value="salary">Зарплата</option>
+                <option value="bonus">Бонус</option>
+                <option value="other">Інше</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.25rem;">Вид робіт</label>
+            <input id="fmWorkType" type="text" placeholder="Наприклад: кровля, бетон, фасад, монтаж..."
+              style="width:100%;padding:0.45rem 0.6rem;border:1px solid #ddd6fe;border-radius:7px;font-size:0.82rem;box-sizing:border-box;">
+          </div>
         </div>
 
         <!-- Дата нарахування (для P&L) -->
@@ -4990,6 +5025,18 @@ function addTransaction(forceType) {
   modal.dataset.type = type;
 }
 
+// Показуємо/приховуємо блок "Виплата персоналу" залежно від категорії
+window._finToggleStaffBlock = function(catId) {
+  const block = document.getElementById('fmStaffBlock');
+  if (!block) return;
+  // Показуємо якщо обрана категорія зарплати або виплат
+  const cats = (window._financeState || window._state)?.categories?.expense || [];
+  const cat = cats.find(c => c.id === catId);
+  const isSalaryCat = catId === 'exp_salary' || catId === 'salary'
+    || (cat?.name && /зарплат|виплат|salary|payroll|оплат праці/i.test(cat.name));
+  block.style.display = isSalaryCat ? 'flex' : 'none';
+};
+
 // Перемикання типу в модалі
 window._financeModalSwitchType = function(type) {
   const modal = document.getElementById('financeModal');
@@ -5027,14 +5074,24 @@ window._financeSaveTx = async function() {
     const currency = document.getElementById('fmCurrency')?.value || _state.currency;
     const accrualVal = document.getElementById('fmAccrualDate')?.value || '';
 
+    // Виплата персоналу — збираємо тільки якщо блок видимий
+    const staffBlock = document.getElementById('fmStaffBlock');
+    const isStaffVisible = staffBlock && staffBlock.style.display !== 'none';
+    const staffId    = isStaffVisible ? (document.getElementById('fmStaffId')?.value || null) : null;
+    const paymentType= isStaffVisible ? (document.getElementById('fmPaymentType')?.value || null) : null;
+    const workType   = isStaffVisible ? (document.getElementById('fmWorkType')?.value?.trim() || null) : null;
+    // Ім'я працівника для швидкого відображення без join
+    const staffName  = staffId
+      ? ((typeof users !== 'undefined' ? users : []).find(u => u.id === staffId)?.name || null)
+      : null;
+
     const txData = {
       type,
       amount,
       currency,
-      amountBase: toBase(amount, currency), // сума в базовій валюті для аналітики
+      amountBase: toBase(amount, currency),
       categoryId:   catId,
       date,
-      // Дата нарахування для P&L (якщо вказана окремо — інакше = date)
       accrualDate:  accrualVal
         ? firebase.firestore.Timestamp.fromDate(new Date(accrualVal))
         : date,
@@ -5043,6 +5100,11 @@ window._financeSaveTx = async function() {
       projectId:    projId,
       description:  desc,
       counterparty: counter,
+      // Виплата персоналу
+      ...(staffId    ? { staffId }    : {}),
+      ...(staffName  ? { staffName }  : {}),
+      ...(paymentType? { paymentType }: {}),
+      ...(workType   ? { workType }   : {}),
       createdBy:    _state.currentUser.uid,
       createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
       recurring:    false,
