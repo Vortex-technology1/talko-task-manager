@@ -2045,29 +2045,29 @@ function _renderDealDetails(deal) {
 
     content.innerHTML = `
     <div style="${row}">
-        <label style="${lbl}">Название сделки</label>
+        <label style="${lbl}">${window.t('crmDealNameLbl')||'Назва угоди'}</label>
         <input id="dd_title" value="${_esc(deal.title||deal.clientName||'')}" style="${inp}">
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
         <div>
-            <label style="${lbl}">Стадия</label>
+            <label style="${lbl}">${window.t('crmStageWord')||'Стадія'}</label>
             <select id="dd_stage" style="${inp}background:white;cursor:pointer;">
                 ${stages.map(s => `<option value="${s.id}" ${s.id===deal.stage?'selected':''}>${_esc(s.label)}</option>`).join('')}
             </select>
         </div>
         <div>
-            <label style="${lbl}">Сумма</label>
+            <label style="${lbl}">${window.t('finAmountLbl')||'Сума'}</label>
             <input id="dd_amount" type="number" value="${deal.amount||''}" placeholder="0" style="${inp}"
                 oninput="(function(){var prep=parseFloat(document.getElementById('dd_prepayment')?.value)||0;var amt=parseFloat(this.value)||0;var el=document.getElementById('dd_balance_display');if(el)el.textContent=Math.max(0,amt-prep).toFixed(2)+' €';}).call(this)">
         </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
         <div>
-            <label style="${lbl}">Клиент</label>
+            <label style="${lbl}">${window.t('crmClientName')||'Клієнт'}</label>
             <input id="dd_client" value="${_esc(deal.clientName||'')}" style="${inp}">
         </div>
         <div>
-            <label style="${lbl}">Ниша</label>
+            <label style="${lbl}">${window.t('crmNiche')||'Ніша'}</label>
             <input id="dd_niche" value="${_esc(deal.clientNiche||'')}"
                 list="dd_nicheList"
                 autocomplete="off"
@@ -2080,7 +2080,7 @@ function _renderDealDetails(deal) {
     <!-- Омніканал — швидкі дії по контакту -->
     ${(deal.phone||deal.email||deal.telegram||deal.instagram) ? `
     <div style="margin-bottom:0.75rem;">
-        <label style="${lbl}">Связаться</label>
+        <label style="${lbl}">${window.t('crmContact')||'Зв\'язатися'}</label>
         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.3rem;">
             ${deal.phone ? `
             <button onclick="crmStartCall('${deal.id}','${_esc(deal.phone)}','${_esc(deal.clientName||'')}')"
@@ -3005,7 +3005,7 @@ async function _loadActivityTab(deal) {
             <div style="display:flex;gap:0.4rem;">
                 <select id="actType" style="padding:0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;background:white;">
                     <option value="note">Заметка</option>
-                    <option value="call">Звонок</option>
+                    <option value="call">${window.t('crmCall')||'Дзвінок'}</option>
                     <option value="meeting">Встреча</option>
                     <option value="email">Email</option>
                 </select>
@@ -3285,11 +3285,11 @@ window.crmOpenCreateDeal = function(defaultStage) {
             </div>
             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                 <div>
-                    <label style="${lbl}">Название сделки</label>
+                    <label style="${lbl}">${window.t('crmDealNameLbl')||'Назва угоди'}</label>
                     <input id="nd_title" placeholder="${window.t('crmDealTitlePh')}" style="${inp}" autofocus>
                 </div>
                 <div>
-                    <label style="${lbl}">Клиент</label>
+                    <label style="${lbl}">${window.t('crmClientName')||'Клієнт'}</label>
                     <div style="position:relative;">
                         <input id="nd_client" placeholder="${window.t('crmClientNamePh')}" style="${inp}"
                             autocomplete="off"
@@ -3305,18 +3305,18 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                     <div>
-                        <label style="${lbl}">Стадия</label>
+                        <label style="${lbl}">${window.t('crmStageWord')||'Стадія'}</label>
                         <select id="nd_stage" style="${inp}background:white;cursor:pointer;">
                             ${stages.map(s => `<option value="${s.id}" ${(defaultStage||'new')===s.id?'selected':''}>${_esc(s.label)}</option>`).join('')}
                         </select>
                     </div>
                     <div>
-                        <label style="${lbl}">Сумма</label>
+                        <label style="${lbl}">${window.t('finAmountLbl')||'Сума'}</label>
                         <input id="nd_amount" type="number" placeholder="0" style="${inp}">
                     </div>
                 </div>
                 <div>
-                    <label style="${lbl}">Ниша</label>
+                    <label style="${lbl}">${window.t('crmNiche')||'Ніша'}</label>
                     <div style="position:relative;">
                         <input id="nd_niche" placeholder="${_tg('Меблі UA, Клініка, Ремонт...', 'Мебель UA, Клиника, Ремонт...')}"
                             list="nd_nicheList"
