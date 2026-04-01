@@ -206,11 +206,18 @@
                         if (tab && tab !== 'more' && !_allowedTabs.includes(tab)) btn.style.display = 'none';
                     });
 
-                    // Ховаємо групові nav-кнопки (Аналітика, Система, Бізнес) в хедері
-                    ['analyticsTabBtn','sysTabBtn','bizNavBtn','tasksTabBtn'].forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.style.display = 'none';
-                    });
+                    // Групові nav-кнопки — ховаємо тільки якщо немає жодного дозволеного пункту
+                    // tasksTabBtn: містить tasks, regular
+                    const taskItems = ['tasks','regular'];
+                    const hasTask = taskItems.some(t => _allowedTabs.includes(t));
+                    if (!hasTask) { const el = document.getElementById('tasksTabBtn'); if (el) el.closest('[id$="Dropdown"]') ? el.closest('[id$="Dropdown"]').style.display = 'none' : el.style.display = 'none'; }
+
+                    // analyticsTabBtn: містить analytics, statistics
+                    const analyticsItems = ['analytics','statistics'];
+                    const hasAnalytics = analyticsItems.some(t => _allowedTabs.includes(t));
+                    if (!hasAnalytics) { const el = document.getElementById('analyticsTabBtn'); if (el) el.closest('[id$="Dropdown"]') ? el.closest('[id$="Dropdown"]').style.display = 'none' : el.style.display = 'none'; }
+
+                    // sysTabBtn і bizNavBtn вже оброблені вище через hasSys/hasBiz
 
                     // Ховаємо inviteBtn, adminTabBtn, ownerAiButtons
                     ['inviteBtn','adminTabBtn','ownerAiButtons','aiAssistantsBtnMenu'].forEach(id => {
