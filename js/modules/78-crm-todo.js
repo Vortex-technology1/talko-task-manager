@@ -83,7 +83,10 @@ function _getActiveDeals() {
                 const ub = b.createdAt&&b.createdAt.toDate?b.createdAt.toDate():new Date(b.createdAt||0);
                 return ub - ua;
             }
-            return (a.nextContactDate||'') < (b.nextContactDate||'') ? -1 : 1;
+            // Сортуємо по даті + часу: 16:00 вище ніж 19:30
+            const dateA = (a.nextContactDate||'') + 'T' + (a.nextContactTime||'00:00');
+            const dateB = (b.nextContactDate||'') + 'T' + (b.nextContactTime||'00:00');
+            return dateA < dateB ? -1 : dateA > dateB ? 1 : 0;
         });
 }
 
@@ -93,11 +96,11 @@ function _fmtDate(dateStr) {
     if (dateStr < today) {
         const days = Math.round((new Date(today)-new Date(dateStr))/86400000);
         // Показуємо кількість днів прострочення для оцінки терміновості
-        const label = days === 1 ? 'Вчера' : '+' + days + ' дн.';
+        const label = days === 1 ? window.t('yesterday')||'Вчора' : '+' + days + ' дн.';
         return { label, days, overdue:true, today:false };
     }
     if (dateStr === today) return { label:window.t('todayWord'), overdue:false, today:true };
-    if (dateStr === _tomorrowStr()) return { label:'Завтра', overdue:false, today:false };
+    if (dateStr === _tomorrowStr()) return { label:window.t('tomorrowWord')||'Завтра', overdue:false, today:false };
     const d = new Date(dateStr);
     const locale = window.getLocale?window.getLocale():'uk-UA';
     return { label:d.toLocaleDateString(locale,{day:'numeric',month:'short'}), overdue:false, today:false };
@@ -168,14 +171,14 @@ window.renderCrmTodo = function() {
         <div style="display:flex;gap:0.5rem;">
           <button onclick="renderCrmTodo()" style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:5px 8px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${TI.refresh}</button>
           ${window.isSuperAdmin ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v11l3.5 6H5.5L9 14V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg> Тест</button>' : ''}
-          <button onclick="crmOpenCreateDeal()" style="background:#22c55e;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem;">${TI.plus} Новый лид</button>
+          <button onclick="crmOpenCreateDeal()" style="background:#22c55e;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem;">${TI.plus} ${window.t('crmNewLead')||'Новий лід'}</button>
         </div>
       </div>
 
       <!-- Лічильники -->
       <div style="display:flex;gap:0.4rem;margin-bottom:0.85rem;flex-wrap:wrap;">
-        ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} просрочено</div>`:''}
-        ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} на сегодня</div>`:''}
+        ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} ${window.t('crmOverdue')||'прострочено'}</div>`:''}
+        ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} ${window.t('crmToday')||'на сьогодні'}</div>`:''}
         ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} новых</div>`:''}
         ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${sla.length} забытых лидов</div>`:''})()}
       </div>
