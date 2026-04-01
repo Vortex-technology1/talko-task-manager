@@ -96,27 +96,23 @@ function colRef(name) {
 
 // ── Системні категорії (дефолт при ініціалізації) ──────────
 const DEFAULT_CATEGORIES = {
+  // ── ДОХОДИ (верхній рівень) ──────────────────────────────
   income: [
-    { id: 'inc_services',   name: window.t('finCatServices'),    icon: 'briefcase' },
-    { id: 'inc_goods',      name: window.t('finCatGoods'),       icon: 'package' },
-    { id: 'inc_prepay',     name: window.t('finCatPrepay'),          icon: 'credit-card' },
-    { id: 'inc_royalty',    name: window.t('finCatRoyalty'),      icon: 'building-2' },
-    { id: 'inc_other',      name: window.t('finOther'),                 icon: 'plus-circle' },
+    { id: 'inc_revenue',    name: window.t('finCatRevenue')    || 'Основна виручка',       icon: 'trending-up',    parentId: null },
+    { id: 'inc_prepay',     name: window.t('finCatPrepay')     || 'Передоплати',            icon: 'credit-card',    parentId: null },
+    { id: 'inc_passive',    name: window.t('finCatPassive')    || 'Пасивний дохід',         icon: 'building-2',     parentId: null },
+    { id: 'inc_other',      name: window.t('finCatOtherInc')   || 'Інші надходження',       icon: 'plus-circle',    parentId: null },
   ],
+  // ── ВИТРАТИ (верхній рівень) ─────────────────────────────
   expense: [
-    { id: 'exp_materials',  name: window.t('finCatMaterials'), icon: 'wrench' },
-    { id: 'exp_salary',     name: window.t('finCatSalary'),       icon: 'user' },
-    { id: 'exp_rent',       name: window.t('finRent'),               icon: 'home' },
-    { id: 'exp_transport',  name: window.t('finCatTransport'),   icon: 'car' },
-    { id: 'exp_marketing',  name: window.t('finCatMarketing'),  icon: 'megaphone' },
-    { id: 'exp_equipment',  name: window.t('finCatEquipment'),           icon: 'settings' },
-    { id: 'exp_utilities',  name: window.t('finCatUtilities'),   icon: 'lightbulb' },
-    { id: 'exp_admin',      name: window.t('finCatAdmin'),      icon: 'clipboard-list' },
-    { id: 'exp_subcontract',name: window.t('finCatSubcontract'),            icon: 'handshake' },
-    { id: 'exp_tax',        name: window.t('finCatTax'),        icon: 'bar-chart-2' },
-    { id: 'exp_reserve',    name: window.t('finCatReserve'),       icon: 'shield' },
-    { id: 'exp_dividends',  name: window.t('finCatDividends'),   icon: 'coins' },
-    { id: 'exp_other',      name: window.t('finOther'),                 icon: 'plus-circle' },
+    { id: 'exp_salary',     name: window.t('finCatSalaryFund') || 'Фонд оплати праці',      icon: 'users',          parentId: null, costType: 'opex' },
+    { id: 'exp_marketing',  name: window.t('finCatMarketing')  || 'Маркетинг',               icon: 'megaphone',      parentId: null, costType: 'opex' },
+    { id: 'exp_cogs',       name: window.t('finCatCOGS')       || 'Собівартість послуг',     icon: 'package',        parentId: null, costType: 'cogs' },
+    { id: 'exp_opex',       name: window.t('finCatOpex')       || 'Операційні витрати',      icon: 'home',           parentId: null, costType: 'opex' },
+    { id: 'exp_tax',        name: window.t('finCatTaxFin')     || 'Податки і фінанси',       icon: 'bar-chart-2',    parentId: null, costType: 'opex' },
+    { id: 'exp_invest',     name: window.t('finCatInvest')     || 'Інвестиції / розвиток',   icon: 'settings',       parentId: null, costType: 'opex' },
+    { id: 'exp_reserve',    name: window.t('finCatReserve')    || 'Резервний фонд',          icon: 'shield',         parentId: null, costType: 'opex' },
+    { id: 'exp_dividends',  name: window.t('finCatDividends')  || 'Дивіденди',               icon: 'coins',          parentId: null, costType: 'opex' },
   ],
 };
 
@@ -3986,29 +3982,41 @@ function renderSettings(el) {
           </button>
         </div>
         <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
-          ${cats.length === 0
-            ? `<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">${window.t('finNoCategories')}</div>`
-            : cats.map((cat, i) => {
+          ${(() => {
+            const topCats = cats.filter(c => !c.parentId);
+            if (topCats.length === 0) return `<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">${window.t('finNoCategories')}</div>`;
+            return topCats.map((cat, i) => {
+              const subcats = cats.filter(c => c.parentId === cat.id);
               const costBadge = type === 'expense' && cat.costType
                 ? `<span style="font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:10px;flex-shrink:0;` +
-                  (cat.costType === 'cogs'
-                    ? 'background:#fff7ed;color:#c2410c;">COGS'
-                    : 'background:#f0fdf4;color:#16a34a;">OPEX') + `</span>`
+                  (cat.costType === 'cogs' ? 'background:#fff7ed;color:#c2410c;">COGS' : 'background:#f0fdf4;color:#16a34a;">OPEX') + `</span>`
                 : '';
+              const subcatRows = subcats.map(sc => `
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.45rem 0.9rem 0.45rem 2rem;background:#f9fafb;border-bottom:1px solid #f3f4f6;">
+                  <span style="color:#9ca3af;font-size:11px;margin-right:2px;">↳</span>
+                  <div style="flex:1;font-size:0.82rem;color:#374151;">${escHtml(sc.name)}</div>
+                  <button onclick="window._financeDeleteCategory('${sc.id}','${type}')"
+                    style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.2rem;">${I.trash}</button>
+                </div>`).join('');
               return `
-              <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
-                background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
-                <div style="flex:1;font-size:0.85rem;color:#1a1a1a;">${escHtml(cat.name)}</div>
-                ${costBadge}
-                ${!cat.system ? `
-                  <button onclick="window._financeDeleteCategory('${cat.id}','${type}')"
-                    style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.2rem;">
-                    ${I.trash}
+              <div style="border-bottom:1px solid #f3f4f6;">
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;background:${i%2===0?'#fff':'#fafafa'};">
+                  <div style="flex:1;font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(cat.name)}</div>
+                  ${costBadge}
+                  <button onclick="window._financeAddCategory('${type}','${cat.id}')"
+                    title="${_tg('Додати підкатегорію','Добавить подкатегорию')}"
+                    style="display:flex;align-items:center;gap:3px;padding:2px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:5px;cursor:pointer;font-size:0.72rem;font-weight:600;">
+                    + ${_tg('Підкат.','Подкат.')}
                   </button>
-                ` : `<span style="font-size:0.7rem;color:#9ca3af;">${window.t('finSystem')}</span>`}
+                  ${!cat.system ? `
+                    <button onclick="window._financeDeleteCategory('${cat.id}','${type}')"
+                      style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.2rem;">${I.trash}</button>
+                  ` : `<span style="font-size:0.7rem;color:#9ca3af;">${window.t('finSystem')}</span>`}
+                </div>
+                ${subcatRows}
               </div>`;
-            }).join('')
-          }
+            }).join('');
+          })()}
         </div>
       </div>
     `;
@@ -4230,11 +4238,16 @@ window._fetchRates = async function() {
   }
 };
 
-// Додавання категорії
-window._financeAddCategory = function(type) {
+// Додавання категорії (parentId — якщо передано, то це підкатегорія)
+window._financeAddCategory = function(type, parentId) {
   // Знімаємо старий модал
   const old = document.getElementById('finCatModal');
   if (old) old.remove();
+
+  const isSubcat = !!parentId;
+  const allCats = (window._financeState || window._state)?.categories?.[type] || [];
+  const parentCat = parentId ? allCats.find(c => c.id === parentId) : null;
+  const topLevelCats = allCats.filter(c => !c.parentId);
 
   const modal = document.createElement('div');
   modal.id = 'finCatModal';
@@ -4248,6 +4261,17 @@ window._financeAddCategory = function(type) {
       </div>
       <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
 
+        <!-- Батьківська категорія (опційно) -->
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">
+            ${_tg('Батьківська категорія','Родительская категория')}
+          </label>
+          <select id="finCatParent"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
+            <option value="">${_tg('— Верхній рівень (основна категорія)','— Верхний уровень (основная категория)')}</option>
+            ${topLevelCats.map(c => `<option value="${c.id}" ${c.id === parentId ? 'selected' : ''}>${c.name}</option>`).join('')}
+          </select>
+        </div>
         <div>
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_tg('Назва *','Название *')}</label>
           <input id="finCatName" type="text" placeholder="${isExpense ? window.t('catPlaceholderExpense') : window.t('catPlaceholderIncome')}"
@@ -4316,10 +4340,12 @@ window._finCatSave = async function(type) {
   const costTypeEl = document.querySelector('input[name="finCatType"]:checked');
   const costType = costTypeEl ? costTypeEl.value : 'opex';
   try {
+    const parentIdVal = document.getElementById('finCatParent')?.value || null;
     const catData = { name, type, system: false, icon: 'tag', createdAt: firebase.firestore.FieldValue.serverTimestamp() };
     if (type === 'expense') catData.costType = costType;
+    if (parentIdVal) catData.parentId = parentIdVal;
     const ref = await colRef('finance_categories').add(catData);
-    _state.categories[type].push({ id: ref.id, name, type, system: false, costType: costType });
+    _state.categories[type].push({ id: ref.id, name, type, system: false, costType: costType, ...(parentIdVal ? { parentId: parentIdVal } : {}) });
     document.getElementById('finCatModal')?.remove();
     renderSubTab('settings');
     if (typeof showToast === 'function') showToast(window.t('categoryAdded'), 'success');
@@ -4886,14 +4912,22 @@ function addTransaction(forceType) {
         <!-- Підказка конвертації -->
         <div id="fmCurrencyHint" style="font-size:0.72rem;color:#6b7280;margin-top:-8px;margin-bottom:4px;min-height:16px;"></div>
 
-        <!-- Категорія -->
+        <!-- Категорія + Підкатегорія -->
         <div id="fmCatWrap">
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCategoryLbl')} *</label>
           <select id="fmCategory"
-            onchange="window._finToggleStaffBlock(this.value)"
+            onchange="window._finToggleStaffBlock(this.value); window._finUpdateSubcategory(this.value, '${type}')"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             <option value="">${window.t('finSelectCategory')||'— Оберіть категорію —'}</option>
-            ${cats.map(c => `<option value="${c.id}">${escHtml(c.name)}</option>`).join('')}
+            ${cats.filter(c => !c.parentId).map(c => `<option value="${c.id}">${escHtml(c.name)}</option>`).join('')}
+          </select>
+        </div>
+        <!-- Підкатегорія (з'являється після вибору категорії) -->
+        <div id="fmSubCatWrap" style="display:none;">
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finSubcategoryLbl')||'Підкатегорія'}</label>
+          <select id="fmSubcategory"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
+            <option value="">${window.t('finSelectSubcategory')||'— Оберіть підкатегорію —'}</option>
           </select>
         </div>
 
@@ -5026,6 +5060,28 @@ function addTransaction(forceType) {
 }
 
 // Показуємо/приховуємо блок "Виплата персоналу" залежно від категорії
+// Оновлення підкатегорій при виборі категорії
+window._finUpdateSubcategory = function(catId, type) {
+  const wrap = document.getElementById('fmSubCatWrap');
+  const sel  = document.getElementById('fmSubcategory');
+  if (!wrap || !sel) return;
+
+  if (!catId) { wrap.style.display = 'none'; return; }
+
+  const allCats = (window._financeState || window._state)?.categories?.[type] || [];
+  const subcats = allCats.filter(c => c.parentId === catId);
+
+  if (subcats.length === 0) {
+    wrap.style.display = 'none';
+    sel.value = '';
+    return;
+  }
+
+  sel.innerHTML = `<option value="">— ${window.t('finSelectSubcategory')||'Оберіть підкатегорію'} —</option>` +
+    subcats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  wrap.style.display = 'block';
+};
+
 window._finToggleStaffBlock = function(catId) {
   const block = document.getElementById('fmStaffBlock');
   if (!block) return;
@@ -5085,12 +5141,14 @@ window._financeSaveTx = async function() {
       ? ((typeof users !== 'undefined' ? users : []).find(u => u.id === staffId)?.name || null)
       : null;
 
+    const subcatId = document.getElementById('fmSubcategory')?.value || null;
     const txData = {
       type,
       amount,
       currency,
       amountBase: toBase(amount, currency),
       categoryId:   catId,
+      ...(subcatId ? { subcategoryId: subcatId } : {}),
       date,
       accrualDate:  accrualVal
         ? firebase.firestore.Timestamp.fromDate(new Date(accrualVal))
