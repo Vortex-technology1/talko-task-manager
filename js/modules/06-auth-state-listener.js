@@ -196,7 +196,9 @@
                     });
 
                     // Відразу переходимо на перший дозволений таб
-                    const firstTab = _allowedTabs[0];
+                    // Пріоритет: myday > tasks > перший зі списку
+                    const preferredFirst = ['myday', 'tasks', 'projects', 'crm'].find(t => _allowedTabs.includes(t));
+                    const firstTab = preferredFirst || _allowedTabs[0];
                     if (typeof switchTab === 'function') {
                         setTimeout(() => switchTab(firstTab), 300);
                     }
