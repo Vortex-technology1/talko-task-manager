@@ -15448,9 +15448,6 @@
                 finFinances: 'Финансы',
                 tabWarehouse: 'Склад',
                 tabBooking: 'Бронирование',
-                tabSales: 'Реализация',
-                tabFoodProduction: 'Производство',
-                tabEstimate: 'Смета',
                 whDashboard: 'Дашборд',
                 whCatalog: 'Каталог',
                 whOperations: 'Операции',
@@ -22032,60 +22029,6 @@
         };
 
         // Зміна мови
-        // ── Apply data-i18n translations to DOM ──────────────────
-        window.applyNavTranslations = function(lang) {
-            const t = window.t;
-            if (!t) return;
-            // Apply to all [data-i18n] elements
-            document.querySelectorAll('[data-i18n]').forEach(function(el) {
-                const key = el.getAttribute('data-i18n');
-                const val = t(key);
-                if (val && val !== key) {
-                    // Якщо значення містить HTML теги — використовуємо innerHTML
-                    // (наприклад signIn містить <i data-lucide=...>)
-                    if (val.includes('<') && val.includes('>')) {
-                        el.innerHTML = val;
-                    } else {
-                        el.textContent = val;
-                    }
-                }
-            });
-            // Apply to [data-i18n-placeholder]
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
-                const key = el.getAttribute('data-i18n-placeholder');
-                const val = t(key);
-                if (val && val !== key) el.placeholder = val;
-            });
-            // Apply to [data-i18n-title]
-            document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
-                const key = el.getAttribute('data-i18n-title');
-                const val = t(key);
-                if (val && val !== key) el.title = val;
-            });
-        };
-
-        // Auto-apply on load if language is not UA
-        (function() {
-            const lang = window.currentLanguage || 'ua';
-            if (lang !== 'ua') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    window.applyNavTranslations(lang);
-                });
-                // Also apply after a short delay for dynamic content
-                setTimeout(function() {
-                    if (typeof window.applyNavTranslations === 'function') {
-                        window.applyNavTranslations(lang);
-                    }
-                }, 300);
-                setTimeout(function() {
-                    if (typeof window.applyNavTranslations === 'function') {
-                        window.applyNavTranslations(lang);
-                    }
-                }, 1500);
-            }
-        })();
-
-
         window.setLanguage = function(lang, forceReload) {
             if (!lang || !window.translations[lang]) return;
             // FIX CRITICAL: reload тільки якщо мова реально змінилась
