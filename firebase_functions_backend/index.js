@@ -3528,6 +3528,7 @@ exports.registerBotCommands = functions
                 { command: 'weekly',  description: 'Тижневий звіт' },
                 { command: 'team',    description: 'Статус команди' },
                 { command: 'lang',    description: 'Змінити мову бота: /lang uk | ru | en' },
+                { command: 'connect', description: 'Підключити Telegram до акаунту' },
                 { command: 'help',    description: 'Довідка' },
             ],
             ru: [
@@ -3537,6 +3538,7 @@ exports.registerBotCommands = functions
                 { command: 'weekly',  description: 'Отчёт за неделю' },
                 { command: 'team',    description: 'Статус команды' },
                 { command: 'lang',    description: 'Сменить язык бота: /lang uk | ru | en' },
+                { command: 'connect', description: 'Подключить Telegram к аккаунту' },
                 { command: 'help',    description: 'Справка' },
             ],
             en: [
@@ -3546,6 +3548,7 @@ exports.registerBotCommands = functions
                 { command: 'weekly',  description: 'Weekly report' },
                 { command: 'team',    description: 'Team status' },
                 { command: 'lang',    description: 'Change bot language: /lang uk | ru | en' },
+                { command: 'connect', description: 'Connect Telegram to your account' },
                 { command: 'help',    description: 'Help' },
             ],
             de: [
@@ -3555,6 +3558,7 @@ exports.registerBotCommands = functions
                 { command: 'weekly',  description: 'Wochenbericht' },
                 { command: 'team',    description: 'Teamstatus' },
                 { command: 'lang',    description: 'Sprache ändern: /lang uk | ru | en' },
+                { command: 'connect', description: 'Telegram mit Konto verbinden' },
                 { command: 'help',    description: 'Hilfe' },
             ],
             pl: [
@@ -3564,6 +3568,7 @@ exports.registerBotCommands = functions
                 { command: 'weekly',  description: 'Raport tygodniowy' },
                 { command: 'team',    description: 'Status zespołu' },
                 { command: 'lang',    description: 'Zmień język: /lang uk | ru | en' },
+                { command: 'connect', description: 'Połącz Telegram z kontem' },
                 { command: 'help',    description: 'Pomoc' },
             ],
         };
