@@ -513,6 +513,75 @@ async function handleWebhook(request, url, env) {
         if (ct.includes('json')) body = await request.json();
     } catch {}
 
+    // ── ACTION: send-message (менеджер відповідає клієнту з CRM) ──
+    if (url.searchParams.get('action') === 'send-message') {
+        // Верифікація токена через Firebase
+        const authHeader = request.headers.get('Authorization') || '';
+        const idToken = authHeader.replace('Bearer ', '').trim();
+        // Базова перевірка — токен є
+        if (!idToken) return json({ ok: false, error: 'Unauthorized' }, 401);
+
+        const { companyId, contactId, text: msgText } = body;
+        if (!companyId || !contactId || !msgText) return json({ ok: false, error: 'Missing fields' }, 400);
+
+        // Завантажуємо контакт щоб отримати chatId і botToken
+        const contactDoc = await fsGet(`companies/${companyId}/contacts/${contactId}`, token);
+        if (!contactDoc?.fields) return json({ ok: false, error: 'Contact not found' }, 404);
+        const contact = fFields(contactDoc.fields);
+
+        const telegramChatId = contact.chatId || contact.telegramChatId || contact.senderId || '';
+
+        // Отримуємо botToken з налаштувань або з бота
+        let botTokenForSend = '';
+        const settDoc = await fsGet(`companies/${companyId}/settings/integrations`, token);
+        if (settDoc?.fields) {
+            const sett = fFields(settDoc.fields);
+            botTokenForSend = sett.telegramBotToken || '';
+        }
+        // Якщо немає в settings — шукаємо в bots
+        if (!botTokenForSend && contact.botId) {
+            const botDoc = await fsGet(`companies/${companyId}/bots/${contact.botId}`, token);
+            if (botDoc?.fields) {
+                const bd = fFields(botDoc.fields);
+                botTokenForSend = bd.token || '';
+            }
+        }
+
+        let telegramOk = false;
+        if (botTokenForSend && telegramChatId) {
+            const tgResp = await fetch(`https://api.telegram.org/bot${botTokenForSend}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: telegramChatId, text: msgText, parse_mode: 'HTML' }),
+            }).catch(() => null);
+            telegramOk = tgResp?.ok === true;
+        }
+
+        // Зберігаємо повідомлення в лог чату
+        const now = new Date().toISOString();
+        const msgId = `msg_op_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
+        await fsSet(`companies/${companyId}/contacts/${contactId}/messages/${msgId}`, {
+            id:        { stringValue: msgId },
+            role:      { stringValue: 'bot' },
+            from:      { stringValue: 'bot' },
+            direction: { stringValue: 'out' },
+            sentBy:    { stringValue: 'operator' },
+            text:      { stringValue: msgText },
+            timestamp: { timestampValue: now },
+            createdAt: { timestampValue: now },
+            read:      { booleanValue: false },
+        }, token);
+
+        // Оновлюємо lastMessage контакту
+        await fsPatch(`companies/${companyId}/contacts/${contactId}`, {
+            lastMessage:   { stringValue: msgText },
+            lastMessageAt: { timestampValue: now },
+            updatedAt:     { timestampValue: now },
+        }, token);
+
+        return json({ ok: true, telegramOk });
+    }
+
     if (channel==='telegram') {
         const msg    = body.message||body.callback_query?.message||{};
         const chat   = msg.chat||body.callback_query?.from||{};
@@ -663,12 +732,16 @@ async function handleWebhook(request, url, env) {
             await fsSet(contactPath, {
                 chatId:        { stringValue: chatId },
                 name:          { stringValue: userName },
+                senderName:    { stringValue: userName },
                 username:      { stringValue: from.username||'' },
+                senderId:      { stringValue: chatId },
+                channel:       { stringValue: 'telegram' },
                 source:        { stringValue: 'telegram' },
                 status:        { stringValue: 'subscriber' },
                 currentFlowId: { stringValue: '' },
                 currentNodeId: { stringValue: '' },
                 collectedData: { mapValue: { fields: {} } },
+                unreadCount:   { integerValue: '0' },
                 createdAt:     { timestampValue: new Date().toISOString() },
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
@@ -1102,6 +1175,10 @@ async function createCrmLead({ cid, chatId, contact, collectedData, token }) {
         phone:         { stringValue: phone },
         telegramChatId:{ stringValue: chatId },
         telegramUsername:{ stringValue: contact.username||'' },
+        senderId:      { stringValue: chatId },
+        botContactId:  { stringValue: chatId },
+        contactId:     { stringValue: chatId },
+        channel:       { stringValue: 'telegram' },
         source:        { stringValue: 'telegram_bot' },
         status:        { stringValue: 'active' },
         createdAt:     { timestampValue: now },
@@ -1128,6 +1205,8 @@ async function createCrmLead({ cid, chatId, contact, collectedData, token }) {
         clientId:      { stringValue: clientId },
         phone:         { stringValue: phone },
         telegramChatId:{ stringValue: chatId },
+        contactId:     { stringValue: chatId },
+        botContactId:  { stringValue: chatId },
         source:        { stringValue: 'telegram_bot' },
         stage:         { stringValue: 'new' },
         note:          { stringValue: note },
