@@ -945,10 +945,14 @@ function renderTransactions(el, type) {
           <option value="">${window.t('finAllMonths')}</option>
           ${monthOpts.join('')}
         </select>
-        <select id="txFilterCat" onchange="window._txFilterChange('categoryId',this.value,'${type}')"
+        <select id="txFilterCat" onchange="window._txFilterCatChange(this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
           <option value="">${window.t('finAllCategories')}</option>
-          ${cats.map(c => `<option value="${c.id}" ${_txFilter.categoryId===c.id?'selected':''}>${escHtml(c.name)}</option>`).join('')}
+          ${cats.filter(c => !c.parentId).map(c => `<option value="${c.id}" ${_txFilter.categoryId===c.id?'selected':''}>${escHtml(c.name)}</option>`).join('')}
+        </select>
+        <select id="txFilterSubCat" onchange="window._txFilterChange('subcategoryId',this.value,'${type}')"
+          style="display:none;padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
+          <option value="">${_tg('Всі підкатегорії','Все подкатегории')}</option>
         </select>
         <select id="txFilterAcc" onchange="window._txFilterChange('accountId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
@@ -1173,7 +1177,11 @@ async function _getTxForExport(type) {
   } else {
     query = query.limit(EXPORT_LIMIT);
   }
-  if (_txFilter.categoryId) query = query.where('categoryId', '==', _txFilter.categoryId);
+  if (_txFilter.subcategoryId) {
+    query = query.where('subcategoryId', '==', _txFilter.subcategoryId);
+  } else if (_txFilter.categoryId) {
+    query = query.where('categoryId', '==', _txFilter.categoryId);
+  }
 
   const snap = await query.get();
 
@@ -5421,6 +5429,28 @@ window._financeAddTransaction = function(type) {
 
 window._txFilterChange = function(field, value, type) {
   _txFilter[field] = value;
+  loadAndRenderTxList(type);
+};
+
+// Каскадний фільтр: вибір основної категорії → оновлює підкатегорії
+window._txFilterCatChange = function(catId, type) {
+  _txFilter.categoryId = catId;
+  _txFilter.subcategoryId = ''; // скидаємо підкатегорію
+
+  const subSel = document.getElementById('txFilterSubCat');
+  if (!subSel) { loadAndRenderTxList(type); return; }
+
+  const cats = _state.categories[type] || [];
+  const subcats = catId ? cats.filter(c => c.parentId === catId) : [];
+
+  if (subcats.length === 0) {
+    subSel.style.display = 'none';
+    subSel.value = '';
+  } else {
+    subSel.innerHTML = `<option value="">${_tg('Всі підкатегорії','Все подкатегории')}</option>` +
+      subcats.map(c => `<option value="${c.id}">${escHtml(c.name)}</option>`).join('');
+    subSel.style.display = '';
+  }
   loadAndRenderTxList(type);
 };
 
