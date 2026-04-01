@@ -930,6 +930,40 @@ exports.telegramWebhook = functions
                 await answerCallbackQuery(cb.id, tg('ua', 'unknownAction'));
                 return res.status(200).send('OK');
             }
+
+            // ── setlang callback — окремий обробник ──────────────────────
+            if (data.startsWith('setlang:')) {
+                const slParts = data.split(':');
+                const slCompanyId = slParts[1];
+                const slLang = slParts[2];
+                const LANG_NAMES_CB = { ua: '🇺🇦 Українська', ru: '🇷🇺 Русский', en: '🇬🇧 English', de: '🇩🇪 Deutsch', cs: '🇨🇿 Čeština', pl: '🇵🇱 Polski' };
+                if (!slCompanyId || !slLang || !TG_LANG[slLang]) {
+                    await answerCallbackQuery(cb.id, '❌ Невідома мова');
+                    return res.status(200).send('OK');
+                }
+                // Знаходимо юзера по chatId
+                let slUid = null;
+                const slIdx = await db.collection('telegramIndex').doc('chat_' + chatId.toString()).get();
+                if (slIdx.exists) slUid = slIdx.data().userId;
+                if (!slUid) {
+                    const slSnap = await db.collectionGroup('users').where('telegramChatId', '==', chatId.toString()).limit(1).get();
+                    if (!slSnap.empty) slUid = slSnap.docs[0].id;
+                }
+                if (!slUid) {
+                    await answerCallbackQuery(cb.id, tg('ua', 'notConnected'));
+                    return res.status(200).send('OK');
+                }
+                await db.collection('companies').doc(slCompanyId).collection('users').doc(slUid)
+                    .update({ telegramLanguage: slLang });
+                await answerCallbackQuery(cb.id, `✅ ${LANG_NAMES_CB[slLang]}`);
+                await sendTelegramMessage(chatId,
+                    tg(slLang, 'langChanged') ||
+                    `✅ ${LANG_NAMES_CB[slLang]} — мову встановлено!\n\nВсі наступні сповіщення будуть цією мовою.`
+                );
+                return res.status(200).send('OK');
+            }
+            // ─────────────────────────────────────────────────────────────
+
             const ALLOWED_ACTIONS = ['done', 'postpone', 'progress', 'details'];
             const parts = data.split(':');
             if (parts.length < 3) {
@@ -1324,11 +1358,25 @@ exports.telegramWebhook = functions
                 if (!langCompanyId) {
                     await sendTelegramMessage(chatId, tg('ua', 'notConnected'));
                 } else if (!requestedLang || !TG_LANG[requestedLang]) {
-                    // Показуємо поточну мову і доступні варіанти
+                    // Показуємо поточну мову і inline кнопки для вибору
                     const curLang = await getUserLang(langCompanyId, langUid);
-                    const langList = Object.entries(LANG_NAMES).map(([k, v]) => `  /lang ${k} — ${v}`).join('\n');
-                    await sendTelegramMessage(chatId,
-                        `${tg(curLang, 'langMenuTitle')}\n\n${tg(curLang, 'langCurrent')}: ${LANG_NAMES[curLang] || curLang}\n\n${tg(curLang, 'langChange')}\n${langList}`
+                    const langButtons = [
+                        [
+                            { text: '🇺🇦 Українська', callback_data: `setlang:${langCompanyId}:ua` },
+                            { text: '🇷🇺 Русский',     callback_data: `setlang:${langCompanyId}:ru` },
+                        ],
+                        [
+                            { text: '🇬🇧 English',     callback_data: `setlang:${langCompanyId}:en` },
+                            { text: '🇩🇪 Deutsch',     callback_data: `setlang:${langCompanyId}:de` },
+                        ],
+                        [
+                            { text: '🇨🇿 Čeština',     callback_data: `setlang:${langCompanyId}:cs` },
+                            { text: '🇵🇱 Polski',      callback_data: `setlang:${langCompanyId}:pl` },
+                        ],
+                    ];
+                    await sendWithButtons(chatId,
+                        `${tg(curLang, 'langMenuTitle')}\n\n${tg(curLang, 'langCurrent')}: ${LANG_NAMES[curLang] || curLang}\n\n${tg(curLang, 'langChange')}`,
+                        langButtons
                     );
                 } else {
                     // Зберігаємо нову мову в Firestore (telegramLanguage — окреме поле)
