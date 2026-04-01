@@ -1,0 +1,336 @@
+================================================================================
+ЗВІТ АНАЛІЗУ ПЕРЕКЛАДІВ МОДУЛЯ 'КОШТОРИС' (ESTIMATE)
+================================================================================
+
+СТАТИСТИКА:
+----------------------------------------
+Українська: 35 ключів
+Англійська: 35 ключів
+Німецька: 35 ключів
+Чеська: 35 ключів
+Російська: 35 ключів
+Польська: 35 ключів
+
+✓ Всі ключі присутні у всіх мовах
+
+ДЕТАЛЬНИЙ СПИСОК ПЕРЕКЛАДІВ:
+================================================================================
+
+addNorm:
+----------------------------------------
+  UA: Додати норму
+  EN: Add norm
+  DE: Norm hinzufügen
+  CS: Přidat normu
+  RU: Добавить норму
+  PL: Dodaj normę
+
+addWorkType:
+----------------------------------------
+  UA: Додати тип роботи
+  EN: Add work type
+  DE: Arbeitstyp hinzufügen
+  CS: Přidat typ práce
+  RU: Добавить тип работы
+  PL: Dodaj typ pracy
+
+approveEstimate:
+----------------------------------------
+  UA: Затвердити кошторис
+  EN: Approve estimate
+  DE: Kostenvoranschlag genehmigen
+  CS: Schválit kalkulaci
+  RU: Утвердить смету
+  PL: Zatwierdź kosztorys
+
+estimateDeficit:
+----------------------------------------
+  UA: Дефіцит матеріалів
+  EN: Material deficit
+  DE: Materialdefizit
+  CS: Nedostatek materiálu
+  RU: Дефицит материалов
+  PL: Niedobór materiałów
+
+estimateNorms:
+----------------------------------------
+  UA: Довідник норм
+  EN: Norms Handbook
+  DE: Normenhandbuch
+  CS: Příručka norem
+  RU: Справочник норм
+  PL: Podręcznik norm
+
+estimateNormsDesc:
+----------------------------------------
+  UA: Норми витрат матеріалів по типах робіт
+  EN: Material consumption norms by work type
+  DE: Materialverbrauchsnormen nach Arbeitstyp
+  CS: Normy spotřeby materiálu podle typu práce
+  RU: Нормы расхода материалов по типам работ
+  PL: Normy zużycia materiałów wg typu pracy
+
+estimateTitle:
+----------------------------------------
+  UA: Назва кошторису
+  EN: Estimate name
+  DE: Name des Kostenvoranschlags
+  CS: Název kalkulace
+  RU: Название сметы
+  PL: Nazwa kosztorysu
+
+estimates:
+----------------------------------------
+  UA: Кошториси
+  EN: Estimates
+  DE: Kostenvoranschläge
+  CS: Kalkulace
+  RU: Сметы
+  PL: Kosztorysy
+
+extraParam:
+----------------------------------------
+  UA: Додатковий параметр
+  EN: Extra parameter
+  DE: Zusatzparameter
+  CS: Další parametr
+  RU: Доп. параметр
+  PL: Dodatkowy parametr
+
+funcLoadTitle:
+----------------------------------------
+  UA: Навантаження по функціях
+  EN: Load by functions
+  DE: Auslastung nach Funktionen
+  CS: Vytížení dle funkcí
+  RU: Нагрузка по функциям
+  PL: Obciążenie wg funkcji
+
+inputUnit:
+----------------------------------------
+  UA: Вхідна одиниця
+  EN: Input unit
+  DE: Eingabeeinheit
+  CS: Vstupní jednotka
+  RU: Единица ввода
+  PL: Jednostka wejściowa
+
+linkToDeal:
+----------------------------------------
+  UA: Прив'язати до угоди
+  EN: Link to deal
+  DE: Zum Deal verknüpfen
+  CS: Přiřadit k obchodu
+  RU: Привязать к сделке
+  PL: Powiąż z umową
+
+linkToProject:
+----------------------------------------
+  UA: Прив'язати до проекту
+  EN: Link to project
+  DE: Zum Projekt verknüpfen
+  CS: Přiřadit k projektu
+  RU: Привязать к проекту
+  PL: Powiąż z projektem
+
+linkedWarehouseItem:
+----------------------------------------
+  UA: Позиція складу
+  EN: Warehouse item
+  DE: Lagerposition
+  CS: Položka skladu
+  RU: Позиция склада
+  PL: Pozycja magazynowa
+
+loadDefaultNorms:
+----------------------------------------
+  UA: Завантажити стандартні норми
+  EN: Load default norms
+  DE: Standardnormen laden
+  CS: Načíst výchozí normy
+  RU: Загрузить стандартные нормы
+  PL: Wczytaj domyślne normy
+
+materialsDeficit:
+----------------------------------------
+  UA: Дефіцит
+  EN: Deficit
+  DE: Defizit
+  CS: Deficit
+  RU: Дефицит
+  PL: Deficyt
+
+materialsInStock:
+----------------------------------------
+  UA: На складі
+  EN: In stock
+  DE: Auf Lager
+  CS: Na skladě
+  RU: На складе
+  PL: Na stanie
+
+materialsRequired:
+----------------------------------------
+  UA: Потрібно
+  EN: Required
+  DE: Benötigt
+  CS: Potřeba
+  RU: Требуется
+  PL: Wymagane
+
+newEstimate:
+----------------------------------------
+  UA: Новий кошторис
+  EN: New Estimate
+  DE: Neuer Kostenvoranschlag
+  CS: Nová kalkulace
+  RU: Новая смета
+  PL: Nowy kosztorys
+
+noDeficit:
+----------------------------------------
+  UA: Матеріалів достатньо
+  EN: Materials sufficient
+  DE: Materialien ausreichend
+  CS: Materiálů je dostatek
+  RU: Материалов достаточно
+  PL: Materiałów wystarczy
+
+normCategory:
+----------------------------------------
+  UA: Категорія
+  EN: Category
+  DE: Kategorie
+  CS: Kategorie
+  RU: Категория
+  PL: Kategoria
+
+normName:
+----------------------------------------
+  UA: Назва норми
+  EN: Norm name
+  DE: Normname
+  CS: Název normy
+  RU: Название нормы
+  PL: Nazwa normy
+
+normPerUnit:
+----------------------------------------
+  UA: Норма на одиницю
+  EN: Norm per unit
+  DE: Norm pro Einheit
+  CS: Norma na jednotku
+  RU: Норма на единицу
+  PL: Norma na jednostkę
+
+othersLabel:
+----------------------------------------
+  UA: Інші
+  EN: Others
+  DE: Weitere
+  CS: Ostatní
+  RU: Другие
+  PL: Inne
+
+syncWithWarehouse:
+----------------------------------------
+  UA: Синхронізувати зі складом
+  EN: Sync with warehouse
+  DE: Lager synchronisieren
+  CS: Synchronizovat se skladem
+  RU: Синхронизировать со складом
+  PL: Synchronizuj z magazynem
+
+top5Loaded:
+----------------------------------------
+  UA: Топ-5 найбільш завантажених
+  EN: Top-5 most loaded
+  DE: Top-5 am stärksten ausgelastet
+  CS: Top-5 nejvíce vytížených
+  RU: Топ-5 наиболее загруженных
+  PL: Top-5 najbardziej obciążonych
+
+totalDeficitCost:
+----------------------------------------
+  UA: Потрібно докупити
+  EN: Need to purchase
+  DE: Zu kaufen
+  CS: Je třeba dokoupit
+  RU: Нужно докупить
+  PL: Do zakupu
+
+totalMaterialsCost:
+----------------------------------------
+  UA: Бюджет матеріалів
+  EN: Materials budget
+  DE: Materialbudget
+  CS: Rozpočet materiálu
+  RU: Бюджет материалов
+  PL: Budżet materiałów
+
+totalPeople:
+----------------------------------------
+  UA: Людей в команді
+  EN: Team members
+  DE: Teammitglieder
+  CS: Členů týmu
+  RU: Людей в команде
+  PL: Członków zespołu
+
+workloadAttention:
+----------------------------------------
+  UA: Увага
+  EN: Attention
+  DE: Achtung
+  CS: Pozor
+  RU: Внимание
+  PL: Uwaga
+
+workloadNorm:
+----------------------------------------
+  UA: Норма
+  EN: Normal
+  DE: Normal
+  CS: Normální
+  RU: Норма
+  PL: Normalne
+
+workloadOverloaded:
+----------------------------------------
+  UA: Перевантажений
+  EN: Overloaded
+  DE: Überlastet
+  CS: Přetížen
+  RU: Перегружен
+  PL: Przeciążony
+
+workloadTab:
+----------------------------------------
+  UA: Навантаження
+  EN: Workload
+  DE: Auslastung
+  CS: Vytížení
+  RU: Нагрузка
+  PL: Obciążenie
+
+workloadTitle:
+----------------------------------------
+  UA: Навантаження команди
+  EN: Team Workload
+  DE: Team-Auslastung
+  CS: Vytížení týmu
+  RU: Нагрузка команды
+  PL: Obciążenie zespołu
+
+writeOffMaterials:
+----------------------------------------
+  UA: Списати матеріали
+  EN: Write off materials
+  DE: Materialien abschreiben
+  CS: Odepsat materiály
+  RU: Списать материалы
+  PL: Odpisz materiały
+
+================================================================================
+КІНЕЦЬ ЗВІТУ
+================================================================================
