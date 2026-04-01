@@ -635,21 +635,505 @@ async function handleWebhook(request, url, env) {
             return json({ok:true});
         }
 
-        // Звичайне повідомлення → лід у CRM
-        const leadId=`tg_${Date.now()}`;
-        const lname=`${from.first_name||''} ${from.last_name||''}`.trim()||from.username||chatId;
-        await fsSet(`companies/${cid}/leads/${leadId}`,{
-            id:{stringValue:leadId},name:{stringValue:lname},phone:{stringValue:''},
-            source:{stringValue:'telegram'},telegramChatId:{stringValue:chatId},
-            message:{stringValue:text},status:{stringValue:'new'},
-            createdAt:{timestampValue:new Date().toISOString()},
-        },token);
-        if (text) await tgSend(chatId,"✅ Дякуємо! Ваша заявка прийнята. Ми зв'яжемося з вами найближчим часом.");
+        // ── FLOW ENGINE ──────────────────────────────────────
+        const isCallback = !!body.callback_query;
+        const callbackQueryId = body.callback_query?.id || '';
+        const userName = `${from.first_name||''} ${from.last_name||''}`.trim() || from.username || chatId;
+
+        // Відповідь на callback щоб прибрати "годинник" в Telegram
+        if (isCallback && callbackQueryId) {
+            fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({ callback_query_id: callbackQueryId }),
+            }).catch(()=>{});
+        }
+
+        // Завантажуємо або створюємо контакт/сесію
+        const contactPath = `companies/${cid}/contacts/${chatId}`;
+        let contactDoc = await fsGet(contactPath, token);
+        let contact = contactDoc?.fields ? fFields(contactDoc.fields) : null;
+
+        if (!contact) {
+            contact = {
+                chatId, name: userName, username: from.username||'',
+                source: 'telegram', status: 'subscriber',
+                currentFlowId: '', currentNodeId: '',
+                createdAt: new Date().toISOString(),
+            };
+            await fsSet(contactPath, {
+                chatId:        { stringValue: chatId },
+                name:          { stringValue: userName },
+                username:      { stringValue: from.username||'' },
+                source:        { stringValue: 'telegram' },
+                status:        { stringValue: 'subscriber' },
+                currentFlowId: { stringValue: '' },
+                currentNodeId: { stringValue: '' },
+                collectedData: { mapValue: { fields: {} } },
+                createdAt:     { timestampValue: new Date().toISOString() },
+                updatedAt:     { timestampValue: new Date().toISOString() },
+            }, token);
+        }
+
+        // Зберігаємо повідомлення в лог чату
+        const msgId = `msg_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
+        await fsSet(`${contactPath}/messages/${msgId}`, {
+            id:        { stringValue: msgId },
+            role:      { stringValue: 'user' },
+            text:      { stringValue: text },
+            isCallback:{ booleanValue: isCallback },
+            createdAt: { timestampValue: new Date().toISOString() },
+        }, token);
+
+        // Визначаємо активний flow
+        let activeFlowId = contact.currentFlowId || '';
+        let activeNodeId = contact.currentNodeId || '';
+
+        // /start з параметром → шукаємо flow бота
+        if (text.startsWith('/start')) {
+            const startParam = text.split(' ')[1] || '';
+            const botsRaw = await fsQuery(`bots`, [], token, 20);
+            // Шукаємо серед ботів компанії
+            let foundBotId = '', foundFlowId = '';
+            const compBotsSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (compBotsSnap.ok) {
+                const compBots = await compBotsSnap.json();
+                const botDocs = compBots.documents || [];
+                for (const bd of botDocs) {
+                    const bid = bd.name?.split('/').pop();
+                    const flowsSnap = await fetch(
+                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    if (!flowsSnap.ok) continue;
+                    const flowsData = await flowsSnap.json();
+                    for (const fd of (flowsData.documents||[])) {
+                        const fid = fd.name?.split('/').pop();
+                        const fdata = fFields(fd.fields||{});
+                        // Активний flow: status=active або збіг startParam
+                        if (fdata.status === 'active' || fdata.startParam === startParam) {
+                            foundBotId = bid; foundFlowId = fid; break;
+                        }
+                    }
+                    if (foundFlowId) break;
+                }
+            }
+            if (foundBotId && foundFlowId) {
+                activeFlowId = `${foundBotId}::${foundFlowId}`;
+                activeNodeId = 'start';
+                await fsPatch(contactPath, {
+                    currentFlowId: { stringValue: activeFlowId },
+                    currentNodeId: { stringValue: 'start' },
+                    updatedAt:     { timestampValue: new Date().toISOString() },
+                }, token);
+            }
+        }
+
+        // Запускаємо Flow Engine якщо є активний flow
+        if (activeFlowId) {
+            const parts = activeFlowId.split('::');
+            const botId = parts[0], flowId = parts[1];
+            if (botId && flowId) {
+                await runFlowEngine({
+                    cid, chatId, botId, flowId,
+                    currentNodeId: activeNodeId,
+                    text, isCallback,
+                    callbackData: body.callback_query?.data || '',
+                    contact, contactPath,
+                    token, botToken, from, userName,
+                    tgSend,
+                    env,
+                });
+                return json({ok:true});
+            }
+        }
+
         return json({ok:true});
     }
 
     // Other channels — just ack
     return json({ok:true, channel, received: true});
+}
+
+
+// ════════════════════════════════════════════════════════════
+// FLOW ENGINE — виконання ланцюгів ботів
+// ════════════════════════════════════════════════════════════
+async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, isCallback, callbackData, contact, contactPath, token, botToken, from, userName, tgSend, env }) {
+
+    // Завантажуємо canvas даних flow (вузли і з'єднання)
+    const canvasSnap = await fetch(
+        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${botId}/flows/${flowId}/canvasData/main`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    let nodes = [], edges = [];
+    if (canvasSnap.ok) {
+        const cd = await canvasSnap.json();
+        if (cd.fields) {
+            const raw = fFields(cd.fields);
+            try { nodes = JSON.parse(raw.nodes || '[]'); } catch {}
+            try { edges = JSON.parse(raw.edges || '[]'); } catch {}
+        }
+    }
+
+    if (!nodes.length) return;
+
+    // Знаходимо поточний вузол
+    // При старті — шукаємо START вузол
+    let currentNode = null;
+    if (currentNodeId === 'start' || !currentNodeId) {
+        currentNode = nodes.find(n => n.type === 'start' || n.data?.type === 'start' || n.id?.includes('start'));
+    } else {
+        currentNode = nodes.find(n => n.id === currentNodeId);
+    }
+
+    if (!currentNode) return;
+
+    // Знаходимо наступний вузол по з'єднанню
+    function getNextNode(fromNodeId, buttonLabel) {
+        // Шукаємо edge від цього вузла
+        const matchEdge = edges.find(e => {
+            if (e.source !== fromNodeId) return false;
+            // Якщо кнопка — шукаємо по sourceHandle або label
+            if (buttonLabel) {
+                return e.sourceHandle?.includes(buttonLabel) || e.label === buttonLabel ||
+                       e.sourceHandle === buttonLabel || !e.sourceHandle;
+            }
+            return true;
+        }) || edges.find(e => e.source === fromNodeId);
+        if (!matchEdge) return null;
+        return nodes.find(n => n.id === matchEdge.target) || null;
+    }
+
+    // Зібрані дані контакту
+    let collectedData = {};
+    try {
+        const cd = contact.collectedData;
+        if (typeof cd === 'object' && cd !== null) collectedData = cd;
+    } catch {}
+
+    // Визначаємо що робити залежно від типу поточного вузла
+    const nodeType = currentNode.type || currentNode.data?.type || '';
+    const nodeData = currentNode.data || {};
+
+    // Якщо це START вузол — переходимо до наступного
+    if (nodeType === 'start' || currentNode.id?.includes('start')) {
+        const nextNode = getNextNode(currentNode.id);
+        if (nextNode) {
+            await fsPatch(contactPath, {
+                currentNodeId: { stringValue: nextNode.id },
+                updatedAt:     { timestampValue: new Date().toISOString() },
+            }, token);
+            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+        }
+        return;
+    }
+
+    // Якщо прийшов callback (натиснута кнопка) — знаходимо наступний вузол
+    if (isCallback && callbackData) {
+        const nextNode = getNextNode(currentNode.id, callbackData);
+        if (nextNode) {
+            await fsPatch(contactPath, {
+                currentNodeId: { stringValue: nextNode.id },
+                updatedAt:     { timestampValue: new Date().toISOString() },
+            }, token);
+            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+        }
+        return;
+    }
+
+    // Якщо прийшло текстове повідомлення — передаємо в поточний вузол
+    // (зазвичай це ШІ Агент або питання)
+    await executeNode({ node: currentNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput: text });
+}
+
+async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput }) {
+    const nodeType = node.type || node.data?.type || '';
+    const nodeData = node.data || {};
+
+    // ── ВУЗОЛ: ПОВІДОМЛЕННЯ ──────────────────────────────────
+    if (nodeType === 'message' || nodeType === 'sendMessage') {
+        const msgText = nodeData.text || nodeData.message || nodeData.content || '';
+        const buttons = nodeData.buttons || nodeData.keyboard || [];
+
+        let replyMarkup = {};
+        if (buttons && buttons.length > 0) {
+            // Inline кнопки — передаємо id вузла як callback_data
+            const inlineKeyboard = buttons.map(btn => [{
+                text: btn.text || btn.label || btn,
+                callback_data: btn.text || btn.label || btn,
+            }]);
+            replyMarkup = { inline_keyboard: inlineKeyboard };
+        }
+
+        if (msgText) {
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: msgText,
+                    parse_mode: 'HTML',
+                    ...(buttons.length > 0 ? { reply_markup: replyMarkup } : {}),
+                }),
+            }).catch(()=>{});
+        }
+
+        // Зберігаємо повідомлення бота в лог
+        const bmId = `msg_${Date.now()}_bot`;
+        await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bmId}`, {
+            id:        { stringValue: bmId },
+            role:      { stringValue: 'bot' },
+            text:      { stringValue: msgText },
+            createdAt: { timestampValue: new Date().toISOString() },
+        }, token);
+
+        // Якщо немає кнопок — автоматично переходимо до наступного вузла
+        if (!buttons || buttons.length === 0) {
+            const nextNode = (node.edges || []).find(e=>e.source===node.id) ||
+                             edges.find(e=>e.source===node.id);
+            if (nextNode) {
+                const target = nodes.find(n=>n.id===nextNode.target);
+                if (target) {
+                    await fsPatch(`companies/${cid}/contacts/${chatId}`, {
+                        currentNodeId: { stringValue: target.id },
+                        updatedAt:     { timestampValue: new Date().toISOString() },
+                    }, token);
+                    // Якщо наступний — ШІ агент з "бот пише першим" = виконуємо відразу
+                    const tType = target.type || target.data?.type || '';
+                    if (tType === 'ai_agent' || tType === 'aiAgent') {
+                        await executeNode({ node: target, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+                    }
+                }
+            }
+        }
+        return;
+    }
+
+    // ── ВУЗОЛ: ШІ АГЕНТ ─────────────────────────────────────
+    if (nodeType === 'ai_agent' || nodeType === 'aiAgent' || nodeType === 'AI') {
+        // Завантажуємо промпт вузла
+        let systemPrompt = nodeData.systemPrompt || nodeData.prompt || '';
+        const aiProvider = nodeData.aiProvider || 'openai';
+        const aiModel    = nodeData.model || 'gpt-4o-mini';
+        const maxTokens  = nodeData.maxTokens || 1500;
+        const writesFirst = nodeData.writesFirst || nodeData.botWritesFirst || false;
+
+        // Якщо є окремий документ з промптом
+        if (!systemPrompt) {
+            const promptDoc = await fsGet(
+                `companies/${cid}/bots/${botId}/flows/${flowId}/nodePrompts/${node.id}`, token
+            );
+            if (promptDoc?.fields) {
+                const pd = fFields(promptDoc.fields);
+                systemPrompt = pd.systemPrompt || pd.prompt || '';
+            }
+        }
+
+        // Якщо бот пише першим і немає userInput — надсилаємо привітання від ШІ
+        if (writesFirst && !userInput) {
+            const openaiKey = env.OPENAI_API_KEY || '';
+            if (openaiKey && systemPrompt) {
+                const aiResp = await callOpenAI({
+                    apiKey: openaiKey,
+                    model: aiModel,
+                    systemPrompt,
+                    messages: [{ role: 'user', content: 'Привітай клієнта і почни розмову.' }],
+                    maxTokens,
+                });
+                if (aiResp) {
+                    await tgSend(chatId, aiResp);
+                    const bm = `msg_${Date.now()}_bot`;
+                    await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bm}`, {
+                        id:{ stringValue:bm }, role:{ stringValue:'bot' },
+                        text:{ stringValue:aiResp },
+                        createdAt:{ timestampValue:new Date().toISOString() },
+                    }, token);
+                    // Перевіряємо чи ШІ кваліфікував ліда
+                    await checkAndConvertToLead({ aiResponse: aiResp, userInput: '', collectedData, cid, chatId, contact, contactPath, token });
+                }
+            }
+            return;
+        }
+
+        if (!userInput) return;
+
+        // Завантажуємо історію чату для контексту
+        const histSnap = await fetch(
+            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/contacts/${chatId}/messages?pageSize=20&orderBy=createdAt`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        let chatHistory = [];
+        if (histSnap.ok) {
+            const hd = await histSnap.json();
+            for (const doc of (hd.documents||[]).slice(-12)) {
+                const d = fFields(doc.fields||{});
+                if (d.role === 'user') chatHistory.push({ role:'user', content: d.text||'' });
+                else if (d.role === 'bot') chatHistory.push({ role:'assistant', content: d.text||'' });
+            }
+        }
+        // Додаємо поточне повідомлення
+        chatHistory.push({ role: 'user', content: userInput });
+
+        const openaiKey = env.OPENAI_API_KEY || '';
+        if (!openaiKey) {
+            await tgSend(chatId, 'Вибачте, ШІ наразі недоступний. Менеджер зв'яжеться з вами.');
+            return;
+        }
+
+        const aiResp = await callOpenAI({
+            apiKey: openaiKey,
+            model: aiModel,
+            systemPrompt: systemPrompt || 'Ти корисний асистент. Відповідай коротко і чітко.',
+            messages: chatHistory,
+            maxTokens,
+        });
+
+        if (aiResp) {
+            await tgSend(chatId, aiResp);
+            const bm = `msg_${Date.now()}_bot`;
+            await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bm}`, {
+                id:{ stringValue:bm }, role:{ stringValue:'bot' },
+                text:{ stringValue:aiResp },
+                createdAt:{ timestampValue:new Date().toISOString() },
+            }, token);
+
+            // Перевіряємо кваліфікацію — чи ШІ зібрав потрібні дані
+            await checkAndConvertToLead({ aiResponse: aiResp, userInput, collectedData, cid, chatId, contact, contactPath, token });
+        }
+        return;
+    }
+
+    // ── ВУЗОЛ: ДІЯ (CREATE_LEAD / CRM) ──────────────────────
+    if (nodeType === 'action' || nodeType === 'crm' || nodeType === 'createLead') {
+        await createCrmLead({ cid, chatId, contact, collectedData, token });
+        // Переходимо далі
+        const nextEdge = edges.find(e=>e.source===node.id);
+        if (nextEdge) {
+            const nextNode = nodes.find(n=>n.id===nextEdge.target);
+            if (nextNode) {
+                await fsPatch(`companies/${cid}/contacts/${chatId}`, {
+                    currentNodeId: { stringValue: nextNode.id },
+                    updatedAt:     { timestampValue: new Date().toISOString() },
+                }, token);
+            }
+        }
+        return;
+    }
+
+    // ── ВУЗОЛ: КІНЕЦЬ ───────────────────────────────────────
+    if (nodeType === 'end' || nodeType === 'finish') {
+        await fsPatch(`companies/${cid}/contacts/${chatId}`, {
+            currentFlowId: { stringValue: '' },
+            currentNodeId: { stringValue: '' },
+            updatedAt:     { timestampValue: new Date().toISOString() },
+        }, token);
+        return;
+    }
+}
+
+// Виклик OpenAI API
+async function callOpenAI({ apiKey, model, systemPrompt, messages, maxTokens }) {
+    try {
+        const r = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${apiKey}` },
+            body: JSON.stringify({
+                model: model || 'gpt-4o-mini',
+                max_tokens: maxTokens || 1000,
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    ...messages,
+                ],
+            }),
+        });
+        if (!r.ok) return null;
+        const d = await r.json();
+        return d.choices?.[0]?.message?.content?.trim() || null;
+    } catch { return null; }
+}
+
+// Перевірка кваліфікації ліда і конвертація в CRM
+async function checkAndConvertToLead({ aiResponse, userInput, collectedData, cid, chatId, contact, contactPath, token }) {
+    // Витягуємо телефон з повідомлення користувача
+    const phoneMatch = userInput.match(/(\+?[\d\s\-()]{10,15})/);
+    if (phoneMatch) {
+        collectedData.phone = phoneMatch[1].replace(/\s/g,'');
+    }
+
+    // Зберігаємо зібрані дані
+    if (Object.keys(collectedData).length > 0) {
+        const mapFields = {};
+        for (const [k,v] of Object.entries(collectedData)) {
+            mapFields[k] = { stringValue: String(v) };
+        }
+        await fsPatch(contactPath, {
+            collectedData: { mapValue: { fields: mapFields } },
+            updatedAt:     { timestampValue: new Date().toISOString() },
+        }, token);
+    }
+
+    // Якщо є телефон — конвертуємо в ліда автоматично
+    if (collectedData.phone && contact.status !== 'lead' && contact.status !== 'client') {
+        await createCrmLead({ cid, chatId, contact: {...contact, ...collectedData}, collectedData, token });
+        await fsPatch(contactPath, {
+            status:    { stringValue: 'lead' },
+            updatedAt: { timestampValue: new Date().toISOString() },
+        }, token);
+    }
+}
+
+// Створення ліда і угоди в CRM
+async function createCrmLead({ cid, chatId, contact, collectedData, token }) {
+    const now = new Date().toISOString();
+    const clientId = `tg_client_${chatId}`;
+    const dealId   = `tg_deal_${chatId}_${Date.now()}`;
+    const name = contact.name || collectedData.name || `Telegram ${chatId}`;
+    const phone = collectedData.phone || contact.phone || '';
+    const note = collectedData.lastMessage || collectedData.request || '';
+
+    // Створюємо/оновлюємо клієнта в CRM
+    await fsSet(`companies/${cid}/crm_clients/${clientId}`, {
+        id:            { stringValue: clientId },
+        name:          { stringValue: name },
+        phone:         { stringValue: phone },
+        telegramChatId:{ stringValue: chatId },
+        telegramUsername:{ stringValue: contact.username||'' },
+        source:        { stringValue: 'telegram_bot' },
+        status:        { stringValue: 'active' },
+        createdAt:     { timestampValue: now },
+        updatedAt:     { timestampValue: now },
+    }, token);
+
+    // Перевіряємо чи угода вже є
+    const existingDeal = await fetch(
+        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_deals?pageSize=1`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    // Простий пошук по chatId — якщо вже є угода від цього чату — не дублюємо
+    const dealsRaw = await fsQuery(`crm_deals`, [{ field:'telegramChatId', value:chatId }], token, 1);
+    // Примітка: fsQuery шукає по allDescendants, тут треба в межах компанії
+    // Використовуємо простіший підхід — унікальний ID по chatId
+    const existDealDoc = await fsGet(`companies/${cid}/crm_deals/${clientId}_deal`, token);
+    if (existDealDoc?.fields) return; // вже є
+
+    // Створюємо угоду
+    await fsSet(`companies/${cid}/crm_deals/${clientId}_deal`, {
+        id:            { stringValue: `${clientId}_deal` },
+        title:         { stringValue: `${name} — Telegram бот` },
+        clientName:    { stringValue: name },
+        clientId:      { stringValue: clientId },
+        phone:         { stringValue: phone },
+        telegramChatId:{ stringValue: chatId },
+        source:        { stringValue: 'telegram_bot' },
+        stage:         { stringValue: 'new' },
+        note:          { stringValue: note },
+        createdAt:     { timestampValue: now },
+        updatedAt:     { timestampValue: now },
+    }, token);
 }
 
 // ════════════════════════════════════════════════════════════
