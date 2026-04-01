@@ -3639,7 +3639,7 @@ exports.registerBotCommands = functions
         const rDef = await fetch(api, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commands: commandsByLang.uk }),
+            body: JSON.stringify({ commands: commandsByLang.en }),
         });
         const dDef = await rDef.json();
         results.push({ lang: 'default', ok: dDef.ok });
