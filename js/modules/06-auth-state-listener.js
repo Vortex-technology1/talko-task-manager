@@ -177,6 +177,29 @@
                         if (tab && !_allowedTabs.includes(tab)) btn.style.display = 'none';
                     });
 
+                    // Ховаємо dropdown-контейнери якщо всі їх _ntab пункти заховані
+                    // (щоб не було видимої кнопки з порожнім меню)
+                    ['tasksTabDropdown','analyticsTabDropdown'].forEach(dropId => {
+                        const drop = document.getElementById(dropId);
+                        if (!drop) return;
+                        const menuId = dropId.replace('Dropdown','Menu');
+                        const menu = document.getElementById(menuId);
+                        if (!menu) return;
+                        const visibleItems = menu.querySelectorAll('._ntab:not([style*="display: none"]):not([style*="display:none"])');
+                        if (visibleItems.length === 0) {
+                            drop.style.display = 'none';
+                        }
+                    });
+
+                    // Ховаємо групові dropdown-кнопки (Система, Бізнес) — вони вже ховаються нижче
+                    // Але якщо allowedTabs не містить жодного їх пункту — ховаємо повністю
+                    const sysItems = ['functions','users','onboarding','bizstructure'];
+                    const bizItems = ['crm','finance','marketing','bots','booking','sales','sites','warehouse','estimate','foodProduction'];
+                    const hasSys = sysItems.some(t => _allowedTabs.includes(t));
+                    const hasBiz = bizItems.some(t => _allowedTabs.includes(t));
+                    if (!hasSys) { const el = document.getElementById('sysTabBtn'); if (el) el.closest('[id$="Dropdown"]')?.style && (el.closest('[id$="Dropdown"]').style.display = 'none') || (el.style.display = 'none'); }
+                    if (!hasBiz) { const el = document.getElementById('bizNavBtn'); if (el) el.style.display = 'none'; }
+
                     // Ховаємо bottom-nav кнопки крім дозволених (+ "Ще" завжди залишаємо)
                     document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
                         const tab = btn.dataset.tab;
