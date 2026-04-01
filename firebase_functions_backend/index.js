@@ -3527,6 +3527,7 @@ exports.registerBotCommands = functions
                 { command: 'task',    description: 'Поставити завдання: /task @імя Назва | дата' },
                 { command: 'weekly',  description: 'Тижневий звіт' },
                 { command: 'team',    description: 'Статус команди' },
+                { command: 'lang',    description: 'Змінити мову бота: /lang uk | ru | en' },
                 { command: 'help',    description: 'Довідка' },
             ],
             ru: [
@@ -3535,6 +3536,7 @@ exports.registerBotCommands = functions
                 { command: 'task',    description: 'Поставить задачу: /task @имя Название | дата' },
                 { command: 'weekly',  description: 'Отчёт за неделю' },
                 { command: 'team',    description: 'Статус команды' },
+                { command: 'lang',    description: 'Сменить язык бота: /lang uk | ru | en' },
                 { command: 'help',    description: 'Справка' },
             ],
             en: [
@@ -3543,6 +3545,7 @@ exports.registerBotCommands = functions
                 { command: 'task',    description: 'Create task: /task @name Title | date' },
                 { command: 'weekly',  description: 'Weekly report' },
                 { command: 'team',    description: 'Team status' },
+                { command: 'lang',    description: 'Change bot language: /lang uk | ru | en' },
                 { command: 'help',    description: 'Help' },
             ],
             de: [
@@ -3551,6 +3554,7 @@ exports.registerBotCommands = functions
                 { command: 'task',    description: 'Aufgabe erstellen: /task @name Titel | Datum' },
                 { command: 'weekly',  description: 'Wochenbericht' },
                 { command: 'team',    description: 'Teamstatus' },
+                { command: 'lang',    description: 'Sprache ändern: /lang uk | ru | en' },
                 { command: 'help',    description: 'Hilfe' },
             ],
             pl: [
@@ -3559,6 +3563,7 @@ exports.registerBotCommands = functions
                 { command: 'task',    description: 'Utwórz zadanie: /task @imię Tytuł | data' },
                 { command: 'weekly',  description: 'Raport tygodniowy' },
                 { command: 'team',    description: 'Status zespołu' },
+                { command: 'lang',    description: 'Zmień język: /lang uk | ru | en' },
                 { command: 'help',    description: 'Pomoc' },
             ],
         };
