@@ -39,6 +39,18 @@ service cloud.firestore {
     function isValidString(field, maxLength) {
       return field is string && field.size() > 0 && field.size() <= maxLength;
     }
+
+    // Перевірка: чи є юзер viewer в проєкті (тільки читання)
+    // Viewer може бачити задачі проєкту, але НЕ може створювати/редагувати/видаляти
+    function isProjectViewerOnly(companyId, projectId) {
+      return exists(/databases/$(database)/documents/companies/$(companyId)/projects/$(projectId)/members/$(userId())) &&
+        get(/databases/$(database)/documents/companies/$(companyId)/projects/$(projectId)/members/$(userId())).data.role == 'viewer';
+    }
+
+    // Повертає true якщо юзер є viewer у проєкті задачі (і не є manager+)
+    function isViewerInTaskProject(companyId, projectId) {
+      return projectId != null && projectId != '' && isProjectViewerOnly(companyId, projectId);
+    }
     
     // =====================
     // COMPANIES
@@ -85,22 +97,29 @@ service cloud.firestore {
       }
 
       // TASKS
+      // viewer роль в проєкті — тільки читання, навіть якщо знає API
       match /tasks/{taskId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId) && 
-          isValidString(request.resource.data.title, 500);
-        allow update: if isManagerOrOwner(companyId) || 
+          isValidString(request.resource.data.title, 500) &&
+          !(request.resource.data.projectId != null && request.resource.data.projectId != '' &&
+            isProjectViewerOnly(companyId, request.resource.data.projectId));
+        allow update: if !isViewerInTaskProject(companyId, resource.data.projectId) && (
+          isManagerOrOwner(companyId) || 
           (isCompanyMember(companyId) && (
             resource.data.assigneeId == userId() ||
             resource.data.creatorId == userId() ||
             (resource.data.coExecutorIds != null && resource.data.coExecutorIds.hasAny([userId()]))
-          ));
-        allow delete: if isManagerOrOwner(companyId) || 
-          (isCompanyMember(companyId) && resource.data.creatorId == userId());
+          )));
+        allow delete: if !isViewerInTaskProject(companyId, resource.data.projectId) && (
+          isManagerOrOwner(companyId) || 
+          (isCompanyMember(companyId) && resource.data.creatorId == userId()));
         
         match /comments/{commentId} {
           allow read: if isCompanyMember(companyId);
-          allow create: if isCompanyMember(companyId);
+          // viewer не може коментувати задачі проєкту
+          allow create: if isCompanyMember(companyId) &&
+            !isViewerInTaskProject(companyId, get(/databases/$(database)/documents/companies/$(companyId)/tasks/$(taskId)).data.projectId);
           allow update: if isManagerOrOwner(companyId) ||
             (isAuthenticated() && isCompanyMember(companyId) && resource.data.authorId == userId());
           allow delete: if isManagerOrOwner(companyId) ||

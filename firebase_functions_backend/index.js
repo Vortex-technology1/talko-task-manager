@@ -1,5 +1,5 @@
-// deploy-trigger: 2026-03-11 20:48
-const functions = require('firebase-functions');
+// deploy-trigger: 2026-04-01
+const functions = require('firebase-functions/v1'); // upgraded to firebase-functions v7, explicit v1 API
 const admin = require('firebase-admin');
 const fetch = require('node-fetch');
 
