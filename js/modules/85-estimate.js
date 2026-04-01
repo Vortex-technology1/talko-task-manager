@@ -6,7 +6,10 @@
 //   companies/{id}/project_estimates/  — кошториси проектів
 // ============================================================
 'use strict';
-  function _tg(ua, ru) { return window.currentLang === 'ru' ? ru : ua; }
+  function _tg(ua, ru) {
+    const lang = window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
+    return lang === 'ru' ? ru : ua;
+  }
 
 // ── SVG іконки ────────────────────────────────────────────────
 const _estIco = {
