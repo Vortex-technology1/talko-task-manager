@@ -1408,8 +1408,8 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         const firstMessage = nodeData.firstMessage || '';
         const historyLimit = nodeData.historyLimit ?? 14;
 
-        // Якщо є окремий документ з промптом
-        if (!systemPrompt) {
+        // Якщо промпт є посиланням (__ref:nodeId) або порожній — читаємо з nodePrompts
+        if (!systemPrompt || systemPrompt.startsWith('__ref:')) {
             const promptDoc = await fsGet(
                 `companies/${cid}/bots/${botId}/flows/${flowId}/nodePrompts/${node.id}`, token
             );
