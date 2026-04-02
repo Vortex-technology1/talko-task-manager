@@ -1108,6 +1108,20 @@ async function handleWebhook(request, url, env) {
 
         // DEBUG: підтверджуємо що webhook отримав повідомлення
 
+        // CRM тригер flow_start — при першому повідомленні
+        if (activeFlowId && !isCallback && !text.startsWith('/')) {
+            const fParts = activeFlowId.split('::');
+            if (fParts[0] && fParts[1]) {
+                const fDoc = await fsGet(`companies/${cid}/bots/${fParts[0]}/flows/${fParts[1]}`, token);
+                if (fDoc?.fields) {
+                    const fd = fFields(fDoc.fields);
+                    if (fd.crmEnabled && fd.crmTrigger === 'flow_start' && fd.crmPipelineId) {
+                        await _createCrmDealFromFlow({ cid, chatId, contact, fd, token, userName });
+                    }
+                }
+            }
+        }
+
         // Зберігаємо повідомлення і оновлюємо контакт
         if (!isCallback && !text.startsWith('/start') && !text.startsWith('/')) {
             const msgId = `msg_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
@@ -1636,6 +1650,16 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 updatedAt:     { timestampValue: bmTs2 },
             }, token);
             await checkAndConvertToLead({ aiResponse: aiResp, userInput, collectedData, cid, chatId, contact, contactPath, token });
+            // CRM тригер done_tag — якщо AI відповідь містить [DONE]
+            if (aiResp.includes('[DONE]')) {
+                const fDoc2 = await fsGet(`companies/${cid}/bots/${botId}/flows/${flowId}`, token);
+                if (fDoc2?.fields) {
+                    const fd2 = fFields(fDoc2.fields);
+                    if (fd2.crmEnabled && (fd2.crmTrigger === 'done_tag' || !fd2.crmTrigger) && fd2.crmPipelineId) {
+                        await _createCrmDealFromFlow({ cid, chatId, contact, fd: fd2, token, userName });
+                    }
+                }
+            }
         } else {
             // API помилка — надсилаємо fallback
             const fallbackMsg = nodeData.fallback || 'Вибачте, спробуйте пізніше.';
@@ -1663,6 +1687,14 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
     // ── ВУЗОЛ: КІНЕЦЬ ───────────────────────────────────────
     if (nodeType === 'end' || nodeType === 'finish') {
+        // CRM тригер flow_end
+        const fDocEnd = await fsGet(`companies/${cid}/bots/${botId}/flows/${flowId}`, token);
+        if (fDocEnd?.fields) {
+            const fdEnd = fFields(fDocEnd.fields);
+            if (fdEnd.crmEnabled && fdEnd.crmTrigger === 'flow_end' && fdEnd.crmPipelineId) {
+                await _createCrmDealFromFlow({ cid, chatId, contact, fd: fdEnd, token, userName });
+            }
+        }
         await fsPatch(`companies/${cid}/contacts/${chatId}`, {
             currentFlowId: { stringValue: '' },
             currentNodeId: { stringValue: '' },
@@ -1692,6 +1724,52 @@ async function callOpenAI({ apiKey, model, systemPrompt, messages, maxTokens, te
         const d = await r.json();
         return d.choices?.[0]?.message?.content?.trim() || null;
     } catch { return null; }
+}
+
+// CRM угода з налаштувань flow
+async function _createCrmDealFromFlow({ cid, chatId, contact, fd, token, userName }) {
+    try {
+        const now = new Date().toISOString();
+        const dealId = `flow_deal_${chatId}_${Date.now()}`;
+        const clientId = `tg_${chatId}`;
+        const name = contact.name || contact.senderName || userName || `Telegram ${chatId}`;
+
+        // Створюємо клієнта
+        await fsSet(`companies/${cid}/crm_clients/${clientId}`, {
+            id:              { stringValue: clientId },
+            name:            { stringValue: name },
+            phone:           { stringValue: contact.phone || '' },
+            telegramChatId:  { stringValue: chatId },
+            telegramUsername:{ stringValue: contact.username || '' },
+            channel:         { stringValue: 'telegram' },
+            source:          { stringValue: 'bot_flow' },
+            createdAt:       { timestampValue: now },
+            updatedAt:       { timestampValue: now },
+        }, token);
+
+        // Створюємо угоду в потрібній воронці/стадії
+        await fsSet(`companies/${cid}/crm_deals/${dealId}`, {
+            id:         { stringValue: dealId },
+            title:      { stringValue: name },
+            clientName: { stringValue: name },
+            phone:      { stringValue: contact.phone || '' },
+            stage:      { stringValue: fd.crmStageId || 'new' },
+            pipelineId: { stringValue: fd.crmPipelineId || '' },
+            source:     { stringValue: 'bot_flow' },
+            telegramChatId: { stringValue: chatId },
+            status:     { stringValue: 'active' },
+            amount:     { integerValue: '0' },
+            createdAt:  { timestampValue: now },
+            updatedAt:  { timestampValue: now },
+        }, token);
+
+        // Оновлюємо статус контакту
+        await fsPatch(`companies/${cid}/contacts/${chatId}`, {
+            status:    { stringValue: 'lead' },
+            dealId:    { stringValue: dealId },
+            updatedAt: { timestampValue: now },
+        }, token);
+    } catch(e) { /* мовчки */ }
 }
 
 // Перевірка кваліфікації ліда і конвертація в CRM

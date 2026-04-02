@@ -450,6 +450,16 @@ function renderFlowsTab() {
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                     ${_tg('Редагувати','Редактировать')}
                                 </button>
+                                <!-- CRM автоматизація -->
+                                <button onclick="openFlowCrmSettings('${flow.id}','${escH(flow.name||'')}')"
+                                    style="padding:0.42rem 0.75rem;border:none;border-radius:8px;cursor:pointer;font-size:0.76rem;font-weight:700;
+                                    display:flex;align-items:center;justify-content:center;gap:5px;transition:all 0.15s;
+                                    ${flow.crmPipelineId ? 'background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;box-shadow:0 2px 8px rgba(245,158,11,0.4);' : 'background:#fff7ed;color:#f59e0b;border:2px dashed #fcd34d;'}"
+                                    title="${_tg('CRM Автоматизація','CRM Автоматизация')}"
+                                    onmouseenter="this.style.filter='brightness(1.1)'" onmouseleave="this.style.filter=''">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                                    ${flow.crmPipelineId ? '🔥 CRM' : _tg('→ CRM','→ CRM')}
+                                </button>
                                 <div style="display:flex;gap:0.25rem;">
                                     <button onclick="toggleFlowStatus('${flow.id}','${flow.status}')"
                                         title="${flow.status==='active'?window.t('botsPause'):window.t('botsActivate')}"
@@ -696,6 +706,170 @@ window.saveNewFlow = async function() {
     } catch(e) {
         if (saveBtn) { saveBtn.disabled = false; }
         if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message);
+    }
+};
+
+// ═══════════════════════════════════════
+// CRM АВТОМАТИЗАЦІЯ ДЛЯ FLOW
+// ═══════════════════════════════════════
+window.openFlowCrmSettings = async function(flowId, flowName) {
+    // Закриваємо попередній модал якщо є
+    document.getElementById('flowCrmModal')?.remove();
+
+    // Завантажуємо воронки і поточні налаштування паралельно
+    let pipelines = [], currentSettings = {};
+    try {
+        const [pipSnap, flowSnap] = await Promise.all([
+            window.companyRef().collection('crm_pipelines').get(),
+            window.companyRef().collection('bots').doc(bp.activeBotId).collection('flows').doc(flowId).get(),
+        ]);
+        pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (!pipelines.length) {
+            // Fallback: стара колекція crm_pipeline
+            const oldPip = await window.companyRef().collection('crm_pipeline').get();
+            if (oldPip.docs.length) {
+                pipelines = [{ id: 'default', name: _tg('Основна воронка','Основная воронка'), stages: oldPip.docs.map(d => ({ id: d.id, ...d.data() })) }];
+            }
+        }
+        currentSettings = flowSnap.data() || {};
+    } catch(e) { console.error(e); }
+
+    const selPipeId = currentSettings.crmPipelineId || '';
+    const selStageId = currentSettings.crmStageId || '';
+    const selTrigger = currentSettings.crmTrigger || 'done_tag';
+
+    const pipOpts = pipelines.map(p => `<option value="${p.id}" ${p.id===selPipeId?'selected':''}>${escH(p.name||p.id)}</option>`).join('');
+
+    // Стадії першої воронки або обраної
+    const getStageOpts = (pipeId, selStId) => {
+        const pip = pipelines.find(p => p.id === pipeId) || pipelines[0];
+        const stages = pip?.stages || pip?.steps || [];
+        return stages.map(s => `<option value="${s.id}" ${s.id===selStId?'selected':''}>${escH(s.name||s.id)}</option>`).join('');
+    };
+
+    const modal = `
+    <div id="flowCrmModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10050;display:flex;align-items:center;justify-content:center;padding:16px;">
+        <div style="background:white;border-radius:16px;width:100%;max-width:480px;box-shadow:0 8px 40px rgba(0,0,0,0.18);overflow:hidden;">
+            <!-- Header -->
+            <div style="padding:18px 20px 14px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:10px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <div>
+                    <div style="font-weight:700;font-size:0.95rem;color:#111827;">CRM Автоматизація</div>
+                    <div style="font-size:0.74rem;color:#6b7280;">${escH(flowName)}</div>
+                </div>
+                <button onclick="document.getElementById('flowCrmModal').remove()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div style="padding:18px 20px;">
+                <!-- Увімкнути -->
+                <label style="display:flex;align-items:center;gap:10px;margin-bottom:16px;cursor:pointer;padding:12px 14px;background:#f9fafb;border-radius:10px;border:1.5px solid ${selPipeId?'#f59e0b':'#e5e7eb'};">
+                    <input type="checkbox" id="fcrmEnabled" ${selPipeId?'checked':''} onchange="document.getElementById('fcrmPipeWrap').style.display=this.checked?'':'none'"
+                        style="width:18px;height:18px;cursor:pointer;accent-color:#f59e0b;">
+                    <div>
+                        <div style="font-weight:700;font-size:0.85rem;color:#111827;">${_tg('Автоматично створювати угоду','Автоматически создавать сделку')}</div>
+                        <div style="font-size:0.74rem;color:#6b7280;">${_tg('Ліди з ланцюга потраплять в CRM','Лиды из цепочки попадут в CRM')}</div>
+                    </div>
+                </label>
+
+                <div id="fcrmPipeWrap" style="display:${selPipeId?'':'none'};">
+                    <!-- Коли спрацьовує -->
+                    <div style="margin-bottom:12px;">
+                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">${_tg('Коли створювати','Когда создавать')}</label>
+                        <select id="fcrmTrigger" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
+                            onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                            <option value="done_tag" ${selTrigger==='done_tag'?'selected':''}>${_tg('При тегу [DONE] в відповіді AI','При теге [DONE] в ответе AI')}</option>
+                            <option value="flow_start" ${selTrigger==='flow_start'?'selected':''}>${_tg('При першому повідомленні','При первом сообщении')}</option>
+                            <option value="flow_end" ${selTrigger==='flow_end'?'selected':''}>${_tg('При завершенні ланцюга','При завершении цепочки')}</option>
+                        </select>
+                    </div>
+
+                    <!-- Воронка -->
+                    <div style="margin-bottom:12px;">
+                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">${_tg('Воронка','Воронка')}</label>
+                        ${pipelines.length ? `
+                        <select id="fcrmPipeline" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
+                            onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'"
+                            onchange="fcrmUpdateStages(this.value,'${selStageId}')">
+                            <option value="">${_tg('Оберіть воронку...','Выберите воронку...')}</option>
+                            ${pipOpts}
+                        </select>` : `<div style="padding:8px;background:#fef3c7;border-radius:8px;font-size:0.78rem;color:#92400e;">
+                            ${_tg('Створіть воронку в CRM → Налаштування','Создайте воронку в CRM → Настройки')}
+                        </div>`}
+                    </div>
+
+                    <!-- Стадія -->
+                    <div style="margin-bottom:16px;">
+                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">${_tg('Стадія','Стадия')}</label>
+                        <select id="fcrmStage" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
+                            onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                            <option value="">${_tg('Оберіть стадію...','Выберите стадию...')}</option>
+                            ${getStageOpts(selPipeId, selStageId)}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="padding:14px 20px;border-top:1px solid #f3f4f6;display:flex;gap:8px;justify-content:flex-end;">
+                <button onclick="document.getElementById('flowCrmModal').remove()"
+                    style="padding:9px 18px;border:1.5px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;font-size:0.84rem;font-weight:600;color:#6b7280;">
+                    ${_tg('Скасувати','Отмена')}
+                </button>
+                <button onclick="saveFlowCrmSettings('${flowId}')"
+                    style="padding:9px 22px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.84rem;font-weight:700;box-shadow:0 2px 8px rgba(245,158,11,0.35);">
+                    🔥 ${_tg('Зберегти','Сохранить')}
+                </button>
+            </div>
+        </div>
+    </div>`;
+
+    document.body.insertAdjacentHTML('beforeend', modal);
+
+    // Оновлення стадій при зміні воронки
+    window.fcrmUpdateStages = function(pipeId, selStId = '') {
+        const sel = document.getElementById('fcrmStage');
+        if (!sel) return;
+        const pip = pipelines.find(p => p.id === pipeId);
+        const stages = pip?.stages || pip?.steps || [];
+        sel.innerHTML = `<option value="">${_tg('Оберіть стадію...','Выберите стадию...')}</option>` +
+            stages.map(s => `<option value="${s.id}" ${s.id===selStId?'selected':''}>${escH(s.name||s.id)}</option>`).join('');
+    };
+};
+
+window.saveFlowCrmSettings = async function(flowId) {
+    const enabled = document.getElementById('fcrmEnabled')?.checked;
+    const pipelineId = document.getElementById('fcrmPipeline')?.value || '';
+    const stageId = document.getElementById('fcrmStage')?.value || '';
+    const trigger = document.getElementById('fcrmTrigger')?.value || 'done_tag';
+
+    try {
+        const btn = document.querySelector('#flowCrmModal button[onclick*="saveFlowCrm"]');
+        if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+        await window.companyRef().collection('bots').doc(bp.activeBotId).collection('flows').doc(flowId).update({
+            crmEnabled:    enabled && !!pipelineId,
+            crmPipelineId: enabled ? pipelineId : '',
+            crmStageId:    enabled ? stageId : '',
+            crmTrigger:    enabled ? trigger : '',
+            updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
+        });
+
+        document.getElementById('flowCrmModal')?.remove();
+        if (typeof showToast === 'function') showToast(
+            enabled && pipelineId
+                ? '🔥 ' + _tg('CRM автоматизацію увімкнено!','CRM автоматизация включена!')
+                : _tg('CRM автоматизацію вимкнено','CRM автоматизация отключена'),
+            'success'
+        );
+        // Перерендеримо список flows щоб кнопка оновилась
+        if (bp.subTab === 'flows') renderFlowsTab();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(_tg('Помилка: ','Ошибка: ') + e.message, 'error');
     }
 };
 
