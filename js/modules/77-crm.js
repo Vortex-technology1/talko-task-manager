@@ -2164,7 +2164,7 @@ function _renderDealDetails(deal) {
             <input id="dd_probability" type="number" min="0" max="100" value="${deal.probability ?? ''}" placeholder="10" style="${inp}">
         </div>
         <div>
-            <label style="${lbl}">Следующий контакт</label>
+            <label style="${lbl}">${_tg('Наступний контакт','Следующий контакт')}</label>
             <div style="display:flex;gap:0.35rem;">
                 <input id="dd_nextContact" type="date" value="${deal.nextContactDate||''}" style="${inp}${deal.nextContactDate && deal.nextContactDate < _crmToday() ? 'border-color:#ef4444;' : ''}flex:1;min-width:0;">
                 <input id="dd_nextContactTime" type="time" value="${deal.nextContactTime||''}" style="padding:0.45rem 0.4rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;width:82px;">
@@ -3129,9 +3129,9 @@ async function _loadAITab(deal) {
             margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;color:#22c55e;font-size:1.4rem;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
         </div>
-        <div style="font-weight:700;font-size:0.92rem;margin-bottom:0.35rem;color:#111827;">AI Анализ сделки</div>
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:0.35rem;color:#111827;">${_tg('AI Аналіз угоди','AI Анализ сделки')}</div>
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;line-height:1.5;">
-            Вероятность закрытия • Риски • Следующий шаг • Текст сообщения
+            ${_tg('Ймовірність закриття • Ризики • Наступний крок • Текст повідомлення','Вероятность закрытия • Риски • Следующий шаг • Текст сообщения')}
         </div>
         ${ctx.length ? `<div style="background:#f8fafc;border-radius:8px;padding:0.65rem;margin-bottom:1rem;text-align:left;">
             ${ctx.map(c=>`<div style="font-size:0.75rem;color:#6b7280;margin-bottom:3px;">${c}</div>`).join('')}
@@ -3139,9 +3139,9 @@ async function _loadAITab(deal) {
         <button onclick="crmRunAI('${deal.id}')"
             style="padding:0.65rem 1.75rem;background:#22c55e;color:white;border:none;
             border-radius:8px;cursor:pointer;font-weight:600;font-size:0.84rem;display:inline-flex;align-items:center;gap:0.4rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg> Запустить анализ
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>${_tg('Запустити аналіз','Запустить анализ')}
         </button>
-        <div style="font-size:0.68rem;color:#d1d5db;margin-top:0.5rem;">~5 секунд</div>
+        <div style="font-size:0.68rem;color:#d1d5db;margin-top:0.5rem;">${_tg('~5 секунд','~5 секунд')}</div>
     </div>`;
 }
 
