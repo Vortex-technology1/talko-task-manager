@@ -1552,7 +1552,6 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         // Якщо userInput порожній (прийшов callback → перехід на AI) — AI починає сам
         if (!userInput) {
             if (systemPrompt && openaiKey) {
-                await tgSend(chatId, `🔍 Промпт (перші 300): ${systemPrompt.slice(0,300)}`);
                 const startResp = await callOpenAI({
                     apiKey: openaiKey,
                     model: botModel,
