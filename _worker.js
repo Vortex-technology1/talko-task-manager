@@ -830,14 +830,25 @@ async function handleWebhook(request, url, env) {
         }
         if (!botToken) return json({ok:true});
 
-        const tgSend = (chat_id, txt) =>
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method:'POST', headers:{'Content-Type':'application/json'},
-                body: JSON.stringify({ chat_id, text: txt, parse_mode:'HTML' }),
-            }).catch(()=>{});
+        const tgSend = async (chat_id, txt) => {
+            try {
+                const r = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method:'POST', headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({ chat_id, text: txt, parse_mode:'HTML' }),
+                });
+                if (!r.ok) {
+                    // Fallback без HTML якщо parse_mode помилка
+                    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                        method:'POST', headers:{'Content-Type':'application/json'},
+                        body: JSON.stringify({ chat_id, text: txt.replace(/<[^>]*>/g,'') }),
+                    }).catch(()=>{});
+                }
+            } catch(e) {}
+        };
 
         // /start {code} — підключення співробітника
-        if (text.startsWith('/start')) {
+        // Пропускаємо якщо це flow-бот (urlBotId є в URL) — там /start запускає flow
+        if (text.startsWith('/start') && !urlBotId) {
             const code = text.split(' ')[1]||'';
             if (code) {
                 const idxDoc = await fsGet(`telegramIndex/code_${code}`, token);
@@ -863,14 +874,14 @@ async function handleWebhook(request, url, env) {
             return json({ok:true});
         }
 
-        // /help
-        if (text === '/help' || text === '/допомога') {
+        // /help — тільки для системного бота TALKO (не для flow ботів)
+        if ((text === '/help' || text === '/допомога') && !urlBotId) {
             await tgSend(chatId, '📖 <b>Команди TALKO:</b>\n\n<code>/task @імя Назва | дата</code> — поставити завдання\n\nПриклад:\n<code>/task @Петренко Кошторис | 10.04.2026</code>\n\nДата необовязкова. Якщо не вказати @імя — ставиться собі.');
             return json({ok:true});
         }
 
-        // /task — поставити завдання
-        if (text.startsWith('/task') || text.startsWith('/завдання')) {
+        // /task — тільки для системного бота TALKO (не для flow ботів)
+        if ((text.startsWith('/task') || text.startsWith('/завдання')) && !urlBotId) {
             const sDoc = await fsGet(`telegramIndex/chat_${chatId}`, token);
             if (!sDoc?.fields) {
                 await tgSend(chatId, '⚠️ Telegram не підключений до системи. Відкрийте профіль → «Підключити Telegram».');
