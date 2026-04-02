@@ -531,9 +531,9 @@ window.renderEstimateNormsView = function() {
                 <td style="padding:0.65rem 0.75rem;font-weight:500;color:#3b82f6;cursor:pointer;" onclick="openNormModal('${esc(n.id)}')" title="Відкрити норму">${esc(n.name)}</td>
                 <td style="padding:0.65rem 0.75rem;color:#6b7280;">${categoryLabel[n.category]||n.category||'—'}</td>
                 <td style="padding:0.65rem 0.75rem;text-align:center;"><span style="padding:0.2rem 0.5rem;background:#f0f9ff;color:#0ea5e9;border-radius:4px;font-weight:600;">${esc(n.inputUnit||'шт')}</span></td>
-                <td style="padding:0.65rem 0.75rem;text-align:center;color:#6b7280;">${(n.materials||[]).length} поз.</td>
+                <td style="padding:0.65rem 0.75rem;text-align:center;color:#6b7280;">${(n.materials||[]).length} ${_tg('поз.','поз.')}</td>
                 <td style="padding:0.65rem 0.75rem;text-align:right;">
-                  <button onclick="openNormModal('${esc(n.id)}')" style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.3rem 0.65rem;border:1px solid #e5e7eb;border-radius:6px;background:white;font-size:0.78rem;cursor:pointer;margin-right:4px;">${_estIco.edit} Редагувати</button>
+                  <button onclick="openNormModal('${esc(n.id)}')" style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.3rem 0.65rem;border:1px solid #e5e7eb;border-radius:6px;background:white;font-size:0.78rem;cursor:pointer;margin-right:4px;">${_estIco.edit} ${_tg('Редагувати','Редактировать')}</button>
                   <button onclick="deleteNorm('${esc(n.id)}')" style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.3rem 0.65rem;border:1px solid #fecaca;border-radius:6px;background:#fef2f2;color:#dc2626;font-size:0.78rem;cursor:pointer;">${_estIco.trash}</button>
                 </td>
               </tr>`).join('')}
@@ -932,8 +932,8 @@ window.openEstimateModal = function(estimateId) {
 
           <div style="background:white;border:1px solid #e5e7eb;border-radius:12px;padding:1rem;margin-bottom:1rem;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-              <div style="font-weight:600;font-size:0.88rem;color:#374151;display:flex;align-items:center;gap:0.4rem;">${_estIco.hammer} Типи робіт</div>
-              <button onclick="openAddSectionModal()" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;background:#3b82f6;color:white;border:none;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;">${_estIco.plus} Додати тип роботи</button>
+              <div style="font-weight:600;font-size:0.88rem;color:#374151;display:flex;align-items:center;gap:0.4rem;">${_estIco.hammer} ${_tg('Типи робіт','Типы работ')}</div>
+              <button onclick="openAddSectionModal()" style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.8rem;background:#3b82f6;color:white;border:none;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;">${_estIco.plus} ${_tg('Додати тип роботи','Добавить тип работы')}</button>
             </div>
             <div id="estSectionsBody">${renderSections()}</div>
           </div>
@@ -970,7 +970,7 @@ function renderEstTotals() {
         });
     });
     return `
-    <div style="font-weight:600;font-size:0.88rem;color:#374151;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;">${_estIco.barChart} Підсумок</div>
+    <div style="font-weight:600;font-size:0.88rem;color:#374151;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;">${_estIco.barChart} ${_tg('Підсумок','Итого')}</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem;">
       <div style="padding:0.75rem;background:#f0fdf4;border-radius:8px;text-align:center;">
         <div style="font-size:0.75rem;color:#6b7280;">${_tg('Бюджет матеріалів','Бюджет материалов')}</div>
