@@ -1816,8 +1816,10 @@ function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
 
     const wasAtBottom = div.scrollHeight - div.scrollTop - div.clientHeight < 50;
 
+    // Фільтруємо службові повідомлення (callback, /start)
+    msgs = msgs.filter(m => m.text && m.text !== 'btn_0' && m.text !== 'btn_1' && m.text !== 'btn_2' && !m.text.startsWith('/start') && !m.isCallback);
     div.innerHTML = msgs.map(m => {
-        const isBot = m.from === 'bot' || m.direction === 'out';
+        const isBot = m.from === 'bot' || m.direction === 'out' || m.role === 'bot';
         const time = m.timestamp?.toDate ? m.timestamp.toDate().toLocaleTimeString('uk-UA', {hour:'2-digit',minute:'2-digit'}) : '';
 
         // Відображаємо кнопки якщо є (збережені ботом)

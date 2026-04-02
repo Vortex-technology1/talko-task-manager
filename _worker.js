@@ -1073,15 +1073,21 @@ async function handleWebhook(request, url, env) {
 
         // DEBUG: підтверджуємо що webhook отримав повідомлення
 
-        // Зберігаємо повідомлення в лог чату
-        const msgId = `msg_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
-        await fsSet(`${contactPath}/messages/${msgId}`, {
-            id:        { stringValue: msgId },
-            role:      { stringValue: 'user' },
-            text:      { stringValue: text },
-            isCallback:{ booleanValue: isCallback },
-            createdAt: { timestampValue: new Date().toISOString() },
-        }, token);
+        // Зберігаємо повідомлення в лог чату (не зберігаємо callback і /start)
+        if (!isCallback && !text.startsWith('/start') && !text.startsWith('/')) {
+            const msgId = `msg_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
+            const nowTs = new Date().toISOString();
+            await fsSet(`${contactPath}/messages/${msgId}`, {
+                id:        { stringValue: msgId },
+                role:      { stringValue: 'user' },
+                from:      { stringValue: 'user' },
+                direction: { stringValue: 'in' },
+                text:      { stringValue: text },
+                isCallback:{ booleanValue: false },
+                timestamp: { timestampValue: nowTs },
+                createdAt: { timestampValue: nowTs },
+            }, token);
+        }
 
         // Визначаємо активний flow
         let activeFlowId = contact.currentFlowId || '';
@@ -1361,11 +1367,15 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
         // Зберігаємо повідомлення бота в лог
         const bmId = `msg_${Date.now()}_bot`;
+        const bmTs3 = new Date().toISOString();
         await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bmId}`, {
             id:        { stringValue: bmId },
             role:      { stringValue: 'bot' },
+            from:      { stringValue: 'bot' },
+            direction: { stringValue: 'out' },
             text:      { stringValue: msgText },
-            createdAt: { timestampValue: new Date().toISOString() },
+            timestamp: { timestampValue: bmTs3 },
+            createdAt: { timestampValue: bmTs3 },
         }, token);
 
         // Зберігаємо поточний вузол (потрібно для callback від кнопок)
@@ -1459,10 +1469,15 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 if (aiResp) {
                     await tgSend(chatId, aiResp);
                     const bm = `msg_${Date.now()}_bot`;
+                    const bmTs = new Date().toISOString();
                     await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bm}`, {
-                        id:{ stringValue:bm }, role:{ stringValue:'bot' },
-                        text:{ stringValue:aiResp },
-                        createdAt:{ timestampValue:new Date().toISOString() },
+                        id:        { stringValue: bm },
+                        role:      { stringValue: 'bot' },
+                        from:      { stringValue: 'bot' },
+                        direction: { stringValue: 'out' },
+                        text:      { stringValue: aiResp },
+                        timestamp: { timestampValue: bmTs },
+                        createdAt: { timestampValue: bmTs },
                     }, token);
                     // Перевіряємо чи ШІ кваліфікував ліда
                     await checkAndConvertToLead({ aiResponse: aiResp, userInput: '', collectedData, cid, chatId, contact, contactPath, token });
@@ -1519,10 +1534,15 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         if (aiResp) {
             await tgSend(chatId, aiResp);
             const bm = `msg_${Date.now()}_bot`;
+            const bmTs2 = new Date().toISOString();
             await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bm}`, {
-                id:{ stringValue:bm }, role:{ stringValue:'bot' },
-                text:{ stringValue:aiResp },
-                createdAt:{ timestampValue:new Date().toISOString() },
+                id:        { stringValue: bm },
+                role:      { stringValue: 'bot' },
+                from:      { stringValue: 'bot' },
+                direction: { stringValue: 'out' },
+                text:      { stringValue: aiResp },
+                timestamp: { timestampValue: bmTs2 },
+                createdAt: { timestampValue: bmTs2 },
             }, token);
             await checkAndConvertToLead({ aiResponse: aiResp, userInput, collectedData, cid, chatId, contact, contactPath, token });
         } else {
