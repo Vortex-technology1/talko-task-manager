@@ -502,7 +502,7 @@ async function handleCrmForm(request, env) {
 // ════════════════════════════════════════════════════════════
 async function handleWebhook(request, url, env) {
     const channel = url.searchParams.get('channel')||'telegram';
-    const cid     = url.searchParams.get('cid')||'';
+    const cid     = url.searchParams.get('cid') || url.searchParams.get('companyId') || '';
 
     let token;
     try { token = await getToken(env); } catch(e) { return json({ok:false,error:'Firebase error'},500); }
