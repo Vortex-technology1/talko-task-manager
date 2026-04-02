@@ -240,27 +240,36 @@ body::before{
   .journey-arrow{padding:12px 0;transform:rotate(90deg)}
 }
 
-/* ─── PROBLEMS ─── */
-.problems-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+/* ─── DAY GRID ─── */
+.day-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
   gap:12px;margin-top:40px;
 }
-.prob-card{
+.day-card{
   background:var(--surface);
   border:1px solid var(--border-soft);
-  border-radius:12px;padding:20px;
-  display:flex;gap:14px;align-items:flex-start;
+  border-radius:14px;padding:22px 20px;
   transition:.2s;
 }
-.prob-card:hover{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.03)}
-.prob-icon{
-  width:38px;height:38px;border-radius:8px;
-  background:rgba(239,68,68,.08);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+.day-card:hover{border-color:var(--green);background:var(--surface-2)}
+.day-tag{
+  display:inline-block;
+  font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--green);margin-bottom:14px;
+  padding:3px 10px;border-radius:50px;
+  background:var(--green-glow);border:1px solid rgba(34,197,94,.2);
 }
-.prob-icon svg{width:18px;height:18px;stroke:var(--red);fill:none;stroke-width:2}
-.prob-card h4{font-size:14px;font-weight:600;margin-bottom:4px}
-.prob-card p{font-size:13px;color:var(--text-muted);font-weight:300}
+.day-line{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:14px;color:var(--text);
+  margin-bottom:8px;line-height:1.45;
+}
+.day-line:last-child{margin-bottom:0}
+.day-line svg{width:15px;height:15px;stroke:var(--green);fill:none;stroke-width:2.5;flex-shrink:0;margin-top:2px}
+.day-line.dim{color:var(--text-muted);font-size:13px;font-weight:300}
+@media(max-width:768px){.day-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.day-grid{grid-template-columns:1fr}}
 
 /* ─── WHAT IS TALKO ─── */
 .talko-grid{
@@ -624,54 +633,49 @@ body::before{
 
 <div class="divider"></div>
 
-<!-- PROBLEMS -->
+<!-- DAY WITH SYSTEM -->
 <section class="sec">
   <div class="wrap">
-    <span class="sec-label">Знайомо?</span>
-    <h2 class="sec-title">Симптоми бізнесу без системи</h2>
-    <div class="problems-grid">
-      <div class="prob-card">
-        <div class="prob-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-        <div>
-          <h4>Ви — вузьке місце</h4>
-          <p>10–14 годин роботи. Без вас нічого не рухається. Відпустка — розкіш.</p>
-        </div>
+    <span class="sec-label">Як виглядає твій день</span>
+    <h2 class="sec-title">Коли система побудована</h2>
+    <div class="day-grid">
+
+      <div class="day-card">
+        <div class="day-tag">Ранок</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Команда вирішує сама. Ти бачиш результат</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Відкрив дашборд — все видно за 30 секунд</div>
       </div>
-      <div class="prob-card">
-        <div class="prob-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-        <div>
-          <h4>Прибуток нестабільний</h4>
-          <p>Гроші є — де не зрозуміло. Немає цифр, є тільки відчуття.</p>
-        </div>
+
+      <div class="day-card">
+        <div class="day-tag">Фінанси</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>P&L, cashflow, прибуток — в реальному часі</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Знаєш цифри — приймаєш рішення спокійно</div>
       </div>
-      <div class="prob-card">
-        <div class="prob-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-        <div>
-          <h4>Залежність від людей</h4>
-          <p>Хороший співробітник пішов — все посипалось. Результат залежить від особистості.</p>
-        </div>
+
+      <div class="day-card">
+        <div class="day-tag">Команда</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Інструкції в системі. Новий входить за 3 дні</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Бізнес працює від системи, не від людини</div>
       </div>
-      <div class="prob-card">
-        <div class="prob-icon"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div>
-        <div>
-          <h4>Клієнти хаотично</h4>
-          <p>Сьогодні густо, завтра пусто. Маркетинг — ривками, без системи.</p>
-        </div>
+
+      <div class="day-card">
+        <div class="day-tag">Клієнти</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>CRM сам нагадує. Бот сам відповідає</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Потік клієнтів — стабільний, без твоєї участі</div>
       </div>
-      <div class="prob-card">
-        <div class="prob-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-        <div>
-          <h4>Команда не думає</h4>
-          <p>Всі питання — до вас. Приходять з проблемами, а не з рішеннями.</p>
-        </div>
+
+      <div class="day-card">
+        <div class="day-tag">Відпустка</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Тиждень без тебе. Бізнес працює</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Повернувся — побачив звіт, не пожежу</div>
       </div>
-      <div class="prob-card">
-        <div class="prob-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
-        <div>
-          <h4>Немає прогнозу</h4>
-          <p>Що буде через 3 місяці — не знаєте. Рішення — «по ситуації».</p>
-        </div>
+
+      <div class="day-card">
+        <div class="day-tag">Плани</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Бачиш прогноз на 3 місяці вперед</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Рішення по цифрах, а не по відчуттях</div>
       </div>
+
     </div>
   </div>
 </section>
