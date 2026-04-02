@@ -591,10 +591,43 @@ async function handleWebhook(request, url, env) {
 
         if (!chatId||!cid) return json({ok:true});
 
-        const settDoc = await fsGet(`companies/${cid}/settings/integrations`, token);
-        if (!settDoc?.fields) return json({ok:true});
-        const sett = fFields(settDoc.fields);
-        const botToken = sett.telegramBotToken;
+        // Читаємо botToken з компанії (integrations.telegram.botToken)
+        // Також перевіряємо bots підколекцію як fallback
+        let botToken = '';
+        const compDoc = await fsGet(`companies/${cid}`, token);
+        if (compDoc?.fields) {
+            const compData = fFields(compDoc.fields);
+            botToken = compData['integrations.telegram.botToken'] ||
+                       compData?.integrations?.telegram?.botToken || '';
+            // Якщо не знайшли через fFields (вкладений об'єкт) — беремо з raw fields
+            if (!botToken && compDoc.fields?.integrations?.mapValue?.fields?.telegram?.mapValue?.fields?.botToken?.stringValue) {
+                botToken = compDoc.fields.integrations.mapValue.fields.telegram.mapValue.fields.botToken.stringValue;
+            }
+        }
+        // Fallback: settings/integrations
+        if (!botToken) {
+            const settDoc = await fsGet(`companies/${cid}/settings/integrations`, token);
+            if (settDoc?.fields) {
+                const sett = fFields(settDoc.fields);
+                botToken = sett.telegramBotToken || sett.botToken || '';
+            }
+        }
+        // Fallback: bots підколекція
+        if (!botToken) {
+            const botsSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots?pageSize=5`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (botsSnap.ok) {
+                const bd = await botsSnap.json();
+                for (const doc of (bd.documents||[])) {
+                    const d = fFields(doc.fields||{});
+                    if (d.token && (d.channel === 'telegram' || !d.channel)) {
+                        botToken = d.token; break;
+                    }
+                }
+            }
+        }
         if (!botToken) return json({ok:true});
 
         const tgSend = (chat_id, txt) =>
