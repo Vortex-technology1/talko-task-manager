@@ -993,6 +993,7 @@ async function handleWebhook(request, url, env) {
         // Визначаємо активний flow
         let activeFlowId = contact.currentFlowId || '';
         let activeNodeId = contact.currentNodeId || '';
+        await tgSend(chatId, `🔍 DEBUG: cid=${cid} | text="${text.slice(0,30)}" | activeFlowId="${activeFlowId}" | isCallback=${isCallback}`);
 
         // /start з параметром → шукаємо flow бота
         if (text.startsWith('/start')) {
