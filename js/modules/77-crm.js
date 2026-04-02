@@ -620,7 +620,7 @@ function _kanbanFilterBar() {
         </div>` : ''}
         <div style="display:flex;align-items:center;gap:3px;border:1px solid #e8eaed;border-radius:6px;background:white;padding:0 0.4rem;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <input id="crmKanbanFilterCity" type="text" placeholder="Город..." value="${f.city||''}"
+            <input id="crmKanbanFilterCity" type="text" placeholder="${_tg('Місто...','Город...')}" value="${f.city||''}"
                 oninput="crmApplyFilters()"
                 style="border:none;background:none;outline:none;font-size:0.75rem;width:75px;padding:0.25rem 0;">
         </div>
@@ -1736,7 +1736,7 @@ function _showLostReasonModal(dealId, newStage, oldStage) {
                 }).join('') +
             '</div>' +
             '<div style="margin-bottom:0.75rem;">' +
-                '<input id="lostReasonNote" placeholder="Комментарий (необязательно)..." ' +
+                '<inlostReasonNote" placeholder="Comment..." ' +
                 'style="width:100%;padding:0.45rem 0.55rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.8rem;box-sizing:border-box;">' +
             '</div>' +
             '<div style="display:flex;gap:0.5rem;justify-content:flex-end;">' +
@@ -2156,7 +2156,7 @@ function _renderDealDetails(deal) {
     </div>` : ''}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
         <div>
-            <label style="${lbl}">Дата закрытия</label>
+            <label style="${lbl}">${_tg('Дата закриття','Дата закрытия')}</label>
             <input id="dd_close" type="date" value="${deal.expectedClose||''}" style="${inp}">
         </div>
         <div>
@@ -2315,7 +2315,7 @@ function _renderDealDetails(deal) {
 
     <!-- Теги -->
     <div style="margin-bottom:0.9rem;">
-        <label style="${lbl}">Теги</label>
+        <label style="${lbl}">${_tg('Теги','Теги')}</label>
         <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.3rem;" id="dealTagsList">
             ${(deal.tags||[]).map(tag =>
             `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f3f4f6;border-radius:20px;font-size:0.72rem;color:#374151;">
@@ -3004,7 +3004,7 @@ async function _loadActivityTab(deal) {
         <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;margin-bottom:1rem;border:1px solid #e8eaed;">
             <div style="display:flex;gap:0.4rem;">
                 <select id="actType" style="padding:0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;background:white;">
-                    <option value="note">Заметка</option>
+                    <option value="note">${_tg('Нотатка','Заметка')}</option>
                     <option value="call">${window.t('crmCall')||'Дзвінок'}</option>
                     <option value="meeting">Встреча</option>
                     <option value="email">Email</option>
