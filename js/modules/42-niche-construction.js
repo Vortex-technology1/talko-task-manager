@@ -609,6 +609,7 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
         isDefault:false, createdBy:uid, createdAt:now,
     }}));
     await window.safeBatchCommit(finOps);
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     // Маппінг нотатки → functionId
     const _noteToFunc = (note) => {

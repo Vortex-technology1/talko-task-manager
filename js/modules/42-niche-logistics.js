@@ -439,6 +439,7 @@ window._DEMO_NICHE_MAP['logistics'] = async function() {
         name:c.name, type:c.type, color:c.color, icon:c.icon,
         isDefault:false, createdBy:uid, createdAt:now,
     }})),'step-cats');
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Приватбанк — ФОП Харченко',  type:'bank', balance:684000,  isDefault:true},

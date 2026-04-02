@@ -440,6 +440,7 @@ window._DEMO_NICHE_MAP['food_production'] = async function() {
         name:c.name, type:c.type, color:c.color, icon:c.icon,
         isDefault:false, createdBy:uid, createdAt:now,
     }})),'step-cats');
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Приватбанк — ФОП Савченко',  type:'bank', balance:1240000, isDefault:true},

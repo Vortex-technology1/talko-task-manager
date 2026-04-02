@@ -1260,6 +1260,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         isDefault:false, createdBy:uid, createdAt:now,
     }}));
     await window.safeBatchCommit(finOps);
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     // Транзакції (3 місяці детально)
     const TXS2 = [

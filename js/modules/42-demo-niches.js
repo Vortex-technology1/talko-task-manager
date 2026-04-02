@@ -48,3 +48,21 @@ window._demoTsFinance = function(offsetDays) {
 };
 
 window._DEMO_NICHE_MAP = window._DEMO_NICHE_MAP || {};
+
+// Записує DEFAULT_CATEGORIES з 98-finance.js в демо-компанію
+window._writeDemoDefaultFinCategories = async function(cr, uid) {
+    try {
+        if (typeof window._getDefaultFinCategories !== 'function') return;
+        const cats = window._getDefaultFinCategories();
+        if (!cats || !cats.length) return;
+        const now = firebase.firestore.FieldValue.serverTimestamp();
+        const ops = cats.map(cat => ({
+            type: 'set',
+            ref: cr.collection('finance_categories').doc(cat.id),
+            data: { ...cat, system: !cat.parentId, createdBy: uid, createdAt: now }
+        }));
+        await window.safeBatchCommit(ops, 'default-fin-categories');
+    } catch(e) {
+        console.warn('[Demo] writeDefaultFinCategories:', e.message);
+    }
+};

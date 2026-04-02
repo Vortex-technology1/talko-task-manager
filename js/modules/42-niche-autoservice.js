@@ -456,6 +456,7 @@ window._DEMO_NICHE_MAP['autoservice'] = async function() {
             isDefault:false, createdBy:uid, createdAt:now,
         }})), 'step-cats'
     );
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Приватбанк ФОП',      type:'bank', balance:284000, isDefault:true},

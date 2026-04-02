@@ -731,6 +731,7 @@ window._DEMO_NICHE_MAP['cleaning'] = async function() {
     const catRefs = FIN_CATS.map(() => cr.collection('finance_categories').doc());
     FIN_CATS.forEach((c, i) => finOps.push({type:'set', ref:catRefs[i], data:{name:c.name, type:c.type, color:c.color, icon:c.icon, isDefault:false, createdBy:uid, createdAt:now}}));
     await window.safeBatchCommit(finOps);
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const _noteToFuncCleaning = (note) => {
         const n = (note||'').toLowerCase();

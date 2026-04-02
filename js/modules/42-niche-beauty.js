@@ -658,6 +658,7 @@ window._DEMO_NICHE_MAP['beauty_salon'] = async function() {
     const catRefs = FIN_CATS.map(() => cr.collection('finance_categories').doc());
     FIN_CATS.forEach((c, i) => finOps.push({type:'set', ref:catRefs[i], data:{name:c.name, type:c.type, color:c.color, icon:c.icon, isDefault:false, createdBy:uid, createdAt:now}}));
     await window.safeBatchCommit(finOps, "step-13-finOps");
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     // Транзакції — 5 тижнів (35 записів)
     const TXS = [

@@ -166,6 +166,15 @@ const DEFAULT_CATEGORIES = {
   ],
 };
 
+// Публічна функція для доступу до DEFAULT_CATEGORIES з інших модулів
+window._getDefaultFinCategories = function() {
+    return [
+        ...DEFAULT_CATEGORIES.income.map(c => ({...c, type:'income'})),
+        ...DEFAULT_CATEGORIES.expense.map(c => ({...c, type:'expense'})),
+    ];
+};
+
+
 // ── Ініціалізація Firestore колекцій ──────────────────────
 async function initFirestoreCollections() {
   const db = getDb();

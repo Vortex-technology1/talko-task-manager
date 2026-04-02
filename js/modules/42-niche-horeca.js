@@ -436,6 +436,7 @@ window._DEMO_NICHE_MAP['horeca'] = async function() {
         name:c.name, type:c.type, color:c.color, icon:c.icon,
         isDefault:false, createdBy:uid, createdAt:now,
     }})),'step-cats');
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Монобанк ФОП Бойко',     type:'bank', balance:284000, isDefault:true},
