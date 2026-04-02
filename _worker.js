@@ -1468,21 +1468,30 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         if (!userInput) return;
 
         // Завантажуємо історію чату для контексту
+        const limit = Math.max((historyLimit || 14) * 2, 30);
         const histSnap = await fetch(
-            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/contacts/${chatId}/messages?pageSize=20&orderBy=createdAt`,
+            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/contacts/${chatId}/messages?pageSize=${limit}&orderBy=createdAt%20desc`,
             { headers: { Authorization: `Bearer ${token}` } }
         );
         let chatHistory = [];
         if (histSnap.ok) {
             const hd = await histSnap.json();
-            for (const doc of (hd.documents||[]).slice(-(historyLimit * 2 || 24))) {
+            // desc → реверсуємо щоб отримати хронологічний порядок
+            const docs = (hd.documents||[]).reverse();
+            for (const doc of docs) {
                 const d = fFields(doc.fields||{});
-                if (d.role === 'user') chatHistory.push({ role:'user', content: d.text||'' });
-                else if (d.role === 'bot') chatHistory.push({ role:'assistant', content: d.text||'' });
+                if (d.role === 'user' && d.text && !d.isCallback) {
+                    chatHistory.push({ role:'user', content: d.text });
+                } else if (d.role === 'bot' && d.text) {
+                    chatHistory.push({ role:'assistant', content: d.text });
+                }
             }
         }
-        // Додаємо поточне повідомлення
-        chatHistory.push({ role: 'user', content: userInput });
+        // Додаємо поточне повідомлення (якщо ще немає в history)
+        const lastMsg = chatHistory[chatHistory.length - 1];
+        if (!lastMsg || lastMsg.role !== 'user' || lastMsg.content !== userInput) {
+            chatHistory.push({ role: 'user', content: userInput });
+        }
 
         // Ключ і параметри від superadmin: завжди читаємо settings/platform
         let openaiKey = '';
