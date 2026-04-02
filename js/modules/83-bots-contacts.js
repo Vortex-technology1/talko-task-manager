@@ -70,6 +70,7 @@ window.destroyBotsModule = function() {
     chat.lastContactDoc     = null;
     chat.hasMoreContacts    = false;
     chat.search             = '';
+    chat.filter             = 'all';
     chat.sendingBotToken    = null;
     // cleanup всіх multi-instance listeners (crm, тощо)
     Object.keys(chat.instances || {}).forEach(id => {
@@ -1456,6 +1457,7 @@ let chat = {
     msgsUnsub: null,     // onSnapshot на messages (main instance)
     contactsUnsub: null, // onSnapshot на unreadCount
     search: '',
+    filter: 'all',       // all | unread | lead
     sendingBotToken: null, // токен бота поточного контакту (main instance)
 
     // ── Multi-instance: кожен контекст (main, crm, тощо) має свій стейт ──
