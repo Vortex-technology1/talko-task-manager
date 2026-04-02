@@ -1479,12 +1479,12 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             }
         }
 
-        // Використовуємо вже завантажений platDocPre (з Promise.all вгорі)
+        // Читаємо settings/platform для AI параметрів
         let openaiKey = '';
         let botModel = 'gpt-4o-mini';
         let botMaxTokens = 1500;
         let botTemperature = 0.7;
-        const platDocAI = platDocPre;
+        const platDocAI = await fsGet(`settings/platform`, token);
         if (platDocAI?.fields) {
             const platAI = fFields(platDocAI.fields);
             openaiKey = platAI.openaiApiKey || '';
