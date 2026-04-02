@@ -707,6 +707,28 @@ async function handleBotDebug(request, url, env) {
         }
     }
 
+    // 7. Перевіряємо nodes у flow document
+    if (result.bots && result.bots.length > 0) {
+        const fb = result.bots[0];
+        if (fb.flows && fb.flows.length > 0) {
+            const fl = fb.flows[0];
+            const flowDoc = await fsGet(`companies/${cid}/bots/${fb.id}/flows/${fl.id}`, token);
+            if (flowDoc?.fields) {
+                const fd = fFields(flowDoc.fields);
+                result.flowNodes = Array.isArray(fd.nodes) ? fd.nodes.length : 'NOT_ARRAY: ' + typeof fd.nodes;
+                result.flowEdges = Array.isArray(fd.edges) ? fd.edges.length : 'NOT_ARRAY: ' + typeof fd.edges;
+                result.flowFirstNode = Array.isArray(fd.nodes) && fd.nodes[0] ? 
+                    { id: fd.nodes[0].id, type: fd.nodes[0].type, hasText: !!fd.nodes[0].text } : null;
+                result.steps.push(`flow nodes: ${result.flowNodes}, edges: ${result.flowEdges}`);
+                if (Array.isArray(fd.nodes) && fd.nodes[0]) {
+                    result.steps.push(`first node: id=${fd.nodes[0].id} type=${fd.nodes[0].type}`);
+                }
+            } else {
+                result.steps.push('flow document fields: EMPTY');
+            }
+        }
+    }
+
     result.botTokenFound = !!botToken;
     return json(result);
 }
