@@ -2174,19 +2174,19 @@ function _renderDealDetails(deal) {
     <div style="${row}">
         <label style="${lbl}">Ответственный</label>
         <select id="dd_assignee" style="${inp}background:white;cursor:pointer;">
-            <option value="">— не назначен —</option>
+            <option value="">${_tg('— не призначено —','— не назначен —')}</option>
             ${(typeof users !== 'undefined' ? users : []).map(u => '<option value="' + u.id + '" ' + (deal.assigneeId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>').join('')}
         </select>
     </div>
     <div style="${row}">
-        <label style="${lbl}">Заметка</label>
+        <label style="${lbl}">${_tg('Нотатка','Заметка')}</label>
         <textarea id="dd_note" rows="3" style="${inp}resize:vertical;">${_esc(deal.note||'')}</textarea>
     </div>
 
     <!-- Доставка / Оплата — тільки для ніш з доставкою -->
     ${['furniture','construction','cleaning','logistics','retail',''].includes(window.currentCompanyData?.niche||'') || !window.currentCompanyData?.niche ? `
     <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
-        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Доставка и оплата</div>
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> ${_tg('Доставка і оплата','Доставка и оплата')}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
                 <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">ТТН Нова Пошта</label>
@@ -2201,20 +2201,20 @@ function _renderDealDetails(deal) {
                 </div>
             </div>
             <div>
-                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">Статус оплаты</label>
+                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">${_tg('Статус оплати','Статус оплаты')}</label>
                 <select id="dd_payStatus" style="${inp}background:white;cursor:pointer;font-size:0.78rem;">
-                    <option value="" ${!deal.payStatus?'selected':''}>— не установлен —</option>
-                    <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>⏳ Ожидает оплаты</option>
-                    <option value="paid"     ${deal.payStatus==='paid'    ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Оплачено</option>
-                    <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none"><polygon points="12,2 22,12 12,22 2,12"/></svg> Частично</option>
-                    <option value="refunded" ${deal.payStatus==='refunded'?'selected':''}>↩️ Возвращено</option>
+                    <option value="" ${!deal.payStatus?'selected':''}>${_tg('— не встановлено —','— не установлен —')}</option>
+                    <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>${_tg('⏳ Очікує оплати','⏳ Ожидает оплаты')}</option>
+                    <option value="paid"     ${deal.payStatus==='paid'    ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${_tg('✅ Оплачено','✅ Оплачено')}</option>
+                    <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none"><polygon points="12,2 22,12 12,22 2,12"/></svg>${_tg('🔶 Частково','🔶 Частично')}</option>
+                    <option value="refunded" ${deal.payStatus==='refunded'?'selected':''}>${_tg('↩️ Повернено','↩️ Возвращено')}</option>
                 </select>
             </div>
         </div>
         ${deal.amount ? `
         <button onclick="crmMonoPayLink(${deal.amount||0},'${_esc(deal.title||deal.clientName||'')}','${deal.id}')"
             style="padding:0.3rem 0.75rem;background:#1f3950;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Monobank — ссылка на оплату ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> ${_tg('Monobank — посилання на оплату','Monobank — ссылка на оплату')} ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
         </button>` : ''}
     </div>
 
@@ -2230,16 +2230,16 @@ function _renderDealDetails(deal) {
         <!-- Рядок 1: Філіал + Адреса об'єкту -->
         <div style="display:grid;grid-template-columns:1fr 2fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
-                <label style="${lbl}">Филиал</label>
+                <label style="${lbl}">${_tg('Філіал','Филиал')}</label>
                 <select id="dd_branch" style="${inp}background:white;cursor:pointer;">
-                    <option value="" ${!deal.branch?'selected':''}>— не указан —</option>
+                    <option value="" ${!deal.branch?'selected':''}>${_tg('— не вказано —','— не указан —')}</option>
                     <option value="prague"    ${deal.branch==='prague'    ?'selected':''}> Прага</option>
                     <option value="brno"      ${deal.branch==='brno'      ?'selected':''}> Брно</option>
                     <option value="bratislava"${deal.branch==='bratislava'?'selected':''}>🌆 Братислава</option>
                 </select>
             </div>
             <div>
-                <label style="${lbl}">Адрес объекта</label>
+                <label style="${lbl}">${_tg('Адреса об\'єкту','Адрес объекта')}</label>
                 <input id="dd_objectAddress" value="${_esc(deal.objectAddress||'')}" placeholder="вул. Náměstí Míru 12, Praha 2" style="${inp}">
             </div>
         </div>
@@ -2247,16 +2247,16 @@ function _renderDealDetails(deal) {
         <!-- Рядок 2: Замірник + Дата заміру -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
-                <label style="${lbl}">Замерщик</label>
+                <label style="${lbl}">${_tg('Замірник','Замерщик')}</label>
                 <select id="dd_measurer" style="${inp}background:white;cursor:pointer;">
-                    <option value="" ${!deal.measurerId?'selected':''}>— не назначен —</option>
+                    <option value="" ${!deal.measurerId?'selected':''}>${_tg('— не призначено —','— не назначен —')}</option>
                     ${(typeof users !== 'undefined' ? users : []).map(u =>
                         '<option value="' + u.id + '" ' + (deal.measurerId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>'
                     ).join('')}
                 </select>
             </div>
             <div>
-                <label style="${lbl}">Дата и время замера</label>
+                <label style="${lbl}">${_tg('Дата і час заміру','Дата и время замера')}</label>
                 <input id="dd_measurementDate" type="datetime-local" value="${deal.measurementDate||''}" style="${inp}">
             </div>
         </div>
@@ -2264,16 +2264,16 @@ function _renderDealDetails(deal) {
         <!-- Рядок 3: Монтажник + Дата монтажу -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
-                <label style="${lbl}">Монтажник</label>
+                <label style="${lbl}">${_tg('Монтажник','Монтажник')}</label>
                 <select id="dd_installer" style="${inp}background:white;cursor:pointer;">
-                    <option value="" ${!deal.installerId?'selected':''}>— не назначен —</option>
+                    <option value="" ${!deal.installerId?'selected':''}>${_tg('— не призначено —','— не назначен —')}</option>
                     ${(typeof users !== 'undefined' ? users : []).map(u =>
                         '<option value="' + u.id + '" ' + (deal.installerId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>'
                     ).join('')}
                 </select>
             </div>
             <div>
-                <label style="${lbl}">Дата и время монтажа</label>
+                <label style="${lbl}">${_tg('Дата і час монтажу','Дата и время монтажа')}</label>
                 <input id="dd_installationDate" type="datetime-local" value="${deal.installationDate||''}" style="${inp}">
             </div>
         </div>
@@ -2281,7 +2281,7 @@ function _renderDealDetails(deal) {
         <!-- Рядок 4: Передоплата + Залишок (авто) -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
-                <label style="${lbl}">Предоплата (€)</label>
+                <label style="${lbl}">${_tg('Передоплата (€)','Предоплата (€)')}</label>
                 <input id="dd_prepayment" type="number" min="0" step="0.01"
                     value="${deal.prepayment||''}" placeholder="0"
                     oninput="(function(){
@@ -2293,7 +2293,7 @@ function _renderDealDetails(deal) {
                     })()" style="${inp}">
             </div>
             <div>
-                <label style="${lbl}">Остаток к оплате</label>
+                <label style="${lbl}">${_tg('Залишок до оплати','Остаток к оплате')}</label>
                 <div id="dd_balance_display" style="${inp}background:#f9fafb;color:#374151;font-weight:600;display:flex;align-items:center;">
                     ${deal.amount && deal.prepayment != null
                         ? (Math.max(0, (deal.amount||0) - (deal.prepayment||0))).toFixed(2) + ' €'
@@ -2307,7 +2307,7 @@ function _renderDealDetails(deal) {
 
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
     <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;margin-bottom:0.9rem;">
-        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">Данные из бота</div>
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">${_tg('Дані з бота','Данные из бота')}</div>
         ${[[window.t('crmRole'),'role'],[window.t('crmProblem'),'mainProblem'],[window.t('crmGoal'),'mainGoal']].map(([l,k]) =>
             deal.leadData[k] ? `<div style="font-size:0.78rem;margin-bottom:0.25rem;"><span style="color:#9ca3af;">${l}: </span>${_esc(deal.leadData[k])}</div>` : ''
         ).join('')}
@@ -2325,17 +2325,17 @@ function _renderDealDetails(deal) {
             </span>`).join('')}
         </div>
         <div style="display:flex;gap:0.3rem;">
-            <input id="dd_tagInput" placeholder="Новый тег..." onkeydown="if(event.key==='Enter'){event.preventDefault();crmAddTag('${deal.id}')}"
+            <input id="dd_tagInput" placeholder="${_tg('Новий тег...','Новый тег...')}" onkeydown="if(event.key==='Enter'){event.preventDefault();crmAddTag('${deal.id}')}"
                 style="${inp}flex:1;">
             <button onclick="crmAddTag('${deal.id}')"
-                style="padding:0.45rem 0.7rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;">+ Тег</button>
+                style="padding:0.45rem 0.7rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;">${_tg('+ Тег','+ Тег')}</button>
         </div>
     </div>
 
     <!-- Товари зі складу -->
     ${typeof window.whGetItems === 'function' && window.whGetItems().length > 0 ? `
     <div style="margin-bottom:0.9rem;">
-        <label style="${lbl}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> Товары со склада</label>
+        <label style="${lbl}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>${_tg('Товари зі складу','Товары со склада')}</label>
         <div id="dealWhItems" style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.4rem;">
             ${(deal.warehouseItems||[]).map((wi,idx) => {
                 const it = window.whGetItems().find(i=>i.id===wi.itemId);
