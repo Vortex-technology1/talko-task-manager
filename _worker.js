@@ -188,6 +188,36 @@ export default {
         // ── /api/fix-company ─── виправлення companyId ────────
         if (path === '/api/fix-company') return handleFixCompany(request, url, env);
 
+        // ── /api/fix-edges ─── запис edges в flow document ────────
+        if (path === '/api/fix-edges') {
+            const cid2 = url.searchParams.get('cid') || url.searchParams.get('companyId') || '';
+            const bid2 = url.searchParams.get('botId') || '';
+            const fid2 = url.searchParams.get('flowId') || '';
+            if (!cid2 || !bid2 || !fid2) return json({ error: 'need cid, botId, flowId' });
+            let tok2;
+            try { tok2 = await getToken(env); } catch(e) { return json({ error: e.message }); }
+            // Читаємо canvasData/layout де edges точно є
+            const cvSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid2}/bots/${bid2}/flows/${fid2}/canvasData/layout`,
+                { headers: { Authorization: `Bearer ${tok2}` } }
+            );
+            if (!cvSnap.ok) return json({ error: 'canvasData/layout not found' });
+            const cvData = await cvSnap.json();
+            const cvFields = fFields(cvData.fields || {});
+            const cvEdges = Array.isArray(cvFields.edges) ? cvFields.edges : [];
+            // Записуємо edges в flow document
+            await fsPatch(`companies/${cid2}/bots/${bid2}/flows/${fid2}`, {
+                edges: { arrayValue: { values: cvEdges.map(e => ({ mapValue: { fields: {
+                    id:       { stringValue: e.id || '' },
+                    fromNode: { stringValue: e.fromNode || e.source || '' },
+                    fromPort: { stringValue: e.fromPort || e.sourceHandle || 'out' },
+                    toNode:   { stringValue: e.toNode || e.target || '' },
+                    toPort:   { stringValue: e.toPort || 'in' },
+                }}}))}},
+            }, tok2);
+            return json({ ok: true, edgesCount: cvEdges.length, edges: cvEdges });
+        }
+
         // ── /api/crm-form ────────────────────────────────────
         if (path === '/api/crm-form') return handleCrmForm(request, env);
 

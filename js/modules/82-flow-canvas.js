@@ -2438,7 +2438,7 @@ async function saveFlow() {
         try { window.fcApplyNodeData(fc.selected); } catch(e) { console.warn('[saveFlow] pre-save apply:', e.message); }
         window._fcApplyingBeforeSave = false;
     }
-    console.log('[saveFlow] START flowId:', fc.flowId, 'botId:', fc.botId, 'nodes:', fc.nodes.length);
+    console.log('[saveFlow] START flowId:', fc.flowId, 'botId:', fc.botId, 'nodes:', fc.nodes.length, 'edges:', fc.edges.length);
     window._fcSaving = true;
     const btn = document.getElementById('fcBtnSave');
     if (btn) btn.textContent = window.t('botsFlowSaving');
