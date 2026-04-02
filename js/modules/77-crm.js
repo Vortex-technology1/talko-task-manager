@@ -1870,10 +1870,10 @@ window.crmOpenDeal = function(dealId) {
         style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10020;
         display:flex;align-items:stretch;${_isMob ? 'flex-direction:column;justify-content:flex-end;' : 'justify-content:flex-end;'}">
 
-        <!-- ЧАТ ПАНЕЛЬ -->
+        <!-- ЧАТ ПАНЕЛЬ (справа від картки) -->
         <div id="crmDealChatPane" style="display:none;${_isMob
             ? 'width:100%;height:65vh;border-top:1px solid #e8eaed;flex-shrink:0;'
-            : 'width:380px;min-width:320px;max-width:45vw;border-left:1px solid #e8eaed;flex-shrink:0;'}
+            : 'width:400px;min-width:340px;max-width:48vw;border-left:1px solid #e8eaed;flex-shrink:0;order:2;'}
             background:#f8fafc;flex-direction:column;overflow:hidden;">
             <div id="chatMsgHeader_crmdeal"
                 style="padding:0.75rem 1rem;border-bottom:1px solid #e8eaed;
@@ -1897,8 +1897,8 @@ window.crmOpenDeal = function(dealId) {
             </div>
         </div>
 
-        <!-- КАРТКА УГОДИ -->
-        <div style="background:white;${_isMob ? 'width:100%;max-height:65vh;overflow-y:auto;' : 'width:100%;max-width:520px;'}
+        <!-- КАРТКА УГОДИ (зліва) -->
+        <div style="background:white;${_isMob ? 'width:100%;max-height:65vh;overflow-y:auto;' : 'width:100%;max-width:520px;order:1;'}
             display:flex;flex-direction:column;
             box-shadow:${_isMob ? '0 -4px 24px rgba(0,0,0,0.12)' : '-8px 0 32px rgba(0,0,0,0.12)'};">
 
