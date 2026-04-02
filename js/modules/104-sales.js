@@ -241,7 +241,7 @@
 
     const overlay = document.createElement('div');
     overlay.id = 'salesInvoiceOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding-top:2vh;overflow-y:auto;';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10050;display:flex;align-items:flex-start;justify-content:center;padding-top:2vh;overflow-y:auto;';
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:12px;width:min(760px,98vw);padding:1.5rem;margin-bottom:2rem;position:relative">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
@@ -422,7 +422,7 @@
   window._salesAddCatalogItem = function() {
     if (!S.products.length) { toast(_tg('Каталог порожній. Додайте товари/послуги в розділ "Каталог".', 'Каталог пуст. Добавьте товары/услуги в раздел "Каталог".'), 'info'); return; }
     const html = `
-      <div id="slCatalogOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center">
+      <div id="slCatalogOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10050;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:10px;padding:1.25rem;width:min(440px,95vw);max-height:80vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
             <b>${_tg('Вибір з каталогу','Выбор из каталога')}</b>
@@ -643,7 +643,7 @@
 
     const overlay = document.createElement('div');
     overlay.id = 'salesReceiptOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding-top:2vh;overflow-y:auto;';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10050;display:flex;align-items:flex-start;justify-content:center;padding-top:2vh;overflow-y:auto;';
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:12px;width:min(560px,98vw);padding:1.5rem;margin-bottom:2rem;position:relative">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
@@ -835,7 +835,7 @@
     const p = productId ? S.products.find(x => x.id === productId) : null;
     const overlay = document.createElement('div');
     overlay.id = 'salesProductOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10050;display:flex;align-items:center;justify-content:center';
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:10px;padding:1.25rem;width:min(400px,96vw)">
         <div style="display:flex;justify-content:space-between;margin-bottom:1rem">

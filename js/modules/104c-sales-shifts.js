@@ -119,7 +119,7 @@
 
   function showShiftSummary(data) {
     const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10050;display:flex;align-items:center;justify-content:center';
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:14px;padding:1.75rem;width:min(380px,95vw);text-align:center">
         <div style="font-size:2rem;margin-bottom:.5rem">📊</div>

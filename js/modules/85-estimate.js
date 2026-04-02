@@ -601,7 +601,7 @@ window.openNormModal = function(normId) {
     window.normMaterialsRowsHtml = materialsHtml;
 
     const html = `
-    <div id="normModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:flex;align-items:flex-start;justify-content:center;padding:4rem 1rem 1rem;overflow-y:auto;" onclick="if(event.target===this)closeNormModal()">
+    <div id="normModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10051;display:flex;align-items:flex-start;justify-content:center;padding-top:60px;padding-left:1rem;padding-right:1rem;padding-bottom:1rem;overflow-y:auto;" onclick="if(event.target===this)closeNormModal()">
       <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:700px;max-height:calc(100vh - 5rem);overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);" onclick="event.stopPropagation()">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
           <h3 style="margin:0;font-size:1.1rem;font-weight:700;">${_tg(normId?'Редагувати норму':'Нова норма витрат', normId?'Редактировать норму':'Новая норма расходов')}</h3>
@@ -730,7 +730,7 @@ window.openLoadDefaultNormsModal = function() {
         {v:'metal',        l:'Металоконструкції',desc:'Метал, електроди, болти, ґрунтовка',   ico: _estIco.gear},
     ];
     const html = `
-    <div id="loadNormsModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10001;display:flex;align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)document.getElementById('loadNormsModal').remove()">
+    <div id="loadNormsModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10053;display:flex;align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)document.getElementById('loadNormsModal').remove()">
       <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
         <h3 style="margin:0 0 1rem;font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;">${_estIco.package} Завантажити стандартні норми</h3>
         <p style="font-size:0.85rem;color:#6b7280;margin-bottom:1.25rem;">${_tg('Оберіть нішу — система додасть типові норми витрат матеріалів для вашої галузі','Выберите нишу — система добавит типовые нормы расходов материалов для вашей отрасли')}<еріалів:</p>
@@ -891,7 +891,7 @@ window.openEstimateModal = function(estimateId) {
     window.renderEstSectionsHtml = renderSections;
 
     const html = `
-    <div id="estimateModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:flex;align-items:flex-start;justify-content:center;padding:4rem 1rem 1rem;overflow-y:auto;">
+    <div id="estimateModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10050;display:flex;align-items:flex-start;justify-content:center;padding-top:60px;padding-left:1rem;padding-right:1rem;padding-bottom:1rem;overflow-y:auto;">
       <div style="background:#f9fafb;border-radius:16px;width:100%;max-width:800px;max-height:calc(100vh - 5rem);overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
         <div style="background:white;border-radius:16px 16px 0 0;padding:1.25rem 1.5rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1;">
           <h3 style="margin:0;font-size:1.05rem;font-weight:700;">${_tg(estimateId?'Редагувати кошторис':'Новий кошторис',estimateId?'Редактировать смету':'Новая смета')}</h3>
@@ -1002,7 +1002,7 @@ window.openAddSectionModal = function() {
         return;
     }
     const html = `
-    <div id="addSectionModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10002;display:flex;align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)document.getElementById('addSectionModal').remove()">
+    <div id="addSectionModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10052;display:flex;align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)document.getElementById('addSectionModal').remove()">
       <div style="background:white;border-radius:14px;padding:1.25rem;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
         <h4 style="margin:0 0 1rem;font-size:1rem;font-weight:700;">${_tg('Додати тип роботи','Добавить тип работы')}</h4>
         <div style="margin-bottom:0.75rem;">

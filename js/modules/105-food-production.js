@@ -79,7 +79,7 @@
 
     const overlay = document.createElement('div');
     overlay.id = 'fpRecipeOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding:2vh 0;overflow-y:auto;';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10050;display:flex;align-items:flex-start;justify-content:center;padding-top:60px;padding-bottom:1rem;overflow-y:auto;';
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:14px;width:min(780px,98vw);padding:1.5rem;margin-bottom:2rem">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
@@ -246,7 +246,7 @@
   window._fpAddIngredientFromWarehouse = function() {
     if (!FP.warehouseItems.length) { toast(_tg('Склад порожній. Додайте товари в розділ Склад.', 'Склад пуст. Добавьте товары в раздел Склад.'), 'info'); return; }
     const html = `
-      <div id="fpWhPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10001;display:flex;align-items:center;justify-content:center">
+      <div id="fpWhPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10051;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:12px;padding:1.25rem;width:min(440px,95vw);max-height:80vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
             <b>${_tg('Вибір зі складу', 'Выбор со склада')}</b>
@@ -566,7 +566,7 @@
     if (!FP.recipes.length) { toast(_tg('Немає рецептур. Спочатку створіть рецептуру.', 'Нет рецептур. Сначала создайте рецептуру.'), 'info'); return; }
 
     const html = `
-      <div id="fpPlanPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center">
+      <div id="fpPlanPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10052;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:12px;padding:1.25rem;width:min(420px,96vw)">
           <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
             <b>${_tg('Додати в план виробництва','Добавить в план производства')}</b>
