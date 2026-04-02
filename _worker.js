@@ -1399,7 +1399,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
     }
 
     // ── ВУЗОЛ: ШІ АГЕНТ ─────────────────────────────────────
-    if (nodeType === 'ai_agent' || nodeType === 'aiAgent' || nodeType === 'AI') {
+    if (nodeType === 'ai_agent' || nodeType === 'aiAgent' || nodeType === 'AI' || nodeType === 'ai') {
         await tgSend(chatId, `🤖 AI вузол: ${node.id} userInput:${userInput?.slice(0,20)||'none'}`);
         // Завантажуємо промпт вузла
         let systemPrompt = nodeData.systemPrompt || nodeData.aiSystem || nodeData.prompt || '';
