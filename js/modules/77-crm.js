@@ -1991,6 +1991,13 @@ window.crmOpenDeal = function(dealId) {
     </div>`);
 
     crmDealTab(deal.id, 'details');
+    // Ініціалізуємо auto-resize для всіх textarea після рендеру
+    setTimeout(() => {
+        document.querySelectorAll('#crmDealOverlay textarea').forEach(t => {
+            t.style.height = 'auto';
+            t.style.height = t.scrollHeight + 'px';
+        });
+    }, 100);
     // Хуки для зовнішніх модулів (77f-crm-mobile та ін.)
     if (Array.isArray(window.crmOpenDealHooks)) {
         window.crmOpenDealHooks.forEach(function (fn) { try { fn(deal.id); } catch(e) {} });
@@ -2180,7 +2187,7 @@ function _renderDealDetails(deal) {
     </div>
     <div style="${row}">
         <label style="${lbl}">${_tg('Нотатка','Заметка')}</label>
-        <textarea id="dd_note" rows="3" style="${inp}resize:vertical;">${_esc(deal.note||'')}</textarea>
+        <textarea id="dd_note" rows="3" style="${inp}resize:vertical;overflow:hidden;min-height:72px;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';" onfocus="setTimeout(()=>{this.style.height='auto';this.style.height=this.scrollHeight+'px';},0)">${_esc(deal.note||'')}</textarea>
     </div>
 
     <!-- Доставка / Оплата — тільки для ніш з доставкою -->
@@ -3777,7 +3784,7 @@ window.crmEditClient = function(clientId) {
                 </div>
                 <div>
                     <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Нотатка','Заметка')}</label>
-                    <textarea id="eci_note" rows="3" style="${inp}resize:vertical;" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">${_esc(cl.note||'')}</textarea>
+                    <textarea id="eci_note" rows="3" style="${inp}resize:vertical;overflow:hidden;min-height:72px;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';" onfocus="this.style.borderColor='#22c55e';setTimeout(()=>{this.style.height='auto';this.style.height=this.scrollHeight+'px';},0)" onblur="this.style.borderColor='#e5e7eb'">${_esc(cl.note||'')}</textarea>
                 </div>
                 <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
                     <button onclick="document.getElementById('crmEditClientOverlay').remove()"
@@ -6098,7 +6105,7 @@ window.crmCreateTaskFromDeal = function(dealId) {
         </div>
         <div style="margin-bottom:1rem;">
             <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:4px;">Опис</label>
-            <textarea id="crmT_note" rows="2" style="${inp}resize:vertical;">${_esc(deal.note||'')}</textarea>
+            <textarea id="crmT_note" rows="2" style="${inp}resize:vertical;overflow:hidden;min-height:52px;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';" onfocus="setTimeout(()=>{this.style.height='auto';this.style.height=this.scrollHeight+'px';},0)">${_esc(deal.note||'')}</textarea>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
             <button onclick="document.getElementById('crmTaskModal').remove()"
