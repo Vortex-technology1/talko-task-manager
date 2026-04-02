@@ -787,7 +787,8 @@ window.openFlowCrmSettings = async function(flowId, flowName) {
                     <!-- Воронка -->
                     <div style="margin-bottom:12px;">
                         <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">${_tg('Воронка','Воронка')}</label>
-                        ${pipelines.length ? `
+                        <!-- DEBUG: pipelines.length = ${pipelines.length} -->
+        ${pipelines.length ? `
                         <select id="fcrmPipeline" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
                             onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'"
                             onchange="fcrmUpdateStages(this.value,'${selStageId}')">
@@ -2294,6 +2295,16 @@ window.chatCreateCrmDeal = async function(contactId) {
 
     // Зберігаємо pipelines для оновлення стадій
     window._chatCrmPipelines = pipelines;
+    // Якщо є воронки — одразу завантажуємо стадії першої
+    setTimeout(() => {
+        const pipeEl = document.getElementById('chatCrmDealPipeline');
+        if (pipeEl && pipeEl.value) {
+            window.chatCrmUpdateStages(pipeEl.value);
+        } else if (pipeEl && pipelines.length) {
+            pipeEl.value = pipelines[0].id;
+            window.chatCrmUpdateStages(pipelines[0].id);
+        }
+    }, 50);
 
     document.body.insertAdjacentHTML('beforeend', `
     <div id="chatCrmDealModal" onclick="if(event.target===this)document.getElementById('chatCrmDealModal').remove()"
@@ -2374,9 +2385,9 @@ window.chatCrmUpdateStages = function(pipeId) {
     const sel = document.getElementById('chatCrmDealStage');
     if (!sel) return;
     const pip = (window._chatCrmPipelines||[]).find(p => p.id === pipeId);
-    const stages = pip?.stages || pip?.steps || [];
+    const stages = (pip?.stages || pip?.steps || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
     sel.innerHTML = `<option value="">${_tg('Оберіть стадію...','Выберите стадию...')}</option>` +
-        stages.map(s => `<option value="${s.id}">${escH(s.name||s.id)}</option>`).join('');
+        stages.map(s => `<option value="${s.id}">${escH(s.label||s.name||s.id)}</option>`).join('');
 };
 
 window.chatSaveCrmDeal = async function(contactId) {
