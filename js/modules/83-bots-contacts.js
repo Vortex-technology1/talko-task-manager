@@ -1487,13 +1487,16 @@ async function renderChatTab() {
     <style>
         #chatWrapper { display:flex;height:calc(100dvh - 175px);min-height:400px;background:white;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden; }
         #chatLeftCol { width:260px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #f1f5f9;transition:transform 0.2s; }
-        #chatRightCol { flex:1;display:flex;flex-direction:column;min-width:0; }
-        @media (max-width:600px) {
-            #chatWrapper { height:calc(100dvh - 160px);border-radius:0; }
-            #chatLeftCol { position:absolute;width:100%;height:100%;z-index:10;background:white;border-right:none; }
+        #chatRightCol { flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden; }
+        #chatMsgs { flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.4rem;background:#f8fafc; }
+        #chatInputArea { flex-shrink:0;padding:0.5rem;border-top:1px solid #f1f5f9;background:white; }
+        @media (max-width:768px) {
+            #chatWrapper { height:calc(100dvh - 155px);border-radius:0;box-shadow:none; }
+            #chatLeftCol { position:absolute;width:100%;height:100%;z-index:10;background:white;border-right:none;transition:transform 0.25s ease; }
             #chatLeftCol.chat-hidden { transform:translateX(-100%);pointer-events:none; }
-            #chatRightCol { width:100%; }
+            #chatRightCol { width:100%;height:100%; }
             #chatBackBtn { display:flex!important; }
+            #chatMsgs { padding:0.5rem; }
         }
     </style>
     <div id="chatWrapper">
@@ -1540,14 +1543,10 @@ async function renderChatTab() {
             </div>
 
             <!-- Повідомлення -->
-            <div id="chatMsgs"
-                style="flex:1;overflow-y:auto;padding:1rem;
-                display:flex;flex-direction:column;gap:0.5rem;background:#f8fafc;">
-            </div>
+            <div id="chatMsgs"></div>
 
             <!-- Поле вводу -->
-            <div id="chatInputArea"
-                style="padding:0.6rem;border-top:1px solid #f1f5f9;flex-shrink:0;display:none;">
+            <div id="chatInputArea" style="display:none;">
                 <div style="display:flex;gap:0.4rem;align-items:flex-end;">
                     <textarea id="chatInput" rows="1" placeholder=${window.t('botsChatPh')}
                         style="flex:1;padding:0.5rem 0.65rem;border:1.5px solid #e5e7eb;
