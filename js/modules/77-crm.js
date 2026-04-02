@@ -1937,7 +1937,7 @@ window.crmOpenDeal = function(dealId) {
 
             <!-- Sub-tabs -->
             <div style="display:flex;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
-                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['tasks','Завдання'],['files','📎 Файли'],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','💅 Beauty']]:
+                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['tasks', window.currentLang==='ru' ? 'Задания' : 'Завдання'],['files', '📎 ' + (window.currentLang==='ru' ? 'Файлы' : 'Файли')],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','💅 Beauty']]:
                         (window.currentCompanyData?.niche==='autoservice'?[['vehicles','🔧 Авто/Наряди']]:
                         (window.currentCompanyData?.niche==='horeca'?[['pos_history','🧾 Чеки']]:
                         (window.currentCompanyData?.niche==='logistics'?[['routes_history','🚛 Рейси']]:
