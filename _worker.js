@@ -657,6 +657,35 @@ async function handleBotDebug(request, url, env) {
         result.steps.push('companies list HTTP: ' + companiesSnap.status);
     }
 
+    // 6. Перевіряємо webhook info через Telegram API
+    if (result.bots && result.bots.length > 0) {
+        const firstBot = result.bots[0];
+        if (firstBot.hasToken) {
+            // Читаємо повний токен
+            const botDocFull = await fsGet(`companies/${cid}/bots/${firstBot.id}`, token);
+            if (botDocFull?.fields) {
+                const bd = fFields(botDocFull.fields);
+                const fullToken = bd.token || '';
+                if (fullToken) {
+                    const whInfo = await fetch(`https://api.telegram.org/bot${fullToken}/getWebhookInfo`);
+                    if (whInfo.ok) {
+                        const whData = await whInfo.json();
+                        result.webhookInfo = {
+                            url: whData.result?.url,
+                            has_custom_certificate: whData.result?.has_custom_certificate,
+                            pending_update_count: whData.result?.pending_update_count,
+                            last_error_message: whData.result?.last_error_message,
+                            last_error_date: whData.result?.last_error_date,
+                            max_connections: whData.result?.max_connections,
+                        };
+                        result.steps.push('webhook url: ' + (whData.result?.url || 'EMPTY'));
+                        result.steps.push('last_error: ' + (whData.result?.last_error_message || 'none'));
+                    }
+                }
+            }
+        }
+    }
+
     result.botTokenFound = !!botToken;
     return json(result);
 }
