@@ -1188,7 +1188,6 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
             edges = Array.isArray(raw.edges) ? raw.edges : [];
         }
     }
-    await tgSend(chatId, `📊 nodes:${nodes.length} edges:${edges.length} nodeId:${currentNodeId||'none'}`);
     // Fallback: canvasData/layout
     if (!nodes.length) {
         const canvasSnap = await fetch(
@@ -1217,7 +1216,6 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
         currentNode = nodes.find(n => n.id === currentNodeId);
     }
 
-    await tgSend(chatId, `🔍 currentNode: ${currentNode?.id} type:${currentNode?.type}`);
     if (!currentNode) return;
 
     // Знаходимо наступний вузол по з'єднанню
@@ -1254,7 +1252,6 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
     const nodeData = currentNode.data || currentNode;
 
     // Якщо це START вузол — переходимо до наступного
-    await tgSend(chatId, `🔍 nodeType:${nodeType} id:${currentNode.id}`);
     if (nodeType === 'start' || currentNode.id?.includes('start')) {
         const nextNode = getNextNode(currentNode.id);
         if (nextNode) {
@@ -1278,10 +1275,8 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
     }
 
     // Якщо прийшов callback (натиснута кнопка) — знаходимо наступний вузол
-    await tgSend(chatId, `🔍 isCallback:${isCallback} callbackData:${callbackData} edges:${edges.length}`);
     if (isCallback && callbackData) {
         const nextNode = getNextNode(currentNode.id, callbackData);
-        await tgSend(chatId, `🔍 nextNode:${nextNode?.id || 'NULL'} type:${nextNode?.type}`);
         if (nextNode) {
             await fsPatch(contactPath, {
                 currentNodeId: { stringValue: nextNode.id },
@@ -1404,7 +1399,6 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
     // ── ВУЗОЛ: ШІ АГЕНТ ─────────────────────────────────────
     if (nodeType === 'ai_agent' || nodeType === 'aiAgent' || nodeType === 'AI' || nodeType === 'ai') {
-        await tgSend(chatId, `🤖 AI вузол: ${node.id} userInput:${userInput?.slice(0,20)||'none'}`);
         // Завантажуємо промпт вузла
         let systemPrompt = nodeData.systemPrompt || nodeData.aiSystem || nodeData.prompt || '';
         const aiProvider = nodeData.aiProvider || 'openai';
