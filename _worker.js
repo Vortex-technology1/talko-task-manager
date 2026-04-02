@@ -1053,7 +1053,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
         const openaiKey = env.OPENAI_API_KEY || '';
         if (!openaiKey) {
-            await tgSend(chatId, 'Вибачте, ШІ наразі недоступний. Менеджер зв'яжеться з вами.');
+            await tgSend(chatId, `Вибачте, ШІ наразі недоступний. Менеджер зв'яжеться з вами.`);
             return;
         }
 
