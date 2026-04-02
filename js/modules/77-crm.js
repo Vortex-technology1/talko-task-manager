@@ -1960,7 +1960,7 @@ window.crmOpenDeal = function(dealId) {
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title="Конвертувати угоду в проєкт">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                    ${deal.linkedProjectId ? 'Відкрити проєкт →' : 'В проєкт'}
+                    ${deal.linkedProjectId ? _tg('Відкрити проєкт →','Открыть проект →') : _tg('В проєкт','В проект')}
                 </button>
                 <button onclick="crmDealLaunchProcess('${deal.id}')"
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
@@ -1973,13 +1973,13 @@ window.crmOpenDeal = function(dealId) {
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title="Створити задачу в таск-менеджері">
-                    ${I.check} Задача
+                    ${I.check} ${_tg('Задача','Задача')}
                 </button>
                 <button onclick="window.crmCreateInvoiceForDeal('${deal.id}')"
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title="Выставить счёт для сделки">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Счёт
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${_tg('Рахунок','Счёт')}
                 </button>
                 <button onclick="crmSaveDeal('${deal.id}')"
                     style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;
@@ -2160,7 +2160,7 @@ function _renderDealDetails(deal) {
             <input id="dd_close" type="date" value="${deal.expectedClose||''}" style="${inp}">
         </div>
         <div>
-            <label style="${lbl}">Ймовірність закриття, %</label>
+            <label style="${lbl}">${_tg('Ймовірність закриття, %','Вероятность закрытия, %')}</label>
             <input id="dd_probability" type="number" min="0" max="100" value="${deal.probability ?? ''}" placeholder="10" style="${inp}">
         </div>
         <div>
