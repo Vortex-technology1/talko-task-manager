@@ -4819,12 +4819,16 @@ setTimeout(fixAuthInputs, 1500);
     }
     function _fix() {
         var lang = _getLang();
+        console.log('[NAV-FIX] lang=' + lang + ', navSpanSales=' + (document.getElementById('navSpanSales') ? document.getElementById('navSpanSales').textContent : 'NOT FOUND'));
         if (lang === 'ua') return;
         Object.keys(_targets).forEach(function(id) {
             var el = document.getElementById(id);
             if (el) {
                 var val = _targets[id][lang];
-                if (val && el.textContent !== val) el.textContent = val;
+                if (val && el.textContent !== val) {
+                    console.log('[NAV-FIX] Fixing ' + id + ': ' + el.textContent + ' → ' + val);
+                    el.textContent = val;
+                }
             }
         });
     }
