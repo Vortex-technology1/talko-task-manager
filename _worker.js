@@ -719,7 +719,14 @@ async function handleBotDebug(request, url, env) {
                 result.flowEdges = Array.isArray(fd.edges) ? fd.edges.length : 'NOT_ARRAY: ' + typeof fd.edges;
                 result.flowFirstNode = Array.isArray(fd.nodes) && fd.nodes[0] ? 
                     { id: fd.nodes[0].id, type: fd.nodes[0].type, hasText: !!fd.nodes[0].text } : null;
+                // RAW поля для діагностики
+                result.flowRawKeys = Object.keys(flowDoc.fields);
+                result.flowEdgesRaw = flowDoc.fields.edges ? Object.keys(flowDoc.fields.edges) : 'NO_EDGES_FIELD';
                 result.steps.push(`flow nodes: ${result.flowNodes}, edges: ${result.flowEdges}`);
+                result.steps.push(`raw fields: ${result.flowRawKeys.join(', ')}`);
+                if (flowDoc.fields.edges) {
+                    result.steps.push(`edges raw type: ${Object.keys(flowDoc.fields.edges).join(', ')}`);
+                }
                 if (Array.isArray(fd.nodes) && fd.nodes[0]) {
                     result.steps.push(`first node: id=${fd.nodes[0].id} type=${fd.nodes[0].type}`);
                 }
