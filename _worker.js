@@ -1278,8 +1278,10 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
     }
 
     // Якщо прийшов callback (натиснута кнопка) — знаходимо наступний вузол
+    await tgSend(chatId, `🔍 isCallback:${isCallback} callbackData:${callbackData} edges:${edges.length}`);
     if (isCallback && callbackData) {
         const nextNode = getNextNode(currentNode.id, callbackData);
+        await tgSend(chatId, `🔍 nextNode:${nextNode?.id || 'NULL'}`);
         if (nextNode) {
             await fsPatch(contactPath, {
                 currentNodeId: { stringValue: nextNode.id },
