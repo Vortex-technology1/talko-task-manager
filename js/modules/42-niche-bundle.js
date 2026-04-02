@@ -599,6 +599,7 @@ window._DEMO_NICHE_MAP['construction_eu'] = async function() {
         isDefault:false, createdBy:uid, createdAt:now,
     }}));
     await window.safeBatchCommit(finOps);
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     // Маппінг нотатки → functionId
     const _noteToFunc = (note) => {
@@ -1604,7 +1605,23 @@ if (window._NICHE_LABELS) {
 
 window._DEMO_NICHE_MAP = window._DEMO_NICHE_MAP || {};
 
-// Патч safeBatchCommit — автоматично додає isDemo:true
+// Спільна функція: записує DEFAULT_CATEGORIES з 98-finance.js в демо-компанію
+window._writeDemoDefaultFinCategories = async function(cr, uid) {
+    try {
+        if (typeof window._getDefaultFinCategories !== 'function') return;
+        const cats = window._getDefaultFinCategories();
+        if (!cats || !cats.length) return;
+        const now = firebase.firestore.FieldValue.serverTimestamp();
+        const ops = cats.map(cat => ({
+            type: 'set',
+            ref: cr.collection('finance_categories').doc(cat.id),
+            data: { ...cat, system: !cat.parentId, createdBy: uid, createdAt: now }
+        }));
+        await window.safeBatchCommit(ops);
+    } catch(e) {
+        console.warn('[Demo] writeDefaultFinCategories:', e.message);
+    }
+};
 (function() {
     const _orig = window.safeBatchCommit;
     if (!_orig || _orig._isPatched) return;
@@ -2784,6 +2801,7 @@ window._DEMO_NICHE_MAP['furniture_factory'] = async function() {
         isDefault:false, createdBy:uid, createdAt:now,
     }}));
     await window.safeBatchCommit(finOps);
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     // Транзакції (3 місяці детально)
     const TXS2 = [
@@ -5739,6 +5757,7 @@ window._DEMO_NICHE_MAP['medical'] = async function() {
     const catRefs = FIN_CATS.map(() => cr.collection('finance_categories').doc());
     FIN_CATS.forEach((c, i) => finOps.push({type:'set', ref:catRefs[i], data:{name:c.name, type:c.type, color:c.color, icon:c.icon, isDefault:false, createdBy:uid, createdAt:now}}));
     await window.safeBatchCommit(finOps);
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const _noteToFuncMed = (note) => {
         if (!note) return '';
@@ -6914,6 +6933,7 @@ window._DEMO_NICHE_MAP['cleaning'] = async function() {
     const catRefs = FIN_CATS.map(() => cr.collection('finance_categories').doc());
     FIN_CATS.forEach((c, i) => finOps.push({type:'set', ref:catRefs[i], data:{name:c.name, type:c.type, color:c.color, icon:c.icon, isDefault:false, createdBy:uid, createdAt:now}}));
     await window.safeBatchCommit(finOps);
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const _noteToFuncCleaning = (note) => {
         const n = (note||'').toLowerCase();
@@ -7896,6 +7916,7 @@ window._DEMO_NICHE_MAP['autoservice'] = async function() {
             isDefault:false, createdBy:uid, createdAt:now,
         }})), 'step-cats'
     );
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Приватбанк ФОП',      type:'bank', balance:284000, isDefault:true},
@@ -8573,6 +8594,7 @@ window._DEMO_NICHE_MAP['cleaning_us'] = async function() {
         name:c.name, type:c.type, color:c.color, icon:c.icon,
         isDefault:false, createdBy:uid, createdAt:now,
     }})),'step-cats');
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Chase Business Checking', type:'bank', balance:48200,  isDefault:true},
@@ -9232,6 +9254,7 @@ window._DEMO_NICHE_MAP['logistics'] = async function() {
         name:c.name, type:c.type, color:c.color, icon:c.icon,
         isDefault:false, createdBy:uid, createdAt:now,
     }})),'step-cats');
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Приватбанк — ФОП Харченко',  type:'bank', balance:684000,  isDefault:true},
@@ -9880,6 +9903,7 @@ window._DEMO_NICHE_MAP['horeca'] = async function() {
         name:c.name, type:c.type, color:c.color, icon:c.icon,
         isDefault:false, createdBy:uid, createdAt:now,
     }})),'step-cats');
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Монобанк ФОП Бойко',     type:'bank', balance:284000, isDefault:true},
@@ -10532,6 +10556,7 @@ window._DEMO_NICHE_MAP['food_production'] = async function() {
         name:c.name, type:c.type, color:c.color, icon:c.icon,
         isDefault:false, createdBy:uid, createdAt:now,
     }})),'step-cats');
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Приватбанк — ФОП Савченко',  type:'bank', balance:1240000, isDefault:true},
@@ -11180,6 +11205,7 @@ window._DEMO_NICHE_MAP['trucking_us'] = async function() {
         name:c.name, type:c.type, color:c.color, icon:c.icon,
         isDefault:false, createdBy:uid, createdAt:now,
     }})),'step-cats');
+    await window._writeDemoDefaultFinCategories(cr, uid);
 
     const ACCOUNTS = [
         {name:'Chase Business Checking',   type:'bank', balance:84200,  isDefault:true},
