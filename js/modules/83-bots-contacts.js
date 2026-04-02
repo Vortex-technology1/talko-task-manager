@@ -719,20 +719,16 @@ window.openFlowCrmSettings = async function(flowId, flowName) {
     // Завантажуємо воронки і поточні налаштування паралельно
     let pipelines = [], currentSettings = {};
     try {
-        const [pipSnap, flowSnap] = await Promise.all([
-            window.companyRef().collection('crm_pipeline').get(),
-            window.companyRef().collection('bots').doc(bp.activeBotId).collection('flows').doc(flowId).get(),
-        ]);
-        pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        if (!pipelines.length && window.crm?.pipelines?.length) {
+        // Пріоритет: window.crm.pipelines (вже в пам'яті якщо CRM відкривався)
+        if (window.crm?.pipelines?.length) {
             pipelines = window.crm.pipelines;
+        } else {
+            const pipSnap = await window.companyRef().collection(window.DB_COLS?.CRM_PIPELINE || 'crm_pipeline').get();
+            pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         }
-        if (!pipelines.length) {
-            const newPip = await window.companyRef().collection('crm_pipelines').get();
-            pipelines = newPip.docs.map(d => ({ id: d.id, ...d.data() }));
-        }
+        const flowSnap = await window.companyRef().collection('bots').doc(bp.activeBotId).collection('flows').doc(flowId).get();
         currentSettings = flowSnap.data() || {};
-    } catch(e) { console.error(e); }
+    } catch(e) { console.error('[openFlowCrmSettings]', e); }
 
     const selPipeId = currentSettings.crmPipelineId || '';
     const selStageId = currentSettings.crmStageId || '';
@@ -776,7 +772,7 @@ window.openFlowCrmSettings = async function(flowId, flowName) {
                     </div>
                 </label>
 
-                <div id="fcrmPipeWrap" style="display:${selPipeId?'':'none'};">
+                <div id="fcrmPipeWrap" style="display:${(selPipeId||pipelines.length)?'':'none'};">
                     <!-- Коли спрацьовує -->
                     <div style="margin-bottom:12px;">
                         <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">${_tg('Коли створювати','Когда создавать')}</label>
