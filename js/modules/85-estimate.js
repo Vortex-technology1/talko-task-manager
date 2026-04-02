@@ -486,7 +486,7 @@ window.renderEstimateListView = function() {
     <div style="border-top:1px solid #e5e7eb;padding-top:1rem;">
       <button onclick="window._estimateHowtoOpen=!window._estimateHowtoOpen;renderEstimateListView();"
         style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.85rem;border:1px solid ${howtoOpen?'#bae6fd':'#e5e7eb'};border-radius:10px;background:${howtoOpen?'#eff6ff':'#f9fafb'};color:${howtoOpen?'#0369a1':'#6b7280'};font-size:0.83rem;font-weight:600;cursor:pointer;width:100%;justify-content:space-between;">
-        <span style="display:flex;align-items:center;gap:0.4rem;">${_estIco.info} ${_tg('Як це працює — детальна логіка','Как это работает — детальная логика')}</span>
+        <span style="display:flex;align-items:center;gap:0.4rem;">${_estIco.info} ${_tg('Як це працює — детальна логіка','Как это работает — подробная логика')}</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transform:rotate(${howtoOpen?'180':'0'}deg);transition:transform 0.2s;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       ${howtoOpen ? `<div id="estimateInlineHowto" style="margin-top:1rem;"></div>` : ''}
