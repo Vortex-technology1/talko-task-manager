@@ -664,6 +664,7 @@ async function handleBotDebug(request, url, env) {
 async function handleWebhook(request, url, env) {
     const channel = url.searchParams.get('channel')||'telegram';
     const cid     = url.searchParams.get('cid') || url.searchParams.get('companyId') || '';
+    const urlBotId = url.searchParams.get('botId') || '';
 
     let token;
     try { token = await getToken(env); } catch(e) { return json({ok:false,error:'Firebase error'},500); }
@@ -773,18 +774,27 @@ async function handleWebhook(request, url, env) {
                 botToken = sett.telegramBotToken || sett.botToken || '';
             }
         }
-        // Fallback: bots підколекція
+        // Fallback: bots підколекція — спочатку по urlBotId, потім перший telegram бот
         if (!botToken) {
-            const botsSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots?pageSize=5`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            if (botsSnap.ok) {
-                const bd = await botsSnap.json();
-                for (const doc of (bd.documents||[])) {
-                    const d = fFields(doc.fields||{});
-                    if (d.token && (d.channel === 'telegram' || !d.channel)) {
-                        botToken = d.token; break;
+            if (urlBotId) {
+                const botDoc = await fsGet(`companies/${cid}/bots/${urlBotId}`, token);
+                if (botDoc?.fields) {
+                    const bd = fFields(botDoc.fields);
+                    botToken = bd.token || '';
+                }
+            }
+            if (!botToken) {
+                const botsSnap = await fetch(
+                    `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots?pageSize=10`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                if (botsSnap.ok) {
+                    const bd = await botsSnap.json();
+                    for (const doc of (bd.documents||[])) {
+                        const d = fFields(doc.fields||{});
+                        if (d.token && (d.channel === 'telegram' || !d.channel)) {
+                            botToken = d.token; break;
+                        }
                     }
                 }
             }
