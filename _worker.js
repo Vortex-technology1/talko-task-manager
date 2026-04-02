@@ -185,6 +185,9 @@ export default {
         // ── /api/bot-debug ─── діагностика flow бота ─────────
         if (path === '/api/bot-debug') return handleBotDebug(request, url, env);
 
+        // ── /api/fix-company ─── виправлення companyId ────────
+        if (path === '/api/fix-company') return handleFixCompany(request, url, env);
+
         // ── /api/crm-form ────────────────────────────────────
         if (path === '/api/crm-form') return handleCrmForm(request, env);
 
@@ -503,6 +506,34 @@ async function handleCrmForm(request, env) {
 // ════════════════════════════════════════════════════════════
 // WEBHOOK — Telegram, Viber, Facebook, Binotel etc.
 // ════════════════════════════════════════════════════════════
+async function handleFixCompany(request, url, env) {
+    const uid = url.searchParams.get('uid') || '';
+    const correctCid = url.searchParams.get('cid') || '';
+    if (!uid || !correctCid) return json({ error: 'need uid and cid params' });
+    let token;
+    try { token = await getToken(env); } catch(e) { return json({ error: e.message }); }
+
+    // Читаємо поточний стан
+    const before = await fsGet(`users/${uid}`, token);
+    const beforeData = before?.fields ? fFields(before.fields) : {};
+
+    // Оновлюємо companyId
+    await fsPatch(`users/${uid}`, {
+        companyId: { stringValue: correctCid },
+        updatedAt:  { timestampValue: new Date().toISOString() },
+    }, token);
+
+    const after = await fsGet(`users/${uid}`, token);
+    const afterData = after?.fields ? fFields(after.fields) : {};
+
+    return json({
+        ok: true,
+        uid,
+        before: { companyId: beforeData.companyId },
+        after:  { companyId: afterData.companyId },
+    });
+}
+
 async function handleBotDebug(request, url, env) {
     const cid = url.searchParams.get('cid') || url.searchParams.get('companyId') || '';
     if (!cid) return json({ error: 'no cid' });
