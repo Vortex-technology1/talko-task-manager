@@ -879,6 +879,7 @@ async function handleWebhook(request, url, env) {
     }
 
     if (channel==='telegram') {
+      try {
         const msg    = body.message||body.callback_query?.message||{};
         const chat   = msg.chat||body.callback_query?.from||{};
         const text   = (msg.text||body.callback_query?.data||'').trim();
@@ -1228,6 +1229,10 @@ ${e.stack?.slice(0,200)}`);
         }
 
         return json({ok:true});
+      } catch(e) {
+        console.error('[webhook] FATAL:', e.message, e.stack?.slice(0,200));
+        return json({ok:true, _error: e.message});
+      }
     }
 
     // Other channels — just ack
