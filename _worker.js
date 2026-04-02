@@ -657,16 +657,24 @@ async function handleBotDebug(request, url, env) {
         result.steps.push('companies list HTTP: ' + companiesSnap.status);
     }
 
-    // 6. Перевіряємо webhook info через Telegram API
+    // 6. Перевіряємо webhook info + getMe для обох токенів
     if (result.bots && result.bots.length > 0) {
         const firstBot = result.bots[0];
         if (firstBot.hasToken) {
-            // Читаємо повний токен
             const botDocFull = await fsGet(`companies/${cid}/bots/${firstBot.id}`, token);
             if (botDocFull?.fields) {
                 const bd = fFields(botDocFull.fields);
                 const fullToken = bd.token || '';
                 if (fullToken) {
+                    // getMe — перевіряємо чи токен валідний
+                    const getMeR = await fetch(`https://api.telegram.org/bot${fullToken}/getMe`);
+                    if (getMeR.ok) {
+                        const getMeD = await getMeR.json();
+                        result.botGetMe = getMeD.result;
+                        result.steps.push('getMe botId: ' + getMeD.result?.id + ' username: @' + getMeD.result?.username);
+                    } else {
+                        result.steps.push('getMe FAILED - token invalid!');
+                    }
                     const whInfo = await fetch(`https://api.telegram.org/bot${fullToken}/getWebhookInfo`);
                     if (whInfo.ok) {
                         const whData = await whInfo.json();
@@ -679,10 +687,23 @@ async function handleBotDebug(request, url, env) {
                             max_connections: whData.result?.max_connections,
                         };
                         result.steps.push('webhook url: ' + (whData.result?.url || 'EMPTY'));
+                        result.steps.push('pending: ' + whData.result?.pending_update_count);
                         result.steps.push('last_error: ' + (whData.result?.last_error_message || 'none'));
                     }
                 }
             }
+        }
+    }
+    // Також перевіряємо токен з integrations.telegram
+    if (compDoc?.fields?.integrations?.mapValue?.fields?.telegram?.mapValue?.fields?.botToken?.stringValue) {
+        const intToken = compDoc.fields.integrations.mapValue.fields.telegram.mapValue.fields.botToken.stringValue;
+        const getMeInt = await fetch(`https://api.telegram.org/bot${intToken}/getMe`);
+        if (getMeInt.ok) {
+            const d = await getMeInt.json();
+            result.integrationsTokenGetMe = { id: d.result?.id, username: d.result?.username };
+            result.steps.push('integrations.telegram token → @' + d.result?.username);
+        } else {
+            result.steps.push('integrations.telegram token INVALID');
         }
     }
 
