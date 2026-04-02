@@ -590,6 +590,29 @@ async function handleBotDebug(request, url, env) {
         }
     }
 
+    // 4.5. Шукаємо компанію через query по ownerId або назві
+    const searchQuery = {
+        structuredQuery: {
+            from: [{ collectionId: 'companies' }],
+            limit: 20,
+        }
+    };
+    const allCompSnap = await fetch(
+        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents:runQuery`,
+        {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(searchQuery)
+        }
+    );
+    if (allCompSnap.ok) {
+        const rows = await allCompSnap.json();
+        result.allCompanies20 = rows
+            .filter(r => r.document)
+            .map(r => ({ id: r.document.name?.split('/').pop(), name: fFields(r.document.fields||{}).name }));
+        result.steps.push('all companies (20): ' + result.allCompanies20.map(c=>c.id).join(', '));
+    }
+
     // 5. Список компаній (перші 5)
     const companiesSnap = await fetch(
         `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies?pageSize=5`,
