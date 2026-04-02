@@ -818,39 +818,7 @@
                     </div>
                 </div>
 
-                <!-- AI KEYS -->
-                <div style="background:white;border-radius:12px;padding:1.25rem;box-shadow:var(--shadow);">
-                    <h3 style="font-weight:700;font-size:0.9rem;margin-bottom:0.75rem;color:#374151;">AI Ключі (для AI вузлів у флоу)</h3>
-                    <div style="display:flex;flex-direction:column;gap:0.6rem;">
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">OpenAI API Key</label>
-                            <div style="display:flex;gap:0.5rem;">
-                                <input type="password" id="botsOpenAIKey" value="${compData.openaiApiKey ? '••••••••' + compData.openaiApiKey.slice(-4) : ''}"
-                                    placeholder="sk-..." style="flex:1;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
-                                <button onclick="saveBotApiKey('openai')" style="padding:0.55rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">Зберегти</button>
-                            </div>
-                        </div>
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">Anthropic API Key</label>
-                            <div style="display:flex;gap:0.5rem;">
-                                <input type="password" id="botsAnthropicKey" value="${compData.anthropicApiKey ? '••••••••' + compData.anthropicApiKey.slice(-4) : ''}"
-                                    placeholder="sk-ant-..." style="flex:1;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
-                                <button onclick="saveBotApiKey('anthropic')" style="padding:0.55rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">Зберегти</button>
-                            </div>
-                        </div>
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">Google Gemini API Key</label>
-                            <div style="display:flex;gap:0.5rem;">
-                                <input type="password" id="botsGoogleKey" value="${compData.googleApiKey ? '••••••••' + compData.googleApiKey.slice(-4) : ''}"
-                                    placeholder="AIza..." style="flex:1;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
-                                <button onclick="saveBotApiKey('google')" style="padding:0.55rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">Зберегти</button>
-                            </div>
-                            <div style="font-size:0.72rem;color:#9ca3af;margin-top:3px;">
-                                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#3b82f6;">Отримати ключ →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- AI KEYS — прибрано, використовується ключ superadmin -->
             </div>`;
         } catch (e) {
             console.error('[renderBotsSettingsView]', e);

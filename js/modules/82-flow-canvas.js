@@ -1921,72 +1921,8 @@ function renderPropPanel() {
             </span>`;
 
             fields =
-            // ── Провайдер + Ключ ──
-            `<div style="background:#0f172a;border:1px solid #22c55e33;border-radius:10px;padding:10px;margin-bottom:12px;">
-                <div style="font-size:10px;color:#22c55e;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">
-                    🔑 AI Провайдер
-                </div>
-                <div style="display:flex;gap:6px;margin-bottom:8px;">
-                    ${['openai','anthropic','google'].map(p => `
-                        <button onclick="fcSetAiProvider('${p}')"
-                            style="flex:1;padding:6px 4px;border:1px solid ${aiProvider===p?'#22c55e':'#334155'};
-                            border-radius:7px;background:${aiProvider===p?'#22c55e22':'transparent'};
-                            color:${aiProvider===p?'#22c55e':'#94a3b8'};font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;">
-                            ${p==='openai'?'OpenAI':p==='anthropic'?'Anthropic':'Google'}
-                        </button>`).join('')}
-                </div>
-                <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;display:flex;align-items:center;gap:4px;justify-content:space-between;">
-                    <span style="display:flex;align-items:center;gap:4px;">
-                        API Ключ
-                        <a href="${aiProvider==='openai'?'https://platform.openai.com/api-keys':aiProvider==='anthropic'?'https://console.anthropic.com/settings/keys':'https://aistudio.google.com/app/apikey'}"
-                            target="_blank" style="color:#3b82f6;font-size:9px;">Отримати →</a>
-                    </span>
-                    ${!savedKey && _companyHasKey ? '<span style="color:#22c55e;font-size:9px;">✅ Ключ компанії активний</span>' : ''}
-                    ${savedKey ? '<span style="color:#22c55e;font-size:9px;">✅ Встановлено</span>' : (!_companyHasKey ? '<span style="color:#ef4444;font-size:9px;">⚠️ Не встановлено</span>' : '')}
-                </div>
-                <div style="position:relative;margin-bottom:4px;">
-                    <input id="fcp_aiApiKey" type="password" value="${savedKey}"
-                        placeholder="${aiProvider==='openai'?'sk-...':aiProvider==='anthropic'?'sk-ant-...':'AIza...'}"
-                        style="width:100%;padding:7px 30px 7px 8px;background:#1e293b;border:1px solid #334155;
-                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;"
-                        oninput="(function(v){
-                            const h=document.getElementById('fcp_keyHint');
-                            if(!h)return;
-                            if(!v){h.textContent='';return;}
-                            const _isValidKey=v.startsWith('sk-')||v.startsWith('AIza')||v.startsWith('sk-ant');
-                            if(v.includes('•')){h.style.color='#f59e0b';h.textContent='⚠️ Маска — введіть ключ заново';}
-                            else if(_isValidKey&&v.length>=20){h.style.color='#22c55e';h.textContent='✅ Ключ виглядає вірно';}
-                            else if(v.includes('@')||v.startsWith('http')){h.style.color='#ef4444';h.textContent='❌ Це не API ключ';}
-                            else if(!_isValidKey&&/^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(v)){h.style.color='#ef4444';h.textContent='❌ Це домен, не ключ';}
-                            else if(v.length<20){h.style.color='#f59e0b';h.textContent='⚠️ Занадто короткий';}
-                            else{h.style.color='#94a3b8';h.textContent='ℹ️ Формат не розпізнано — перевірте';}
-                        })(this.value)">
-                    <span onclick="const i=document.getElementById('fcp_aiApiKey');i.type=i.type==='password'?'text':'password';"
-                        style="position:absolute;right:7px;top:50%;transform:translateY(-50%);
-                        cursor:pointer;font-size:12px;opacity:0.5;user-select:none;" title="Показати/приховати">👁</span>
-                </div>
-                <div id="fcp_keyHint" style="font-size:9px;margin-top:2px;margin-bottom:2px;">${
-                    savedKey && savedKey.includes('•') ? '<span style="color:#f59e0b;">⚠️ Маска — введіть ключ заново</span>' :
-                    savedKey && (savedKey.includes('@') || /^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(savedKey)) ? '<span style="color:#ef4444;">❌ Збережено невалідне значення — очистіть і введіть sk-...</span>' :
-                    savedKey && savedKey.length >= 20 && (savedKey.startsWith('sk-') || savedKey.startsWith('AIza') || savedKey.startsWith('sk-ant')) ? '<span style="color:#22c55e;">✅ Ключ збережено</span>' :
-                    ''
-                }</div>
-                <div style="font-size:9px;color:#475569;">
-                    Ключ для цього ланцюга.
-                    <span style="color:#22c55e;cursor:pointer;text-decoration:underline;"
-                        onclick="(async()=>{
-                            const k=document.getElementById('fcp_aiApiKey')?.value?.trim();
-                            if(!k||k.startsWith('•')){if(window.showToast)showToast('Введіть повний API ключ','warning');return;}
-                            const providerField='${aiProvider}ApiKey';
-                            try{
-                                await firebase.firestore().collection('companies').doc(window.currentCompanyId).update({[providerField]:k});
-                                if(window.showToast)showToast('✅ Збережено для всіх ланцюгів','success');
-                            }catch(e){if(window.showToast)showToast(window.t('errPfx2')+e.message,'error');}
-                        })()">
-                        Зберегти для всієї компанії →
-                    </span>
-                </div>
-            </div>`
+            // ── Провайдер прихований — використовується ключ superadmin ──
+            ``
 
             // ── Системний промпт ──
             + fld(tip(window.t('flowSysPr'), 'Скажи боту хто він і що робить. Наприклад: "Ти — менеджер клініки. Запитуй ім\'я, телефон і зручний час. Будь ввічливим. Відповідай тільки українською." Чим конкретніше — тим краще.'),

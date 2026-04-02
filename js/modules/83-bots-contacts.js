@@ -2653,33 +2653,7 @@ async function renderSettingsTab() {
             </div>
         </div>
 
-        <!-- Секція 4: AI ключ -->
-        <div style="${sectionStyle}">
-            <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
-                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span> OpenAI / Claude API ключ
-            </div>
-            <label style="${labelStyle}">OPENAI (GPT-4o-mini, GPT-4o)</label>
-            <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
-                <input type="password" id="settingsOpenAIKey"
-                    value="${compData.openaiApiKey ? '•••••' + compData.openaiApiKey.slice(-4) : ''}"
-                    placeholder="sk-..."
-                    style="${inputStyle}flex:1;">
-                <button onclick="settingsSaveApiKey('openai')" style="${btnGreenStyle}">
-                    ${_tg('Зберегти','Сохранить')}
-                </button>
-            </div>
-            <label style="${labelStyle}">ANTHROPIC CLAUDE (claude-3-5-haiku)</label>
-            <div style="display:flex;gap:0.4rem;">
-                <input type="password" id="settingsAnthropicKey"
-                    value="${compData.anthropicApiKey ? '•••••' + compData.anthropicApiKey.slice(-4) : ''}"
-                    placeholder="sk-ant-..."
-                    style="${inputStyle}flex:1;">
-                <button onclick="settingsSaveApiKey('anthropic')" style="${btnGreenStyle}">
-                    ${_tg('Зберегти','Сохранить')}
-                </button>
-            </div>
-            <div id="apiKeyResult" style="margin-top:0.4rem;font-size:0.76rem;"></div>
-        </div>
+        <!-- Секція 4: AI ключ — прихована, використовується ключ superadmin -->
 
         <!-- Секція 5: Сповіщення менеджеру -->
         <div style="${sectionStyle}">

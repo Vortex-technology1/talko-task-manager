@@ -1240,12 +1240,12 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
         // Якщо бот пише першим і немає userInput — надсилаємо привітання від ШІ
         if (writesFirst && !userInput) {
-            let openaiKey = nodeData.apiKey || env.OPENAI_API_KEY || '';
+            let openaiKey = env.OPENAI_API_KEY || '';
             if (!openaiKey) {
-                const aiSettDoc2 = await fsGet(`companies/${cid}/settings/ai`, token);
+                const aiSettDoc2 = await fsGet(`settings/ai`, token);
                 if (aiSettDoc2?.fields) {
                     const aiSett2 = fFields(aiSettDoc2.fields);
-                    openaiKey = aiSett2.openaiKey || aiSett2.apiKey || aiSett2.key || '';
+                    openaiKey = aiSett2.openaiApiKey || aiSett2.apiKey || '';
                 }
             }
             if (openaiKey && systemPrompt) {
@@ -1290,13 +1290,13 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         // Додаємо поточне повідомлення
         chatHistory.push({ role: 'user', content: userInput });
 
-        // Беремо ключ: 1) з вузла, 2) з env, 3) з налаштувань компанії
-        let openaiKey = nodeData.apiKey || env.OPENAI_API_KEY || '';
+        // Ключ тільки від superadmin: env → settings/ai
+        let openaiKey = env.OPENAI_API_KEY || '';
         if (!openaiKey) {
-            const aiSettDoc = await fsGet(`companies/${cid}/settings/ai`, token);
+            const aiSettDoc = await fsGet(`settings/ai`, token);
             if (aiSettDoc?.fields) {
                 const aiSett = fFields(aiSettDoc.fields);
-                openaiKey = aiSett.openaiKey || aiSett.apiKey || aiSett.key || '';
+                openaiKey = aiSett.openaiApiKey || aiSett.apiKey || '';
             }
         }
         if (!openaiKey) {
