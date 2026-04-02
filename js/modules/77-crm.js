@@ -2940,7 +2940,7 @@ function _loadFilesTab(deal) {
     if (!cnt) return;
     cnt.innerHTML = `
         <div style="margin-bottom:0.75rem;display:flex;justify-content:space-between;align-items:center;">
-            <div style="font-size:0.85rem;font-weight:700;color:#111827;">📎 Файли угоди</div>
+            <div style="font-size:0.85rem;font-weight:700;color:#111827;">📎 ${_tg('Файли угоди','Файлы сделки')}</div>
             <div style="font-size:0.72rem;color:#9ca3af;">PDF, DOC, XLSX, зображення — до 20 MB</div>
         </div>
         <div id="crmDealFilesList"></div>`;

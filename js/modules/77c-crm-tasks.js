@@ -489,17 +489,17 @@ function _crmRenderFilesUI(container, files, dealId) {
                 onchange="crmUploadDealFiles('${dealId}',this.files)">
             <div style="font-size:0.75rem;color:#9ca3af;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                Перетягніть файл або натисніть для вибору
+                ${window.currentLang==='ru'?'Перетащите файл или нажмите для выбора':'Перетягніть файл або натисніть для вибору'}
             </div>
             <div id="crmFileUploadProgress_${dealId}" style="font-size:0.72rem;color:#16a34a;margin-top:4px;display:none;"></div>
         </div>
-        ${files.length ? fileRows : '<div style="font-size:0.75rem;color:#9ca3af;text-align:center;padding:0.4rem;">Файлів немає</div>'}`;
+        ${files.length ? fileRows : '<div style="font-size:0.75rem;color:#9ca3af;text-align:center;padding:0.4rem;">' + (window.currentLang==='ru'?'Файлов нет':'Файлів немає') + '</div>'}` ;
 }
 
 window.crmUploadDealFiles = async function(dealId, fileList) {
     if (!fileList || !fileList.length) return;
     const progressEl = document.getElementById(`crmFileUploadProgress_${dealId}`);
-    if (progressEl) { progressEl.style.display = ''; progressEl.textContent = 'Завантаження...'; }
+    if (progressEl) { progressEl.style.display = ''; progressEl.textContent = window.currentLang==='ru'?'Загрузка...':'Завантаження...'; }
 
     const compRef = window.companyRef();
     const uid = window.currentUser?.uid || '';
