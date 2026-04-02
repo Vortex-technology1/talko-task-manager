@@ -182,6 +182,9 @@ export default {
         // ── /api/webhook ─────────────────────────────────────
         if (path === '/api/webhook') return handleWebhook(request, url, env);
 
+        // ── /api/bot-debug ─── діагностика flow бота ─────────
+        if (path === '/api/bot-debug') return handleBotDebug(request, url, env);
+
         // ── /api/crm-form ────────────────────────────────────
         if (path === '/api/crm-form') return handleCrmForm(request, env);
 
@@ -500,6 +503,69 @@ async function handleCrmForm(request, env) {
 // ════════════════════════════════════════════════════════════
 // WEBHOOK — Telegram, Viber, Facebook, Binotel etc.
 // ════════════════════════════════════════════════════════════
+async function handleBotDebug(request, url, env) {
+    const cid = url.searchParams.get('cid') || url.searchParams.get('companyId') || '';
+    if (!cid) return json({ error: 'no cid' });
+    let token;
+    try { token = await getToken(env); } catch(e) { return json({ error: 'firebase: '+e.message }); }
+
+    const result = { cid, steps: [] };
+
+    // 1. Читаємо компанію
+    const compDoc = await fsGet(`companies/${cid}`, token);
+    result.compDocExists = !!compDoc?.fields;
+    result.steps.push('compDoc: ' + (compDoc?.fields ? 'EXISTS' : 'NOT FOUND'));
+
+    // 2. Шукаємо botToken
+    let botToken = '';
+    if (compDoc?.fields) {
+        if (compDoc.fields?.integrations?.mapValue?.fields?.telegram?.mapValue?.fields?.botToken?.stringValue) {
+            botToken = compDoc.fields.integrations.mapValue.fields.telegram.mapValue.fields.botToken.stringValue;
+            result.steps.push('botToken from integrations.telegram: FOUND ' + botToken.slice(0,10) + '...');
+        } else {
+            result.steps.push('botToken from integrations.telegram: NOT FOUND');
+        }
+    }
+
+    // 3. Bots підколекція
+    const botsSnap = await fetch(
+        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots?pageSize=10`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (botsSnap.ok) {
+        const bd = await botsSnap.json();
+        const bots = (bd.documents||[]).map(d => {
+            const f = fFields(d.fields||{});
+            return { id: d.name?.split('/').pop(), channel: f.channel, hasToken: !!f.token, tokenSnippet: f.token?.slice(0,10), status: f.status };
+        });
+        result.bots = bots;
+        result.steps.push('bots count: ' + bots.length);
+        if (!botToken && bots.length > 0) {
+            const tBot = bots.find(b => b.hasToken);
+            if (tBot) { botToken = 'FOUND_IN_BOTS'; result.steps.push('botToken from bots: FOUND'); }
+        }
+    }
+
+    // 4. Flows
+    for (const bot of (result.bots||[])) {
+        const flowsSnap = await fetch(
+            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bot.id}/flows`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (flowsSnap.ok) {
+            const fd = await flowsSnap.json();
+            bot.flows = (fd.documents||[]).map(d => {
+                const f = fFields(d.fields||{});
+                return { id: d.name?.split('/').pop(), status: f.status, name: f.name };
+            });
+            result.steps.push(`bot ${bot.id} flows: ${bot.flows.length}`);
+        }
+    }
+
+    result.botTokenFound = !!botToken;
+    return json(result);
+}
+
 async function handleWebhook(request, url, env) {
     const channel = url.searchParams.get('channel')||'telegram';
     const cid     = url.searchParams.get('cid') || url.searchParams.get('companyId') || '';
@@ -589,8 +655,7 @@ async function handleWebhook(request, url, env) {
         const chatId = String(chat.id||'');
         const from   = msg.from || body.callback_query?.from || {};
 
-        console.error('[BOT-FLOW] Received:', { chatId, cid, textSnippet: text.slice(0,50), isCallback: !!body.callback_query });
-        if (!chatId||!cid) { console.error('[BOT-FLOW] STOP: no chatId or cid'); return json({ok:true}); }
+        if (!chatId||!cid) return json({ok:true});
 
         // Читаємо botToken з компанії (integrations.telegram.botToken)
         // Також перевіряємо bots підколекцію як fallback
@@ -629,8 +694,7 @@ async function handleWebhook(request, url, env) {
                 }
             }
         }
-        console.error('[BOT-FLOW] botToken found:', !!botToken, botToken ? botToken.slice(0,10)+'...' : 'EMPTY');
-        if (!botToken) { console.error('[BOT-FLOW] STOP: no botToken'); return json({ok:true}); }
+        if (!botToken) return json({ok:true});
 
         const tgSend = (chat_id, txt) =>
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -839,7 +903,6 @@ async function handleWebhook(request, url, env) {
             }
         }
 
-        console.error('[BOT-FLOW] activeFlowId:', activeFlowId, 'activeNodeId:', activeNodeId);
         // Запускаємо Flow Engine якщо є активний flow
         if (activeFlowId) {
             const parts = activeFlowId.split('::');
@@ -871,8 +934,6 @@ async function handleWebhook(request, url, env) {
 // FLOW ENGINE — виконання ланцюгів ботів
 // ════════════════════════════════════════════════════════════
 async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, isCallback, callbackData, contact, contactPath, token, botToken, from, userName, tgSend, env }) {
-    console.error('[FLOW-ENGINE] start:', { botId, flowId, currentNodeId, isCallback, textSnippet: text?.slice(0,30) });
-
     // Завантажуємо canvas даних flow (вузли і з'єднання)
     const canvasSnap = await fetch(
         `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${botId}/flows/${flowId}/canvasData/main`,
@@ -1025,7 +1086,6 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
     // ── ВУЗОЛ: ШІ АГЕНТ ─────────────────────────────────────
     if (nodeType === 'ai_agent' || nodeType === 'aiAgent' || nodeType === 'AI') {
-        console.error('[AI-NODE] executing, userInput:', userInput?.slice(0,30), 'writesFirst:', nodeData.writesFirst);
         // Завантажуємо промпт вузла
         let systemPrompt = nodeData.systemPrompt || nodeData.prompt || '';
         const aiProvider = nodeData.aiProvider || 'openai';
