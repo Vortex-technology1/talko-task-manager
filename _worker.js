@@ -1217,6 +1217,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
         currentNode = nodes.find(n => n.id === currentNodeId);
     }
 
+    await tgSend(chatId, `🔍 currentNode: ${currentNode?.id} type:${currentNode?.type}`);
     if (!currentNode) return;
 
     // Знаходимо наступний вузол по з'єднанню
@@ -1253,6 +1254,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
     const nodeData = currentNode.data || currentNode;
 
     // Якщо це START вузол — переходимо до наступного
+    await tgSend(chatId, `🔍 nodeType:${nodeType} id:${currentNode.id}`);
     if (nodeType === 'start' || currentNode.id?.includes('start')) {
         const nextNode = getNextNode(currentNode.id);
         if (nextNode) {
