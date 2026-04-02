@@ -1953,11 +1953,12 @@ function renderPropPanel() {
                             const h=document.getElementById('fcp_keyHint');
                             if(!h)return;
                             if(!v){h.textContent='';return;}
+                            const _isValidKey=v.startsWith('sk-')||v.startsWith('AIza')||v.startsWith('sk-ant');
                             if(v.includes('•')){h.style.color='#f59e0b';h.textContent='⚠️ Маска — введіть ключ заново';}
+                            else if(_isValidKey&&v.length>=20){h.style.color='#22c55e';h.textContent='✅ Ключ виглядає вірно';}
                             else if(v.includes('@')||v.startsWith('http')){h.style.color='#ef4444';h.textContent='❌ Це не API ключ';}
-                            else if(/^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(v)){h.style.color='#ef4444';h.textContent='❌ Це домен, не ключ';}
+                            else if(!_isValidKey&&/^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(v)){h.style.color='#ef4444';h.textContent='❌ Це домен, не ключ';}
                             else if(v.length<20){h.style.color='#f59e0b';h.textContent='⚠️ Занадто короткий';}
-                            else if(v.startsWith('sk-')||v.startsWith('AIza')||v.startsWith('sk-ant')){h.style.color='#22c55e';h.textContent='✅ Ключ виглядає вірно';}
                             else{h.style.color='#94a3b8';h.textContent='ℹ️ Формат не розпізнано — перевірте';}
                         })(this.value)">
                     <span onclick="const i=document.getElementById('fcp_aiApiKey');i.type=i.type==='password'?'text':'password';"
@@ -2399,7 +2400,7 @@ window.fcApplyNodeData = function(nodeId) {
                 const _isMasked = _rawKey.includes('•');
                 const _isEmail  = _rawKey.includes('@');
                 const _isUrl    = _rawKey.startsWith('http');
-                const _isDomain = /^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(_rawKey);
+                const _isDomain = !_rawKey.startsWith('sk-') && !_rawKey.startsWith('AIza') && /^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(_rawKey);
                 const _tooShort = _rawKey.length > 0 && _rawKey.length < 20;
                 const _isInvalid = _isMasked || _isEmail || _isUrl || _isDomain || _tooShort;
                 if (_isInvalid && _rawKey) {
