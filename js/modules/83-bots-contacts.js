@@ -2266,17 +2266,190 @@ window.chatInsertTemplate = function(text) {
 window.chatCreateCrmDeal = async function(contactId) {
     const ct = chat.contacts.find(c => c.id === contactId);
     if (!ct) return;
-    const name = ct.senderName || ct.name || 'Telegram ' + contactId;
-    // Відкриваємо CRM з prefill даними
-    if (typeof lazyLoad === 'function') {
-        lazyLoad('crm', () => {
-            if (typeof window.crmOpenNewDeal === 'function') {
-                window.crmOpenNewDeal({ clientName: name, phone: ct.phone||'', telegramChatId: contactId, source: 'telegram' });
-            } else {
-                window.switchTab('crm');
-                if (typeof showToast === 'function') showToast(_tg('Перейдіть в CRM та створіть угоду','Перейдите в CRM и создайте сделку'), 'info');
+
+    // Прибираємо попередній модал
+    document.getElementById('chatCrmDealModal')?.remove();
+
+    // Завантажуємо воронки
+    let pipelines = [];
+    try {
+        const pipSnap = await window.companyRef().collection('crm_pipelines').get();
+        pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (!pipelines.length) {
+            const oldPip = await window.companyRef().collection('crm_pipeline').get();
+            if (oldPip.docs.length) {
+                pipelines = [{ id: 'default', name: _tg('Основна воронка','Основная воронка'), stages: oldPip.docs.map(d => ({ id: d.id, ...d.data() })) }];
             }
+        }
+    } catch(e) {}
+
+    const name = ct.senderName || ct.name || 'Telegram ' + contactId;
+    const pipOpts = pipelines.map(p => `<option value="${p.id}">${escH(p.name||p.id)}</option>`).join('');
+
+    const getStageOpts = (pipeId) => {
+        const pip = pipelines.find(p => p.id === pipeId) || pipelines[0];
+        const stages = pip?.stages || pip?.steps || [];
+        return stages.map(s => `<option value="${s.id}">${escH(s.name||s.id)}</option>`).join('');
+    };
+
+    // Зберігаємо pipelines для оновлення стадій
+    window._chatCrmPipelines = pipelines;
+
+    document.body.insertAdjacentHTML('beforeend', `
+    <div id="chatCrmDealModal" onclick="if(event.target===this)document.getElementById('chatCrmDealModal').remove()"
+        style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10060;display:flex;align-items:center;justify-content:center;padding:16px;">
+        <div style="background:white;border-radius:14px;width:100%;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+            <!-- Header -->
+            <div style="padding:16px 18px 12px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:9px;background:#22c55e;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <div>
+                    <div style="font-weight:700;font-size:0.9rem;color:#111827;">${_tg('Додати в CRM','Добавить в CRM')}</div>
+                    <div style="font-size:0.72rem;color:#6b7280;">${escH(name)}</div>
+                </div>
+                <button onclick="document.getElementById('chatCrmDealModal').remove()"
+                    style="margin-left:auto;background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <!-- Body -->
+            <div style="padding:16px 18px;">
+                <!-- Назва угоди -->
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">${_tg('Назва угоди','Название сделки')}</label>
+                    <input id="chatCrmDealTitle" type="text" value="${escH(name)}"
+                        style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;box-sizing:border-box;outline:none;"
+                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <!-- Телефон -->
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">${_tg('Телефон','Телефон')}</label>
+                    <input id="chatCrmDealPhone" type="text" value="${escH(ct.phone||'')}"
+                        placeholder="+380..."
+                        style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;box-sizing:border-box;outline:none;"
+                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                ${pipelines.length ? `
+                <!-- Воронка -->
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">${_tg('Воронка','Воронка')}</label>
+                    <select id="chatCrmDealPipeline"
+                        style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;background:white;outline:none;"
+                        onchange="chatCrmUpdateStages(this.value)"
+                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                        <option value="">${_tg('Оберіть воронку...','Выберите воронку...')}</option>
+                        ${pipOpts}
+                    </select>
+                </div>
+                <!-- Стадія -->
+                <div style="margin-bottom:16px;">
+                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">${_tg('Стадія','Стадия')}</label>
+                    <select id="chatCrmDealStage"
+                        style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;background:white;outline:none;"
+                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                        <option value="">${_tg('Спочатку оберіть воронку','Сначала выберите воронку')}</option>
+                    </select>
+                </div>` : `
+                <div style="padding:10px;background:#fef3c7;border-radius:8px;font-size:0.78rem;color:#92400e;margin-bottom:12px;">
+                    ${_tg('⚠️ Створіть воронку в CRM → Налаштування','⚠️ Создайте воронку в CRM → Настройки')}
+                </div>`}
+            </div>
+            <!-- Footer -->
+            <div style="padding:12px 18px;border-top:1px solid #f3f4f6;display:flex;gap:8px;justify-content:flex-end;">
+                <button onclick="document.getElementById('chatCrmDealModal').remove()"
+                    style="padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:7px;background:white;cursor:pointer;font-size:0.82rem;font-weight:600;color:#6b7280;">
+                    ${_tg('Скасувати','Отмена')}
+                </button>
+                <button onclick="chatSaveCrmDeal('${contactId}')"
+                    style="padding:8px 20px;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.82rem;font-weight:700;">
+                    ${_tg('Створити угоду','Создать сделку')}
+                </button>
+            </div>
+        </div>
+    </div>`);
+};
+
+window.chatCrmUpdateStages = function(pipeId) {
+    const sel = document.getElementById('chatCrmDealStage');
+    if (!sel) return;
+    const pip = (window._chatCrmPipelines||[]).find(p => p.id === pipeId);
+    const stages = pip?.stages || pip?.steps || [];
+    sel.innerHTML = `<option value="">${_tg('Оберіть стадію...','Выберите стадию...')}</option>` +
+        stages.map(s => `<option value="${s.id}">${escH(s.name||s.id)}</option>`).join('');
+};
+
+window.chatSaveCrmDeal = async function(contactId) {
+    const ct = chat.contacts.find(c => c.id === contactId);
+    if (!ct) return;
+
+    const title = document.getElementById('chatCrmDealTitle')?.value?.trim() || ct.name || contactId;
+    const phone = document.getElementById('chatCrmDealPhone')?.value?.trim() || '';
+    const pipelineId = document.getElementById('chatCrmDealPipeline')?.value || '';
+    const stageId = document.getElementById('chatCrmDealStage')?.value || '';
+
+    const btn = document.querySelector('#chatCrmDealModal button[onclick*="chatSaveCrmDeal"]');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+    try {
+        const now = firebase.firestore.FieldValue.serverTimestamp();
+        const dealId = `chat_deal_${contactId}_${Date.now()}`;
+        const clientId = `tg_${contactId}`;
+
+        // Створюємо/оновлюємо клієнта
+        await window.companyRef().collection('crm_clients').doc(clientId).set({
+            id: clientId,
+            name: title,
+            phone,
+            telegramChatId: contactId,
+            telegramUsername: ct.username || '',
+            senderId: contactId,
+            channel: 'telegram',
+            source: 'chat',
+            botContactId: contactId,
+            contactId: contactId,
+            createdAt: now,
+            updatedAt: now,
+        }, { merge: true });
+
+        // Створюємо угоду
+        await window.companyRef().collection('crm_deals').doc(dealId).set({
+            id: dealId,
+            title,
+            clientName: title,
+            clientId,
+            phone,
+            stage: stageId || 'new',
+            pipelineId: pipelineId || '',
+            source: 'telegram_chat',
+            telegramChatId: contactId,
+            contactId: contactId,
+            botContactId: contactId,
+            status: 'active',
+            amount: 0,
+            createdAt: now,
+            updatedAt: now,
         });
+
+        // Оновлюємо статус контакту
+        await window.companyRef().collection('contacts').doc(contactId).update({
+            status: 'lead',
+            dealId,
+            updatedAt: now,
+        });
+
+        // Оновлюємо локальний стан
+        if (ct) { ct.status = 'lead'; ct.dealId = dealId; }
+
+        document.getElementById('chatCrmDealModal')?.remove();
+        if (typeof showToast === 'function') showToast('✅ ' + _tg('Угоду створено в CRM!','Сделка создана в CRM!'), 'success');
+
+        // Оновлюємо праву панель
+        _chatRenderInfoPanel(ct);
+
+    } catch(e) {
+        if (btn) { btn.disabled = false; btn.textContent = _tg('Створити угоду','Создать сделку'); }
+        if (typeof showToast === 'function') showToast(_tg('Помилка: ','Ошибка: ') + e.message, 'error');
     }
 };
 
