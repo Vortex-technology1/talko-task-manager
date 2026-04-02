@@ -35,8 +35,9 @@
                 const diffX = e.touches[0].clientX - tabSwipeStartX;
                 const diffY = e.touches[0].clientY - tabSwipeStartY;
                 
-                // If scrolling vertically, cancel swipe
-                if (Math.abs(diffY) > Math.abs(diffX)) {
+                // Якщо вертикальний скрол більший за горизонтальний — скасовуємо свайп
+                // Збільшений коефіцієнт 2.5 щоб не конфліктувати зі скролом
+                if (Math.abs(diffY) > Math.abs(diffX) * 0.7) {
                     isTabSwiping = false;
                 }
             }, { passive: true });
@@ -46,7 +47,12 @@
                 isTabSwiping = false;
                 
                 const diffX = e.changedTouches[0].clientX - tabSwipeStartX;
-                const threshold = 100;
+                const diffY = e.changedTouches[0].clientY - tabSwipeStartY;
+                
+                // Збільшений поріг + перевірка що горизонтальний рух домінує
+                const threshold = 150;
+                // Якщо вертикальний рух значний — ігноруємо як скрол
+                if (Math.abs(diffY) > 40) return;
                 
                 // Get current tab
                 const activeTab = document.querySelector('.tab-content.active');
