@@ -4803,5 +4803,39 @@ document.addEventListener('DOMContentLoaded', fixAuthInputs);
 setTimeout(fixAuthInputs, 500);
 setTimeout(fixAuthInputs, 1500);
 </script>
+<script>
+// Надійний переклад nav елементів — не залежить від defer модулів
+(function() {
+    var _map = {
+        tabSales:         { ru:'Реализация', pl:'Sprzedaż',  en:'Sales',       de:'Verkauf',             cs:'Prodej'    },
+        tabFoodProduction:{ ru:'Производство',pl:'Produkcja', en:'Production',  de:'Produktion',          cs:'Výroba'    },
+        tabEstimate:      { ru:'Смета',      pl:'Kosztorys', en:'Estimate',     de:'Kostenvoranschlag',   cs:'Rozpočet'  },
+        tabBooking:       { ru:'Бронирование',pl:'Rezerwacja',en:'Booking',     de:'Buchung',             cs:'Rezervace' },
+        tabWarehouse:     { ru:'Склад',      pl:'Magazyn',   en:'Warehouse',    de:'Lager',               cs:'Sklad'     }
+    };
+    function _applyForced() {
+        var lang = localStorage.getItem('talko_language') || window.currentLang || window.currentLanguage || 'ua';
+        if (lang === 'ua') return;
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n');
+            if (_map[key] && _map[key][lang]) el.textContent = _map[key][lang];
+        });
+    }
+    document.addEventListener('DOMContentLoaded', _applyForced);
+    setTimeout(_applyForced, 300);
+    setTimeout(_applyForced, 1000);
+    setTimeout(_applyForced, 2500);
+    // Перехоплюємо відкриття dropdown Бізнес
+    var _bizOrig = window.toggleNavDropdown;
+    window.addEventListener('load', function() {
+        var _bizBtn = document.getElementById('bizNavBtn');
+        if (_bizBtn) {
+            _bizBtn.addEventListener('click', function() {
+                setTimeout(_applyForced, 30);
+            }, true);
+        }
+    });
+})();
+</script>
 </body>
 </html>
