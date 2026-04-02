@@ -2172,7 +2172,7 @@ function _renderDealDetails(deal) {
         </div>
     </div>
     <div style="${row}">
-        <label style="${lbl}">Ответственный</label>
+        <label style="${lbl}">${_tg('Відповідальний','Ответственный')}</label>
         <select id="dd_assignee" style="${inp}background:white;cursor:pointer;">
             <option value="">${_tg('— не призначено —','— не назначен —')}</option>
             ${(typeof users !== 'undefined' ? users : []).map(u => '<option value="' + u.id + '" ' + (deal.assigneeId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>').join('')}
