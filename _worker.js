@@ -1108,20 +1108,6 @@ async function handleWebhook(request, url, env) {
 
         // DEBUG: підтверджуємо що webhook отримав повідомлення
 
-        // CRM тригер flow_start — при першому повідомленні
-        if (activeFlowId && !isCallback && !text.startsWith('/')) {
-            const fParts = activeFlowId.split('::');
-            if (fParts[0] && fParts[1]) {
-                const fDoc = await fsGet(`companies/${cid}/bots/${fParts[0]}/flows/${fParts[1]}`, token);
-                if (fDoc?.fields) {
-                    const fd = fFields(fDoc.fields);
-                    if (fd.crmEnabled && fd.crmTrigger === 'flow_start' && fd.crmPipelineId) {
-                        await _createCrmDealFromFlow({ cid, chatId, contact, fd, token, userName });
-                    }
-                }
-            }
-        }
-
         // Зберігаємо повідомлення і оновлюємо контакт
         if (!isCallback && !text.startsWith('/start') && !text.startsWith('/')) {
             const msgId = `msg_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
@@ -1200,6 +1186,20 @@ async function handleWebhook(request, url, env) {
                     currentNodeId: { stringValue: 'start' },
                     updatedAt:     { timestampValue: new Date().toISOString() },
                 }, token);
+            }
+        }
+
+        // CRM тригер flow_start — при першому повідомленні юзера (після визначення activeFlowId)
+        if (activeFlowId && !isCallback && !text.startsWith('/')) {
+            const fParts = activeFlowId.split('::');
+            if (fParts[0] && fParts[1]) {
+                const fDoc = await fsGet(`companies/${cid}/bots/${fParts[0]}/flows/${fParts[1]}`, token);
+                if (fDoc?.fields) {
+                    const fd = fFields(fDoc.fields);
+                    if (fd.crmEnabled && fd.crmTrigger === 'flow_start' && fd.crmPipelineId) {
+                        await _createCrmDealFromFlow({ cid, chatId, contact, fd, token, userName });
+                    }
+                }
             }
         }
 
