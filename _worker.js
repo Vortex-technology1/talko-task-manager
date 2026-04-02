@@ -993,7 +993,6 @@ async function handleWebhook(request, url, env) {
         // Визначаємо активний flow
         let activeFlowId = contact.currentFlowId || '';
         let activeNodeId = contact.currentNodeId || '';
-        await tgSend(chatId, `🔍 DEBUG: cid=${cid} | text="${text.slice(0,30)}" | activeFlowId="${activeFlowId}" | isCallback=${isCallback}`);
 
         // /start з параметром → шукаємо flow бота
         if (text.startsWith('/start')) {
@@ -1241,7 +1240,14 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
         // Якщо бот пише першим і немає userInput — надсилаємо привітання від ШІ
         if (writesFirst && !userInput) {
-            const openaiKey = env.OPENAI_API_KEY || '';
+            let openaiKey = nodeData.apiKey || env.OPENAI_API_KEY || '';
+            if (!openaiKey) {
+                const aiSettDoc2 = await fsGet(`companies/${cid}/settings/ai`, token);
+                if (aiSettDoc2?.fields) {
+                    const aiSett2 = fFields(aiSettDoc2.fields);
+                    openaiKey = aiSett2.openaiKey || aiSett2.apiKey || aiSett2.key || '';
+                }
+            }
             if (openaiKey && systemPrompt) {
                 const aiResp = await callOpenAI({
                     apiKey: openaiKey,
@@ -1284,7 +1290,15 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         // Додаємо поточне повідомлення
         chatHistory.push({ role: 'user', content: userInput });
 
-        const openaiKey = env.OPENAI_API_KEY || '';
+        // Беремо ключ: 1) з вузла, 2) з env, 3) з налаштувань компанії
+        let openaiKey = nodeData.apiKey || env.OPENAI_API_KEY || '';
+        if (!openaiKey) {
+            const aiSettDoc = await fsGet(`companies/${cid}/settings/ai`, token);
+            if (aiSettDoc?.fields) {
+                const aiSett = fFields(aiSettDoc.fields);
+                openaiKey = aiSett.openaiKey || aiSett.apiKey || aiSett.key || '';
+            }
+        }
         if (!openaiKey) {
             await tgSend(chatId, `Вибачте, ШІ наразі недоступний. Менеджер зв'яжеться з вами.`);
             return;
