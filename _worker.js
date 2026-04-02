@@ -589,7 +589,8 @@ async function handleWebhook(request, url, env) {
         const chatId = String(chat.id||'');
         const from   = msg.from || body.callback_query?.from || {};
 
-        if (!chatId||!cid) return json({ok:true});
+        console.error('[BOT-FLOW] Received:', { chatId, cid, textSnippet: text.slice(0,50), isCallback: !!body.callback_query });
+        if (!chatId||!cid) { console.error('[BOT-FLOW] STOP: no chatId or cid'); return json({ok:true}); }
 
         // Читаємо botToken з компанії (integrations.telegram.botToken)
         // Також перевіряємо bots підколекцію як fallback
@@ -628,7 +629,8 @@ async function handleWebhook(request, url, env) {
                 }
             }
         }
-        if (!botToken) return json({ok:true});
+        console.error('[BOT-FLOW] botToken found:', !!botToken, botToken ? botToken.slice(0,10)+'...' : 'EMPTY');
+        if (!botToken) { console.error('[BOT-FLOW] STOP: no botToken'); return json({ok:true}); }
 
         const tgSend = (chat_id, txt) =>
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -837,6 +839,7 @@ async function handleWebhook(request, url, env) {
             }
         }
 
+        console.error('[BOT-FLOW] activeFlowId:', activeFlowId, 'activeNodeId:', activeNodeId);
         // Запускаємо Flow Engine якщо є активний flow
         if (activeFlowId) {
             const parts = activeFlowId.split('::');
@@ -868,6 +871,7 @@ async function handleWebhook(request, url, env) {
 // FLOW ENGINE — виконання ланцюгів ботів
 // ════════════════════════════════════════════════════════════
 async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, isCallback, callbackData, contact, contactPath, token, botToken, from, userName, tgSend, env }) {
+    console.error('[FLOW-ENGINE] start:', { botId, flowId, currentNodeId, isCallback, textSnippet: text?.slice(0,30) });
 
     // Завантажуємо canvas даних flow (вузли і з'єднання)
     const canvasSnap = await fetch(
@@ -1021,6 +1025,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
     // ── ВУЗОЛ: ШІ АГЕНТ ─────────────────────────────────────
     if (nodeType === 'ai_agent' || nodeType === 'aiAgent' || nodeType === 'AI') {
+        console.error('[AI-NODE] executing, userInput:', userInput?.slice(0,30), 'writesFirst:', nodeData.writesFirst);
         // Завантажуємо промпт вузла
         let systemPrompt = nodeData.systemPrompt || nodeData.prompt || '';
         const aiProvider = nodeData.aiProvider || 'openai';
