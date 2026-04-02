@@ -720,16 +720,16 @@ window.openFlowCrmSettings = async function(flowId, flowName) {
     let pipelines = [], currentSettings = {};
     try {
         const [pipSnap, flowSnap] = await Promise.all([
-            window.companyRef().collection('crm_pipelines').get(),
+            window.companyRef().collection('crm_pipeline').get(),
             window.companyRef().collection('bots').doc(bp.activeBotId).collection('flows').doc(flowId).get(),
         ]);
         pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (!pipelines.length && window.crm?.pipelines?.length) {
+            pipelines = window.crm.pipelines;
+        }
         if (!pipelines.length) {
-            // Fallback: стара колекція crm_pipeline
-            const oldPip = await window.companyRef().collection('crm_pipeline').get();
-            if (oldPip.docs.length) {
-                pipelines = [{ id: 'default', name: _tg('Основна воронка','Основная воронка'), stages: oldPip.docs.map(d => ({ id: d.id, ...d.data() })) }];
-            }
+            const newPip = await window.companyRef().collection('crm_pipelines').get();
+            pipelines = newPip.docs.map(d => ({ id: d.id, ...d.data() }));
         }
         currentSettings = flowSnap.data() || {};
     } catch(e) { console.error(e); }
@@ -743,8 +743,8 @@ window.openFlowCrmSettings = async function(flowId, flowName) {
     // Стадії першої воронки або обраної
     const getStageOpts = (pipeId, selStId) => {
         const pip = pipelines.find(p => p.id === pipeId) || pipelines[0];
-        const stages = pip?.stages || pip?.steps || [];
-        return stages.map(s => `<option value="${s.id}" ${s.id===selStId?'selected':''}>${escH(s.name||s.id)}</option>`).join('');
+        const stages = (pip?.stages || pip?.steps || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+        return stages.map(s => `<option value="${s.id}" ${s.id===selStId?'selected':''}>${escH(s.label||s.name||s.id)}</option>`).join('');
     };
 
     const modal = `
@@ -835,9 +835,9 @@ window.openFlowCrmSettings = async function(flowId, flowName) {
         const sel = document.getElementById('fcrmStage');
         if (!sel) return;
         const pip = pipelines.find(p => p.id === pipeId);
-        const stages = pip?.stages || pip?.steps || [];
+        const stages = (pip?.stages || pip?.steps || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
         sel.innerHTML = `<option value="">${_tg('Оберіть стадію...','Выберите стадию...')}</option>` +
-            stages.map(s => `<option value="${s.id}" ${s.id===selStId?'selected':''}>${escH(s.name||s.id)}</option>`).join('');
+            stages.map(s => `<option value="${s.id}" ${s.id===selStId?'selected':''}>${escH(s.label||s.name||s.id)}</option>`).join('');
     };
 };
 
@@ -2270,18 +2270,22 @@ window.chatCreateCrmDeal = async function(contactId) {
     // Прибираємо попередній модал
     document.getElementById('chatCrmDealModal')?.remove();
 
-    // Завантажуємо воронки
+    // Завантажуємо воронки з правильної колекції
     let pipelines = [];
     try {
-        const pipSnap = await window.companyRef().collection('crm_pipelines').get();
+        // CRM зберігає воронки в 'crm_pipeline' (DB_COLS.CRM_PIPELINE)
+        const pipSnap = await window.companyRef().collection('crm_pipeline').get();
         pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        // Fallback: crm_pipelines (нова колекція якщо є)
         if (!pipelines.length) {
-            const oldPip = await window.companyRef().collection('crm_pipeline').get();
-            if (oldPip.docs.length) {
-                pipelines = [{ id: 'default', name: _tg('Основна воронка','Основная воронка'), stages: oldPip.docs.map(d => ({ id: d.id, ...d.data() })) }];
-            }
+            const newPip = await window.companyRef().collection('crm_pipelines').get();
+            pipelines = newPip.docs.map(d => ({ id: d.id, ...d.data() }));
         }
-    } catch(e) {}
+        // Також використовуємо вже завантажені дані якщо CRM відкритий
+        if (!pipelines.length && window.crm?.pipelines?.length) {
+            pipelines = window.crm.pipelines;
+        }
+    } catch(e) { console.error('[chatCreateCrmDeal]', e); }
 
     const name = ct.senderName || ct.name || 'Telegram ' + contactId;
     const pipOpts = pipelines.map(p => `<option value="${p.id}">${escH(p.name||p.id)}</option>`).join('');
