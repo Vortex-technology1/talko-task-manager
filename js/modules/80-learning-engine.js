@@ -5253,6 +5253,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         if (!module) return;
         currentLearningModule = module;
         const lang = getLearningLang();
+        const isRu = lang === 'ru';
 
         const title = getLangField(module, 'title', lang);
         const subtitle = getLangField(module, 'subtitle', lang);
