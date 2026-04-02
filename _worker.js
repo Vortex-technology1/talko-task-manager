@@ -1552,11 +1552,12 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         // Якщо userInput порожній (прийшов callback → перехід на AI) — AI починає сам
         if (!userInput) {
             if (systemPrompt && openaiKey) {
+                // Не передаємо штучне user повідомлення — AI сам починає по system промпту
                 const startResp = await callOpenAI({
                     apiKey: openaiKey,
                     model: botModel,
-                    systemPrompt,
-                    messages: [{ role: 'user', content: 'Почни розмову згідно з промптом.' }],
+                    systemPrompt: systemPrompt + '\n\nВАЖЛИВО: Зараз починай розмову першим. Не чекай на запитання — одразу починай з першого кроку по скрипту.',
+                    messages: [{ role: 'user', content: '.' }],
                     maxTokens: botMaxTokens,
                     temperature: botTemperature,
                 });
