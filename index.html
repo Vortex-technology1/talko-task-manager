@@ -4804,43 +4804,35 @@ setTimeout(fixAuthInputs, 500);
 setTimeout(fixAuthInputs, 1500);
 </script>
 <script>
-// Надійний переклад nav елементів — не залежить від defer модулів
+// MutationObserver фікс для nav span-ів — гарантовано виправляє навіть після перезапису
 (function() {
-    var _map = {
-        tabSales:         { ru:'Реализация', pl:'Sprzedaż',  en:'Sales',       de:'Verkauf',             cs:'Prodej'    },
-        tabFoodProduction:{ ru:'Производство',pl:'Produkcja', en:'Production',  de:'Produktion',          cs:'Výroba'    },
-        tabEstimate:      { ru:'Смета',      pl:'Kosztorys', en:'Estimate',     de:'Kostenvoranschlag',   cs:'Rozpočet'  },
-        tabBooking:       { ru:'Бронирование',pl:'Rezerwacja',en:'Booking',     de:'Buchung',             cs:'Rezervace' },
-        tabWarehouse:     { ru:'Склад',      pl:'Magazyn',   en:'Warehouse',    de:'Lager',               cs:'Sklad'     }
+    var _targets = {
+        'navSpanSales':          { ua:'Реалізація',   ru:'Реализация',  en:'Sales',      de:'Verkauf',           pl:'Sprzedaż',  cs:'Prodej'   },
+        'navSpanFoodProduction': { ua:'Виробництво',  ru:'Производство',en:'Production', de:'Produktion',        pl:'Produkcja', cs:'Výroba'   },
+        'navSpanEstimate':       { ua:'Кошторис',     ru:'Смета',       en:'Estimate',   de:'Kostenvoranschlag', pl:'Kosztorys', cs:'Rozpočet' }
     };
-    function _applyForced() {
-        var lang = localStorage.getItem('talko_language') || window.currentLang || window.currentLanguage || 'ua';
+    function _getLang() {
+        return localStorage.getItem('talko_language') || window.currentLang || window.currentLanguage || 'ua';
+    }
+    function _fix() {
+        var lang = _getLang();
         if (lang === 'ua') return;
-        // Спочатку через data-{lang} атрибути (пряме читання, 100% надійно)
-        document.querySelectorAll('[data-' + lang + ']').forEach(function(el) {
-            var val = el.getAttribute('data-' + lang);
-            if (val) el.textContent = val;
-        });
-        // Також через data-i18n + словник (fallback)
-        document.querySelectorAll('[data-i18n]').forEach(function(el) {
-            var key = el.getAttribute('data-i18n');
-            if (_map[key] && _map[key][lang]) el.textContent = _map[key][lang];
+        Object.keys(_targets).forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                var val = _targets[id][lang];
+                if (val && el.textContent !== val) el.textContent = val;
+            }
         });
     }
-    document.addEventListener('DOMContentLoaded', _applyForced);
-    setTimeout(_applyForced, 300);
-    setTimeout(_applyForced, 1000);
-    setTimeout(_applyForced, 2500);
-    // Перехоплюємо відкриття dropdown Бізнес
-    var _bizOrig = window.toggleNavDropdown;
-    window.addEventListener('load', function() {
-        var _bizBtn = document.getElementById('bizNavBtn');
-        if (_bizBtn) {
-            _bizBtn.addEventListener('click', function() {
-                setTimeout(_applyForced, 30);
-            }, true);
-        }
-    });
+    function _startObserver() {
+        var obs = new MutationObserver(function() { _fix(); });
+        obs.observe(document.body, { subtree: true, childList: true, characterData: true });
+    }
+    document.addEventListener('DOMContentLoaded', function() { _fix(); _startObserver(); });
+    setTimeout(_fix, 500);
+    setTimeout(_fix, 1500);
+    setTimeout(_fix, 3000);
 })();
 </script>
 </body>
