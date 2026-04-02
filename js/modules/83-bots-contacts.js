@@ -1691,7 +1691,7 @@ async function renderChatTab() {
         #chatMsgs { flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:6px;background:#f8f9fa; }
         #chatMsgs::-webkit-scrollbar { width:4px; }
         #chatMsgs::-webkit-scrollbar-thumb { background:#dee2e6;border-radius:2px; }
-        #chatInputArea { flex-shrink:0;background:#fff;border-top:1px solid #e9ecef;display:none; }
+        #chatInputArea { flex-shrink:0;background:#fff;border-top:1px solid #e9ecef; }
         #chatInputTabs { display:flex;gap:0;border-bottom:1px solid #e9ecef;padding:0 16px; }
         .chat-input-tab { padding:7px 14px;font-size:0.78rem;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px; }
         .chat-input-tab.active { color:#22c55e;border-bottom-color:#22c55e; }
@@ -1783,7 +1783,7 @@ async function renderChatTab() {
             </div>
 
             <!-- Поле вводу -->
-            <div id="chatInputArea">
+            <div id="chatInputArea" style="display:none;">
                 <div id="chatInputTabs">
                     <span class="chat-input-tab active">${_tg('Надіслати повідомлення','Отправить сообщение')}</span>
                 </div>
@@ -1964,7 +1964,7 @@ window.bpOpenChat = async function(contactId, instanceId = 'main') {
     _chatRenderHeader(ct, headerContainerId);
     const inputAreaId = instanceId === 'main' ? 'chatInputArea' : `chatInputArea_${instanceId}`;
     const inputArea = document.getElementById(inputAreaId);
-    if (inputArea) inputArea.style.display = '';
+    if (inputArea) inputArea.style.display = 'block';
 
     // Зупиняємо попередній listener
     if (typeof inst.msgsUnsub === 'function') { inst.msgsUnsub(); }
