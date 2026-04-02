@@ -1557,7 +1557,7 @@ async function renderChatTab() {
                         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend();}"
                         oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'">
                     </textarea>
-                    <button onclick="chatSend()" id="chatSendBtn"
+                    <button onclick="chatSend()" ontouchend="event.preventDefault();chatSend()" id="chatSendBtn"
                         style="padding:0.5rem 0.75rem;background:#22c55e;color:white;border:none;
                         border-radius:10px;cursor:pointer;flex-shrink:0;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1570,6 +1570,20 @@ async function renderChatTab() {
     </div>`;
 
     await chatLoadContacts();
+
+    // Реалізуємо мобільні функції
+    window.chatShowMessages = function() {
+        const left = document.getElementById('chatLeftCol');
+        if (left) left.classList.add('chat-hidden');
+        const backBtn = document.getElementById('chatBackBtn');
+        if (backBtn) backBtn.style.display = 'flex';
+    };
+    window.chatShowContacts = function() {
+        const left = document.getElementById('chatLeftCol');
+        if (left) left.classList.remove('chat-hidden');
+        const backBtn = document.getElementById('chatBackBtn');
+        if (backBtn) backBtn.style.display = 'none';
+    };
 
     // Real-time: оновлення unreadCount в лівій колонці
     _chatStartUnreadListener();

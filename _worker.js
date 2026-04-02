@@ -1073,10 +1073,11 @@ async function handleWebhook(request, url, env) {
 
         // DEBUG: підтверджуємо що webhook отримав повідомлення
 
-        // Зберігаємо повідомлення в лог чату (не зберігаємо callback і /start)
+        // Зберігаємо повідомлення і оновлюємо контакт
         if (!isCallback && !text.startsWith('/start') && !text.startsWith('/')) {
             const msgId = `msg_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
             const nowTs = new Date().toISOString();
+            // Зберігаємо повідомлення
             await fsSet(`${contactPath}/messages/${msgId}`, {
                 id:        { stringValue: msgId },
                 role:      { stringValue: 'user' },
@@ -1086,6 +1087,18 @@ async function handleWebhook(request, url, env) {
                 isCallback:{ booleanValue: false },
                 timestamp: { timestampValue: nowTs },
                 createdAt: { timestampValue: nowTs },
+            }, token);
+            // Оновлюємо lastMessageAt + unreadCount + ім'я контакту
+            const contactUpd = await fsGet(contactPath, token);
+            const curUnread = contactUpd?.fields?.unreadCount?.integerValue
+                ? parseInt(contactUpd.fields.unreadCount.integerValue) : 0;
+            await fsPatch(contactPath, {
+                lastMessage:   { stringValue: text.slice(0, 100) },
+                lastMessageAt: { timestampValue: nowTs },
+                unreadCount:   { integerValue: String(curUnread + 1) },
+                name:          { stringValue: userName },
+                senderName:    { stringValue: userName },
+                updatedAt:     { timestampValue: nowTs },
             }, token);
         }
 
@@ -1543,6 +1556,12 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 text:      { stringValue: aiResp },
                 timestamp: { timestampValue: bmTs2 },
                 createdAt: { timestampValue: bmTs2 },
+            }, token);
+            // Оновлюємо lastMessage контакту (bot відповідь)
+            await fsPatch(`companies/${cid}/contacts/${chatId}`, {
+                lastMessage:   { stringValue: aiResp.slice(0, 100) },
+                lastMessageAt: { timestampValue: bmTs2 },
+                updatedAt:     { timestampValue: bmTs2 },
             }, token);
             await checkAndConvertToLead({ aiResponse: aiResp, userInput, collectedData, cid, chatId, contact, contactPath, token });
         } else {
