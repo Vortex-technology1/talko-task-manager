@@ -897,10 +897,10 @@ document.addEventListener('mousedown', function(e) {
                             <i data-lucide="calendar-check" class="icon icon-sm"></i><span id="navSpanBooking" data-i18n="tabBooking">Запис</span>
                         </button>
                         <button class="tab-btn _ntab" id="salesNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('sales',function(){switchTab('sales');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="receipt" class="icon icon-sm"></i><span id="navSpanSales" data-i18n="tabSales">Реалізація</span>
+                            <i data-lucide="receipt" class="icon icon-sm"></i><span id="navSpanSales" data-i18n="tabSales" data-ua="Реалізація" data-ru="Реализация" data-en="Sales" data-de="Verkauf" data-pl="Sprzedaż" data-cs="Prodej">Реалізація</span>
                         </button>
                         <button class="tab-btn _ntab" id="foodProductionNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('foodProduction',function(){switchTab('foodProduction');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="chef-hat" class="icon icon-sm"></i><span id="navSpanFoodProduction" data-i18n="tabFoodProduction">Виробництво</span>
+                            <i data-lucide="chef-hat" class="icon icon-sm"></i><span id="navSpanFoodProduction" data-i18n="tabFoodProduction" data-ua="Виробництво" data-ru="Производство" data-en="Production" data-de="Produktion" data-pl="Produkcja" data-cs="Výroba">Виробництво</span>
                         </button>
                         <button class="tab-btn _ntab" id="sitesNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';switchTab('sites');" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="globe" class="icon icon-sm"></i><span data-i18n="tabSites" id="navSpanSites">Сайти</span>
@@ -911,7 +911,7 @@ document.addEventListener('mousedown', function(e) {
                         </button>
                         <div style="height:1px;background:#f1f5f9;margin:0.2rem 0;"></div>
                         <button class="tab-btn _ntab" id="estimateNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';lazyLoad('estimate',function(){switchTab('estimate');});" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="clipboard-list" class="icon icon-sm"></i><span id="navSpanEstimate" data-i18n="tabEstimate">Кошторис</span>
+                            <i data-lucide="clipboard-list" class="icon icon-sm"></i><span id="navSpanEstimate" data-i18n="tabEstimate" data-ua="Кошторис" data-ru="Смета" data-en="Estimate" data-de="Kostenvoranschlag" data-pl="Kosztorys" data-cs="Rozpočet">Кошторис</span>
                         </button>
                         <div style="height:1px;background:#f1f5f9;margin:0.2rem 0;"></div>
                         <button class="tab-btn _ntab" id="integrationsNavBtn" onclick="document.getElementById('bizTabMenu').style.display='none';switchTab('integrations');" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
@@ -4816,6 +4816,12 @@ setTimeout(fixAuthInputs, 1500);
     function _applyForced() {
         var lang = localStorage.getItem('talko_language') || window.currentLang || window.currentLanguage || 'ua';
         if (lang === 'ua') return;
+        // Спочатку через data-{lang} атрибути (пряме читання, 100% надійно)
+        document.querySelectorAll('[data-' + lang + ']').forEach(function(el) {
+            var val = el.getAttribute('data-' + lang);
+            if (val) el.textContent = val;
+        });
+        // Також через data-i18n + словник (fallback)
         document.querySelectorAll('[data-i18n]').forEach(function(el) {
             var key = el.getAttribute('data-i18n');
             if (_map[key] && _map[key][lang]) el.textContent = _map[key][lang];
