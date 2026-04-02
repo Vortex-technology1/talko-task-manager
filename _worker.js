@@ -1012,6 +1012,9 @@ async function handleWebhook(request, url, env) {
             }, token);
         }
 
+        // DEBUG: підтверджуємо що webhook отримав повідомлення
+        await tgSend(chatId, `⚙️ DEBUG: отримано "${text.slice(0,30)}" | cid=${cid} | flowId=${contact.currentFlowId||'none'}`);
+
         // Зберігаємо повідомлення в лог чату
         const msgId = `msg_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
         await fsSet(`${contactPath}/messages/${msgId}`, {
