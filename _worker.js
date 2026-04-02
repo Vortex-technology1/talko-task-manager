@@ -997,34 +997,41 @@ async function handleWebhook(request, url, env) {
         // /start з параметром → шукаємо flow бота
         if (text.startsWith('/start')) {
             const startParam = text.split(' ')[1] || '';
-            const botsRaw = await fsQuery(`bots`, [], token, 20);
-            // Шукаємо серед ботів компанії
-            let foundBotId = '', foundFlowId = '';
-            const compBotsSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            if (compBotsSnap.ok) {
-                const compBots = await compBotsSnap.json();
-                const botDocs = compBots.documents || [];
-                for (const bd of botDocs) {
-                    const bid = bd.name?.split('/').pop();
-                    const flowsSnap = await fetch(
-                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+            let foundBotId = urlBotId || '', foundFlowId = '';
+            
+            // Якщо botId відомий з URL — шукаємо тільки його flows
+            const botsToSearch = foundBotId
+                ? [foundBotId]
+                : await (async () => {
+                    const snap = await fetch(
+                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
-                    if (!flowsSnap.ok) continue;
-                    const flowsData = await flowsSnap.json();
-                    for (const fd of (flowsData.documents||[])) {
-                        const fid = fd.name?.split('/').pop();
-                        const fdata = fFields(fd.fields||{});
-                        // Активний flow: status=active або збіг startParam
-                        if (fdata.status === 'active' || fdata.startParam === startParam) {
-                            foundBotId = bid; foundFlowId = fid; break;
-                        }
+                    if (!snap.ok) return [];
+                    const d = await snap.json();
+                    return (d.documents||[]).map(b => b.name?.split('/').pop());
+                })();
+
+            for (const bid of botsToSearch) {
+                const flowsSnap = await fetch(
+                    `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                if (!flowsSnap.ok) continue;
+                const flowsData = await flowsSnap.json();
+                for (const fd of (flowsData.documents||[])) {
+                    const fid = fd.name?.split('/').pop();
+                    const fdata = fFields(fd.fields||{});
+                    // Пріоритет: збіг startParam > status=active
+                    if (startParam && fdata.startParam === startParam) {
+                        foundBotId = bid; foundFlowId = fid; break;
                     }
-                    if (foundFlowId) break;
+                    if (!foundFlowId && fdata.status === 'active') {
+                        foundBotId = bid; foundFlowId = fid;
+                        // Не break — продовжуємо шукати збіг startParam
+                    }
                 }
+                if (foundFlowId && startParam && foundFlowId) break;
             }
             if (foundBotId && foundFlowId) {
                 activeFlowId = `${foundBotId}::${foundFlowId}`;
@@ -1190,10 +1197,11 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
         let replyMarkup = {};
         if (buttons && buttons.length > 0) {
-            // Inline кнопки — передаємо id вузла як callback_data
-            const inlineKeyboard = buttons.map(btn => [{
+            // Inline кнопки — callback_data = індекс кнопки (btn_0, btn_1...)
+            // щоб відповідати fromPort в edges
+            const inlineKeyboard = buttons.map((btn, btnIdx) => [{
                 text: btn.text || btn.label || btn,
-                callback_data: btn.text || btn.label || btn,
+                callback_data: `btn_${btnIdx}`,
             }]);
             replyMarkup = { inline_keyboard: inlineKeyboard };
         }
@@ -1383,9 +1391,11 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 text:{ stringValue:aiResp },
                 createdAt:{ timestampValue:new Date().toISOString() },
             }, token);
-
-            // Перевіряємо кваліфікацію — чи ШІ зібрав потрібні дані
             await checkAndConvertToLead({ aiResponse: aiResp, userInput, collectedData, cid, chatId, contact, contactPath, token });
+        } else {
+            // API помилка — надсилаємо fallback
+            const fallbackMsg = nodeData.fallback || 'Вибачте, спробуйте пізніше.';
+            await tgSend(chatId, fallbackMsg);
         }
         return;
     }
