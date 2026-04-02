@@ -2614,7 +2614,7 @@ async function saveFlow() {
             saveRef.set({
                 name: fc.flowData.name || 'Без назви',
                 nodes: sanitize(minimalNodes),
-                edges: sanitize(fc.edges),
+                ...(fc.edges.length > 0 ? { edges: sanitize(fc.edges) } : {}),
                 triggerKeyword: triggerKeyword || '/start',
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             }, { merge: true }),

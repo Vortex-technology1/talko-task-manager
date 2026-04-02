@@ -12,7 +12,14 @@ const FS_URL      = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/
 const FS_QUERY    = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents:runQuery`;
 
 // ── Firebase JWT ─────────────────────────────────────────────
+// Token cache (в межах однієї Worker ізоляції)
+let _tokenCache = null;
+let _tokenExpiry = 0;
+
 async function getToken(env) {
+    const _cacheNow = Math.floor(Date.now() / 1000);
+    if (_tokenCache && _cacheNow < _tokenExpiry - 60) return _tokenCache;
+
     let pk = env.FIREBASE_PRIVATE_KEY || '';
     // Handle literal \n sequences
     if (pk.includes('\\n')) pk = pk.replace(/\\n/g, '\n');
@@ -49,6 +56,8 @@ async function getToken(env) {
     });
     const d = await r.json();
     if (!d.access_token) throw new Error('Token error: ' + JSON.stringify(d));
+    _tokenCache = d.access_token;
+    _tokenExpiry = _cacheNow + 3600;
     return d.access_token;
 }
 
@@ -1088,10 +1097,8 @@ async function handleWebhook(request, url, env) {
                 timestamp: { timestampValue: nowTs },
                 createdAt: { timestampValue: nowTs },
             }, token);
-            // Оновлюємо lastMessageAt + unreadCount + ім'я контакту
-            const contactUpd = await fsGet(contactPath, token);
-            const curUnread = contactUpd?.fields?.unreadCount?.integerValue
-                ? parseInt(contactUpd.fields.unreadCount.integerValue) : 0;
+            // Оновлюємо контакт — unreadCount беремо з вже завантаженого contact
+            const curUnread = parseInt(contact.unreadCount || 0);
             await fsPatch(contactPath, {
                 lastMessage:   { stringValue: text.slice(0, 100) },
                 lastMessageAt: { timestampValue: nowTs },
@@ -1192,11 +1199,14 @@ ${e.stack?.slice(0,200)}`);
 // FLOW ENGINE — виконання ланцюгів ботів
 // ════════════════════════════════════════════════════════════
 async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, isCallback, callbackData, contact, contactPath, token, botToken, from, userName, tgSend, env }) {
-    // Завантажуємо вузли з flow document (nodes зберігаються як Firestore array)
-    const flowSnap = await fetch(
-        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${botId}/flows/${flowId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
+    // Паралельно завантажуємо flow і platform settings
+    const [flowSnap, platDocPre] = await Promise.all([
+        fetch(
+            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${botId}/flows/${flowId}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        ),
+        fsGet(`settings/platform`, token),
+    ]);
 
     let nodes = [], edges = [];
     if (flowSnap.ok) {
@@ -1443,12 +1453,12 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             }
         }
 
-        // Читаємо ключ і параметри один раз для всього AI вузла
+        // Використовуємо вже завантажений platDocPre (з Promise.all вгорі)
         let openaiKey = '';
         let botModel = 'gpt-4o-mini';
         let botMaxTokens = 1500;
         let botTemperature = 0.7;
-        const platDocAI = await fsGet(`settings/platform`, token);
+        const platDocAI = platDocPre;
         if (platDocAI?.fields) {
             const platAI = fFields(platDocAI.fields);
             openaiKey = platAI.openaiApiKey || '';
@@ -1545,7 +1555,13 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         });
 
         if (aiResp) {
-            await tgSend(chatId, aiResp);
+            // Telegram обмежує 4096 символів — розбиваємо на частини
+            const MAX_TG = 4096;
+            const parts = [];
+            for (let i = 0; i < aiResp.length; i += MAX_TG) {
+                parts.push(aiResp.slice(i, i + MAX_TG));
+            }
+            for (const part of parts) await tgSend(chatId, part);
             const bm = `msg_${Date.now()}_bot`;
             const bmTs2 = new Date().toISOString();
             await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bm}`, {
