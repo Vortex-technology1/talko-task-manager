@@ -1216,8 +1216,33 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
         return;
     }
 
-    // Якщо прийшло текстове повідомлення — передаємо в поточний вузол
-    // (зазвичай це ШІ Агент або питання)
+    // Якщо прийшло текстове повідомлення
+    const curType = currentNode.type || currentNode.data?.type || '';
+    const curData = currentNode.data || currentNode;
+    
+    // Якщо поточний вузол — MESSAGE з кнопками, юзер написав текст замість натиснути кнопку
+    // Знаходимо наступний AI вузол напряму
+    if (curType === 'message' || curType === 'sendMessage') {
+        const curButtons = curData.buttons || curData.keyboard || [];
+        if (curButtons.length > 0) {
+            // Шукаємо перший AI вузол після цього MESSAGE
+            const nextNode = getNextNode(currentNode.id);
+            if (nextNode) {
+                const nextType = nextNode.type || nextNode.data?.type || '';
+                if (nextType === 'ai_agent' || nextType === 'aiAgent') {
+                    await fsPatch(contactPath, {
+                        currentNodeId: { stringValue: nextNode.id },
+                        updatedAt:     { timestampValue: new Date().toISOString() },
+                    }, token);
+                    await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput: text });
+                    return;
+                }
+            }
+            // Немає AI вузла — просто надсилаємо повідомлення знову
+            return;
+        }
+    }
+    
     await executeNode({ node: currentNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput: text });
 }
 
