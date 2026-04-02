@@ -1535,7 +1535,37 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             return;
         }
 
-        if (!userInput) return;
+        // Якщо userInput порожній (прийшов callback → перехід на AI) — AI починає сам
+        if (!userInput) {
+            if (systemPrompt && openaiKey) {
+                const startResp = await callOpenAI({
+                    apiKey: openaiKey,
+                    model: botModel,
+                    systemPrompt,
+                    messages: [{ role: 'user', content: 'Почни розмову згідно з промптом.' }],
+                    maxTokens: botMaxTokens,
+                    temperature: botTemperature,
+                });
+                if (startResp) {
+                    const parts = [];
+                    for (let i = 0; i < startResp.length; i += 4096) parts.push(startResp.slice(i, i + 4096));
+                    for (const p of parts) await tgSend(chatId, p);
+                    const bm0 = `msg_${Date.now()}_bot`;
+                    const bTs0 = new Date().toISOString();
+                    await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bm0}`, {
+                        id:{ stringValue:bm0 }, role:{ stringValue:'bot' }, from:{ stringValue:'bot' },
+                        direction:{ stringValue:'out' }, text:{ stringValue:startResp },
+                        timestamp:{ timestampValue:bTs0 }, createdAt:{ timestampValue:bTs0 },
+                    }, token);
+                    await fsPatch(`companies/${cid}/contacts/${chatId}`, {
+                        lastMessage:{ stringValue:startResp.slice(0,100) },
+                        lastMessageAt:{ timestampValue:bTs0 },
+                        updatedAt:{ timestampValue:bTs0 },
+                    }, token);
+                }
+            }
+            return;
+        }
 
         // Завантажуємо історію чату для контексту
         const limit = Math.max((historyLimit || 14) * 2, 30);
