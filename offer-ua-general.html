@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TALKO System — Бізнес на автопілоті</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#22c55e;--green-d:#16a34a;--green-bg:rgba(34,197,94,0.08);--green-border:rgba(34,197,94,0.25);
+  --bg:#fff;--bg-2:#f8fafc;--dark:#0c1009;--text:#1a1a1a;--text-2:#374151;--text-3:#64748b;
+  --border:#e2e8f0;--border-2:#cbd5e1;--red:#ef4444;--blue:#3b82f6;--gold:#f59e0b;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+  --sh-lg:0 8px 32px rgba(0,0,0,.1);--r:12px;--r-lg:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+
+/* STICKY MOB CTA */
+.mob-cta-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:#fff;border-top:1px solid var(--border);padding:12px 16px;gap:10px;box-shadow:0 -4px 20px rgba(0,0,0,.12)}
+@media(max-width:768px){.mob-cta-bar{display:flex}}
+.mob-cta-bar .btn{flex:1;justify-content:center}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:10px 0}
+.hdr-inner{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-mark{width:34px;height:34px;background:var(--dark);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-mark svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5}
+.logo-text{font-weight:800;font-size:15px;color:var(--text);line-height:1.2}
+.logo-sub{font-size:10px;color:var(--text-3);font-weight:500}
+.hdr-cta{display:flex;gap:8px;align-items:center}
+.hdr-ai{display:none}
+@media(min-width:560px){.hdr-ai{display:inline-flex}}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none;border:none;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;line-height:1;min-height:48px}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.btn-dark{background:var(--dark);color:#fff}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#1db854;box-shadow:0 4px 16px rgba(34,197,94,.35)}
+.btn-outline{background:#fff;color:var(--text);border:2px solid var(--border-2)}.btn-outline:hover{border-color:var(--green);color:var(--green-d)}
+.btn-outline-dark{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.3)}.btn-outline-dark:hover{border-color:#fff}
+.btn-sm{padding:9px 16px;font-size:13px;min-height:40px;border-radius:8px}
+
+/* HERO */
+.hero{background:var(--dark);padding:48px 0 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(34,197,94,.09),transparent 65%);pointer-events:none}
+.hero-lbl{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:50px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--green);font-size:12px;font-weight:600;margin-bottom:16px}
+.hero-lbl svg{width:13px;height:13px;stroke:var(--green);fill:none;stroke-width:2}
+.hero-content{position:relative;text-align:center}
+.hero-title{font-size:clamp(28px,7vw,56px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:14px;letter-spacing:-1px}
+.hero-title .hl{color:var(--green)}
+.hero-title .ua{color:#ffd700}
+.hero-sub{font-size:clamp(14px,3.5vw,17px);color:rgba(255,255,255,.6);max-width:540px;margin:0 auto 24px;font-weight:400}
+.hero-badges{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:24px}
+.h-badge{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7);font-size:12px}
+.h-badge svg{width:13px;height:13px;stroke:var(--green);fill:none;stroke-width:2}
+.h-badge.ua-badge{background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.2);color:rgba(255,215,0,.9)}
+.h-badge.ua-badge svg{stroke:#ffd700}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+@media(max-width:480px){.hero-btns{flex-direction:column;align-items:center}.hero-btns .btn{width:100%;max-width:320px}}
+
+/* CONTEXT BANNER — UA SPECIFIC */
+.context-banner{margin-top:28px;background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.15);border-radius:var(--r-lg);padding:18px 20px;text-align:left}
+.context-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,215,0,.7);margin-bottom:10px}
+.context-text{font-size:13px;color:rgba(255,255,255,.65);line-height:1.6}
+.context-text strong{color:rgba(255,255,255,.9)}
+
+/* NICHES */
+.niches-strip{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:24px}
+.niche-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.55);font-size:12px}
+.niche-tag svg{width:12px;height:12px;stroke:rgba(255,255,255,.4);fill:none;stroke-width:2}
+
+/* SECTION */
+.sec{padding:48px 0}.sec-gray{background:var(--bg-2)}.sec-dark{background:var(--dark);color:#fff}
+.sec-label{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green-d);background:var(--green-bg);border:1px solid var(--green-border);padding:3px 10px;border-radius:50px;margin-bottom:8px}
+.sec-dark .sec-label{color:var(--green);background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.25)}
+.sec-title{font-size:clamp(22px,5vw,36px);font-weight:800;line-height:1.15;letter-spacing:-.5px;margin-bottom:6px}
+.sec-sub{font-size:14px;color:var(--text-3)}.sec-dark .sec-sub{color:rgba(255,255,255,.5)}
+.divider{height:1px;background:var(--border)}
+
+/* BEFORE/AFTER */
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}
+@media(max-width:580px){.ba-grid{grid-template-columns:1fr}}
+.ba-col{border-radius:var(--r-lg);padding:20px}
+.ba-before{background:#fff8f8;border:1px solid #fecaca}
+.ba-after{background:#f0fdf4;border:1px solid #bbf7d0}
+.ba-header{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.ba-before .ba-header{color:var(--red)}.ba-after .ba-header{color:var(--green-d)}
+.ba-header svg{width:16px;height:16px;fill:none;stroke-width:2}
+.ba-before .ba-header svg{stroke:var(--red)}.ba-after .ba-header svg{stroke:var(--green-d)}
+.ba-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.ba-list li{display:flex;align-items:flex-start;gap:7px;font-size:13px;line-height:1.4}
+.ba-before .ba-list li{color:#7f1d1d}.ba-after .ba-list li{color:#14532d}
+.ba-list svg{width:13px;height:13px;flex-shrink:0;margin-top:2px;fill:none;stroke-width:2.5}
+.ba-before .ba-list svg{stroke:var(--red)}.ba-after .ba-list svg{stroke:var(--green-d)}
+
+/* DAY GRID */
+.day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px}
+@media(max-width:680px){.day-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:420px){.day-grid{grid-template-columns:1fr}}
+.day-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px;transition:.2s;box-shadow:var(--sh)}
+.day-card:active{border-color:var(--green);background:#f0fdf4}
+.day-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-d);background:var(--green-bg);border:1px solid var(--green-border);padding:2px 8px;border-radius:50px;margin-bottom:10px}
+.day-line{display:flex;align-items:flex-start;gap:7px;font-size:13px;color:var(--text-2);margin-bottom:6px;line-height:1.4}
+.day-line:last-child{margin-bottom:0}
+.day-line svg{width:13px;height:13px;stroke:var(--green);fill:none;stroke-width:2.5;flex-shrink:0;margin-top:2px}
+.day-line.dim{color:var(--text-3);font-size:12px}
+
+/* JOURNEY */
+.journey{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;margin-top:32px}
+@media(max-width:680px){.journey{grid-template-columns:1fr}.j-arrow{padding:8px 0;transform:rotate(90deg)}}
+.j-step{border-radius:var(--r-lg);padding:22px 20px;position:relative}
+.j-step::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r-lg) var(--r-lg) 0 0}
+.j-sys{background:#eff6ff;border:1px solid #bfdbfe}.j-sys::before{background:var(--blue)}
+.j-auto{background:#f0fdf4;border:1px solid #bbf7d0}.j-auto::before{background:var(--green)}
+.j-arrow{display:flex;align-items:center;justify-content:center;padding:0 12px;flex-shrink:0}
+.j-arrow-circle{width:36px;height:36px;border-radius:50%;background:#fff;border:1.5px solid var(--border-2);display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.j-arrow-circle svg{width:16px;height:16px;stroke:var(--text-3);fill:none;stroke-width:2}
+.j-num{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.j-sys .j-num{color:var(--blue)}.j-auto .j-num{color:var(--green-d)}
+.j-title{font-size:18px;font-weight:800;margin-bottom:5px;line-height:1.2}
+.j-desc{font-size:12px;color:var(--text-3);margin-bottom:14px}
+.j-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.j-list li{display:flex;align-items:flex-start;gap:7px;font-size:13px;color:var(--text-2)}
+.j-list svg{width:13px;height:13px;flex-shrink:0;margin-top:2px;stroke-width:2.5;fill:none}
+.j-sys .j-list svg{stroke:var(--blue)}.j-auto .j-list svg{stroke:var(--green-d)}
+.j-result{margin-top:14px;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:600}
+.j-sys .j-result{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);color:#1d4ed8}
+.j-auto .j-result{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-d)}
+
+/* MODULES */
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-top:28px}
+@media(max-width:480px){.mod-grid{grid-template-columns:1fr 1fr}}
+.mod-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;gap:10px;align-items:flex-start;box-shadow:var(--sh)}
+.mod-ic{width:32px;height:32px;border-radius:7px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mod-ic svg{width:16px;height:16px;stroke:var(--green-d);fill:none;stroke-width:2}
+.mod-name{font-size:12px;font-weight:700;margin-bottom:2px;color:var(--text)}
+.mod-desc{font-size:11px;color:var(--text-3);line-height:1.35}
+
+/* PLATFORM */
+.plat-banner{margin-top:24px;background:var(--dark);border-radius:var(--r-lg);padding:22px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.pb-left{flex:1;min-width:200px}
+.pb-left h3{font-size:17px;font-weight:800;color:#fff;margin-bottom:4px}
+.pb-left p{font-size:13px;color:rgba(255,255,255,.5)}
+.pb-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.pb-tag{font-size:11px;padding:3px 9px;border-radius:50px;background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.pb-price-block{text-align:right;flex-shrink:0}
+.pb-price-val{font-size:40px;font-weight:800;color:var(--green);line-height:1}
+.pb-price-per{font-size:12px;color:rgba(255,255,255,.4)}
+@media(max-width:500px){.pb-price-block{text-align:left}}
+.updates-block{margin-top:12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--r-lg);padding:18px 20px;display:flex;align-items:flex-start;gap:14px}
+@media(max-width:500px){.updates-block{flex-direction:column}}
+.upd-icon{width:40px;height:40px;border-radius:10px;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.upd-icon svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2}
+.upd-content h4{font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px}
+.upd-content p{font-size:13px;color:var(--text-3);margin-bottom:12px}
+.upd-tags{display:flex;flex-wrap:wrap;gap:6px}
+.upd-tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--green-d);background:#fff;border:1px solid #bbf7d0;padding:4px 10px;border-radius:50px}
+.upd-tag svg{width:12px;height:12px;stroke:var(--green-d);fill:none;stroke-width:2.5}
+
+/* ROLES */
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+@media(max-width:680px){.role-grid{grid-template-columns:1fr}}
+.role-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;box-shadow:var(--sh)}
+.role-ic{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.role-ic svg{width:18px;height:18px;fill:none;stroke-width:2}
+.ri-own{background:var(--green-bg)}.ri-own svg{stroke:var(--green-d)}
+.ri-emp{background:rgba(59,130,246,.08)}.ri-emp svg{stroke:var(--blue)}
+.ri-ai{background:rgba(168,85,247,.08)}.ri-ai svg{stroke:#9333ea}
+.role-card h4{font-size:14px;font-weight:800;margin-bottom:8px}
+.role-list{list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.role-list li{display:flex;align-items:flex-start;gap:6px;font-size:12px;color:var(--text-2)}
+.role-list svg{width:12px;height:12px;flex-shrink:0;margin-top:3px;stroke:var(--green);fill:none;stroke-width:2.5}
+.role-result{font-size:11px;font-weight:700;padding:7px 10px;border-radius:6px;background:var(--green-bg);color:var(--green-d);border:1px solid var(--green-border);text-align:center}
+
+/* RESULTS */
+.results-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:32px;background:rgba(255,255,255,.08);border-radius:var(--r);overflow:hidden}
+@media(max-width:500px){.results-row{grid-template-columns:repeat(2,1fr)}}
+.res-item{background:rgba(0,0,0,.15);padding:22px 16px;text-align:center}
+.res-val{font-size:32px;font-weight:800;line-height:1;color:var(--green)}
+.res-lbl{font-size:12px;color:rgba(255,255,255,.5);margin-top:4px}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+@media(max-width:860px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}}
+.p-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh)}
+.p-card.feat{border-color:var(--green);box-shadow:0 4px 24px rgba(34,197,94,.15)}
+.p-bar{height:4px}.p-inner{padding:20px}
+.feat-badge{display:inline-flex;align-items:center;gap:4px;background:var(--green);color:#fff;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:4px 9px;border-radius:50px;margin-bottom:10px}
+.feat-badge svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5}
+.p-name{font-size:22px;font-weight:800;margin-bottom:2px}
+.p-tag{font-size:12px;color:var(--text-3);margin-bottom:14px}
+.p-for{background:var(--bg-2);border-radius:7px;padding:8px 12px;font-size:12px;color:var(--text-2);margin-bottom:14px;border:1px solid var(--border)}
+.p-sec{margin-bottom:14px}
+.p-sec-title{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3);margin-bottom:8px}
+.p-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.p-list li{display:flex;align-items:flex-start;gap:6px;font-size:12px;color:var(--text-2)}
+.p-list svg{width:13px;height:13px;flex-shrink:0;margin-top:2px;stroke:var(--green);fill:none;stroke-width:2.5}
+.warn-box{background:#fffbeb;border:1px solid #fde68a;border-radius:7px;padding:8px 12px;margin-bottom:14px}
+.warn-box p{font-size:11px;color:#92400e}
+.warn-box svg{width:11px;height:11px;stroke:#d97706;fill:none;stroke-width:2;vertical-align:-2px;margin-right:3px}
+.adv-box{background:var(--green-bg);border:1px solid var(--green-border);border-radius:7px;padding:8px 12px;margin-bottom:14px}
+.adv-box p{font-size:11px;color:var(--green-d)}
+.adv-box svg{width:11px;height:11px;stroke:var(--green-d);fill:none;stroke-width:2;vertical-align:-2px;margin-right:3px}
+.p-bottom{padding-top:14px;border-top:1px solid var(--border)}
+.p-amount{font-size:32px;font-weight:800;line-height:1;margin-bottom:2px}
+.p-amount span{font-size:14px;font-weight:400;color:var(--text-3)}
+.p-note{font-size:11px;color:var(--text-3);margin-bottom:12px}
+.p-cta{width:100%;min-height:48px}
+.plat-footer{margin-top:14px;background:var(--bg-2);border:1.5px solid var(--green);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pf-icon{width:38px;height:38px;border-radius:9px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pf-icon svg{width:19px;height:19px;stroke:var(--green-d);fill:none;stroke-width:2}
+.pf-content{flex:1;min-width:160px}
+.pf-content h4{font-size:13px;font-weight:800;margin-bottom:2px}
+.pf-content p{font-size:11px;color:var(--text-3)}
+.pf-price{font-size:20px;font-weight:800;color:var(--green-d);white-space:nowrap}
+.pf-price span{font-size:12px;font-weight:400;color:var(--text-3)}
+
+/* OBJECTIONS */
+.obj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:28px}
+@media(max-width:600px){.obj-grid{grid-template-columns:1fr}}
+.obj-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.obj-card:active{border-color:var(--green)}
+.obj-q{display:flex;align-items:flex-start;gap:8px;font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.35}
+.obj-q svg{width:16px;height:16px;stroke:var(--text-3);fill:none;stroke-width:2;flex-shrink:0;margin-top:2px}
+.obj-a{font-size:12px;color:var(--text-3);line-height:1.55;padding-left:24px}
+
+/* FINAL CTA */
+.cta-sec{padding:56px 0 80px;background:var(--dark);position:relative;overflow:hidden}
+@media(max-width:768px){.cta-sec{padding-bottom:100px}}
+.cta-sec::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(34,197,94,.06),transparent 65%);pointer-events:none}
+.cta-inner{display:grid;grid-template-columns:1fr 320px;gap:40px;align-items:center;position:relative}
+@media(max-width:860px){.cta-inner{grid-template-columns:1fr}.cta-right{display:none}}
+.cta-eyebrow{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);padding:3px 10px;border-radius:50px;margin-bottom:12px}
+.cta-title{font-size:clamp(24px,5vw,42px);font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.5px;margin-bottom:10px}
+.cta-title .hl{color:var(--green)}
+.cta-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:24px}
+.cta-btns{display:flex;gap:10px;flex-wrap:wrap}
+@media(max-width:480px){.cta-btns{flex-direction:column}.cta-btns .btn{width:100%}}
+.guarantee-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);padding:24px}
+.gc-icon{width:48px;height:48px;border-radius:12px;background:var(--green);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.gc-icon svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2}
+.gc-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:6px}
+.gc-text{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:16px;line-height:1.5}
+.gc-divider{height:1px;background:rgba(255,255,255,.07);margin-bottom:14px}
+.gc-row{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.65);margin-bottom:8px}
+.gc-row:last-child{margin-bottom:0}
+.gc-row svg{width:14px;height:14px;stroke:var(--green);fill:none;stroke-width:2.5;flex-shrink:0}
+
+/* FOOTER */
+.footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding:20px 0}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:rgba(255,255,255,.3);text-decoration:none}
+.footer-links a:hover{color:rgba(255,255,255,.6)}
+.footer-copy{font-size:12px;color:rgba(255,255,255,.2)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hero-content>*{animation:fadeUp .5s both}
+.hero-lbl{animation-delay:.03s}.hero-title{animation-delay:.07s}.hero-sub{animation-delay:.11s}.hero-badges{animation-delay:.15s}.hero-btns{animation-delay:.19s}
+</style>
+</head>
+<body>
+
+<!-- STICKY MOB CTA -->
+<div class="mob-cta-bar">
+  <a href="https://wa.me/380661807563?text=Добрий день! Хочу обрати тариф" target="_blank" class="btn btn-green btn-sm">
+    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Обрати тариф
+  </a>
+  <a href="tel:+380661807563" class="btn btn-outline btn-sm">
+    <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Зателефонувати
+  </a>
+</div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="wrap">
+    <div class="hdr-inner">
+      <a href="#" class="logo">
+        <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <div><div class="logo-text">TALKO System</div><div class="logo-sub">бізнес на автопілоті · Україна</div></div>
+      </a>
+      <div class="hdr-cta">
+        <a href="https://chatgpt.com/g/g-68e3790847dc8191b280e353cdf40e44-ai-asistent-talko-system" target="_blank" class="btn btn-outline btn-sm hdr-ai">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg>AI-консультант
+        </a>
+        <a href="#pricing" class="btn btn-dark btn-sm">Тарифи</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-content">
+      <div class="hero-lbl">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Для власників бізнесу в Україні
+      </div>
+      <h1 class="hero-title">Бізнес, який <span class="hl">працює</span><br>без тебе.<br><span class="ua">Навіть зараз.</span></h1>
+      <p class="hero-sub">Систематизація + платформа з AI-асистентами. Бізнес стає незалежним від людей, відключень і непередбачуваності.</p>
+      <div class="hero-badges">
+        <span class="h-badge"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>150+ компаній</span>
+        <span class="h-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>10 років практики</span>
+        <span class="h-badge"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>×2 прибуток за рік</span>
+        <span class="h-badge ua-badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Зроблено для України</span>
+      </div>
+      <div class="hero-btns">
+        <a href="#pricing" class="btn btn-green">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Обрати тариф
+        </a>
+        <a href="https://wa.me/380661807563?text=Добрий день! Хочу отримати консультацію" target="_blank" class="btn btn-outline-dark">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+
+      <!-- CONTEXT UKRAINE -->
+      <div class="context-banner">
+        <div class="context-title">Чому система — це не розкіш, а виживання</div>
+        <div class="context-text">Українські підприємці будують бізнес в умовах, де все може змінитись за день. <strong>Відключення, мобілізація, переїзди, нестабільність.</strong> Власник, який є "вузьким місцем" — ризикує зупинити бізнес у будь-який момент. Система — це те, що залишається працювати, коли вас немає поруч.</div>
+      </div>
+
+      <!-- NICHES -->
+      <div class="niches-strip">
+        <span class="niche-tag"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Медицина</span>
+        <span class="niche-tag"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Будівництво</span>
+        <span class="niche-tag"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>Меблі</span>
+        <span class="niche-tag"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg>Послуги</span>
+        <span class="niche-tag"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>Консалтинг</span>
+        <span class="niche-tag"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>Виробництво</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BEFORE / AFTER -->
+<section class="sec sec-gray">
+  <div class="wrap">
+    <span class="sec-label">До і після системи</span>
+    <h2 class="sec-title">Два режими роботи бізнесу</h2>
+    <div class="ba-grid">
+      <div class="ba-col ba-before">
+        <div class="ba-header">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Зараз
+        </div>
+        <ul class="ba-list">
+          <li><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Ви — єдина людина, яка вирішує все</li>
+          <li><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Хороший співробітник пішов — бізнес завис</li>
+          <li><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Гроші є — де, незрозуміло</li>
+          <li><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Клієнти — то густо, то пусто</li>
+          <li><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Тривога: якщо вас не буде — що станеться?</li>
+          <li><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Рішення — "по ситуації", без прогнозу</li>
+        </ul>
+      </div>
+      <div class="ba-col ba-after">
+        <div class="ba-header">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Після системи
+        </div>
+        <ul class="ba-list">
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Команда вирішує сама — ви бачите результат</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Система працює від правил, а не від людей</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>P&L, cashflow, прибуток — в реальному часі</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>CRM сам веде клієнта, бот сам відповідає</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Бізнес працює навіть коли вас немає</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Прогноз на 3 місяці. Рішення по цифрах.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DAY -->
+<section class="sec">
+  <div class="wrap">
+    <span class="sec-label">Як виглядає твій день</span>
+    <h2 class="sec-title">Коли система побудована</h2>
+    <div class="day-grid">
+      <div class="day-card">
+        <div class="day-tag">Ранок</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Команда вирішує сама. Ти бачиш результат</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Відкрив дашборд — все видно за 30 секунд</div>
+      </div>
+      <div class="day-card">
+        <div class="day-tag">Фінанси</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>P&L, cashflow, прибуток — в реальному часі</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Знаєш цифри — приймаєш рішення спокійно</div>
+      </div>
+      <div class="day-card">
+        <div class="day-tag">Команда</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Інструкції в системі. Новий входить за 3 дні</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Бізнес від системи, не від конкретної людини</div>
+      </div>
+      <div class="day-card">
+        <div class="day-tag">Клієнти</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>CRM сам нагадує. Бот сам відповідає</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Стабільний потік без твоєї участі</div>
+      </div>
+      <div class="day-card">
+        <div class="day-tag">Стійкість</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Вас немає — бізнес продовжує працювати</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Повернулись — побачили звіт, не пожежу</div>
+      </div>
+      <div class="day-card">
+        <div class="day-tag">Плани</div>
+        <div class="day-line"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Бачиш прогноз на 3 місяці вперед</div>
+        <div class="day-line dim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Рішення по цифрах, а не по відчуттях</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- JOURNEY -->
+<section class="sec sec-gray">
+  <div class="wrap">
+    <span class="sec-label">Як це працює</span>
+    <h2 class="sec-title">Два кроки до керованого бізнесу</h2>
+    <p class="sec-sub">Паралельно: будуємо систему і одразу реалізуємо її на платформі</p>
+    <div class="journey">
+      <div class="j-step j-sys">
+        <div class="j-num">Крок 01 — Систематизація</div>
+        <div class="j-title">Будуємо систему управління</div>
+        <p class="j-desc">65 днів, 10 модулів. Наставник «за руку» від стратегії до делегування.</p>
+        <ul class="j-list">
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Стратегія та бізнес-модель</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Функціональна структура і ролі</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>KPI і система статистик</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Фінансова система</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Маркетинг і продажі</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Система найму та делегування</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Культура відповідальності</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Стратегічне планування</li>
+        </ul>
+        <div class="j-result">Результат: система правил замість залежності від людей</div>
+      </div>
+      <div class="j-arrow"><div class="j-arrow-circle"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+      <div class="j-step j-auto">
+        <div class="j-num">Крок 02 — Автоматизація</div>
+        <div class="j-title">Реалізуємо на платформі TALKO</div>
+        <p class="j-desc">ERP-система з вбудованими AI-асистентами. Все в одному місці.</p>
+        <ul class="j-list">
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>AI-асистенти для кожного відділу</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>CRM + автоматичні тригери</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Фінанси: P&L, cashflow, бюджети</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Telegram-боти для продажів</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Контроль команди 24/7</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Онлайн-запис клієнтів</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Програма навчання вбудована</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Аналітика в реальному часі</li>
+        </ul>
+        <div class="j-result">Результат: 80–90% рішень без вас. AI робить операційку.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PLATFORM -->
+<section class="sec">
+  <div class="wrap">
+    <span class="sec-label">Платформа</span>
+    <h2 class="sec-title">TALKO — ERP з AI-асистентами</h2>
+    <p class="sec-sub">Не просто таск-менеджер. Повна операційна система для МСБ.</p>
+    <div class="mod-grid">
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div class="mod-name">Задачі та проєкти</div><div class="mod-desc">Kanban, календар, список — 6 видів</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="mod-name">Мій день</div><div class="mod-desc">Дашборд співробітника на сьогодні</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><div class="mod-name">CRM + тригери</div><div class="mod-desc">Воронка, угоди, авто-дії при зміні стадії</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="mod-name">Фінанси</div><div class="mod-desc">P&L, cashflow, рахунки, бюджети</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg></div><div><div class="mod-name">AI-асистенти</div><div class="mod-desc">Аналізують, підказують, генерують задачі</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div class="mod-name">Telegram-боти</div><div class="mod-desc">Flow-builder, воронки, автовідповіді</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div class="mod-name">Booking</div><div class="mod-desc">Онлайн-запис через Google Calendar</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div><div class="mod-name">Аналітика</div><div class="mod-desc">KPI, ефективність команди, звіти</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div><div class="mod-name">Навчання</div><div class="mod-desc">«Бізнес на автопілоті» — вбудовано</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><div><div class="mod-name">Процеси</div><div class="mod-desc">Бізнес-процеси, шаблони, регламенти</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg></div><div><div class="mod-name">Склад</div><div class="mod-desc">Залишки, операції, автосписання</div></div></div>
+      <div class="mod-card"><div class="mod-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div><div><div class="mod-name">Сайти та форми</div><div class="mod-desc">Конструктор лендінгів, форми лідів</div></div></div>
+    </div>
+    <div class="plat-banner">
+      <div class="pb-left">
+        <h3>TALKO Platform — ваш ERP на автопілоті</h3>
+        <p>Необмежена кількість співробітників. Всі модулі включені.</p>
+        <div class="pb-tags">
+          <span class="pb-tag">Необмежено співробітників</span>
+          <span class="pb-tag">Всі модулі</span>
+          <span class="pb-tag">AI-асистенти</span>
+          <span class="pb-tag">PWA — працює як додаток</span>
+        </div>
+      </div>
+      <div class="pb-price-block">
+        <div class="pb-price-val">50€</div>
+        <div class="pb-price-per">/ місяць</div>
+      </div>
+    </div>
+    <div class="updates-block">
+      <div class="upd-icon"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.18-4.28"/></svg></div>
+      <div class="upd-content">
+        <h4>Платформа TALKO постійно оновлюється</h4>
+        <p>Нові модулі, AI-функції та інструменти — виходять регулярно. Ви отримуєте всі оновлення автоматично.</p>
+        <div class="upd-tags">
+          <span class="upd-tag"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Нові модулі щомісяця</span>
+          <span class="upd-tag"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>AI постійно розумнішає</span>
+          <span class="upd-tag"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Без доплат за оновлення</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ROLES -->
+<section class="sec sec-gray">
+  <div class="wrap">
+    <span class="sec-label">Що отримує кожен</span>
+    <h2 class="sec-title">Система для власника, команди і AI</h2>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-ic ri-own"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <h4>Власник</h4>
+        <ul class="role-list">
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Керує через цифри, не людей</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Звіти в один клік</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Бачить реальний стан справ</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Бізнес незалежний від його присутності</li>
+        </ul>
+        <div class="role-result">Вільний час + прогнозований прибуток</div>
+      </div>
+      <div class="role-card">
+        <div class="role-ic ri-emp"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h4>Співробітник</h4>
+        <ul class="role-list">
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Знає що робити кожен день</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Чіткі інструкції — без питань</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Приходить з рішенням, не проблемою</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Менше переробок, нормальні строки</li>
+        </ul>
+        <div class="role-result">Чіткість, спокій, результат</div>
+      </div>
+      <div class="role-card">
+        <div class="role-ic ri-ai"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg></div>
+        <h4>AI-асистент</h4>
+        <ul class="role-list">
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Аналізує цифри і знаходить проблеми</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Пропонує 3 варіанти дій</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Генерує задачі і плани</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Супроводжує найм, фінанси, маркетинг</li>
+        </ul>
+        <div class="role-result">AI знімає операційку — власник думає стратегічно</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RESULTS -->
+<section class="sec sec-dark">
+  <div class="wrap">
+    <div style="text-align:center">
+      <span class="sec-label">Результати</span>
+      <h2 class="sec-title" style="color:#fff">Що отримуєте після впровадження</h2>
+    </div>
+    <div class="results-row">
+      <div class="res-item"><div class="res-val">80–90%</div><div class="res-lbl">рішень без вас</div></div>
+      <div class="res-item"><div class="res-val">×2</div><div class="res-lbl">прибуток за рік</div></div>
+      <div class="res-item"><div class="res-val">−50%</div><div class="res-lbl">часу на рутину</div></div>
+      <div class="res-item"><div class="res-val">24/7</div><div class="res-lbl">AI працює за вас</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:32px">
+      <span class="sec-label">Тарифи</span>
+      <h2 class="sec-title">Виберіть формат впровадження</h2>
+      <p class="sec-sub" style="margin-top:6px">Результат один — керований бізнес. Різниця у швидкості та вашій участі.<br>До кожного пакету входить платформа TALKO — <strong style="color:var(--green-d)">50€/міс</strong></p>
+    </div>
+    <div class="pricing-grid">
+      <div class="p-card">
+        <div class="p-bar" style="background:#3b82f6"></div>
+        <div class="p-inner">
+          <div class="p-name">START</div><div class="p-tag">Самостійне впровадження</div>
+          <div class="p-for">Готові робити самостійно — і є час на це</div>
+          <div class="p-sec"><div class="p-sec-title">Систематизація</div><ul class="p-list">
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Програма «Бізнес на автопілоті» (65 днів)</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Всі шаблони, регламенти, чеклісти</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>База знань + відеоуроки</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Підтримка 3 місяці</li>
+          </ul></div>
+          <div class="p-sec"><div class="p-sec-title">Платформа</div><ul class="p-list">
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>TALKO Platform — 12 місяців</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Всі модулі + AI-асистенти</li>
+          </ul></div>
+          <div class="warn-box"><p><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Чесно: темп залежить від вас. Легше відкласти.</p></div>
+          <div class="p-bottom">
+            <div class="p-amount">1 990 <span>EUR</span></div>
+            <div class="p-note">+ 50€/міс платформа після 12 міс</div>
+            <a href="https://wa.me/380661807563?text=Добрий день! Хочу обрати тариф START (1 990 EUR)" target="_blank" class="btn btn-outline p-cta">Обрати START</a>
+          </div>
+        </div>
+      </div>
+      <div class="p-card feat">
+        <div class="p-bar" style="background:var(--green)"></div>
+        <div class="p-inner">
+          <div class="feat-badge"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Найчастіше обирають</div>
+          <div class="p-name">PRO GROUP</div><div class="p-tag">З наставником у групі</div>
+          <div class="p-for">Результат, а не експерименти. Без зайвих ризиків.</div>
+          <div class="p-sec"><div class="p-sec-title">Систематизація</div><ul class="p-list">
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Все зі START</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Група до 15 власників</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Щотижневі Zoom-сесії з наставником</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Аналіз вашого бізнесу</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Персональний трекер прогресу</li>
+          </ul></div>
+          <div class="p-sec"><div class="p-sec-title">Платформа</div><ul class="p-list">
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>TALKO Platform — 12 місяців</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Налаштування під ваш бізнес</li>
+          </ul></div>
+          <div class="adv-box"><p><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Швидкість у 2–3 рази вища. Вчитесь на чужих помилках.</p></div>
+          <div class="p-bottom">
+            <div class="p-amount">2 890 <span>EUR</span></div>
+            <div class="p-note">+ 50€/міс платформа після 12 міс</div>
+            <a href="https://wa.me/380661807563?text=Добрий день! Хочу обрати тариф PRO GROUP (2 890 EUR)" target="_blank" class="btn btn-green p-cta">Обрати PRO GROUP</a>
+          </div>
+        </div>
+      </div>
+      <div class="p-card">
+        <div class="p-bar" style="background:var(--red)"></div>
+        <div class="p-inner">
+          <div class="p-name">ELITE</div><div class="p-tag">Під ключ</div>
+          <div class="p-for">Мінімум вашої участі — максимум результату</div>
+          <div class="p-sec"><div class="p-sec-title">Систематизація</div><ul class="p-list">
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Все з PRO GROUP</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>1-на-1 сесії (2 рази/тиждень)</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Глибокий розбір вашого бізнесу</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Частину роботи робимо за вас</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Підтримка 24/7</li>
+          </ul></div>
+          <div class="p-sec"><div class="p-sec-title">Платформа</div><ul class="p-list">
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>TALKO Platform — 12 місяців</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Повне налаштування під ключ</li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>AI-асистенти налаштовані під вас</li>
+          </ul></div>
+          <div class="adv-box"><p><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>Розробляємо інструменти — вам залишається тільки впровадити.</p></div>
+          <div class="p-bottom">
+            <div class="p-amount">5 790 <span>EUR</span></div>
+            <div class="p-note">+ 50€/міс платформа після 12 міс</div>
+            <a href="https://wa.me/380661807563?text=Добрий день! Хочу обрати тариф ELITE (5 790 EUR)" target="_blank" class="btn btn-outline p-cta">Обрати ELITE</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="plat-footer">
+      <div class="pf-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg></div>
+      <div class="pf-content">
+        <h4>TALKO Platform входить у кожен пакет (12 місяців)</h4>
+        <p>Необмежена кількість співробітників · Всі модулі · AI-асистенти · Постійні оновлення</p>
+      </div>
+      <div class="pf-price">50€ <span>/ міс після 12 міс</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- OBJECTIONS — UA SPECIFIC -->
+<section class="sec sec-gray">
+  <div class="wrap">
+    <span class="sec-label">Часті сумніви</span>
+    <h2 class="sec-title">Те, що зупиняє — і чому це не привід чекати</h2>
+    <div class="obj-grid">
+      <div class="obj-card">
+        <div class="obj-q"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>«Зараз не час — іде війна»</div>
+        <div class="obj-a">Саме зараз і час. Бізнес без системи — це максимальний ризик. Якщо власник виїде, потрапить під мобілізацію, захворіє — все зупиниться. Система — це те, що залишається працювати без вас.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>«Дорого. Зараз немає бюджету»</div>
+        <div class="obj-a">Подивіться інакше: скільки ви втрачаєте щомісяця без системи? У більшості клієнтів — від 50 000 до 200 000 грн упущеного прибутку або зайвих витрат. Система окупається в перші 2–3 місяці.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>«Вже пробував — не вийшло»</div>
+        <div class="obj-a">Бо раніше це були інструменти без системи, або система без впровадження. Тут наставник веде за руку, платформа фіксує кожен крок, результат не залежить від вашої "мотивації в понеділок".</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>«Немає часу на навчання»</div>
+        <div class="obj-a">Програма побудована так, щоб не забирати час — а повертати його. Витрачаєте 2–3 год на тиждень, повертаєте 10–15. Перші інструменти починають працювати вже через 2 тижні.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>«Моя ніша специфічна — не підійде»</div>
+        <div class="obj-a">150+ кейсів: медицина, будівництво, меблі, послуги, консалтинг, виробництво. Система управління універсальна — адаптується під будь-яку нішу. Платформа має окремі модулі під кожну галузь.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>«А якщо не спрацює?»</div>
+        <div class="obj-a">Система або працює, або я повертаю витрачене. Це не обіцянка — це умова роботи. За 10 років і 150+ клієнтів повернень не було. Але рамка є.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FINAL CTA -->
+<section class="cta-sec">
+  <div class="wrap">
+    <div class="cta-inner">
+      <div class="cta-left">
+        <div class="cta-eyebrow">Ви вже були на консультації</div>
+        <h2 class="cta-title">Ви вже знаєте<br><span class="hl">де втрачаєте гроші.</span></h2>
+        <p class="cta-sub">Залишилось одне рішення. Кожен тиждень без системи — це конкретна сума, яку ви залишаєте на столі. І конкретний ризик, якщо вас не буде поруч.</p>
+        <div class="cta-btns">
+          <a href="https://wa.me/380661807563?text=Добрий день! Готовий стартувати" target="_blank" class="btn btn-green">
+            <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Готовий стартувати
+          </a>
+          <a href="https://wa.me/380661807563?text=Добрий день! Є питання перед стартом" target="_blank" class="btn btn-outline-dark">Є питання</a>
+        </div>
+      </div>
+      <div class="cta-right">
+        <div class="guarantee-card">
+          <div class="gc-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+          <div class="gc-title">Гарантія результату</div>
+          <div class="gc-text">Система працює — або повертаю витрачене. Без умов. Без дрібного шрифту.</div>
+          <div class="gc-divider"></div>
+          <div class="gc-row"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>10 років практики</div>
+          <div class="gc-row"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>150+ впроваджень</div>
+          <div class="gc-row"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Наставник 24/7 поруч</div>
+          <div class="gc-row"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Платформа на 12 місяців</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="https://alextalko.com/privacypolicy" target="_blank">Політика конфіденційності</a>
+        <a href="https://alextalko.com/terms" target="_blank">Умови використання</a>
+      </div>
+      <div class="footer-copy">© 2026 TALKO System</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
