@@ -1083,16 +1083,21 @@ async function handleWebhook(request, url, env) {
             const parts = activeFlowId.split('::');
             const botId = parts[0], flowId = parts[1];
             if (botId && flowId) {
-                await runFlowEngine({
-                    cid, chatId, botId, flowId,
-                    currentNodeId: activeNodeId,
-                    text, isCallback,
-                    callbackData: body.callback_query?.data || '',
-                    contact, contactPath,
-                    token, botToken, from, userName,
-                    tgSend,
-                    env,
-                });
+                try {
+                    await runFlowEngine({
+                        cid, chatId, botId, flowId,
+                        currentNodeId: activeNodeId,
+                        text, isCallback,
+                        callbackData: body.callback_query?.data || '',
+                        contact, contactPath,
+                        token, botToken, from, userName,
+                        tgSend,
+                        env,
+                    });
+                } catch(e) {
+                    // Логуємо помилку і надсилаємо в Telegram для діагностики
+                    await tgSend(chatId, `⚠️ Flow error: ${e.message?.slice(0,100)}`);
+                }
                 return json({ok:true});
             }
         }
