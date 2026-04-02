@@ -103,16 +103,66 @@ const DEFAULT_CATEGORIES = {
     { id: 'inc_passive',    name: window.t('finCatPassive')    || 'Пасивний дохід',         icon: 'building-2',     parentId: null },
     { id: 'inc_other',      name: window.t('finCatOtherInc')   || 'Інші надходження',       icon: 'plus-circle',    parentId: null },
   ],
-  // ── ВИТРАТИ (верхній рівень) ─────────────────────────────
+  // ── ВИТРАТИ (верхній рівень + підкатегорії) ─────────────
   expense: [
-    { id: 'exp_salary',     name: window.t('finCatSalaryFund') || 'Фонд оплати праці',      icon: 'users',          parentId: null, costType: 'opex' },
-    { id: 'exp_marketing',  name: window.t('finCatMarketing')  || 'Маркетинг',               icon: 'megaphone',      parentId: null, costType: 'opex' },
-    { id: 'exp_cogs',       name: window.t('finCatCOGS')       || 'Собівартість послуг',     icon: 'package',        parentId: null, costType: 'cogs' },
-    { id: 'exp_opex',       name: window.t('finCatOpex')       || 'Операційні витрати',      icon: 'home',           parentId: null, costType: 'opex' },
-    { id: 'exp_tax',        name: window.t('finCatTaxFin')     || 'Податки і фінанси',       icon: 'bar-chart-2',    parentId: null, costType: 'opex' },
-    { id: 'exp_invest',     name: window.t('finCatInvest')     || 'Інвестиції / розвиток',   icon: 'settings',       parentId: null, costType: 'opex' },
-    { id: 'exp_reserve',    name: window.t('finCatReserve')    || 'Резервний фонд',          icon: 'shield',         parentId: null, costType: 'opex' },
-    { id: 'exp_dividends',  name: window.t('finCatDividends')  || 'Дивіденди',               icon: 'coins',          parentId: null, costType: 'opex' },
+    // 1. ФОНД ОПЛАТИ ПРАЦІ
+    { id: 'exp_fop',         name: '🔵 Фонд оплати праці (FOP)',          icon: 'users',       parentId: null,        costType: 'opex' },
+    { id: 'exp_fop_prod',    name: 'Зарплата виробничого персоналу',      icon: 'users',       parentId: 'exp_fop',   costType: 'opex' },
+    { id: 'exp_fop_admin',   name: 'Зарплата адміністрації',              icon: 'users',       parentId: 'exp_fop',   costType: 'opex' },
+    { id: 'exp_fop_sales',   name: 'Зарплата менеджерів продажів',        icon: 'users',       parentId: 'exp_fop',   costType: 'opex' },
+    { id: 'exp_fop_mgmt',    name: 'Зарплата керівників / топів',         icon: 'users',       parentId: 'exp_fop',   costType: 'opex' },
+    { id: 'exp_fop_hr',      name: 'HR / рекрутинг',                      icon: 'users',       parentId: 'exp_fop',   costType: 'opex' },
+    { id: 'exp_fop_bonus',   name: 'Бонуси / % / премії',                 icon: 'users',       parentId: 'exp_fop',   costType: 'opex' },
+    { id: 'exp_fop_tax',     name: 'Податки на зарплату',                 icon: 'users',       parentId: 'exp_fop',   costType: 'opex' },
+    // 2. МАРКЕТИНГ
+    { id: 'exp_mkt',         name: '🟢 Маркетинг і залучення клієнтів',   icon: 'megaphone',   parentId: null,        costType: 'opex' },
+    { id: 'exp_mkt_ads',     name: 'Реклама (Meta, Google, TikTok)',      icon: 'megaphone',   parentId: 'exp_mkt',   costType: 'opex' },
+    { id: 'exp_mkt_seo',     name: 'SEO / сайт / лендінги',              icon: 'megaphone',   parentId: 'exp_mkt',   costType: 'opex' },
+    { id: 'exp_mkt_agency',  name: 'Підрядники (маркетолог, агентство)',  icon: 'megaphone',   parentId: 'exp_mkt',   costType: 'opex' },
+    { id: 'exp_mkt_content', name: 'Контент (відео, дизайн, тексти)',     icon: 'megaphone',   parentId: 'exp_mkt',   costType: 'opex' },
+    { id: 'exp_mkt_crm',     name: 'CRM / маркетингові сервіси',         icon: 'megaphone',   parentId: 'exp_mkt',   costType: 'opex' },
+    { id: 'exp_mkt_leads',   name: 'Лідогенерація (платформи)',           icon: 'megaphone',   parentId: 'exp_mkt',   costType: 'opex' },
+    { id: 'exp_mkt_email',   name: 'Email / месенджери',                  icon: 'megaphone',   parentId: 'exp_mkt',   costType: 'opex' },
+    // 3. СОБІВАРТІСТЬ
+    { id: 'exp_cogs',        name: '🟡 Собівартість (COGS)',               icon: 'package',     parentId: null,        costType: 'cogs' },
+    { id: 'exp_cogs_mat',    name: 'Сировина / матеріали',                icon: 'package',     parentId: 'exp_cogs',  costType: 'cogs' },
+    { id: 'exp_cogs_goods',  name: 'Закупка товару',                      icon: 'package',     parentId: 'exp_cogs',  costType: 'cogs' },
+    { id: 'exp_cogs_cons',   name: 'Виробничі витратники',                icon: 'package',     parentId: 'exp_cogs',  costType: 'cogs' },
+    { id: 'exp_cogs_sub',    name: 'Підрядники (частина продукту)',       icon: 'package',     parentId: 'exp_cogs',  costType: 'cogs' },
+    { id: 'exp_cogs_log',    name: 'Логістика / доставка',                icon: 'package',     parentId: 'exp_cogs',  costType: 'cogs' },
+    { id: 'exp_cogs_comm',   name: 'Комісії платформ',                    icon: 'package',     parentId: 'exp_cogs',  costType: 'cogs' },
+    // 4. ОПЕРАЦІЙНІ ВИТРАТИ
+    { id: 'exp_opex',        name: '🟠 Операційні витрати (OPEX)',         icon: 'home',        parentId: null,        costType: 'opex' },
+    { id: 'exp_opex_rent',   name: 'Оренда',                              icon: 'home',        parentId: 'exp_opex',  costType: 'opex' },
+    { id: 'exp_opex_util',   name: 'Комунальні послуги',                  icon: 'home',        parentId: 'exp_opex',  costType: 'opex' },
+    { id: 'exp_opex_inet',   name: 'Інтернет / телефонія',                icon: 'home',        parentId: 'exp_opex',  costType: 'opex' },
+    { id: 'exp_opex_equip',  name: 'Обладнання (обслуговування)',         icon: 'home',        parentId: 'exp_opex',  costType: 'opex' },
+    { id: 'exp_opex_repair', name: 'Ремонт / утримання',                  icon: 'home',        parentId: 'exp_opex',  costType: 'opex' },
+    { id: 'exp_opex_office', name: 'Канцелярія / господарські',           icon: 'home',        parentId: 'exp_opex',  costType: 'opex' },
+    { id: 'exp_opex_clean',  name: 'Прибирання / сервіс',                icon: 'home',        parentId: 'exp_opex',  costType: 'opex' },
+    // 5. ФІНАНСИ І АДМІНІСТРУВАННЯ
+    { id: 'exp_fin',         name: '🔴 Фінанси і адміністрування',        icon: 'bar-chart-2', parentId: null,        costType: 'opex' },
+    { id: 'exp_fin_tax',     name: 'Податки (крім зарплатних)',           icon: 'bar-chart-2', parentId: 'exp_fin',   costType: 'opex' },
+    { id: 'exp_fin_bank',    name: 'Банківські комісії',                  icon: 'bar-chart-2', parentId: 'exp_fin',   costType: 'opex' },
+    { id: 'exp_fin_acq',     name: 'Еквайринг',                           icon: 'bar-chart-2', parentId: 'exp_fin',   costType: 'opex' },
+    { id: 'exp_fin_acc',     name: 'Бухгалтерія',                         icon: 'bar-chart-2', parentId: 'exp_fin',   costType: 'opex' },
+    { id: 'exp_fin_legal',   name: 'Юридичні послуги',                    icon: 'bar-chart-2', parentId: 'exp_fin',   costType: 'opex' },
+    // 6. ІНВЕСТИЦІЇ / РОЗВИТОК
+    { id: 'exp_inv',         name: '🟣 Інвестиції / розвиток',             icon: 'settings',   parentId: null,        costType: 'opex' },
+    { id: 'exp_inv_equip',   name: 'Обладнання / активи',                 icon: 'settings',    parentId: 'exp_inv',   costType: 'opex' },
+    { id: 'exp_inv_soft',    name: 'Автоматизація / софт',                icon: 'settings',    parentId: 'exp_inv',   costType: 'opex' },
+    { id: 'exp_inv_train',   name: 'Навчання персоналу',                  icon: 'settings',    parentId: 'exp_inv',   costType: 'opex' },
+    { id: 'exp_inv_cons',    name: 'Консалтинг',                          icon: 'settings',    parentId: 'exp_inv',   costType: 'opex' },
+    { id: 'exp_inv_dev',     name: 'Розробка продукту',                   icon: 'settings',    parentId: 'exp_inv',   costType: 'opex' },
+    // 7. РЕЗЕРВ / БЕЗПЕКА
+    { id: 'exp_reserve',     name: '⚫ Резерв / безпека',                  icon: 'shield',     parentId: null,        costType: 'opex' },
+    { id: 'exp_res_fund',    name: 'Резервний фонд',                      icon: 'shield',      parentId: 'exp_reserve', costType: 'opex' },
+    { id: 'exp_res_stock',   name: 'Страхові запаси',                     icon: 'shield',      parentId: 'exp_reserve', costType: 'opex' },
+    { id: 'exp_res_misc',    name: 'Непередбачені витрати',               icon: 'shield',      parentId: 'exp_reserve', costType: 'opex' },
+    // 8. ПРИБУТОК / ДИВІДЕНДИ
+    { id: 'exp_dividends',   name: '⚪ Прибуток / дивіденди',              icon: 'coins',      parentId: null,        costType: 'opex' },
+    { id: 'exp_div_owner',   name: 'Виплати власнику',                    icon: 'coins',       parentId: 'exp_dividends', costType: 'opex' },
+    { id: 'exp_div_reinv',   name: 'Реінвестований прибуток',             icon: 'coins',       parentId: 'exp_dividends', costType: 'opex' },
   ],
 };
 
@@ -148,7 +198,7 @@ async function initFirestoreCollections() {
   // 3. Дефолтні категорії витрат
   DEFAULT_CATEGORIES.expense.forEach(cat => {
     const ref = colRef('finance_categories').doc(cat.id);
-    batch.set(ref, { ...cat, type: 'expense', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    batch.set(ref, { ...cat, type: 'expense', system: !cat.parentId, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
   });
 
   // 4. Рахунок за замовчуванням
@@ -232,7 +282,7 @@ async function writeDefaultCategories() {
     });
     DEFAULT_CATEGORIES.expense.forEach(cat => {
       const ref = colRef('finance_categories').doc(cat.id);
-      batch.set(ref, { ...cat, type: 'expense', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      batch.set(ref, { ...cat, type: 'expense', system: !cat.parentId, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
     });
     await batch.commit();
     // Заповнюємо state з дефолтних
