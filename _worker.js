@@ -1240,20 +1240,19 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
         // Якщо бот пише першим і немає userInput — надсилаємо привітання від ШІ
         if (writesFirst && !userInput) {
-            let openaiKey = env.OPENAI_API_KEY || '';
-            let botModel2 = aiModel;
-            let botMaxTokens2 = maxTokens;
-            let botTemperature2 = nodeData.temperature || 0.7;
-            if (!openaiKey) {
-                const platDoc2 = await fsGet(`settings/platform`, token);
-                if (platDoc2?.fields) {
-                    const plat2 = fFields(platDoc2.fields);
-                    openaiKey = plat2.openaiApiKey || '';
-                    if (plat2.botModel) botModel2 = plat2.botModel;
-                    if (plat2.botMaxTokens) botMaxTokens2 = parseInt(plat2.botMaxTokens) || 1500;
-                    if (plat2.botTemperature !== undefined) botTemperature2 = parseFloat(plat2.botTemperature) || 0.7;
-                }
+            let openaiKey = '';
+            let botModel2 = 'gpt-4o-mini';
+            let botMaxTokens2 = 1500;
+            let botTemperature2 = 0.7;
+            const platDoc2 = await fsGet(`settings/platform`, token);
+            if (platDoc2?.fields) {
+                const plat2 = fFields(platDoc2.fields);
+                openaiKey = plat2.openaiApiKey || '';
+                if (plat2.botModel) botModel2 = plat2.botModel;
+                if (plat2.botMaxTokens) botMaxTokens2 = parseInt(plat2.botMaxTokens) || 1500;
+                if (plat2.botTemperature !== undefined) botTemperature2 = parseFloat(plat2.botTemperature) || 0.7;
             }
+            if (!openaiKey) openaiKey = env.OPENAI_API_KEY || '';
             if (!openaiKey) {
                 const aiSettDoc2 = await fsGet(`settings/ai`, token);
                 if (aiSettDoc2?.fields) {
@@ -1304,24 +1303,23 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         // Додаємо поточне повідомлення
         chatHistory.push({ role: 'user', content: userInput });
 
-        // Ключ і параметри від superadmin: env → settings/platform
-        let openaiKey = env.OPENAI_API_KEY || '';
-        let botModel = aiModel;
-        let botMaxTokens = maxTokens;
-        let botTemperature = nodeData.temperature || 0.7;
-        
-        if (!openaiKey) {
-            const platDoc = await fsGet(`settings/platform`, token);
-            if (platDoc?.fields) {
-                const plat = fFields(platDoc.fields);
-                openaiKey = plat.openaiApiKey || '';
-                // Глобальні налаштування ботів від superadmin
-                if (plat.botModel) botModel = plat.botModel;
-                if (plat.botMaxTokens) botMaxTokens = parseInt(plat.botMaxTokens) || 1500;
-                if (plat.botTemperature !== undefined) botTemperature = parseFloat(plat.botTemperature) || 0.7;
-            }
+        // Ключ і параметри від superadmin: завжди читаємо settings/platform
+        let openaiKey = '';
+        let botModel = 'gpt-4o-mini';
+        let botMaxTokens = 1500;
+        let botTemperature = 0.7;
+
+        const platDoc = await fsGet(`settings/platform`, token);
+        if (platDoc?.fields) {
+            const plat = fFields(platDoc.fields);
+            openaiKey = plat.openaiApiKey || '';
+            if (plat.botModel) botModel = plat.botModel;
+            if (plat.botMaxTokens) botMaxTokens = parseInt(plat.botMaxTokens) || 1500;
+            if (plat.botTemperature !== undefined) botTemperature = parseFloat(plat.botTemperature) || 0.7;
         }
-        // Fallback на settings/ai (старе місце)
+        // Fallback: env var
+        if (!openaiKey) openaiKey = env.OPENAI_API_KEY || '';
+        // Fallback: settings/ai (старе місце)
         if (!openaiKey) {
             const aiSettDoc = await fsGet(`settings/ai`, token);
             if (aiSettDoc?.fields) {

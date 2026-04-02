@@ -1928,43 +1928,6 @@ function renderPropPanel() {
             + fld(tip(window.t('flowSysPr'), 'Скажи боту хто він і що робить. Наприклад: "Ти — менеджер клініки. Запитуй ім\'я, телефон і зручний час. Будь ввічливим. Відповідай тільки українською." Чим конкретніше — тим краще.'),
                 ta('aiSystem', d.aiSystem, 'Ти — помічник компанії. Відповідай коротко та по суті українською мовою.', 5))
 
-            // ── Модель ──
-            + fld(tip('Модель AI', 'Мозок бота. GPT-4o mini — найкращий вибір для більшості: швидкий і недорогий. GPT-4o — розумніший але дорожчий. Якщо не знаєш що обрати — залиш GPT-4o mini.'),
-                sel('aiModel', modelOptions, d.aiModel || modelOptions[0][0])
-                + (d.aiModel && !modelOptions.some(([v]) => v === d.aiModel)
-                    ? '<div style="font-size:9px;color:#f59e0b;margin-top:3px;">⚠️ Модель "' + d.aiModel + '" не в списку — може не існувати. Обери нову.</div>'
-                    : '')
-                + '<div style="margin-top:5px;">'
-                    + '<button id="fcLoadModelsBtn" onclick="_fcLoadLiveModels(\'' + aiProvider + '\', document.getElementById(\'fcp_aiApiKey\')?.value)"'
-                    + ' style="width:100%;padding:5px;background:transparent;border:1px solid #334155;border-radius:6px;'
-                    + 'color:#64748b;font-size:10px;cursor:pointer;transition:all .15s;"'
-                    + ' onmouseenter="this.style.borderColor=\'#22c55e\';this.style.color=\'#22c55e\'"'
-                    + ' onmouseleave="this.style.borderColor=\'#334155\';this.style.color=\'#64748b\'">🔄 Завантажити актуальні моделі з API</button>'
-                + '</div>'
-            )
-
-            // ── Точність відповіді (temperature) ──
-            + `<div style="margin-bottom:12px;">
-                <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:4px;">
-                    ${tip(window.t('responseAccuracy'), 'Наскільки бот "по скрипту". Ближче до 0 — відповідає чітко і передбачувано (добре коли збираєш дані: ім\'я, телефон). Ближче до 1 — відповідає більш живо і різноманітно. Для продажів і анкет рекомендуємо 0.4–0.6.')}
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="font-size:10px;color:#64748b;min-width:28px;">0.0</span>
-                    <input id="fcp_temperature" type="range" min="0" max="1" step="0.05"
-                        value="${temp}"
-                        style="flex:1;accent-color:#22c55e;cursor:pointer;height:4px;"
-                        oninput="document.getElementById('fcp_temp_val').textContent=parseFloat(this.value).toFixed(2);
-                                 const v=parseFloat(this.value);
-                                 document.getElementById('fcp_temp_desc').textContent=v<=0.2?'Дуже точно':v<=0.4?'Точно':v<=0.6?'Збалансовано':v<=0.8?'Природньо':'Творчо';">
-                    <span style="font-size:10px;color:#64748b;min-width:28px;text-align:right;">1.0</span>
-                    <span id="fcp_temp_val" style="color:#22c55e;font-size:13px;font-weight:700;min-width:36px;text-align:right;">${temp.toFixed(2)}</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;margin-top:3px;">
-                    <span style="font-size:9px;color:#334155;">← Точно</span>
-                    <span id="fcp_temp_desc" style="font-size:10px;color:#64748b;font-weight:600;">${temp<=0.2?'Дуже точно':temp<=0.4?'Точно':temp<=0.6?'Збалансовано':temp<=0.8?'Природньо':'Творчо'}</span>
-                    <span style="font-size:9px;color:#334155;">Творчо →</span>
-                </div>
-            </div>`
 
             // ── Пам'ять + Макс токени ──
             + `<div style="display:flex;gap:8px;margin-bottom:12px;">
@@ -1988,27 +1951,8 @@ function renderPropPanel() {
                         ).join('')}
                     </div>
                 </div>
-                <div style="flex:1;">
-                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                        ${tip('Макс. токени', "Довжина однієї відповіді бота. Коротко (200) — бот пише 1-2 речення, швидко і дешево. Середньо (600) — абзац тексту. Довго (1500) — детальні пояснення. Для анкет і продажів обирай Коротко.")}
-                    </div>
-                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
-                        <input id="fcp_maxTokens" type="number" min="100" max="2000" step="100" value="${d.maxTokens || 600}"
-                            style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;
-                            border-radius:7px;color:white;font-size:12px;box-sizing:border-box;text-align:center;">
-                        <span style="font-size:9px;color:#475569;white-space:nowrap;">токенів</span>
-                    </div>
-                    <div style="display:flex;gap:3px;">
-                        ${[['200','Коротко'],['600','Середньо'],['1500','Довго']].map(([v,l]) =>
-                            '<span onclick="document.getElementById(\'fcp_maxTokens\').value=' + v + '" '
-                            + 'style="flex:1;text-align:center;font-size:9px;padding:2px 0;border-radius:4px;cursor:pointer;'
-                            + 'background:' + ((d.maxTokens||600)==+v ? '#22c55e22' : '#0f172a') + ';'
-                            + 'border:1px solid ' + ((d.maxTokens||600)==+v ? '#22c55e' : '#334155') + ';'
-                            + 'color:' + ((d.maxTokens||600)==+v ? '#22c55e' : '#64748b') + ';">' + l + '</span>'
-                        ).join('')}
-                    </div>
-                </div>
             </div>`
+
 
             // ── Бот пише першим ──
             + `<div style="background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px;margin-bottom:12px;">
@@ -2351,7 +2295,7 @@ window.fcApplyNodeData = function(nodeId) {
             const _rawT = parseFloat(document.getElementById('fcp_temperature')?.value);
             node.config.temperature = (isNaN(_rawT) ? 0.7 : Math.min(Math.max(_rawT, 0), 2));
             node.config.historyLimit = parseInt(document.getElementById('fcp_historyLimit')?.value ?? 6) || 0;
-            node.config.maxTokens = parseInt(document.getElementById('fcp_maxTokens')?.value) || 600;
+            // maxTokens керується superadmin глобально
             node.config.firstMessageEnabled = document.getElementById('fcp_firstMessageEnabled')?.checked || false;
             node.config.firstMessage = document.getElementById('fcp_firstMessage')?.value?.trim() || '';
             break;
