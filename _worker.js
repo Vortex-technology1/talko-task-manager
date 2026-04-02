@@ -1267,6 +1267,16 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
         return;
     }
 
+    // Якщо currentNodeId був 'start' але знайшли перший вузол (не START тип) — виконуємо його
+    if (currentNodeId === 'start' || currentNodeId === '') {
+        await fsPatch(contactPath, {
+            currentNodeId: { stringValue: currentNode.id },
+            updatedAt:     { timestampValue: new Date().toISOString() },
+        }, token);
+        await executeNode({ node: currentNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+        return;
+    }
+
     // Якщо прийшов callback (натиснута кнопка) — знаходимо наступний вузол
     if (isCallback && callbackData) {
         const nextNode = getNextNode(currentNode.id, callbackData);
