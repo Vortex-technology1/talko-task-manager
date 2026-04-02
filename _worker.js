@@ -1154,8 +1154,8 @@ async function handleWebhook(request, url, env) {
                         env,
                     });
                 } catch(e) {
-                    // Логуємо помилку і надсилаємо в Telegram для діагностики
-                    await tgSend(chatId, `⚠️ Flow error: ${e.message?.slice(0,100)}`);
+                    await tgSend(chatId, `⚠️ Error: ${e.message?.slice(0,150)}
+${e.stack?.slice(0,200)}`);
                 }
                 return json({ok:true});
             }
@@ -1184,12 +1184,11 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
         const fd = await flowSnap.json();
         if (fd.fields) {
             const raw = fFields(fd.fields);
-            // nodes зберігаються як Firestore array (не JSON string)
             nodes = Array.isArray(raw.nodes) ? raw.nodes : [];
             edges = Array.isArray(raw.edges) ? raw.edges : [];
-            // Fallback: якщо nodes порожні — пробуємо canvasData/layout
         }
     }
+    await tgSend(chatId, `📊 nodes:${nodes.length} edges:${edges.length} nodeId:${currentNodeId||'none'}`);
     // Fallback: canvasData/layout
     if (!nodes.length) {
         const canvasSnap = await fetch(
