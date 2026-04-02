@@ -1025,6 +1025,8 @@ async function handleWebhook(request, url, env) {
         // Визначаємо активний flow
         let activeFlowId = contact.currentFlowId || '';
         let activeNodeId = contact.currentNodeId || '';
+        // DEBUG: підтвердження отримання
+        await tgSend(chatId, `🔍 cid:${cid} | flow:${activeFlowId||'none'} | node:${activeNodeId||'none'} | text:${text.slice(0,20)}`);
 
         // /start з параметром → шукаємо flow бота
         if (text.startsWith('/start')) {
