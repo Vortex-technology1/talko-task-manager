@@ -1482,112 +1482,180 @@ async function renderChatTab() {
     const c = document.getElementById('bpViewChat');
     if (!c) return;
 
-    // FIX mobile: адаптивний чат — на мобільному список і переписка перемикаються
     c.innerHTML = `
     <style>
-        #chatWrapper { display:flex;height:calc(100dvh - 175px);min-height:400px;background:white;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden; }
-        #chatLeftCol { width:260px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #f1f5f9;transition:transform 0.2s; }
-        #chatRightCol { flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden; }
-        #chatMsgs { flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.4rem;background:#f8fafc; }
-        #chatInputArea { flex-shrink:0;padding:0.5rem;border-top:1px solid #f1f5f9;background:white; }
-        @media (max-width:768px) {
-            #chatWrapper { height:calc(100dvh - 155px);border-radius:0;box-shadow:none; }
-            #chatLeftCol { position:absolute;width:100%;height:100%;z-index:10;background:white;border-right:none;transition:transform 0.25s ease; }
-            #chatLeftCol.chat-hidden { transform:translateX(-100%);pointer-events:none; }
-            #chatRightCol { width:100%;height:100%; }
+        /* ── Chat layout ── */
+        #chatWrap { display:flex;height:calc(100dvh - 172px);min-height:500px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+
+        /* LEFT: contacts */
+        #chatLeft { width:280px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #e9ecef;background:#fff; }
+        #chatLeftHead { padding:12px 14px 10px;border-bottom:1px solid #e9ecef;flex-shrink:0; }
+        #chatLeftFilters { display:flex;gap:4px;padding:6px 10px;border-bottom:1px solid #e9ecef;flex-shrink:0;overflow-x:auto; }
+        #chatLeftFilters::-webkit-scrollbar { display:none; }
+        .chat-filter-btn { padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;border:1px solid #dee2e6;cursor:pointer;white-space:nowrap;transition:all .15s;background:#fff;color:#6b7280; }
+        .chat-filter-btn.active { background:#22c55e;color:#fff;border-color:#22c55e; }
+        #chatContactsList { flex:1;overflow-y:auto; }
+        #chatContactsList::-webkit-scrollbar { width:4px; }
+        #chatContactsList::-webkit-scrollbar-thumb { background:#e5e7eb;border-radius:2px; }
+        .chat-contact-item { display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid #f3f4f6;transition:background .12s; }
+        .chat-contact-item:hover { background:#f9fafb; }
+        .chat-contact-item.active { background:#f0fdf4; }
+        .chat-contact-avatar { width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.9rem;flex-shrink:0;position:relative; }
+        .chat-contact-avatar .unread-badge { position:absolute;top:-3px;right:-3px;width:17px;height:17px;border-radius:50%;background:#ef4444;font-size:0.58rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid #fff; }
+        .chat-contact-name { font-weight:600;font-size:0.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#111827; }
+        .chat-contact-sub { font-size:0.72rem;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px; }
+        .chat-contact-sub.unread { color:#374151;font-weight:600; }
+        .chat-contact-time { font-size:0.65rem;color:#9ca3af;flex-shrink:0;text-align:right; }
+
+        /* CENTER: messages */
+        #chatCenter { flex:1;display:flex;flex-direction:column;min-width:0;border-right:1px solid #e9ecef; }
+        #chatCenterHead { padding:10px 16px;border-bottom:1px solid #e9ecef;display:flex;align-items:center;gap:10px;min-height:54px;flex-shrink:0;background:#fff; }
+        #chatMsgs { flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:6px;background:#f8f9fa; }
+        #chatMsgs::-webkit-scrollbar { width:4px; }
+        #chatMsgs::-webkit-scrollbar-thumb { background:#dee2e6;border-radius:2px; }
+        #chatInputArea { flex-shrink:0;background:#fff;border-top:1px solid #e9ecef;display:none; }
+        #chatInputTabs { display:flex;gap:0;border-bottom:1px solid #e9ecef;padding:0 16px; }
+        .chat-input-tab { padding:7px 14px;font-size:0.78rem;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px; }
+        .chat-input-tab.active { color:#22c55e;border-bottom-color:#22c55e; }
+        #chatInputBox { padding:10px 14px;display:flex;align-items:flex-end;gap:8px; }
+        #chatInput { flex:1;padding:8px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;resize:none;font-family:inherit;max-height:120px;outline:none;line-height:1.45;transition:border-color .15s; }
+        #chatInput:focus { border-color:#22c55e; }
+        #chatSendBtn { padding:8px 18px;background:#22c55e;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;flex-shrink:0;transition:background .15s; }
+        #chatSendBtn:hover { background:#16a34a; }
+
+        /* RIGHT: contact info panel */
+        #chatRight { width:260px;flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto;background:#fff; }
+        #chatRight::-webkit-scrollbar { width:4px; }
+        #chatRight::-webkit-scrollbar-thumb { background:#e5e7eb;border-radius:2px; }
+        #chatRight.hidden { display:none; }
+        .chat-info-section { padding:14px 16px;border-bottom:1px solid #f3f4f6; }
+        .chat-info-label { font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px; }
+        .chat-info-row { display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:0.78rem; }
+        .chat-info-row .key { color:#6b7280; }
+        .chat-info-row .val { color:#111827;font-weight:500;text-align:right;max-width:60%; }
+        .chat-info-badge { display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:0.72rem;font-weight:600; }
+        .chat-crm-btn { display:flex;align-items:center;gap:6px;width:100%;padding:7px 12px;border:1.5px dashed #d1fae5;background:#f0fdf4;border-radius:8px;color:#16a34a;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all .15s;margin-bottom:6px; }
+        .chat-crm-btn:hover { background:#dcfce7;border-color:#86efac; }
+        .chat-tmpl-btn { display:flex;align-items:center;justify-content:space-between;width:100%;padding:6px 10px;border:1px solid #e5e7eb;background:#fff;border-radius:7px;color:#374151;font-size:0.76rem;cursor:pointer;transition:all .15s;margin-bottom:4px; }
+        .chat-tmpl-btn:hover { background:#f9fafb;border-color:#22c55e; }
+
+        /* Mobile */
+        @media (max-width:900px) {
+            #chatRight { display:none; }
+        }
+        @media (max-width:700px) {
+            #chatWrap { height:calc(100dvh - 155px);border-radius:0;box-shadow:none; }
+            #chatLeft { position:absolute;width:100%;height:100%;z-index:10;background:#fff;border-right:none;transition:transform .25s ease; }
+            #chatLeft.chat-hidden { transform:translateX(-100%);pointer-events:none; }
+            #chatCenter { width:100%; }
             #chatBackBtn { display:flex!important; }
-            #chatMsgs { padding:0.5rem; }
         }
     </style>
-    <div id="chatWrapper">
 
-        <!-- ЛІВА КОЛОНКА: список контактів -->
-        <div id="chatLeftCol" style="flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #f1f5f9;">
+    <div id="chatWrap">
 
-            <!-- Хедер + пошук -->
-            <div style="padding:0.75rem;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
-                <div style="font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.5rem;">
-                    ${_tg('Повідомлення','Сообщения')}
+        <!-- ═══ ЛІВА: СПИСОК ═══ -->
+        <div id="chatLeft">
+            <!-- Хедер -->
+            <div id="chatLeftHead">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                    <span style="font-weight:700;font-size:0.9rem;color:#111827;">${_tg('Чати','Чаты')}</span>
                 </div>
                 <div style="position:relative;">
-                    <svg style="position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;"
-                        width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                    </svg>
-                    <input id="chatSearch" type="text" placeholder=${window.t('botsSearch')}
+                    <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <input id="chatSearch" type="text" placeholder="${_tg('Пошук...','Поиск...')}"
                         value="${escH(chat.search)}"
                         oninput="chatOnSearch(this.value)"
-                        style="width:100%;padding:0.38rem 0.5rem 0.38rem 1.8rem;border:1.5px solid #e5e7eb;
-                        border-radius:8px;font-size:0.78rem;box-sizing:border-box;outline:none;"
+                        style="width:100%;padding:6px 10px 6px 30px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.78rem;box-sizing:border-box;outline:none;"
                         onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
             </div>
-
+            <!-- Фільтри -->
+            <div id="chatLeftFilters">
+                <button class="chat-filter-btn active" onclick="chatSetFilter('all',this)">${_tg('Всі','Все')}</button>
+                <button class="chat-filter-btn" onclick="chatSetFilter('unread',this)">${_tg('Непрочитані','Непрочит.')}</button>
+                <button class="chat-filter-btn" onclick="chatSetFilter('lead',this)">${_tg('Ліди','Лиды')}</button>
+            </div>
             <!-- Список -->
-            <div id="chatContactsList" style="flex:1;overflow-y:auto;"></div>
+            <div id="chatContactsList"></div>
         </div>
 
-        <!-- ПРАВА КОЛОНКА: переписка -->
-        <div id="chatRightCol" style="flex:1;display:flex;flex-direction:column;min-width:0;">
-
-            <!-- Хедер контакту -->
-            <div id="chatMsgHeader"
-                style="padding:0.55rem 0.75rem;border-bottom:1px solid #f1f5f9;
-                flex-shrink:0;display:flex;align-items:center;gap:0.5rem;min-height:50px;">
-                <!-- Кнопка назад (тільки мобільний) -->
-                <button id="chatBackBtn" onclick="chatShowContacts()" style="display:none;
-                    background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;color:#6b7280;">
+        <!-- ═══ ЦЕНТР: ПЕРЕПИСКА ═══ -->
+        <div id="chatCenter">
+            <!-- Хедер -->
+            <div id="chatCenterHead">
+                <button id="chatBackBtn" onclick="chatShowContacts()" style="display:none;background:none;border:none;cursor:pointer;padding:4px;color:#6b7280;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                 </button>
-                <div style="color:#9ca3af;font-size:0.82rem;">${_tg('Оберіть контакт зліва','Выберите контакт слева')}</div>
+                <div id="chatMsgHeader" style="flex:1;display:flex;align-items:center;gap:10px;">
+                    <div style="color:#9ca3af;font-size:0.82rem;">${_tg('Оберіть контакт зліва','Выберите контакт слева')}</div>
+                </div>
+                <button id="chatInfoToggleBtn" onclick="chatToggleInfo()" title="${_tg('Інфо','Инфо')}"
+                    style="display:none;padding:5px 8px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;cursor:pointer;flex-shrink:0;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </button>
             </div>
 
             <!-- Повідомлення -->
-            <div id="chatMsgs"></div>
+            <div id="chatMsgs">
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#9ca3af;gap:8px;">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.35;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <span style="font-size:.82rem;">${_tg('Оберіть чат зі списку','Выберите чат из списка')}</span>
+                </div>
+            </div>
 
             <!-- Поле вводу -->
-            <div id="chatInputArea" style="display:none;">
-                <div style="display:flex;gap:0.4rem;align-items:flex-end;">
-                    <textarea id="chatInput" rows="1" placeholder=${window.t('botsChatPh')}
-                        style="flex:1;padding:0.5rem 0.65rem;border:1.5px solid #e5e7eb;
-                        border-radius:10px;font-size:0.83rem;resize:none;font-family:inherit;
-                        max-height:100px;overflow-y:auto;outline:none;line-height:1.4;"
-                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"
+            <div id="chatInputArea">
+                <div id="chatInputTabs">
+                    <span class="chat-input-tab active">${_tg('Надіслати повідомлення','Отправить сообщение')}</span>
+                </div>
+                <div id="chatInputBox">
+                    <textarea id="chatInput" rows="1"
+                        placeholder="${_tg('Написати повідомлення...','Написать сообщение...')}"
                         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend();}"
-                        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'">
+                        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'">
                     </textarea>
-                    <button onclick="chatSend()" ontouchend="event.preventDefault();chatSend()" id="chatSendBtn"
-                        style="padding:0.5rem 0.75rem;background:#22c55e;color:white;border:none;
-                        border-radius:10px;cursor:pointer;flex-shrink:0;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                        </svg>
+                    <button onclick="chatSend()" ontouchend="event.preventDefault();chatSend()" id="chatSendBtn">
+                        ${_tg('Відправити','Отправить')}
                     </button>
                 </div>
             </div>
         </div>
+
+        <!-- ═══ ПРАВА: ІНФО ═══ -->
+        <div id="chatRight">
+            <div id="chatInfoPanel" style="color:#9ca3af;font-size:.8rem;padding:20px;text-align:center;">${_tg('Оберіть контакт','Выберите контакт')}</div>
+        </div>
+
     </div>`;
 
     await chatLoadContacts();
 
-    // Реалізуємо мобільні функції
+    // Мобільні функції
     window.chatShowMessages = function() {
-        const left = document.getElementById('chatLeftCol');
+        const left = document.getElementById('chatLeft');
         if (left) left.classList.add('chat-hidden');
         const backBtn = document.getElementById('chatBackBtn');
         if (backBtn) backBtn.style.display = 'flex';
     };
     window.chatShowContacts = function() {
-        const left = document.getElementById('chatLeftCol');
+        const left = document.getElementById('chatLeft');
         if (left) left.classList.remove('chat-hidden');
         const backBtn = document.getElementById('chatBackBtn');
         if (backBtn) backBtn.style.display = 'none';
     };
+    window.chatToggleInfo = function() {
+        const panel = document.getElementById('chatRight');
+        if (panel) panel.classList.toggle('hidden');
+    };
+    window.chatSetFilter = function(filter, btn) {
+        chat.filter = filter;
+        document.querySelectorAll('.chat-filter-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        chatLoadContacts(true);
+    };
 
-    // Real-time: оновлення unreadCount в лівій колонці
     _chatStartUnreadListener();
-
-    // Якщо є активний контакт — відкриваємо
     if (chat.activeId) bpOpenChat(chat.activeId);
 }
 
@@ -1603,6 +1671,9 @@ async function chatLoadContacts(reset = true) {
     try {
         let q = window.companyCol('contacts')
             .orderBy('lastMessageAt', 'desc');
+
+        if (chat.filter === 'unread') q = q.where('unreadCount', '>', 0);
+        else if (chat.filter === 'lead') q = q.where('status', '==', 'lead');
 
         if (chat.lastContactDoc) q = q.startAfter(chat.lastContactDoc);
         q = q.limit(31);
@@ -1643,53 +1714,30 @@ function _chatRenderContactsList() {
     }
 
     list.innerHTML = chat.contacts.map(ct => {
-        // FIX 2: якщо немає імені — показуємо @username, якщо є обидва — додаємо @username під іменем
         const rawName = ct.senderName || ct.name || '';
         const name = rawName || (ct.username ? '@'+ct.username : window.t('botsAnon'));
-        const displaySub = rawName && ct.username ? '@'+ct.username : '';
         const initial = (name.charAt(0) === '@' ? (ct.username||'?').charAt(0) : name.charAt(0)).toUpperCase();
         const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
         const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
         const isActive = ct.id === chat.activeId;
         const unread = ct.unreadCount || 0;
-        const lastMsg = ct.lastMessage || '';
+        const lastMsg = ct.lastMessage || window.t('botsNoMessages2') || '';
         const lastTime = ct.lastMessageAt?.toDate ? relTime(ct.lastMessageAt.toDate()) : '';
+        const statusDot = ct.status === 'lead' ? '#f59e0b' : ct.status === 'client' ? '#22c55e' : '#d1d5db';
 
         return `
         <div onclick="bpOpenChat('${ct.id}')" data-chatid="${ct.id}"
-            style="padding:0.65rem 0.75rem;cursor:pointer;border-bottom:1px solid #f9fafb;
-            background:${isActive ? '#f0fdf4' : 'transparent'};
-            transition:background 0.15s;"
-            onmouseenter="if('${ct.id}'!=='${chat.activeId}')this.style.background='#f8fafc'"
-            onmouseleave="this.style.background='${isActive ? '#f0fdf4' : 'transparent'}'">
-            <div style="display:flex;align-items:center;gap:0.5rem;">
-                <div style="position:relative;flex-shrink:0;">
-                    <div style="width:36px;height:36px;border-radius:50%;background:${avatarColor};
-                        display:flex;align-items:center;justify-content:center;
-                        font-weight:700;color:white;font-size:0.88rem;">
-                        ${initial}
-                    </div>
-                    ${unread > 0 ? `
-                    <div style="position:absolute;top:-2px;right:-2px;
-                        width:16px;height:16px;border-radius:50%;background:#ef4444;
-                        display:flex;align-items:center;justify-content:center;
-                        font-size:0.6rem;font-weight:700;color:white;border:2px solid white;">
-                        ${unread > 9 ? '9+' : unread}
-                    </div>` : ''}
+            class="chat-contact-item${isActive ? ' active' : ''}">
+            <div class="chat-contact-avatar" style="background:${avatarColor};">
+                ${initial}
+                ${unread > 0 ? `<div class="unread-badge">${unread > 9 ? '9+' : unread}</div>` : ''}
+            </div>
+            <div style="flex:1;min-width:0;">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px;">
+                    <span class="chat-contact-name">${escH(name)}</span>
+                    <span class="chat-contact-time">${lastTime}</span>
                 </div>
-                <div style="flex:1;min-width:0;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1px;">
-                        <span style="font-weight:${unread>0?'700':'600'};font-size:0.82rem;
-                            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px;">
-                            ${escH(name)}
-                        </span>
-                        <span style="font-size:0.65rem;color:#9ca3af;flex-shrink:0;margin-left:4px;">${lastTime}</span>
-                    </div>
-                    <div style="font-size:0.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-                        font-weight:${unread>0?'600':'400'};color:${unread>0?'#374151':'#9ca3af'};">
-                        ${displaySub ? '<span style="color:#3b82f6;font-size:0.68rem;">'+escH(displaySub)+'</span> · ' : ''}${escH(lastMsg.slice(0, 40) || window.t('botsNoMessages2'))}
-                    </div>
-                </div>
+                <div class="chat-contact-sub ${unread>0?'unread':''}">${escH(lastMsg.slice(0,45))}</div>
             </div>
         </div>`;
     }).join('') + (chat.hasMoreContacts ? `
@@ -1776,39 +1824,98 @@ function _chatRenderHeader(ct, containerId = 'chatMsgHeader') {
     const header = document.getElementById(containerId);
     if (!header || !ct) return;
     const name = ct.senderName || ct.name || window.t('botsAnon');
-    const initial = name.charAt(0).toUpperCase();
+    const initial = (name.charAt(0) === '@' ? (ct.username||'?').charAt(0) : name.charAt(0)).toUpperCase();
     const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
     const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
+    const isBlocked = ct.botStatus === 'blocked';
 
     header.innerHTML = `
-        <div style="width:36px;height:36px;border-radius:50%;background:${avatarColor};
+        <div style="width:38px;height:38px;border-radius:50%;background:${avatarColor};
             display:flex;align-items:center;justify-content:center;
             font-weight:700;color:white;font-size:0.9rem;flex-shrink:0;">
             ${initial}
         </div>
         <div style="flex:1;min-width:0;">
-            <div style="font-weight:700;font-size:0.88rem;">${escH(name)}</div>
-            <div style="font-size:0.7rem;color:#6b7280;display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
+            <div style="font-weight:700;font-size:0.88rem;color:#111827;">${escH(name)}</div>
+            <div style="font-size:0.7rem;color:#6b7280;display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:1px;">
                 ${ct.username ? '<span style="color:#3b82f6;font-weight:600;">@'+escH(ct.username)+'</span>' : ''}
-                ${ct.senderId ? '<span>ID: '+escH(ct.senderId)+'</span>' : ''}
-                ${ct.phone ? '<span>· '+escH(ct.phone)+'</span>' : ''}
-                ${ct.business_type ? '<span>· '+escH(ct.business_type)+'</span>' : ''}
+                ${ct.senderId ? '<span>ID: '+escH(String(ct.senderId))+'</span>' : ''}
+                ${isBlocked ? '<span style="color:#ef4444;font-weight:600;">● '+_tg('Заблокував','Заблокировал')+'</span>' : '<span style="color:#22c55e;font-weight:600;">● '+_tg('Підписаний','Подписан')+'</span>'}
+            </div>
+        </div>`;
+
+    // Права панель інфо
+    _chatRenderInfoPanel(ct);
+
+    // Показуємо кнопку інфо на планшеті
+    const infoBtn = document.getElementById('chatInfoToggleBtn');
+    if (infoBtn) infoBtn.style.display = '';
+}
+
+function _chatRenderInfoPanel(ct) {
+    const panel = document.getElementById('chatInfoPanel');
+    if (!panel || !ct) return;
+    const name = ct.senderName || ct.name || window.t('botsAnon');
+    const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
+    const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
+    const initial = (name.charAt(0) === '@' ? (ct.username||'?').charAt(0) : name.charAt(0)).toUpperCase();
+
+    const addedAt = ct.createdAt ? new Date(ct.createdAt).toLocaleDateString('uk-UA', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
+    const lastAt = ct.lastMessageAt?.toDate ? ct.lastMessageAt.toDate().toLocaleDateString('uk-UA', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
+
+    panel.innerHTML = `
+        <!-- Аватар і ім'я -->
+        <div style="padding:20px 16px 14px;text-align:center;border-bottom:1px solid #f3f4f6;">
+            <div style="width:56px;height:56px;border-radius:50%;background:${avatarColor};
+                display:flex;align-items:center;justify-content:center;
+                font-weight:700;color:white;font-size:1.2rem;margin:0 auto 8px;">
+                ${initial}
+            </div>
+            <div style="font-weight:700;font-size:0.9rem;color:#111827;">${escH(name)}</div>
+            ${ct.username ? '<div style="font-size:0.75rem;color:#3b82f6;margin-top:2px;">@'+escH(ct.username)+'</div>' : ''}
+            <div style="margin-top:8px;">
+                <span class="chat-info-badge" style="background:${ct.status==='lead'?'#fef3c7':'#f0fdf4'};color:${ct.status==='lead'?'#92400e':'#166534'};">
+                    ${ct.status === 'lead' ? '🎯 ' + _tg('Лід','Лид') : ct.status === 'client' ? '✅ ' + _tg('Клієнт','Клиент') : '📨 ' + _tg('Підписник','Подписчик')}
+                </span>
             </div>
         </div>
-        ${ct.botStatus === 'blocked' ? `
-        <span style="font-size:0.7rem;color:#ef4444;background:#fee2e2;
-            padding:2px 8px;border-radius:6px;font-weight:600;flex-shrink:0;">
-            <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></span> Заблокував
-        </span>` : ''}
-        <button onclick="ctsOpenCard('${ct.id}')"
-            title=${window.t('botsContactCard')}
-            style="padding:0.35rem 0.5rem;background:#f9fafb;border:1px solid #e5e7eb;
-            border-radius:8px;cursor:pointer;flex-shrink:0;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-            </svg>
-        </button>`;
+
+        <!-- Деталі -->
+        <div class="chat-info-section">
+            <div class="chat-info-label">${_tg('Контакт','Контакт')}</div>
+            ${ct.phone ? `<div class="chat-info-row"><span class="key">${_tg('Телефон','Телефон')}</span><span class="val">${escH(ct.phone)}</span></div>` : ''}
+            <div class="chat-info-row"><span class="key">ID</span><span class="val">${escH(String(ct.senderId||ct.chatId||''))}</span></div>
+            <div class="chat-info-row"><span class="key">${_tg('Додано','Добавлен')}</span><span class="val">${addedAt}</span></div>
+            <div class="chat-info-row"><span class="key">${_tg('Активність','Активность')}</span><span class="val">${lastAt}</span></div>
+            ${ct.source ? `<div class="chat-info-row"><span class="key">${_tg('Джерело','Источник')}</span><span class="val">${escH(ct.source)}</span></div>` : ''}
+            ${ct.language ? `<div class="chat-info-row"><span class="key">${_tg('Мова','Язык')}</span><span class="val">${escH(ct.language)}</span></div>` : ''}
+        </div>
+
+        <!-- CRM -->
+        <div class="chat-info-section">
+            <div class="chat-info-label">CRM</div>
+            <button class="chat-crm-btn" onclick="chatCreateCrmDeal('${ct.id}')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                ${_tg('Додати угоду','Добавить сделку')}
+            </button>
+            <button class="chat-crm-btn" onclick="chatCreateCrmContact('${ct.id}')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                ${_tg('Додати контакт','Добавить контакт')}
+            </button>
+        </div>
+
+        <!-- Шаблони -->
+        <div class="chat-info-section">
+            <div class="chat-info-label">${_tg('Швидкі відповіді','Быстрые ответы')}</div>
+            <button class="chat-tmpl-btn" onclick="chatInsertTemplate('${_tg('Дякуємо за відповідь! Наш менеджер зв\'яжеться з вами найближчим часом.','Спасибо за ответ! Наш менеджер свяжется с вами в ближайшее время.')}')">
+                <span>${_tg('Підтвердження','Подтверждение')}</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <button class="chat-tmpl-btn" onclick="chatInsertTemplate('${_tg('Вітаємо! Чим можемо допомогти?','Добро пожаловать! Чем можем помочь?')}')">
+                <span>${_tg('Привітання','Приветствие')}</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+        </div>`;
 }
 
 function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
@@ -1969,6 +2076,54 @@ async function _chatGetBotToken(ct) {
         return doc.data()?.token || null;
     } catch { return null; }
 }
+
+// ─────────────────────────────────────────
+// ШАБЛОНИ / CRM
+// ─────────────────────────────────────────
+window.chatInsertTemplate = function(text) {
+    const input = document.getElementById('chatInput');
+    if (input) { input.value = text; input.focus(); input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight,120)+'px'; }
+};
+
+window.chatCreateCrmDeal = async function(contactId) {
+    const ct = chat.contacts.find(c => c.id === contactId);
+    if (!ct) return;
+    const name = ct.senderName || ct.name || 'Telegram ' + contactId;
+    // Відкриваємо CRM з prefill даними
+    if (typeof lazyLoad === 'function') {
+        lazyLoad('crm', () => {
+            if (typeof window.crmOpenNewDeal === 'function') {
+                window.crmOpenNewDeal({ clientName: name, phone: ct.phone||'', telegramChatId: contactId, source: 'telegram' });
+            } else {
+                window.switchTab('crm');
+                if (typeof showToast === 'function') showToast(_tg('Перейдіть в CRM та створіть угоду','Перейдите в CRM и создайте сделку'), 'info');
+            }
+        });
+    }
+};
+
+window.chatCreateCrmContact = async function(contactId) {
+    const ct = chat.contacts.find(c => c.id === contactId);
+    if (!ct) return;
+    try {
+        const clientId = 'tg_' + contactId;
+        await window.companyRef().collection('crm_clients').doc(clientId).set({
+            id: clientId,
+            name: ct.senderName || ct.name || 'Telegram ' + contactId,
+            phone: ct.phone || '',
+            telegramChatId: contactId,
+            telegramUsername: ct.username || '',
+            channel: 'telegram',
+            source: ct.source || 'telegram',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+        if (typeof showToast === 'function') showToast(_tg('Контакт додано в CRM','Контакт добавлен в CRM'), 'success');
+        _chatRenderInfoPanel(ct);
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(_tg('Помилка: ','Ошибка: ') + e.message, 'error');
+    }
+};
 
 // ─────────────────────────────────────────
 // REAL-TIME: лічильник непрочитаних
