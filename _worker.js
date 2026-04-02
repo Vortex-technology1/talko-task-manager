@@ -579,6 +579,19 @@ async function handleBotDebug(request, url, env) {
         }
     }
 
+    // 5. Список компаній (перші 5)
+    const companiesSnap = await fetch(
+        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies?pageSize=5`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (companiesSnap.ok) {
+        const cd = await companiesSnap.json();
+        result.allCompanyIds = (cd.documents||[]).map(d => d.name?.split('/').pop());
+        result.steps.push('found companies: ' + result.allCompanyIds.join(', '));
+    } else {
+        result.steps.push('companies list HTTP: ' + companiesSnap.status);
+    }
+
     result.botTokenFound = !!botToken;
     return json(result);
 }
