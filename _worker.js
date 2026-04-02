@@ -511,6 +511,23 @@ async function handleBotDebug(request, url, env) {
 
     const result = { cid, steps: [] };
 
+    // 0. Перевіряємо токен
+    result.tokenLength = token ? token.length : 0;
+    result.steps.push('token length: ' + result.tokenLength);
+    
+    // Тестовий запит до Firestore (публічна колекція)
+    const testReq = await fetch(
+        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/settings/ai`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    result.firestoreTestStatus = testReq.status;
+    result.steps.push('firestore test HTTP status: ' + testReq.status);
+    if (!testReq.ok) {
+        const errText = await testReq.text();
+        result.firestoreError = errText.slice(0, 200);
+        result.steps.push('firestore error: ' + result.firestoreError);
+    }
+
     // 1. Читаємо компанію
     const compDoc = await fsGet(`companies/${cid}`, token);
     result.compDocExists = !!compDoc?.fields;
