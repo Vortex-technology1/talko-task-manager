@@ -1281,13 +1281,17 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
     await tgSend(chatId, `🔍 isCallback:${isCallback} callbackData:${callbackData} edges:${edges.length}`);
     if (isCallback && callbackData) {
         const nextNode = getNextNode(currentNode.id, callbackData);
-        await tgSend(chatId, `🔍 nextNode:${nextNode?.id || 'NULL'}`);
+        await tgSend(chatId, `🔍 nextNode:${nextNode?.id || 'NULL'} type:${nextNode?.type}`);
         if (nextNode) {
             await fsPatch(contactPath, {
                 currentNodeId: { stringValue: nextNode.id },
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
-            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            try {
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            } catch(ex) {
+                await tgSend(chatId, `⚠️ executeNode error: ${ex.message?.slice(0,200)}`);
+            }
         }
         return;
     }
@@ -1396,6 +1400,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
     // ── ВУЗОЛ: ШІ АГЕНТ ─────────────────────────────────────
     if (nodeType === 'ai_agent' || nodeType === 'aiAgent' || nodeType === 'AI') {
+        await tgSend(chatId, `🤖 AI вузол: ${node.id} userInput:${userInput?.slice(0,20)||'none'}`);
         // Завантажуємо промпт вузла
         let systemPrompt = nodeData.systemPrompt || nodeData.aiSystem || nodeData.prompt || '';
         const aiProvider = nodeData.aiProvider || 'openai';
