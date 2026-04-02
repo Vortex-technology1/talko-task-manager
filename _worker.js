@@ -1288,7 +1288,11 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
             try {
-                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+                const nextType = nextNode.type || nextNode.data?.type || '';
+                const isAI = nextType === 'ai_agent' || nextType === 'aiAgent' || nextType === 'AI' || nextType === 'ai';
+                // Якщо наступний вузол AI — передаємо стартовий текст щоб AI почав
+                const inputForAI = isAI ? (text && text !== '/start' ? text : 'Привіт') : undefined;
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput: inputForAI });
             } catch(ex) {
                 await tgSend(chatId, `⚠️ executeNode error: ${ex.message?.slice(0,200)}`);
             }
