@@ -1286,7 +1286,8 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
                 const nextType = nextNode.type || nextNode.data?.type || '';
                 const isAI = nextType === 'ai_agent' || nextType === 'aiAgent' || nextType === 'AI' || nextType === 'ai';
                 // Якщо наступний вузол AI — передаємо стартовий текст щоб AI почав
-                const inputForAI = isAI ? (text && text !== '/start' ? text : 'Привіт') : undefined;
+                // При callback не передаємо text бота як userInput — тільки для не-AI вузлів
+                const inputForAI = isAI ? '' : undefined;
                 await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput: inputForAI });
             } catch(ex) {
                 await tgSend(chatId, `⚠️ executeNode error: ${ex.message?.slice(0,200)}`);
@@ -1406,7 +1407,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         const maxTokens  = nodeData.maxTokens || 1500;
         const writesFirst = nodeData.writesFirst || nodeData.firstMessageEnabled || nodeData.botWritesFirst || false;
         const firstMessage = nodeData.firstMessage || '';
-        const historyLimit = nodeData.historyLimit ?? 14;
+        const historyLimit = parseInt(nodeData.historyLimit ?? 14) || 14;
 
         // Якщо промпт є посиланням (__ref:nodeId) або порожній — читаємо з nodePrompts
         if (!systemPrompt || systemPrompt.startsWith('__ref:')) {
@@ -1419,28 +1420,33 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             }
         }
 
+        // Читаємо ключ і параметри один раз для всього AI вузла
+        let openaiKey = '';
+        let botModel = 'gpt-4o-mini';
+        let botMaxTokens = 1500;
+        let botTemperature = 0.7;
+        const platDocAI = await fsGet(`settings/platform`, token);
+        if (platDocAI?.fields) {
+            const platAI = fFields(platDocAI.fields);
+            openaiKey = platAI.openaiApiKey || '';
+            if (platAI.botModel) botModel = platAI.botModel;
+            if (platAI.botMaxTokens) botMaxTokens = parseInt(platAI.botMaxTokens) || 1500;
+            if (platAI.botTemperature !== undefined) botTemperature = parseFloat(platAI.botTemperature) || 0.7;
+        }
+        if (!openaiKey) openaiKey = env.OPENAI_API_KEY || '';
+        if (!openaiKey) {
+            const aiSettDocFallback = await fsGet(`settings/ai`, token);
+            if (aiSettDocFallback?.fields) {
+                const aiSettFallback = fFields(aiSettDocFallback.fields);
+                openaiKey = aiSettFallback.openaiApiKey || aiSettFallback.apiKey || '';
+            }
+        }
+
         // Якщо бот пише першим і немає userInput — надсилаємо привітання від ШІ
         if (writesFirst && !userInput) {
-            let openaiKey = '';
-            let botModel2 = 'gpt-4o-mini';
-            let botMaxTokens2 = 1500;
-            let botTemperature2 = 0.7;
-            const platDoc2 = await fsGet(`settings/platform`, token);
-            if (platDoc2?.fields) {
-                const plat2 = fFields(platDoc2.fields);
-                openaiKey = plat2.openaiApiKey || '';
-                if (plat2.botModel) botModel2 = plat2.botModel;
-                if (plat2.botMaxTokens) botMaxTokens2 = parseInt(plat2.botMaxTokens) || 1500;
-                if (plat2.botTemperature !== undefined) botTemperature2 = parseFloat(plat2.botTemperature) || 0.7;
-            }
-            if (!openaiKey) openaiKey = env.OPENAI_API_KEY || '';
-            if (!openaiKey) {
-                const aiSettDoc2 = await fsGet(`settings/ai`, token);
-                if (aiSettDoc2?.fields) {
-                    const aiSett2 = fFields(aiSettDoc2.fields);
-                    openaiKey = aiSett2.openaiApiKey || aiSett2.apiKey || '';
-                }
-            }
+            const botModel2 = botModel;
+            const botMaxTokens2 = botMaxTokens;
+            const botTemperature2 = botTemperature;
             if (openaiKey && systemPrompt) {
                 const aiResp = await callOpenAI({
                     apiKey: openaiKey,
@@ -1480,7 +1486,9 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             const docs = (hd.documents||[]).reverse();
             for (const doc of docs) {
                 const d = fFields(doc.fields||{});
-                if (d.role === 'user' && d.text && !d.isCallback) {
+                if (d.role === 'user' && d.text && !d.isCallback &&
+                    !d.text.startsWith('/start') && !d.text.startsWith('/') &&
+                    d.text !== 'btn_0' && d.text !== 'btn_1' && d.text !== 'btn_2') {
                     chatHistory.push({ role:'user', content: d.text });
                 } else if (d.role === 'bot' && d.text) {
                     chatHistory.push({ role:'assistant', content: d.text });
@@ -1493,30 +1501,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             chatHistory.push({ role: 'user', content: userInput });
         }
 
-        // Ключ і параметри від superadmin: завжди читаємо settings/platform
-        let openaiKey = '';
-        let botModel = 'gpt-4o-mini';
-        let botMaxTokens = 1500;
-        let botTemperature = 0.7;
-
-        const platDoc = await fsGet(`settings/platform`, token);
-        if (platDoc?.fields) {
-            const plat = fFields(platDoc.fields);
-            openaiKey = plat.openaiApiKey || '';
-            if (plat.botModel) botModel = plat.botModel;
-            if (plat.botMaxTokens) botMaxTokens = parseInt(plat.botMaxTokens) || 1500;
-            if (plat.botTemperature !== undefined) botTemperature = parseFloat(plat.botTemperature) || 0.7;
-        }
-        // Fallback: env var
-        if (!openaiKey) openaiKey = env.OPENAI_API_KEY || '';
-        // Fallback: settings/ai (старе місце)
-        if (!openaiKey) {
-            const aiSettDoc = await fsGet(`settings/ai`, token);
-            if (aiSettDoc?.fields) {
-                const aiSett = fFields(aiSettDoc.fields);
-                openaiKey = aiSett.openaiApiKey || aiSett.apiKey || '';
-            }
-        }
+        // Ключ вже завантажений вище (один раз для всього AI вузла)
         if (!openaiKey) {
             await tgSend(chatId, `Вибачте, ШІ наразі недоступний. Менеджер зв'яжеться з вами.`);
             return;
