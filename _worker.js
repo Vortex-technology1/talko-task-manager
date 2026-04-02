@@ -528,8 +528,19 @@ async function handleBotDebug(request, url, env) {
         result.steps.push('firestore error: ' + result.firestoreError);
     }
 
-    // 1. Читаємо компанію
-    const compDoc = await fsGet(`companies/${cid}`, token);
+    // 1. Читаємо компанію — з деталями помилки
+    const compRaw = await fetch(
+        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    result.compDocHttpStatus = compRaw.status;
+    result.steps.push('compDoc HTTP status: ' + compRaw.status);
+    const compDoc = compRaw.ok ? await compRaw.json() : null;
+    if (!compRaw.ok) {
+        const errBody = await compRaw.text().catch(()=>'');
+        result.compDocError = errBody.slice(0, 300);
+        result.steps.push('compDoc error: ' + result.compDocError);
+    }
     result.compDocExists = !!compDoc?.fields;
     result.steps.push('compDoc: ' + (compDoc?.fields ? 'EXISTS' : 'NOT FOUND'));
 
