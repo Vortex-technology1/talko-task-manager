@@ -184,7 +184,7 @@
         const list = moduleList || learningCourseData;
         const moduleIndex = list.findIndex(m => m.id === module.id);
         // Перші 3 модулі категорії — завжди доступні; далі — тільки після завершення попереднього
-        const isAvailable = moduleIndex <= 2 || (moduleIndex > 0 && list[moduleIndex - 1] && list[moduleIndex - 1].completed);
+        const isAvailable = true;
 
         return `
         <div class="l-module-card ${isCompleted ? 'completed' : ''} ${!isAvailable ? 'locked' : ''}" 

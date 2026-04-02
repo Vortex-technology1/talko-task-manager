@@ -6130,7 +6130,7 @@
                        : _lang === 'cs' ? (module.subtitle_cs || module.subtitle_en || module.subtitle || '')
                        : (module.subtitle || '');
         const isCompleted = module.completed;
-        const isAvailable = module.id === 0 || (learningCourseData[module.id - 1] && learningCourseData[module.id - 1].completed) || module.id <= 3;
+        const isAvailable = true;
 
         return `
         <div class="l-module-card ${isCompleted ? 'completed' : ''} ${!isAvailable ? 'locked' : ''}" 
