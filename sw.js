@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-03-30-v24.0';
+const CACHE_VERSION = '2026-04-02-v25.0';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache — core shell only (JS modules via network-first)
