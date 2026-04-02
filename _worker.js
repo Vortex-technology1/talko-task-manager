@@ -1241,6 +1241,19 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         // Якщо бот пише першим і немає userInput — надсилаємо привітання від ШІ
         if (writesFirst && !userInput) {
             let openaiKey = env.OPENAI_API_KEY || '';
+            let botModel2 = aiModel;
+            let botMaxTokens2 = maxTokens;
+            let botTemperature2 = nodeData.temperature || 0.7;
+            if (!openaiKey) {
+                const platDoc2 = await fsGet(`settings/platform`, token);
+                if (platDoc2?.fields) {
+                    const plat2 = fFields(platDoc2.fields);
+                    openaiKey = plat2.openaiApiKey || '';
+                    if (plat2.botModel) botModel2 = plat2.botModel;
+                    if (plat2.botMaxTokens) botMaxTokens2 = parseInt(plat2.botMaxTokens) || 1500;
+                    if (plat2.botTemperature !== undefined) botTemperature2 = parseFloat(plat2.botTemperature) || 0.7;
+                }
+            }
             if (!openaiKey) {
                 const aiSettDoc2 = await fsGet(`settings/ai`, token);
                 if (aiSettDoc2?.fields) {
@@ -1251,10 +1264,11 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             if (openaiKey && systemPrompt) {
                 const aiResp = await callOpenAI({
                     apiKey: openaiKey,
-                    model: aiModel,
+                    model: botModel2,
                     systemPrompt,
                     messages: [{ role: 'user', content: 'Привітай клієнта і почни розмову.' }],
-                    maxTokens,
+                    maxTokens: botMaxTokens2,
+                    temperature: botTemperature2,
                 });
                 if (aiResp) {
                     await tgSend(chatId, aiResp);
@@ -1290,8 +1304,24 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         // Додаємо поточне повідомлення
         chatHistory.push({ role: 'user', content: userInput });
 
-        // Ключ тільки від superadmin: env → settings/ai
+        // Ключ і параметри від superadmin: env → settings/platform
         let openaiKey = env.OPENAI_API_KEY || '';
+        let botModel = aiModel;
+        let botMaxTokens = maxTokens;
+        let botTemperature = nodeData.temperature || 0.7;
+        
+        if (!openaiKey) {
+            const platDoc = await fsGet(`settings/platform`, token);
+            if (platDoc?.fields) {
+                const plat = fFields(platDoc.fields);
+                openaiKey = plat.openaiApiKey || '';
+                // Глобальні налаштування ботів від superadmin
+                if (plat.botModel) botModel = plat.botModel;
+                if (plat.botMaxTokens) botMaxTokens = parseInt(plat.botMaxTokens) || 1500;
+                if (plat.botTemperature !== undefined) botTemperature = parseFloat(plat.botTemperature) || 0.7;
+            }
+        }
+        // Fallback на settings/ai (старе місце)
         if (!openaiKey) {
             const aiSettDoc = await fsGet(`settings/ai`, token);
             if (aiSettDoc?.fields) {
@@ -1306,10 +1336,11 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
         const aiResp = await callOpenAI({
             apiKey: openaiKey,
-            model: aiModel,
+            model: botModel,
             systemPrompt: systemPrompt || 'Ти корисний асистент. Відповідай коротко і чітко.',
             messages: chatHistory,
-            maxTokens,
+            maxTokens: botMaxTokens,
+            temperature: botTemperature,
         });
 
         if (aiResp) {
@@ -1356,7 +1387,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 }
 
 // Виклик OpenAI API
-async function callOpenAI({ apiKey, model, systemPrompt, messages, maxTokens }) {
+async function callOpenAI({ apiKey, model, systemPrompt, messages, maxTokens, temperature }) {
     try {
         const r = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
@@ -1364,6 +1395,7 @@ async function callOpenAI({ apiKey, model, systemPrompt, messages, maxTokens }) 
             body: JSON.stringify({
                 model: model || 'gpt-4o-mini',
                 max_tokens: maxTokens || 1000,
+                temperature: temperature ?? 0.7,
                 messages: [
                     { role: 'system', content: systemPrompt },
                     ...messages,

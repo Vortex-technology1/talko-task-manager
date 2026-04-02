@@ -1612,6 +1612,34 @@ window.openGlobalAISettings = async function() {
                         <input type="number" id="globalMonthlyLimit" value="${s.defaultMonthlyLimit || ''}" placeholder="Без ліміту" min="0" step="10000"
                             style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
+
+                    <!-- Налаштування ботів -->
+                    <div style="border-top:1px solid #f3f4f6;padding-top:1rem;margin-top:0.5rem;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#374151;margin-bottom:0.75rem;">🤖 Глобальні налаштування ботів</div>
+                        <div style="margin-bottom:0.75rem;">
+                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Модель AI для ботів</label>
+                            <select id="botModelSelect" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
+                                ${[['gpt-4o-mini','GPT-4o mini — рекомендовано'],['gpt-4o','GPT-4o'],['gpt-4.1-mini','GPT-4.1 mini'],['gpt-4.1','GPT-4.1'],['gpt-4.1-nano','GPT-4.1 nano — найдешевший']].map(([v,n]) =>
+                                    `<option value="${v}" ${(saSettings.botModel||'gpt-4o-mini')===v?'selected':''}>${n}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                        <div style="margin-bottom:0.75rem;">
+                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Точність відповіді (0.0 — точно, 1.0 — творчо)</label>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <input type="range" id="botTempRange" min="0" max="1" step="0.05"
+                                    value="${saSettings.botTemperature ?? 0.7}"
+                                    oninput="document.getElementById('botTempVal').textContent=parseFloat(this.value).toFixed(2);"
+                                    style="flex:1;accent-color:#22c55e;">
+                                <span id="botTempVal" style="font-size:0.88rem;font-weight:700;color:#22c55e;min-width:32px;">${(saSettings.botTemperature ?? 0.7).toFixed(2)}</span>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:0.75rem;">
+                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Макс. токени відповіді</label>
+                            <input type="number" id="botMaxTokens" value="${saSettings.botMaxTokens || 1500}" min="100" max="8000" step="100"
+                                style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- TAB: AGENTS -->
@@ -1646,6 +1674,9 @@ window.saveGlobalAISettings = async function() {
     const daily    = parseInt(document.getElementById('globalDailyLimit')?.value) || 0;
     const monthly  = parseInt(document.getElementById('globalMonthlyLimit')?.value) || 0;
     const newKey   = document.getElementById('platformOpenAiKey')?.value?.trim() || '';
+    const botModel = document.getElementById('botModelSelect')?.value || 'gpt-4o-mini';
+    const botTemperature = parseFloat(document.getElementById('botTempRange')?.value) || 0.7;
+    const botMaxTokens = parseInt(document.getElementById('botMaxTokens')?.value) || 1500;
 
     // Збираємо агентів
     const agents = {};
@@ -1686,7 +1717,7 @@ window.saveGlobalAISettings = async function() {
             { merge: true }
         );
         // Платформний ключ + агенти → superadmin/settings
-        const saUpdate = { agents, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+        const saUpdate = { agents, botModel, botTemperature, botMaxTokens, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
         if (newKey) {
             saUpdate.openaiApiKey = newKey;
             saUpdate.keyUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
