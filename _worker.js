@@ -818,12 +818,28 @@ async function handleWebhook(request, url, env) {
             const sett = fFields(settDoc.fields);
             botTokenForSend = sett.telegramBotToken || '';
         }
-        // Якщо немає в settings — шукаємо в bots
+        // Якщо немає в settings — шукаємо в bots по botId контакту
         if (!botTokenForSend && contact.botId) {
             const botDoc = await fsGet(`companies/${companyId}/bots/${contact.botId}`, token);
             if (botDoc?.fields) {
                 const bd = fFields(botDoc.fields);
                 botTokenForSend = bd.token || '';
+            }
+        }
+        // Fallback: перший активний бот компанії
+        if (!botTokenForSend) {
+            const botsSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${companyId}/bots?pageSize=5`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (botsSnap.ok) {
+                const bd = await botsSnap.json();
+                for (const doc of (bd.documents||[])) {
+                    const d = fFields(doc.fields||{});
+                    if (d.token && (d.channel === 'telegram' || !d.channel)) {
+                        botTokenForSend = d.token; break;
+                    }
+                }
             }
         }
 
@@ -1055,11 +1071,20 @@ async function handleWebhook(request, url, env) {
         let contactDoc = await fsGet(contactPath, token);
         let contact = contactDoc?.fields ? fFields(contactDoc.fields) : null;
 
+        // Якщо контакт існує але без botId — оновлюємо
+        if (contact && !contact.botId && urlBotId) {
+            await fsPatch(contactPath, {
+                botId: { stringValue: urlBotId },
+            }, token);
+            contact.botId = urlBotId;
+        }
+
         if (!contact) {
             contact = {
                 chatId, name: userName, username: from.username||'',
                 source: 'telegram', status: 'subscriber',
                 currentFlowId: '', currentNodeId: '',
+                botId: urlBotId || '',
                 createdAt: new Date().toISOString(),
             };
             await fsSet(contactPath, {
@@ -1073,6 +1098,7 @@ async function handleWebhook(request, url, env) {
                 status:        { stringValue: 'subscriber' },
                 currentFlowId: { stringValue: '' },
                 currentNodeId: { stringValue: '' },
+                botId:         { stringValue: urlBotId || '' },
                 collectedData: { mapValue: { fields: {} } },
                 unreadCount:   { integerValue: '0' },
                 createdAt:     { timestampValue: new Date().toISOString() },
