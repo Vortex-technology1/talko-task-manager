@@ -2292,8 +2292,6 @@ window.fcApplyNodeData = function(nodeId) {
             node.config.aiProvider = get('aiProvider') || node.config?.aiProvider || 'openai';
             node.config.saveAs = get('saveAs') || null;
             node.config.fallback = get('fallback');
-            const _rawT = parseFloat(document.getElementById('fcp_temperature')?.value);
-            node.config.temperature = (isNaN(_rawT) ? 0.7 : Math.min(Math.max(_rawT, 0), 2));
             node.config.historyLimit = parseInt(document.getElementById('fcp_historyLimit')?.value ?? 6) || 0;
             // maxTokens керується superadmin глобально
             node.config.firstMessageEnabled = document.getElementById('fcp_firstMessageEnabled')?.checked || false;
@@ -2616,6 +2614,7 @@ async function saveFlow() {
             saveRef.set({
                 name: fc.flowData.name || 'Без назви',
                 nodes: sanitize(minimalNodes),
+                edges: sanitize(fc.edges),
                 triggerKeyword: triggerKeyword || '/start',
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             }, { merge: true }),

@@ -1068,29 +1068,47 @@ async function handleWebhook(request, url, env) {
 // FLOW ENGINE — виконання ланцюгів ботів
 // ════════════════════════════════════════════════════════════
 async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, isCallback, callbackData, contact, contactPath, token, botToken, from, userName, tgSend, env }) {
-    // Завантажуємо canvas даних flow (вузли і з'єднання)
-    const canvasSnap = await fetch(
-        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${botId}/flows/${flowId}/canvasData/main`,
+    // Завантажуємо вузли з flow document (nodes зберігаються як Firestore array)
+    const flowSnap = await fetch(
+        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${botId}/flows/${flowId}`,
         { headers: { Authorization: `Bearer ${token}` } }
     );
 
     let nodes = [], edges = [];
-    if (canvasSnap.ok) {
-        const cd = await canvasSnap.json();
-        if (cd.fields) {
-            const raw = fFields(cd.fields);
-            try { nodes = JSON.parse(raw.nodes || '[]'); } catch {}
-            try { edges = JSON.parse(raw.edges || '[]'); } catch {}
+    if (flowSnap.ok) {
+        const fd = await flowSnap.json();
+        if (fd.fields) {
+            const raw = fFields(fd.fields);
+            // nodes зберігаються як Firestore array (не JSON string)
+            nodes = Array.isArray(raw.nodes) ? raw.nodes : [];
+            edges = Array.isArray(raw.edges) ? raw.edges : [];
+            // Fallback: якщо nodes порожні — пробуємо canvasData/layout
+        }
+    }
+    // Fallback: canvasData/layout
+    if (!nodes.length) {
+        const canvasSnap = await fetch(
+            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${botId}/flows/${flowId}/canvasData/layout`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (canvasSnap.ok) {
+            const cd = await canvasSnap.json();
+            if (cd.fields) {
+                const raw = fFields(cd.fields);
+                nodes = Array.isArray(raw.nodes) ? raw.nodes : [];
+                edges = Array.isArray(raw.edges) ? raw.edges : [];
+            }
         }
     }
 
     if (!nodes.length) return;
 
     // Знаходимо поточний вузол
-    // При старті — шукаємо START вузол
     let currentNode = null;
     if (currentNodeId === 'start' || !currentNodeId) {
-        currentNode = nodes.find(n => n.type === 'start' || n.data?.type === 'start' || n.id?.includes('start'));
+        // START вузол не зберігається в nodes → беремо перший вузол (він завжди відсортований)
+        currentNode = nodes.find(n => n.type === 'start' || n.data?.type === 'start' || n.id?.includes('start'))
+                   || nodes[0] || null;
     } else {
         currentNode = nodes.find(n => n.id === currentNodeId);
     }
@@ -1099,18 +1117,24 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
 
     // Знаходимо наступний вузол по з'єднанню
     function getNextNode(fromNodeId, buttonLabel) {
-        // Шукаємо edge від цього вузла
+        // Підтримуємо дві структури edges:
+        // React Flow: { source, target, sourceHandle }
+        // Canvas: { fromNode, fromPort, toNode }
+        const srcKey  = e => e.source || e.fromNode;
+        const tgtKey  = e => e.target || e.toNode;
+        const hdlKey  = e => e.sourceHandle || e.fromPort;
+
         const matchEdge = edges.find(e => {
-            if (e.source !== fromNodeId) return false;
-            // Якщо кнопка — шукаємо по sourceHandle або label
+            if (srcKey(e) !== fromNodeId) return false;
             if (buttonLabel) {
-                return e.sourceHandle?.includes(buttonLabel) || e.label === buttonLabel ||
-                       e.sourceHandle === buttonLabel || !e.sourceHandle;
+                const h = hdlKey(e);
+                return (h && (h.includes(buttonLabel) || h === buttonLabel)) ||
+                       e.label === buttonLabel || !h;
             }
             return true;
-        }) || edges.find(e => e.source === fromNodeId);
+        }) || edges.find(e => srcKey(e) === fromNodeId);
         if (!matchEdge) return null;
-        return nodes.find(n => n.id === matchEdge.target) || null;
+        return nodes.find(n => n.id === tgtKey(matchEdge)) || null;
     }
 
     // Зібрані дані контакту
@@ -1122,7 +1146,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
 
     // Визначаємо що робити залежно від типу поточного вузла
     const nodeType = currentNode.type || currentNode.data?.type || '';
-    const nodeData = currentNode.data || {};
+    const nodeData = currentNode.data || currentNode;
 
     // Якщо це START вузол — переходимо до наступного
     if (nodeType === 'start' || currentNode.id?.includes('start')) {
@@ -1157,7 +1181,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
 
 async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput }) {
     const nodeType = node.type || node.data?.type || '';
-    const nodeData = node.data || {};
+    const nodeData = node.data || node;
 
     // ── ВУЗОЛ: ПОВІДОМЛЕННЯ ──────────────────────────────────
     if (nodeType === 'message' || nodeType === 'sendMessage') {
@@ -1196,12 +1220,20 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             createdAt: { timestampValue: new Date().toISOString() },
         }, token);
 
+        // Зберігаємо поточний вузол (потрібно для callback від кнопок)
+        if (buttons && buttons.length > 0) {
+            await fsPatch(`companies/${cid}/contacts/${chatId}`, {
+                currentNodeId: { stringValue: node.id },
+                updatedAt:     { timestampValue: new Date().toISOString() },
+            }, token);
+        }
+
         // Якщо немає кнопок — автоматично переходимо до наступного вузла
         if (!buttons || buttons.length === 0) {
-            const nextNode = (node.edges || []).find(e=>e.source===node.id) ||
-                             edges.find(e=>e.source===node.id);
+            const nextNode = (node.edges || []).find(e=>(e.source||e.fromNode)===node.id) ||
+                             edges.find(e=>(e.source||e.fromNode)===node.id);
             if (nextNode) {
-                const target = nodes.find(n=>n.id===nextNode.target);
+                const target = nodes.find(n=>n.id===(nextNode.target||nextNode.toNode));
                 if (target) {
                     await fsPatch(`companies/${cid}/contacts/${chatId}`, {
                         currentNodeId: { stringValue: target.id },
@@ -1221,11 +1253,13 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
     // ── ВУЗОЛ: ШІ АГЕНТ ─────────────────────────────────────
     if (nodeType === 'ai_agent' || nodeType === 'aiAgent' || nodeType === 'AI') {
         // Завантажуємо промпт вузла
-        let systemPrompt = nodeData.systemPrompt || nodeData.prompt || '';
+        let systemPrompt = nodeData.systemPrompt || nodeData.aiSystem || nodeData.prompt || '';
         const aiProvider = nodeData.aiProvider || 'openai';
         const aiModel    = nodeData.model || 'gpt-4o-mini';
         const maxTokens  = nodeData.maxTokens || 1500;
-        const writesFirst = nodeData.writesFirst || nodeData.botWritesFirst || false;
+        const writesFirst = nodeData.writesFirst || nodeData.firstMessageEnabled || nodeData.botWritesFirst || false;
+        const firstMessage = nodeData.firstMessage || '';
+        const historyLimit = nodeData.historyLimit ?? 14;
 
         // Якщо є окремий документ з промптом
         if (!systemPrompt) {
@@ -1234,7 +1268,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             );
             if (promptDoc?.fields) {
                 const pd = fFields(promptDoc.fields);
-                systemPrompt = pd.systemPrompt || pd.prompt || '';
+                systemPrompt = pd.systemPrompt || pd.aiSystem || pd.prompt || '';
             }
         }
 
@@ -1294,7 +1328,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         let chatHistory = [];
         if (histSnap.ok) {
             const hd = await histSnap.json();
-            for (const doc of (hd.documents||[]).slice(-12)) {
+            for (const doc of (hd.documents||[]).slice(-(historyLimit * 2 || 24))) {
                 const d = fFields(doc.fields||{});
                 if (d.role === 'user') chatHistory.push({ role:'user', content: d.text||'' });
                 else if (d.role === 'bot') chatHistory.push({ role:'assistant', content: d.text||'' });
@@ -1360,9 +1394,9 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
     if (nodeType === 'action' || nodeType === 'crm' || nodeType === 'createLead') {
         await createCrmLead({ cid, chatId, contact, collectedData, token });
         // Переходимо далі
-        const nextEdge = edges.find(e=>e.source===node.id);
+        const nextEdge = edges.find(e=>(e.source||e.fromNode)===node.id);
         if (nextEdge) {
-            const nextNode = nodes.find(n=>n.id===nextEdge.target);
+            const nextNode = nodes.find(n=>n.id===(nextEdge.target||nextEdge.toNode));
             if (nextNode) {
                 await fsPatch(`companies/${cid}/contacts/${chatId}`, {
                     currentNodeId: { stringValue: nextNode.id },
