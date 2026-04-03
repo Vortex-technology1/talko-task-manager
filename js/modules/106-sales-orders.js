@@ -702,6 +702,7 @@
     if (m) m.remove();
     S.editing = null;
     S.modalItems = [];
+    S.currentPriceListId = null; // БАГ 26 fix
   };
 
   // ─── MODAL ITEM HANDLERS ──────────────────────────────────────────────────

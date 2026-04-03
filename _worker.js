@@ -2124,18 +2124,20 @@ async function handleGeneratePdf(request, url, env) {
             if (!userByUid) return json({ error: 'forbidden' }, 403);
         }
 
-        // Завантажуємо налаштування компанії
-        const settDoc = await fsGet(`companies/${companyId}/settings/main`, token);
-        const sett = settDoc ? fFields(settDoc.fields || {}) : {};
+        // Завантажуємо налаштування компанії (settings/general — основне, settings/main — fallback)
+        const genDoc  = await fsGet(`companies/${companyId}/settings/general`, token);
+        const sett    = genDoc ? fFields(genDoc.fields || {}) : {};
+        const mainDoc = await fsGet(`companies/${companyId}/settings/main`, token);
+        const main    = mainDoc ? fFields(mainDoc.fields || {}) : {};
 
         // Завантажуємо назву компанії
         const compDoc = await fsGet(`companies/${companyId}`, token);
         const comp = compDoc ? fFields(compDoc.fields || {}) : {};
 
-        const companyName = comp.name || sett.companyName || 'TALKO';
-        const companyEdrpou = sett.edrpou || sett.inn || '';
-        const companyAddress = sett.address || '';
-        const companyPhone = sett.phone || '';
+        const companyName    = comp.name || sett.companyName || main.companyName || 'TALKO';
+        const companyEdrpou  = sett.edrpou || sett.inn || main.edrpou || main.inn || '';
+        const companyAddress = sett.address || sett.legalAddress || main.address || '';
+        const companyPhone   = sett.phone || sett.contactPhone || main.phone || '';
         const currency = r.currency || 'UAH';
         const docDate = r.realizationDate || new Date().toISOString().slice(0,10);
         const docNum  = r.number || realizationId.slice(0,8);

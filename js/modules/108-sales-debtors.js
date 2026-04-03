@@ -26,10 +26,24 @@
       const snap=await col('sales_debtors').orderBy('createdAt','desc').limit(500).get();
       S.debtors=snap.docs.map(d=>({id:d.id,...d.data()}));
       const today=todayISO();
-      // БАГ 14 fix: і open і partial переходять в overdue якщо прострочені
-      S.debtors.forEach(d=>{
-        if((d.status==='open'||d.status==='partial')&&d.dueDate&&d.dueDate<today) d.status='overdue';
-      });
+
+      // БАГ 27 fix: синхронізуємо overdue в Firestore (batch, не більше 10 за раз щоб не блокувати UI)
+      const toUpdate = S.debtors.filter(d =>
+        (d.status==='open'||d.status==='partial') && d.dueDate && d.dueDate < today
+      );
+      // Локально оновлюємо одразу
+      toUpdate.forEach(d => { d.status = 'overdue'; });
+      // Асинхронно пишемо в Firestore (не чекаємо — щоб не затримувати UI)
+      if (toUpdate.length) {
+        const batch = db().batch();
+        toUpdate.slice(0, 20).forEach(d => {
+          batch.update(db().collection('companies').doc(cid()).collection('sales_debtors').doc(d.id), {
+            status: 'overdue', updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        });
+        batch.commit().catch(e => console.warn('108 overdue sync:', e.message));
+      }
+
       renderList(); renderSummary();
     }catch(e){console.warn('108:',e.message);}
   }
