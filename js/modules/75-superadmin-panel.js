@@ -276,6 +276,7 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
 
     const TABS = [
         {id:'overview',   label:'Огляд',      icon:'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'},
+        {id:'requests',   label:'🆕 Заявки',   icon:'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z'},
         {id:'companies',  label:'Компанії',   icon:'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'},
         {id:'users',      label:'Юзери',      icon:'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'},
         {id:'activity',   label:'Активність', icon:'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'},
@@ -321,6 +322,10 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
 
 <!-- Tab Contents -->
 <div id="saTabContent_overview">${_saRenderOverview(pc, planCounts)}</div>
+<div id="saTabContent_requests" style="display:none;">
+    <div style="margin-bottom:0.75rem;font-weight:700;font-size:0.95rem;">🆕 Нові заявки на реєстрацію</div>
+    <div id="saPendingRegs"><div style="color:#9ca3af;font-size:0.82rem;">Завантаження...</div></div>
+</div>
 <div id="saTabContent_companies" style="display:none;">${_saRenderCompanies(pc)}</div>
 <div id="saTabContent_users"     style="display:none;">${_saRenderUsers(pc)}</div>
 <div id="saTabContent_activity"  style="display:none;">${_saRenderActivity(pc)}</div>
@@ -334,7 +339,7 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
 }
 
 window.saSwitchTab = function(tab) {
-    const tabs = ['overview','companies','users','activity','ai','health','alerts','system','firestore','subscriptions'];
+    const tabs = ['overview','requests','companies','users','activity','ai','health','alerts','system','firestore','subscriptions'];
     tabs.forEach(t => {
         const btn   = document.getElementById(`saTab_${t}`);
         const panel = document.getElementById(`saTabContent_${t}`);
@@ -346,6 +351,7 @@ window.saSwitchTab = function(tab) {
         }
         if (panel) panel.style.display = active ? '' : 'none';
     });
+    if (tab === 'requests') renderPendingRegistrations();
 };
 
 // ── TAB 1: OVERVIEW ─────────────────────────────────────────
@@ -486,6 +492,9 @@ function _saRenderCompanies(pc) {
                     <button onclick="toggleCompanyAI('${safeId}',${d.aiEnabled!==false?'false':'true'})"
                         style="padding:2px 5px;background:${d.aiEnabled!==false?'#fef2f2':'#f0fdf4'};color:${d.aiEnabled!==false?'#ef4444':'#16a34a'};border:1px solid ${d.aiEnabled!==false?'#fecaca':'#bbf7d0'};border-radius:5px;cursor:pointer;font-size:0.7rem;">
                         AI ${d.aiEnabled!==false?'вимк':'увімк'}</button>
+                    <button onclick="toggleCompanyBlock('${safeId}','${safeName}',${!!d.disabled})"
+                        style="padding:2px 5px;background:${d.disabled?'#f0fdf4':'#fef2f2'};color:${d.disabled?'#16a34a':'#dc2626'};border:1px solid ${d.disabled?'#bbf7d0':'#fecaca'};border-radius:5px;cursor:pointer;font-size:0.7rem;font-weight:700;">
+                        ${d.disabled?'🔓':'🔒'}</button>
                 </div>
             </td>
         </tr>`;
@@ -1367,6 +1376,98 @@ window.toggleCompanyAI = async function(companyId, enabled) {
         await loadSuperadminData();
     } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
 };
+
+// ── Блокування/розблокування компанії ────────────────────────
+window.toggleCompanyBlock = async function(companyId, companyName, isBlocked) {
+    const action = isBlocked ? 'розблокувати' : 'заблокувати';
+    const confirmed = typeof showConfirmModal === 'function'
+        ? await showConfirmModal(`${isBlocked?'Розблокувати':'Заблокувати'} компанію "${companyName}"?`, { danger: !isBlocked })
+        : confirm(`${action} компанію "${companyName}"?`);
+    if (!confirmed) return;
+    try {
+        await firebase.firestore().collection('companies').doc(companyId).update({
+            disabled: !isBlocked,
+            disabledAt: !isBlocked ? firebase.firestore.FieldValue.serverTimestamp() : null,
+        });
+        showToast && showToast(`Компанію ${isBlocked ? '🔓 розблоковано' : '🔒 заблоковано'} ✓`, 'success');
+        await loadSuperadminData();
+    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+};
+
+// ── Підтвердження/відхилення реєстрації ──────────────────────
+window.approveRegistration = async function(companyId, companyName) {
+    const confirmed = typeof showConfirmModal === 'function'
+        ? await showConfirmModal(`Надати доступ компанії "${companyName}"?`)
+        : confirm(`Надати доступ "${companyName}"?`);
+    if (!confirmed) return;
+    try {
+        const batch = firebase.firestore().batch();
+        batch.update(firebase.firestore().collection('companies').doc(companyId), {
+            disabled: false,
+            pendingApproval: false,
+            subscriptionStatus: 'active',
+            approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        batch.update(firebase.firestore().collection('registration_requests').doc(companyId), {
+            status: 'approved',
+            approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        await batch.commit();
+        showToast && showToast(`✅ Компанію "${companyName}" підтверджено`, 'success');
+        await loadSuperadminData();
+        renderPendingRegistrations();
+    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+};
+
+window.rejectRegistration = async function(companyId, companyName) {
+    const confirmed = typeof showConfirmModal === 'function'
+        ? await showConfirmModal(`Відхилити реєстрацію "${companyName}"?`, { danger: true })
+        : confirm(`Відхилити "${companyName}"?`);
+    if (!confirmed) return;
+    try {
+        await firebase.firestore().collection('registration_requests').doc(companyId).update({
+            status: 'rejected',
+            rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        await firebase.firestore().collection('companies').doc(companyId).update({ disabled: true, pendingApproval: false });
+        showToast && showToast(`❌ Реєстрацію "${companyName}" відхилено`, 'info');
+        renderPendingRegistrations();
+    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+};
+
+// ── Рендер панелі нових реєстрацій ───────────────────────────
+async function renderPendingRegistrations() {
+    const wrap = document.getElementById('saPendingRegs');
+    if (!wrap) return;
+    try {
+        const snap = await firebase.firestore().collection('registration_requests')
+            .where('status', '==', 'pending').orderBy('createdAt', 'desc').limit(50).get();
+        if (snap.empty) {
+            wrap.innerHTML = '<div style="color:#9ca3af;font-size:0.82rem;padding:0.5rem 0;">Нових заявок немає ✓</div>';
+            return;
+        }
+        wrap.innerHTML = snap.docs.map(doc => {
+            const r = doc.data();
+            const date = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleDateString('uk-UA') : '—';
+            return `
+            <div style="background:white;border:1px solid #fde68a;border-radius:10px;padding:0.75rem 1rem;
+                display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.4rem;">
+                <div style="flex:1;min-width:0;">
+                    <div style="font-weight:700;font-size:0.88rem;color:#111827;">${r.companyName}</div>
+                    <div style="font-size:0.75rem;color:#6b7280;">${r.ownerName} · ${r.ownerEmail} · ${date}</div>
+                </div>
+                <button onclick="approveRegistration('${doc.id}','${(r.companyName||'').replace(/'/g,"\\'")}')"
+                    style="padding:0.35rem 0.85rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:700;">
+                    ✅ Підтвердити
+                </button>
+                <button onclick="rejectRegistration('${doc.id}','${(r.companyName||'').replace(/'/g,"\\'")}')"
+                    style="padding:0.35rem 0.85rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">
+                    ❌ Відхилити
+                </button>
+            </div>`;
+        }).join('');
+    } catch(e) { wrap.innerHTML = '<div style="color:#ef4444;font-size:0.8rem;">Помилка завантаження</div>'; }
+}
 
 window.updateAILimit = async function(companyId, field, value) {
     const num = value === '' ? 0 : Math.max(0, parseInt(value) || 0);

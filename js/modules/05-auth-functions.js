@@ -45,18 +45,19 @@
                 
                 const batch = db.batch();
                 
-                // 1. Company doc
+                // 1. Company doc — одразу disabled:true, чекає підтвердження
                 const trialEnd = new Date();
-                trialEnd.setDate(trialEnd.getDate() + 7);
+                trialEnd.setDate(trialEnd.getDate() + 14); // 14 днів після підтвердження
                 batch.set(db.collection('companies').doc(companyId), {
                     name: companyName,
                     ownerName: ownerName,
                     ownerEmail: user.email.toLowerCase(),
                     ownerId: user.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    disabled: false,
+                    disabled: true,           // заблоковано до підтвердження
+                    pendingApproval: true,    // чекає схвалення
                     subscriptionPlan: 'trial',
-                    subscriptionStatus: 'active',
+                    subscriptionStatus: 'pending',
                     subscriptionEnd: firebase.firestore.Timestamp.fromDate(trialEnd),
                 });
                 
@@ -74,16 +75,48 @@
                     companyId: companyId,
                     role: 'owner'
                 });
+
+                // 4. Запит на модерацію
+                batch.set(db.collection('registration_requests').doc(companyId), {
+                    companyId,
+                    companyName,
+                    ownerName,
+                    ownerEmail: user.email.toLowerCase(),
+                    ownerId: user.uid,
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                });
                 
-                try {
                 await batch.commit();
-                } catch(err) {
-                    console.error('[Batch] commit failed:', err);
-                    showToast && showToast(window.t('savingError'), 'error');
+
+                // 5. Telegram сповіщення супер-адміну
+                try {
+                    await fetch('/api/notify-new-registration', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ companyId, companyName, ownerName, ownerEmail: user.email }),
+                    });
+                } catch(e) { console.warn('[Reg] notify error:', e.message); }
+
+                // Показуємо повідомлення про очікування
+                if (btn) btn.disabled = false;
+                const authBox = document.querySelector('.auth-box') || document.getElementById('registerForm');
+                if (authBox) {
+                    authBox.innerHTML = `
+                    <div style="text-align:center;padding:2rem 1rem;">
+                        <div style="font-size:2.5rem;margin-bottom:1rem;">⏳</div>
+                        <div style="font-size:1.1rem;font-weight:700;color:#111827;margin-bottom:0.75rem;">Заявку надіслано!</div>
+                        <div style="font-size:0.88rem;color:#6b7280;line-height:1.6;margin-bottom:1.5rem;">
+                            Ваша компанія <strong>${companyName}</strong> зареєстрована.<br>
+                            Адміністратор перевірить заявку і надасть доступ протягом 24 годин.<br>
+                            Ви отримаєте листа на <strong>${user.email}</strong>.
+                        </div>
+                        <button onclick="auth.signOut().then(()=>location.reload())"
+                            style="padding:0.6rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">
+                            Зрозуміло
+                        </button>
+                    </div>`;
                 }
-                
-                // Reload — onAuthStateChanged знайде companyId і зайде
-                window.location.reload();
                 
             } catch (error) {
                 console.error('Self registration error:', error);

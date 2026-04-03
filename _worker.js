@@ -298,6 +298,38 @@ async function handleGoogleOauth(request, url, env) {
     );
 }
 
+// ════════════════════════════════════════════════════════════
+// handleNotifyNewRegistration — Telegram сповіщення супер-адміну
+// ════════════════════════════════════════════════════════════
+async function handleNotifyNewRegistration(request, env) {
+    if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+    let body;
+    try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
+
+    const { companyId, companyName, ownerName, ownerEmail } = body;
+
+    // Telegram сповіщення через системний бот
+    const botToken = env.TELEGRAM_BOT_TOKEN;
+    const adminChatId = env.SUPERADMIN_TELEGRAM_CHAT_ID || ''; // додай в Cloudflare env
+
+    if (botToken && adminChatId) {
+        const msg = `🆕 <b>Нова реєстрація!</b>\n\n` +
+            `🏢 <b>${companyName}</b>\n` +
+            `👤 ${ownerName}\n` +
+            `📧 ${ownerEmail}\n` +
+            `🔑 ID: <code>${companyId}</code>\n\n` +
+            `Відкрий адмін панель → Заявки для підтвердження.`;
+
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: adminChatId, text: msg, parse_mode: 'HTML' }),
+        }).catch(() => {});
+    }
+
+    return json({ ok: true });
+}
+
 // ── Main router ──────────────────────────────────────────────
 export default {
     async fetch(request, env, ctx) {
@@ -373,6 +405,9 @@ export default {
 
         // ── /api/google-oauth ─── Google Calendar OAuth flow ──
         if (path === '/api/google-oauth') return handleGoogleOauth(request, url, env);
+
+        // ── /api/notify-new-registration ─── сповіщення про нову реєстрацію ──
+        if (path === '/api/notify-new-registration') return handleNotifyNewRegistration(request, env);
 
         // ── /api/ping ────────────────────────────────────────
         if (path === '/api/ping') return json({ ok:true, ts:Date.now() });
