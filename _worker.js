@@ -1428,6 +1428,209 @@ ${e.stack?.slice(0,200)}`);
         return json({ok:true});
     }
 
+    // ════════════════════════════════════════════════════════════
+    // VIBER CHANNEL
+    // ════════════════════════════════════════════════════════════
+    if (channel === 'viber') {
+        const vEvent   = body.event || '';
+        const vSender  = body.sender || {};
+        const vMessage = body.message || {};
+        const chatId   = String(vSender.id || '');
+        const userName = vSender.name || '';
+
+        if (!chatId || !['message', 'subscribed', 'conversation_started'].includes(vEvent)) {
+            return json({ status: 0 });
+        }
+
+        // Читаємо Viber токен компанії
+        let viberToken = '';
+        const compDocV = await fsGet(`companies/${cid}`, token);
+        if (compDocV?.fields) {
+            const cd = fFields(compDocV.fields);
+            viberToken = cd.viberBotToken || '';
+        }
+        if (!viberToken) return json({ status: 0 });
+
+        // Відправка через Viber API
+        const viberSend = async (receiverId, msgText, keyboard = null) => {
+            const payload = {
+                receiver: receiverId,
+                min_api_version: 1,
+                sender:   { name: 'TALKO Bot' },
+                type:     'text',
+                text:     msgText,
+            };
+            if (keyboard) payload.keyboard = keyboard;
+            await fetch('https://chatapi.viber.com/pa/send_message', {
+                method:  'POST',
+                headers: {
+                    'Content-Type':      'application/json',
+                    'X-Viber-Auth-Token': viberToken,
+                },
+                body: JSON.stringify(payload),
+            }).catch(() => {});
+        };
+
+        // Парсинг вхідного повідомлення
+        let text = '';
+        if (vEvent === 'subscribed' || vEvent === 'conversation_started') {
+            text = '/start';
+        } else if (vMessage.type === 'text') {
+            text = (vMessage.text || '').trim();
+        } else if (vMessage.type === 'picture') {
+            const photoUrl = vMessage.media || '';
+            text = photoUrl ? `PHOTO:${photoUrl}` : '';
+        } else if (vMessage.type === 'file') {
+            text = vMessage.media || '';
+        }
+
+        if (!text) return json({ status: 0 });
+
+        // Читаємо або створюємо контакт
+        const contactPath = `companies/${cid}/contacts/${chatId}`;
+        let contact = {};
+        const contactDoc = await fsGet(contactPath, token);
+        if (contactDoc?.fields) {
+            contact = fFields(contactDoc.fields);
+        } else {
+            const nowV = new Date().toISOString();
+            await fsSet(contactPath, {
+                id:            { stringValue: chatId },
+                channel:       { stringValue: 'viber' },
+                name:          { stringValue: userName },
+                status:        { stringValue: 'new' },
+                currentFlowId: { stringValue: '' },
+                currentNodeId: { stringValue: '' },
+                createdAt:     { timestampValue: nowV },
+                updatedAt:     { timestampValue: nowV },
+            }, token);
+            contact = { id: chatId, channel: 'viber', name: userName, status: 'new', currentFlowId: '', currentNodeId: '' };
+        }
+
+        // Лог вхідного повідомлення
+        const vmId = `msg_${Date.now()}_user`;
+        const vmTs = new Date().toISOString();
+        await fsSet(`${contactPath}/messages/${vmId}`, {
+            id:        { stringValue: vmId },
+            role:      { stringValue: 'user' },
+            from:      { stringValue: 'user' },
+            direction: { stringValue: 'in' },
+            text:      { stringValue: text },
+            channel:   { stringValue: 'viber' },
+            timestamp: { timestampValue: vmTs },
+            createdAt: { timestampValue: vmTs },
+        }, token);
+
+        await fsPatch(contactPath, {
+            name:          { stringValue: userName },
+            lastMessage:   { stringValue: text.slice(0, 100) },
+            lastMessageAt: { timestampValue: vmTs },
+            updatedAt:     { timestampValue: vmTs },
+            channel:       { stringValue: 'viber' },
+        }, token);
+
+        // Визначаємо активний flow
+        let activeFlowId = contact.currentFlowId || '';
+        let activeNodeId = contact.currentNodeId || '';
+
+        // /start → шукаємо активний flow
+        if (text === '/start') {
+            const botsSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (botsSnap.ok) {
+                const botsData = await botsSnap.json();
+                for (const botDoc of (botsData.documents || [])) {
+                    const bid = botDoc.name?.split('/').pop();
+                    const flowsSnap = await fetch(
+                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    if (!flowsSnap.ok) continue;
+                    const flowsData = await flowsSnap.json();
+                    for (const fd of (flowsData.documents || [])) {
+                        const fid = fd.name?.split('/').pop();
+                        const fdata = fFields(fd.fields || {});
+                        if (fdata.status === 'active') {
+                            activeFlowId = `${bid}::${fid}`;
+                            activeNodeId = 'start';
+                            await fsPatch(contactPath, {
+                                currentFlowId: { stringValue: activeFlowId },
+                                currentNodeId: { stringValue: 'start' },
+                                updatedAt:     { timestampValue: new Date().toISOString() },
+                            }, token);
+                            break;
+                        }
+                    }
+                    if (activeFlowId) break;
+                }
+            }
+        }
+
+        // Запускаємо Flow Engine
+        if (activeFlowId) {
+            const vParts  = activeFlowId.split('::');
+            const botIdV  = vParts[0];
+            const flowIdV = vParts[1];
+            if (botIdV && flowIdV) {
+                const isWaitingPhotoV = contact.waitingForPhoto === true || String(contact.waitingForPhoto) === 'true';
+                if (isWaitingPhotoV && !text.startsWith('PHOTO:')) {
+                    await viberSend(chatId, '📷 Будь ласка, надішліть фото (не текст)');
+                    return json({ status: 0 });
+                }
+                const isWaitingV = contact.waitingForInput === true || String(contact.waitingForInput) === 'true';
+                if (isWaitingV || isWaitingPhotoV) {
+                    await fsPatch(contactPath, {
+                        waitingForInput: { booleanValue: false },
+                        waitingForPhoto: { booleanValue: false },
+                        updatedAt:       { timestampValue: new Date().toISOString() },
+                    }, token);
+                }
+
+                // vSend — аналог tgSend але для Viber
+                const vSend = async (receiverId, msgText, opts = {}) => {
+                    const kbButtons = opts.inline_keyboard;
+                    let vKeyboard = null;
+                    if (kbButtons && kbButtons.length > 0) {
+                        const vButtons = kbButtons.flat().map((btn, i) => ({
+                            Columns: 6, Rows: 1,
+                            Text: `<b>${btn.text}</b>`,
+                            ActionType: 'reply',
+                            ActionBody: btn.callback_data || `btn_${i}`,
+                            BgColor: '#f0fdf4',
+                            TextSize: 'regular',
+                        }));
+                        vKeyboard = { Type: 'keyboard', DefaultHeight: false, Buttons: vButtons };
+                    }
+                    await viberSend(receiverId, msgText, vKeyboard);
+                };
+
+                try {
+                    await runFlowEngine({
+                        cid, chatId,
+                        botId:         botIdV,
+                        flowId:        flowIdV,
+                        currentNodeId: activeNodeId,
+                        text, isCallback: false, callbackData: '',
+                        contact, contactPath,
+                        token, botToken: viberToken,
+                        from: { id: chatId, first_name: userName },
+                        userName,
+                        tgSend: vSend,
+                        env,
+                    });
+                } catch (e) {
+                    await viberSend(chatId, `Помилка: ${e.message?.slice(0, 100)}`);
+                }
+            }
+        } else {
+            await viberSend(chatId, "Вітаємо! Напишіть нам і ми зв'яжемося з вами.");
+        }
+
+        return json({ status: 0 });
+    }
+
     // Other channels — just ack
     return json({ok:true, channel, received: true});
 }
