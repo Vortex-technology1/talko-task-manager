@@ -4281,45 +4281,38 @@ exports.migrateWarehouseAndClients = functions
                 // ── 3. crm_clients — додаємо нові поля якщо немає ──
                 try {
                     const clientsSnap = await compDoc.ref.collection('crm_clients').get();
-                    const clBatch = db.batch();
+                    let clBatch = db.batch();
                     let clCount = 0;
+                    let batchSize = 0;
 
                     for (const clientDoc of clientsSnap.docs) {
                         const data = clientDoc.data();
                         const updates = {};
                         let needsUpdate = false;
 
-                        if (data.creditLimit === undefined) {
-                            updates.creditLimit = 0;   // 0 = без ліміту
-                            needsUpdate = true;
-                        }
-                        if (data.priceTypeId === undefined) {
-                            updates.priceTypeId = null; // null = дефолтний прайс
-                            needsUpdate = true;
-                        }
-                        if (data.totalDebt === undefined) {
-                            updates.totalDebt = 0;
-                            needsUpdate = true;
-                        }
-                        if (data.paymentCondition === undefined) {
-                            updates.paymentCondition = 'prepay';
-                            needsUpdate = true;
-                        }
-                        if (data.paymentDueDays === undefined) {
-                            updates.paymentDueDays = 0;
-                            needsUpdate = true;
-                        }
+                        if (data.creditLimit === undefined) { updates.creditLimit = 0; needsUpdate = true; }
+                        if (data.priceTypeId === undefined) { updates.priceTypeId = null; needsUpdate = true; }
+                        if (data.totalDebt === undefined) { updates.totalDebt = 0; needsUpdate = true; }
+                        if (data.paymentCondition === undefined) { updates.paymentCondition = 'prepay'; needsUpdate = true; }
+                        if (data.paymentDueDays === undefined) { updates.paymentDueDays = 0; needsUpdate = true; }
 
                         if (needsUpdate) {
                             clBatch.update(clientDoc.ref, updates);
                             clCount++;
+                            batchSize++;
                             results.clientsUpdated++;
-                            if (clCount % 400 === 0) await clBatch.commit();
+                            // Після кожних 400 — commit і новий batch
+                            if (batchSize >= 400) {
+                                await clBatch.commit();
+                                clBatch = db.batch(); // новий batch
+                                batchSize = 0;
+                            }
                         } else {
                             results.clientsSkipped++;
                         }
                     }
-                    if (clCount % 400 !== 0 && clCount > 0) await clBatch.commit();
+                    // Залишок
+                    if (batchSize > 0) await clBatch.commit();
                 } catch(e) {
                     console.error(`[migrate] clients error ${cid}:`, e.message);
                     results.errors.push(`clients:${cid}: ${e.message}`);
