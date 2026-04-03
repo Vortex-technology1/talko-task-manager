@@ -13,18 +13,21 @@ body{
   background:#0c1009;
   color:#e8f0e4;
   min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:32px 20px 48px;
+  display:grid;
+  place-items:center;
+  padding:40px 20px 60px;
   -webkit-font-smoothing:antialiased;
 }
 
 .card{
   width:100%;
-  max-width:480px;
+  max-width:460px;
   text-align:center;
+  margin:0 auto;
+}
+
+@media(max-width:500px){
+  body{padding:28px 16px 80px}
 }
 
 /* AVATAR */
