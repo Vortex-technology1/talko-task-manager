@@ -1051,9 +1051,20 @@ async function handleWebhook(request, url, env) {
     if (channel==='telegram') {
         const msg    = body.message||body.callback_query?.message||{};
         const chat   = msg.chat||body.callback_query?.from||{};
-        const text   = (msg.text||body.callback_query?.data||'').trim();
-        const chatId = String(chat.id||'');
         const from   = msg.from || body.callback_query?.from || {};
+        const chatId = String(chat.id||'');
+
+        // Визначаємо text — враховуємо фото з підписом
+        let text = (msg.text||body.callback_query?.data||'').trim();
+        let incomingPhotoUrl = null;
+
+        // Обробка вхідного фото
+        if (msg.photo && msg.photo.length > 0 && !text) {
+            const bestPhoto = msg.photo[msg.photo.length - 1]; // найбільша версія
+            const fileId = bestPhoto.file_id;
+            text = `PHOTO:${fileId}`; // передаємо як спеціальний токен у flow engine
+            incomingPhotoUrl = fileId; // буде замінено на URL нижче якщо потрібно
+        }
 
         if (!chatId||!cid) return json({ok:true});
 
@@ -1379,6 +1390,23 @@ async function handleWebhook(request, url, env) {
             const botId = parts[0], flowId = parts[1];
             if (botId && flowId) {
                 try {
+                    // Якщо нода чекає фото але прийшов текст — нагадуємо
+                    const isWaitingPhoto = contact.waitingForPhoto === true ||
+                        String(contact.waitingForPhoto) === 'true';
+                    if (isWaitingPhoto && !text.startsWith('PHOTO:') && !isCallback) {
+                        await tgSend(chatId, '📷 Будь ласка, надішліть фото (не текст)');
+                        return json({ ok: true });
+                    }
+                    // Скидаємо waitingForInput перед обробкою щоб уникнути петлі
+                    const isWaiting = contact.waitingForInput === true ||
+                        String(contact.waitingForInput) === 'true';
+                    if ((isWaiting || isWaitingPhoto) && !isCallback) {
+                        await fsPatch(contactPath, {
+                            waitingForInput: { booleanValue: false },
+                            waitingForPhoto: { booleanValue: false },
+                            updatedAt:       { timestampValue: new Date().toISOString() },
+                        }, token);
+                    }
                     await runFlowEngine({
                         cid, chatId, botId, flowId,
                         currentNodeId: activeNodeId,
@@ -1565,13 +1593,23 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
     await executeNode({ node: currentNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput: text });
 }
 
+// ══════════════════════════════════════════════════════════
+// ІНТЕРПОЛЯЦІЯ ЗМІННИХ {{varName}} в тексті
+// ══════════════════════════════════════════════════════════
+function _interpolate(text, collectedData = {}) {
+    if (!text) return '';
+    return text.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+        return collectedData[key] !== undefined ? String(collectedData[key]) : match;
+    });
+}
+
 async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput }) {
     const nodeType = node.type || node.data?.type || '';
     const nodeData = node.data || node;
 
     // ── ВУЗОЛ: ПОВІДОМЛЕННЯ ──────────────────────────────────
     if (nodeType === 'message' || nodeType === 'sendMessage') {
-        const msgText = nodeData.text || nodeData.message || nodeData.content || '';
+        const msgText = _interpolate(nodeData.text || nodeData.message || nodeData.content || '', collectedData);
         const buttons = nodeData.buttons || nodeData.keyboard || [];
 
         let replyMarkup = {};
@@ -1852,6 +1890,316 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     updatedAt:     { timestampValue: new Date().toISOString() },
                 }, token);
             }
+        }
+        return;
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // ── ВУЗОЛ: QUESTION — задати питання і чекати відповідь ──
+    // ══════════════════════════════════════════════════════════
+    if (nodeType === 'question') {
+        const questionText = _interpolate(nodeData.text || nodeData.question || '', collectedData);
+        const varName      = nodeData.varName || nodeData.variable || nodeData.saveAs || '';
+        const buttons      = nodeData.buttons || nodeData.keyboard || [];
+
+        // Якщо userInput вже є — це відповідь клієнта на це питання
+        if (userInput !== undefined && userInput !== null && userInput !== '') {
+            // Зберігаємо відповідь в collectedData
+            if (varName) {
+                collectedData[varName] = userInput;
+                const mapFields = {};
+                for (const [k, v] of Object.entries(collectedData)) {
+                    mapFields[k] = { stringValue: String(v) };
+                }
+                await fsPatch(contactPath, {
+                    collectedData: { mapValue: { fields: mapFields } },
+                    updatedAt:     { timestampValue: new Date().toISOString() },
+                }, token);
+            }
+            // Переходимо до наступного вузла
+            // Якщо є кнопки — шукаємо edge по callback або по тексту кнопки
+            let nextNode = null;
+            if (buttons.length > 0) {
+                const btnIdx = buttons.findIndex(b =>
+                    (b.text || b.label || b) === userInput ||
+                    userInput === `btn_${buttons.indexOf(b)}`
+                );
+                if (btnIdx >= 0) {
+                    nextNode = getNextNode(node.id, `btn_${btnIdx}`);
+                }
+            }
+            if (!nextNode) nextNode = getNextNode(node.id);
+            if (nextNode) {
+                await fsPatch(contactPath, {
+                    currentNodeId: { stringValue: nextNode.id },
+                    updatedAt:     { timestampValue: new Date().toISOString() },
+                }, token);
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            }
+            return;
+        }
+
+        // Відповіді ще немає — надсилаємо питання і чекаємо
+        let replyMarkup = {};
+        if (buttons.length > 0) {
+            const inlineKeyboard = buttons.map((btn, i) => [{
+                text: btn.text || btn.label || btn,
+                callback_data: `btn_${i}`,
+            }]);
+            replyMarkup = { inline_keyboard: inlineKeyboard };
+        }
+
+        if (questionText) {
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id:    chatId,
+                    text:       questionText,
+                    parse_mode: 'HTML',
+                    ...(buttons.length > 0 ? { reply_markup: replyMarkup } : {}),
+                }),
+            }).catch(() => {});
+        }
+
+        // Зберігаємо що чекаємо відповідь на це питання
+        await fsPatch(contactPath, {
+            currentNodeId:    { stringValue: node.id },
+            waitingForInput:  { booleanValue: true },
+            waitingVarName:   { stringValue: varName },
+            updatedAt:        { timestampValue: new Date().toISOString() },
+        }, token);
+        return;
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // ── ВУЗОЛ: CONDITION — розгалуження по змінній ────────────
+    // ══════════════════════════════════════════════════════════
+    if (nodeType === 'condition') {
+        const condVar    = nodeData.variable || nodeData.varName || '';
+        const condOp     = nodeData.operator || 'eq';
+        const condVal    = nodeData.value || '';
+        const actualVal  = String(collectedData[condVar] || '');
+        const compareVal = String(condVal);
+
+        let condResult = false;
+        switch (condOp) {
+            case 'eq':       condResult = actualVal === compareVal; break;
+            case 'neq':      condResult = actualVal !== compareVal; break;
+            case 'contains': condResult = actualVal.toLowerCase().includes(compareVal.toLowerCase()); break;
+            case 'gt':       condResult = Number(actualVal) > Number(compareVal); break;
+            case 'lt':       condResult = Number(actualVal) < Number(compareVal); break;
+            case 'gte':      condResult = Number(actualVal) >= Number(compareVal); break;
+            case 'lte':      condResult = Number(actualVal) <= Number(compareVal); break;
+            case 'empty':    condResult = !actualVal; break;
+            case 'notempty': condResult = !!actualVal; break;
+            default:         condResult = actualVal === compareVal;
+        }
+
+        // true → edge з handle 'yes' або 'true' або перший
+        // false → edge з handle 'no' або 'false' або другий
+        const trueEdge  = edges.find(e => (e.source || e.fromNode) === node.id &&
+            (e.sourceHandle === 'yes' || e.sourceHandle === 'true' || e.label === 'Так'));
+        const falseEdge = edges.find(e => (e.source || e.fromNode) === node.id &&
+            (e.sourceHandle === 'no' || e.sourceHandle === 'false' || e.label === 'Ні'));
+        const allEdges  = edges.filter(e => (e.source || e.fromNode) === node.id);
+
+        const targetEdge = condResult
+            ? (trueEdge  || allEdges[0])
+            : (falseEdge || allEdges[1] || allEdges[0]);
+
+        if (targetEdge) {
+            const nextNode = nodes.find(n => n.id === (targetEdge.target || targetEdge.toNode));
+            if (nextNode) {
+                await fsPatch(contactPath, {
+                    currentNodeId: { stringValue: nextNode.id },
+                    updatedAt:     { timestampValue: new Date().toISOString() },
+                }, token);
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput });
+            }
+        }
+        return;
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // ── ВУЗОЛ: PHOTO — отримати фото від клієнта ──────────────
+    // ══════════════════════════════════════════════════════════
+    if (nodeType === 'photo' || nodeType === 'receive_photo') {
+        const varName   = nodeData.varName || nodeData.variable || nodeData.saveAs || 'photo_url';
+        const promptMsg = _interpolate(nodeData.text || nodeData.prompt || 'Будь ласка, надішліть фото 📷', collectedData);
+
+        // Якщо є фото у вхідному повідомленні (передається як спеціальне значення)
+        if (userInput && userInput.startsWith('PHOTO:')) {
+            const photoUrl = userInput.replace('PHOTO:', '');
+            collectedData[varName] = photoUrl;
+            const mapFields = {};
+            for (const [k, v] of Object.entries(collectedData)) {
+                mapFields[k] = { stringValue: String(v) };
+            }
+            await fsPatch(contactPath, {
+                collectedData:   { mapValue: { fields: mapFields } },
+                waitingForInput: { booleanValue: false },
+                updatedAt:       { timestampValue: new Date().toISOString() },
+            }, token);
+
+            // Підтвердження і перехід далі
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: chatId, text: '✅ Фото отримано', parse_mode: 'HTML' }),
+            }).catch(() => {});
+
+            const nextNode = getNextNode(node.id);
+            if (nextNode) {
+                await fsPatch(contactPath, {
+                    currentNodeId: { stringValue: nextNode.id },
+                    updatedAt:     { timestampValue: new Date().toISOString() },
+                }, token);
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            }
+            return;
+        }
+
+        // Фото ще не надіслано — просимо
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: chatId, text: promptMsg, parse_mode: 'HTML' }),
+        }).catch(() => {});
+
+        await fsPatch(contactPath, {
+            currentNodeId:    { stringValue: node.id },
+            waitingForInput:  { booleanValue: true },
+            waitingVarName:   { stringValue: varName },
+            waitingForPhoto:  { booleanValue: true },
+            updatedAt:        { timestampValue: new Date().toISOString() },
+        }, token);
+        return;
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // ── ВУЗОЛ: CRM_UPDATE — записати дані в угоду ─────────────
+    // ══════════════════════════════════════════════════════════
+    if (nodeType === 'crm_update' || nodeType === 'updateDeal' || nodeType === 'update_deal') {
+        // Знаходимо активну угоду контакту або створюємо нову
+        let dealId = contact.crmDealId || collectedData._dealId || null;
+
+        if (!dealId) {
+            // Шукаємо угоду по chatId
+            const dealsSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_deals?pageSize=5`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (dealsSnap.ok) {
+                const dd = await dealsSnap.json();
+                const found = (dd.documents || []).find(d => {
+                    const f = fFields(d.fields || {});
+                    return f.botChatId === String(chatId) || f.telegramChatId === String(chatId);
+                });
+                if (found) dealId = found.name.split('/').pop();
+            }
+        }
+
+        // Що оновлюємо — беремо з nodeData.fields або всі collectedData
+        const fieldsToUpdate = nodeData.fields || {};
+        const updatePayload = {};
+
+        // Фіксовані поля з налаштувань ноди
+        for (const [key, val] of Object.entries(fieldsToUpdate)) {
+            updatePayload[key] = { stringValue: _interpolate(String(val), collectedData) };
+        }
+
+        // Також записуємо весь collectedData як підполе
+        if (Object.keys(collectedData).length > 0) {
+            const cdFields = {};
+            for (const [k, v] of Object.entries(collectedData)) {
+                cdFields[k] = { stringValue: String(v) };
+            }
+            updatePayload.botCollectedData = { mapValue: { fields: cdFields } };
+        }
+
+        updatePayload.updatedAt = { timestampValue: new Date().toISOString() };
+
+        if (dealId) {
+            await fsPatch(`companies/${cid}/crm_deals/${dealId}`, updatePayload, token);
+        } else {
+            // Немає угоди — створюємо нову
+            await createCrmLead({ cid, chatId, contact, collectedData, token });
+        }
+
+        const nextNode = getNextNode(node.id);
+        if (nextNode) {
+            await fsPatch(contactPath, {
+                currentNodeId: { stringValue: nextNode.id },
+                updatedAt:     { timestampValue: new Date().toISOString() },
+            }, token);
+            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+        }
+        return;
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // ── ВУЗОЛ: HTTP_REQUEST — зовнішній API виклик ────────────
+    // ══════════════════════════════════════════════════════════
+    if (nodeType === 'http_request' || nodeType === 'httpRequest' || nodeType === 'api_call') {
+        const reqUrl     = _interpolate(nodeData.url || '', collectedData);
+        const reqMethod  = (nodeData.method || 'POST').toUpperCase();
+        const reqBodyTpl = nodeData.body || '{}';
+        const saveAs     = nodeData.saveAs || nodeData.varName || 'api_result';
+
+        if (!reqUrl) {
+            const nextNode = getNextNode(node.id);
+            if (nextNode) await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            return;
+        }
+
+        try {
+            const bodyStr = _interpolate(reqBodyTpl, collectedData);
+            const reqOpts = {
+                method: reqMethod,
+                headers: { 'Content-Type': 'application/json' },
+            };
+            if (reqMethod !== 'GET') reqOpts.body = bodyStr;
+
+            const resp = await fetch(reqUrl, reqOpts);
+            const respText = await resp.text();
+
+            // Намагаємось розпарсити як JSON
+            let resultVal = respText;
+            try {
+                const j = JSON.parse(respText);
+                // Якщо є поле url або image — зберігаємо URL
+                resultVal = j.url || j.image_url || j.data?.[0]?.url || respText;
+                // Зберігаємо всі top-level поля
+                for (const [k, v] of Object.entries(j)) {
+                    if (typeof v === 'string' || typeof v === 'number') {
+                        collectedData[`${saveAs}_${k}`] = String(v);
+                    }
+                }
+            } catch {}
+
+            collectedData[saveAs] = String(resultVal).slice(0, 1000);
+
+            const mapFields = {};
+            for (const [k, v] of Object.entries(collectedData)) {
+                mapFields[k] = { stringValue: String(v) };
+            }
+            await fsPatch(contactPath, {
+                collectedData: { mapValue: { fields: mapFields } },
+                updatedAt:     { timestampValue: new Date().toISOString() },
+            }, token);
+        } catch (httpErr) {
+            collectedData[saveAs] = 'error';
+            collectedData[`${saveAs}_error`] = httpErr.message || 'request failed';
+        }
+
+        const nextNodeHttp = getNextNode(node.id);
+        if (nextNodeHttp) {
+            await fsPatch(contactPath, {
+                currentNodeId: { stringValue: nextNodeHttp.id },
+                updatedAt:     { timestampValue: new Date().toISOString() },
+            }, token);
+            await executeNode({ node: nextNodeHttp, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
         }
         return;
     }
