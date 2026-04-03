@@ -18,7 +18,7 @@
   function serverTs() { return firebase.firestore.FieldValue.serverTimestamp(); }
   function canManage() { const r=window.currentUserData?.role; return r==='owner'||r==='manager'||r==='admin'; }
 
-  const S={debtors:[],filter:'open',saving:false};
+  const S={debtors:[],filter:'open',savingId:null};
 
   async function loadDebtors(){
     if(!cid()) return;
@@ -164,14 +164,14 @@
   };
 
   window._sdSavePayment=async function(debtorId){
-    if(S.saving) return;
+    if(S.savingId===debtorId) return;
     const d=S.debtors.find(x=>x.id===debtorId); if(!d) return;
     const amount=parseFloat(el('sdPayAmount')?.value)||0;
     const payDate=el('sdPayDate')?.value||todayISO();
     if(amount<=0){toast(tg('Введіть суму','Enter amount'),'error');return;}
     const maxBal=Math.max(0,Number(d.amount||0)-Number(d.paidAmount||0));
     if(amount>maxBal+0.01){toast(tg('Сума більша за залишок','Amount exceeds balance'),'error');return;}
-    S.saving=true;
+    S.savingId=debtorId;
     const modal=document.getElementById('sdPayModalOverlay');
     const btn=modal?.querySelector('#sdPaySaveBtn')||el('sdPaySaveBtn');
     if(btn){btn.disabled=true;btn.textContent=tg('Збереження...','Saving...');}
@@ -191,7 +191,7 @@
       if(isPaid&&typeof window.TALKO?.events?.emit==='function') window.TALKO.events.emit('DEBTOR_PAID',{debtorId,clientId:d.clientId,amount});
       await loadDebtors();
     }catch(e){console.error('_sdSavePayment:',e);toast(tg('Помилка: ','Error: ')+e.message,'error');}
-    finally{S.saving=false;if(btn){btn.disabled=false;btn.textContent=tg('Зберегти','Save');}}
+    finally{S.savingId=null;if(btn){btn.disabled=false;btn.textContent=tg('Зберегти','Save');}}
   };
 
   window.initSalesDebtors=async function(){

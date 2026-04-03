@@ -71,13 +71,31 @@
   async function createOrderFromDeal(deal) {
     if (!deal || !cid()) return null;
 
-    // Перевіряємо — можливо вже є замовлення
     if (deal.orderId) {
       toast(tg('Замовлення вже існує: ','Order already exists: ') + deal.orderId, 'info');
       return deal.orderId;
     }
 
     try {
+      // БАГ 21 fix: підтягуємо умови клієнта з crm_clients
+      let paymentCondition = 'prepay';
+      let paymentDueDays   = 0;
+      let priceTypeId      = null;
+      let currency         = 'UAH';
+
+      if (deal.clientId) {
+        try {
+          const clientSnap = await col('crm_clients').doc(deal.clientId).get();
+          if (clientSnap.exists) {
+            const cl = clientSnap.data();
+            paymentCondition = cl.paymentCondition || 'prepay';
+            paymentDueDays   = Number(cl.paymentDueDays || 0);
+            priceTypeId      = cl.priceTypeId || null;
+            currency         = cl.currency || 'UAH';
+          }
+        } catch(e) { /* fallback to defaults */ }
+      }
+
       const number = await generateOrderNumber();
       const payload = {
         number,
@@ -86,9 +104,10 @@
         clientId:         deal.clientId || null,
         clientName:       deal.clientName || deal.title || '',
         assigneeId:       deal.assigneeId || deal.responsibleId || window.currentUserData?.id || '',
-        paymentCondition: 'prepay',
-        paymentDueDays:   0,
-        currency:         'UAH',
+        paymentCondition,
+        paymentDueDays,
+        priceTypeId,
+        currency,
         items:            [],
         totalAmount:      Number(deal.amount || 0),
         discountAmount:   0,
@@ -101,7 +120,6 @@
 
       const ref = await col(COL_ORD).add(payload);
 
-      // Записуємо orderId в угоду
       await col('crm_deals').doc(deal.id).update({
         orderId:   ref.id,
         updatedAt: serverTs(),
@@ -109,7 +127,6 @@
 
       toast(tg('Замовлення створено: ','Order created: ') + number);
 
-      // Оновлюємо локальний стан CRM якщо є
       if (window.crm && Array.isArray(window.crm.deals)) {
         const d = window.crm.deals.find(x => x.id === deal.id);
         if (d) d.orderId = ref.id;
