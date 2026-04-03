@@ -170,15 +170,21 @@
 
                 // АВТОДОПОВНЕННЯ: якщо є tasks — автоматично додаємо myday
                 // бо "Мій день" це просто вид задач, без нього tasks недоступний
-                if (Array.isArray(_allowedTabs) && _allowedTabs.length > 0) {
-                    const _tabsSet = new Set(_allowedTabs);
-                    if (_tabsSet.has('tasks') && !_tabsSet.has('myday')) {
-                        _tabsSet.add('myday');
+                if (Array.isArray(_allowedTabs)) {
+                    // Автодоповнення тільки якщо є хоч щось (порожній = заблоковано все)
+                    if (_allowedTabs.length > 0) {
+                        const _tabsSet = new Set(_allowedTabs);
+                        // tasks → автоматично myday (бо "Мій день" = вид задач)
+                        if (_tabsSet.has('tasks') && !_tabsSet.has('myday')) {
+                            _tabsSet.add('myday');
+                        }
                         _allowedTabs = Array.from(_tabsSet);
                     }
-                    // Якщо є crm — додаємо sales якщо вони пов'язані
+                    // [] → _userAllowedTabs = [] (заблоковано все)
+                    // ['tasks'] → _userAllowedTabs = ['tasks','myday']
                     window._userAllowedTabs = _allowedTabs;
                 } else {
+                    // null/undefined → null (бачить все — старий режим без обмежень)
                     window._userAllowedTabs = null;
                 }
 
@@ -191,11 +197,17 @@
                 window._userHasTabAccess = function(tabKey) {
                     const role = window.currentUserData?.role || 'employee';
                     if (['owner', 'admin', 'manager'].includes(role)) return true;
-                    if (!window._userAllowedTabs) return true;
+                    // null → бачить все
+                    if (window._userAllowedTabs === null || window._userAllowedTabs === undefined) return true;
+                    // [] → заблоковано все
+                    if (window._userAllowedTabs.length === 0) return false;
+                    // ['tasks',...] → перевіряємо
                     return window._userAllowedTabs.includes(tabKey);
                 };
 
-                if (Array.isArray(_allowedTabs) && _allowedTabs.length > 0) {
+                if (Array.isArray(_allowedTabs)) {
+                    // Якщо [] — ховаємо ВСЕ (employee заблокований повністю)
+                    // Якщо ['tasks'] — ховаємо все крім tasks
                     document.querySelectorAll('.tab-btn').forEach(btn => {
                         const match = (btn.getAttribute('onclick') || '').match(/switchTab\('(\w+)'\)/);
                         const tab = match ? match[1] : null;
@@ -252,10 +264,27 @@
 
                     // Відразу переходимо на перший дозволений таб
                     // Пріоритет: myday > tasks > перший зі списку
-                    const preferredFirst = ['myday', 'tasks', 'projects', 'crm'].find(t => _allowedTabs.includes(t));
-                    const firstTab = preferredFirst || _allowedTabs[0];
-                    if (typeof switchTab === 'function') {
-                        setTimeout(() => switchTab(firstTab), 300);
+                    // Переходимо на перший дозволений таб (тільки якщо є хоч щось)
+                    if (_allowedTabs.length > 0) {
+                        const preferredFirst = ['myday', 'tasks', 'projects', 'crm'].find(t => _allowedTabs.includes(t));
+                        const firstTab = preferredFirst || _allowedTabs[0];
+                        if (typeof switchTab === 'function') {
+                            setTimeout(() => switchTab(firstTab), 300);
+                        }
+                    } else {
+                        // allowedTabs = [] — жоден модуль не дозволений
+                        // Показуємо повідомлення замість порожньої сторінки
+                        setTimeout(() => {
+                            const mainContent = document.getElementById('mainContent') || document.getElementById('mainInterface');
+                            const existingMsg = document.getElementById('_noAccessMsg');
+                            if (!existingMsg && mainContent) {
+                                const msg = document.createElement('div');
+                                msg.id = '_noAccessMsg';
+                                msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;padding:2rem;background:white;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.12);z-index:100;max-width:360px;';
+                                msg.innerHTML = '<div style="font-size:2rem;margin-bottom:0.75rem;">🔒</div><div style="font-weight:700;font-size:1.05rem;margin-bottom:0.5rem;">Доступ обмежено</div><div style="font-size:0.85rem;color:#6b7280;">Адміністратор ще не налаштував ваші модулі. Зверніться до керівника.</div>';
+                                document.body.appendChild(msg);
+                            }
+                        }, 500);
                     }
 
                     // Блокуємо switchTab — не дозволяємо перейти на недозволений таб
@@ -264,9 +293,12 @@
                         window._switchTabRestricted = true;
                         const _origSwitchTab = window.switchTab;
                         window.switchTab = function(tabName) {
-                            if (window._userAllowedTabs && !window._userAllowedTabs.includes(tabName)) {
-                                console.warn('[TALKO] Tab not allowed:', tabName);
-                                return;
+                            if (window._userAllowedTabs !== null && window._userAllowedTabs !== undefined) {
+                                // [] → блокуємо все; ['tasks'] → блокуємо все крім tasks
+                                if (window._userAllowedTabs.length === 0 || !window._userAllowedTabs.includes(tabName)) {
+                                    console.warn('[TALKO] Tab not allowed:', tabName);
+                                    return;
+                                }
                             }
                             if (typeof _origSwitchTab === 'function') _origSwitchTab(tabName);
                         };
@@ -414,14 +446,19 @@
                             'regular','incidents','warehouse','finance'];
                         if (lastTab && safeTabs.includes(lastTab) && typeof switchTab === 'function') {
                             // Перевіряємо що таб доступний для цього юзера
-                            const tabAllowed = !window._userAllowedTabs || window._userAllowedTabs.includes(lastTab);
+                            // null → дозволено все; [] → заблоковано все; [...] → перевіряємо
+                            const _tabs = window._userAllowedTabs;
+                            const tabAllowed = _tabs === null || _tabs === undefined
+                                ? true
+                                : (_tabs.length > 0 && _tabs.includes(lastTab));
                             const tabEl = document.getElementById(lastTab + 'Tab');
                             if (tabEl && tabAllowed) {
                                 switchTab(lastTab);
-                            } else if (!tabAllowed && window._userAllowedTabs?.length) {
+                            } else if (!tabAllowed) {
                                 // Таб недозволений — переходимо на перший дозволений
-                                const fallback = ['myday','tasks','projects','crm'].find(t => window._userAllowedTabs.includes(t))
-                                    || window._userAllowedTabs[0];
+                                const fallback = _tabs && _tabs.length > 0
+                                    ? (['myday','tasks','projects','crm'].find(t => _tabs.includes(t)) || _tabs[0])
+                                    : null;
                                 if (fallback) switchTab(fallback);
                             }
                         }
