@@ -108,9 +108,14 @@
                     <div style="font-weight:700;font-size:1rem;">Чат-боти</div>
                     <div style="font-size:0.78rem;color:#6b7280;">${botsFlows.length} ${_tg('ботів','ботов')}</div>
                 </div>
-                <button onclick="openCreateFlowModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                    + Новий бот
-                </button>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button onclick="openFlowTemplatesModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#ede9fe;color:#7c3aed;border:1px solid #c4b5fd;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
+                        📋 Шаблони
+                    </button>
+                    <button onclick="openCreateFlowModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
+                        + Новий бот
+                    </button>
+                </div>
             </div>
 
             ${botsFlows.length === 0 ? `
@@ -1027,3 +1032,304 @@ async function _tgFetch(url, opts = {}) {
         return await fetch(url, { ...opts, signal: ctrl.signal });
     } finally { clearTimeout(timer); }
 }
+
+// ════════════════════════════════════════════════════════════
+// ШАБЛОНИ ФЛОУ — готові воронки під ніші
+// ════════════════════════════════════════════════════════════
+
+const FLOW_TEMPLATES = {
+    furniture: {
+        name:        'Меблі / Кухні',
+        icon:        '🪑',
+        description: 'Збирає розміри, стиль, фото кімнати → генерує дизайн DALL-E → записує на замір',
+        tags:        ['Меблі', 'Кухні', 'Дизайн', 'AI'],
+        color:       '#f0fdf4',
+        border:      '#bbf7d0',
+        nodes: [
+            { id: 'start',   type: 'start',    data: {} },
+            { id: 'greet',   type: 'message',  data: { text: 'Привіт, {{name}}! 👋\n\nЯ допоможу підібрати кухню вашої мрії. Це займе 2 хвилини 🎨' } },
+            { id: 'q_style', type: 'question', data: { text: '🎨 Який стиль вам до вподоби?', varName: 'style', buttons: [
+                { text: 'Сучасний', label: 'Сучасний' },
+                { text: 'Класика', label: 'Класика' },
+                { text: 'Скандинавський', label: 'Скандинавський' },
+                { text: 'Loft', label: 'Loft' },
+            ]}},
+            { id: 'q_size',  type: 'question', data: { text: '📐 Вкажіть розміри кухні (наприклад: 3×4 м або просто площу)', varName: 'dimensions' } },
+            { id: 'q_color', type: 'question', data: { text: '🎨 Які кольори фасадів вам подобаються? (наприклад: білий, сірий, дерево)', varName: 'colors' } },
+            { id: 'photo',   type: 'photo',    data: { text: '📷 Надішліть фото вашої кімнати (щоб дизайн підходив до простору)', varName: 'room_photo' } },
+            { id: 'gen',     type: 'image_generate', data: {
+                style:      '{{style}}',
+                roomType:   'kitchen',
+                colors:     '{{colors}}',
+                dimensions: '{{dimensions}}',
+                caption:    '✨ Ось концепт вашої кухні!\n\n⚠️ Це орієнтовна візуалізація. Фінальний дизайн уточнюється на заміру.\n\nЦіна залежить від розмірів і матеріалів.',
+                saveAs:     'design_url',
+            }},
+            { id: 'q_like',  type: 'question', data: { text: '❤️ Як вам концепт?', varName: 'reaction', buttons: [
+                { text: '👍 Подобається, хочу дізнатись ціну', label: 'like' },
+                { text: '🔄 Хочу інший варіант', label: 'retry' },
+                { text: '📞 Хочу поговорити з менеджером', label: 'manager' },
+            ]}},
+            { id: 'cond',    type: 'condition', data: { variable: 'reaction', operator: 'contains', value: 'like' } },
+            { id: 'price',   type: 'message',  data: { text: '💰 Орієнтовна вартість кухні {{dimensions}} м: від 45 000 грн\n\nФінальна ціна — після безкоштовного заміру у вас вдома.\n\n📅 Записати замірника?' } },
+            { id: 'q_name',  type: 'question', data: { text: "👤 Як вас звати?", varName: 'client_name' } },
+            { id: 'q_phone', type: 'question', data: { text: '📱 Ваш номер телефону?', varName: 'phone' } },
+            { id: 'crm',     type: 'crm_update', data: { fields: { clientName: '{{client_name}}', phone: '{{phone}}', note: 'Стиль: {{style}}, Розміри: {{dimensions}}, Кольори: {{colors}}' } } },
+            { id: 'confirm', type: 'message',  data: { text: '✅ Відмінно, {{client_name}}!\n\nМенеджер зателефонує вам найближчим часом для погодження зручного часу заміру.\n\nДякуємо! 🙏' } },
+            { id: 'manager_msg', type: 'message', data: { text: '👍 Зрозуміло! Залиште свій номер — менеджер зв\'яжеться і відповість на всі питання.' } },
+            { id: 'end',     type: 'end',      data: {} },
+        ],
+        edges: [
+            { id: 'e1',  source: 'start',   target: 'greet' },
+            { id: 'e2',  source: 'greet',   target: 'q_style' },
+            { id: 'e3',  source: 'q_style', target: 'q_size' },
+            { id: 'e4',  source: 'q_size',  target: 'q_color' },
+            { id: 'e5',  source: 'q_color', target: 'photo' },
+            { id: 'e6',  source: 'photo',   target: 'gen' },
+            { id: 'e7',  source: 'gen',     target: 'q_like' },
+            { id: 'e8',  source: 'q_like',  target: 'cond' },
+            { id: 'e9',  source: 'cond',    target: 'price',       sourceHandle: 'yes' },
+            { id: 'e10', source: 'cond',    target: 'manager_msg', sourceHandle: 'no' },
+            { id: 'e11', source: 'price',   target: 'q_name' },
+            { id: 'e12', source: 'q_name',  target: 'q_phone' },
+            { id: 'e13', source: 'q_phone', target: 'crm' },
+            { id: 'e14', source: 'crm',     target: 'confirm' },
+            { id: 'e15', source: 'confirm', target: 'end' },
+            { id: 'e16', source: 'manager_msg', target: 'q_phone' },
+        ],
+    },
+
+    medical: {
+        name:        'Медицина / Анамнез',
+        icon:        '🏥',
+        description: 'Збирає скарги, симптоми, тривалість → структурований анамнез лікарю → запис на консультацію',
+        tags:        ['Медицина', 'Стоматологія', 'Анамнез', 'Запис'],
+        color:       '#eff6ff',
+        border:      '#bfdbfe',
+        nodes: [
+            { id: 'start',    type: 'start',    data: {} },
+            { id: 'greet',    type: 'message',  data: { text: 'Вітаємо в нашій клініці! 👨‍⚕️\n\nЩоб лікар міг краще підготуватись до прийому, дайте відповідь на кілька запитань.\n\n⚠️ Ця анкета не замінює консультацію лікаря.' } },
+            { id: 'consent',  type: 'question', data: { text: '✅ Ви погоджуєтесь на обробку медичних даних для підготовки до консультації?', varName: 'consent', buttons: [
+                { text: '✅ Так, погоджуюсь', label: 'yes' },
+                { text: '❌ Ні', label: 'no' },
+            ]}},
+            { id: 'cond_consent', type: 'condition', data: { variable: 'consent', operator: 'contains', value: 'yes' } },
+            { id: 'no_consent', type: 'message', data: { text: 'Зрозуміло. Ви можете записатись на консультацію за телефоном. Дякуємо!' } },
+            { id: 'q_name',   type: 'question', data: { text: "👤 Ваше ім'я та прізвище?", varName: 'client_name' } },
+            { id: 'q_age',    type: 'question', data: { text: '🎂 Ваш вік?', varName: 'age' } },
+            { id: 'q_complaint', type: 'question', data: { text: '💬 Що вас турбує? Опишіть основну скаргу (наприклад: біль у зубі, кровоточивість ясен, чутливість)', varName: 'complaint' } },
+            { id: 'q_duration', type: 'question', data: { text: '⏱ Як давно турбує ця проблема?', varName: 'duration', buttons: [
+                { text: 'Менше тижня', label: 'less_week' },
+                { text: '1-4 тижні', label: 'weeks' },
+                { text: '1-6 місяців', label: 'months' },
+                { text: 'Більше 6 місяців', label: 'long' },
+            ]}},
+            { id: 'q_prev',   type: 'question', data: { text: '📋 Чи зверталися раніше з цією проблемою? Якщо так — коротко опишіть', varName: 'prev_treatment' } },
+            { id: 'q_allergy', type: 'question', data: { text: '⚠️ Чи є алергія на ліки? (якщо так — напишіть на які, якщо ні — "немає")', varName: 'allergy' } },
+            { id: 'crm',      type: 'crm_update', data: { fields: {
+                clientName: '{{client_name}}',
+                note: 'АНАМНЕЗ:\nСкарга: {{complaint}}\nТривалість: {{duration}}\nПопереднє лікування: {{prev_treatment}}\nАлергія: {{allergy}}\nВік: {{age}}',
+                source: 'bot_medical',
+            }}},
+            { id: 'summary',  type: 'message',  data: { text: '✅ Дякуємо, {{client_name}}!\n\nДані передано лікарю. Хочете записатись на консультацію?' } },
+            { id: 'q_book',   type: 'question', data: { text: '📅 Записатись на консультацію?', varName: 'wants_booking', buttons: [
+                { text: '✅ Так, записатись', label: 'yes' },
+                { text: 'Пізніше зателефоную', label: 'later' },
+            ]}},
+            { id: 'cond_book', type: 'condition', data: { variable: 'wants_booking', operator: 'contains', value: 'yes' } },
+            { id: 'q_phone',  type: 'question', data: { text: '📱 Ваш номер телефону для підтвердження запису?', varName: 'phone' } },
+            { id: 'crm2',     type: 'crm_update', data: { fields: { phone: '{{phone}}', stage: 'consultation' } } },
+            { id: 'booked',   type: 'message',  data: { text: '✅ Чудово! Адміністратор зателефонує вам найближчим часом для підтвердження зручного часу.\n\nДо зустрічі! 😊' } },
+            { id: 'later_msg', type: 'message', data: { text: 'Добре! Телефонуйте нам коли будете готові. До зустрічі! 😊' } },
+            { id: 'end',      type: 'end',      data: {} },
+        ],
+        edges: [
+            { id: 'e1',  source: 'start',       target: 'greet' },
+            { id: 'e2',  source: 'greet',       target: 'consent' },
+            { id: 'e3',  source: 'consent',     target: 'cond_consent' },
+            { id: 'e4',  source: 'cond_consent', target: 'q_name',     sourceHandle: 'yes' },
+            { id: 'e5',  source: 'cond_consent', target: 'no_consent', sourceHandle: 'no' },
+            { id: 'e6',  source: 'no_consent',  target: 'end' },
+            { id: 'e7',  source: 'q_name',      target: 'q_age' },
+            { id: 'e8',  source: 'q_age',       target: 'q_complaint' },
+            { id: 'e9',  source: 'q_complaint', target: 'q_duration' },
+            { id: 'e10', source: 'q_duration',  target: 'q_prev' },
+            { id: 'e11', source: 'q_prev',      target: 'q_allergy' },
+            { id: 'e12', source: 'q_allergy',   target: 'crm' },
+            { id: 'e13', source: 'crm',         target: 'summary' },
+            { id: 'e14', source: 'summary',     target: 'q_book' },
+            { id: 'e15', source: 'q_book',      target: 'cond_book' },
+            { id: 'e16', source: 'cond_book',   target: 'q_phone',   sourceHandle: 'yes' },
+            { id: 'e17', source: 'cond_book',   target: 'later_msg', sourceHandle: 'no' },
+            { id: 'e18', source: 'q_phone',     target: 'crm2' },
+            { id: 'e19', source: 'crm2',        target: 'booked' },
+            { id: 'e20', source: 'booked',      target: 'end' },
+            { id: 'e21', source: 'later_msg',   target: 'end' },
+        ],
+    },
+
+    construction: {
+        name:        'Будівництво / Кошторис',
+        icon:        '🏗️',
+        description: 'Визначає тип об\'єкту → збирає параметри кнопками → автоматичний кошторис → менеджер підтверджує',
+        tags:        ['Будівництво', 'Ремонт', 'Кошторис', 'Замір'],
+        color:       '#fefce8',
+        border:      '#fef08a',
+        nodes: [
+            { id: 'start',    type: 'start',    data: {} },
+            { id: 'greet',    type: 'message',  data: { text: 'Вітаємо! 🏗️\n\nПодготуємо для вас попередній кошторис за 2 хвилини.\n\n⚠️ Кошторис орієнтовний. Точна вартість після виїзду фахівця.' } },
+            { id: 'q_type',   type: 'question', data: { text: '🏠 Тип об\'єкту?', varName: 'object_type', buttons: [
+                { text: '🏠 Квартира', label: 'apartment' },
+                { text: '🏡 Будинок', label: 'house' },
+                { text: '🏢 Комерційне приміщення', label: 'commercial' },
+                { text: '🔨 Окремі роботи', label: 'partial' },
+            ]}},
+            { id: 'q_area',   type: 'question', data: { text: '📐 Загальна площа (м²)?', varName: 'area' } },
+            { id: 'q_works',  type: 'question', data: { text: '🔧 Які роботи потрібні?', varName: 'work_type', buttons: [
+                { text: '🔨 Капітальний ремонт', label: 'capital' },
+                { text: '🖌️ Косметичний ремонт', label: 'cosmetic' },
+                { text: '🏗️ Будівництво під ключ', label: 'turnkey' },
+                { text: '⚡ Тільки електрика/сантехніка', label: 'engineering' },
+            ]}},
+            { id: 'q_deadline', type: 'question', data: { text: '📅 Бажаний термін здачі?', varName: 'deadline', buttons: [
+                { text: '⚡ До 1 місяця', label: 'urgent' },
+                { text: '📅 1-3 місяці', label: 'normal' },
+                { text: '🗓️ 3-6 місяців', label: 'standard' },
+                { text: '📆 Більше 6 місяців', label: 'long' },
+            ]}},
+            { id: 'q_budget', type: 'question', data: { text: '💰 Орієнтовний бюджет?', varName: 'budget', buttons: [
+                { text: 'До 100 000 грн', label: 'small' },
+                { text: '100 000 - 300 000 грн', label: 'medium' },
+                { text: '300 000 - 700 000 грн', label: 'large' },
+                { text: 'Більше 700 000 грн', label: 'premium' },
+            ]}},
+            { id: 'q_name',   type: 'question', data: { text: "👤 Ваше ім'я?", varName: 'client_name' } },
+            { id: 'q_phone',  type: 'question', data: { text: '📱 Номер телефону для зв\'язку?', varName: 'phone' } },
+            { id: 'crm',      type: 'crm_update', data: { fields: {
+                clientName: '{{client_name}}',
+                phone:      '{{phone}}',
+                note:       'КОШТОРИС-ЗАПИТ:\nТип: {{object_type}}\nПлоща: {{area}} м²\nРоботи: {{work_type}}\nТермін: {{deadline}}\nБюджет: {{budget}}',
+                source:     'bot_construction',
+                amount:     '0',
+            }}},
+            { id: 'confirm',  type: 'message',  data: { text: '✅ Дякуємо, {{client_name}}!\n\nВаш запит прийнято:\n📍 Об\'єкт: {{object_type}}\n📐 Площа: {{area}} м²\n🔧 Роботи: {{work_type}}\n💰 Бюджет: {{budget}}\n\nКошторисник зателефонує вам протягом 2 годин для уточнення деталей і погодження безкоштовного виїзду.' } },
+            { id: 'end',      type: 'end',      data: {} },
+        ],
+        edges: [
+            { id: 'e1',  source: 'start',      target: 'greet' },
+            { id: 'e2',  source: 'greet',      target: 'q_type' },
+            { id: 'e3',  source: 'q_type',     target: 'q_area' },
+            { id: 'e4',  source: 'q_area',     target: 'q_works' },
+            { id: 'e5',  source: 'q_works',    target: 'q_deadline' },
+            { id: 'e6',  source: 'q_deadline', target: 'q_budget' },
+            { id: 'e7',  source: 'q_budget',   target: 'q_name' },
+            { id: 'e8',  source: 'q_name',     target: 'q_phone' },
+            { id: 'e9',  source: 'q_phone',    target: 'crm' },
+            { id: 'e10', source: 'crm',        target: 'confirm' },
+            { id: 'e11', source: 'confirm',    target: 'end' },
+        ],
+    },
+};
+
+// ── Модалка вибору шаблону ──────────────────────────────────
+window.openFlowTemplatesModal = function() {
+    document.getElementById('flowTemplatesModal')?.remove();
+    const modal = document.createElement('div');
+    modal.id = 'flowTemplatesModal';
+    modal.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;`;
+
+    modal.innerHTML = `
+        <div style="background:white;border-radius:16px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+            <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1;">
+                <div>
+                    <div style="font-weight:700;font-size:1.05rem;">📋 Шаблони флоу</div>
+                    <div style="font-size:0.78rem;color:#6b7280;margin-top:2px;">Готові воронки під вашу нішу. Встановіть за 1 клік.</div>
+                </div>
+                <button onclick="document.getElementById('flowTemplatesModal').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;">✕</button>
+            </div>
+            <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
+                ${Object.entries(FLOW_TEMPLATES).map(([key, tpl]) => `
+                    <div style="border:2px solid ${tpl.border};border-radius:14px;padding:1.1rem 1.25rem;background:${tpl.color};transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
+                            <div style="flex:1;min-width:200px;">
+                                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
+                                    <span style="font-size:1.4rem;">${tpl.icon}</span>
+                                    <span style="font-weight:700;font-size:1rem;">${tpl.name}</span>
+                                </div>
+                                <div style="font-size:0.82rem;color:#374151;margin-bottom:0.6rem;">${tpl.description}</div>
+                                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
+                                    ${tpl.tags.map(tag => `<span style="background:white;border:1px solid #e5e7eb;border-radius:20px;padding:2px 8px;font-size:0.72rem;color:#6b7280;">${tag}</span>`).join('')}
+                                </div>
+                                <div style="margin-top:0.6rem;font-size:0.75rem;color:#6b7280;">
+                                    📊 ${tpl.nodes.length} нод · ${tpl.edges.length} переходів
+                                </div>
+                            </div>
+                            <button onclick="installFlowTemplate('${key}')" style="padding:0.6rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;flex-shrink:0;">
+                                ⚡ Встановити
+                            </button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="padding:0.75rem 1.5rem;border-top:1px solid #f3f4f6;font-size:0.75rem;color:#9ca3af;text-align:center;">
+                Після встановлення шаблон з'явиться в списку ботів. Налаштуйте тексти і підключіть до Telegram/Viber.
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+};
+
+// ── Встановлення шаблону ────────────────────────────────────
+window.installFlowTemplate = async function(templateKey) {
+    const tpl = FLOW_TEMPLATES[templateKey];
+    if (!tpl) return;
+
+    const cid = window.currentCompanyId;
+    if (!cid) { if (typeof showToast === 'function') showToast('Компанія не визначена', 'error'); return; }
+
+    const btn = document.querySelector(`button[onclick="installFlowTemplate('${templateKey}')"]`);
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Встановлення...'; }
+
+    try {
+        const db = window.db ? window.db() : firebase.firestore();
+        const compRef = db.collection('companies').doc(cid);
+
+        // Створюємо бота
+        const botRef = await compRef.collection('bots').add({
+            name:      tpl.name,
+            icon:      tpl.icon,
+            channel:   'telegram',
+            status:    'draft',
+            template:  templateKey,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+
+        // Створюємо флоу
+        const flowRef = await compRef.collection('bots').doc(botRef.id).collection('flows').add({
+            name:      tpl.name,
+            botId:     botRef.id,
+            status:    'active',
+            nodes:     tpl.nodes,
+            edges:     tpl.edges,
+            template:  templateKey,
+            crmEnabled: true,
+            crmTrigger: 'flow_end',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+
+        document.getElementById('flowTemplatesModal')?.remove();
+        if (typeof showToast === 'function') showToast(`✅ Шаблон "${tpl.name}" встановлено! Налаштуйте тексти і підключіть до месенджера.`, 'success');
+
+        // Оновлюємо список ботів
+        if (typeof window._renderBotsList === 'function') window._renderBotsList();
+        else if (typeof window._renderBotsTab === 'function') window._renderBotsTab();
+
+    } catch (e) {
+        if (typeof showToast === 'function') showToast('Помилка встановлення: ' + e.message, 'error');
+        if (btn) { btn.disabled = false; btn.textContent = '⚡ Встановити'; }
+    }
+};
