@@ -412,6 +412,8 @@ export default {
         // ── /api/ping ────────────────────────────────────────
         if (path === '/api/ping') return json({ ok:true, ts:Date.now() });
         if (path === '/api/generate-image') return handleGenerateImage(request, env);
+        if (path === '/api/whatsapp-send') return handleWhatsAppSend(request, env);
+        if (path === '/api/whatsapp-webhook') return handleWhatsAppWebhook(request, url, env);
 
         // ── Static assets ────────────────────────────────────
         return env.ASSETS.fetch(request);
@@ -481,6 +483,313 @@ ${blocks}${site.bodyCode||''}
 // ════════════════════════════════════════════════════════════
 // AI PROXY
 // ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
+// WHATSAPP — 360dialog API
+// POST /api/whatsapp-send  — відправка повідомлення клієнту
+// GET/POST /api/whatsapp-webhook — вхідні повідомлення
+// ════════════════════════════════════════════════════════════
+
+// ── Відправка повідомлення через 360dialog ────────────────
+async function handleWhatsAppSend(request, env) {
+    if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+
+    let body;
+    try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
+
+    const { phone, message, companyId, templateName, templateParams } = body;
+    if (!phone || !message) return json({ error: 'phone and message required' }, 400);
+
+    // Отримуємо API ключ — спочатку з заголовка (тест), потім з Firestore
+    let waApiKey = request.headers.get('X-WA-KEY') || '';
+    if (!waApiKey && companyId) {
+        try {
+            const token = await getToken(env);
+            const settDoc = await fsGet(`companies/${companyId}/settings/integrations`, token);
+            if (settDoc?.fields) {
+                waApiKey = fFields(settDoc.fields).whatsappApiKey || '';
+            }
+        } catch {}
+    }
+    if (!waApiKey) return json({ ok: false, error: 'No WhatsApp API key configured' }, 400);
+
+    // Нормалізуємо номер телефону — тільки цифри з +
+    const cleanPhone = phone.replace(/[^\d+]/g, '').replace(/^\+/, '');
+
+    try {
+        // 360dialog API — відправка text message
+        const waResp = await fetch(`https://waba.360dialog.io/v1/messages`, {
+            method: 'POST',
+            headers: {
+                'Content-Type':  'application/json',
+                'D360-API-KEY':  waApiKey,
+            },
+            body: JSON.stringify({
+                messaging_product: 'whatsapp',
+                recipient_type:    'individual',
+                to:                cleanPhone,
+                type:              'text',
+                text: { body: message, preview_url: false },
+            }),
+        });
+
+        const waData = await waResp.json();
+
+        if (!waResp.ok) {
+            return json({ ok: false, error: waData.meta?.developer_message || waData.error || 'WhatsApp send failed', status: waResp.status });
+        }
+
+        const msgId = waData.messages?.[0]?.id || '';
+        return json({ ok: true, messageId: msgId });
+
+    } catch (e) {
+        return json({ ok: false, error: e.message }, 500);
+    }
+}
+
+// ── Вхідні повідомлення від 360dialog webhook ─────────────
+async function handleWhatsAppWebhook(request, url, env) {
+    // GET — верифікація webhook від Meta/360dialog
+    if (request.method === 'GET') {
+        const mode      = url.searchParams.get('hub.mode');
+        const token     = url.searchParams.get('hub.verify_token');
+        const challenge = url.searchParams.get('hub.challenge');
+        // Verify token — використовуємо CRON_SECRET або фіксований
+        const verifyToken = env.CRON_SECRET || 'talko_wa_verify';
+        if (mode === 'subscribe' && token === verifyToken) {
+            return new Response(challenge, { status: 200 });
+        }
+        return new Response('Forbidden', { status: 403 });
+    }
+
+    if (request.method !== 'POST') return json({ ok: true });
+
+    let body;
+    try { body = await request.json(); } catch { return json({ ok: true }); }
+
+    const cid = url.searchParams.get('cid') || '';
+    if (!cid) return json({ ok: true });
+
+    let token;
+    try { token = await getToken(env); } catch { return json({ ok: true }); }
+
+    // Парсинг 360dialog webhook
+    // Структура: { contacts: [...], messages: [...] } або Meta Cloud API format
+    const entry    = body.entry?.[0] || body;
+    const changes  = entry.changes?.[0]?.value || entry;
+    const messages = changes.messages || body.messages || [];
+    const contacts = changes.contacts || body.contacts || [];
+
+    for (const msg of messages) {
+        const waPhone  = msg.from || '';
+        const waId     = msg.id   || '';
+        const waType   = msg.type || 'text';
+        const now      = new Date().toISOString();
+
+        // Ім'я з contacts
+        const contactMeta = contacts.find(c => c.wa_id === waPhone);
+        const userName    = contactMeta?.profile?.name || waPhone;
+
+        // Парсимо текст
+        let text = '';
+        let incomingPhotoUrl = '';
+
+        if (waType === 'text') {
+            text = msg.text?.body || '';
+        } else if (waType === 'image') {
+            // Медіа — зберігаємо media_id для подальшого завантаження
+            const mediaId = msg.image?.id || '';
+            incomingPhotoUrl = `wa_media:${mediaId}`;
+            text = incomingPhotoUrl;
+            if (msg.image?.caption) text = msg.image.caption;
+        } else if (waType === 'audio' || waType === 'video' || waType === 'document') {
+            text = `[${waType}: ${msg[waType]?.id || ''}]`;
+        } else if (waType === 'interactive') {
+            // Кнопки — відповідь
+            text = msg.interactive?.button_reply?.id ||
+                   msg.interactive?.list_reply?.id   ||
+                   msg.interactive?.button_reply?.title || '';
+        }
+
+        if (!text || !waPhone) continue;
+
+        // Зберігаємо / оновлюємо контакт
+        const contactPath = `companies/${cid}/contacts/${waPhone}`;
+        let contact = {};
+        const contactDoc = await fsGet(contactPath, token);
+        if (contactDoc?.fields) {
+            contact = fFields(contactDoc.fields);
+        } else {
+            await fsSet(contactPath, {
+                id:            { stringValue: waPhone },
+                channel:       { stringValue: 'whatsapp' },
+                name:          { stringValue: userName },
+                phone:         { stringValue: '+' + waPhone },
+                status:        { stringValue: 'new' },
+                currentFlowId: { stringValue: '' },
+                currentNodeId: { stringValue: '' },
+                createdAt:     { timestampValue: now },
+                updatedAt:     { timestampValue: now },
+            }, token);
+            contact = { id: waPhone, channel: 'whatsapp', name: userName, phone: '+' + waPhone, status: 'new', currentFlowId: '', currentNodeId: '' };
+        }
+
+        // Лог вхідного повідомлення
+        const wmId = `msg_${Date.now()}_user`;
+        await fsSet(`${contactPath}/messages/${wmId}`, {
+            id:        { stringValue: wmId },
+            role:      { stringValue: 'user' },
+            from:      { stringValue: 'user' },
+            direction: { stringValue: 'in' },
+            text:      { stringValue: text },
+            waId:      { stringValue: waId },
+            channel:   { stringValue: 'whatsapp' },
+            timestamp: { timestampValue: now },
+            createdAt: { timestampValue: now },
+        }, token);
+
+        await fsPatch(contactPath, {
+            name:          { stringValue: userName },
+            phone:         { stringValue: '+' + waPhone },
+            lastMessage:   { stringValue: text.slice(0, 100) },
+            lastMessageAt: { timestampValue: now },
+            updatedAt:     { timestampValue: now },
+            channel:       { stringValue: 'whatsapp' },
+        }, token);
+
+        // Отримуємо WA API ключ для відправки відповідей
+        let waApiKey = '';
+        const settDocWa = await fsGet(`companies/${cid}/settings/integrations`, token);
+        if (settDocWa?.fields) {
+            waApiKey = fFields(settDocWa.fields).whatsappApiKey || '';
+        }
+
+        // Функція відправки через WhatsApp
+        const waSend = async (to, msgText, opts = {}) => {
+            if (!waApiKey) return;
+            const cleanTo = String(to).replace(/[^\d]/g, '');
+
+            // Якщо є кнопки — відправляємо interactive message
+            const kbButtons = opts.inline_keyboard;
+            let waPayload;
+
+            if (kbButtons && kbButtons.length > 0) {
+                const flatBtns = kbButtons.flat().slice(0, 3); // WhatsApp max 3 кнопки
+                waPayload = {
+                    messaging_product: 'whatsapp',
+                    to: cleanTo,
+                    type: 'interactive',
+                    interactive: {
+                        type: 'button',
+                        body: { text: msgText },
+                        action: {
+                            buttons: flatBtns.map((btn, i) => ({
+                                type:  'reply',
+                                reply: { id: btn.callback_data || `btn_${i}`, title: (btn.text || '').slice(0, 20) },
+                            })),
+                        },
+                    },
+                };
+            } else {
+                waPayload = {
+                    messaging_product: 'whatsapp',
+                    recipient_type:    'individual',
+                    to:                cleanTo,
+                    type:              'text',
+                    text: { body: msgText, preview_url: false },
+                };
+            }
+
+            await fetch('https://waba.360dialog.io/v1/messages', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json', 'D360-API-KEY': waApiKey },
+                body:    JSON.stringify(waPayload),
+            }).catch(() => {});
+        };
+
+        // Визначаємо активний flow
+        let activeFlowId = contact.currentFlowId || '';
+        let activeNodeId = contact.currentNodeId || '';
+
+        // /start або перше повідомлення → шукаємо активний флоу
+        if (!activeFlowId || text === '/start') {
+            const botsSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (botsSnap.ok) {
+                const botsData = await botsSnap.json();
+                for (const botDoc of (botsData.documents || [])) {
+                    const bid = botDoc.name?.split('/').pop();
+                    const flowsSnap = await fetch(
+                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    if (!flowsSnap.ok) continue;
+                    const flowsData = await flowsSnap.json();
+                    for (const fd of (flowsData.documents || [])) {
+                        const fid = fd.name?.split('/').pop();
+                        const fdata = fFields(fd.fields || {});
+                        if (fdata.status === 'active') {
+                            activeFlowId = `${bid}::${fid}`;
+                            activeNodeId = 'start';
+                            await fsPatch(contactPath, {
+                                currentFlowId: { stringValue: activeFlowId },
+                                currentNodeId: { stringValue: 'start' },
+                                updatedAt:     { timestampValue: now },
+                            }, token);
+                            break;
+                        }
+                    }
+                    if (activeFlowId) break;
+                }
+            }
+        }
+
+        // Запускаємо Flow Engine
+        if (activeFlowId) {
+            const waParts  = activeFlowId.split('::');
+            const botIdWa  = waParts[0];
+            const flowIdWa = waParts[1];
+            if (botIdWa && flowIdWa) {
+                const isWaitingPhotoWa = contact.waitingForPhoto === true || String(contact.waitingForPhoto) === 'true';
+                if (isWaitingPhotoWa && !text.startsWith('PHOTO:') && !incomingPhotoUrl) {
+                    await waSend(waPhone, '📷 Будь ласка, надішліть фото (не текст)');
+                    continue;
+                }
+                const isWaitingWa = contact.waitingForInput === true || String(contact.waitingForInput) === 'true';
+                if (isWaitingWa || isWaitingPhotoWa) {
+                    await fsPatch(contactPath, {
+                        waitingForInput: { booleanValue: false },
+                        waitingForPhoto: { booleanValue: false },
+                        updatedAt:       { timestampValue: now },
+                    }, token);
+                }
+                try {
+                    await runFlowEngine({
+                        cid, chatId: waPhone,
+                        botId:         botIdWa,
+                        flowId:        flowIdWa,
+                        currentNodeId: activeNodeId,
+                        text, isCallback: false, callbackData: '',
+                        contact, contactPath,
+                        token, botToken: waApiKey,
+                        from: { id: waPhone, first_name: userName },
+                        userName,
+                        tgSend: waSend,
+                        env,
+                    });
+                } catch(e) {
+                    await waSend(waPhone, `Помилка: ${e.message?.slice(0, 100)}`);
+                }
+            }
+        } else {
+            await waSend(waPhone, 'Вітаємо! Напишіть нам і ми зв'яжемося з вами.');
+        }
+    }
+
+    return json({ ok: true });
+}
+
 // ════════════════════════════════════════════════════════════
 // GENERATE IMAGE — DALL-E 3
 // POST /api/generate-image
@@ -770,6 +1079,28 @@ async function handleCrmTriggerNotify(request, env) {
                 return json({ ok: true, sent: 1, channel: 'viber' });
             }
             return json({ ok: false, error: 'No Viber token' });
+        }
+
+        if (directChatId && msgChannel === 'whatsapp') {
+            // Відправляємо через WhatsApp 360dialog
+            const settDocWaN = await fsGet(`companies/${companyId}/settings/integrations`, token);
+            const waKeyN = settDocWaN?.fields ? (fFields(settDocWaN.fields).whatsappApiKey || '') : '';
+            if (waKeyN) {
+                const cleanPhoneN = String(directChatId).replace(/[^\d]/g, '');
+                await fetch('https://waba.360dialog.io/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'D360-API-KEY': waKeyN },
+                    body: JSON.stringify({
+                        messaging_product: 'whatsapp',
+                        recipient_type: 'individual',
+                        to: cleanPhoneN,
+                        type: 'text',
+                        text: { body: message, preview_url: false },
+                    }),
+                }).catch(() => {});
+                return json({ ok: true, sent: 1, channel: 'whatsapp' });
+            }
+            return json({ ok: false, error: 'No WhatsApp API key' });
         }
 
         if (directChatId && (!msgChannel || msgChannel === 'telegram')) {

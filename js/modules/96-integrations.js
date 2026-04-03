@@ -168,6 +168,20 @@ function _renderAll() {
             </div>
         </div>
         <div style="display:flex;gap:0.4rem;">
+            <div style="margin-bottom:0.75rem;">
+                <label style="${lbl}">Webhook URL (встановіть у 360dialog)</label>
+                <div style="display:flex;gap:0.4rem;">
+                    <input type="text" readonly
+                        value="https://apptalko.com/api/whatsapp-webhook?cid=${window.currentCompanyId||''}"
+                        style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
+                    <button onclick="intgCopy('https://apptalko.com/api/whatsapp-webhook?cid=${window.currentCompanyId||''}')"
+                        style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
+                </div>
+                <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
+                    360dialog кабінет → Налаштування → Webhooks → вставте цей URL
+                </div>
+            </div>
+            <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveWhatsApp()"
                 style="padding:0.4rem 1rem;background:#25d366;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
                 ${I.save} ${_tg('Зберегти','Сохранить')}
@@ -176,6 +190,7 @@ function _renderAll() {
                 style="padding:0.4rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
                 ${I.test} ${_tg('Тест','Тест')}
             </button>
+            </div>
         </div>
     </div>
 
