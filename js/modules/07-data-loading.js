@@ -28,11 +28,25 @@
         if (typeof window.startOnboarding !== 'function') window.startOnboarding = function() {};
         if (typeof window.renderMyDay !== 'function') window.renderMyDay = function() {};
         if (typeof window.renderCalendar !== 'function') window.renderCalendar = function() {};
+        // Дебаунс — якщо loadAllData викликається кілька разів підряд (напр. auth listener)
+        // чекаємо 300мс і запускаємо тільки один раз
+        let _loadAllDataTimer = null;
+        const _loadAllDataDebounced = function() {
+            if (_loadAllDataTimer) clearTimeout(_loadAllDataTimer);
+            _loadAllDataTimer = setTimeout(() => {
+                _loadAllDataTimer = null;
+                loadAllData();
+            }, 300);
+        };
+        window._reloadDataDebounced = _loadAllDataDebounced;
+
         async function loadAllData() {
 
             if (!currentCompany) return;
             if (isLoading) {
-                dbg('loadAllData: already loading, skipping...');
+                dbg('loadAllData: already loading, queuing retry in 1s...');
+                // Замість skip — ставимо в чергу повторний виклик
+                setTimeout(() => { if (!isLoading) loadAllData(); }, 1000);
                 return;
             }
             
@@ -201,11 +215,12 @@
                 
                 // Перевіряємо чи це ще актуальний запит
                 if (thisLoadVersion !== loadingVersion) {
-                    dbg('loadAllData: newer load started, discarding results');
-                    // FIX: скидаємо isLoading щоб не застрягти назавжди
+                    dbg('loadAllData: newer load started, discarding results — tasks NOT cleared');
+                    // ВАЖЛИВО: не скидаємо tasks/users/etc — старі дані краще ніж пусто
+                    // isLoading вже буде скинутий новим запитом
                     isLoading = false;
                     hideSkeletonLoading();
-                    return;
+                    return; // виходимо БЕЗ перезапису window.tasks
                 }
                 
                 // Атомарно оновлюємо всі дані

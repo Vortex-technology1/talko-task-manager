@@ -166,8 +166,17 @@
 
                 // ── ALLOWED TABS: обмежений доступ до модулів ──
                 // Якщо у юзера є поле allowedTabs: ['warehouse', ...] — показуємо ТІЛЬКИ ці таби
-                const _allowedTabs = currentUserData.allowedTabs;
+                let _allowedTabs = currentUserData.allowedTabs;
+
+                // АВТОДОПОВНЕННЯ: якщо є tasks — автоматично додаємо myday
+                // бо "Мій день" це просто вид задач, без нього tasks недоступний
                 if (Array.isArray(_allowedTabs) && _allowedTabs.length > 0) {
+                    const _tabsSet = new Set(_allowedTabs);
+                    if (_tabsSet.has('tasks') && !_tabsSet.has('myday')) {
+                        _tabsSet.add('myday');
+                        _allowedTabs = Array.from(_tabsSet);
+                    }
+                    // Якщо є crm — додаємо sales якщо вони пов'язані
                     window._userAllowedTabs = _allowedTabs;
                 } else {
                     window._userAllowedTabs = null;
@@ -250,14 +259,18 @@
                     }
 
                     // Блокуємо switchTab — не дозволяємо перейти на недозволений таб
-                    const _origSwitchTab = window.switchTab;
-                    window.switchTab = function(tabName) {
-                        if (window._userAllowedTabs && !window._userAllowedTabs.includes(tabName)) {
-                            console.warn('[TALKO] Tab not allowed:', tabName);
-                            return;
-                        }
-                        if (typeof _origSwitchTab === 'function') _origSwitchTab(tabName);
-                    };
+                    // ВАЖЛИВО: встановлюємо тільки один раз щоб не створювати ланцюги обгорток
+                    if (!window._switchTabRestricted) {
+                        window._switchTabRestricted = true;
+                        const _origSwitchTab = window.switchTab;
+                        window.switchTab = function(tabName) {
+                            if (window._userAllowedTabs && !window._userAllowedTabs.includes(tabName)) {
+                                console.warn('[TALKO] Tab not allowed:', tabName);
+                                return;
+                            }
+                            if (typeof _origSwitchTab === 'function') _origSwitchTab(tabName);
+                        };
+                    }
                 }
                 
                 // Кнопка Демо: для superadmin і owner
@@ -288,7 +301,12 @@
                 if (typeof initCalendar === 'function') initCalendar();
                 if (typeof initRegularView === 'function') initRegularView();
                 if (typeof initGoogleCalendar === 'function') initGoogleCalendar();
-                loadAllData();
+                // Дебаунс — захист від подвійного виклику при auth state change
+                if (typeof window._reloadDataDebounced === 'function') {
+                    window._reloadDataDebounced();
+                } else {
+                    loadAllData();
+                }
                 // Синхронізуємо обидва stats tab buttons (desktop + mobile) одразу після login
                 if (typeof showStatsTabIfAllowed === 'function') showStatsTabIfAllowed();
                 if (typeof initStatistics === 'function') initStatistics();
