@@ -117,7 +117,7 @@
         const activeCat = window._learningActiveCategory;
 
         // Вкладки категорій
-        const categories = window.learningCategories || [];
+        const categories = window.learningCategories || window.learningCourseCategories || [];
         const catTabsHTML = categories.length > 1 ? `
         <div style="display:flex;gap:0;overflow-x:auto;border-bottom:2px solid #e5e7eb;margin-bottom:0;padding:0 0.5rem;">
             ${categories.map(cat => {
@@ -5206,7 +5206,8 @@
     window.renderLearning = renderLearning;
 
     // ── AI Assistant block ───────────────────────────────────
-        window.learningCourseData = learningCourseData;
+        // НЕ перезаписуємо window.learningCourseData — там можуть бути всі курси (маркетинг/HR/etc)
+        // window.learningCourseData = learningCourseData; // ВИДАЛЕНО
 
 window._openAIAssistant = function(moduleTitle, homeworkText) {
         const prompt = `У мене завдання з програми навчання TALKO:\n\nМодуль: ${moduleTitle}\n${homeworkText ? 'Домашнє завдання: ' + homeworkText + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
