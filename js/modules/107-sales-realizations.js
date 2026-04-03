@@ -262,7 +262,12 @@
 
   window._srRenderItems=function(){renderModalItems();};
 
-  window.openSalesRealizationModal=function(realizationId,sourceOrder){
+  window.openSalesRealizationModal=async function(realizationId,sourceOrder){
+    // БАГ 24 fix: завантажуємо дані якщо ще не завантажені (відкриття з 106)
+    const needsLoad = !S.warehouses.length || !S.clients.length;
+    if (needsLoad) {
+      await Promise.all([loadWarehouseData(), loadClients()]);
+    }
     const realization=realizationId?S.realizations.find(r=>r.id===realizationId):null;
     S.editingId=realization?.id||null; S.sourceOrder=sourceOrder||null;
     el('srModalOverlay')?.remove();

@@ -4102,26 +4102,44 @@ exports.onRealizationPosted = functions
         if (before.status === after.status) return null;
         if (after.status !== 'posted') return null;
 
+        // БАГ 25 fix: ідемпотентність — якщо вже оброблено, пропускаємо
+        if (after.debtProcessedAt) {
+            console.log('[onRealizationPosted] already processed, skipping:', realizationId);
+            return null;
+        }
+
         console.log('[onRealizationPosted]', realizationId, 'company:', companyId);
 
         try {
             const compRef = db.collection('companies').doc(companyId);
 
-            // Оновлюємо totalDebt клієнта (денормалізація)
+            // Атомарно: ставимо маркер і оновлюємо борг в транзакції
             if (after.clientId && after.debtorEntryId) {
                 const clientRef = compRef.collection('crm_clients').doc(after.clientId);
-                const clientSnap = await clientRef.get();
-                if (clientSnap.exists) {
-                    const currentDebt = Number(clientSnap.data().totalDebt || 0);
-                    const newAmount = Number(after.totalAmount || 0);
-                    await clientRef.update({
-                        totalDebt: currentDebt + newAmount,
-                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                const realizationRef = change.after.ref;
+
+                await db.runTransaction(async (tx) => {
+                    // Перечитуємо реалізацію щоб перевірити маркер
+                    const freshSnap = await tx.get(realizationRef);
+                    if (freshSnap.data()?.debtProcessedAt) return; // вже оброблено
+
+                    const clientSnap = await tx.get(clientRef);
+                    if (clientSnap.exists) {
+                        const currentDebt = Number(clientSnap.data().totalDebt || 0);
+                        const newAmount   = Number(after.totalAmount || 0);
+                        tx.update(clientRef, {
+                            totalDebt: currentDebt + newAmount,
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        });
+                    }
+                    // Ставимо маркер
+                    tx.update(realizationRef, {
+                        debtProcessedAt: admin.firestore.FieldValue.serverTimestamp(),
                     });
-                }
+                });
             }
 
-            // Логуємо в activity_log
+            // Логуємо в activity_log (не в транзакції — не критично якщо дублюється)
             await compRef.collection('activity_log').add({
                 type:          'realization_posted',
                 realizationId,

@@ -2092,12 +2092,16 @@ res.textContent='\u041f\u043e\u043c\u0438\u043b\u043a\u0430. \u0421\u043f\u0440\
 // Authorization: Bearer <idToken>
 // ════════════════════════════════════════════════════════════
 async function handleGeneratePdf(request, url, env) {
-    // Auth
+    // Auth — верифікуємо Firebase idToken
     const authHeader = request.headers.get('Authorization') || '';
     const idToken = authHeader.replace('Bearer ', '').trim();
     if (!idToken) return json({ error: 'unauthorized' }, 401);
 
-    const type          = url.searchParams.get('type') || 'invoice'; // invoice | act
+    // БАГ 23 fix: верифікуємо токен через Firebase Auth
+    const user = await verifyIdToken(idToken, env);
+    if (!user) return json({ error: 'invalid token' }, 401);
+
+    const type          = url.searchParams.get('type') || 'invoice';
     const realizationId = url.searchParams.get('realizationId');
     const companyId     = url.searchParams.get('cid');
 
@@ -2111,6 +2115,14 @@ async function handleGeneratePdf(request, url, env) {
         const rDoc = await fsGet(`companies/${companyId}/sales_realizations/${realizationId}`, token);
         if (!rDoc) return json({ error: 'realization not found' }, 404);
         const r = fFields(rDoc.fields || {});
+
+        // БАГ 23 fix: перевіряємо що користувач належить до цієї компанії
+        const userCompanyDoc = await fsGet(`companies/${companyId}/users/${user.localId}`, token);
+        if (!userCompanyDoc) {
+            // Спробуємо знайти через uid
+            const userByUid = await fsGet(`companies/${companyId}/users/${user.uid || user.localId}`, token);
+            if (!userByUid) return json({ error: 'forbidden' }, 403);
+        }
 
         // Завантажуємо налаштування компанії
         const settDoc = await fsGet(`companies/${companyId}/settings/main`, token);
