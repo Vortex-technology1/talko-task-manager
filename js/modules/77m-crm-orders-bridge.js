@@ -213,10 +213,9 @@
 
   // ─── Створити замовлення з картки угоди (кнопка) ─────────────────────────
   window._crmCreateOrderFromDeal = async function (dealId) {
-    // Перевірка ролі — employee не може створювати замовлення
-    const _role = window.currentUserData?.role || 'employee';
-    if (!['owner', 'admin', 'manager'].includes(_role)) {
-      toast(tg('Недостатньо прав для створення замовлення', 'Insufficient permissions to create order'), 'error');
+    // Перевірка доступу через allowedTabs (дзеркало firestore rules)
+    if (!window._userHasTabAccess('sales')) {
+      toast(tg('Немає доступу до модуля Продажі', 'No access to Sales module'), 'error');
       return;
     }
     const deal = window.crm?.deals?.find(d => d.id === dealId);

@@ -169,8 +169,24 @@
                 const _allowedTabs = currentUserData.allowedTabs;
                 if (Array.isArray(_allowedTabs) && _allowedTabs.length > 0) {
                     window._userAllowedTabs = _allowedTabs;
+                } else {
+                    window._userAllowedTabs = null;
+                }
 
-                    // Ховаємо всі tab-btn крім дозволених
+                // ── Глобальна функція перевірки доступу до табу ──
+                // Використовується в UI для показу/приховання кнопок дій.
+                // Логіка = дзеркало firestore rules hasTabAccess():
+                //   owner/admin/manager → завжди true
+                //   employee без allowedTabs → true (бачить все)
+                //   employee з allowedTabs → перевіряємо наявність табу
+                window._userHasTabAccess = function(tabKey) {
+                    const role = window.currentUserData?.role || 'employee';
+                    if (['owner', 'admin', 'manager'].includes(role)) return true;
+                    if (!window._userAllowedTabs) return true;
+                    return window._userAllowedTabs.includes(tabKey);
+                };
+
+                if (Array.isArray(_allowedTabs) && _allowedTabs.length > 0) {
                     document.querySelectorAll('.tab-btn').forEach(btn => {
                         const match = (btn.getAttribute('onclick') || '').match(/switchTab\('(\w+)'\)/);
                         const tab = match ? match[1] : null;
