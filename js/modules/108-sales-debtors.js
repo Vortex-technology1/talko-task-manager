@@ -169,7 +169,8 @@
     const maxBal=Math.max(0,Number(d.amount||0)-Number(d.paidAmount||0));
     if(amount>maxBal+0.01){toast(tg('Сума більша за залишок','Amount exceeds balance'),'error');return;}
     S.saving=true;
-    const btn=el('sdPaySaveBtn');
+    const modal=document.getElementById('sdPayModalOverlay');
+    const btn=modal?.querySelector('#sdPaySaveBtn')||el('sdPaySaveBtn');
     if(btn){btn.disabled=true;btn.textContent=tg('Збереження...','Saving...');}
     try{
       const newPaid=Number(d.paidAmount||0)+amount, isPaid=newPaid>=Number(d.amount||0)-0.01;

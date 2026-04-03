@@ -4051,13 +4051,16 @@ exports.checkOverdueDebtors = functions
                     }
                 }
 
-                // Сповіщення власнику (зведене)
+                // Сповіщення власнику (зведене) — тільки якщо він НЕ отримав вже як менеджер
                 try {
                     const ownerSnap = await compDoc.ref.collection('users')
                         .where('role', '==', 'owner').limit(1).get();
                     if (!ownerSnap.empty) {
-                        const owner = ownerSnap.docs[0].data();
-                        if (owner.telegramChatId) {
+                        const ownerDoc = ownerSnap.docs[0];
+                        const owner = ownerDoc.data();
+                        const ownerId = ownerDoc.id;
+                        // БАГ 10 fix: пропускаємо якщо власник вже отримав сповіщення як менеджер
+                        if (owner.telegramChatId && !byAssignee[ownerId]) {
                             const totalBal = debtorsSnap.docs.reduce((s, d) => {
                                 const data = d.data();
                                 return s + Number(data.amount || 0) - Number(data.paidAmount || 0);

@@ -1984,6 +1984,21 @@ window.crmOpenDeal = function(dealId) {
                     title="Выставить счёт для сделки">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${_tg('Рахунок','Счёт')}
                 </button>
+                <!-- Кнопка замовлення покупця (77m) -->
+                ${deal.orderId
+                  ? `<button onclick="window._crmGoToOrder('${deal.orderId}')" class="crm-order-footer-btn"
+                        style="padding:0.5rem 1rem;background:#ede9fe;color:#6366f1;border:1px solid #c4b5fd;
+                        border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+                        ${_tg('Замовлення →','Order →')}
+                    </button>`
+                  : `<button onclick="window._crmCreateOrderFromDeal('${deal.id}')" class="crm-order-footer-btn"
+                        style="padding:0.5rem 1rem;background:#f0fdf4;color:#059669;border:1px solid #bbf7d0;
+                        border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        ${_tg('Замовлення','Order')}
+                    </button>`
+                }
                 <button onclick="crmSaveDeal('${deal.id}')"
                     style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;
                     border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">

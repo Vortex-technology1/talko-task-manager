@@ -116,16 +116,15 @@
   }
 
   // ─── Хук на зміну стадії ─────────────────────────────────────────────────
-  // Викликається з 77-crm.js: window.crmOrdersBridgeOnStageChange(deal, newStageId)
   window.crmOrdersBridgeOnStageChange = async function (deal, newStageId) {
     if (!deal || !newStageId) return;
-    try {
-      const shouldCreate = await stageHasCreateOrder(newStageId);
-      if (shouldCreate && !deal.orderId) {
+    // Автоматично створюємо замовлення при переході на Won (якщо ще немає)
+    if (newStageId === 'won' && !deal.orderId) {
+      try {
         await createOrderFromDeal(deal);
+      } catch(e) {
+        console.warn('77m onStageChange won:', e.message);
       }
-    } catch(e) {
-      console.warn('77m onStageChange:', e.message);
     }
   };
 
@@ -218,17 +217,28 @@
     }
     const orderId = await createOrderFromDeal(deal);
     if (orderId) {
-      // Оновлюємо кнопку
-      const wrap = document.querySelector(`.crm-order-btn-wrap`);
-      if (wrap) {
-        wrap.innerHTML = `<button onclick="window._crmGoToOrder('${orderId}')"
-          style="width:100%;padding:8px 14px;background:#ede9fe;color:#6366f1;border:1px solid #c4b5fd;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px;justify-content:center">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
-          ${tg('Перейти до замовлення','Go to order')}
-        </button>`;
-      }
+      // Оновлюємо кнопку у footer картки угоди (нова структура через crmOpenDeal)
+      _refreshOrderButton(dealId, orderId);
     }
   };
+
+  // Оновлюємо кнопку замовлення у footer без перезавантаження картки
+  function _refreshOrderButton(dealId, orderId) {
+    // Шукаємо кнопку «Замовлення» у footer crmDealOverlay
+    const footer = document.querySelector('#crmDealOverlay .crm-order-footer-btn');
+    if (footer) {
+      footer.style.background = '#ede9fe';
+      footer.style.color = '#6366f1';
+      footer.style.borderColor = '#c4b5fd';
+      footer.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> ${tg('Замовлення →','Order →')}`;
+      footer.setAttribute('onclick', `window._crmGoToOrder('${orderId}')`);
+      return;
+    }
+    // Fallback — перезавантажуємо картку
+    if (typeof window.crmOpenDeal === 'function' && window.crm?.activeDealId === dealId) {
+      setTimeout(() => window.crmOpenDeal(dealId), 300);
+    }
+  }
 
   // ─── Публічне API ─────────────────────────────────────────────────────────
   window.crmCreateOrderFromDeal = createOrderFromDeal;
