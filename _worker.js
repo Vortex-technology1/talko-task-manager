@@ -2773,10 +2773,26 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             }
         }
         await fsPatch(`companies/${cid}/contacts/${chatId}`, {
-            currentFlowId: { stringValue: '' },
-            currentNodeId: { stringValue: '' },
-            updatedAt:     { timestampValue: new Date().toISOString() },
+            currentFlowId:   { stringValue: '' },
+            currentNodeId:   { stringValue: '' },
+            flowCompletedAt: { timestampValue: new Date().toISOString() },
+            updatedAt:       { timestampValue: new Date().toISOString() },
         }, token);
+
+        // Emit bot_flow_completed подія — тригери CRM підхоплять
+        // Зберігаємо в events колекцію щоб client-side EventBus міг підписатись
+        const fcEventId = `evt_flow_${chatId}_${Date.now()}`;
+        await fsSet(`companies/${cid}/events/${fcEventId}`, {
+            type:      { stringValue: 'bot.flow_completed' },
+            chatId:    { stringValue: String(chatId) },
+            botId:     { stringValue: botId || '' },
+            flowId:    { stringValue: flowId || '' },
+            dealId:    { stringValue: contact.crmDealId || '' },
+            clientId:  { stringValue: contact.clientId || '' },
+            channel:   { stringValue: contact.channel || 'telegram' },
+            createdAt: { timestampValue: new Date().toISOString() },
+        }, token);
+
         return;
     }
 }
