@@ -525,7 +525,17 @@
         }
 
         if (node.type === 'delay') {
-            specific = field(window.t('botsFieldDelay')) + input(node.delay||0, `updateNode('${nodeId}','delay',parseInt(this.value)||0)`, '60', 'number');
+            specific =
+                field('Затримка (секунди)') +
+                input(node.delay||0, `updateNode('${nodeId}','delay',parseInt(this.value)||0)`, '0', 'number') +
+                field('Хвилини') +
+                input(node.minutes||0, `updateNode('${nodeId}','minutes',parseInt(this.value)||0)`, '0', 'number') +
+                field('Години') +
+                input(node.hours||0, `updateNode('${nodeId}','hours',parseInt(this.value)||0)`, '0', 'number') +
+                field('Дні') +
+                input(node.days||0, `updateNode('${nodeId}','days',parseInt(this.value)||0)`, '0', 'number') +
+                field('Повідомлення під час очікування (опційно)') +
+                input(node.waitMessage||'', `updateNode('${nodeId}','waitMessage',this.value)`, 'Незабаром зв\'яжемось з вами...');
         }
 
         if (node.type === 'photo' || node.type === 'receive_photo') {

@@ -810,6 +810,17 @@ service cloud.firestore {
         allow write: if false; // тільки Admin SDK / Worker
       }
 
+      // BOT DELAYED NODES — відкладені ноди флоу (delay нода)
+      match /bot_delayed_nodes/{docId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if false; // тільки Worker / Cloud Function
+      }
+
+      // STALE ALERTS — трекінг відправлених нагадувань про застиглі угоди
+      match /_stale_alerts/{docId} {
+        allow read, write: if false; // тільки Cloud Function
+      }
+
       // FALLBACK
       match /{subcollection}/{docId} {
         allow read: if isCompanyMember(companyId);

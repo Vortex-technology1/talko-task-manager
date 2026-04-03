@@ -4361,3 +4361,151 @@ exports.migrateWarehouseAndClients = functions
             return res.status(500).json({ error: e.message, results });
         }
     });
+
+// ════════════════════════════════════════════════════════════
+// DELAY NODE — виконання відкладених нод флоу
+// Колекція: companies/{cid}/bot_delayed_nodes
+// Поля: cid, chatId, botId, flowId, nodeId, contactData,
+//       collectedData, channel, executeAt, executed
+// Запускається кожні 2 хвилини
+// ════════════════════════════════════════════════════════════
+exports.processBotDelayedNodes = functions
+    .region(REGION)
+    .pubsub.schedule('every 2 minutes')
+    .timeZone('Europe/Kyiv')
+    .onRun(async () => {
+        const now = admin.firestore.Timestamp.now();
+
+        const companiesSnap = await db.collection('companies').limit(200).get();
+
+        for (const compDoc of companiesSnap.docs) {
+            const cid = compDoc.id;
+
+            const delayedSnap = await compDoc.ref
+                .collection('bot_delayed_nodes')
+                .where('executeAt', '<=', now)
+                .where('executed', '==', false)
+                .limit(50)
+                .get();
+
+            if (delayedSnap.empty) continue;
+
+            for (const delayDoc of delayedSnap.docs) {
+                const d = delayDoc.data();
+
+                // Idempotent guard — транзакція
+                try {
+                    await db.runTransaction(async (tx) => {
+                        const fresh = await tx.get(delayDoc.ref);
+                        if (!fresh.exists || fresh.data().executed === true) return;
+                        tx.update(delayDoc.ref, { executed: true, executedAt: admin.firestore.FieldValue.serverTimestamp() });
+                    });
+                } catch { continue; }
+
+                // Викликаємо Worker endpoint для продовження флоу
+                try {
+                    const workerUrl = `https://apptalko.com/api/bot-resume-flow`;
+                    await fetch(workerUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type':  'application/json',
+                            'Authorization': `Bearer ${process.env.CRON_SECRET || ''}`,
+                        },
+                        body: JSON.stringify({
+                            cid:           d.cid || cid,
+                            chatId:        d.chatId,
+                            botId:         d.botId,
+                            flowId:        d.flowId,
+                            nodeId:        d.nodeId,       // нода ПІСЛЯ delay
+                            collectedData: d.collectedData || {},
+                            channel:       d.channel || 'telegram',
+                        }),
+                    });
+                } catch(e) {
+                    console.error('[processBotDelayedNodes] resume error:', e.message);
+                }
+            }
+        }
+
+        return null;
+    });
+
+// ════════════════════════════════════════════════════════════
+// STALE DEALS TRIGGER — угоди без руху N днів
+// Запускається щодня о 9:00
+// ════════════════════════════════════════════════════════════
+exports.checkStaleDeals = functions
+    .region(REGION)
+    .pubsub.schedule('0 9 * * *')
+    .timeZone('Europe/Kyiv')
+    .onRun(async () => {
+        const now = Date.now();
+        const companiesSnap = await db.collection('companies').limit(200).get();
+
+        for (const compDoc of companiesSnap.docs) {
+            const cid = compDoc.id;
+
+            // Читаємо активні тригери типу deal_stale
+            const triggersSnap = await compDoc.ref
+                .collection('crmTriggers')
+                .where('isActive', '==', true)
+                .where('event', '==', 'deal_stale')
+                .get();
+
+            if (triggersSnap.empty) continue;
+
+            // Читаємо відкриті угоди
+            const dealsSnap = await compDoc.ref
+                .collection('crm_deals')
+                .where('stage', 'not-in', ['won', 'lost'])
+                .limit(500)
+                .get();
+
+            for (const trigger of triggersSnap.docs) {
+                const tData = trigger.data();
+                const staleDays = Number(
+                    tData.conditions?.find(c => c.field === 'staleDays')?.value || 3
+                );
+                const thresholdMs = staleDays * 24 * 60 * 60 * 1000;
+
+                for (const dealDoc of dealsSnap.docs) {
+                    const deal = { id: dealDoc.id, ...dealDoc.data() };
+                    const updatedAt = deal.updatedAt?.toMillis ? deal.updatedAt.toMillis() : 0;
+                    const staleDaysActual = Math.floor((now - updatedAt) / (24 * 60 * 60 * 1000));
+
+                    if ((now - updatedAt) < thresholdMs) continue;
+
+                    // Перевіряємо чи вже відправляли нагадування сьогодні
+                    const alertKey = `stale_${trigger.id}_${dealDoc.id}`;
+                    const alertDoc = await compDoc.ref.collection('_stale_alerts').doc(alertKey).get();
+                    const lastAlert = alertDoc.exists ? alertDoc.data().lastAt?.toMillis() : 0;
+                    if (lastAlert && (now - lastAlert) < 20 * 60 * 60 * 1000) continue; // не частіше 20 год
+
+                    // Виконуємо дії тригера через Worker
+                    try {
+                        await fetch('https://apptalko.com/api/crm-trigger-notify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                companyId: cid,
+                                to:        'responsible',
+                                dealId:    deal.id,
+                                dealTitle: deal.title || deal.clientName || '',
+                                message:   `⏰ Угода "${deal.title || deal.clientName}" не рухалась вже ${staleDaysActual} днів`,
+                            }),
+                        });
+
+                        // Зберігаємо факт відправки
+                        await compDoc.ref.collection('_stale_alerts').doc(alertKey).set({
+                            dealId:  deal.id,
+                            lastAt:  admin.firestore.FieldValue.serverTimestamp(),
+                        });
+                    } catch(e) {
+                        console.error('[checkStaleDeals]', e.message);
+                    }
+                }
+            }
+        }
+
+        return null;
+    });

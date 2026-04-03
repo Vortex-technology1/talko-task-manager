@@ -414,6 +414,7 @@ export default {
         if (path === '/api/generate-image') return handleGenerateImage(request, env);
         if (path === '/api/whatsapp-send') return handleWhatsAppSend(request, env);
         if (path === '/api/whatsapp-webhook') return handleWhatsAppWebhook(request, url, env);
+        if (path === '/api/bot-resume-flow') return handleBotResumeFlow(request, env);
 
         // ── Static assets ────────────────────────────────────
         return env.ASSETS.fetch(request);
@@ -483,6 +484,123 @@ ${blocks}${site.bodyCode||''}
 // ════════════════════════════════════════════════════════════
 // AI PROXY
 // ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
+// BOT RESUME FLOW — продовження флоу після delay
+// Викликається Cloud Function processBotDelayedNodes
+// ════════════════════════════════════════════════════════════
+async function handleBotResumeFlow(request, env) {
+    if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+
+    // Перевірка авторизації через CRON_SECRET
+    const auth = request.headers.get('Authorization') || '';
+    const cronSecret = env.CRON_SECRET || '';
+    if (cronSecret && auth !== `Bearer ${cronSecret}`) {
+        return json({ error: 'Unauthorized' }, 401);
+    }
+
+    let body;
+    try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
+
+    const { cid, chatId, botId, flowId, nodeId, collectedData, channel } = body;
+    if (!cid || !chatId || !botId || !flowId || !nodeId) {
+        return json({ error: 'Missing required fields' }, 400);
+    }
+
+    let token;
+    try { token = await getToken(env); } catch(e) { return json({ error: 'Firebase error' }, 500); }
+
+    try {
+        // Читаємо контакт
+        const contactPath = `companies/${cid}/contacts/${chatId}`;
+        const contactDoc  = await fsGet(contactPath, token);
+        const contact     = contactDoc?.fields ? fFields(contactDoc.fields) : { id: chatId };
+
+        // Читаємо ноди флоу
+        const flowDoc = await fsGet(`companies/${cid}/bots/${botId}/flows/${flowId}`, token);
+        if (!flowDoc?.fields) return json({ error: 'Flow not found' }, 404);
+
+        const fd    = fFields(flowDoc.fields);
+        const nodes = fd.nodes || [];
+        const edges = fd.edges || [];
+
+        const targetNode = nodes.find(n => n.id === nodeId);
+        if (!targetNode) return json({ error: 'Node not found' }, 404);
+
+        // Оновлюємо стан контакту
+        await fsPatch(contactPath, {
+            currentNodeId: { stringValue: nodeId },
+            updatedAt:     { timestampValue: new Date().toISOString() },
+        }, token);
+
+        // Визначаємо канал і token/send функцію
+        const contactChannel = channel || contact.channel || 'telegram';
+        let botToken = '';
+        let tgSend;
+
+        if (contactChannel === 'telegram') {
+            const compDoc = await fsGet(`companies/${cid}`, token);
+            if (compDoc?.fields) {
+                const cd = fFields(compDoc.fields);
+                botToken = cd['integrations.telegram.botToken'] || '';
+                if (!botToken && compDoc.fields?.integrations?.mapValue?.fields?.telegram?.mapValue?.fields?.botToken?.stringValue) {
+                    botToken = compDoc.fields.integrations.mapValue.fields.telegram.mapValue.fields.botToken.stringValue;
+                }
+            }
+            tgSend = async (cId, text, opts = {}) => {
+                const buttons = opts.inline_keyboard;
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: cId, text, parse_mode: 'HTML',
+                        ...(buttons ? { reply_markup: { inline_keyboard: buttons } } : {}),
+                    }),
+                }).catch(() => {});
+            };
+        } else if (contactChannel === 'viber') {
+            const compDoc = await fsGet(`companies/${cid}`, token);
+            const vToken  = compDoc?.fields ? fFields(compDoc.fields).viberBotToken || '' : '';
+            botToken = vToken;
+            tgSend = async (cId, text) => {
+                await fetch('https://chatapi.viber.com/pa/send_message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Viber-Auth-Token': vToken },
+                    body: JSON.stringify({ receiver: cId, min_api_version: 1, sender: { name: 'TALKO' }, type: 'text', text }),
+                }).catch(() => {});
+            };
+        } else if (contactChannel === 'whatsapp') {
+            const settDoc = await fsGet(`companies/${cid}/settings/integrations`, token);
+            const waKey   = settDoc?.fields ? fFields(settDoc.fields).whatsappApiKey || '' : '';
+            botToken = waKey;
+            tgSend = async (cId, text) => {
+                const cleanTo = String(cId).replace(/[^\d]/g, '');
+                await fetch('https://waba.360dialog.io/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'D360-API-KEY': waKey },
+                    body: JSON.stringify({ messaging_product: 'whatsapp', to: cleanTo, type: 'text', text: { body: text } }),
+                }).catch(() => {});
+            };
+        }
+
+        // Запускаємо flow engine з потрібної ноди
+        await runFlowEngine({
+            cid, chatId: String(chatId),
+            botId, flowId,
+            currentNodeId: nodeId,
+            text: '', isCallback: false, callbackData: '',
+            contact: { ...contact, collectedData },
+            contactPath, token, botToken,
+            from: { id: chatId }, userName: contact.name || '',
+            tgSend, env,
+        });
+
+        return json({ ok: true });
+    } catch(e) {
+        console.error('[bot-resume-flow]', e.message);
+        return json({ error: e.message }, 500);
+    }
+}
+
 // ════════════════════════════════════════════════════════════
 // WHATSAPP — 360dialog API
 // POST /api/whatsapp-send  — відправка повідомлення клієнту
@@ -3214,6 +3332,62 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             await executeNode({ node: nextNodeHttp, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
         }
         return;
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // ── ВУЗОЛ: DELAY — затримка перед наступною нодою ─────────
+    // ══════════════════════════════════════════════════════════
+    if (nodeType === 'delay') {
+        const delaySec     = Number(nodeData.delay || nodeData.seconds || 60);
+        const delayMinutes = Number(nodeData.minutes || 0);
+        const delayHours   = Number(nodeData.hours   || 0);
+        const delayDays    = Number(nodeData.days     || 0);
+
+        // Загальна затримка в секундах
+        const totalSec = delaySec + delayMinutes * 60 + delayHours * 3600 + delayDays * 86400;
+
+        const executeAt = new Date(Date.now() + totalSec * 1000).toISOString();
+
+        // Знаходимо наступну ноду
+        const nextDelayNode = getNextNode(node.id);
+        if (!nextDelayNode) return;
+
+        // Серіалізуємо collectedData для збереження
+        const cdFields = {};
+        for (const [k, v] of Object.entries(collectedData)) {
+            cdFields[k] = { stringValue: String(v) };
+        }
+
+        // Зберігаємо в bot_delayed_nodes — CF підхопить через 2 хвилини
+        const delayDocId = `delay_${chatId}_${node.id}_${Date.now()}`;
+        await fsSet(`companies/${cid}/bot_delayed_nodes/${delayDocId}`, {
+            cid:           { stringValue: cid },
+            chatId:        { stringValue: String(chatId) },
+            botId:         { stringValue: botId || '' },
+            flowId:        { stringValue: flowId || '' },
+            nodeId:        { stringValue: nextDelayNode.id },
+            channel:       { stringValue: contact.channel || 'telegram' },
+            collectedData: { mapValue: { fields: cdFields } },
+            executeAt:     { timestampValue: executeAt },
+            executed:      { booleanValue: false },
+            createdAt:     { timestampValue: new Date().toISOString() },
+        }, token);
+
+        // Оновлюємо стан контакту — чекаємо delay
+        await fsPatch(contactPath, {
+            currentNodeId:  { stringValue: node.id },
+            waitingDelay:   { booleanValue: true },
+            delayUntil:     { timestampValue: executeAt },
+            updatedAt:      { timestampValue: new Date().toISOString() },
+        }, token);
+
+        // Відправляємо повідомлення якщо є
+        const delayMsg = _interpolate(nodeData.waitMessage || '', collectedData);
+        if (delayMsg) {
+            await tgSend(chatId, delayMsg);
+        }
+
+        return; // Зупиняємо виконання — CF продовжить після затримки
     }
 
     // ══════════════════════════════════════════════════════════
