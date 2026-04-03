@@ -1,0 +1,268 @@
+[
+  {
+    "file": "index.html",
+    "line": 514,
+    "type": "title",
+    "text": "AI Підтримка 24/7",
+    "content": "<a href=\"https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support\" target=\"_blank\" class=\"hdr-dropdown-btn hide-mobile\" style=\"background:#22c55e;color:#fff;text-decoration:none;gap:0.35rem;padding:0.4rem 0.6rem;\" title=\"AI Підтримка 24/7\">"
+  },
+  {
+    "file": "index.html",
+    "line": 778,
+    "type": "aria-label",
+    "text": "Мій день",
+    "content": "<button class=\"tab-btn active\" onclick=\"switchTab('myday')\" data-tab=\"myday\" aria-label=\"Мій день\">"
+  },
+  {
+    "file": "index.html",
+    "line": 813,
+    "type": "aria-label",
+    "text": "Координація",
+    "content": "<button class=\"tab-btn\" onclick=\"switchTab('coordination');lazyLoad('coordination',function(){window._initCoordTab&&window._initCoordTab();});\" data-tab=\"coordination\" aria-label=\"Координація\">"
+  },
+  {
+    "file": "index.html",
+    "line": 824,
+    "type": "aria-label",
+    "text": "Аналітика",
+    "content": "<button class=\"tab-btn\" onclick=\"toggleNavDropdown('analyticsTabMenu','analyticsTabDropdown',event)\" id=\"analyticsTabBtn\" aria-label=\"Аналітика\">"
+  },
+  {
+    "file": "index.html",
+    "line": 877,
+    "type": "aria-label",
+    "text": "Бізнес",
+    "content": "<button class=\"tab-btn\" onclick=\"toggleNavDropdown('bizTabMenu','bizTabDropdown',event);setTimeout(function(){var l=window.currentLang||window.currentLanguage||localStorage.getItem('talko_language')||'ua';if(l!=='ua'&&window.applyNavTranslations)window.applyNavTranslations(l);},50);\" id=\"bizNavBtn\" aria-label=\"Бізнес\" style=\"position:relative;\">"
+  },
+  {
+    "file": "index.html",
+    "line": 1165,
+    "type": "title",
+    "text": "Щільність рядків",
+    "content": "<div class=\"density-toggle\" title=\"Щільність рядків\">"
+  },
+  {
+    "file": "index.html",
+    "line": 1459,
+    "type": "title",
+    "text": "AI Асистент бізнес-процесів",
+    "content": "<a href=\"https://chatgpt.com/g/g-693ec18df2c0819194f1c3de7404d6fe-talko-ai-business-process\" target=\"_blank\" class=\"btn-ai hide-mobile\" title=\"AI Асистент бізнес-процесів\">"
+  },
+  {
+    "file": "index.html",
+    "line": 1730,
+    "type": "placeholder",
+    "text": "Назва компанії",
+    "content": "<input id=\"settingCompanyName\" type=\"text\" placeholder=\"Назва компанії\""
+  },
+  {
+    "file": "index.html",
+    "line": 2049,
+    "type": "aria-label",
+    "text": "Безповоротно видалити ВСІ метрики та дані",
+    "content": "<button onclick=\"clearAllStatsData()\" class=\"btn\" style=\"padding:0.4rem 0.8rem;font-size:0.8rem;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;\" title=\"Безповоротно видалити ВСІ метрики та дані\" aria-label=\"Безповоротно видалити ВСІ метрики та дані\">"
+  },
+  {
+    "file": "index.html",
+    "line": 2049,
+    "type": "title",
+    "text": "Безповоротно видалити ВСІ метрики та дані",
+    "content": "<button onclick=\"clearAllStatsData()\" class=\"btn\" style=\"padding:0.4rem 0.8rem;font-size:0.8rem;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;\" title=\"Безповоротно видалити ВСІ метрики та дані\" aria-label=\"Безповоротно видалити ВСІ метрики та дані\">"
+  },
+  {
+    "file": "index.html",
+    "line": 2097,
+    "type": "placeholder",
+    "text": "Назва компанії",
+    "content": "<input id=\"settingCompanyName\" type=\"text\" placeholder=\"Назва компанії\""
+  },
+  {
+    "file": "index.html",
+    "line": 2203,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('taskModal')\" aria-label=\"Закрити діалог\">"
+  },
+  {
+    "file": "index.html",
+    "line": 2517,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('mergeFunctionsModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 2560,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('processTemplatesModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 2580,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('editProcessTemplateModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 2616,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('startProcessModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 2658,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('viewProcessModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 3073,
+    "type": "aria-label",
+    "text": "Основна навігація",
+    "content": "<nav class=\"bottom-nav\" id=\"bottomNav\" role=\"navigation\" aria-label=\"Основна навігація\">"
+  },
+  {
+    "file": "index.html",
+    "line": 3075,
+    "type": "aria-label",
+    "text": "Мій день",
+    "content": "<button class=\"bottom-nav-btn active\" onclick=\"switchTab('myday')\" data-tab=\"myday\" role=\"tab\" aria-label=\"Мій день\">"
+  },
+  {
+    "file": "index.html",
+    "line": 3088,
+    "type": "aria-label",
+    "text": "Проєкти",
+    "content": "<button class=\"bottom-nav-btn\" onclick=\"switchTab('projects')\" data-tab=\"projects\" role=\"tab\" aria-label=\"Проєкти\">"
+  },
+  {
+    "file": "index.html",
+    "line": 3096,
+    "type": "aria-label",
+    "text": "Більше опцій",
+    "content": "<button class=\"bottom-nav-btn\" onclick=\"openMobileMenu()\" data-tab=\"more\" role=\"tab\" aria-label=\"Більше опцій\">"
+  },
+  {
+    "file": "index.html",
+    "line": 3272,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('aiGeneratorModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 3307,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('importStructureModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 3326,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('aiAssistantsModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 4258,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('quickInputModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 4275,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('aiAnalysisModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "index.html",
+    "line": 4288,
+    "type": "aria-label",
+    "text": "Закрити діалог",
+    "content": "<button class=\"close\" onclick=\"closeModal('trendsChartModal')\" aria-label=\"Закрити діалог\">&times;</button>"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 4776,
+    "type": "title",
+    "text": "Додати нову функцію",
+    "content": "<button class=\"tool-btn add-btn\" id=\"addFunctionBtn\" type=\"button\" title=\"Додати нову функцію\" data-title=\"toolbar.add_function\">"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 4790,
+    "type": "title",
+    "text": "Переміщення полотна",
+    "content": "<button class=\"tool-btn\" id=\"handTool\" type=\"button\" title=\"Переміщення полотна\" data-title=\"toolbar.move\" aria-pressed=\"false\">"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 4797,
+    "type": "title",
+    "text": "Відмінити (Ctrl+Z)",
+    "content": "<button class=\"tool-btn undo-redo-btn disabled\" id=\"undoBtn\" type=\"button\" title=\"Відмінити (Ctrl+Z)\" data-title=\"toolbar.undo_title\" disabled>"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 4961,
+    "type": "title",
+    "text": "Інструменти",
+    "content": "<button class=\"tool-btn\" id=\"toolsMenuBtn\" type=\"button\" title=\"Інструменти\" data-title=\"toolbar.tools_title\" aria-haspopup=\"true\" aria-expanded=\"false\" onclick=\"event.stopPropagation(); var m=document.getElementById('toolsMenu'); if(!m) return; if(m.style.display==='block'){m.style.display='none';}else{var r=this.getBoundingClientRect(); m.style.top=(r.bottom+4)+'px'; m.style.right=(window.innerWidth-r.right)+'px'; m.style.display='block';}\">"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 5034,
+    "type": "title",
+    "text": "Скасувати виділення (Esc)",
+    "content": "<button class=\"tool-btn cancel-selection-btn\" id=\"cancelSelectionBtn\" type=\"button\" title=\"Скасувати виділення (Esc)\" style=\"display:none;\">"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 5040,
+    "type": "title",
+    "text": "AI Структура — розробка організаційної структури",
+    "content": "<a href=\"https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-organizational-structure\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"tool-btn ai-btn\" style=\"text-decoration:none;color:white;\" title=\"AI Структура — розробка організаційної структури\">"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 5092,
+    "type": "aria-label",
+    "text": "Додати функцію",
+    "content": "<button class=\"mobile-fab\" id=\"mobileFab\" aria-label=\"Додати функцію\">"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 5115,
+    "type": "aria-label",
+    "text": "Додати функцію",
+    "content": "<button class=\"mobile-nav-btn nav-add\" id=\"mobileAddBtn\" type=\"button\" aria-label=\"Додати функцію\">"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 5171,
+    "type": "aria-label",
+    "text": "Збільшити",
+    "content": "<button class=\"zoom-btn\" id=\"zoomInBtn\" type=\"button\" data-title=\"zoom.in\" aria-label=\"Збільшити\">"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 5361,
+    "type": "placeholder",
+    "text": "Наприклад: Відділ продажів",
+    "content": "<input type=\"text\" class=\"form-input\" id=\"groupName\" placeholder=\"Наприклад: Відділ продажів\" data-placeholder=\"group.name_placeholder\" maxlength=\"50\">"
+  },
+  {
+    "file": "biz-structure.html",
+    "line": 8857,
+    "type": "aria-label",
+    "text": "Обрати колір",
+    "content": "aria-label=\"Обрати колір\"></div>"
+  }
+]
