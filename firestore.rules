@@ -35,19 +35,39 @@ service cloud.firestore {
         get(/databases/$(database)/documents/companies/$(companyId)/users/$(userId())).data.role in ['owner', 'admin', 'manager']
       ));
     }
-    
+
+    // =====================
+    // PERMISSION SYSTEM
+    // Перевіряє чи є таб в allowedTabs юзера.
+    // Якщо allowedTabs відсутній (null/не встановлено) — юзер бачить все (як раніше).
+    // Якщо allowedTabs встановлено — перевіряємо наявність табу.
+    // owner/admin/manager завжди мають доступ незалежно від allowedTabs.
+    // =====================
+    function getUserDoc(companyId) {
+      return get(/databases/$(database)/documents/companies/$(companyId)/users/$(userId()));
+    }
+
+    function hasTabAccess(companyId, tabKey) {
+      return isManagerOrOwner(companyId) ||
+        isSuperAdmin() || (
+          isCompanyMember(companyId) && (
+            !('allowedTabs' in getUserDoc(companyId).data) ||
+            getUserDoc(companyId).data.allowedTabs == null ||
+            getUserDoc(companyId).data.allowedTabs.hasAny([tabKey])
+          )
+        );
+    }
+
     function isValidString(field, maxLength) {
       return field is string && field.size() > 0 && field.size() <= maxLength;
     }
 
     // Перевірка: чи є юзер viewer в проєкті (тільки читання)
-    // Viewer може бачити задачі проєкту, але НЕ може створювати/редагувати/видаляти
     function isProjectViewerOnly(companyId, projectId) {
       return exists(/databases/$(database)/documents/companies/$(companyId)/projects/$(projectId)/members/$(userId())) &&
         get(/databases/$(database)/documents/companies/$(companyId)/projects/$(projectId)/members/$(userId())).data.role == 'viewer';
     }
 
-    // Повертає true якщо юзер є viewer у проєкті задачі (і не є manager+)
     function isViewerInTaskProject(companyId, projectId) {
       return projectId != null && projectId != '' && isProjectViewerOnly(companyId, projectId);
     }
@@ -79,7 +99,6 @@ service cloud.firestore {
         allow update: if isManagerOrOwner(companyId) || 
           (isAuthenticated() && memberId == userId() && 
            request.resource.data.role == resource.data.role) ||
-          // Юзер може зберегти свою мову інтерфейсу та Telegram мову
           (isAuthenticated() && memberId == userId() &&
            request.resource.data.diff(resource.data).affectedKeys()
              .hasOnly(['language', 'interfaceLang', 'telegramLanguage', 'updatedAt', 
@@ -96,29 +115,30 @@ service cloud.firestore {
         allow write: if isCompanyOwner(companyId);
       }
 
+      // =====================
       // TASKS
-      // viewer роль в проєкті — тільки читання, навіть якщо знає API
+      // tab: tasks, projects, myday
+      // =====================
       match /tasks/{taskId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId) && 
+        allow create: if hasTabAccess(companyId, 'tasks') && 
           isValidString(request.resource.data.title, 500) &&
           !(request.resource.data.projectId != null && request.resource.data.projectId != '' &&
             isProjectViewerOnly(companyId, request.resource.data.projectId));
         allow update: if !isViewerInTaskProject(companyId, resource.data.projectId) && (
           isManagerOrOwner(companyId) || 
-          (isCompanyMember(companyId) && (
+          (hasTabAccess(companyId, 'tasks') && (
             resource.data.assigneeId == userId() ||
             resource.data.creatorId == userId() ||
             (resource.data.coExecutorIds != null && resource.data.coExecutorIds.hasAny([userId()]))
           )));
         allow delete: if !isViewerInTaskProject(companyId, resource.data.projectId) && (
           isManagerOrOwner(companyId) || 
-          (isCompanyMember(companyId) && resource.data.creatorId == userId()));
+          (hasTabAccess(companyId, 'tasks') && resource.data.creatorId == userId()));
         
         match /comments/{commentId} {
           allow read: if isCompanyMember(companyId);
-          // viewer не може коментувати задачі проєкту
-          allow create: if isCompanyMember(companyId) &&
+          allow create: if hasTabAccess(companyId, 'tasks') &&
             !isViewerInTaskProject(companyId, get(/databases/$(database)/documents/companies/$(companyId)/tasks/$(taskId)).data.projectId);
           allow update: if isManagerOrOwner(companyId) ||
             (isAuthenticated() && isCompanyMember(companyId) && resource.data.authorId == userId());
@@ -135,19 +155,19 @@ service cloud.firestore {
       // TASKS ARCHIVE
       match /tasksArchive/{taskId} {
         allow read: if isCompanyMember(companyId);
-        allow create, delete: if isCompanyMember(companyId);
+        allow create, delete: if hasTabAccess(companyId, 'tasks');
       }
       
-      // REGULAR TASKS
+      // REGULAR TASKS — tab: regular
       match /regularTasks/{taskId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId) &&
+        allow create: if hasTabAccess(companyId, 'regular') &&
           isValidString(request.resource.data.title, 500);
-        allow update: if isManagerOrOwner(companyId);
+        allow update: if hasTabAccess(companyId, 'regular');
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // FUNCTIONS
+      // FUNCTIONS — tab: tasks (функції співробітників)
       match /functions/{functionId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isManagerOrOwner(companyId) &&
@@ -162,55 +182,53 @@ service cloud.firestore {
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
       
-      // PROCESS TEMPLATES
+      // PROCESS TEMPLATES — tab: processes
       match /processTemplates/{templateId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId) &&
+        allow create: if hasTabAccess(companyId, 'processes') &&
           isValidString(request.resource.data.name, 200);
-        allow update: if isManagerOrOwner(companyId);
+        allow update: if hasTabAccess(companyId, 'processes');
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // PROCESSES
+      // PROCESSES — tab: processes
       match /processes/{processId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId) &&
+        allow create: if hasTabAccess(companyId, 'processes') &&
           isValidString(request.resource.data.name, 500);
-        allow update: if isCompanyMember(companyId);
+        allow update: if hasTabAccess(companyId, 'processes');
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // COORDINATIONS
+      // COORDINATIONS — tab: coordination
       match /coordinations/{coordId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId) &&
+        allow create: if hasTabAccess(companyId, 'coordination') &&
           isValidString(request.resource.data.name, 500);
-        allow update: if isManagerOrOwner(companyId);
+        allow update: if hasTabAccess(companyId, 'coordination');
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // PROJECTS
+      // PROJECTS — tab: projects
       match /projects/{projectId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId) &&
+        allow create: if hasTabAccess(companyId, 'projects') &&
           isValidString(request.resource.data.name, 200);
-        allow update: if isManagerOrOwner(companyId);
+        allow update: if hasTabAccess(companyId, 'projects');
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // ESTIMATE NORMS (Довідник норм витрат матеріалів)
+      // ESTIMATE NORMS — tab: estimate
       match /estimate_norms/{normId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId);
-        allow update: if isManagerOrOwner(companyId);
+        allow create, update: if hasTabAccess(companyId, 'estimate');
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // PROJECT ESTIMATES (Кошториси проектів)
+      // PROJECT ESTIMATES — tab: estimate
       match /project_estimates/{estimateId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId);
-        allow update: if isManagerOrOwner(companyId);
+        allow create, update: if hasTabAccess(companyId, 'estimate');
         allow delete: if isManagerOrOwner(companyId);
       }
       
@@ -220,21 +238,21 @@ service cloud.firestore {
         allow write: if isCompanyMember(companyId);
       }
       
-      // TASK TEMPLATES
+      // TASK TEMPLATES — tab: tasks
       match /taskTemplates/{templateId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId) &&
+        allow create: if hasTabAccess(companyId, 'tasks') &&
           isValidString(request.resource.data.title, 500);
-        allow update: if isManagerOrOwner(companyId);
+        allow update: if hasTabAccess(companyId, 'tasks');
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // INCIDENTS
+      // INCIDENTS — tab: control
       match /incidents/{incidentId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId) &&
+        allow create: if hasTabAccess(companyId, 'control') &&
           isValidString(request.resource.data.title, 500);
-        allow update: if isManagerOrOwner(companyId);
+        allow update: if hasTabAccess(companyId, 'control');
         allow delete: if isManagerOrOwner(companyId);
       }
       
@@ -266,10 +284,10 @@ service cloud.firestore {
         allow write: if isManagerOrOwner(companyId);
       }
       
-      // PROJECT TEMPLATES, STANDARDS, QC
+      // PROJECT TEMPLATES, STANDARDS, QC — tab: projects
       match /projectTemplates/{templateId} {
         allow read: if isCompanyMember(companyId);
-        allow write: if isManagerOrOwner(companyId);
+        allow write: if hasTabAccess(companyId, 'projects');
       }
       
       match /workStandards/{standardId} {
@@ -279,48 +297,49 @@ service cloud.firestore {
       
       match /qualityChecks/{qcId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId) &&
+        allow create: if hasTabAccess(companyId, 'projects') &&
           isValidString(request.resource.data.projectId, 200);
-        allow update: if isCompanyMember(companyId);
+        allow update: if hasTabAccess(companyId, 'projects');
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // PROJECT STAGES & MATERIALS
+      // PROJECT STAGES & MATERIALS — tab: projects
       match /projectStages/{stageId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId) &&
+        allow create: if hasTabAccess(companyId, 'projects') &&
           isValidString(request.resource.data.name, 200) &&
           isValidString(request.resource.data.projectId, 200);
-        allow update: if isCompanyMember(companyId);
+        allow update: if hasTabAccess(companyId, 'projects');
         allow delete: if isManagerOrOwner(companyId);
       }
       
       match /projectMaterials/{materialId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId) &&
+        allow create: if hasTabAccess(companyId, 'projects') &&
           isValidString(request.resource.data.name, 200) &&
           isValidString(request.resource.data.projectId, 200);
-        allow update: if isCompanyMember(companyId);
+        allow update: if hasTabAccess(companyId, 'projects');
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // STATISTICS / METRICS
+      // STATISTICS / METRICS — tab: statistics
       match /metrics/{metricId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update: if hasTabAccess(companyId, 'statistics');
+        allow delete: if isManagerOrOwner(companyId);
       }
       
       match /metricEntries/{entryId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId);
-        allow update: if isCompanyMember(companyId) &&
+        allow create: if hasTabAccess(companyId, 'statistics');
+        allow update: if hasTabAccess(companyId, 'statistics') &&
           (resource.data.createdBy == userId() || isManagerOrOwner(companyId));
         allow delete: if isManagerOrOwner(companyId);
       }
       
       match /metricTargets/{targetId} {
         allow read: if isCompanyMember(companyId);
-        allow write: if isManagerOrOwner(companyId);
+        allow write: if hasTabAccess(companyId, 'statistics');
       }
       
       match /metricAggregates/{aggId} {
@@ -335,137 +354,64 @@ service cloud.firestore {
         allow read: if isManagerOrOwner(companyId);
       }
 
-      // CRM — CONTACTS
+      // =====================
+      // CRM — tab: crm
+      // =====================
       match /contacts/{contactId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId);
-        allow update: if isCompanyMember(companyId);
+        allow create, update: if hasTabAccess(companyId, 'crm');
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // CRM — DEALS (legacy)
       match /deals/{dealId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId);
-        allow update: if isCompanyMember(companyId);
+        allow create, update: if hasTabAccess(companyId, 'crm');
         allow delete: if isManagerOrOwner(companyId);
         match /history/{histId} {
           allow read: if isCompanyMember(companyId);
-          allow create: if isCompanyMember(companyId);
+          allow create: if hasTabAccess(companyId, 'crm');
         }
       }
 
-      // CRM — PIPELINES (legacy)
       match /pipelines/{pipelineId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // MARKETING — LANDING PAGES
-      match /landingPages/{pageId} {
-        allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
-      }
-
-      // MARKETING — FUNNELS
-      match /funnels/{funnelId} {
-        allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
-      }
-
-      // BOTS
-      match /bots/{botId} {
-        allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
-        match /flows/{flowId} {
-          allow read: if isCompanyMember(companyId);
-          allow create, update, delete: if isManagerOrOwner(companyId);
-          match /nodePrompts/{nodeId} {
-            allow read: if isCompanyMember(companyId);
-            allow write: if isManagerOrOwner(companyId);
-          }
-          match /canvasData/{docId} {
-            allow read: if isCompanyMember(companyId);
-            allow write: if isManagerOrOwner(companyId);
-          }
-        }
-      }
-
-      // BOTS — FLOWS (root level)
-      match /flows/{flowId} {
-        allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
-        match /nodePrompts/{nodeId} {
-          allow read: if isCompanyMember(companyId);
-          allow write: if isManagerOrOwner(companyId);
-        }
-        match /canvasData/{docId} {
-          allow read: if isCompanyMember(companyId);
-          allow write: if isManagerOrOwner(companyId);
-        }
-      }
-
-      // BOTS — LEADS
-      match /leads/{leadId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow create: if isCompanyMember(companyId);
-      }
-
-      // BOTS — SESSIONS
-      match /sessions/{sessionId} {
-        allow read: if isCompanyMember(companyId);
-        allow write: if isCompanyMember(companyId);
-      }
-
-      // BOTS — CALLBACK CACHE (Admin SDK only)
-      match /cbCache/{cbId} {
-        allow read, write: if false;
-      }
-
-      // WEBHOOK — IDEMPOTENCY LOCKS
-      match /_finish_locks/{lockId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow write: if false;
-      }
-
-      // CRM — CLIENTS
       match /crm_clients/{clientId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId);
-        allow update: if isCompanyMember(companyId);
+        allow create, update: if hasTabAccess(companyId, 'crm');
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // CRM — DEALS
       match /crm_deals/{dealId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId);
+        allow create: if hasTabAccess(companyId, 'crm');
         allow update: if isManagerOrOwner(companyId) ||
-          (isCompanyMember(companyId) && (
+          (hasTabAccess(companyId, 'crm') && (
             resource.data.assigneeId == userId() ||
             resource.data.responsibleId == userId()
           ));
         allow delete: if isManagerOrOwner(companyId);
         match /history/{histId} {
           allow read: if isCompanyMember(companyId);
-          allow create: if isCompanyMember(companyId);
+          allow create: if hasTabAccess(companyId, 'crm');
           allow update, delete: if false;
         }
         match /tasks/{taskId} {
           allow read: if isCompanyMember(companyId);
-          allow create: if isCompanyMember(companyId);
+          allow create: if hasTabAccess(companyId, 'crm');
           allow update: if isManagerOrOwner(companyId) ||
-            (isCompanyMember(companyId) && resource.data.assigneeId == userId());
+            (hasTabAccess(companyId, 'crm') && resource.data.assigneeId == userId());
           allow delete: if isManagerOrOwner(companyId);
         }
         match /files/{fileId} {
           allow read: if isCompanyMember(companyId);
-          allow create: if isCompanyMember(companyId);
+          allow create: if hasTabAccess(companyId, 'crm');
           allow delete: if isManagerOrOwner(companyId);
         }
       }
 
-      // CRM — PIPELINES
       match /crm_pipeline/{pipelineId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
@@ -476,66 +422,125 @@ service cloud.firestore {
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // CRM — FORMS
       match /crm_forms/{formId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // CRM — ACTIVITIES
       match /crm_activities/{activityId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId);
+        allow create: if hasTabAccess(companyId, 'crm');
         allow update: if isManagerOrOwner(companyId) ||
-          (isCompanyMember(companyId) && resource.data.userId == userId());
+          (hasTabAccess(companyId, 'crm') && resource.data.userId == userId());
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // CRM — STATS
       match /crm_stats/{docId} {
         allow read: if isManagerOrOwner(companyId);
-        allow write: if isCompanyMember(companyId);
+        allow write: if hasTabAccess(companyId, 'crm');
       }
 
-      // AUTOMATION RULES
       match /automation_rules/{ruleId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // CONTACTS — MESSAGES
       match /contacts/{contactId}/messages/{msgId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId);
-        allow update: if isCompanyMember(companyId);
+        allow create, update: if hasTabAccess(companyId, 'crm');
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // BROADCASTS
-      match /broadcasts/{broadcastId} {
+      // =====================
+      // MARKETING — tab: marketing
+      // =====================
+      match /landingPages/{pageId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'marketing');
       }
 
-      // SITES
-      match /sites/{siteId} {
+      match /funnels/{funnelId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
-        match /blocks/{blockId} {
+        allow create, update, delete: if hasTabAccess(companyId, 'marketing');
+      }
+
+      match /broadcasts/{broadcastId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update: if hasTabAccess(companyId, 'marketing');
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // =====================
+      // BOTS — tab: bots
+      // =====================
+      match /bots/{botId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'bots');
+        match /flows/{flowId} {
           allow read: if isCompanyMember(companyId);
-          allow write: if isManagerOrOwner(companyId);
+          allow create, update, delete: if hasTabAccess(companyId, 'bots');
+          match /nodePrompts/{nodeId} {
+            allow read: if isCompanyMember(companyId);
+            allow write: if hasTabAccess(companyId, 'bots');
+          }
+          match /canvasData/{docId} {
+            allow read: if isCompanyMember(companyId);
+            allow write: if hasTabAccess(companyId, 'bots');
+          }
         }
       }
 
-      // SITE FORMS + SUBMISSIONS
+      match /flows/{flowId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'bots');
+        match /nodePrompts/{nodeId} {
+          allow read: if isCompanyMember(companyId);
+          allow write: if hasTabAccess(companyId, 'bots');
+        }
+        match /canvasData/{docId} {
+          allow read: if isCompanyMember(companyId);
+          allow write: if hasTabAccess(companyId, 'bots');
+        }
+      }
+
+      match /leads/{leadId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow create: if isCompanyMember(companyId);
+      }
+
+      match /sessions/{sessionId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if isCompanyMember(companyId);
+      }
+
+      match /cbCache/{cbId} {
+        allow read, write: if false;
+      }
+
+      match /_finish_locks/{lockId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if false;
+      }
+
+      // =====================
+      // SITES — tab: sites
+      // =====================
+      match /sites/{siteId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'sites');
+        match /blocks/{blockId} {
+          allow read: if isCompanyMember(companyId);
+          allow write: if hasTabAccess(companyId, 'sites');
+        }
+      }
+
       match /site_forms/{formId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'sites');
       }
 
       match /form_submissions/{submissionId} {
         allow read: if isCompanyMember(companyId);
-        // Публічний create — клієнти подають форми без авторизації
         allow create: if request.resource.data.keys().hasAll(['submittedAt', 'formId'])
                       && request.resource.data.size() < 10240;
         allow update: if isCompanyMember(companyId);
@@ -553,242 +558,176 @@ service cloud.firestore {
       }
 
       // =====================
-      // FINANCE
+      // FINANCE — tab: finance
       // =====================
       match /finance_transactions/{txId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow create: if isCompanyMember(companyId) && (
-          isManagerOrOwner(companyId) ||
-          (request.resource.data.type == 'expense' &&
-           (request.resource.data.projectId != null || request.resource.data.taskId != null))
-        );
+        allow read: if hasTabAccess(companyId, 'finance');
+        allow create: if hasTabAccess(companyId, 'finance');
         allow update, delete: if isManagerOrOwner(companyId);
       }
 
       match /finance_categories/{catId} {
         allow read: if isCompanyMember(companyId);
-        allow write: if isManagerOrOwner(companyId);
+        allow write: if hasTabAccess(companyId, 'finance');
       }
 
       match /finance_budgets/{budgetId} {
-        allow read: if isManagerOrOwner(companyId);
+        allow read: if hasTabAccess(companyId, 'finance');
         allow write: if isCompanyOwner(companyId);
       }
 
       match /finance_accounts/{accId} {
-        allow read, write: if isManagerOrOwner(companyId);
+        allow read: if hasTabAccess(companyId, 'finance');
+        allow write: if hasTabAccess(companyId, 'finance');
       }
 
       match /finance_recurring/{recId} {
-        allow read, write: if isManagerOrOwner(companyId);
+        allow read: if hasTabAccess(companyId, 'finance');
+        allow write: if hasTabAccess(companyId, 'finance');
       }
 
       match /finance_function_budgets/{fbudId} {
-        allow read: if isManagerOrOwner(companyId);
+        allow read: if hasTabAccess(companyId, 'finance');
         allow write: if isCompanyOwner(companyId);
       }
 
       match /finance_ai_history/{aiId} {
-        allow read, write: if isManagerOrOwner(companyId);
+        allow read, write: if hasTabAccess(companyId, 'finance');
       }
 
       match /finance_settings/{doc} {
         allow read: if isCompanyMember(companyId);
-        allow write: if isManagerOrOwner(companyId);
+        allow write: if hasTabAccess(companyId, 'finance');
       }
 
       match /finance_transfers/{transferId} {
-        allow read, write: if isManagerOrOwner(companyId);
+        allow read, write: if hasTabAccess(companyId, 'finance');
       }
 
       match /finance_invoices/{invoiceId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow create: if isCompanyMember(companyId);
+        allow read: if hasTabAccess(companyId, 'finance');
+        allow create: if hasTabAccess(companyId, 'finance');
         allow update, delete: if isManagerOrOwner(companyId);
       }
 
       // =====================
-      // BOOKING MODULE
-      // Записи клієнтів відбуваються через /api/booking (Admin SDK)
-      // Rules захищають прямий JS SDK доступ від співробітників
+      // BOOKING — tab: booking
       // =====================
-
-      // Налаштування календарів — тільки менеджер+
       match /booking_calendars/{calendarId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'booking');
       }
 
-      // Розклади — тільки менеджер+
       match /booking_schedules/{scheduleId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'booking');
       }
 
-      // Групи календарів — тільки менеджер+
       match /booking_groups/{groupId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'booking');
       }
 
-      // Записи клієнтів:
-      // - READ: тільки менеджер+ (містить ПІБ, email, телефон клієнтів → GDPR)
-      // - CREATE: тільки через Admin SDK (/api/booking) → allow create: if false
-      // - UPDATE (confirm/cancel): тільки менеджер+ через UI або Admin SDK
       match /booking_appointments/{appointmentId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow create: if false; // Admin SDK only (/api/booking?action=create)
-        allow update: if isManagerOrOwner(companyId); // confirm/cancel через UI
+        allow read: if hasTabAccess(companyId, 'booking');
+        allow create: if false; // Admin SDK only
+        allow update: if hasTabAccess(companyId, 'booking');
         allow delete: if isManagerOrOwner(companyId);
       }
 
       // =====================
-      // WAREHOUSE MODULE
+      // WAREHOUSE — tab: warehouse
       // =====================
-
-      // Товари — manager може редагувати каталог, member читає
       match /warehouse_items/{itemId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId) &&
+        allow create: if hasTabAccess(companyId, 'warehouse') &&
           isValidString(request.resource.data.name, 200);
-        allow update: if isManagerOrOwner(companyId);
+        allow update: if hasTabAccess(companyId, 'warehouse');
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // Операції (прихід/видача/списання) — member може додавати
-      // (комірник не обов'язково є менеджером)
       match /warehouse_operations/{opId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId) &&
+        allow create: if hasTabAccess(companyId, 'warehouse') &&
           request.resource.data.keys().hasAll(['itemId', 'type', 'qty']) &&
           request.resource.data.qty is number &&
           request.resource.data.qty > 0;
-        // update/delete — тільки менеджер (виправлення помилок)
         allow update, delete: if isManagerOrOwner(companyId);
       }
 
-      // Залишки — оновлює тільки серверна логіка (warehouse.js Admin SDK)
-      // Клієнт може читати для відображення дашборду
       match /warehouse_stock/{stockId} {
         allow read: if isCompanyMember(companyId);
-        allow write: if isManagerOrOwner(companyId); // Allow client-side updates for real-time sync
+        allow write: if hasTabAccess(companyId, 'warehouse');
       }
 
       match /warehouse_stock_by_location/{docId} {
         allow read: if isCompanyMember(companyId);
-        allow write: if isManagerOrOwner(companyId);
+        allow write: if hasTabAccess(companyId, 'warehouse');
       }
 
-      // Локації складу — тільки менеджер+
       match /warehouse_locations/{locationId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'warehouse');
       }
 
-      // Постачальники складу
       match /warehouse_suppliers/{supplierId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if hasTabAccess(companyId, 'warehouse');
       }
 
-      // Ескалації (пишуться клієнтом, обробляються Cloud Functions)
-      match /escalations/{escId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow create: if isCompanyMember(companyId);
-        allow update: if false; // тільки Admin SDK (processEscalations CF)
+      // =====================
+      // SALES — tab: sales
+      // =====================
+      match /sales/{saleId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update: if hasTabAccess(companyId, 'sales');
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // Заплановані задачі (Cloud Functions scheduled tasks)
-      match /scheduledTasks/{taskId} {
+      match /sales_purchase_orders/{orderId} {
         allow read: if isCompanyMember(companyId);
-        allow write: if isManagerOrOwner(companyId);
+        allow create: if hasTabAccess(companyId, 'sales');
+        allow update: if hasTabAccess(companyId, 'sales');
+        allow delete: if isCompanyOwner(companyId);
       }
 
-      // =====================
-      // ACTIVITY LOG
-      // Лог активності співробітників — member може писати свої дії
-      // =====================
-      match /activity_log/{logId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow create: if isCompanyMember(companyId) &&
-          request.resource.data.userId == userId();
-        allow update, delete: if false; // immutable log
-      }
-
-      // =====================
-      // SETTINGS (per company)
-      // Onboarding, AI assistants config, integrations
-      // =====================
-      match /settings/{settingId} {
-        // Onboarding прогрес — будь-який member може зберігати свій прогрес
+      match /sales_realizations/{realizationId} {
         allow read: if isCompanyMember(companyId);
-        allow write: if isCompanyMember(companyId);
+        allow create: if hasTabAccess(companyId, 'sales');
+        allow update: if hasTabAccess(companyId, 'sales');
+        allow delete: if isCompanyOwner(companyId);
       }
 
-      // =====================
-      // AI USAGE LOG
-      // =====================
-      match /aiUsageLog/{docId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow write: if false; // Admin SDK only (ai-proxy.js)
-      }
-
-      // AI RECOMMENDATIONS
-      match /ai_recommendations/{docId} {
-        allow read, write: if isManagerOrOwner(companyId);
-      }
-
-      // WEEKLY REPORT LOG
-      match /weekly_report_log/{docId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow write: if false; // Admin SDK only
-      }
-
-      // SUPERADMIN NOTES
-      match /sa_notes/{noteId} {
-        allow read, write: if isSuperAdmin();
-      }
-
-      // SESSION LOCKS (webhook)
-      match /_session_locks/{lockId} {
-        allow read, write: if false;
-      }
-
-      // =====================
-      // FALLBACK — нові колекції до деплою специфічних правил
-      // Вужчий ніж раніше: read тільки member, write тільки manager
-      // =====================
-
-      // BOOKING (demo/internal)
-      match /bookings/{bookingId} {
+      match /sales_debtors/{debtorId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create: if hasTabAccess(companyId, 'sales');
+        allow update: if hasTabAccess(companyId, 'sales');
+        allow delete: if false; // immutable
       }
 
-      // SALES / РЕАЛІЗАЦІЇ
-      match /sales/{saleId} {
+      match /price_lists/{priceListId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if isCompanyOwner(companyId);
       }
 
-      // ESTIMATES / КОШТОРИСИ
+      // =====================
+      // ESTIMATE — tab: estimate
+      // =====================
       match /estimates/{estId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow create, update: if hasTabAccess(companyId, 'estimate');
+        allow delete: if isManagerOrOwner(companyId);
         match /{sub=**} {
           allow read: if isCompanyMember(companyId);
-          allow write: if isManagerOrOwner(companyId);
+          allow write: if hasTabAccess(companyId, 'estimate');
         }
       }
 
-      // STANDARDS / СТАНДАРТИ
       match /standards/{stdId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // NORM DEFINITIONS / НОРМИ КОШТОРИСУ
       match /norm_definitions/{normId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
@@ -798,51 +737,74 @@ service cloud.firestore {
         }
       }
 
-      // METRICS DAILY
+      // =====================
+      // ANALYTICS / CONTROL — tab: analytics, control
+      // =====================
       match /metrics_daily/{mId} {
+        allow read: if hasTabAccess(companyId, 'analytics') || hasTabAccess(companyId, 'statistics');
+        allow create, update: if hasTabAccess(companyId, 'statistics');
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      match /escalations/{escId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow create: if isCompanyMember(companyId);
+        allow update: if false; // Admin SDK only
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      match /scheduledTasks/{taskId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isManagerOrOwner(companyId);
+        allow write: if isManagerOrOwner(companyId);
       }
 
       // =====================
-      // SALES PURCHASE ORDERS — Замовлення покупців
+      // ACTIVITY LOG (Реєстр — tab: control)
       // =====================
-      match /sales_purchase_orders/{orderId} {
-        allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId);
-        allow update: if isManagerOrOwner(companyId);
-        allow delete: if isCompanyOwner(companyId);
+      match /activity_log/{logId} {
+        allow read: if hasTabAccess(companyId, 'control') || isManagerOrOwner(companyId);
+        allow create: if isCompanyMember(companyId) &&
+          request.resource.data.userId == userId();
+        allow update, delete: if false; // immutable
       }
 
       // =====================
-      // SALES REALIZATIONS — Документи реалізації
+      // SETTINGS
       // =====================
-      match /sales_realizations/{realizationId} {
+      match /settings/{settingId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId);
-        // Після проведення (posted) — тільки власник може редагувати
-        allow update: if isManagerOrOwner(companyId);
-        allow delete: if isCompanyOwner(companyId);
+        allow write: if isCompanyMember(companyId);
       }
 
-      // =====================
-      // SALES DEBTORS — Дебіторська заборгованість
-      // =====================
-      match /sales_debtors/{debtorId} {
-        allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId); // також Admin SDK (CF onRealizationPosted)
-        allow update: if isManagerOrOwner(companyId); // реєстрація оплати
-        allow delete: if false; // immutable — тільки status змінюється
+      match /aiUsageLog/{docId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if false; // Admin SDK only
       }
 
-      // =====================
-      // PRICE LISTS — Прайс-листи
-      // =====================
-      match /price_lists/{priceListId} {
-        allow read: if isCompanyMember(companyId);
-        allow create, update, delete: if isCompanyOwner(companyId); // тільки власник керує прайсами
+      match /ai_recommendations/{docId} {
+        allow read, write: if isManagerOrOwner(companyId);
       }
 
+      match /weekly_report_log/{docId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if false; // Admin SDK only
+      }
+
+      match /sa_notes/{noteId} {
+        allow read, write: if isSuperAdmin();
+      }
+
+      match /_session_locks/{lockId} {
+        allow read, write: if false;
+      }
+
+      match /bookings/{bookingId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update: if hasTabAccess(companyId, 'booking');
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // FALLBACK
       match /{subcollection}/{docId} {
         allow read: if isCompanyMember(companyId);
         allow write: if isManagerOrOwner(companyId);
@@ -876,7 +838,7 @@ service cloud.firestore {
     }
     
     // =====================
-    // USERS (глобальна — профіль, Google Calendar токени)
+    // USERS (global profile)
     // =====================
     match /users/{docUserId} {
       allow read: if isAuthenticated() && (docUserId == userId() || isSuperAdmin());
@@ -884,7 +846,7 @@ service cloud.firestore {
     }
     
     // =====================
-    // SETTINGS (глобальні — AI assistants config)
+    // SETTINGS (global)
     // =====================
     match /settings/{doc} {
       allow read: if isSuperAdmin() || (isAuthenticated() && doc != 'main');
