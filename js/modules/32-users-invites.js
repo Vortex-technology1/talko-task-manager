@@ -898,12 +898,26 @@
                     const checkedTabs = _tabsCont
                         ? Array.from(_tabsCont.querySelectorAll('[data-allowed-tab]:checked')).map(cb => cb.dataset.allowedTab)
                         : Array.from(document.querySelectorAll('[data-allowed-tab]:checked')).map(cb => cb.dataset.allowedTab);
-                    // ФІКС: якщо жодна галочка — зберігаємо порожній масив, а не null
-                    // null = видалити поле = бачить все; [] = заблоковано все
-                    // Тому якщо блок видимий — зберігаємо масив (навіть порожній означає "нічого")
+                    // Логіка збереження allowedTabs:
+                    // - блок прихований (не employee) → null (поле видалиться)
+                    // - блок видимий + є галочки → масив вибраних
+                    // - блок видимий + немає галочок → null (бачить все, як default)
+                    //   ВИНЯТОК: якщо у юзера вже був allowedTabs (він раніше мав обмеження)
+                    //   і тепер всі галочки зняті → зберігаємо [] (заблокований)
                     const tabsGroupEl = document.getElementById('allowedTabsGroup');
                     const tabsVisible = tabsGroupEl && tabsGroupEl.style.display !== 'none';
-                    allowedTabs = tabsVisible ? checkedTabs : null;
+                    if (!tabsVisible) {
+                        allowedTabs = null;
+                    } else if (checkedTabs.length > 0) {
+                        allowedTabs = checkedTabs;
+                    } else {
+                        // Перевіряємо поточний стан юзера в локальному масиві
+                        const _curUser = (typeof users !== 'undefined' ? users : []).find(u => u.id === editingUserId);
+                        const _hadTabs = _curUser && Array.isArray(_curUser.allowedTabs);
+                        // Якщо раніше мав обмеження і тепер знято всі → [] (заблокований)
+                        // Якщо ніколи не мав → null (бачить все)
+                        allowedTabs = _hadTabs ? [] : null;
+                    }
                 }
 
                 // Оновлюємо дані користувача + нові поля функцій

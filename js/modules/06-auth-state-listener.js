@@ -313,24 +313,27 @@
                 if (!window._userDocListener && currentUser && currentCompany) {
                     const _userDocRef = db.collection('companies').doc(currentCompany)
                         .collection('users').doc(currentUser.uid);
+                    let _userDocFirstSnapshot = true; // guard від спрацювання при першому читанні
                     window._userDocListener = _userDocRef.onSnapshot(snap => {
                         if (!snap.exists) return;
+                        // Пропускаємо перший snapshot — це просто початковий стан
+                        if (_userDocFirstSnapshot) { _userDocFirstSnapshot = false; return; }
+
                         const newData = snap.data();
-                        const oldTabs = JSON.stringify(window.currentUserData?.allowedTabs || null);
-                        const newTabs = JSON.stringify(newData.allowedTabs || null);
+                        // Нормалізуємо: undefined/null → null, [] → '[]', ['a'] → '["a"]'
+                        const _normTabs = (v) => JSON.stringify(Array.isArray(v) ? v.sort() : null);
+                        const oldTabs = _normTabs(window.currentUserData?.allowedTabs);
+                        const newTabs = _normTabs(newData.allowedTabs);
+
                         if (oldTabs !== newTabs) {
-                            console.log('[TALKO] allowedTabs змінились — оновлюємо доступи');
-                            // Оновлюємо дані і перезавантажуємо сторінку щоб застосувати нові доступи
+                            console.log('[TALKO] allowedTabs змінились:', oldTabs, '→', newTabs);
                             if (window.currentUserData) {
-                                window.currentUserData.allowedTabs = newData.allowedTabs || null;
+                                window.currentUserData.allowedTabs = newData.allowedTabs ?? null;
                             }
-                            // М'яке перезавантаження — без повного reload
-                            window._userAllowedTabs = Array.isArray(newData.allowedTabs) && newData.allowedTabs.length > 0
-                                ? newData.allowedTabs : null;
                             if (typeof showToast === 'function') {
-                                showToast('Ваші доступи оновлено. Сторінка перезавантажиться...', 'info');
+                                showToast('Адміністратор оновив ваші доступи. Сторінка перезавантажиться...', 'info');
                             }
-                            setTimeout(() => window.location.reload(), 1500);
+                            setTimeout(() => window.location.reload(), 2000);
                         }
                     }, err => console.warn('[_userDocListener]', err.message));
                 }
