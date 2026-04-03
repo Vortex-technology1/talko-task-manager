@@ -323,6 +323,10 @@
             ['buttons',window.t('botsNodeButtons'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="5" r="2" fill="currentColor"/></svg></span>'],
             ['condition',window.t('botsNodeCondition'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>'],
             ['ai',window.t('botsNodeAI'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>'],
+            ['photo','📷 Отримати фото','📷'],
+            ['image_generate','🎨 AI Генерація','🎨'],
+            ['crm_update','📋 Оновити угоду','📋'],
+            ['http_request','🌐 HTTP запит','🌐'],
             ['delay',window.t('botsNodeDelay'),'⏳'],
             ['talko_task',window.t('botsNodeTask'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>'],
             ['talko_deal',window.t('botsNodeCRM'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>'],
@@ -517,6 +521,52 @@
 
         if (node.type === 'delay') {
             specific = field(window.t('botsFieldDelay')) + input(node.delay||0, `updateNode('${nodeId}','delay',parseInt(this.value)||0)`, '60', 'number');
+        }
+
+        if (node.type === 'photo' || node.type === 'receive_photo') {
+            specific = field('Текст-запит (надіслати клієнту)') +
+                input(node.text||'', `updateNode('${nodeId}','text',this.value)`, 'Будь ласка, надішліть фото 📷') +
+                field('Зберегти як змінну') +
+                input(node.varName||'photo_url', `updateNode('${nodeId}','varName',this.value)`, 'photo_url');
+        }
+
+        if (node.type === 'image_generate' || node.type === 'dalle') {
+            specific =
+                field('Стиль (modern/classic/scandinavian/loft)') +
+                input(node.style||'modern', `updateNode('${nodeId}','style',this.value)`, 'modern') +
+                field('Тип приміщення (kitchen/living/bedroom)') +
+                input(node.roomType||'kitchen', `updateNode('${nodeId}','roomType',this.value)`, 'kitchen') +
+                field('Кольори (з collectedData: {{colors}})') +
+                input(node.colors||'{{colors}}', `updateNode('${nodeId}','colors',this.value)`, '{{colors}}') +
+                field('Розміри ({{dimensions}})') +
+                input(node.dimensions||'{{dimensions}}', `updateNode('${nodeId}','dimensions',this.value)`, '{{dimensions}}') +
+                field('Додаткові вимоги') +
+                input(node.extra||'', `updateNode('${nodeId}','extra',this.value)`, '{{extra}}') +
+                field('Підпис до фото (підтримує {{var}})') +
+                input(node.caption||'✅ Ось ваш концепт дизайну!', `updateNode('${nodeId}','caption',this.value)`, '✅ Концепт готовий') +
+                field('Зберегти URL як змінну') +
+                input(node.saveAs||'generated_image_url', `updateNode('${nodeId}','saveAs',this.value)`, 'generated_image_url');
+        }
+
+        if (node.type === 'crm_update' || node.type === 'update_deal') {
+            specific = field('Поле угоди') +
+                input(node.fieldName||'', `updateNode('${nodeId}','fieldName',this.value)`, 'stage або amount або note') +
+                field('Значення (підтримує {{var}})') +
+                input(node.fieldValue||'', `updateNode('${nodeId}','fieldValue',this.value)`, '{{answer}}');
+        }
+
+        if (node.type === 'http_request' || node.type === 'api_call') {
+            specific = field('URL (підтримує {{var}})') +
+                input(node.url||'', `updateNode('${nodeId}','url',this.value)`, 'https://api.example.com/endpoint') +
+                field('Метод') +
+                `<select onchange="updateNode('${nodeId}','method',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
+                    <option value="POST" ${node.method==='POST'?'selected':''}>POST</option>
+                    <option value="GET" ${node.method==='GET'?'selected':''}>GET</option>
+                </select>` +
+                field('Body JSON (підтримує {{var}})') +
+                `<textarea onchange="updateNode('${nodeId}','body',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;font-family:monospace;min-height:80px;box-sizing:border-box;margin-bottom:0.75rem;" placeholder='{"name":"{{name}}","phone":"{{phone}}"}'>${node.body||''}</textarea>` +
+                field('Зберегти результат як змінну') +
+                input(node.saveAs||'api_result', `updateNode('${nodeId}','saveAs',this.value)`, 'api_result');
         }
 
         if (node.type === 'talko_task') {

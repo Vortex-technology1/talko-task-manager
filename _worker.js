@@ -411,6 +411,7 @@ export default {
 
         // ── /api/ping ────────────────────────────────────────
         if (path === '/api/ping') return json({ ok:true, ts:Date.now() });
+        if (path === '/api/generate-image') return handleGenerateImage(request, env);
 
         // ── Static assets ────────────────────────────────────
         return env.ASSETS.fetch(request);
@@ -480,6 +481,106 @@ ${blocks}${site.bodyCode||''}
 // ════════════════════════════════════════════════════════════
 // AI PROXY
 // ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
+// GENERATE IMAGE — DALL-E 3
+// POST /api/generate-image
+// Body: { companyId, style, colors, dimensions, roomType, extra, prompt }
+// Returns: { url, revised_prompt }
+// ════════════════════════════════════════════════════════════
+async function handleGenerateImage(request, env) {
+    if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+
+    let body;
+    try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
+
+    const {
+        companyId,
+        style      = 'modern',
+        colors     = '',
+        dimensions = '',
+        roomType   = 'kitchen',
+        extra      = '',
+        prompt: customPrompt = '',
+    } = body;
+
+    // Отримуємо OpenAI ключ
+    let openaiKey = env.OPENAI_API_KEY || '';
+    if (companyId) {
+        try {
+            const token = await getToken(env);
+            const cDoc = await fsGet(`companies/${companyId}/settings/ai`, token);
+            if (cDoc?.fields) {
+                const cs = fFields(cDoc.fields);
+                if (cs.openaiApiKey) openaiKey = cs.openaiApiKey;
+            }
+        } catch {}
+    }
+    if (!openaiKey) return json({ error: 'No OpenAI API key' }, 500);
+
+    // Будуємо промпт
+    const styleMap = {
+        modern:    'modern minimalist interior design',
+        classic:   'classic elegant interior design',
+        scandinavian: 'Scandinavian style interior',
+        industrial:'industrial loft style interior',
+        loft:      'loft style interior',
+        provence:  'Provence style interior',
+    };
+    const roomMap = {
+        kitchen:   'kitchen',
+        living:    'living room',
+        bedroom:   'bedroom',
+        bathroom:  'bathroom',
+        office:    'home office',
+        hallway:   'hallway',
+    };
+
+    const styleDesc  = styleMap[style]  || style;
+    const roomDesc   = roomMap[roomType] || roomType;
+    const colorPart  = colors     ? `, color palette: ${colors}`     : '';
+    const dimPart    = dimensions ? `, room dimensions: ${dimensions}` : '';
+    const extraPart  = extra      ? `. Additional requirements: ${extra}` : '';
+
+    const finalPrompt = customPrompt ||
+        `Photorealistic interior design visualization. ${styleDesc} ${roomDesc}${colorPart}${dimPart}${extraPart}. ` +
+        `High quality, professional interior photography, 4K, natural lighting, no people. ` +
+        `Show complete room view with furniture and decor details.`;
+
+    try {
+        const resp = await fetch('https://api.openai.com/v1/images/generations', {
+            method: 'POST',
+            headers: {
+                'Content-Type':  'application/json',
+                'Authorization': `Bearer ${openaiKey}`,
+            },
+            body: JSON.stringify({
+                model:           'dall-e-3',
+                prompt:          finalPrompt,
+                n:               1,
+                size:            '1792x1024',
+                quality:         'standard',
+                response_format: 'url',
+            }),
+        });
+
+        if (!resp.ok) {
+            const errData = await resp.json().catch(() => ({}));
+            return json({ error: errData.error?.message || 'DALL-E error', status: resp.status }, 500);
+        }
+
+        const data = await resp.json();
+        const imageUrl     = data.data?.[0]?.url || '';
+        const revisedPrompt = data.data?.[0]?.revised_prompt || finalPrompt;
+
+        if (!imageUrl) return json({ error: 'No image URL returned' }, 500);
+
+        return json({ ok: true, url: imageUrl, revised_prompt: revisedPrompt });
+
+    } catch (e) {
+        return json({ error: e.message || 'Generation failed' }, 500);
+    }
+}
+
 async function handleAiProxy(request, env) {
     if (request.method!=='POST') return json({error:'Method not allowed'},405);
     let body;
@@ -2758,6 +2859,110 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
             await executeNode({ node: nextNodeHttp, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+        }
+        return;
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // ── ВУЗОЛ: IMAGE_GENERATE — DALL-E генерація зображення ───
+    // ══════════════════════════════════════════════════════════
+    if (nodeType === 'image_generate' || nodeType === 'generateImage' || nodeType === 'dalle') {
+        const imgStyle    = _interpolate(nodeData.style    || 'modern',   collectedData);
+        const imgColors   = _interpolate(nodeData.colors   || collectedData.colors   || '', collectedData);
+        const imgDims     = _interpolate(nodeData.dimensions || collectedData.dimensions || collectedData.room_size || '', collectedData);
+        const imgRoomType = _interpolate(nodeData.roomType || collectedData.room_type || 'kitchen', collectedData);
+        const imgExtra    = _interpolate(nodeData.extra    || collectedData.extra    || '', collectedData);
+        const imgPrompt   = _interpolate(nodeData.prompt   || '', collectedData);
+        const saveAs      = nodeData.saveAs || nodeData.varName || 'generated_image_url';
+        const loadingMsg  = _interpolate(nodeData.loadingMessage || '⏳ Генерую дизайн, зачекайте ~30 секунд...', collectedData);
+
+        // Повідомляємо клієнта що генерація йде
+        await tgSend(chatId, loadingMsg);
+
+        try {
+            const genResp = await fetch(`https://apptalko.com/api/generate-image`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    companyId:  cid,
+                    style:      imgStyle,
+                    colors:     imgColors,
+                    dimensions: imgDims,
+                    roomType:   imgRoomType,
+                    extra:      imgExtra,
+                    prompt:     imgPrompt,
+                }),
+            });
+
+            if (genResp.ok) {
+                const genData = await genResp.json();
+                const imageUrl = genData.url || '';
+
+                if (imageUrl) {
+                    collectedData[saveAs] = imageUrl;
+
+                    // Зберігаємо URL в collectedData
+                    const mapFields = {};
+                    for (const [k, v] of Object.entries(collectedData)) {
+                        mapFields[k] = { stringValue: String(v) };
+                    }
+                    await fsPatch(contactPath, {
+                        collectedData: { mapValue: { fields: mapFields } },
+                        updatedAt:     { timestampValue: new Date().toISOString() },
+                    }, token);
+
+                    // Відправляємо фото клієнту через Telegram
+                    const captionText = _interpolate(
+                        nodeData.caption || '✅ Ось ваш концепт дизайну!\n\n⚠️ Це орієнтовна візуалізація. Фінальний вигляд уточнюється на заміру.',
+                        collectedData
+                    );
+                    await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            photo:   imageUrl,
+                            caption: captionText,
+                            parse_mode: 'HTML',
+                        }),
+                    }).catch(() => {
+                        // Fallback — якщо sendPhoto не спрацював, відправляємо як посилання
+                        tgSend(chatId, `${captionText}\n\n🖼 ${imageUrl}`);
+                    });
+
+                    // Лог повідомлення
+                    const imgMsgId = `msg_${Date.now()}_bot`;
+                    const imgTs    = new Date().toISOString();
+                    await fsSet(`companies/${cid}/contacts/${chatId}/messages/${imgMsgId}`, {
+                        id:        { stringValue: imgMsgId },
+                        role:      { stringValue: 'bot' },
+                        from:      { stringValue: 'bot' },
+                        direction: { stringValue: 'out' },
+                        text:      { stringValue: captionText },
+                        imageUrl:  { stringValue: imageUrl },
+                        timestamp: { timestampValue: imgTs },
+                        createdAt: { timestampValue: imgTs },
+                    }, token);
+
+                } else {
+                    await tgSend(chatId, '⚠️ Не вдалось згенерувати зображення. Менеджер зв\'яжеться з вами.');
+                }
+            } else {
+                await tgSend(chatId, '⚠️ Сервіс генерації тимчасово недоступний. Менеджер надішле варіанти вручну.');
+            }
+        } catch (imgErr) {
+            await tgSend(chatId, '⚠️ Помилка генерації. Спробуємо пізніше.');
+            console.error('[image_generate]', imgErr.message);
+        }
+
+        // Переходимо до наступної ноди
+        const nextNodeImg = getNextNode(node.id);
+        if (nextNodeImg) {
+            await fsPatch(contactPath, {
+                currentNodeId: { stringValue: nextNodeImg.id },
+                updatedAt:     { timestampValue: new Date().toISOString() },
+            }, token);
+            await executeNode({ node: nextNodeImg, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
         }
         return;
     }
