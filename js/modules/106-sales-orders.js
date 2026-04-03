@@ -987,6 +987,33 @@
   window.createOrderFromDeal = async function (deal) {
     if (!deal) return null;
     try {
+      // БАГ 32 fix: підтягуємо умови клієнта з кешу або Firestore
+      let paymentCondition = 'prepay';
+      let paymentDueDays   = 0;
+      let priceTypeId      = null;
+      let currency         = 'UAH';
+
+      if (deal.clientId) {
+        const cached = S.clients.find(c => c.id === deal.clientId);
+        if (cached) {
+          paymentCondition = cached.paymentCondition || 'prepay';
+          paymentDueDays   = Number(cached.paymentDueDays || 0);
+          priceTypeId      = cached.priceTypeId || null;
+          currency         = cached.currency || 'UAH';
+        } else {
+          try {
+            const snap = await col('crm_clients').doc(deal.clientId).get();
+            if (snap.exists) {
+              const cl = snap.data();
+              paymentCondition = cl.paymentCondition || 'prepay';
+              paymentDueDays   = Number(cl.paymentDueDays || 0);
+              priceTypeId      = cl.priceTypeId || null;
+              currency         = cl.currency || 'UAH';
+            }
+          } catch(e) { /* fallback */ }
+        }
+      }
+
       const number = await generateOrderNumber();
       const payload = {
         number,
@@ -995,9 +1022,10 @@
         clientId:         deal.clientId || null,
         clientName:       deal.clientName || deal.title || '',
         assigneeId:       deal.assigneeId || deal.responsibleId || '',
-        paymentCondition: 'prepay',
-        paymentDueDays:   0,
-        currency:         'UAH',
+        paymentCondition,
+        paymentDueDays,
+        priceTypeId,
+        currency,
         items:            [],
         totalAmount:      Number(deal.amount || 0),
         discountAmount:   0,
@@ -1007,7 +1035,6 @@
         updatedAt:        firebase.firestore.FieldValue.serverTimestamp(),
       };
       const ref = await col(COL).add(payload);
-      // update deal with orderId
       if (deal.id) {
         await db().collection('companies').doc(cid()).collection('crm_deals').doc(deal.id).update({
           orderId: ref.id,

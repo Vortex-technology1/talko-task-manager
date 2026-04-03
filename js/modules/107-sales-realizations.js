@@ -164,6 +164,7 @@
 
   function buildModal(realization, sourceOrder){
     const isEdit=!!realization, r=realization||{}, o=sourceOrder||{};
+    const currentStatus = r.status || 'draft'; // БАГ 33 fix
     const srcItems=r.items||o.items||[];
     S.modalItems=srcItems.map(i=>({...i,_id:Date.now()+Math.random()}));
     if(!S.modalItems.length) S.modalItems=[{_id:Date.now(),name:'',qty:1,price:0,unit:'шт',warehouseItemId:null,discount:0}];
@@ -226,8 +227,8 @@
         </div>
         <div style="display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid #f1f5f9">
           <button onclick="window.closeSalesRealizationModal()" style="padding:9px 20px;border:1px solid #e5e7eb;border-radius:7px;cursor:pointer;background:#fff;font-size:.85rem;font-weight:600;color:#374151">${tg('Скасувати','Cancel')}</button>
-          <button onclick="window._srSave(false)" id="srSaveBtn" style="padding:9px 20px;border:1px solid #059669;border-radius:7px;cursor:pointer;background:#fff;color:#059669;font-size:.85rem;font-weight:600">${tg('Зберегти чернетку','Save draft')}</button>
-          <button onclick="window._srSave(true)" id="srPostBtn" style="padding:9px 24px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">${tg('Провести','Post')}</button>
+          ${currentStatus!=='posted'?`<button onclick="window._srSave(false)" id="srSaveBtn" style="padding:9px 20px;border:1px solid #059669;border-radius:7px;cursor:pointer;background:#fff;color:#059669;font-size:.85rem;font-weight:600">${tg('Зберегти чернетку','Save draft')}</button>`:''}
+          <button onclick="window._srSave(true)" id="srPostBtn" ${currentStatus==='posted'?'disabled style="opacity:.5;cursor:not-allowed;"':''} style="padding:9px 24px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">${currentStatus==='posted'?tg('Проведено ✓','Posted ✓'):tg('Провести','Post')}</button>
         </div>
       </div>
     </div>`;
@@ -307,7 +308,11 @@
     let total=0;
     const items=valid.map(i=>{const l=Number(i.qty||1)*Number(i.price||0)*(1-Number(i.discount||0)/100);total+=l;return{name:i.name||'',qty:Number(i.qty)||1,price:Number(i.price)||0,discount:Number(i.discount)||0,unit:i.unit||'шт',warehouseItemId:i.warehouseItemId||null,lineTotal:Math.round(l*100)/100};});
     total=Math.round(total*100)/100;
-    const payload={clientId,clientName,type:deriveType(items),items,totalAmount:total,currency:el('srFldCurrency')?.value||'UAH',realizationDate:el('srFldDate')?.value||todayISO(),paymentDueDate:el('srFldDueDate')?.value||'',note:el('srFldNote')?.value||'',orderId:S.sourceOrder?.id||null,dealId:S.sourceOrder?.dealId||null,status:doPost?'posted':'draft',updatedAt:serverTs()};
+    const editingRealization = S.editingId ? S.realizations.find(r => r.id === S.editingId) : null;
+    const currentStatus = editingRealization?.status || 'draft';
+    // БАГ 33 fix: не скидаємо posted назад в draft
+    const newStatus = doPost ? 'posted' : (currentStatus === 'posted' ? 'posted' : 'draft');
+    const payload={clientId,clientName,type:deriveType(items),items,totalAmount:total,currency:el('srFldCurrency')?.value||'UAH',realizationDate:el('srFldDate')?.value||todayISO(),paymentDueDate:el('srFldDueDate')?.value||'',note:el('srFldNote')?.value||'',orderId:S.sourceOrder?.id||null,dealId:S.sourceOrder?.dealId||null,status:newStatus,updatedAt:serverTs()};
     S.saving=true;
     const sBtn=el('srSaveBtn'),pBtn=el('srPostBtn');
     if(sBtn)sBtn.disabled=true; if(pBtn){pBtn.disabled=true;pBtn.textContent=tg('Проводимо...','Posting...');}
