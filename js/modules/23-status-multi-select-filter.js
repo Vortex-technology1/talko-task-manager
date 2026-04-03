@@ -432,7 +432,7 @@
                                 const badges = [];
                                 const checklist = task.checklist || [];
                                 if (checklist.length > 0) {
-                                    const done = checklist.filter(c => c.checked).length;
+                                const done = checklist.filter(c => c.done || c.checked).length; // БАГ M6 fix: підтримуємо обидва поля
                                     const cls = done === checklist.length ? 'has-items' : '';
                                     badges.push(`<span class="mobile-badge ${cls}"><i data-lucide="list-checks" class="icon"></i> ${done}/${checklist.length}</span>`);
                                 }
