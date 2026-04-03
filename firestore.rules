@@ -48,14 +48,17 @@ service cloud.firestore {
     }
 
     function hasTabAccess(companyId, tabKey) {
-      return isManagerOrOwner(companyId) ||
-        isSuperAdmin() || (
-          isCompanyMember(companyId) && (
-            !('allowedTabs' in getUserDoc(companyId).data) ||
-            getUserDoc(companyId).data.allowedTabs == null ||
-            getUserDoc(companyId).data.allowedTabs.hasAny([tabKey])
-          )
-        );
+      // Спочатку швидкі перевірки без get()
+      if (!isAuthenticated()) return false;
+      if (isSuperAdmin()) return true;
+      if (!exists(/databases/$(database)/documents/companies/$(companyId)/users/$(userId()))) return false;
+      // Один get() для перевірки і ролі і allowedTabs
+      let uDoc = getUserDoc(companyId).data;
+      if (uDoc.role in ['owner', 'admin', 'manager']) return true;
+      // employee: перевіряємо allowedTabs
+      return !('allowedTabs' in uDoc) ||
+             uDoc.allowedTabs == null ||
+             uDoc.allowedTabs.hasAny([tabKey]);
     }
 
     function isValidString(field, maxLength) {

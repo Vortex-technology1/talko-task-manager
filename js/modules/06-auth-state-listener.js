@@ -383,10 +383,16 @@
                             'learning','admin','crm','marketing','bots','sites','coordination',
                             'regular','incidents','warehouse','finance'];
                         if (lastTab && safeTabs.includes(lastTab) && typeof switchTab === 'function') {
-                            // Перевіряємо що таб доступний (кнопка є і не прихована)
+                            // Перевіряємо що таб доступний для цього юзера
+                            const tabAllowed = !window._userAllowedTabs || window._userAllowedTabs.includes(lastTab);
                             const tabEl = document.getElementById(lastTab + 'Tab');
-                            if (tabEl) {
+                            if (tabEl && tabAllowed) {
                                 switchTab(lastTab);
+                            } else if (!tabAllowed && window._userAllowedTabs?.length) {
+                                // Таб недозволений — переходимо на перший дозволений
+                                const fallback = ['myday','tasks','projects','crm'].find(t => window._userAllowedTabs.includes(t))
+                                    || window._userAllowedTabs[0];
+                                if (fallback) switchTab(fallback);
                             }
                         }
                     } catch(e) { console.error('[06-auth]', e.message); }
@@ -422,6 +428,10 @@
                     if (typeof isLoading !== 'undefined') isLoading = false;
                     if (typeof loadingVersion !== 'undefined') loadingVersion = 0;
                 } catch(e) {}
+                // Скидаємо allowedTabs стан при logout — наступний логін отримає свіжий стан
+                window._userAllowedTabs    = null;
+                window._switchTabRestricted = false;
+                window._userHasTabAccess   = function() { return true; };
                 // Очищаємо дані — тільки якщо була активна сесія
                 // (захист: onAuthStateChanged(null) спрацьовує і при першому завантаженні
                 //  поки Firebase відновлює сесію — не очищаємо якщо ще не логінились)
