@@ -463,7 +463,7 @@
                                         <i data-lucide="eye" class="icon icon-sm"></i> ${window.t('reviewLabel')}
                                     </button>
                                 ` : task.status !== 'done' ? `
-                                    <button class="mobile-action-btn complete" onclick="quickCompleteTask('${escId(task.id)}')">
+                                    <button class="mobile-action-btn complete" onclick="this.disabled=true;this.style.opacity='0.5';quickCompleteTask('${escId(task.id)}')">
                                         <i data-lucide="check" class="icon icon-sm"></i> ${window.t('statusDone')}
                                     </button>
                                 ` : `

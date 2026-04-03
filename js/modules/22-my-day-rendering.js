@@ -335,7 +335,6 @@
                         ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
                         ${task.review ? '<i data-lucide="eye" class="icon icon-sm" style="color:white;"></i>' : ''}
                     </div>
-                    <div class="myday-item-content">
                         <div class="myday-item-title">${esc(task.title)}</div>
                         <div class="myday-item-meta">
                             ${task.time ? `<span class="myday-item-time">${esc(task.time)}</span>` : ''}

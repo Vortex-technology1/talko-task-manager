@@ -95,6 +95,8 @@
             /* Не дозволяємо випадковий виділення тексту */
             user-select: none;
             -webkit-user-select: none;
+            /* БАГ M11 fix: усуває 300мс затримку onclick на iOS без JS змін */
+            touch-action: manipulation;
         }
         .myday-item:last-child { margin-bottom: 0; }
         .myday-item:hover { background: #f0fdf4; }
