@@ -1575,6 +1575,9 @@ async function _doStageChange(deal, newStage, oldStage) {
     }
     if (typeof window.crmAutoTasksOnStageChange === 'function')
         window.crmAutoTasksOnStageChange(deal, newStage);
+    // ── Замовлення покупця (77m-crm-orders-bridge) ───────────
+    if (typeof window.crmOrdersBridgeOnStageChange === 'function')
+        window.crmOrdersBridgeOnStageChange(deal, newStage).catch(e => console.warn('[77m]', e.message));
     // ── Тригери ──────────────────────────────────────────────
     if (Array.isArray(window.crmTriggerHooks)) {
         window.crmTriggerHooks.forEach(fn => {

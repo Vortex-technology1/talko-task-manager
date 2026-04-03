@@ -960,6 +960,8 @@
       <div style="display:flex;gap:.35rem;flex-wrap:wrap;padding:0 1rem;margin-bottom:.75rem">
         <button class="sl-subtab active" id="slSubAll" onclick="window._salesSubTab('all',this)">${_tg('Всі','Все')}</button>
         <button class="sl-subtab" id="slSubOrders" onclick="window._salesSubTab('orders',this)" style="background:transparent;border:1px dashed #6366f1;color:#6366f1">${_tg('Замовлення','Orders')}</button>
+        <button class="sl-subtab" id="slSubRealizations" onclick="window._salesSubTab('realizations',this)" style="background:transparent;border:1px dashed #059669;color:#059669">${_tg('Реалізації','Realizations')}</button>
+        <button class="sl-subtab" id="slSubDebtors" onclick="window._salesSubTab('debtors',this)" style="background:transparent;border:1px dashed #dc2626;color:#dc2626">${_tg('Дебіторка','Receivables')}</button>
         <button class="sl-subtab" id="slSubInvoice" onclick="window._salesSubTab('invoice',this)">${_tg('Рахунки','Счета')}</button>
         <button class="sl-subtab" id="slSubReceipt" onclick="window._salesSubTab('receipt',this)">${_tg('Каса','Касса')}</button>
         ${showWorkOrders() ? `<button class="sl-subtab" id="slSubWO" onclick="window._salesSubTab('work_order',this)">${_tg('Наряди','Наряды')}</button>` : ''}
@@ -1016,6 +1018,8 @@
         <div id="salesRoutesContent" style="display:none"></div>
         <!-- Orders (106-sales-orders.js) -->
         <div id="salesOrdersContent" style="display:none"><div id="soRootWrap"></div></div>
+        <div id="salesRealizationsContent" style="display:none"><div id="srRootWrap"></div></div>
+        <div id="salesDebtorsContent" style="display:none"><div id="sdRootWrap"></div></div>
       </div>
     `;
 
@@ -1056,8 +1060,10 @@
     const shiftsCont   = el('salesShiftsContent');
     const vehiclesCont = el('salesVehiclesContent');
     const routesCont   = el('salesRoutesContent');
-    const ordersCont   = el('salesOrdersContent');
-    const allSecondary = [catalogCont, shiftsCont, vehiclesCont, routesCont, ordersCont];
+    const ordersCont       = el('salesOrdersContent');
+    const realizationsCont = el('salesRealizationsContent');
+    const debtorsCont      = el('salesDebtorsContent');
+    const allSecondary = [catalogCont, shiftsCont, vehiclesCont, routesCont, ordersCont, realizationsCont, debtorsCont];
 
     function hideAll() {
       if (tableWrap) tableWrap.style.display = 'none';
@@ -1069,12 +1075,25 @@
       hideAll();
       if (ordersCont) ordersCont.style.display = 'block';
       if (typeof window.initSalesOrders === 'function') {
-        if (!ordersCont._soInited) {
-          ordersCont._soInited = true;
-          window.initSalesOrders();
-        }
+        if (!ordersCont._soInited) { ordersCont._soInited = true; window.initSalesOrders(); }
       } else {
         if (ordersCont) ordersCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">' + _tg('Завантаження...','Loading...') + '</div>';
+      }
+    } else if (tab === 'realizations') {
+      hideAll();
+      if (realizationsCont) realizationsCont.style.display = 'block';
+      if (typeof window.initSalesRealizations === 'function') {
+        if (!realizationsCont._srInited) { realizationsCont._srInited = true; window.initSalesRealizations(); }
+      } else {
+        if (realizationsCont) realizationsCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">' + _tg('Завантаження...','Loading...') + '</div>';
+      }
+    } else if (tab === 'debtors') {
+      hideAll();
+      if (debtorsCont) debtorsCont.style.display = 'block';
+      if (typeof window.initSalesDebtors === 'function') {
+        if (!debtorsCont._sdInited) { debtorsCont._sdInited = true; window.initSalesDebtors(); }
+      } else {
+        if (debtorsCont) debtorsCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">' + _tg('Завантаження...','Loading...') + '</div>';
       }
     } else if (tab === 'catalog') {
       hideAll();
