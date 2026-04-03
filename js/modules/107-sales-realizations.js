@@ -84,7 +84,8 @@
     const wrap=el('srStatsWrap'); if(!wrap) return;
     const all=S.realizations, posted=all.filter(r=>r.status==='posted'), rev=posted.reduce((s,r)=>s+Number(r.totalAmount||0),0);
     const drafts=all.filter(r=>r.status==='draft').length, today=todayISO();
-    const overdue=all.filter(r=>r.status==='draft'&&r.paymentDueDate&&r.paymentDueDate<today).length;
+    // БАГ 20 fix: overdue = draft + posted з простроченою датою оплати і відкритою дебіторкою
+    const overdue=all.filter(r=>r.paymentDueDate&&r.paymentDueDate<today&&r.status!=='cancelled').length;
     wrap.innerHTML=`
       <div class="sr-stat"><div class="sr-stat-lbl">${tg('Проведено','Posted')}</div><div class="sr-stat-val" style="color:#059669">${posted.length}</div></div>
       <div class="sr-stat"><div class="sr-stat-lbl">${tg('Чернетки','Drafts')}</div><div class="sr-stat-val" style="color:#d97706">${drafts}</div></div>
@@ -116,7 +117,7 @@
         const tc=typeL[r.type]||r.type||'—';
         const dt=r.realizationDate||(r.createdAt?.toDate?r.createdAt.toDate().toLocaleDateString('uk-UA'):'—');
         const due=r.paymentDueDate||'—';
-        const isOver=r.status==='draft'&&r.paymentDueDate&&r.paymentDueDate<today;
+        const isOver=r.paymentDueDate&&r.paymentDueDate<today&&r.status!=='cancelled'&&r.status!=='posted';
         const cur=r.currency||'UAH';
         const acts=[];
         if(canManage()){
@@ -339,7 +340,15 @@
     if (warehouseItems.length) {
       if (typeof window.warehouseDeduct === 'function') {
         const result = await window.warehouseDeduct(rid, warehouseItems);
-        if (!result.success) throw new Error(tg('Помилка списання складу: ', 'Stock deduction error: ') + (result.error || ''));
+        if (!result.success) {
+          if (result.conflicts?.length) {
+            const conflictText = result.conflicts
+              .map(c => `${c.name}: ${tg('потрібно','needed')} ${c.needed}, ${tg('є','available')} ${c.available}`)
+              .join('\n');
+            throw new Error(tg('Недостатньо товарів:\n','Insufficient stock:\n') + conflictText);
+          }
+          throw new Error(tg('Помилка списання складу: ', 'Stock deduction error: ') + (result.error || ''));
+        }
         // Оновлюємо локальний кеш
         warehouseItems.forEach(item => {
           const st = S.stock[item.warehouseItemId];

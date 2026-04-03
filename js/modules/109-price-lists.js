@@ -279,15 +279,19 @@
         await col(COL).add(payload);
         toast(tg('Прайс створено','Price list created'));
       }
-      // Якщо isDefault — знімаємо з інших
-      if(payload.isDefault) {
-        const others = S.lists.filter(p=>p.id!==S.editingId&&p.isDefault);
-        for(const p of others) {
-          await col(COL).doc(p.id).update({ isDefault:false }).catch(()=>{});
+      // Якщо isDefault — знімаємо з інших після отримання ID нового
+      if (payload.isDefault) {
+        await loadPriceLists(); // спочатку оновлюємо список
+        const newId = S.editingId || S.lists.find(p => p.name === payload.name)?.id;
+        const others = S.lists.filter(p => p.id !== newId && p.isDefault);
+        for (const p of others) {
+          await col(COL).doc(p.id).update({ isDefault: false }).catch(() => {});
         }
+        await loadPriceLists(); // перезавантажуємо ще раз після скидання
+      } else {
+        await loadPriceLists();
       }
       window.closePriceListModal();
-      await loadPriceLists();
     } catch(e) {
       console.error('_plSave:',e);
       toast(tg('Помилка: ','Error: ')+e.message,'error');

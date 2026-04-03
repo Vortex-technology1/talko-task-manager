@@ -172,12 +172,30 @@
     const warehouseItems = items.filter(i => i.warehouseItemId);
     if (!warehouseItems.length) return { success: true };
 
+    const conflicts = [];
+
     try {
       await db().runTransaction(async (transaction) => {
         const stockRefs = warehouseItems.map(i =>
           compRef.collection('warehouse_stock').doc(i.warehouseItemId)
         );
         const stockDocs = await Promise.all(stockRefs.map(r => transaction.get(r)));
+
+        // БАГ 17 fix: перевіряємо наявність перед списанням
+        stockDocs.forEach((stockDoc, idx) => {
+          const item = warehouseItems[idx];
+          const data = stockDoc.exists ? stockDoc.data() : {};
+          const qty  = Number(data.quantity || 0);
+          if (Number(item.qty) > qty) {
+            conflicts.push({
+              name:      item.name || item.warehouseItemId,
+              needed:    Number(item.qty),
+              available: qty,
+            });
+          }
+        });
+
+        if (conflicts.length) throw new Error('INSUFFICIENT_STOCK');
 
         stockDocs.forEach((stockDoc, idx) => {
           const item = warehouseItems[idx];
@@ -196,14 +214,9 @@
               available: Math.max(0, newQty - newReserved),
             });
           } else {
-            transaction.set(stockRefs[idx], {
-              quantity:  0,
-              reserved:  0,
-              available: 0,
-            });
+            transaction.set(stockRefs[idx], { quantity: 0, reserved: 0, available: 0 });
           }
 
-          // Лог
           const opRef = compRef.collection('warehouse_operations').doc();
           transaction.set(opRef, {
             type:           'sale',
@@ -219,6 +232,9 @@
 
       return { success: true };
     } catch(e) {
+      if (e.message === 'INSUFFICIENT_STOCK') {
+        return { success: false, conflicts };
+      }
       console.error('warehouseDeduct:', e);
       return { success: false, error: e.message };
     }

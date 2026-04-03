@@ -274,7 +274,9 @@
     if (!wrap) return;
 
     const all       = S.orders;
-    const totalSum  = all.reduce((s, o) => s + Number(o.totalAmount||0), 0);
+    const uahOrders = all.filter(o => !o.currency || o.currency === 'UAH');
+    const totalSum  = uahOrders.reduce((s, o) => s + Number(o.totalAmount||0), 0);
+    const nonUah    = all.filter(o => o.currency && o.currency !== 'UAH').length;
     const newCount  = all.filter(o => o.status === 'new').length;
     const confCount = all.filter(o => o.status === 'confirmed').length;
     const doneCount = all.filter(o => o.status === 'completed').length;
@@ -298,7 +300,7 @@
       </div>
       <div class="so-stat-card">
         <div class="so-stat-label">${tg('Загальна сума','Total amount')}</div>
-        <div class="so-stat-value">${fmt(totalSum)} <span style="font-size:.75rem;color:#9ca3af">UAH</span></div>
+        <div class="so-stat-value">${fmt(totalSum)} <span style="font-size:.75rem;color:#9ca3af">UAH</span>${nonUah > 0 ? `<span style="font-size:.7rem;color:#d97706;margin-left:4px">+${nonUah} інш.</span>` : ''}</div>
       </div>`;
   }
 
@@ -913,7 +915,17 @@
         await batch.commit();
       }
 
-      await col(COL).doc(orderId).update({ status: 'confirmed', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      // БАГ 16 fix: оновлюємо статус — якщо падає, відкатуємо резерв
+      try {
+        await col(COL).doc(orderId).update({ status: 'confirmed', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      } catch(updateErr) {
+        // Відкатуємо резерв щоб уникнути split-brain
+        console.error('_soConfirm: status update failed, releasing reserve:', updateErr.message);
+        if (typeof window.warehouseRelease === 'function') {
+          await window.warehouseRelease(orderId, order.items || []).catch(e => console.warn('rollback failed:', e.message));
+        }
+        throw updateErr; // пробрасуємо для catch нижче
+      }
       showToast(tg('Замовлення підтверджено, товари зарезервовані','Order confirmed, items reserved'));
       await loadOrders();
     } catch(e) {
