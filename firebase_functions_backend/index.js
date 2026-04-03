@@ -4170,30 +4170,43 @@ exports.onDebtorPaid = functions
         const after  = change.after.data();
         const { companyId, debtorId } = context.params;
 
-        // Спрацьовує тільки при переході → paid
         if (before.status === after.status) return null;
         if (after.status !== 'paid') return null;
+
+        // БАГ 35 fix: ідемпотентність через маркер
+        if (after.paidProcessedAt) {
+            console.log('[onDebtorPaid] already processed, skipping:', debtorId);
+            return null;
+        }
 
         console.log('[onDebtorPaid]', debtorId, 'company:', companyId);
 
         try {
-            const compRef = db.collection('companies').doc(companyId);
+            const compRef    = db.collection('companies').doc(companyId);
+            const debtorRef  = change.after.ref;
 
-            // Зменшуємо totalDebt клієнта
             if (after.clientId) {
                 const clientRef = compRef.collection('crm_clients').doc(after.clientId);
-                const clientSnap = await clientRef.get();
-                if (clientSnap.exists) {
-                    const currentDebt = Number(clientSnap.data().totalDebt || 0);
-                    const paidAmount  = Number(after.paidAmount || after.amount || 0);
-                    await clientRef.update({
-                        totalDebt: Math.max(0, currentDebt - paidAmount),
-                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+
+                await db.runTransaction(async (tx) => {
+                    const freshSnap = await tx.get(debtorRef);
+                    if (freshSnap.data()?.paidProcessedAt) return;
+
+                    const clientSnap = await tx.get(clientRef);
+                    if (clientSnap.exists) {
+                        const currentDebt = Number(clientSnap.data().totalDebt || 0);
+                        const paidAmount  = Number(after.paidAmount || after.amount || 0);
+                        tx.update(clientRef, {
+                            totalDebt: Math.max(0, currentDebt - paidAmount),
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        });
+                    }
+                    tx.update(debtorRef, {
+                        paidProcessedAt: admin.firestore.FieldValue.serverTimestamp(),
                     });
-                }
+                });
             }
 
-            // Логуємо
             await compRef.collection('activity_log').add({
                 type:       'debtor_paid',
                 debtorId,
