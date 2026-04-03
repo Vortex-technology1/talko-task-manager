@@ -1940,7 +1940,7 @@ window.crmOpenDeal = function(dealId) {
 
             <!-- Sub-tabs -->
             <div style="display:flex;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
-                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['tasks', window.currentLang==='ru' ? 'Задания' : 'Завдання'],['files', '📎 ' + (window.currentLang==='ru' ? 'Файлы' : 'Файли')],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','💅 Beauty']]:
+                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['calls','📞 ' + (window.currentLang==='ru' ? 'Звонки' : 'Дзвінки')],['tasks', window.currentLang==='ru' ? 'Задания' : 'Завдання'],['files', '📎 ' + (window.currentLang==='ru' ? 'Файлы' : 'Файли')],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','💅 Beauty']]:
                         (window.currentCompanyData?.niche==='autoservice'?[['vehicles','🔧 Авто/Наряди']]:
                         (window.currentCompanyData?.niche==='horeca'?[['pos_history','🧾 Чеки']]:
                         (window.currentCompanyData?.niche==='logistics'?[['routes_history','🚛 Рейси']]:
@@ -2042,7 +2042,7 @@ window.crmOpenDeal = function(dealId) {
 window.crmDealTab = function(dealId, tab) {
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;
-    const allTabs = ['details','activity','tasks','files','ai','beauty','vehicles','pos_history','routes_history'];
+    const allTabs = ['details','activity','calls','tasks','files','ai','beauty','vehicles','pos_history','routes_history'];
     allTabs.forEach(t => {
         const btn = document.getElementById('cdt_' + t);
         if (btn) {
@@ -2053,6 +2053,7 @@ window.crmDealTab = function(dealId, tab) {
     });
     if (tab === 'details')  _renderDealDetails(deal);
     if (tab === 'activity') _loadActivityTab(deal);
+    if (tab === 'calls') _loadCallsTab(deal);
     if (tab === 'tasks')    _loadTasksTab(deal);
     if (tab === 'files')    _loadFilesTab(deal);
     if (tab === 'ai')       _loadAITab(deal);
@@ -3057,6 +3058,28 @@ async function _loadActivityTab(deal) {
                 if (ev.type === 'stage_changed') text = _stageLabel(ev.from) + ' → ' + _stageLabel(ev.to);
                 if (ev.type === 'created') text = window.t('crmDealCreated');
 
+                // ── Дзвінок з телефонії (Binotel/Ringostat) ──
+                let callHtml = '';
+                if (ev.type === 'call' && ev.source && ['binotel','ringostat'].includes(ev.source)) {
+                    const durSec  = Number(ev.duration || 0);
+                    const durMin  = Math.floor(durSec / 60);
+                    const durStr  = durSec > 0 ? (durMin > 0 ? `${durMin} хв ${durSec % 60} сек` : `${durSec} сек`) : '—';
+                    const missed  = ev.status === 'missed' || durSec === 0;
+                    const statusColor = missed ? '#ef4444' : '#22c55e';
+                    const statusLabel = missed ? '📵 Пропущений' : '✅ Відповіли';
+                    const sourceIcon  = ev.source === 'binotel' ? '📞 Binotel' : '📞 Ringostat';
+                    text = `${sourceIcon} · ${ev.phone || ''} · ${statusLabel}`;
+                    callHtml = `
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.4rem;">
+                            <span style="background:${statusColor}18;color:${statusColor};padding:2px 8px;border-radius:8px;font-size:0.72rem;font-weight:600;">${statusLabel}</span>
+                            <span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:8px;font-size:0.72rem;">⏱ ${durStr}</span>
+                            ${ev.internal ? `<span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:8px;font-size:0.72rem;">👤 внутр. ${_esc(ev.internal)}</span>` : ''}
+                            ${ev.recordUrl ? `<a href="${_esc(ev.recordUrl)}" target="_blank" rel="noopener noreferrer"
+                                style="background:#eff6ff;color:#3b82f6;padding:2px 8px;border-radius:8px;font-size:0.72rem;font-weight:600;text-decoration:none;">
+                                🎙 Прослухати запис</a>` : ''}
+                        </div>`;
+                }
+
                 // Якщо є прикріплений файл — показуємо посилання
                 let fileHtml = '';
                 if (ev.fileUrl && ev.fileName) {
@@ -3082,6 +3105,7 @@ async function _loadActivityTab(deal) {
                     </div>
                     <div style="flex:1;">
                         <div style="font-size:0.8rem;color:#374151;">${_esc(text)}</div>
+                        ${callHtml}
                         <div style="font-size:0.68rem;color:#9ca3af;margin-top:2px;">${_esc(ev.by||'')} · ${time}</div>
                         ${fileHtml}
                     </div>
@@ -3090,6 +3114,96 @@ async function _loadActivityTab(deal) {
         </div>`;
     } catch(e) {
         if (content) content.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ${_esc(e.message)}</div>`;
+    }
+}
+
+// ══════════════════════════════════════════════════════════
+// ТАБ "ДЗВІНКИ" — Binotel/Ringostat дзвінки по угоді
+// ══════════════════════════════════════════════════════════
+async function _loadCallsTab(deal) {
+    const content = document.getElementById('crmDealContent');
+    if (!content) return;
+    content.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
+
+    try {
+        const snap = await window.companyRef()
+            .collection(window.DB_COLS.CRM_DEALS).doc(deal.id)
+            .collection('history')
+            .where('type', '==', 'call')
+            .orderBy('createdAt', 'desc')
+            .limit(50)
+            .get();
+
+        const calls = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        if (calls.length === 0) {
+            content.innerHTML = `
+                <div style="text-align:center;padding:3rem;color:#9ca3af;">
+                    <div style="font-size:2rem;margin-bottom:0.5rem;">📵</div>
+                    <div style="font-size:0.85rem;">Дзвінків по цій угоді ще немає</div>
+                    <div style="font-size:0.75rem;margin-top:0.3rem;color:#d1d5db;">Підключіть Binotel або Ringostat в Інтеграціях</div>
+                </div>`;
+            return;
+        }
+
+        // Статистика
+        const answered = calls.filter(c => c.status === 'answered').length;
+        const missed   = calls.filter(c => c.status === 'missed' || !c.duration).length;
+        const totalDur = calls.reduce((s, c) => s + Number(c.duration || 0), 0);
+        const totalMin = Math.floor(totalDur / 60);
+
+        const statsHtml = `
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-bottom:1rem;">
+                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:0.65rem;text-align:center;">
+                    <div style="font-size:1.2rem;font-weight:700;color:#16a34a;">${answered}</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">Відповіли</div>
+                </div>
+                <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:0.65rem;text-align:center;">
+                    <div style="font-size:1.2rem;font-weight:700;color:#dc2626;">${missed}</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">Пропущених</div>
+                </div>
+                <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:0.65rem;text-align:center;">
+                    <div style="font-size:1.2rem;font-weight:700;color:#2563eb;">${totalMin} хв</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">Загальний час</div>
+                </div>
+            </div>`;
+
+        const callsHtml = calls.map(c => {
+            const durSec  = Number(c.duration || 0);
+            const durMin  = Math.floor(durSec / 60);
+            const durStr  = durSec > 0 ? (durMin > 0 ? `${durMin} хв ${durSec % 60} сек` : `${durSec} сек`) : '—';
+            const missed  = c.status === 'missed' || durSec === 0;
+            const statusColor = missed ? '#ef4444' : '#22c55e';
+            const statusLabel = missed ? '📵 Пропущений' : '✅ Відповіли';
+            const sourceLabel = c.source === 'binotel' ? 'Binotel' : c.source === 'ringostat' ? 'Ringostat' : 'Телефонія';
+            const ts = c.createdAt?.toDate
+                ? c.createdAt.toDate().toLocaleString('uk-UA', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+                : '—';
+
+            return `
+                <div style="background:white;border:1px solid #e8eaed;border-radius:10px;padding:0.85rem;margin-bottom:0.6rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <span style="background:${statusColor}18;color:${statusColor};padding:2px 8px;border-radius:8px;font-size:0.72rem;font-weight:600;">${statusLabel}</span>
+                            <span style="font-size:0.75rem;font-weight:600;color:#374151;">${_esc(c.phone || '—')}</span>
+                        </div>
+                        <span style="font-size:0.68rem;color:#9ca3af;">${ts}</span>
+                    </div>
+                    <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+                        <span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:8px;font-size:0.71rem;">⏱ ${durStr}</span>
+                        <span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:8px;font-size:0.71rem;">📞 ${sourceLabel}</span>
+                        ${c.internal ? `<span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:8px;font-size:0.71rem;">👤 внутр. ${_esc(String(c.internal))}</span>` : ''}
+                        ${c.recordUrl ? `<a href="${_esc(c.recordUrl)}" target="_blank" rel="noopener noreferrer"
+                            style="background:#eff6ff;color:#3b82f6;padding:2px 8px;border-radius:8px;font-size:0.71rem;font-weight:600;text-decoration:none;">
+                            🎙 Прослухати</a>` : ''}
+                    </div>
+                </div>`;
+        }).join('');
+
+        content.innerHTML = statsHtml + callsHtml;
+
+    } catch(e) {
+        content.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ${_esc(e.message)}</div>`;
     }
 }
 

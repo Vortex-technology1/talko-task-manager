@@ -700,7 +700,7 @@ async function handleCrmTriggerNotify(request, env) {
     let body;
     try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
 
-    const { companyId, to, message, dealId, dealTitle } = body;
+    const { companyId, to, message, dealId, dealTitle, chatId: directChatId, channel: msgChannel } = body;
     if (!companyId || !message) return json({ error: 'companyId and message required' }, 400);
 
     let token;
@@ -754,6 +754,28 @@ async function handleCrmTriggerNotify(request, env) {
         } else if (to && to !== 'owner' && to !== 'responsible') {
             // Конкретний chatId переданий напряму
             recipients.push(to);
+        }
+
+        // ── Якщо передано прямий chatId і канал (з send_bot_message тригера) ──
+        if (directChatId && msgChannel === 'viber') {
+            // Відправляємо через Viber
+            const compDocV2 = await fsGet(`companies/${companyId}`, token);
+            const vToken = compDocV2?.fields ? (fFields(compDocV2.fields).viberBotToken || '') : '';
+            if (vToken) {
+                await fetch('https://chatapi.viber.com/pa/send_message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Viber-Auth-Token': vToken },
+                    body: JSON.stringify({ receiver: directChatId, min_api_version: 1, sender: { name: 'TALKO' }, type: 'text', text: message }),
+                }).catch(() => {});
+                return json({ ok: true, sent: 1, channel: 'viber' });
+            }
+            return json({ ok: false, error: 'No Viber token' });
+        }
+
+        if (directChatId && (!msgChannel || msgChannel === 'telegram')) {
+            // Telegram напряму
+            await tgSend(directChatId, message);
+            return json({ ok: true, sent: 1, channel: 'telegram' });
         }
 
         if (!recipients.length) return json({ ok: false, error: 'No recipients with Telegram connected' });
