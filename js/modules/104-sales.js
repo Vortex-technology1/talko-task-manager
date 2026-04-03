@@ -959,6 +959,7 @@
       <!-- SubTabs -->
       <div style="display:flex;gap:.35rem;flex-wrap:wrap;padding:0 1rem;margin-bottom:.75rem">
         <button class="sl-subtab active" id="slSubAll" onclick="window._salesSubTab('all',this)">${_tg('Всі','Все')}</button>
+        <button class="sl-subtab" id="slSubOrders" onclick="window._salesSubTab('orders',this)" style="background:transparent;border:1px dashed #6366f1;color:#6366f1">${_tg('Замовлення','Orders')}</button>
         <button class="sl-subtab" id="slSubInvoice" onclick="window._salesSubTab('invoice',this)">${_tg('Рахунки','Счета')}</button>
         <button class="sl-subtab" id="slSubReceipt" onclick="window._salesSubTab('receipt',this)">${_tg('Каса','Касса')}</button>
         ${showWorkOrders() ? `<button class="sl-subtab" id="slSubWO" onclick="window._salesSubTab('work_order',this)">${_tg('Наряди','Наряды')}</button>` : ''}
@@ -1013,6 +1014,8 @@
         <div id="salesVehiclesContent" style="display:none"></div>
         <!-- Routes panel (hidden by default) -->
         <div id="salesRoutesContent" style="display:none"></div>
+        <!-- Orders (106-sales-orders.js) -->
+        <div id="salesOrdersContent" style="display:none"><div id="soRootWrap"></div></div>
       </div>
     `;
 
@@ -1053,7 +1056,8 @@
     const shiftsCont   = el('salesShiftsContent');
     const vehiclesCont = el('salesVehiclesContent');
     const routesCont   = el('salesRoutesContent');
-    const allSecondary = [catalogCont, shiftsCont, vehiclesCont, routesCont];
+    const ordersCont   = el('salesOrdersContent');
+    const allSecondary = [catalogCont, shiftsCont, vehiclesCont, routesCont, ordersCont];
 
     function hideAll() {
       if (tableWrap) tableWrap.style.display = 'none';
@@ -1061,7 +1065,18 @@
       if (filtersRow) filtersRow.style.display = 'none';
     }
 
-    if (tab === 'catalog') {
+    if (tab === 'orders') {
+      hideAll();
+      if (ordersCont) ordersCont.style.display = 'block';
+      if (typeof window.initSalesOrders === 'function') {
+        if (!ordersCont._soInited) {
+          ordersCont._soInited = true;
+          window.initSalesOrders();
+        }
+      } else {
+        if (ordersCont) ordersCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">' + _tg('Завантаження...','Loading...') + '</div>';
+      }
+    } else if (tab === 'catalog') {
       hideAll();
       if (catalogCont) catalogCont.style.display = 'block';
       renderCatalogTab();
