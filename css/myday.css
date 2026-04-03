@@ -54,6 +54,8 @@
             flex-direction: column;
             gap: 0.4rem;
             padding-bottom: 100px;
+            /* БАГ M4 fix: дозволяємо scroll всередині */
+            overscroll-behavior: contain;
         }
 
         /* ---- Секція ---- */
@@ -86,9 +88,13 @@
             margin-bottom: 0.15rem;
             cursor: pointer;
             transition: background 0.15s;
-            min-height: 0;
+            /* БАГ M5 fix: мінімальна touch зона 44px */
+            min-height: 44px;
             -webkit-tap-highlight-color: transparent;
             border-left: 3px solid transparent;
+            /* Не дозволяємо випадковий виділення тексту */
+            user-select: none;
+            -webkit-user-select: none;
         }
         .myday-item:last-child { margin-bottom: 0; }
         .myday-item:hover { background: #f0fdf4; }
