@@ -418,14 +418,13 @@ function renderFlowsTab() {
                                         ${flow.sessionCount||0} ${_tg('сесій','сессий')}
                                     </span>
                                 </div>
-                                <div style="margin-top:0.5rem;display:flex;align-items:center;gap:0.3rem;">
-                                    <div style="font-size:0.69rem;color:#9ca3af;flex:1;overflow:hidden;
-                                        text-overflow:ellipsis;white-space:nowrap;background:#f8fafc;
-                                        border:1px solid #e5e7eb;border-radius:6px;padding:3px 8px;
-                                        display:flex;align-items:center;gap:4px;">
-                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                                        ${deepLink}
-                                    </div>
+                                <div style="margin-top:0.4rem;display:flex;align-items:center;gap:0.3rem;">
+                                    <code style="background:#f8fafc;color:#6b7280;padding:3px 8px;border-radius:6px;
+                                        font-size:0.68rem;border:1px solid #e5e7eb;flex:1;
+                                        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+                                        display:block;max-width:300px;" title="${deepLink}">
+                                        ${deepLink.replace('https://t.me/','t.me/').slice(0, 45)}${deepLink.length > 45 ? '…' : ''}
+                                    </code>
                                     <button onclick="copyLink('${deepLink}')"
                                         style="padding:3px 8px;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;
                                         border-radius:5px;cursor:pointer;font-size:0.68rem;white-space:nowrap;flex-shrink:0;font-weight:600;"

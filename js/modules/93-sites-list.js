@@ -108,93 +108,79 @@ function _siteCard(site) {
     const isPublished = site.status === 'published';
     const blocksCount = (site.blocks || []).length;
     const createdAt   = site.createdAt?.toDate ? site.createdAt.toDate().toLocaleDateString('uk-UA') : '';
-    const niche       = site.niche || '';
-
-    const nicheColors = {
-        dental: '#3b82f6', construction: '#f97316', legal: '#8b5cf6',
-        auto: '#06b6d4', beauty: '#ec4899', fitness: '#22c55e', education: '#f59e0b',
-    };
-    const nicheColor = nicheColors[site.nicheKey] || '#6b7280';
+    const visits      = site.visits || 0;
+    const forms       = site.formSubmissions || 0;
 
     return `
-    <div style="background:white;border-radius:10px;padding:0.5rem 0.9rem;
-        box-shadow:0 1px 4px rgba(0,0,0,0.06);border:1px solid #f1f5f9;
-        transition:all 0.15s;"
-        onmouseenter="this.style.borderColor='#bbf7d0';this.style.boxShadow='0 4px 14px rgba(34,197,94,0.12)'"
-        onmouseleave="this.style.borderColor='#f1f5f9';this.style.boxShadow='0 1px 6px rgba(0,0,0,0.07)'">
+    <div style="background:white;border-radius:10px;padding:0.7rem 1rem;
+        box-shadow:0 1px 3px rgba(0,0,0,0.06);border:1px solid #f1f5f9;
+        display:flex;align-items:center;gap:0.75rem;
+        transition:box-shadow 0.15s,border-color 0.15s;"
+        onmouseenter="this.style.borderColor='#bbf7d0';this.style.boxShadow='0 3px 12px rgba(34,197,94,0.1)'"
+        onmouseleave="this.style.borderColor='#f1f5f9';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.06)'">
 
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
-            <!-- Ліво: info -->
-            <div style="flex:1;min-width:0;">
-                <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.1rem;flex-wrap:wrap;">
-                    <span style="font-weight:700;font-size:0.92rem;color:#1a1a1a;">${_esc(site.name || window.t('botsNoTitle'))}</span>
-                    <span style="font-size:0.65rem;padding:1px 7px;border-radius:8px;font-weight:600;
-                        background:${isPublished ? '#f0fdf4' : '#f9fafb'};
-                        color:${isPublished ? '#16a34a' : '#9ca3af'};">
-                        ${isPublished ? window.t('sitesPublishedBadge') : window.t('sitesDraftBadge')}
-                    </span>
-                    ${niche ? `<span style="font-size:0.65rem;padding:1px 7px;border-radius:8px;
-                        background:#f1f5f9;color:${nicheColor};font-weight:600;">${_esc(niche)}</span>` : ''}
-                </div>
+        <!-- Статус індикатор -->
+        <div style="width:4px;height:40px;border-radius:2px;flex-shrink:0;
+            background:${isPublished ? '#22c55e' : '#e5e7eb'};"></div>
 
-                ${site.description ? `<div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.15rem;
-                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(site.description)}</div>` : ''}
-
-                ${isPublished && (site.customDomain || site.publicUrl) ? `
-                <div style="display:flex;align-items:center;gap:5px;margin-bottom:0.15rem;">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    <span style="font-size:0.72rem;color:#0ea5e9;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;"
-                        title="${site.customDomain ? 'https://'+_esc(site.customDomain) : _esc(site.publicUrl||'')}">
-                        ${site.customDomain ? site.customDomain : (site.publicUrl||'').replace(/^https:\/\/[^/]+/,'').slice(0,40)+'...'}
-                    </span>
-                    <button onclick="navigator.clipboard?.writeText('${site.customDomain ? 'https://'+_esc(site.customDomain) : _esc(site.publicUrl||'')}');event.stopPropagation();if(typeof showToast==='function')showToast('URL скопійовано','success');"
-                        style="background:none;border:none;cursor:pointer;color:#0ea5e9;padding:1px;flex-shrink:0;" title=${window.t('copyURL')}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                    </button>
-                </div>` : ''}
-
-                <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-                    <span style="font-size:0.72rem;color:#9ca3af;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16.5 9.4-9-5.19"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span> ${blocksCount} блоків</span>
-                    ${site.visits ? `<span style="font-size:0.72rem;color:#9ca3af;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> ${site.visits} ${window.t("visitsWord")||"посещений"}</span>` : ''}
-                    ${site.formSubmissions ? `<span style="font-size:0.72rem;color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span> ${site.formSubmissions} заявок</span>` : ''}
-                    ${createdAt ? `<span style="font-size:0.68rem;color:#d1d5db;">${createdAt}</span>` : ''}
-                </div>
+        <!-- Назва + URL -->
+        <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+                <span style="font-weight:700;font-size:0.88rem;color:#111827;
+                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px;"
+                    title="${_esc(site.name)}">${_esc(site.name || window.t('botsNoTitle'))}</span>
+                <span style="font-size:0.65rem;padding:1px 7px;border-radius:8px;font-weight:600;flex-shrink:0;
+                    background:${isPublished ? '#f0fdf4' : '#f9fafb'};
+                    color:${isPublished ? '#16a34a' : '#9ca3af'};">
+                    ${isPublished ? '● ' + window.t('sitesPublishedBadge') : window.t('sitesDraftBadge')}
+                </span>
             </div>
-
-            <!-- Право: кнопки -->
-            <div style="display:flex;flex-direction:column;gap:0.2rem;flex-shrink:0;">
-                ${site.mode === 'html' ? `
-                <button onclick="sitesEditHtml('${site.id}')"
-                    style="padding:0.4rem 0.7rem;background:#8b5cf6;color:white;border:none;
-                    border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:4px;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                    ${window.t("sitesEditHtml")||"Редактировать HTML"}
-                </button>` : `
-                <button onclick="sitesOpenBuilder('${site.id}')"
-                    style="padding:0.4rem 0.7rem;background:#22c55e;color:white;border:none;
-                    border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;white-space:nowrap;">
-                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>️ Редагувати
-                </button>`}
-                <button onclick="sitesOpenForms('${site.id}')"
-                    style="padding:0.4rem 0.7rem;background:#eff6ff;color:#3b82f6;border:none;
-                    border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span> Форми
-                </button>
-                <div style="display:flex;gap:0.3rem;">
-                    ${isPublished && site.publicUrl ? `
-                    <button onclick="sitesTrackVisit('${site.id}');window.open('${_esc(site.publicUrl)}','_blank')"
-                        style="flex:1;padding:0.35rem;background:#f0fdf4;color:#16a34a;border:none;
-                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title=${window.t('openSite')}><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span></button>` : ''}
-                    <button onclick="sitesTogglePublish('${site.id}','${site.status}')"
-                        style="flex:1;padding:0.35rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;
-                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title="${isPublished ? window.t('botsRemove') : window.t('sitesPublish')}">
-                        ${isPublished ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="2" y1="2" x2="22" y2="22"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span>'}
-                    </button>
-                    <button onclick="sitesDelete('${site.id}','${_esc(site.name || '')}')"
-                        style="flex:1;padding:0.35rem;background:#fff5f5;color:#ef4444;border:none;
-                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title=${window.t('crmDelete')}><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span></button>
-                </div>
+            <div style="display:flex;align-items:center;gap:1rem;font-size:0.72rem;color:#9ca3af;flex-wrap:wrap;">
+                <span>📦 ${blocksCount} блоків</span>
+                ${visits ? `<span>👁 ${visits} відвідувань</span>` : ''}
+                ${forms ? `<span style="color:#22c55e;font-weight:600;">📝 ${forms} заявок</span>` : ''}
+                ${createdAt ? `<span>${createdAt}</span>` : ''}
+                ${isPublished && site.publicUrl ? `
+                <a href="${_esc(site.publicUrl)}" target="_blank" onclick="event.stopPropagation();sitesTrackVisit('${site.id}')"
+                    style="color:#0ea5e9;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;"
+                    title="${_esc(site.publicUrl)}">
+                    🔗 ${(_esc(site.customDomain || site.publicUrl)).replace('https://','').slice(0,35)}
+                </a>` : ''}
             </div>
+        </div>
+
+        <!-- Кнопки дій — горизонтально -->
+        <div style="display:flex;align-items:center;gap:0.3rem;flex-shrink:0;">
+            ${site.mode === 'html' ? `
+            <button onclick="sitesEditHtml('${site.id}')" title="Редагувати HTML"
+                style="padding:0.38rem 0.65rem;background:#8b5cf6;color:white;border:none;
+                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;white-space:nowrap;">
+                &lt;/&gt; HTML
+            </button>` : `
+            <button onclick="sitesOpenBuilder('${site.id}')" title="Редагувати"
+                style="padding:0.38rem 0.7rem;background:#22c55e;color:white;border:none;
+                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;">
+                ✏️ Редагувати
+            </button>`}
+            <button onclick="sitesOpenForms('${site.id}')" title="Форми"
+                style="padding:0.38rem 0.65rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;
+                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;">
+                📋 Форми
+            </button>
+            ${isPublished && site.publicUrl ? `
+            <button onclick="navigator.clipboard?.writeText('${_esc(site.publicUrl)}');event.stopPropagation();if(typeof showToast==='function')showToast('URL скопійовано','success');"
+                title="Копіювати посилання"
+                style="padding:0.38rem 0.5rem;background:#f8fafc;color:#6b7280;border:1px solid #e5e7eb;
+                border-radius:7px;cursor:pointer;font-size:0.8rem;">🔗</button>` : ''}
+            <button onclick="sitesTogglePublish('${site.id}','${site.status}')"
+                title="${isPublished ? 'Зняти з публікації' : 'Опублікувати'}"
+                style="padding:0.38rem 0.5rem;background:#f8fafc;color:#6b7280;border:1px solid #e5e7eb;
+                border-radius:7px;cursor:pointer;font-size:0.8rem;">
+                ${isPublished ? '📴' : '🚀'}
+            </button>
+            <button onclick="sitesDelete('${site.id}','${_esc(site.name || '')}')" title="Видалити"
+                style="padding:0.38rem 0.5rem;background:#fff5f5;color:#ef4444;border:none;
+                border-radius:7px;cursor:pointer;font-size:0.8rem;">🗑</button>
         </div>
     </div>`;
 }

@@ -331,10 +331,15 @@
             
             return `
                 <div class="myday-item ${itemClass}" onclick="openMyDayTask('${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}')">
-                    <div class="myday-checkbox ${checkClass}" ${!task.review ? `onclick="event.stopPropagation(); toggleMyDayTask(event, '${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}', ${task.done || task.review})"` : 'onclick="event.stopPropagation();"'} ${task.review ? `style="background:#8b5cf6;border-color:#8b5cf6;cursor:not-allowed;" title="${window.t('inReviewAwait')}"` : ''}>
+                    <div class="myday-checkbox ${checkClass}"
+                        ${!task.review
+                            ? `onclick="event.stopPropagation(); toggleMyDayTask(event, '${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}', ${task.done || task.review})"`
+                            : 'onclick="event.stopPropagation();"'}
+                        ${task.review ? `style="background:#8b5cf6;border-color:#8b5cf6;cursor:not-allowed;" title="${window.t('inReviewAwait')}"` : ''}>
                         ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
                         ${task.review ? '<i data-lucide="eye" class="icon icon-sm" style="color:white;"></i>' : ''}
                     </div>
+                    <div class="myday-item-content" style="flex:1;min-width:0;">
                         <div class="myday-item-title">${esc(task.title)}</div>
                         <div class="myday-item-meta">
                             ${task.time ? `<span class="myday-item-time">${esc(task.time)}</span>` : ''}
@@ -346,8 +351,8 @@
                         </div>
                         ${reviewActionsHtml}
                     </div>
-                    ${!task.done && !task.review ? getTimerButtonHtml(task.id) : ''}
-                    ${task.overdue ? '<i data-lucide="alert-triangle" class="icon" style="color:var(--danger);"></i>' : ''}
+                    ${task.overdue ? '<i data-lucide="alert-triangle" class="icon" style="color:var(--danger);flex-shrink:0;"></i>' : ''}
+                    ${!task.done && !task.review ? `<div onclick="event.stopPropagation();" style="flex-shrink:0;">${getTimerButtonHtml(task.id)}</div>` : ''}
                 </div>`;
         }
         
