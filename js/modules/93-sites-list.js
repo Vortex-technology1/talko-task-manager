@@ -123,7 +123,7 @@ function _siteCard(site) {
         <div style="width:4px;height:40px;border-radius:2px;flex-shrink:0;
             background:${isPublished ? '#22c55e' : '#e5e7eb'};"></div>
 
-        <!-- Назва + URL -->
+        <!-- Назва + мета -->
         <div style="flex:1;min-width:0;">
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
                 <span style="font-weight:700;font-size:0.88rem;color:#111827;
@@ -136,51 +136,74 @@ function _siteCard(site) {
                 </span>
             </div>
             <div style="display:flex;align-items:center;gap:1rem;font-size:0.72rem;color:#9ca3af;flex-wrap:wrap;">
-                <span>📦 ${blocksCount} блоків</span>
-                ${visits ? `<span>👁 ${visits} відвідувань</span>` : ''}
-                ${forms ? `<span style="color:#22c55e;font-weight:600;">📝 ${forms} заявок</span>` : ''}
+                <span style="display:flex;align-items:center;gap:3px;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16.5 9.4-9-5.19"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    ${blocksCount} блоків
+                </span>
+                ${visits ? `<span style="display:flex;align-items:center;gap:3px;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    ${visits} відвідувань
+                </span>` : ''}
+                ${forms ? `<span style="display:flex;align-items:center;gap:3px;color:#22c55e;font-weight:600;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><line x1="12" y1="11" x2="16" y2="11"/><line x1="12" y1="16" x2="16" y2="16"/><circle cx="8" cy="11" r=".5" fill="currentColor"/><circle cx="8" cy="16" r=".5" fill="currentColor"/></svg>
+                    ${forms} заявок
+                </span>` : ''}
                 ${createdAt ? `<span>${createdAt}</span>` : ''}
                 ${isPublished && site.publicUrl ? `
                 <a href="${_esc(site.publicUrl)}" target="_blank" onclick="event.stopPropagation();sitesTrackVisit('${site.id}')"
-                    style="color:#0ea5e9;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;"
+                    style="color:#0ea5e9;text-decoration:none;display:flex;align-items:center;gap:3px;
+                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;"
                     title="${_esc(site.publicUrl)}">
-                    🔗 ${(_esc(site.customDomain || site.publicUrl)).replace('https://','').slice(0,35)}
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    ${(_esc(site.customDomain || site.publicUrl)).replace('https://','').slice(0,35)}
                 </a>` : ''}
             </div>
         </div>
 
-        <!-- Кнопки дій — горизонтально -->
+        <!-- Кнопки дій -->
         <div style="display:flex;align-items:center;gap:0.3rem;flex-shrink:0;">
             ${site.mode === 'html' ? `
             <button onclick="sitesEditHtml('${site.id}')" title="Редагувати HTML"
                 style="padding:0.38rem 0.65rem;background:#8b5cf6;color:white;border:none;
-                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;white-space:nowrap;">
-                &lt;/&gt; HTML
+                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;white-space:nowrap;
+                display:flex;align-items:center;gap:4px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                HTML
             </button>` : `
             <button onclick="sitesOpenBuilder('${site.id}')" title="Редагувати"
                 style="padding:0.38rem 0.7rem;background:#22c55e;color:white;border:none;
-                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                ✏️ Редагувати
+                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;
+                display:flex;align-items:center;gap:4px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Редагувати
             </button>`}
             <button onclick="sitesOpenForms('${site.id}')" title="Форми"
                 style="padding:0.38rem 0.65rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;
-                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                📋 Форми
+                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;
+                display:flex;align-items:center;gap:4px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><line x1="12" y1="11" x2="16" y2="11"/><line x1="12" y1="16" x2="16" y2="16"/></svg>
+                Форми
             </button>
             ${isPublished && site.publicUrl ? `
             <button onclick="navigator.clipboard?.writeText('${_esc(site.publicUrl)}');event.stopPropagation();if(typeof showToast==='function')showToast('URL скопійовано','success');"
                 title="Копіювати посилання"
-                style="padding:0.38rem 0.5rem;background:#f8fafc;color:#6b7280;border:1px solid #e5e7eb;
-                border-radius:7px;cursor:pointer;font-size:0.8rem;">🔗</button>` : ''}
+                style="padding:0.38rem 0.45rem;background:#f8fafc;color:#6b7280;border:1px solid #e5e7eb;
+                border-radius:7px;cursor:pointer;display:flex;align-items:center;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>` : ''}
             <button onclick="sitesTogglePublish('${site.id}','${site.status}')"
                 title="${isPublished ? 'Зняти з публікації' : 'Опублікувати'}"
-                style="padding:0.38rem 0.5rem;background:#f8fafc;color:#6b7280;border:1px solid #e5e7eb;
-                border-radius:7px;cursor:pointer;font-size:0.8rem;">
-                ${isPublished ? '📴' : '🚀'}
+                style="padding:0.38rem 0.45rem;background:#f8fafc;color:#6b7280;border:1px solid #e5e7eb;
+                border-radius:7px;cursor:pointer;display:flex;align-items:center;">
+                ${isPublished
+                    ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="2" y1="2" x2="22" y2="22"/></svg>`
+                    : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`}
             </button>
             <button onclick="sitesDelete('${site.id}','${_esc(site.name || '')}')" title="Видалити"
-                style="padding:0.38rem 0.5rem;background:#fff5f5;color:#ef4444;border:none;
-                border-radius:7px;cursor:pointer;font-size:0.8rem;">🗑</button>
+                style="padding:0.38rem 0.45rem;background:#fff5f5;color:#ef4444;border:none;
+                border-radius:7px;cursor:pointer;display:flex;align-items:center;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
         </div>
     </div>`;
 }
