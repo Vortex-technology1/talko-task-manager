@@ -153,16 +153,19 @@
   async function generateOrderNumber() {
     const year = new Date().getFullYear();
     try {
-      const snap = await col(COL).orderBy('createdAt','desc').limit(1).get();
+      // Атомарний лічильник через Firestore transaction — захист від дублікатів
+      const counterRef = db().collection('companies').doc(cid()).collection('settings').doc('sales_counters');
       let seq = 1;
-      if (!snap.empty) {
-        const last = snap.docs[0].data().number || '';
-        const m = last.match(/(\d+)$/);
-        if (m) seq = parseInt(m[1]) + 1;
-      }
+      await db().runTransaction(async (tx) => {
+        const doc = await tx.get(counterRef);
+        const data = doc.exists ? doc.data() : {};
+        seq = Number(data[`order_${year}`] || 0) + 1;
+        tx.set(counterRef, { [`order_${year}`]: seq }, { merge: true });
+      });
       return `ORD-${year}-${String(seq).padStart(4,'0')}`;
     } catch(e) {
-      return `ORD-${year}-${String(Date.now()).slice(-4)}`;
+      // Fallback — час як унікальний суфікс
+      return `ORD-${year}-${String(Date.now()).slice(-6)}`;
     }
   }
 
@@ -605,7 +608,7 @@
     }
   }
 
-  // Перераховуємо автознижку і застосовуємо до всіх позицій
+  // Перераховуємо автознижку — застосовуємо ТІЛЬКИ якщо ще немає ручної
   function _soRecalcAutoDiscount() {
     let gross = 0;
     S.modalItems.forEach(item => {
@@ -613,7 +616,10 @@
     });
     const autoDisc = calcAutoDiscount(gross);
     if (autoDisc > 0) {
-      S.modalItems.forEach(item => { item.discount = autoDisc; });
+      // Застосовуємо тільки до позицій без знижки (не перезаписуємо ручну)
+      S.modalItems.forEach(item => {
+        if (!item.discount || item.discount === 0) item.discount = autoDisc;
+      });
     }
   }
 
@@ -636,6 +642,21 @@
   // ─── PUBLIC API ───────────────────────────────────────────────────────────
   window.openSalesOrderModal = function (orderId) {
     const order = orderId ? S.orders.find(o => o.id === orderId) : null;
+
+    // БАГ 7 fix: попередження для confirmed замовлень
+    if (order?.status === 'confirmed') {
+      showToast(
+        tg('Замовлення підтверджено — позиції заблоковані. Скасуйте і створіть нове для зміни кількості.',
+           'Order confirmed — items locked. Cancel and create new to change quantities.'),
+        'info'
+      );
+      // Дозволяємо редагувати тільки нотатку і менеджера, не позиції
+    }
+    if (order?.status === 'completed' || order?.status === 'cancelled') {
+      showToast(tg('Редагування закритого замовлення неможливе','Cannot edit closed order'), 'error');
+      return;
+    }
+
     S.editing = order || null;
 
     const existing = el('soModalOverlay');
@@ -645,12 +666,29 @@
     div.innerHTML = buildModalHTML(order);
     document.body.appendChild(div.firstElementChild);
 
+    // Блокуємо таблицю позицій для confirmed
+    if (order?.status === 'confirmed') {
+      setTimeout(() => {
+        const itemsWrap = el('soItemsWrap');
+        if (itemsWrap) {
+          itemsWrap.style.opacity = '0.6';
+          itemsWrap.style.pointerEvents = 'none';
+          itemsWrap.insertAdjacentHTML('beforebegin',
+            `<div style="padding:8px 12px;background:#fef3c7;border:1px solid #fcd34d;border-radius:6px;font-size:.78rem;color:#92400e;margin-bottom:8px">
+              ⚠️ ${tg('Позиції заблоковані — замовлення підтверджено і товари зарезервовані','Items locked — order confirmed and stock reserved')}
+            </div>`
+          );
+        }
+        // Ховаємо кнопку Додати позицію
+        const addBtn = document.querySelector('#soModalOverlay button[onclick*="_soAddItem"]');
+        if (addBtn) addBtn.style.display = 'none';
+      }, 0);
+    }
+
     renderModalItems();
 
-    // Показуємо індикатор прайсу якщо вже встановлений
     setTimeout(() => _soUpdatePriceIndicator(), 0);
 
-    // auto-select current user as assignee if new
     if (!order && window.currentUserData?.id) {
       const sel = el('soFldAssignee');
       if (sel && !sel.value) sel.value = window.currentUserData.id;

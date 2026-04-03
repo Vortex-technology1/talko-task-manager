@@ -62,13 +62,20 @@
   }
 
   async function generateNumber() {
-    const year=new Date().getFullYear();
+    const year = new Date().getFullYear();
     try {
-      const snap=await col(COL).orderBy('createdAt','desc').limit(1).get();
-      let seq=1;
-      if (!snap.empty){const m=(snap.docs[0].data().number||'').match(/(\d+)$/);if(m)seq=parseInt(m[1])+1;}
+      const counterRef = db().collection('companies').doc(cid()).collection('settings').doc('sales_counters');
+      let seq = 1;
+      await db().runTransaction(async (tx) => {
+        const doc = await tx.get(counterRef);
+        const data = doc.exists ? doc.data() : {};
+        seq = Number(data[`realization_${year}`] || 0) + 1;
+        tx.set(counterRef, { [`realization_${year}`]: seq }, { merge: true });
+      });
       return `REA-${year}-${String(seq).padStart(4,'0')}`;
-    } catch(e){return `REA-${year}-${String(Date.now()).slice(-4)}`;}
+    } catch(e) {
+      return `REA-${year}-${String(Date.now()).slice(-6)}`;
+    }
   }
 
   function deriveType(items){const g=items.some(i=>i.warehouseItemId),s=items.some(i=>!i.warehouseItemId);return g&&s?'mixed':g?'goods':'services';}
@@ -310,33 +317,89 @@
     finally{S.saving=false;if(sBtn)sBtn.disabled=false;if(pBtn){pBtn.disabled=false;pBtn.textContent=tg('Провести','Post');}}
   };
 
-  async function _postRealization(rid,payload){
-    const batch=db().batch(), cRef=db().collection('companies').doc(cid());
-    for(const item of payload.items){
-      if(!item.warehouseItemId) continue;
-      const stockRef=cRef.collection(COL_WS).doc(item.warehouseItemId);
-      const st=S.stock[item.warehouseItemId]||{};
-      const nq=Math.max(0,Number(st.quantity||0)-Number(item.qty)), nr=Math.max(0,Number(st.reserved||0)-Number(item.qty));
-      batch.update(stockRef,{quantity:nq,reserved:nr});
-      batch.set(cRef.collection(COL_WOP).doc(),{type:'sale',itemId:item.warehouseItemId,itemName:item.name,qty:Number(item.qty),realizationId:rid,realizationNum:payload.number,clientName:payload.clientName,createdBy:window.currentUserData?.id||'',createdAt:serverTs()});
-      if(S.stock[item.warehouseItemId]){S.stock[item.warehouseItemId].quantity=nq;S.stock[item.warehouseItemId].reserved=nr;}
+  async function _postRealization(rid, payload) {
+    const cRef = db().collection('companies').doc(cid());
+
+    // БАГ 3 fix: перевіряємо поточний статус перед проведенням
+    const currentSnap = await col(COL).doc(rid).get();
+    if (currentSnap.exists && currentSnap.data().status === 'posted') {
+      throw new Error(tg('Реалізація вже проведена', 'Realization already posted'));
     }
-    let debtorEntryId=null;
-    if(payload.paymentDueDate&&payload.totalAmount>0){
-      const dRef=cRef.collection(COL_DEBT).doc(); debtorEntryId=dRef.id;
-      batch.set(dRef,{clientId:payload.clientId,clientName:payload.clientName,realizationId:rid,realizationNum:payload.number,amount:payload.totalAmount,currency:payload.currency,dueDate:payload.paymentDueDate,status:'open',paidAmount:0,paidAt:null,createdAt:serverTs()});
+
+    // БАГ 1 fix: атомарне списання через warehouseDeduct (99d)
+    const warehouseItems = (payload.items || []).filter(i => i.warehouseItemId);
+    if (warehouseItems.length) {
+      if (typeof window.warehouseDeduct === 'function') {
+        const result = await window.warehouseDeduct(rid, warehouseItems);
+        if (!result.success) throw new Error(tg('Помилка списання складу: ', 'Stock deduction error: ') + (result.error || ''));
+        // Оновлюємо локальний кеш
+        warehouseItems.forEach(item => {
+          const st = S.stock[item.warehouseItemId];
+          if (st) {
+            st.quantity = Math.max(0, Number(st.quantity || 0) - Number(item.qty));
+            st.reserved = Math.max(0, Number(st.reserved || 0) - Number(item.qty));
+          }
+        });
+      } else {
+        // Fallback — простий batch якщо 99d не завантажений
+        const batch = db().batch();
+        warehouseItems.forEach(item => {
+          const stockRef = cRef.collection(COL_WS).doc(item.warehouseItemId);
+          const st = S.stock[item.warehouseItemId] || {};
+          const nq = Math.max(0, Number(st.quantity||0) - Number(item.qty));
+          const nr = Math.max(0, Number(st.reserved||0) - Number(item.qty));
+          batch.update(stockRef, { quantity: nq, reserved: nr, available: Math.max(0, nq - nr) });
+          batch.set(cRef.collection(COL_WOP).doc(), {
+            type: 'sale', itemId: item.warehouseItemId, itemName: item.name,
+            qty: Number(item.qty), realizationId: rid, realizationNum: payload.number,
+            clientName: payload.clientName, createdBy: window.currentUserData?.id || '', createdAt: serverTs(),
+          });
+          if (S.stock[item.warehouseItemId]) { S.stock[item.warehouseItemId].quantity = nq; S.stock[item.warehouseItemId].reserved = nr; }
+        });
+        await batch.commit();
+      }
     }
-    if(payload.orderId) batch.update(cRef.collection(COL_ORD).doc(payload.orderId),{status:'completed',realizationId:rid,updatedAt:serverTs()});
-    await batch.commit();
-    await col(COL).doc(rid).update({status:'posted',debtorEntryId:debtorEntryId||null,updatedAt:serverTs()});
-    if(typeof window.TALKO?.events?.emit==='function') window.TALKO.events.emit('REALIZATION_POSTED',{realizationId:rid,clientId:payload.clientId,totalAmount:payload.totalAmount,debtorEntryId});
+
+    // Дебіторка і закриття замовлення — окремий batch
+    let debtorEntryId = null;
+    const batch2 = db().batch();
+    if (payload.paymentDueDate && payload.totalAmount > 0) {
+      const dRef = cRef.collection(COL_DEBT).doc();
+      debtorEntryId = dRef.id;
+      batch2.set(dRef, {
+        clientId: payload.clientId, clientName: payload.clientName,
+        realizationId: rid, realizationNum: payload.number,
+        amount: payload.totalAmount, currency: payload.currency,
+        dueDate: payload.paymentDueDate, status: 'open',
+        paidAmount: 0, paidAt: null, createdAt: serverTs(),
+      });
+    }
+    if (payload.orderId) {
+      batch2.update(cRef.collection(COL_ORD).doc(payload.orderId), { status: 'completed', realizationId: rid, updatedAt: serverTs() });
+    }
+    await batch2.commit();
+
+    await col(COL).doc(rid).update({ status: 'posted', debtorEntryId: debtorEntryId || null, updatedAt: serverTs() });
+
+    if (typeof window.TALKO?.events?.emit === 'function') {
+      window.TALKO.events.emit('REALIZATION_POSTED', { realizationId: rid, clientId: payload.clientId, totalAmount: payload.totalAmount, debtorEntryId });
+    }
   }
 
-  window._srPost=async function(rid){
-    if(!confirm(tg('Провести реалізацію? Товари будуть списані зі складу.','Post realization? Stock will be deducted.'))) return;
-    const r=S.realizations.find(x=>x.id===rid); if(!r) return;
-    try{await _postRealization(rid,r);toast(tg('Реалізацію проведено','Realization posted'));await loadRealizations();}
-    catch(e){console.error('_srPost:',e);toast(tg('Помилка: ','Error: ')+e.message,'error');}
+  window._srPost = async function(rid) {
+    if (!confirm(tg('Провести реалізацію? Товари будуть списані зі складу.', 'Post realization? Stock will be deducted.'))) return;
+    const r = S.realizations.find(x => x.id === rid);
+    if (!r) return;
+    // БАГ 3 fix: перевірка статусу перед проведенням
+    if (r.status === 'posted') { toast(tg('Вже проведено', 'Already posted'), 'info'); return; }
+    try {
+      await _postRealization(rid, r);
+      toast(tg('Реалізацію проведено', 'Realization posted'));
+      await loadRealizations();
+    } catch(e) {
+      console.error('_srPost:', e);
+      toast(tg('Помилка: ', 'Error: ') + e.message, 'error');
+    }
   };
 
   // ─── PDF генерація ────────────────────────────────────────────────────────
