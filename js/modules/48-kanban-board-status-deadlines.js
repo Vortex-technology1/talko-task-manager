@@ -191,7 +191,7 @@
             const board = container.querySelector('.kanban-board');
             if (board) {
                 board.addEventListener('touchstart', kanbanTouchStart, { passive: true });
-                board.addEventListener('touchmove', kanbanTouchMove, { passive: false });
+                board.addEventListener('touchmove', kanbanTouchMove, { passive: true });
                 board.addEventListener('touchend', kanbanTouchEnd, { passive: true });
             }
         }
@@ -247,52 +247,60 @@
             kanbanDragReady = false;
             kanbanDraggedId = card.dataset.taskId;
 
-            // БАГ M2 fix: long press 300мс перед активацією drag
+            // Long press 500мс — достатньо довго щоб відрізнити від scroll
             kanbanLongPressTimer = setTimeout(() => {
                 kanbanDragReady = true;
-                // Візуальний feedback — картка "підіймається"
-                card.style.transform = 'scale(1.03)';
-                card.style.boxShadow = '0 8px 24px rgba(0,0,0,0.18)';
+                card.style.transform = 'scale(1.04)';
+                card.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)';
                 card.style.transition = 'transform 0.15s, box-shadow 0.15s';
-                // Вібрація на мобільних
-                if (navigator.vibrate) navigator.vibrate(40);
-            }, 300);
+                if (navigator.vibrate) navigator.vibrate(50);
+            }, 500);
         }
 
         function kanbanTouchMove(e) {
             if (!kanbanTouchCard) return;
             const dx = Math.abs(e.touches[0].clientX - kanbanTouchStartX);
             const dy = Math.abs(e.touches[0].clientY - kanbanTouchStartY);
+            const moved = dx > 6 || dy > 6;
 
-            // Якщо рух починається — скасовуємо long press
-            if ((dx > 5 || dy > 5) && kanbanLongPressTimer) {
+            // Будь-який рух до long press — скасовуємо drag, дозволяємо scroll
+            if (moved && kanbanLongPressTimer) {
                 clearTimeout(kanbanLongPressTimer);
                 kanbanLongPressTimer = null;
+                // Скидаємо стиль картки якщо long press не встиг спрацювати
+                if (kanbanTouchCard && !kanbanDragReady) {
+                    kanbanTouchCard.style.transform = '';
+                    kanbanTouchCard.style.boxShadow = '';
+                    kanbanTouchCard.style.transition = '';
+                }
             }
 
-            // БАГ M3 fix: якщо drag ще не активований — дозволяємо native scroll
+            // Якщо drag не активований (long press не відбувся) — не перехоплюємо
             if (!kanbanDragReady) return;
 
-            // БАГ M3 fix: якщо рух переважно вертикальний — дозволяємо scroll колонки
-            if (!kanbanTouchMoved && dy > dx * 1.5) {
-                // Вертикальний scroll — не блокуємо
+            // Drag активний — вертикальний рух скасовує drag
+            if (!kanbanTouchMoved && dy > dx * 1.2) {
+                kanbanDragReady = false;
+                if (kanbanTouchCard) {
+                    kanbanTouchCard.style.transform = '';
+                    kanbanTouchCard.style.boxShadow = '';
+                }
                 return;
             }
 
             kanbanTouchMoved = true;
-            e.preventDefault(); // блокуємо scroll тільки при активному drag
+            // Не викликаємо preventDefault — passive:true, native scroll вільний
 
             if (!kanbanTouchClone) {
                 kanbanTouchClone = kanbanTouchCard.cloneNode(true);
-                kanbanTouchClone.style.cssText = 'position:fixed;z-index:9999;opacity:0.85;pointer-events:none;width:250px;transform:rotate(2deg) scale(1.03);box-shadow:0 12px 32px rgba(0,0,0,0.22);border-radius:12px;';
+                kanbanTouchClone.style.cssText = 'position:fixed;z-index:9999;opacity:0.85;pointer-events:none;width:250px;transform:rotate(2deg) scale(1.03);box-shadow:0 12px 32px rgba(0,0,0,0.22);border-radius:12px;transition:none;';
                 document.body.appendChild(kanbanTouchClone);
                 kanbanTouchCard.classList.add('dragging');
-                // Скидаємо стиль оригінальної картки
                 kanbanTouchCard.style.transform = '';
                 kanbanTouchCard.style.boxShadow = '';
             }
             kanbanTouchClone.style.left = (e.touches[0].clientX - 125) + 'px';
-            kanbanTouchClone.style.top = (e.touches[0].clientY - 30) + 'px';
+            kanbanTouchClone.style.top  = (e.touches[0].clientY - 30) + 'px';
 
             document.querySelectorAll('.kanban-column-body').forEach(b => b.classList.remove('drag-over'));
             const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
