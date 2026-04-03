@@ -568,6 +568,18 @@ async function handleBotResumeFlow(request, env) {
                     body: JSON.stringify({ receiver: cId, min_api_version: 1, sender: { name: 'TALKO' }, type: 'text', text }),
                 }).catch(() => {});
             };
+        } else if (contactChannel === 'instagram') {
+            const compDocIGR = await fsGet(`companies/${cid}`, token);
+            const igTokenR   = compDocIGR?.fields ? (fFields(compDocIGR.fields).instagramToken || fFields(compDocIGR.fields).fbPageAccessToken || '') : '';
+            botToken = igTokenR;
+            tgSend = async (cId, text) => {
+                if (!igTokenR) return;
+                await fetch(`https://graph.facebook.com/v18.0/me/messages?access_token=${igTokenR}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipient: { id: cId }, message: { text } }),
+                }).catch(() => {});
+            };
         } else if (contactChannel === 'whatsapp') {
             const settDoc = await fsGet(`companies/${cid}/settings/integrations`, token);
             const waKey   = settDoc?.fields ? fFields(settDoc.fields).whatsappApiKey || '' : '';
@@ -1197,6 +1209,20 @@ async function handleCrmTriggerNotify(request, env) {
                 return json({ ok: true, sent: 1, channel: 'viber' });
             }
             return json({ ok: false, error: 'No Viber token' });
+        }
+
+        if (directChatId && msgChannel === 'instagram') {
+            const compDocIG2 = await fsGet(`companies/${companyId}`, token);
+            const igTokenN = compDocIG2?.fields ? (fFields(compDocIG2.fields).instagramToken || fFields(compDocIG2.fields).fbPageAccessToken || '') : '';
+            if (igTokenN) {
+                await fetch(`https://graph.facebook.com/v18.0/me/messages?access_token=${igTokenN}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipient: { id: directChatId }, message: { text: message } }),
+                }).catch(() => {});
+                return json({ ok: true, sent: 1, channel: 'instagram' });
+            }
+            return json({ ok: false, error: 'No Instagram token' });
         }
 
         if (directChatId && msgChannel === 'whatsapp') {
@@ -2553,6 +2579,242 @@ ${e.stack?.slice(0,200)}`);
                 }
             }
             return json({ ok: true });
+        }
+
+        return json({ ok: true });
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // INSTAGRAM DIRECT — Meta Messenger API for Instagram
+    // ════════════════════════════════════════════════════════════
+    if (channel === 'instagram') {
+        // GET — верифікація webhook від Meta
+        if (request.method === 'GET') {
+            const mode      = url.searchParams.get('hub.mode');
+            const hubToken  = url.searchParams.get('hub.verify_token');
+            const challenge = url.searchParams.get('hub.challenge');
+            // Verify token — беремо з компанії або env
+            let verifyToken = env.CRON_SECRET || 'talko_ig_verify';
+            if (cid) {
+                try {
+                    const compDocIG = await fsGet(`companies/${cid}`, token);
+                    if (compDocIG?.fields) {
+                        verifyToken = fFields(compDocIG.fields).fbVerifyToken || verifyToken;
+                    }
+                } catch {}
+            }
+            if (mode === 'subscribe' && hubToken === verifyToken) {
+                return new Response(challenge, { status: 200 });
+            }
+            return new Response('Forbidden', { status: 403 });
+        }
+
+        if (request.method !== 'POST') return json({ ok: true });
+        if (!cid) return json({ ok: true });
+
+        // Парсинг Meta webhook
+        const igEntries = body.entry || [];
+
+        for (const entry of igEntries) {
+            const messaging = entry.messaging || [];
+            for (const msgEvent of messaging) {
+                const senderId = String(msgEvent.sender?.id || '');
+                if (!senderId) continue;
+
+                // Парсинг повідомлення
+                let text = '';
+                let photoUrl = '';
+
+                if (msgEvent.message) {
+                    text = msgEvent.message.text || '';
+                    // Вкладення — фото/відео
+                    const attachments = msgEvent.message.attachments || [];
+                    for (const att of attachments) {
+                        if (att.type === 'image' || att.type === 'video') {
+                            photoUrl = att.payload?.url || '';
+                            if (photoUrl && !text) text = `PHOTO:${photoUrl}`;
+                        }
+                    }
+                } else if (msgEvent.postback) {
+                    text = msgEvent.postback.payload || msgEvent.postback.title || '';
+                }
+
+                if (!text || text.startsWith('echo')) continue; // ігноруємо echo повідомлення
+
+                const now = new Date().toISOString();
+
+                // Читаємо Instagram токен
+                let igToken = '';
+                let igPageId = '';
+                const compDocIG = await fsGet(`companies/${cid}`, token);
+                if (compDocIG?.fields) {
+                    const cd = fFields(compDocIG.fields);
+                    igToken  = cd.instagramToken  || cd.fbPageAccessToken || '';
+                    igPageId = cd.instagramPageId || cd.fbPageId          || '';
+                }
+
+                // Функція відправки через Instagram Graph API
+                const igSend = async (recipientId, msgText, opts = {}) => {
+                    if (!igToken) return;
+                    const kbButtons = opts.inline_keyboard;
+                    let payload;
+
+                    if (kbButtons && kbButtons.length > 0) {
+                        // Instagram підтримує quick replies
+                        const qr = kbButtons.flat().slice(0, 13).map(btn => ({
+                            content_type: 'text',
+                            title:        (btn.text || '').slice(0, 20),
+                            payload:      btn.callback_data || btn.text || '',
+                        }));
+                        payload = {
+                            recipient: { id: recipientId },
+                            message:   { text: msgText, quick_replies: qr },
+                        };
+                    } else {
+                        payload = {
+                            recipient: { id: recipientId },
+                            message:   { text: msgText },
+                        };
+                    }
+
+                    await fetch(`https://graph.facebook.com/v18.0/me/messages?access_token=${igToken}`, {
+                        method:  'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body:    JSON.stringify(payload),
+                    }).catch(() => {});
+                };
+
+                // Отримуємо ім'я юзера через Graph API
+                let userName = senderId;
+                if (igToken) {
+                    try {
+                        const profileRes = await fetch(
+                            `https://graph.facebook.com/v18.0/${senderId}?fields=name&access_token=${igToken}`
+                        );
+                        if (profileRes.ok) {
+                            const pd = await profileRes.json();
+                            if (pd.name) userName = pd.name;
+                        }
+                    } catch {}
+                }
+
+                // Читаємо або створюємо контакт
+                const contactPath = `companies/${cid}/contacts/${senderId}`;
+                let contact = {};
+                const contactDoc = await fsGet(contactPath, token);
+                if (contactDoc?.fields) {
+                    contact = fFields(contactDoc.fields);
+                } else {
+                    await fsSet(contactPath, {
+                        id:            { stringValue: senderId },
+                        channel:       { stringValue: 'instagram' },
+                        name:          { stringValue: userName },
+                        status:        { stringValue: 'new' },
+                        currentFlowId: { stringValue: '' },
+                        currentNodeId: { stringValue: '' },
+                        createdAt:     { timestampValue: now },
+                        updatedAt:     { timestampValue: now },
+                    }, token);
+                    contact = { id: senderId, channel: 'instagram', name: userName, status: 'new', currentFlowId: '', currentNodeId: '' };
+                }
+
+                // Лог вхідного повідомлення
+                const igMsgId = `msg_${Date.now()}_user`;
+                await fsSet(`${contactPath}/messages/${igMsgId}`, {
+                    id:        { stringValue: igMsgId },
+                    role:      { stringValue: 'user' },
+                    from:      { stringValue: 'user' },
+                    direction: { stringValue: 'in' },
+                    text:      { stringValue: text },
+                    channel:   { stringValue: 'instagram' },
+                    timestamp: { timestampValue: now },
+                    createdAt: { timestampValue: now },
+                }, token);
+
+                await fsPatch(contactPath, {
+                    name:          { stringValue: userName },
+                    lastMessage:   { stringValue: text.slice(0, 100) },
+                    lastMessageAt: { timestampValue: now },
+                    updatedAt:     { timestampValue: now },
+                    channel:       { stringValue: 'instagram' },
+                }, token);
+
+                // Визначаємо активний flow
+                let activeFlowId = contact.currentFlowId || '';
+                let activeNodeId = contact.currentNodeId || '';
+
+                if (!activeFlowId || text === '/start') {
+                    const botsSnap = await fetch(
+                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    if (botsSnap.ok) {
+                        const botsData = await botsSnap.json();
+                        for (const botDoc of (botsData.documents || [])) {
+                            const bid = botDoc.name?.split('/').pop();
+                            const flowsSnap = await fetch(
+                                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+                                { headers: { Authorization: `Bearer ${token}` } }
+                            );
+                            if (!flowsSnap.ok) continue;
+                            const flowsData = await flowsSnap.json();
+                            for (const fd of (flowsData.documents || [])) {
+                                const fid = fd.name?.split('/').pop();
+                                const fdata = fFields(fd.fields || {});
+                                if (fdata.status === 'active') {
+                                    activeFlowId = `${bid}::${fid}`;
+                                    activeNodeId = 'start';
+                                    await fsPatch(contactPath, {
+                                        currentFlowId: { stringValue: activeFlowId },
+                                        currentNodeId: { stringValue: 'start' },
+                                        updatedAt:     { timestampValue: now },
+                                    }, token);
+                                    break;
+                                }
+                            }
+                            if (activeFlowId) break;
+                        }
+                    }
+                }
+
+                // Запускаємо Flow Engine
+                if (activeFlowId) {
+                    const igParts  = activeFlowId.split('::');
+                    const botIdIG  = igParts[0];
+                    const flowIdIG = igParts[1];
+                    if (botIdIG && flowIdIG) {
+                        const isWaitingPhotoIG = contact.waitingForPhoto === true || String(contact.waitingForPhoto) === 'true';
+                        if (isWaitingPhotoIG && !text.startsWith('PHOTO:')) {
+                            await igSend(senderId, '📷 Будь ласка, надішліть фото');
+                            continue;
+                        }
+                        const isWaitingIG = contact.waitingForInput === true || String(contact.waitingForInput) === 'true';
+                        if (isWaitingIG || isWaitingPhotoIG) {
+                            await fsPatch(contactPath, {
+                                waitingForInput: { booleanValue: false },
+                                waitingForPhoto: { booleanValue: false },
+                                updatedAt:       { timestampValue: now },
+                            }, token);
+                        }
+                        try {
+                            await runFlowEngine({
+                                cid, chatId: senderId,
+                                botId:  botIdIG, flowId: flowIdIG,
+                                currentNodeId: activeNodeId,
+                                text, isCallback: false, callbackData: '',
+                                contact, contactPath,
+                                token, botToken: igToken,
+                                from: { id: senderId, first_name: userName },
+                                userName, tgSend: igSend, env,
+                            });
+                        } catch(e) {
+                            await igSend(senderId, 'Вибачте, сталась помилка. Спробуйте пізніше.');
+                        }
+                    }
+                } else {
+                    await igSend(senderId, 'Вітаємо! Напишіть нам і ми зв'яжемося з вами.');
+                }
+            }
         }
 
         return json({ ok: true });

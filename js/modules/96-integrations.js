@@ -450,6 +450,59 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         </div>
     </div>
 
+    <!-- Instagram Direct -->
+    <div style="${card}">
+        <div style="${sTitle}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            Instagram Direct ${badge(!!(s.instagramToken && s.instagramPageId))}
+        </div>
+        <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.6rem;">
+            Клієнти пишуть в Instagram DM → бот відповідає → угода в CRM. Той самий флоу що Telegram/Viber.
+        </div>
+        <div style="margin-bottom:0.6rem;">
+            <label style="${lbl}">Instagram Page Access Token</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input id="intg_ig_token" type="password" value="${s.instagramToken||''}"
+                    placeholder="EAAxxxxx..." style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgToggleVisibility('intg_ig_token')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
+                Meta for Developers → Instagram Basic Display або Messenger API for Instagram
+            </div>
+        </div>
+        <div style="margin-bottom:0.6rem;">
+            <label style="${lbl}">Instagram Business Account ID</label>
+            <input id="intg_ig_pageid" type="text" value="${s.instagramPageId||''}"
+                placeholder="123456789012345" style="${inp}font-family:monospace;">
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
+                Instagram → Профіль → Про акаунт → ID акаунту
+            </div>
+        </div>
+        <div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.75rem;font-size:0.75rem;color:#6b21a8;line-height:1.6;">
+            <strong>Як підключити:</strong><br>
+            1. Meta for Developers → Додаток → Messenger → Instagram → Налаштування<br>
+            2. Підключи Instagram Business акаунт<br>
+            3. Отримай Page Access Token з правами <code>instagram_manage_messages</code><br>
+            4. Webhook URL: <code style="background:#f3e8ff;padding:1px 4px;border-radius:3px;">https://apptalko.com/api/webhook?channel=instagram&cid=${window.currentCompanyId||''}</code><br>
+            5. Підпишись на події: <code>messages, messaging_postbacks</code>
+        </div>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+            <button onclick="intgSaveInstagram()"
+                style="padding:0.4rem 1rem;background:#c026d3;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.save} ${_tg('Зберегти','Сохранить')}
+            </button>
+            <button onclick="intgTestInstagram()"
+                style="padding:0.4rem 0.9rem;background:#fdf4ff;color:#c026d3;border:1px solid #e9d5ff;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.test} Тест
+            </button>
+            <button onclick="intgCopy('https://apptalko.com/api/webhook?channel=instagram&cid=${window.currentCompanyId||''}')"
+                style="padding:0.4rem 0.9rem;background:#fdf4ff;color:#c026d3;border:1px solid #e9d5ff;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.copy} Webhook URL
+            </button>
+        </div>
+    </div>
+
     <!-- Google Sheets -->
     <div style="${card}">
         <div style="${sTitle}">
@@ -1301,3 +1354,45 @@ _registerTab('integrations', function() { window.initIntegrationsModule(); });
     };
 
 })();
+
+window.intgSaveInstagram = async function() {
+    const token  = document.getElementById('intg_ig_token')?.value.trim();
+    const pageId = document.getElementById('intg_ig_pageid')?.value.trim();
+    if (!token || !pageId) {
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Token і Page ID', 'Заполните Token и Page ID'), 'error');
+        return;
+    }
+    try {
+        await window.companyRef().update({
+            instagramToken:  token,
+            instagramPageId: pageId,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        if (intg.settings) { intg.settings.instagramToken = token; intg.settings.instagramPageId = pageId; }
+        if (typeof showToast === 'function') showToast(_tg('Instagram збережено ✓', 'Instagram сохранён ✓'), 'success');
+        _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+window.intgTestInstagram = async function() {
+    const token  = document.getElementById('intg_ig_token')?.value.trim() || intg.settings?.instagramToken;
+    const pageId = document.getElementById('intg_ig_pageid')?.value.trim() || intg.settings?.instagramPageId;
+    if (!token || !pageId) {
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Token і Page ID', 'Заполните Token и Page ID'), 'error');
+        return;
+    }
+    try {
+        // Перевіряємо токен через Graph API
+        const res = await fetch(`https://graph.facebook.com/v18.0/${pageId}?fields=name&access_token=${token}`);
+        const data = await res.json();
+        if (data.name) {
+            if (typeof showToast === 'function') showToast(`✅ Підключено: ${data.name}`, 'success');
+        } else {
+            if (typeof showToast === 'function') showToast('Помилка: ' + (data.error?.message || 'Невірний токен'), 'error');
+        }
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
