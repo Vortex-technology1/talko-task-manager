@@ -16990,294 +16990,224 @@ Bist du dabei?</div>
             category: 'marketing',
             title: '7 ЕЛЕМЕНТІВ ОГОЛОШЕННЯ META',
             title_ru: '7 ЭЛЕМЕНТОВ ОБЪЯВЛЕНИЯ META',
-            subtitle: 'Анатомія реклами яка зупиняє і конвертує — від тексту до CTA',
-            subtitle_ru: 'Анатомия рекламы которая останавливает и конвертирует — от текста до CTA',
+            subtitle: 'Анатомія реклами яка зупиняє і конвертує',
+            subtitle_ru: 'Анатомия рекламы которая останавливает и конвертирует',
             duration: 30,
             videoLink: null,
             materialsLink: null,
-            lessonContent: `<style>
-.l107-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
-.l107-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;background:#ef4444;color:white;border-radius:50%;font-size:.8rem;font-weight:700;margin-right:.5rem;flex-shrink:0}
-.l107-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.5rem;display:flex;align-items:center}
-.l107-desc{font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.65rem}
-.l107-bad{display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .85rem;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:.83rem;color:#7f1d1d;margin-bottom:.35rem}
-.l107-good{display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.83rem;color:#14532d;margin-bottom:.35rem}
-.l107-rule{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;margin-top:.65rem}
-.l107-lbl{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.3rem}
-.l107-divider{height:1px;background:#e2e8f0;margin:1.25rem 0}
-.l107-preview{background:white;border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;margin:1rem 0}
-.l107-preview-header{padding:.7rem 1rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:.5rem}
-.l107-preview-avatar{width:36px;height:36px;background:#3b82f6;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.85rem}
-.l107-preview-body{padding:.85rem 1rem}
-.l107-preview-img{background:linear-gradient(135deg,#1e3a5f,#3b82f6);height:110px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1rem;text-align:center;padding:1rem}
-.l107-preview-footer{padding:.65rem 1rem;border-top:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center}
-.l107-cta-btn{background:#1877f2;color:white;border:none;border-radius:6px;padding:.4rem .9rem;font-size:.8rem;font-weight:600;cursor:pointer}
-.l107-map{display:grid;gap:.5rem;margin:.75rem 0}
-</style>
-
+            lessonContent: `
 <div class="lesson-block intro">
-<div class="lesson-block-header"><div class="lesson-block-title">Навіщо знати структуру оголошення</div></div>
+<div class="lesson-block-header"><div class="lesson-block-title">МАКЕТ ОГОЛОШЕННЯ</div></div>
 <div class="lesson-block-content">
-<p>Meta показує твоє оголошення сотням людей. У кожного є <strong>0.5–2 секунди</strong> щоб вирішити — гортати далі чи зупинитись.</p>
-<p style="margin-top:.65rem">Більшість провалюється не через погану послугу — а через те що не знають <strong>для чого кожен елемент</strong> і що в ньому написати.</p>
-<p style="margin-top:.65rem">Цей урок — анатомія оголошення. 7 елементів, завдання кожного, головні помилки і правильні приклади.</p>
+<div style="border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;background:white;max-width:440px;margin:0 auto;">
+  <div style="padding:0.75rem 1rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:0.5rem;">
+    <div style="width:36px;height:36px;background:#1877f2;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.85rem;flex-shrink:0;">GC</div>
+    <div><div style="font-size:.82rem;font-weight:600;">General Contractor</div><div style="font-size:.7rem;color:#9ca3af;">Реклама 🌐</div></div>
+  </div>
+  <div style="padding:.65rem 1rem;font-size:.84rem;color:#111827;border-bottom:1px solid #f3f4f6;position:relative;">
+    <span style="background:#ef4444;color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;margin-right:4px;">1</span>
+    Ви досі контролюєте кожен об'єкт вручну? Є системне рішення.
+  </div>
+  <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:1.1rem;color:white;">
+    <div style="margin-bottom:.4rem;">
+      <span style="background:#22c55e;color:white;font-size:.65rem;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:4px;">
+        <span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">2</span>GENERAL CONTRACTOR
+      </span>
+    </div>
+    <div style="font-size:.75rem;color:#93c5fd;margin-bottom:.35rem;">
+      <span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">3</span>
+      Для власників генпідрядних компаній
+    </div>
+    <div style="font-size:.95rem;font-weight:700;line-height:1.4;"><span style="color:#fca5a5;">Втомились контролювати</span> прорабів, підрядників і кожен об'єкт вручну?</div>
+    <div style="margin-top:.5rem;font-size:.78rem;color:#bfdbfe;">● Безкоштовний майстер-клас: Як побудувати систему управління, <span style="color:#86efac;">де 80–90% рішень приймаються без вас</span></div>
+  </div>
+  <div style="padding:.65rem 1rem;border-top:1px solid #f3f4f6;">
+    <div style="font-size:.72rem;color:#6b7280;margin-bottom:.25rem;">
+      <span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">4</span>
+      CONTRACTOR.UA
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="font-size:.82rem;font-weight:600;color:#111827;margin-bottom:.1rem;">
+          <span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">5</span>
+          Реєструйтесь на безкоштовний майстер-клас
+        </div>
+        <div style="font-size:.72rem;color:#6b7280;">
+          <span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">6</span>
+          Місць обмаль — реєстрація закривається скоро
+        </div>
+      </div>
+      <button style="background:#e5e7eb;border:none;border-radius:6px;padding:.35rem .75rem;font-size:.78rem;font-weight:600;color:#111827;white-space:nowrap;flex-shrink:0;">
+        <span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">7</span>
+        Дізнатися більше
+      </button>
+    </div>
+  </div>
+</div>
 </div>
 </div>
 
-<!-- МАКЕТ ОГОЛОШЕННЯ -->
-<div class="lesson-block" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;overflow:hidden;padding:0">
-<div style="padding:.75rem 1rem;background:#1a1a1a;color:white;font-size:.75rem;font-weight:700;letter-spacing:.08em">МАКЕТ ОГОЛОШЕННЯ — 7 ЕЛЕМЕНТІВ</div>
-<div style="padding:1rem">
-<div style="background:#f3f4f6;border-radius:8px;padding:.6rem .85rem;font-size:.83rem;color:#374151;margin-bottom:.75rem;display:flex;gap:.5rem;align-items:center">
-<span style="background:#ef4444;color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0">1</span>
-<span>Текст оголошення — перший рядок над картинкою</span>
-</div>
-<div style="background:white;border:1.5px solid #e2e8f0;border-radius:10px;overflow:hidden">
-<div style="padding:.6rem .85rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:.5rem">
-<div style="width:32px;height:32px;background:#3b82f6;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.8rem">GC</div>
-<div><div style="font-size:.82rem;font-weight:600">General Contractor</div><div style="font-size:.7rem;color:#9ca3af">Реклама 🌐</div></div>
-</div>
-<div style="background:linear-gradient(135deg,#1e3a5f 0%,#3b82f6 100%);padding:1.25rem;color:white;text-align:center">
-<div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;background:#22c55e;display:inline-block;padding:2px 8px;border-radius:4px;margin-bottom:.5rem">GENERAL CONTRACTOR</div>
-<div style="font-size:.85rem;color:#93c5fd;margin-bottom:.4rem">Для власників генпідрядних компаній</div>
-<div style="font-size:1rem;font-weight:700;line-height:1.4"><span style="color:#ef4444">Втомились контролювати</span> прорабів, підрядників і кожен об'єкт вручну?</div>
-</div>
-<div style="padding:.65rem .85rem;border-top:1px solid #f3f4f6;font-size:.75rem;color:#6b7280">
-<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
-<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">2</span>Заголовок</div>
-<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
-<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">3</span>Підзаголовок</div>
-<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
-<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">4</span>CONTRACTOR.UA — домен</div>
-<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
-<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">5</span>Реєструйтесь на безкоштовний майстер-клас — headline</div>
-<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
-<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">6</span>Місць обмаль — реєстрація закривається скоро — опис</div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:.5rem;padding-top:.5rem;border-top:1px solid #f3f4f6">
-<div style="display:flex;gap:.5rem;align-items:center">
-<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">7</span><span>CTA кнопка</span>
-</div>
-<button style="background:#1877f2;color:white;border:none;border-radius:5px;padding:.3rem .8rem;font-size:.78rem;font-weight:600">Дізнатися більше</button>
-</div>
-</div>
-</div>
-</div>
-</div>
+<div style="height:1px;background:#e2e8f0;margin:1.25rem 0;"></div>
 
-<div class="l107-divider"></div>
+<div style="font-size:.75rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:1rem;">ПОЯСНЕННЯ ЕЛЕМЕНТІВ</div>
 
-<!-- ЕЛЕМЕНТ 1 -->
+<!-- 1. Текст оголошення -->
 <div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">1</span> Текст оголошення</div></div>
+<div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;flex-shrink:0;">1</span>Текст оголошення</div></div>
 <div class="lesson-block-content">
-<p class="l107-desc"><strong>Завдання:</strong> зачепити і потягнути вниз. Це перше що людина читає — ще над картинкою. Має бути одна гостра думка: біль, провокація або несподіваний факт. Не опис продукту — удар по проблемі.</p>
-<p class="l107-desc">Пишемо одним реченням або двома максимум. Без вступів, без "ми раді запропонувати".</p>
-<div class="l107-lbl">Головна помилка — розпливчастість</div>
-<div class="l107-bad">✗ Хочете розвивати свій бізнес? Ми допоможемо!</div>
-<div class="l107-good">✓ Ви досі контролюєте кожен об'єкт вручну? Є системне рішення.</div>
-<div class="l107-rule">💡 Правило: один текст — одна думка — одна аудиторія. Якщо підходить всім — не зупиняє нікого.</div>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Завдання:</strong> зачепити і потягнути вниз. Це перше що людина читає над картинкою. Має бути одна гостра думка — біль, провокація або несподіваний факт. Не опис продукту — удар по проблемі.</p>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;">Текст оголошення бачать одразу в стрічці. Якщо він не зупинив — картинку вже не побачать. Пишемо одним реченням або двома максимум. Без вступів, без "ми раді запропонувати".</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;">
+<div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГОЛОВНА ПОМИЛКА — РОЗПЛИВЧАСТІСТЬ</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.35rem;font-size:.84rem;color:#991b1b;">✗ Хочете розвивати свій бізнес? Ми допоможемо!</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:#166534;">✓ Ви досі контролюєте кожен об'єкт вручну? Є системне рішення.</div>
+</div>
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Правило: один текст — одна думка — одна аудиторія. Якщо підходить всім — не зупиняє нікого.</div>
 </div>
 </div>
 
-<!-- ЕЛЕМЕНТ 2 -->
+<!-- 2. Заголовок креативу -->
 <div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">2</span> Заголовок креативу</div></div>
+<div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;flex-shrink:0;">2</span>Заголовок креативу</div></div>
 <div class="lesson-block-content">
-<p class="l107-desc"><strong>Завдання:</strong> зупинити гортання за 0.5 секунди. Не продати, не пояснити — просто зупинити. Через гострий біль + чіткий фільтр аудиторії.</p>
-<p class="l107-desc">Людина за 0.5 секунди вирішує: моє чи не моє. Якщо твоє — читає далі. Якщо ні — гортає. І це добре: тобі не потрібні всі — тобі потрібні свої.</p>
-<div class="l107-lbl">Головна помилка — немає фільтру аудиторії</div>
-<div class="l107-bad">✗ Втомились від хаосу в бізнесі? — підходить абсолютно всім, тому не зупиняє нікого</div>
-<div class="l107-good">✓ Втомились контролювати прорабів, підрядників і кожен об'єкт вручну? — одразу ясно хто це читає</div>
-<div class="l107-rule">💡 Формула: [хто це читає] + [їх конкретний біль]. Чим вужче — тим краще клікають свої.</div>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Завдання:</strong> зупинити гортання за 0.5 секунди. Не продати, не пояснити — просто зупинити. Через гострий біль + чіткий фільтр аудиторії.</p>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;">Людина за 0.5 секунди вирішує: моє чи не моє. Якщо твоє — читає далі. Якщо ні — гортає. І це добре: тобі не потрібні всі — тобі потрібні свої.</p>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;">Заголовок без фільтру може підходити стоматології, салону, будівництву, IT — будь-чому. Людина читає: "Ну і що? Це про мене взагалі?" — і гортає далі.</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;">
+<div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГОЛОВНА ПОМИЛКА — НЕМАЄ ФІЛЬТРУ АУДИТОРІЇ</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.35rem;font-size:.84rem;color:#991b1b;">✗ Втомились від хаосу в бізнесі? — підходить абсолютно всім, тому не зупиняє нікого</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:#166534;">✓ Втомились контролювати прорабів, підрядників і кожен об'єкт вручну? — одразу ясно хто це читає</div>
+</div>
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Формула: [хто це читає] + [їх конкретний біль]. Чим вужче — тим краще клікають свої.</div>
 </div>
 </div>
 
-<!-- ЕЛЕМЕНТ 3 -->
+<!-- 3. Підзаголовок креативу -->
 <div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">3</span> Підзаголовок креативу</div></div>
+<div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;flex-shrink:0;">3</span>Підзаголовок креативу</div></div>
 <div class="lesson-block-content">
-<p class="l107-desc"><strong>Завдання:</strong> пояснити що саме отримає людина якщо зупинилась. Заголовок зупинив — підзаголовок утримує і веде до кнопки.</p>
-<p class="l107-desc">Підзаголовок відповідає на питання: "І що мені з цього?" Тут розкриваємо оффер — конкретну обіцянку результату. Не процес, не характеристики — результат.</p>
-<div class="l107-lbl">Головна помилка — опис замість результату</div>
-<div class="l107-bad">✗ Майстер-клас про управління будівельними процесами</div>
-<div class="l107-good">✓ Як побудувати систему, де 80–90% рішень приймаються без вас</div>
-<div class="l107-rule">💡 Підзаголовок = обіцянка конкретного результату. Цифри підсилюють довіру — "80–90%" краще ніж "більшість рішень".</div>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Завдання:</strong> пояснити що саме отримає людина якщо зупинилась. Заголовок зупинив — підзаголовок утримує і веде до кнопки.</p>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;">Підзаголовок відповідає на питання: "І що мені з цього?" Тут розкриваємо оффер — конкретну обіцянку результату. Не процес, не характеристики — результат.</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;">
+<div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГОЛОВНА ПОМИЛКА — ОПИС ЗАМІСТЬ РЕЗУЛЬТАТУ</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.35rem;font-size:.84rem;color:#991b1b;">✗ Майстер-клас про управління будівельними процесами</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:#166534;">✓ Як побудувати систему, де 80–90% рішень приймаються без вас</div>
+</div>
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Підзаголовок = обіцянка конкретного результату. Цифри підсилюють довіру — "80–90%" краще ніж "більшість рішень".</div>
 </div>
 </div>
 
-<!-- ЕЛЕМЕНТ 4 -->
+<!-- 4. Домен -->
 <div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">4</span> Домен</div></div>
+<div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;flex-shrink:0;">4</span>Домен</div></div>
 <div class="lesson-block-content">
-<p class="l107-desc"><strong>Завдання:</strong> підтвердити легітимність. Людина підсвідомо перевіряє — куди я потраплю якщо натисну?</p>
-<p class="l107-desc">Домен генерується автоматично з посилання яке ви вставляєте. Але його видно і він впливає на довіру. Незнайомий або підозрілий домен — людина не клікає навіть якщо рекламу прочитала.</p>
-<div class="l107-lbl">На що звертати увагу</div>
-<div class="l107-bad">✗ bit.ly/3xK9mP2 — скорочене посилання, виглядає як спам</div>
-<div class="l107-good">✓ contractor.ua — чітко, зрозуміло, відповідає бренду</div>
-<div class="l107-rule">💡 Використовуй власний домен, а не сторонні сервіси. Якщо веш на лендінг — він має мати нормальну адресу.</div>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Завдання:</strong> підтвердити легітимність. Людина підсвідомо перевіряє — куди я потраплю якщо натисну?</p>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;">Домен генерується автоматично з посилання яке ви вставляєте. Але його видно і він впливає на довіру. Незнайомий або підозрілий домен — людина не клікає навіть якщо рекламу прочитала.</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;">
+<div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">НА ЩО ЗВЕРТАТИ УВАГУ</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.35rem;font-size:.84rem;color:#991b1b;">✗ bit.ly/3xK9mP2 — скорочене посилання, виглядає як спам</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:#166534;">✓ contractor.ua — чітко, зрозуміло, відповідає бренду</div>
+</div>
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Використовуй власний домен, а не сторонні сервіси. Якщо веш на лендінг — він має мати нормальну адресу.</div>
 </div>
 </div>
 
-<!-- ЕЛЕМЕНТ 5 -->
+<!-- 5. Headline -->
 <div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">5</span> Заголовок посилання (Headline)</div></div>
+<div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;flex-shrink:0;">5</span>Заголовок посилання (Headline)</div></div>
 <div class="lesson-block-content">
-<p class="l107-desc"><strong>Завдання:</strong> останній поштовх до кліку. Людина вже зацікавлена — тут закриваємо останній сумнів і даємо причину натиснути прямо зараз.</p>
-<p class="l107-desc">Це рядок під картинкою біля домену. Ліміт — 27 символів видно одразу. Пишемо як заклик до конкретної дії або підсилюємо оффер. Не повторюємо заголовок креативу — додаємо новий аргумент.</p>
-<div class="l107-lbl">Головна помилка — повтор того що вже сказали</div>
-<div class="l107-bad">✗ Втомились контролювати прорабів? — вже було в заголовку</div>
-<div class="l107-good">✓ Реєструйтесь на безкоштовний майстер-клас — конкретна дія + вигода</div>
-<div class="l107-rule">💡 Headline + CTA кнопка працюють разом. Якщо headline "Реєструйтесь" — кнопка "Записатись", не "Дізнатись більше".</div>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Завдання:</strong> останній поштовх до кліку. Людина вже зацікавлена — тут закриваємо останній сумнів і даємо причину натиснути прямо зараз.</p>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;">Це рядок під картинкою біля домену. Ліміт — 27 символів видно одразу. Пишемо як заклик до конкретної дії або підсилюємо оффер. Не повторюємо заголовок креативу — додаємо новий аргумент.</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;">
+<div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГОЛОВНА ПОМИЛКА — ПОВТОР ТОГО ЩО ВЖЕ СКАЗАЛИ</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.35rem;font-size:.84rem;color:#991b1b;">✗ Втомились контролювати прорабів? — вже було в заголовку</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:#166534;">✓ Реєструйтесь на безкоштовний майстер-клас — конкретна дія + вигода</div>
+</div>
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Headline + CTA кнопка працюють разом. Якщо headline "Реєструйтесь" — кнопка "Записатись", не "Дізнатись більше".</div>
 </div>
 </div>
 
-<!-- ЕЛЕМЕНТ 6 -->
+<!-- 6. Опис посилання -->
 <div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">6</span> Опис посилання</div></div>
+<div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;flex-shrink:0;">6</span>Опис посилання</div></div>
 <div class="lesson-block-content">
-<p class="l107-desc"><strong>Завдання:</strong> зняти останнє заперечення або підсилити терміновість. Дрібний текст під headline — його бачать не всі, але ті хто бачать — вже майже готові клікнути.</p>
-<p class="l107-desc">Ліміт — 27 символів. Використовуємо для терміновості, соціального доказу або уточнення що отримає людина. Один із найнедооцінених елементів — більшість залишають порожнім або пишуть щось беззмістовне.</p>
-<div class="l107-lbl">Головна помилка — порожньо або беззмістовно</div>
-<div class="l107-bad">✗ Дізнайтесь більше на нашому сайті</div>
-<div class="l107-good">✓ Місць обмаль — реєстрація закривається скоро</div>
-<div class="l107-rule">💡 Терміновість або дефіцит в описі = вищий CTR. "Місць обмаль", "До п'ятниці", "Залишилось 3 місця" — конкретика завжди краще загальних слів.</div>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Завдання:</strong> зняти останнє заперечення або підсилити терміновість. Дрібний текст під headline — його бачать не всі, але ті хто бачать — вже майже готові клікнути.</p>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;">Ліміт — 27 символів. Використовуємо для терміновості, соціального доказу або уточнення що отримає людина. Один із найнедооцінених елементів — більшість залишають порожнім або пишуть щось беззмістовне.</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;">
+<div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГОЛОВНА ПОМИЛКА — ПОРОЖНЬО АБО БЕЗЗМІСТОВНО</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.35rem;font-size:.84rem;color:#991b1b;">✗ Дізнайтесь більше на нашому сайті</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:#166534;">✓ Місць обмаль — реєстрація закривається скоро</div>
+</div>
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Терміновість або дефіцит в описі = вищий CTR. "Місць обмаль", "До п'ятниці", "Залишилось 3 місця" — конкретика завжди краще загальних слів.</div>
 </div>
 </div>
 
-<!-- ЕЛЕМЕНТ 7 -->
+<!-- 7. CTA -->
 <div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">7</span> Кнопка CTA</div></div>
+<div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;flex-shrink:0;">7</span>Кнопка CTA</div></div>
 <div class="lesson-block-content">
-<p class="l107-desc"><strong>Завдання:</strong> одна конкретна команда до дії. Кнопка = команда. Має точно відповідати тому що отримає людина після кліку.</p>
-<p class="l107-desc">Meta дає вибір із готових варіантів: Дізнатися більше, Записатися, Зателефонувати, Завантажити, Отримати пропозицію та інші. Обираємо не "що звучить добре" — а що точно описує наступний крок.</p>
-<div class="l107-lbl">Головна помилка — невідповідність дії</div>
-<div class="l107-bad">✗ "Дізнатися більше" коли людина потрапляє на форму реєстрації — обманює очікування</div>
-<div class="l107-good">✓ "Записатися" або "Зареєструватися" коли веш на реєстрацію — людина знає куди йде</div>
-<div class="l107-rule">💡 Якщо після кліку людина потрапляє не туди куди очікувала — відмова. Узгодженість CTA → лендінг → результат = вища конверсія.</div>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Завдання:</strong> одна конкретна команда до дії. Кнопка = команда. Має точно відповідати тому що отримає людина після кліку.</p>
+<p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;">Meta дає вибір із готових варіантів: Дізнатися більше, Записатися, Зателефонувати, Завантажити, Отримати пропозицію та інші. Обираємо не "що звучить добре" — а що точно описує наступний крок.</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;">
+<div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГОЛОВНА ПОМИЛКА — НЕВІДПОВІДНІСТЬ ДІЇ</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.35rem;font-size:.84rem;color:#991b1b;">✗ "Дізнатися більше" коли людина потрапляє на форму реєстрації — обманує очікування</div>
+<div style="display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:#166534;">✓ "Записатися" або "Зареєструватися" коли веш на реєстрацію — людина знає куди йде</div>
 </div>
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Якщо після кліку людина потрапляє не туди куди очікувала — відмова. Узгодженість CTA → лендінг → результат = вища конверсія.</div>
 </div>
-
-<div class="l107-divider"></div>
-
-<!-- ПІДСУМОК -->
-<div class="lesson-block" style="background:#f0fdf4;border:1.5px solid #bbf7d0">
-<div class="lesson-block-header"><div class="lesson-block-title">Як перевірити своє оголошення</div></div>
-<div class="lesson-block-content">
-<p class="l107-desc">Пройдіться по чеклісту перед запуском:</p>
-<div style="display:grid;gap:.45rem;margin:.65rem 0">
-<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Текст:</strong> одне речення, конкретний біль, без вступів?</span></div>
-<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Заголовок:</strong> чітко видно хто аудиторія + їх конкретна проблема?</span></div>
-<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Підзаголовок:</strong> є конкретна обіцянка результату (не процесу)?</span></div>
-<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Домен:</strong> власний і зрозумілий, не скорочений?</span></div>
-<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Headline:</strong> новий аргумент (не повтор заголовку) + заклик до дії?</span></div>
-<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Опис:</strong> терміновість, дефіцит або соціальний доказ?</span></div>
-<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>CTA:</strong> кнопка відповідає тому куди потрапить людина?</span></div>
-</div>
-</div>
-</div>
-
-<!-- AI БЛОК -->
-<div style="background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:12px;padding:.9rem 1rem;margin:.75rem 0;display:flex;gap:.6rem;align-items:flex-start">
-<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
-<div style="font-size:.82rem;color:#374151"><strong style="color:#7c3aed">AI-асистент допоможе написати всі 7 елементів</strong> під твою послугу за 5 хвилин. Відкрий асистент нижче, опиши свою послугу і попроси: "Напиши оголошення для Meta з усіма 7 елементами".</div>
 </div>
 `,
-
-            lessonContent_ru: `<style>
-.l107-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
-.l107-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;background:#ef4444;color:white;border-radius:50%;font-size:.8rem;font-weight:700;margin-right:.5rem;flex-shrink:0}
-.l107-bad{display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .85rem;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:.83rem;color:#7f1d1d;margin-bottom:.35rem}
-.l107-good{display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.83rem;color:#14532d;margin-bottom:.35rem}
-.l107-rule{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;margin-top:.65rem}
-.l107-divider{height:1px;background:#e2e8f0;margin:1.25rem 0}
-</style>
-
+            lessonContent_ru: `
 <div class="lesson-block intro">
-<div class="lesson-block-header"><div class="lesson-block-title">Зачем знать структуру объявления</div></div>
+<div class="lesson-block-header"><div class="lesson-block-title">МАКЕТ ОБЪЯВЛЕНИЯ</div></div>
 <div class="lesson-block-content">
-<p>Meta показывает твоё объявление сотням людей. У каждого есть <strong>0.5–2 секунды</strong> чтобы решить — листать дальше или остановиться.</p>
-<p style="margin-top:.65rem">Большинство проваливается не из-за плохой услуги — а из-за того что не знают <strong>для чего каждый элемент</strong> и что в нём писать.</p>
+<div style="border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;background:white;max-width:440px;margin:0 auto;">
+  <div style="padding:0.75rem 1rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:0.5rem;">
+    <div style="width:36px;height:36px;background:#1877f2;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.85rem;">GC</div>
+    <div><div style="font-size:.82rem;font-weight:600;">General Contractor</div><div style="font-size:.7rem;color:#9ca3af;">Реклама 🌐</div></div>
+  </div>
+  <div style="padding:.65rem 1rem;font-size:.84rem;color:#111827;border-bottom:1px solid #f3f4f6;">
+    <span style="background:#ef4444;color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;margin-right:4px;">1</span>
+    Вы до сих пор контролируете каждый объект вручную? Есть системное решение.
+  </div>
+  <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:1.1rem;color:white;">
+    <div style="margin-bottom:.4rem;"><span style="background:#22c55e;color:white;font-size:.65rem;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:4px;"><span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">2</span>GENERAL CONTRACTOR</span></div>
+    <div style="font-size:.75rem;color:#93c5fd;margin-bottom:.35rem;"><span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">3</span>Для владельцев генподрядных компаний</div>
+    <div style="font-size:.95rem;font-weight:700;line-height:1.4;"><span style="color:#fca5a5;">Устали контролировать</span> прорабов, подрядчиков и каждый объект вручную?</div>
+  </div>
+  <div style="padding:.65rem 1rem;border-top:1px solid #f3f4f6;">
+    <div style="font-size:.72rem;color:#6b7280;margin-bottom:.25rem;"><span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">4</span>CONTRACTOR.UA</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="font-size:.82rem;font-weight:600;color:#111827;margin-bottom:.1rem;"><span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">5</span>Регистрируйтесь на бесплатный мастер-класс</div>
+        <div style="font-size:.72rem;color:#6b7280;"><span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">6</span>Мест мало — регистрация закрывается скоро</div>
+      </div>
+      <button style="background:#e5e7eb;border:none;border-radius:6px;padding:.35rem .75rem;font-size:.78rem;font-weight:600;color:#111827;white-space:nowrap;flex-shrink:0;"><span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-right:3px;">7</span>Узнать больше</button>
+    </div>
+  </div>
+</div>
 </div>
 </div>
 
-<div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">1</span> Текст объявления</div></div>
-<div class="lesson-block-content">
-<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> зацепить и потянуть вниз. Одна острая мысль — боль, провокация или неожиданный факт.</p>
-<div class="l107-bad">✗ Хотите развивать свой бизнес? Мы поможем!</div>
-<div class="l107-good">✓ Вы до сих пор контролируете каждый объект вручную? Есть системное решение.</div>
-<div class="l107-rule">💡 Правило: один текст — одна мысль — одна аудитория. Если подходит всем — не останавливает никого.</div>
-</div>
-</div>
+<div style="height:1px;background:#e2e8f0;margin:1.25rem 0;"></div>
+<div style="font-size:.75rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:1rem;">ПОЯСНЕНИЕ ЭЛЕМЕНТОВ</div>
 
-<div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">2</span> Заголовок креатива</div></div>
-<div class="lesson-block-content">
-<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> остановить листание за 0.5 секунды. Острая боль + чёткий фильтр аудитории.</p>
-<div class="l107-bad">✗ Устали от хаоса в бизнесе? — подходит абсолютно всем, поэтому не останавливает никого</div>
-<div class="l107-good">✓ Устали контролировать прорабов, подрядников и каждый объект вручную? — сразу ясно кто это читает</div>
-<div class="l107-rule">💡 Формула: [кто это читает] + [их конкретная боль]. Чем уже — тем лучше кликают свои.</div>
-</div>
-</div>
+<div class="lesson-block"><div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;">1</span>Текст объявления</div></div><div class="lesson-block-content"><p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Задача:</strong> зацепить и потянуть вниз. Одна острая мысль — боль, провокация или неожиданный факт. Не описание продукта — удар по проблеме. Пишем одним предложением или двумя максимум.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;"><div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГЛАВНАЯ ОШИБКА — РАЗМЫТОСТЬ</div><div style="font-size:.84rem;color:#991b1b;margin-bottom:.35rem;">✗ Хотите развивать свой бизнес? Мы поможем!</div><div style="font-size:.84rem;color:#166534;">✓ Вы до сих пор контролируете каждый объект вручную? Есть системное решение.</div></div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Правило: один текст — одна мысль — одна аудитория. Если подходит всем — не останавливает никого.</div></div></div>
 
-<div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">3</span> Подзаголовок креатива</div></div>
-<div class="lesson-block-content">
-<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> раскрыть оффер — конкретное обещание результата. Не процесс, не характеристики — результат.</p>
-<div class="l107-bad">✗ Мастер-класс про управление строительными процессами</div>
-<div class="l107-good">✓ Как построить систему, где 80–90% решений принимаются без вас</div>
-<div class="l107-rule">💡 Цифры усиливают доверие — "80–90%" лучше чем "большинство решений".</div>
-</div>
-</div>
+<div class="lesson-block"><div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;">2</span>Заголовок креатива</div></div><div class="lesson-block-content"><p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Задача:</strong> остановить листание за 0.5 секунды. Через острую боль + чёткий фильтр аудитории. Человек решает: моё или не моё.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;"><div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГЛАВНАЯ ОШИБКА — НЕТ ФИЛЬТРА АУДИТОРИИ</div><div style="font-size:.84rem;color:#991b1b;margin-bottom:.35rem;">✗ Устали от хаоса в бизнесе? — подходит абсолютно всем, поэтому не останавливает никого</div><div style="font-size:.84rem;color:#166534;">✓ Устали контролировать прорабов, подрядчиков и каждый объект вручную? — сразу ясно кто это читает</div></div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Формула: [кто это читает] + [их конкретная боль]. Чем уже — тем лучше кликают свои.</div></div></div>
 
-<div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">4</span> Домен</div></div>
-<div class="lesson-block-content">
-<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> подтвердить легитимность. Человек подсознательно проверяет — куда я попаду если нажму?</p>
-<div class="l107-bad">✗ bit.ly/3xK9mP2 — сокращённая ссылка, выглядит как спам</div>
-<div class="l107-good">✓ contractor.ua — чётко, понятно, соответствует бренду</div>
-<div class="l107-rule">💡 Используй собственный домен, а не сторонние сервисы.</div>
-</div>
-</div>
+<div class="lesson-block"><div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;">3</span>Подзаголовок креатива</div></div><div class="lesson-block-content"><p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Задача:</strong> раскрыть оффер — конкретное обещание результата. Не процесс, не характеристики — результат.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;"><div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГЛАВНАЯ ОШИБКА — ОПИСАНИЕ ВМЕСТО РЕЗУЛЬТАТА</div><div style="font-size:.84rem;color:#991b1b;margin-bottom:.35rem;">✗ Мастер-класс про управление строительными процессами</div><div style="font-size:.84rem;color:#166534;">✓ Как построить систему, где 80–90% решений принимаются без вас</div></div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Цифры усиливают доверие — "80–90%" лучше чем "большинство решений".</div></div></div>
 
-<div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">5</span> Заголовок ссылки (Headline)</div></div>
-<div class="lesson-block-content">
-<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> последний толчок к клику. Лимит — 27 символов видно сразу. Новый аргумент, не повтор заголовка.</p>
-<div class="l107-bad">✗ Устали контролировать прорабов? — уже было в заголовке</div>
-<div class="l107-good">✓ Регистрируйтесь на бесплатный мастер-класс — конкретное действие + выгода</div>
-<div class="l107-rule">💡 Headline + CTA кнопка работают вместе. Headline "Регистрируйтесь" — кнопка "Записаться".</div>
-</div>
-</div>
+<div class="lesson-block"><div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;">4</span>Домен</div></div><div class="lesson-block-content"><p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Задача:</strong> подтвердить легитимность. Незнакомый или подозрительный домен — человек не кликает даже если рекламу прочитал.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;"><div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">НА ЧТО ОБРАЩАТЬ ВНИМАНИЕ</div><div style="font-size:.84rem;color:#991b1b;margin-bottom:.35rem;">✗ bit.ly/3xK9mP2 — сокращённая ссылка, выглядит как спам</div><div style="font-size:.84rem;color:#166534;">✓ contractor.ua — чётко, понятно, соответствует бренду</div></div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Используй собственный домен, а не сторонние сервисы.</div></div></div>
 
-<div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">6</span> Описание ссылки</div></div>
-<div class="lesson-block-content">
-<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> снять последнее возражение или усилить срочность. Лимит — 27 символов.</p>
-<div class="l107-bad">✗ Узнайте больше на нашем сайте</div>
-<div class="l107-good">✓ Мест мало — регистрация закрывается скоро</div>
-<div class="l107-rule">💡 Срочность или дефицит в описании = выше CTR. "Мест мало", "До пятницы", "Осталось 3 места".</div>
-</div>
-</div>
+<div class="lesson-block"><div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;">5</span>Заголовок ссылки (Headline)</div></div><div class="lesson-block-content"><p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Задача:</strong> последний толчок к клику. Лимит — 27 символов видно сразу. Новый аргумент, не повтор заголовка.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;"><div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГЛАВНАЯ ОШИБКА — ПОВТОР ТОГО ЧТО УЖЕ СКАЗАЛИ</div><div style="font-size:.84rem;color:#991b1b;margin-bottom:.35rem;">✗ Устали контролировать прорабов? — уже было в заголовке</div><div style="font-size:.84rem;color:#166534;">✓ Регистрируйтесь на бесплатный мастер-класс — конкретное действие + выгода</div></div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Headline + CTA кнопка работают вместе. Headline "Регистрируйтесь" — кнопка "Записаться".</div></div></div>
 
-<div class="lesson-block">
-<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">7</span> Кнопка CTA</div></div>
-<div class="lesson-block-content">
-<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> одна конкретная команда к действию. Должна точно соответствовать тому что получит человек после клика.</p>
-<div class="l107-bad">✗ "Узнать больше" когда человек попадает на форму регистрации — обманывает ожидания</div>
-<div class="l107-good">✓ "Записаться" или "Зарегистрироваться" когда ведёшь на регистрацию — человек знает куда идёт</div>
-<div class="l107-rule">💡 Согласованность CTA → лендинг → результат = выше конверсия.</div>
-</div>
-</div>
+<div class="lesson-block"><div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;">6</span>Описание ссылки</div></div><div class="lesson-block-content"><p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Задача:</strong> снять последнее возражение или усилить срочность. Лимит — 27 символов. Один из самых недооценённых элементов.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;"><div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГЛАВНАЯ ОШИБКА — ПУСТО ИЛИ БЕССМЫСЛЕННО</div><div style="font-size:.84rem;color:#991b1b;margin-bottom:.35rem;">✗ Узнайте больше на нашем сайте</div><div style="font-size:.84rem;color:#166534;">✓ Мест мало — регистрация закрывается скоро</div></div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Срочность или дефицит = выше CTR. "Мест мало", "До пятницы", "Осталось 3 места".</div></div></div>
 
-<div style="background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:12px;padding:.9rem 1rem;margin:.75rem 0;display:flex;gap:.6rem;align-items:flex-start">
-<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
-<div style="font-size:.82rem;color:#374151"><strong style="color:#7c3aed">AI-ассистент поможет написать все 7 элементов</strong> под твою услугу за 5 минут. Открой ассистент ниже, опиши свою услугу и попроси: "Напиши объявление для Meta со всеми 7 элементами".</div>
-</div>
+<div class="lesson-block"><div class="lesson-block-header"><div class="lesson-block-title"><span style="background:#ef4444;color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-right:.5rem;">7</span>Кнопка CTA</div></div><div class="lesson-block-content"><p style="font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.75rem;"><strong>Задача:</strong> одна конкретная команда к действию. Должна точно соответствовать тому что получит человек после клика.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.65rem .85rem;margin-bottom:.65rem;"><div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.5rem;">ГЛАВНАЯ ОШИБКА — НЕСООТВЕТСТВИЕ ДЕЙСТВИЯ</div><div style="font-size:.84rem;color:#991b1b;margin-bottom:.35rem;">✗ "Узнать больше" когда человек попадает на форму регистрации — обманывает ожидания</div><div style="font-size:.84rem;color:#166534;">✓ "Записаться" или "Зарегистрироваться" когда ведёшь на регистрацию — человек знает куда идёт</div></div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;">Если после клика человек попадает не туда куда ожидал — отказ. Согласованность CTA → лендинг → результат = выше конверсия.</div></div></div>
 `,
-
-            homework: 'Візьми будь-яке своє поточне оголошення (або придумай нове) і перевір кожен з 7 елементів по чеклісту. Відкрий AI-асистент нижче і попроси: "Напиши оголошення для Meta з усіма 7 елементами для моєї послуги [опиши свою послугу]". Порівняй результат з поточним оголошенням.',
-            homework_ru: 'Возьми любое своё текущее объявление (или придумай новое) и проверь каждый из 7 элементов по чеклисту. Открой AI-ассистент ниже и попроси: "Напиши объявление для Meta со всеми 7 элементами для моей услуги [опиши свою услугу]". Сравни результат с текущим объявлением.',
+            homework: 'Візьми будь-яке своє поточне оголошення і перевір кожен з 7 елементів. Відкрий AI-асистент нижче і попроси: "Напиши оголошення для Meta з усіма 7 елементами для моєї послуги [опиши свою послугу]".',
+            homework_ru: 'Возьми любое своё текущее объявление и проверь каждый из 7 элементов. Открой AI-ассистент ниже и попроси: "Напиши объявление для Meta со всеми 7 элементами для моей услуги [опиши свою услугу]".',
             homeworkLink: 'https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads',
             homeworkLinkName: '→ AI-асистент копірайтингу для реклами',
             homeworkLinkName_ru: '→ AI-ассистент копирайтинга для рекламы',
