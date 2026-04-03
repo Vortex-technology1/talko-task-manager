@@ -61,9 +61,11 @@
     staff:    [],
     items:    [],   // warehouse_items cache
     stock:    {},   // {itemId: {quantity, reserved}}
+    priceLists: [], // price_lists cache
+    currentPriceListId: null, // активний прайс для поточного модалу
     filter:   { status: 'all', search: '', assignee: '' },
-    editing:  null, // order being edited
-    modalItems: [], // позиції в поточному модалі
+    editing:  null,
+    modalItems: [],
     saving:   false,
   };
 
@@ -99,6 +101,41 @@
       S.stock = {};
       stockSnap.docs.forEach(d => { S.stock[d.id] = d.data(); });
     } catch(e) { console.warn('106 loadWarehouseItems:', e.message); }
+  }
+
+  async function loadPriceLists() {
+    if (!cid()) return;
+    try {
+      const snap = await col('price_lists').limit(100).get();
+      S.priceLists = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) { console.warn('106 priceLists:', e.message); }
+  }
+
+  // ─── helpers: прайс і автознижка ─────────────────────────────────────────
+  function getPriceFromList(warehouseItemId) {
+    if (!warehouseItemId || !S.currentPriceListId) return null;
+    const pl = S.priceLists.find(p => p.id === S.currentPriceListId);
+    if (!pl) return null;
+    const entry = (pl.items || []).find(i => i.warehouseItemId === warehouseItemId);
+    return entry != null ? Number(entry.price) : null;
+  }
+
+  function getDefaultPriceListForClient(clientId) {
+    const client = S.clients.find(c => c.id === clientId);
+    if (client?.priceTypeId) {
+      if (S.priceLists.find(p => p.id === client.priceTypeId)) return client.priceTypeId;
+    }
+    return S.priceLists.find(p => p.isDefault)?.id || null;
+  }
+
+  function calcAutoDiscount(totalAmount) {
+    if (!S.currentPriceListId) return 0;
+    const pl = S.priceLists.find(p => p.id === S.currentPriceListId);
+    if (!pl?.discountRules?.length) return 0;
+    const rules = pl.discountRules
+      .filter(r => totalAmount >= Number(r.minAmount || 0))
+      .sort((a, b) => b.discountPercent - a.discountPercent);
+    return rules[0]?.discountPercent || 0;
   }
 
   async function loadStaff() {
@@ -336,12 +373,20 @@
     const o = order || {};
     S.modalItems = JSON.parse(JSON.stringify(o.items || [{ id: Date.now(), name: '', qty: 1, price: 0, unit: 'шт', warehouseItemId: null, discount: 0 }]));
 
+    // Встановлюємо поточний прайс — з замовлення або з клієнта
+    S.currentPriceListId = o.priceTypeId || getDefaultPriceListForClient(o.clientId) || null;
+
     const clientOptions = S.clients.map(c =>
       `<option value="${c.id}" data-name="${esc(c.name)}" ${o.clientId===c.id?'selected':''}>${esc(c.name)}</option>`
     ).join('');
 
     const staffOptions = (window.users || S.staff).filter(u => u.role !== 'guest').map(u =>
       `<option value="${u.id}" ${o.assigneeId===u.id?'selected':''}>${esc(u.name)}</option>`
+    ).join('');
+
+    // Dropdown вибору прайс-листа
+    const priceListOptions = S.priceLists.map(pl =>
+      `<option value="${pl.id}" ${S.currentPriceListId===pl.id?'selected':''}>${esc(pl.name)} (${pl.currency||'UAH'})${pl.isDefault?' ✓':''}</option>`
     ).join('');
 
     return `
@@ -379,6 +424,19 @@
                 </select>
               </div>
             </div>
+
+            <!-- Row 1b: прайс-лист + індикатор -->
+            ${S.priceLists.length ? `<div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:14px">
+              <div>
+                <label style="display:block;font-size:.75rem;font-weight:600;color:#374151;margin-bottom:4px">${tg('Прайс-лист','Price list')}</label>
+                <select id="soFldPriceList" class="so-inp" style="width:100%" onchange="window._soPriceListChange(this)">
+                  <option value="">${tg('— базові ціни товарів —','— base item prices —')}</option>
+                  ${priceListOptions}
+                </select>
+              </div>
+              <div id="soPriceListIndicator" style="display:none;align-items:center;gap:6px;padding:6px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:.78rem;color:#065f46;white-space:nowrap;margin-top:20px"></div>
+            </div>
+            <div id="soAutoDiscountHint" style="display:none;padding:8px 12px;background:#fef3c7;border:1px solid #fcd34d;border-radius:6px;font-size:.78rem;color:#92400e;margin-bottom:14px"></div>` : ''}
 
             <!-- Row 2: payment condition + days -->
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px">
@@ -529,6 +587,50 @@
     if (el('soTotalGross'))    el('soTotalGross').textContent    = fmt(gross) + ' ' + cur;
     if (el('soTotalDiscount')) el('soTotalDiscount').textContent = '-' + fmt(discount) + ' ' + cur;
     if (el('soTotalNet'))      el('soTotalNet').textContent      = fmt(net) + ' ' + cur;
+
+    // Показуємо підказку автознижки якщо є прайс з правилами
+    const autoDisc = calcAutoDiscount(gross);
+    const hint = el('soAutoDiscountHint');
+    if (hint) {
+      if (autoDisc > 0 && discount === 0) {
+        hint.style.display = 'block';
+        hint.textContent = `💡 ${tg('Автознижка','Auto discount')} ${autoDisc}% ${tg('доступна при поточній сумі','available at current amount')} — ${tg('застосуйте до позицій','apply to items')}`;
+      } else if (autoDisc > 0) {
+        hint.style.display = 'block';
+        hint.textContent = `✅ ${tg('Знижка','Discount')} ${autoDisc}% ${tg('застосована','applied')}`;
+        hint.style.color = '#059669';
+      } else {
+        hint.style.display = 'none';
+      }
+    }
+  }
+
+  // Перераховуємо автознижку і застосовуємо до всіх позицій
+  function _soRecalcAutoDiscount() {
+    let gross = 0;
+    S.modalItems.forEach(item => {
+      gross += Number(item.qty||1) * Number(item.price||0);
+    });
+    const autoDisc = calcAutoDiscount(gross);
+    if (autoDisc > 0) {
+      S.modalItems.forEach(item => { item.discount = autoDisc; });
+    }
+  }
+
+  // Оновлюємо індикатор поточного прайсу
+  function _soUpdatePriceIndicator() {
+    const ind = el('soPriceListIndicator');
+    if (!ind) return;
+    if (!S.currentPriceListId) {
+      ind.style.display = 'none';
+      return;
+    }
+    const pl = S.priceLists.find(p => p.id === S.currentPriceListId);
+    if (!pl) { ind.style.display = 'none'; return; }
+    ind.style.display = 'flex';
+    ind.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="flex-shrink:0"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      ${tg('Прайс','Price list')}: <strong>${esc(pl.name)}</strong>
+      ${pl.discountRules?.length ? `· ${pl.discountRules.length} ${tg('правил знижок','discount rules')}` : ''}`;
   }
 
   // ─── PUBLIC API ───────────────────────────────────────────────────────────
@@ -544,6 +646,9 @@
     document.body.appendChild(div.firstElementChild);
 
     renderModalItems();
+
+    // Показуємо індикатор прайсу якщо вже встановлений
+    setTimeout(() => _soUpdatePriceIndicator(), 0);
 
     // auto-select current user as assignee if new
     if (!order && window.currentUserData?.id) {
@@ -568,11 +673,15 @@
     if (val) {
       const wi = S.items.find(w => w.id === val);
       if (wi) {
-        item.price = Number(wi.price || wi.sellPrice || 0);
+        // Спочатку ціна з прайсу клієнта, потім базова ціна товару
+        const priceFromList = getPriceFromList(val);
+        item.price = priceFromList !== null ? priceFromList : Number(wi.price || wi.sellPrice || 0);
         item.unit  = wi.unit || 'шт';
         item.name  = wi.name || wi.title || '';
       }
     }
+    // Перераховуємо автознижку після зміни позиції
+    _soRecalcAutoDiscount();
     renderModalItems();
   };
 
@@ -603,7 +712,23 @@
   };
 
   window._soClientChange = function (sel) {
-    // future: load client's default price type here
+    const clientId = sel.value;
+    if (!clientId) { S.currentPriceListId = null; _soUpdatePriceIndicator(); return; }
+
+    const newPriceListId = getDefaultPriceListForClient(clientId);
+    const changed = newPriceListId !== S.currentPriceListId;
+    S.currentPriceListId = newPriceListId;
+
+    // Якщо прайс змінився — перераховуємо ціни для всіх позицій зі складу
+    if (changed && S.modalItems.length) {
+      S.modalItems.forEach(item => {
+        if (!item.warehouseItemId) return;
+        const priceFromList = getPriceFromList(item.warehouseItemId);
+        if (priceFromList !== null) item.price = priceFromList;
+      });
+      renderModalItems();
+    }
+    _soUpdatePriceIndicator();
   };
 
   window._soPayCondChange = function (sel) {
@@ -652,6 +777,7 @@
       paymentCondition: el('soFldPayCond')?.value  || 'prepay',
       paymentDueDays:   Number(el('soFldDays')?.value) || 0,
       currency:         el('soFldCurrency')?.value || 'UAH',
+      priceTypeId:      S.currentPriceListId || null,
       note:             el('soFldNote')?.value || '',
       items,
       totalAmount,
@@ -821,11 +947,36 @@
     }
   };
 
+  // ─── PRICE LIST CHANGE HANDLER ────────────────────────────────────────────
+  window._soPriceListChange = function (sel) {
+    const newId = sel.value || null;
+    const changed = newId !== S.currentPriceListId;
+    S.currentPriceListId = newId;
+
+    if (changed && S.modalItems.length) {
+      // Перераховуємо ціни всіх складських позицій
+      S.modalItems.forEach(item => {
+        if (!item.warehouseItemId) return;
+        if (newId) {
+          const priceFromList = getPriceFromList(item.warehouseItemId);
+          if (priceFromList !== null) item.price = priceFromList;
+        } else {
+          // Повертаємо базову ціну товару
+          const wi = S.items.find(w => w.id === item.warehouseItemId);
+          if (wi) item.price = Number(wi.price || wi.sellPrice || 0);
+        }
+      });
+      _soRecalcAutoDiscount();
+      renderModalItems();
+    }
+    _soUpdatePriceIndicator();
+  };
+
   // ─── INIT ─────────────────────────────────────────────────────────────────
   window.initSalesOrders = async function () {
     if (!cid()) { console.warn('106: no cid'); return; }
     buildUI();
-    await Promise.all([loadOrders(), loadClients(), loadWarehouseItems(), loadStaff()]);
+    await Promise.all([loadOrders(), loadClients(), loadWarehouseItems(), loadStaff(), loadPriceLists()]);
   };
 
 })();
