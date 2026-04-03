@@ -8,6 +8,7 @@
 
     // ── Course Data (from data module) ────────────────────────
     const learningCourseData = window.learningCourseData || [];
+    console.log('[learning-engine] learningCourseData length:', learningCourseData.length);
 
     // ── State ─────────────────────────────────────────────────
     let learningProgress = {};     // { moduleId: { completed, homeworkDone, homeworkText } }
