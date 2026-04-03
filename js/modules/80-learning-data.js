@@ -16988,664 +16988,304 @@ Bist du dabei?</div>
         {
             id: 107,
             category: 'marketing',
-            title: 'Заголовок, оголошення і картинка: зупинити за 2 секунди',
-            title_ru: 'Заголовок, объявление и картинка: остановить за 2 секунды',
-            subtitle: 'Структура оголошення, 5 правил тексту на картинці, приклади по нішах і AI за 5 хвилин',
-            subtitle_ru: 'Структура объявления, 5 правил текста на картинке, примеры по нишам и AI за 5 минут',
-            duration: 35,
+            title: '7 ЕЛЕМЕНТІВ ОГОЛОШЕННЯ META',
+            title_ru: '7 ЭЛЕМЕНТОВ ОБЪЯВЛЕНИЯ META',
+            subtitle: 'Анатомія реклами яка зупиняє і конвертує — від тексту до CTA',
+            subtitle_ru: 'Анатомия рекламы которая останавливает и конвертирует — от текста до CTA',
+            duration: 30,
             videoLink: null,
             materialsLink: null,
             lessonContent: `<style>
-.l107-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
-.l107-h{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
-.l107-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
-.l107-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
-.l107-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
-.l107-card p+p{margin-top:.55rem}
-.l107-bad{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.84rem;color:#7f1d1d;margin-bottom:.4rem}
-.l107-good{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .9rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.84rem;color:#14532d;margin-bottom:.4rem}
-.l107-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.45rem}
-.l107-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:1px}
-.l107-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
-.l107-stext{font-size:.82rem;color:#525252;line-height:1.5}
-.l107-flow{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin:.75rem 0}
-.l107-fbox{padding:.4rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600}
-.l107-farr{color:#9ca3af}
-.l107-imgzone{display:grid;gap:4px;background:#1a1a1a;border-radius:12px;padding:12px;margin:.75rem 0}
-.l107-zone{padding:8px 12px;border-radius:8px;font-size:.8rem;font-weight:600;text-align:center}
-.l107-zone-lbl{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin-bottom:3px}
-.l107-rule{display:flex;gap:.6rem;align-items:flex-start;padding:.8rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.4rem}
-.l107-rnum{width:26px;height:26px;background:#3b82f6;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:1px}
-.l107-ad{border-radius:14px;overflow:hidden;border:2px solid #22c55e;margin-bottom:.75rem;background:white}
-.l107-ad-badge{display:inline-block;background:#22c55e;color:white;font-size:.72rem;font-weight:700;padding:.25rem .75rem;border-radius:20px;margin-bottom:.6rem}
-.l107-ad-title{font-size:1.1rem;font-weight:800;color:#166534;line-height:1.35;margin-bottom:.6rem}
-.l107-ad-body{font-size:.85rem;color:#374151;line-height:1.6;margin-bottom:.75rem}
-.l107-ad-body strong{color:#166534}
-.l107-ad-btn{display:inline-block;background:#22c55e;color:white;font-weight:700;font-size:.82rem;padding:.45rem 1.1rem;border-radius:8px}
-.l107-ad-inner{padding:1rem 1.1rem}
-.l107-ad-explain{background:#f0fdf4;border-top:1px solid #bbf7d0;padding:.75rem 1rem}
-.l107-ad-explain-title{font-size:.7rem;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem}
-.l107-ad-item{display:flex;gap:.5rem;align-items:flex-start;font-size:.78rem;color:#374151;margin-bottom:.25rem;line-height:1.4}
-.l107-platform{border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
-.l107-ptitle{font-size:.875rem;font-weight:700;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
-.l107-pfield{background:white;border-radius:8px;padding:.6rem .8rem;margin-bottom:.4rem;font-size:.8rem;color:#374151}
-.l107-pfname{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.15rem}
-.l107-ai-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.25rem;background:#22c55e;color:white;border-radius:9px;font-size:.88rem;font-weight:700;text-decoration:none;margin-top:.75rem}
-.l107-code{background:#0f172a;border-radius:10px;padding:.9rem 1.1rem;font-family:monospace;font-size:.82rem;color:#e2e8f0;line-height:1.9;margin:.75rem 0}
+.l107-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l107-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;background:#ef4444;color:white;border-radius:50%;font-size:.8rem;font-weight:700;margin-right:.5rem;flex-shrink:0}
+.l107-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.5rem;display:flex;align-items:center}
+.l107-desc{font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:.65rem}
+.l107-bad{display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .85rem;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:.83rem;color:#7f1d1d;margin-bottom:.35rem}
+.l107-good{display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.83rem;color:#14532d;margin-bottom:.35rem}
+.l107-rule{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;margin-top:.65rem}
+.l107-lbl{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.3rem}
+.l107-divider{height:1px;background:#e2e8f0;margin:1.25rem 0}
+.l107-preview{background:white;border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;margin:1rem 0}
+.l107-preview-header{padding:.7rem 1rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:.5rem}
+.l107-preview-avatar{width:36px;height:36px;background:#3b82f6;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.85rem}
+.l107-preview-body{padding:.85rem 1rem}
+.l107-preview-img{background:linear-gradient(135deg,#1e3a5f,#3b82f6);height:110px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1rem;text-align:center;padding:1rem}
+.l107-preview-footer{padding:.65rem 1rem;border-top:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center}
+.l107-cta-btn{background:#1877f2;color:white;border:none;border-radius:6px;padding:.4rem .9rem;font-size:.8rem;font-weight:600;cursor:pointer}
+.l107-map{display:grid;gap:.5rem;margin:.75rem 0}
 </style>
 
-<div class="l107-lbl">Основи</div>
-<div class="l107-h">Заголовок vs Оголошення — в чому різниця</div>
-<div class="l107-card">
-<p><strong>Заголовок</strong> — перший рядок реклами. Завдання одне: зупинити людину і змусити читати далі. Не продати, не пояснити — просто зупинити.</p>
-<p><strong>Оголошення</strong> — весь текст реклами: заголовок + опис + заклик до дії. Оголошення пояснює, переконує і веде до дії.</p>
-</div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Головна помилка</div>
-<div class="l107-h">Розмитість — заголовок підходить всім і нікому</div>
-<div class="l107-card"><p>Типова помилка — заголовок без фільтру. Він може бути про стоматологію, салон, будівництво, IT — будь-що. Людина читає: "Ну і що? Це про мене взагалі?" — і гортає далі.</p></div>
-
-<div class="l107-bad">
-<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-<div><strong>Погано:</strong> "Втомились від хаосу в бізнесі?" — підходить абсолютно всім, тому не зупиняє нікого конкретно</div>
-</div>
-<div class="l107-good">
-<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
-<div><strong>Добре:</strong> "Для власників стоматологій: графік лікарів заповнений на 40%?" — одразу ясно хто це читає</div>
-</div>
-<div class="l107-card" style="margin-top:.6rem"><p>Людина за 0.5 секунди вирішує: <em>моє чи не моє</em>. Якщо твоє — читає далі. Якщо ні — гортає. І це добре: тобі не потрібні всі — тобі потрібні свої.</p></div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Структура</div>
-<div class="l107-h">4 елементи нормального оголошення</div>
-
-<div class="l107-flow">
-<div class="l107-fbox" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe">Фільтр</div>
-<div class="l107-farr">→</div>
-<div class="l107-fbox" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca">Біль</div>
-<div class="l107-farr">→</div>
-<div class="l107-fbox" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0">Результат</div>
-<div class="l107-farr">→</div>
-<div class="l107-fbox" style="background:#fef9c3;color:#854d0e;border:1px solid #fde68a">Дія</div>
-</div>
-
-<div class="l107-step"><div class="l107-snum" style="background:#3b82f6">1</div><div><div class="l107-stitle">Фільтр — хто ця людина</div><div class="l107-stext">"Для власників стоматологій" / "Для тих, хто будує будинок" / "Власники салонів краси — читайте"</div></div></div>
-<div class="l107-step"><div class="l107-snum" style="background:#ef4444">2</div><div><div class="l107-stitle">Біль — що її дратує прямо зараз</div><div class="l107-stext">"Графік лікарів заповнений на 40%?" / "Ціна змінилась після підписання?" — конкретна ситуація яку людина впізнає</div></div></div>
-<div class="l107-step"><div class="l107-snum" style="background:#22c55e">3</div><div><div class="l107-stitle">Результат — що вона отримає конкретно</div><div class="l107-stext">"80% запису без вашої участі за 65 днів" — не "покращимо бізнес", а конкретна цифра і термін</div></div></div>
-<div class="l107-step"><div class="l107-snum" style="background:#f59e0b">4</div><div><div class="l107-stitle">Дія — що зробити далі</div><div class="l107-stext">"Натисніть — залишіть заявку" / "Записуйтесь — консультація безкоштовно" — одна конкретна дія</div></div></div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Картинка</div>
-<div class="l107-h">Що писати на картинці — 3 зони і 5 правил</div>
-
-<div class="l107-imgzone">
-<div class="l107-zone" style="background:#374151"><div class="l107-zone-lbl" style="color:#9ca3af">Зона 1 — фільтр + бренд</div><div style="color:#e5e7eb;font-size:.82rem">Для власників стоматологій | TALKO System</div></div>
-<div class="l107-zone" style="background:#111827;padding:16px 12px"><div class="l107-zone-lbl" style="color:#6b7280">Зона 2 — заголовок (найбільший)</div><div style="color:white;font-size:1rem;font-weight:700;line-height:1.4">Графік лікарів на 80%<br>без вашого контролю</div></div>
-<div class="l107-zone" style="background:#1f2937"><div class="l107-zone-lbl" style="color:#9ca3af">Зона 3 — підзаголовок</div><div style="color:#d1fae5;font-size:.82rem">За 65 днів — навіть якщо зараз повний хаос</div></div>
-</div>
-
-<div class="l107-card"><p><strong>Правило:</strong> максимум 10-12 слів на всю картинку. Людина сканує, а не читає. Більше — не читають.</p></div>
-
-<div class="l107-rule"><div class="l107-rnum">1</div><div><div class="l107-stitle">Максимум 10-12 слів на всю картинку</div><div class="l107-stext">Людина сканує за 1-2 секунди. Більше слів — не читають. Один головний меседж = одна картинка.</div></div></div>
-
-<div class="l107-rule"><div class="l107-rnum">2</div><div><div class="l107-stitle">Цифра завжди краща за слово</div><div class="l107-stext">
-<div class="l107-bad" style="margin:0 0 .3rem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>&nbsp;"Збільшимо запис"</div>
-<div class="l107-good" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>&nbsp;"Запис +40% за 30 днів"</div>
-</div></div></div>
-
-<div class="l107-rule"><div class="l107-rnum">3</div><div><div class="l107-stitle">Питання або стейтмент</div><div class="l107-stext">Питання чіпляє емоційно: "Лікарі працюють як хочуть?"<br>Стейтмент дає результат: "80% запису без вашої участі"</div></div></div>
-
-<div class="l107-rule"><div class="l107-rnum">4</div><div><div class="l107-stitle">Контраст тексту і фону</div><div class="l107-stext">Білий текст на темному фото. Темний текст на світлому. Без градієнтів і складних шрифтів — простота читається краще.</div></div></div>
-
-<div class="l107-rule"><div class="l107-rnum">5</div><div><div class="l107-stitle">Coca-Cola може без тексту — ти ні</div><div class="l107-stext">Красивий візуал без тексту — реклама бренду. Для цього потрібні мільйони і роки. Текст з болем або цифрою — людина розуміє що їй пропонують конкретно.</div></div></div>
-
-<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #22c55e;border-radius:12px;padding:1rem;margin:.75rem 0;text-align:center">
-<div style="font-size:.82rem;font-weight:700;color:#166534">Візуал зупиняє · Текст пояснює · Разом — конвертують</div>
-</div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Приклади оголошень</div>
-<div class="l107-h">Готові оголошення по нішах — бери і адаптуй</div>
-
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-Для власників клінік
-</div>
-<div class="l107-ad-title">Втомились контролювати лікарів і адміністраторів?</div>
-<div class="l107-ad-body">Безкоштовний майстер-клас: як зробити так, щоб <strong>80-90% питань вирішувались без вас</strong>, а прибуток ріс стабільно</div>
-<div class="l107-ad-btn">TALKO System</div>
-</div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Чому працює</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Фільтр:</strong> "Для власників клінік" — одразу своя аудиторія, решта гортає далі</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Біль:</strong> "Втомились контролювати" — кожен власник клініки це відчуває</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Результат + цифра:</strong> "80-90% питань без вас" — конкретна обіцянка, не "покращимо процеси"</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Знімач бар'єру:</strong> безкоштовний майстер-клас = легко зробити перший крок</div></div>
+<div class="lesson-block intro">
+<div class="lesson-block-header"><div class="lesson-block-title">Навіщо знати структуру оголошення</div></div>
+<div class="lesson-block-content">
+<p>Meta показує твоє оголошення сотням людей. У кожного є <strong>0.5–2 секунди</strong> щоб вирішити — гортати далі чи зупинитись.</p>
+<p style="margin-top:.65rem">Більшість провалюється не через погану послугу — а через те що не знають <strong>для чого кожен елемент</strong> і що в ньому написати.</p>
+<p style="margin-top:.65rem">Цей урок — анатомія оголошення. 7 елементів, завдання кожного, головні помилки і правильні приклади.</p>
 </div>
 </div>
 
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-Для пацієнтів Луцька
+<!-- МАКЕТ ОГОЛОШЕННЯ -->
+<div class="lesson-block" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;overflow:hidden;padding:0">
+<div style="padding:.75rem 1rem;background:#1a1a1a;color:white;font-size:.75rem;font-weight:700;letter-spacing:.08em">МАКЕТ ОГОЛОШЕННЯ — 7 ЕЛЕМЕНТІВ</div>
+<div style="padding:1rem">
+<div style="background:#f3f4f6;border-radius:8px;padding:.6rem .85rem;font-size:.83rem;color:#374151;margin-bottom:.75rem;display:flex;gap:.5rem;align-items:center">
+<span style="background:#ef4444;color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0">1</span>
+<span>Текст оголошення — перший рядок над картинкою</span>
 </div>
-<div class="l107-ad-title">Соромитесь посміхатись через відсутній зуб?</div>
-<div class="l107-ad-body">Імплантація від <strong>8 900 грн</strong>. Запис цього тижня — <strong>безкоштовна консультація</strong></div>
-<div class="l107-ad-btn">Клініка [Назва]</div>
+<div style="background:white;border:1.5px solid #e2e8f0;border-radius:10px;overflow:hidden">
+<div style="padding:.6rem .85rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:.5rem">
+<div style="width:32px;height:32px;background:#3b82f6;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.8rem">GC</div>
+<div><div style="font-size:.82rem;font-weight:600">General Contractor</div><div style="font-size:.7rem;color:#9ca3af">Реклама 🌐</div></div>
 </div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Чому працює</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Фільтр:</strong> Луцьк — одразу локальна аудиторія</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Біль:</strong> сором — це емоція, не просто "немає зуба"</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Цифра:</strong> конкретна ціна знімає страх невідомості</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Знімач бар'єру:</strong> безкоштовна консультація = легко зробити перший крок</div></div>
+<div style="background:linear-gradient(135deg,#1e3a5f 0%,#3b82f6 100%);padding:1.25rem;color:white;text-align:center">
+<div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;background:#22c55e;display:inline-block;padding:2px 8px;border-radius:4px;margin-bottom:.5rem">GENERAL CONTRACTOR</div>
+<div style="font-size:.85rem;color:#93c5fd;margin-bottom:.4rem">Для власників генпідрядних компаній</div>
+<div style="font-size:1rem;font-weight:700;line-height:1.4"><span style="color:#ef4444">Втомились контролювати</span> прорабів, підрядників і кожен об'єкт вручну?</div>
 </div>
+<div style="padding:.65rem .85rem;border-top:1px solid #f3f4f6;font-size:.75rem;color:#6b7280">
+<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
+<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">2</span>Заголовок</div>
+<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
+<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">3</span>Підзаголовок</div>
+<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
+<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">4</span>CONTRACTOR.UA — домен</div>
+<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
+<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">5</span>Реєструйтесь на безкоштовний майстер-клас — headline</div>
+<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem">
+<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">6</span>Місць обмаль — реєстрація закривається скоро — опис</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:.5rem;padding-top:.5rem;border-top:1px solid #f3f4f6">
+<div style="display:flex;gap:.5rem;align-items:center">
+<span style="background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">7</span><span>CTA кнопка</span>
 </div>
-
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-Плануєте будувати будинок?
-</div>
-<div class="l107-ad-title">Ціна зростає поки ви думаєте</div>
-<div class="l107-ad-body">Фіксуємо вартість на етапі договору. <strong>Точний кошторис за 24 години — безкоштовно</strong></div>
-<div class="l107-ad-btn">[Компанія] | Гарантія письмово</div>
-</div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Чому працює</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Фільтр:</strong> "Плануєте будувати" — одразу своя аудиторія</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Біль:</strong> страх подорожчання — реальний і актуальний для всіх хто будує</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Рішення:</strong> фіксована ціна — конкретна відповідь на страх</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Довіра:</strong> "гарантія письмово" — знімає скептицизм</div></div>
+<button style="background:#1877f2;color:white;border:none;border-radius:5px;padding:.3rem .8rem;font-size:.78rem;font-weight:600">Дізнатися більше</button>
 </div>
 </div>
-
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-Для власників МСБ
 </div>
-<div class="l107-ad-title">Бізнес тримається тільки на вас?</div>
-<div class="l107-ad-body">Система, де <strong>80% процесів працює без вашої участі</strong>.<br>65 днів. 170+ клінік. Не теорія — система.</div>
-<div class="l107-ad-btn">TALKO System</div>
-</div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Чому працює</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Біль:</strong> "тримається тільки на вас" — кожен власник це відчуває</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Результат:</strong> "80% без участі" — конкретна цифра свободи</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Докази:</strong> 65 днів + 170 клінік = не обіцянка, а факт</div></div>
 </div>
 </div>
 
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-Для власників бізнесу
-</div>
-<div class="l107-ad-title">Коли востаннє ви були у відпустці БЕЗ телефону?</div>
-<div class="l107-ad-body">Покажу де витікають гроші за <strong>60 хвилин — безкоштовно</strong>.<br>150+ кейсів. Конкретика, а не теорія.</div>
-<div class="l107-ad-btn">[Ім'я консультанта]</div>
-</div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Чому працює</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Питання-дзеркало:</strong> власник одразу уявляє себе — і відповідь "давно" створює напругу</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Конкретна обіцянка:</strong> "де витікають гроші" — не "покращимо бізнес"</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Низький бар'єр:</strong> 60 хвилин + безкоштовно = легко погодитись</div></div>
+<div class="l107-divider"></div>
+
+<!-- ЕЛЕМЕНТ 1 -->
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">1</span> Текст оголошення</div></div>
+<div class="lesson-block-content">
+<p class="l107-desc"><strong>Завдання:</strong> зачепити і потягнути вниз. Це перше що людина читає — ще над картинкою. Має бути одна гостра думка: біль, провокація або несподіваний факт. Не опис продукту — удар по проблемі.</p>
+<p class="l107-desc">Пишемо одним реченням або двома максимум. Без вступів, без "ми раді запропонувати".</p>
+<div class="l107-lbl">Головна помилка — розпливчастість</div>
+<div class="l107-bad">✗ Хочете розвивати свій бізнес? Ми допоможемо!</div>
+<div class="l107-good">✓ Ви досі контролюєте кожен об'єкт вручну? Є системне рішення.</div>
+<div class="l107-rule">💡 Правило: один текст — одна думка — одна аудиторія. Якщо підходить всім — не зупиняє нікого.</div>
 </div>
 </div>
 
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-Меблі на замовлення
-</div>
-<div class="l107-ad-title">Кухня мрії за 6 тижнів?</div>
-<div class="l107-ad-body">Від заміру до встановлення — під ключ. <strong>Ціна фіксована.</strong> Від <strong>18 900 грн</strong>. Замір безкоштовно.</div>
-<div class="l107-ad-btn">[Назва] | м. Луцьк</div>
-</div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Чому працює</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Конкретний термін:</strong> "6 тижнів" — власники ремонту бояться затримок</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>"Ціна фіксована":</strong> знімає головний страх — що ціна зміниться</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>"Під ключ":</strong> людина не хоче вирішувати питання сама</div></div>
+<!-- ЕЛЕМЕНТ 2 -->
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">2</span> Заголовок креативу</div></div>
+<div class="lesson-block-content">
+<p class="l107-desc"><strong>Завдання:</strong> зупинити гортання за 0.5 секунди. Не продати, не пояснити — просто зупинити. Через гострий біль + чіткий фільтр аудиторії.</p>
+<p class="l107-desc">Людина за 0.5 секунди вирішує: моє чи не моє. Якщо твоє — читає далі. Якщо ні — гортає. І це добре: тобі не потрібні всі — тобі потрібні свої.</p>
+<div class="l107-lbl">Головна помилка — немає фільтру аудиторії</div>
+<div class="l107-bad">✗ Втомились від хаосу в бізнесі? — підходить абсолютно всім, тому не зупиняє нікого</div>
+<div class="l107-good">✓ Втомились контролювати прорабів, підрядників і кожен об'єкт вручну? — одразу ясно хто це читає</div>
+<div class="l107-rule">💡 Формула: [хто це читає] + [їх конкретний біль]. Чим вужче — тим краще клікають свої.</div>
 </div>
 </div>
 
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Meta vs Google</div>
-<div class="l107-h">Де розміщати — різна логіка, різний текст</div>
-
-<div class="l107-card"><p>Meta — ти <strong>перебиваєш</strong> людину. Вона гортала котиків, а тут ти. Тому перше слово — фільтр і біль.<br>Google — людина <strong>вже шукає</strong> рішення. Тому перше слово — відповідь на її запит + чому саме ти.</p></div>
-
-<div class="l107-platform" style="background:#f0fdf4;border:1.5px solid #22c55e">
-<div class="l107-ptitle" style="color:#166534">
-<svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-META (Facebook + Instagram) — холодна аудиторія
-</div>
-<div class="l107-pfield" style="border-color:#bbf7d0"><div class="l107-pfname" style="color:#15803d">Основний текст</div>Повне оголошення 3-5 речень: фільтр + біль + результат + заклик до дії</div>
-<div class="l107-pfield" style="border-color:#bbf7d0"><div class="l107-pfname" style="color:#15803d">Заголовок (під картинкою, 5-7 слів)</div>"Запис на 80% без вашої участі" або "Графік лікарів — повний. Без вас"</div>
-<div class="l107-pfield" style="border-color:#bbf7d0"><div class="l107-pfname" style="color:#15803d">Опис</div>"Безкоштовно. Без зобов'язань" / "170+ клінік вже впровадили" / "Місць обмежено"</div>
-<div class="l107-pfield" style="border-color:#bbf7d0"><div class="l107-pfname" style="color:#15803d">CTA кнопка</div>"Дізнатись більше" або "Зареєструватись" — для консалтингу і медицини краще за "Купити зараз"</div>
-</div>
-
-<div class="l107-platform" style="background:#fefce8;border:1.5px solid #fde68a">
-<div class="l107-ptitle" style="color:#854d0e">
-<svg viewBox="0 0 24 24" fill="none" stroke="#854d0e" stroke-width="1.75" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-GOOGLE — тепла аудиторія, вже шукає
-</div>
-<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#92400e">Заголовки (до 15 × 30 символів)</div>1: "Імплантація зубів Луцьк" · 2: "Від 8 900 грн. Гарантія 5 років" · 3: "Безкоштовна консультація"</div>
-<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#92400e">Описи (до 4 × 90 символів)</div>"Система управління бізнесом за 65 днів. 170+ клінік. Перша консультація — безкоштовно"</div>
-<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#92400e">Розширення (Assets)</div>Уточнення: "Гарантія результату", "Без прихованих платежів" · Посилання: "Ціни", "Відгуки", "Записатись"</div>
-</div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">AI за 5 хвилин</div>
-<div class="l107-h">Отримай готові тексти для реклами через AI</div>
-
-<div class="l107-code">
-<span style="color:#9ca3af">Твій текст про послугу (будь-який)</span><br>
-<span style="color:#22c55e">        ↓</span><br>
-<span style="color:#e2e8f0">Вставляєш в AI-асистент і пишеш:</span><br>
-<span style="color:#60a5fa">"Зроби тексти для реклами в Meta та Google"</span><br>
-<span style="color:#22c55e">        ↓</span><br>
-<span style="color:#e2e8f0">Отримуєш: текст, заголовки, описи, варіанти</span><br>
-<span style="color:#22c55e">        ↓</span><br>
-<span style="color:#e2e8f0">Додаєш свої цифри, місто, нішу → запускаєш</span>
-</div>
-
-<div class="l107-step"><div class="l107-snum">1</div><div><div class="l107-stitle">Підготуй свій текст — будь-який</div><div class="l107-stext">Опис послуги з сайту, Instagram, те що пишеш клієнту в месенджері, або просто кілька речень про що ти робиш і для кого. Не має бути ідеально — AI розбереться.</div></div></div>
-<div class="l107-step"><div class="l107-snum">2</div><div><div class="l107-stitle">Відкрий AI-асистент і встав текст</div><div class="l107-stext">Спеціально налаштований під рекламні оголошення. Напиши: "Ось мій текст. Зроби тексти для реклами в Meta та Google"</div></div></div>
-<div class="l107-step"><div class="l107-snum">3</div><div><div class="l107-stitle">Перевір і додай конкретику</div><div class="l107-stext">Тексти від AI — заготовка, не фінал. Перечитай чи звучить як ти, додай свої цифри, місто, нішу — і запускай.</div></div></div>
-
-<a href="https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads" target="_blank" class="l107-ai-btn">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="16" height="16"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Крок 5 — Бонус</div>
-<div class="l107-h">Прогріваюча воронка перед консультацією</div>
-
-<div class="l107-card">
-<p>Той самий AI-асистент зробить тобі ще одну річ — прогріваючу воронку.</p>
-<p><strong>Простими словами:</strong> людина побачила рекламу → клікнула → і замість того щоб одразу записатись вона "холодна". Їй потрібен час і причина.</p>
-<p>Воронка — це серія питань або повідомлень, які розігрівають людину, показують що ти розумієш її проблему і підштовхують до запису. Не "купи зараз" — а "давай розберемось разом".</p>
-</div>
-
-<div class="l107-step">
-<div class="l107-snum" style="background:#8b5cf6">5</div>
-<div><div class="l107-stitle">Як отримати воронку — один запит</div>
-<div class="l107-stext">Після того як отримав рекламні тексти — напиши асистенту:<br><br>
-<span style="background:#0f172a;color:#60a5fa;padding:.3rem .6rem;border-radius:6px;font-family:monospace;font-size:.8rem;display:inline-block;line-height:1.5">"Тепер зроби прогріваючу воронку з питань для месенджера — щоб після кліку на рекламу людина прийшла на консультацію підготовленою"</span><br><br>
-Асистент сформує послідовність повідомлень і питань під твою нішу.</div>
+<!-- ЕЛЕМЕНТ 3 -->
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">3</span> Підзаголовок креативу</div></div>
+<div class="lesson-block-content">
+<p class="l107-desc"><strong>Завдання:</strong> пояснити що саме отримає людина якщо зупинилась. Заголовок зупинив — підзаголовок утримує і веде до кнопки.</p>
+<p class="l107-desc">Підзаголовок відповідає на питання: "І що мені з цього?" Тут розкриваємо оффер — конкретну обіцянку результату. Не процес, не характеристики — результат.</p>
+<div class="l107-lbl">Головна помилка — опис замість результату</div>
+<div class="l107-bad">✗ Майстер-клас про управління будівельними процесами</div>
+<div class="l107-good">✓ Як побудувати систему, де 80–90% рішень приймаються без вас</div>
+<div class="l107-rule">💡 Підзаголовок = обіцянка конкретного результату. Цифри підсилюють довіру — "80–90%" краще ніж "більшість рішень".</div>
 </div>
 </div>
 
-<div style="overflow-x:auto;margin:.75rem 0">
-<table style="width:100%;border-collapse:collapse;font-size:.8rem">
-<tr>
-<th style="padding:.5rem .75rem;background:#fef2f2;color:#dc2626;font-weight:700;border:1px solid #fecaca;text-align:left">Без воронки</th>
-<th style="padding:.5rem .75rem;background:#f0fdf4;color:#16a34a;font-weight:700;border:1px solid #bbf7d0;text-align:left">З воронкою</th>
-</tr>
-<tr>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Людина клікнула — і тиша</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Людина одразу отримує повідомлення</td>
-</tr>
-<tr style="background:#f9fafb">
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Ти чекаєш поки вона напише</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Вона відповідає на питання сама</td>
-</tr>
-<tr>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">На консультацію приходить "холодна"</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Приходить вже підготовленою</td>
-</tr>
-<tr style="background:#f9fafb">
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Ти витрачаєш 40-60 хв на з'ясування</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Консультація займає 20-30 хв</td>
-</tr>
-<tr>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Конверсія в оплату нижча</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Конверсія вища — людина вже "своя"</td>
-</tr>
-</table>
+<!-- ЕЛЕМЕНТ 4 -->
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">4</span> Домен</div></div>
+<div class="lesson-block-content">
+<p class="l107-desc"><strong>Завдання:</strong> підтвердити легітимність. Людина підсвідомо перевіряє — куди я потраплю якщо натисну?</p>
+<p class="l107-desc">Домен генерується автоматично з посилання яке ви вставляєте. Але його видно і він впливає на довіру. Незнайомий або підозрілий домен — людина не клікає навіть якщо рекламу прочитала.</p>
+<div class="l107-lbl">На що звертати увагу</div>
+<div class="l107-bad">✗ bit.ly/3xK9mP2 — скорочене посилання, виглядає як спам</div>
+<div class="l107-good">✓ contractor.ua — чітко, зрозуміло, відповідає бренду</div>
+<div class="l107-rule">💡 Використовуй власний домен, а не сторонні сервіси. Якщо веш на лендінг — він має мати нормальну адресу.</div>
+</div>
 </div>
 
+<!-- ЕЛЕМЕНТ 5 -->
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">5</span> Заголовок посилання (Headline)</div></div>
+<div class="lesson-block-content">
+<p class="l107-desc"><strong>Завдання:</strong> останній поштовх до кліку. Людина вже зацікавлена — тут закриваємо останній сумнів і даємо причину натиснути прямо зараз.</p>
+<p class="l107-desc">Це рядок під картинкою біля домену. Ліміт — 27 символів видно одразу. Пишемо як заклик до конкретної дії або підсилюємо оффер. Не повторюємо заголовок креативу — додаємо новий аргумент.</p>
+<div class="l107-lbl">Головна помилка — повтор того що вже сказали</div>
+<div class="l107-bad">✗ Втомились контролювати прорабів? — вже було в заголовку</div>
+<div class="l107-good">✓ Реєструйтесь на безкоштовний майстер-клас — конкретна дія + вигода</div>
+<div class="l107-rule">💡 Headline + CTA кнопка працюють разом. Якщо headline "Реєструйтесь" — кнопка "Записатись", не "Дізнатись більше".</div>
+</div>
+</div>
+
+<!-- ЕЛЕМЕНТ 6 -->
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">6</span> Опис посилання</div></div>
+<div class="lesson-block-content">
+<p class="l107-desc"><strong>Завдання:</strong> зняти останнє заперечення або підсилити терміновість. Дрібний текст під headline — його бачать не всі, але ті хто бачать — вже майже готові клікнути.</p>
+<p class="l107-desc">Ліміт — 27 символів. Використовуємо для терміновості, соціального доказу або уточнення що отримає людина. Один із найнедооцінених елементів — більшість залишають порожнім або пишуть щось беззмістовне.</p>
+<div class="l107-lbl">Головна помилка — порожньо або беззмістовно</div>
+<div class="l107-bad">✗ Дізнайтесь більше на нашому сайті</div>
+<div class="l107-good">✓ Місць обмаль — реєстрація закривається скоро</div>
+<div class="l107-rule">💡 Терміновість або дефіцит в описі = вищий CTR. "Місць обмаль", "До п'ятниці", "Залишилось 3 місця" — конкретика завжди краще загальних слів.</div>
+</div>
+</div>
+
+<!-- ЕЛЕМЕНТ 7 -->
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">7</span> Кнопка CTA</div></div>
+<div class="lesson-block-content">
+<p class="l107-desc"><strong>Завдання:</strong> одна конкретна команда до дії. Кнопка = команда. Має точно відповідати тому що отримає людина після кліку.</p>
+<p class="l107-desc">Meta дає вибір із готових варіантів: Дізнатися більше, Записатися, Зателефонувати, Завантажити, Отримати пропозицію та інші. Обираємо не "що звучить добре" — а що точно описує наступний крок.</p>
+<div class="l107-lbl">Головна помилка — невідповідність дії</div>
+<div class="l107-bad">✗ "Дізнатися більше" коли людина потрапляє на форму реєстрації — обманює очікування</div>
+<div class="l107-good">✓ "Записатися" або "Зареєструватися" коли веш на реєстрацію — людина знає куди йде</div>
+<div class="l107-rule">💡 Якщо після кліку людина потрапляє не туди куди очікувала — відмова. Узгодженість CTA → лендінг → результат = вища конверсія.</div>
+</div>
+</div>
+
+<div class="l107-divider"></div>
+
+<!-- ПІДСУМОК -->
+<div class="lesson-block" style="background:#f0fdf4;border:1.5px solid #bbf7d0">
+<div class="lesson-block-header"><div class="lesson-block-title">Як перевірити своє оголошення</div></div>
+<div class="lesson-block-content">
+<p class="l107-desc">Пройдіться по чеклісту перед запуском:</p>
+<div style="display:grid;gap:.45rem;margin:.65rem 0">
+<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Текст:</strong> одне речення, конкретний біль, без вступів?</span></div>
+<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Заголовок:</strong> чітко видно хто аудиторія + їх конкретна проблема?</span></div>
+<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Підзаголовок:</strong> є конкретна обіцянка результату (не процесу)?</span></div>
+<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Домен:</strong> власний і зрозумілий, не скорочений?</span></div>
+<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Headline:</strong> новий аргумент (не повтор заголовку) + заклик до дії?</span></div>
+<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>Опис:</strong> терміновість, дефіцит або соціальний доказ?</span></div>
+<div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.84rem;color:#374151"><span style="color:#22c55e;font-weight:700;flex-shrink:0">□</span><span><strong>CTA:</strong> кнопка відповідає тому куди потрапить людина?</span></div>
+</div>
+</div>
+</div>
+
+<!-- AI БЛОК -->
 <div style="background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:12px;padding:.9rem 1rem;margin:.75rem 0;display:flex;gap:.6rem;align-items:flex-start">
-<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-<div style="font-size:.82rem;color:#374151"><strong style="color:#7c3aed">Як технічно запустити воронку в месенджері</strong> — розберемо окремо в розділі "Боти та AI ланцюги". Там покажу як автоматизувати так, щоб воронка працювала без твоєї участі — 24/7.</div>
+<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
+<div style="font-size:.82rem;color:#374151"><strong style="color:#7c3aed">AI-асистент допоможе написати всі 7 елементів</strong> під твою послугу за 5 хвилин. Відкрий асистент нижче, опиши свою послугу і попроси: "Напиши оголошення для Meta з усіма 7 елементами".</div>
 </div>
-
-Відкрити Master of Selling Copy for Ads
-</a>`,
+`,
 
             lessonContent_ru: `<style>
-.l107-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.55rem}
-.l107-h{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
-.l107-div{height:1px;background:#e2e8f0;margin:1.5rem 0}
-.l107-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
-.l107-card p{font-size:.9rem;color:#374151;line-height:1.65;margin:0}
-.l107-card p+p{margin-top:.55rem}
-.l107-bad{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.84rem;color:#7f1d1d;margin-bottom:.4rem}
-.l107-good{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .9rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.84rem;color:#14532d;margin-bottom:.4rem}
-.l107-step{display:flex;gap:.75rem;padding:.85rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.45rem}
-.l107-snum{width:28px;height:28px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:1px}
-.l107-stitle{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}
-.l107-stext{font-size:.82rem;color:#525252;line-height:1.5}
-.l107-flow{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin:.75rem 0}
-.l107-fbox{padding:.4rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600}
-.l107-farr{color:#9ca3af}
-.l107-imgzone{display:grid;gap:4px;background:#1a1a1a;border-radius:12px;padding:12px;margin:.75rem 0}
-.l107-zone{padding:8px 12px;border-radius:8px;font-size:.8rem;font-weight:600;text-align:center}
-.l107-zone-lbl{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin-bottom:3px}
-.l107-rule{display:flex;gap:.6rem;align-items:flex-start;padding:.8rem .95rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:.4rem}
-.l107-rnum{width:26px;height:26px;background:#3b82f6;color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:1px}
-.l107-ad{border-radius:14px;overflow:hidden;border:2px solid #22c55e;margin-bottom:.75rem;background:white}
-.l107-ad-badge{display:inline-block;background:#22c55e;color:white;font-size:.72rem;font-weight:700;padding:.25rem .75rem;border-radius:20px;margin-bottom:.6rem}
-.l107-ad-title{font-size:1.1rem;font-weight:800;color:#166534;line-height:1.35;margin-bottom:.6rem}
-.l107-ad-body{font-size:.85rem;color:#374151;line-height:1.6;margin-bottom:.75rem}
-.l107-ad-body strong{color:#166534}
-.l107-ad-btn{display:inline-block;background:#22c55e;color:white;font-weight:700;font-size:.82rem;padding:.45rem 1.1rem;border-radius:8px}
-.l107-ad-inner{padding:1rem 1.1rem}
-.l107-ad-explain{background:#f0fdf4;border-top:1px solid #bbf7d0;padding:.75rem 1rem}
-.l107-ad-explain-title{font-size:.7rem;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem}
-.l107-ad-item{display:flex;gap:.5rem;align-items:flex-start;font-size:.78rem;color:#374151;margin-bottom:.25rem;line-height:1.4}
-.l107-platform{border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
-.l107-ptitle{font-size:.875rem;font-weight:700;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
-.l107-pfield{background:white;border-radius:8px;padding:.6rem .8rem;margin-bottom:.4rem;font-size:.8rem;color:#374151}
-.l107-pfname{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.15rem}
-.l107-ai-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.25rem;background:#22c55e;color:white;border-radius:9px;font-size:.88rem;font-weight:700;text-decoration:none;margin-top:.75rem}
-.l107-code{background:#0f172a;border-radius:10px;padding:.9rem 1.1rem;font-family:monospace;font-size:.82rem;color:#e2e8f0;line-height:1.9;margin:.75rem 0}
+.l107-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l107-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;background:#ef4444;color:white;border-radius:50%;font-size:.8rem;font-weight:700;margin-right:.5rem;flex-shrink:0}
+.l107-bad{display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .85rem;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:.83rem;color:#7f1d1d;margin-bottom:.35rem}
+.l107-good{display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.83rem;color:#14532d;margin-bottom:.35rem}
+.l107-rule{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .85rem;font-size:.82rem;color:#1e40af;margin-top:.65rem}
+.l107-divider{height:1px;background:#e2e8f0;margin:1.25rem 0}
 </style>
 
-<div class="l107-lbl">Основы</div>
-<div class="l107-h">Заголовок vs Объявление — в чём разница</div>
-<div class="l107-card">
-<p><strong>Заголовок</strong> — первая строка рекламы. Задача одна: остановить человека и заставить читать дальше. Не продать, не объяснить — просто остановить.</p>
-<p><strong>Объявление</strong> — весь текст рекламы: заголовок + описание + призыв к действию. Объявление объясняет, убеждает и ведёт к действию.</p>
-</div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Главная ошибка</div>
-<div class="l107-h">Размытость — заголовок подходит всем и никому</div>
-<div class="l107-card"><p>Типичная ошибка — заголовок без фильтра. Он может быть про стоматологию, салон, строительство, IT — что угодно. Человек читает: "Ну и что? Это вообще про меня?" — и листает дальше.</p></div>
-
-<div class="l107-bad">
-<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-<div><strong>Плохо:</strong> "Устали от хаоса в бизнесе?" — подходит абсолютно всем, поэтому не останавливает никого конкретно</div>
-</div>
-<div class="l107-good">
-<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
-<div><strong>Хорошо:</strong> "Для владельцев стоматологий: график врачей заполнен на 40%?" — сразу ясно кто это читает</div>
-</div>
-<div class="l107-card" style="margin-top:.6rem"><p>Человек за 0.5 секунды решает: <em>моё или не моё</em>. Если твоё — читает дальше. Если нет — листает. И это хорошо: тебе не нужны все — тебе нужны свои.</p></div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Структура</div>
-<div class="l107-h">4 элемента нормального объявления</div>
-
-<div class="l107-flow">
-<div class="l107-fbox" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe">Фильтр</div>
-<div class="l107-farr">→</div>
-<div class="l107-fbox" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca">Боль</div>
-<div class="l107-farr">→</div>
-<div class="l107-fbox" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0">Результат</div>
-<div class="l107-farr">→</div>
-<div class="l107-fbox" style="background:#fef9c3;color:#854d0e;border:1px solid #fde68a">Действие</div>
-</div>
-
-<div class="l107-step"><div class="l107-snum" style="background:#3b82f6">1</div><div><div class="l107-stitle">Фильтр — кто этот человек</div><div class="l107-stext">"Для владельцев стоматологий" / "Для тех, кто строит дом" / "Владельцы салонов красоты — читайте"</div></div></div>
-<div class="l107-step"><div class="l107-snum" style="background:#ef4444">2</div><div><div class="l107-stitle">Боль — что её раздражает прямо сейчас</div><div class="l107-stext">"График врачей заполнен на 40%?" / "Цена изменилась после подписания?" — конкретная ситуация которую человек узнаёт</div></div></div>
-<div class="l107-step"><div class="l107-snum" style="background:#22c55e">3</div><div><div class="l107-stitle">Результат — что она получит конкретно</div><div class="l107-stext">"80% записи без вашего участия за 65 дней" — не "улучшим бизнес", а конкретная цифра и срок</div></div></div>
-<div class="l107-step"><div class="l107-snum" style="background:#f59e0b">4</div><div><div class="l107-stitle">Действие — что сделать дальше</div><div class="l107-stext">"Нажмите — оставьте заявку" / "Записывайтесь — консультация бесплатно" — одно конкретное действие</div></div></div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Картинка</div>
-<div class="l107-h">Что писать на картинке — 3 зоны и 5 правил</div>
-
-<div class="l107-imgzone">
-<div class="l107-zone" style="background:#374151"><div class="l107-zone-lbl" style="color:#9ca3af">Зона 1 — фильтр + бренд</div><div style="color:#e5e7eb;font-size:.82rem">Для владельцев стоматологий | TALKO System</div></div>
-<div class="l107-zone" style="background:#111827;padding:16px 12px"><div class="l107-zone-lbl" style="color:#6b7280">Зона 2 — заголовок (самый большой)</div><div style="color:white;font-size:1rem;font-weight:700;line-height:1.4">График врачей на 80%<br>без вашего контроля</div></div>
-<div class="l107-zone" style="background:#1f2937"><div class="l107-zone-lbl" style="color:#9ca3af">Зона 3 — подзаголовок</div><div style="color:#d1fae5;font-size:.82rem">За 65 дней — даже если сейчас полный хаос</div></div>
-</div>
-
-<div class="l107-card"><p><strong>Правило:</strong> максимум 10-12 слов на всю картинку. Человек сканирует, а не читает. Больше — не читают.</p></div>
-
-<div class="l107-rule"><div class="l107-rnum">1</div><div><div class="l107-stitle">Максимум 10-12 слов на всю картинку</div><div class="l107-stext">Человек сканирует за 1-2 секунды. Больше слов — не читают. Одна главная мысль = одна картинка.</div></div></div>
-<div class="l107-rule"><div class="l107-rnum">2</div><div><div class="l107-stitle">Цифра всегда лучше слова</div><div class="l107-stext">
-<div class="l107-bad" style="margin:0 0 .3rem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>&nbsp;"Увеличим запись"</div>
-<div class="l107-good" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="14" height="14" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>&nbsp;"Запись +40% за 30 дней"</div>
-</div></div></div>
-<div class="l107-rule"><div class="l107-rnum">3</div><div><div class="l107-stitle">Вопрос или стейтмент</div><div class="l107-stext">Вопрос цепляет эмоционально: "Врачи работают как хотят?"<br>Стейтмент даёт результат: "80% записи без вашего участия"</div></div></div>
-<div class="l107-rule"><div class="l107-rnum">4</div><div><div class="l107-stitle">Контраст текста и фона</div><div class="l107-stext">Белый текст на тёмном фото. Тёмный текст на светлом. Без градиентов и сложных шрифтов — простота читается лучше.</div></div></div>
-<div class="l107-rule"><div class="l107-rnum">5</div><div><div class="l107-stitle">Coca-Cola может без текста — ты нет</div><div class="l107-stext">Красивый визуал без текста — реклама бренда. Для этого нужны миллионы и годы. Текст с болью или цифрой — человек понимает что ему предлагают конкретно.</div></div></div>
-
-<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #22c55e;border-radius:12px;padding:1rem;margin:.75rem 0;text-align:center">
-<div style="font-size:.82rem;font-weight:700;color:#166534">Визуал останавливает · Текст объясняет · Вместе — конвертируют</div>
-</div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Примеры объявлений</div>
-<div class="l107-h">Готовые объявления по нишам — бери и адаптируй</div>
-
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-Для владельцев клиник
-</div>
-<div class="l107-ad-title">Устали контролировать врачей и администраторов?</div>
-<div class="l107-ad-body">Бесплатный мастер-класс: как сделать так, чтобы <strong>80-90% вопросов решались без вас</strong>, а прибыль росла стабильно</div>
-<div class="l107-ad-btn">TALKO System</div>
-</div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Почему работает</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Фильтр:</strong> "Для владельцев клиник" — сразу своя аудитория, остальные листают дальше</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Боль:</strong> "Устали контролировать" — каждый владелец клиники это чувствует</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Результат + цифра:</strong> "80-90% вопросов без вас" — конкретное обещание, не "улучшим процессы"</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Снятие барьера:</strong> бесплатный мастер-класс = легко сделать первый шаг</div></div>
+<div class="lesson-block intro">
+<div class="lesson-block-header"><div class="lesson-block-title">Зачем знать структуру объявления</div></div>
+<div class="lesson-block-content">
+<p>Meta показывает твоё объявление сотням людей. У каждого есть <strong>0.5–2 секунды</strong> чтобы решить — листать дальше или остановиться.</p>
+<p style="margin-top:.65rem">Большинство проваливается не из-за плохой услуги — а из-за того что не знают <strong>для чего каждый элемент</strong> и что в нём писать.</p>
 </div>
 </div>
 
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-Для пациентов Луцка
-</div>
-<div class="l107-ad-title">Стесняетесь улыбаться из-за отсутствующего зуба?</div>
-<div class="l107-ad-body">Имплантация от <strong>8 900 грн</strong>. Запись на этой неделе — <strong>бесплатная консультация</strong></div>
-<div class="l107-ad-btn">Клиника [Название]</div>
-</div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Почему работает</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Фильтр:</strong> Луцк — сразу локальная аудитория</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Боль:</strong> стыд — это эмоция, не просто "нет зуба"</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Цифра:</strong> конкретная цена снимает страх неизвестности</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Снятие барьера:</strong> бесплатная консультация = легко сделать первый шаг</div></div>
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">1</span> Текст объявления</div></div>
+<div class="lesson-block-content">
+<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> зацепить и потянуть вниз. Одна острая мысль — боль, провокация или неожиданный факт.</p>
+<div class="l107-bad">✗ Хотите развивать свой бизнес? Мы поможем!</div>
+<div class="l107-good">✓ Вы до сих пор контролируете каждый объект вручную? Есть системное решение.</div>
+<div class="l107-rule">💡 Правило: один текст — одна мысль — одна аудитория. Если подходит всем — не останавливает никого.</div>
 </div>
 </div>
 
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-Планируете строить дом?
-</div>
-<div class="l107-ad-title">Цена растёт пока вы думаете</div>
-<div class="l107-ad-body">Фиксируем стоимость на этапе договора. <strong>Точная смета за 24 часа — бесплатно</strong></div>
-<div class="l107-ad-btn">[Компания] | Гарантия письменно</div>
-</div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Почему работает</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Фильтр:</strong> "Планируете строить" — сразу своя аудитория</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Боль:</strong> страх подорожания — реальный и актуальный для всех кто строит</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Доверие:</strong> "гарантия письменно" — снимает скептицизм</div></div>
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">2</span> Заголовок креатива</div></div>
+<div class="lesson-block-content">
+<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> остановить листание за 0.5 секунды. Острая боль + чёткий фильтр аудитории.</p>
+<div class="l107-bad">✗ Устали от хаоса в бизнесе? — подходит абсолютно всем, поэтому не останавливает никого</div>
+<div class="l107-good">✓ Устали контролировать прорабов, подрядников и каждый объект вручную? — сразу ясно кто это читает</div>
+<div class="l107-rule">💡 Формула: [кто это читает] + [их конкретная боль]. Чем уже — тем лучше кликают свои.</div>
 </div>
 </div>
 
-<div class="l107-ad">
-<div class="l107-ad-inner">
-<div class="l107-ad-badge">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="12" height="12" style="vertical-align:middle;margin-right:4px"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-Для владельцев МСБ
-</div>
-<div class="l107-ad-title">Когда последний раз вы были в отпуске БЕЗ телефона?</div>
-<div class="l107-ad-body">Покажу где утекают деньги за <strong>60 минут — бесплатно</strong>.<br>150+ кейсов. Конкретика, а не теория.</div>
-<div class="l107-ad-btn">[Имя консультанта]</div>
-</div>
-<div class="l107-ad-explain">
-<div class="l107-ad-explain-title">Почему работает</div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Вопрос-зеркало:</strong> владелец сразу представляет себя — и ответ "давно" создаёт напряжение</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Конкретное обещание:</strong> "где утекают деньги" — не "улучшим бизнес"</div></div>
-<div class="l107-ad-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="13" height="13" style="flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Низкий барьер:</strong> 60 минут + бесплатно = легко согласиться</div></div>
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">3</span> Подзаголовок креатива</div></div>
+<div class="lesson-block-content">
+<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> раскрыть оффер — конкретное обещание результата. Не процесс, не характеристики — результат.</p>
+<div class="l107-bad">✗ Мастер-класс про управление строительными процессами</div>
+<div class="l107-good">✓ Как построить систему, где 80–90% решений принимаются без вас</div>
+<div class="l107-rule">💡 Цифры усиливают доверие — "80–90%" лучше чем "большинство решений".</div>
 </div>
 </div>
 
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Meta vs Google</div>
-<div class="l107-h">Где размещать — разная логика, разный текст</div>
-
-<div class="l107-card"><p>Meta — ты <strong>перебиваешь</strong> человека. Он листал котиков, а тут ты. Поэтому первое слово — фильтр и боль.<br>Google — человек <strong>уже ищет</strong> решение. Поэтому первое слово — ответ на его запрос + почему именно ты.</p></div>
-
-<div class="l107-platform" style="background:#f0fdf4;border:1.5px solid #22c55e">
-<div class="l107-ptitle" style="color:#166534">
-<svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-META (Facebook + Instagram) — холодная аудитория
-</div>
-<div class="l107-pfield" style="border-color:#bbf7d0"><div class="l107-pfname" style="color:#15803d">Основной текст</div>Полное объявление 3-5 предложений: фильтр + боль + результат + призыв к действию</div>
-<div class="l107-pfield" style="border-color:#bbf7d0"><div class="l107-pfname" style="color:#15803d">Заголовок (под картинкой, 5-7 слов)</div>"Запись на 80% без вашего участия" или "График врачей — полный. Без вас"</div>
-<div class="l107-pfield" style="border-color:#bbf7d0"><div class="l107-pfname" style="color:#15803d">Описание</div>"Бесплатно. Без обязательств" / "170+ клиник уже внедрили" / "Мест ограничено"</div>
-<div class="l107-pfield" style="border-color:#bbf7d0"><div class="l107-pfname" style="color:#15803d">CTA кнопка</div>"Узнать больше" или "Зарегистрироваться" — для консалтинга и медицины лучше чем "Купить сейчас"</div>
-</div>
-
-<div class="l107-platform" style="background:#fefce8;border:1.5px solid #fde68a">
-<div class="l107-ptitle" style="color:#854d0e">
-<svg viewBox="0 0 24 24" fill="none" stroke="#854d0e" stroke-width="1.75" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-GOOGLE — тёплая аудитория, уже ищет
-</div>
-<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#92400e">Заголовки (до 15 × 30 символов)</div>1: "Имплантация зубов Луцк" · 2: "От 8 900 грн. Гарантия 5 лет" · 3: "Бесплатная консультация"</div>
-<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#92400e">Описания (до 4 × 90 символов)</div>"Система управления бизнесом за 65 дней. 170+ клиник. Первая консультация — бесплатно"</div>
-<div class="l107-pfield" style="border-color:#fde68a"><div class="l107-pfname" style="color:#92400e">Расширения (Assets)</div>Уточнения: "Гарантия результата", "Без скрытых платежей" · Ссылки: "Цены", "Отзывы", "Записаться"</div>
-</div>
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">AI за 5 минут</div>
-<div class="l107-h">Получи готовые тексты для рекламы через AI</div>
-
-<div class="l107-code">
-<span style="color:#9ca3af">Твой текст об услуге (любой)</span><br>
-<span style="color:#22c55e">        ↓</span><br>
-<span style="color:#e2e8f0">Вставляешь в AI-ассистент и пишешь:</span><br>
-<span style="color:#60a5fa">"Сделай тексты для рекламы в Meta и Google"</span><br>
-<span style="color:#22c55e">        ↓</span><br>
-<span style="color:#e2e8f0">Получаешь: текст, заголовки, описания, варианты</span><br>
-<span style="color:#22c55e">        ↓</span><br>
-<span style="color:#e2e8f0">Добавляешь свои цифры, город, нишу → запускаешь</span>
-</div>
-
-<div class="l107-step"><div class="l107-snum">1</div><div><div class="l107-stitle">Подготовь свой текст — любой</div><div class="l107-stext">Описание услуги с сайта, Instagram, то что пишешь клиенту в мессенджере, или просто несколько предложений о том что ты делаешь и для кого. Не должно быть идеально — AI разберётся.</div></div></div>
-<div class="l107-step"><div class="l107-snum">2</div><div><div class="l107-stitle">Открой AI-ассистент и вставь текст</div><div class="l107-stext">Специально настроен под рекламные объявления. Напиши: "Вот мой текст. Сделай тексты для рекламы в Meta и Google"</div></div></div>
-<div class="l107-step"><div class="l107-snum">3</div><div><div class="l107-stitle">Проверь и добавь конкретику</div><div class="l107-stext">Тексты от AI — заготовка, не финал. Перечитай звучит ли как ты, добавь свои цифры, город, нишу — и запускай.</div></div></div>
-
-<a href="https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads" target="_blank" class="l107-ai-btn">
-<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="16" height="16"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-
-
-<div class="l107-div"></div>
-
-<div class="l107-lbl">Шаг 5 — Бонус</div>
-<div class="l107-h">Прогревающая воронка перед консультацией</div>
-
-<div class="l107-card">
-<p>Тот же AI-ассистент сделает тебе ещё одну вещь — прогревающую воронку.</p>
-<p><strong>Простыми словами:</strong> человек увидел рекламу → кликнул → и вместо того чтобы сразу записаться он "холодный". Ему нужно время и причина.</p>
-<p>Воронка — это серия вопросов или сообщений, которые разогревают человека, показывают что ты понимаешь его проблему и подталкивают к записи. Не "купи сейчас" — а "давай разберёмся вместе".</p>
-</div>
-
-<div class="l107-step">
-<div class="l107-snum" style="background:#8b5cf6">5</div>
-<div><div class="l107-stitle">Как получить воронку — один запрос</div>
-<div class="l107-stext">После того как получил рекламные тексты — напиши ассистенту:<br><br>
-<span style="background:#0f172a;color:#60a5fa;padding:.3rem .6rem;border-radius:6px;font-family:monospace;font-size:.8rem;display:inline-block;line-height:1.5">"Теперь сделай прогревающую воронку из вопросов для мессенджера — чтобы после клика на рекламу человек пришёл на консультацию подготовленным"</span><br><br>
-Ассистент сформирует последовательность сообщений и вопросов под твою нишу.</div>
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">4</span> Домен</div></div>
+<div class="lesson-block-content">
+<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> подтвердить легитимность. Человек подсознательно проверяет — куда я попаду если нажму?</p>
+<div class="l107-bad">✗ bit.ly/3xK9mP2 — сокращённая ссылка, выглядит как спам</div>
+<div class="l107-good">✓ contractor.ua — чётко, понятно, соответствует бренду</div>
+<div class="l107-rule">💡 Используй собственный домен, а не сторонние сервисы.</div>
 </div>
 </div>
 
-<div style="overflow-x:auto;margin:.75rem 0">
-<table style="width:100%;border-collapse:collapse;font-size:.8rem">
-<tr>
-<th style="padding:.5rem .75rem;background:#fef2f2;color:#dc2626;font-weight:700;border:1px solid #fecaca;text-align:left">Без воронки</th>
-<th style="padding:.5rem .75rem;background:#f0fdf4;color:#16a34a;font-weight:700;border:1px solid #bbf7d0;text-align:left">С воронкой</th>
-</tr>
-<tr>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Человек кликнул — и тишина</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Человек сразу получает сообщение</td>
-</tr>
-<tr style="background:#f9fafb">
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Ты ждёшь пока он напишет</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Он отвечает на вопросы сам</td>
-</tr>
-<tr>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">На консультацию приходит "холодным"</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Приходит уже подготовленным</td>
-</tr>
-<tr style="background:#f9fafb">
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Ты тратишь 40-60 мин на выяснение</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Консультация занимает 20-30 мин</td>
-</tr>
-<tr>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Конверсия в оплату ниже</td>
-<td style="padding:.5rem .75rem;border:1px solid #e5e7eb;color:#374151">Конверсия выше — человек уже "свой"</td>
-</tr>
-</table>
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">5</span> Заголовок ссылки (Headline)</div></div>
+<div class="lesson-block-content">
+<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> последний толчок к клику. Лимит — 27 символов видно сразу. Новый аргумент, не повтор заголовка.</p>
+<div class="l107-bad">✗ Устали контролировать прорабов? — уже было в заголовке</div>
+<div class="l107-good">✓ Регистрируйтесь на бесплатный мастер-класс — конкретное действие + выгода</div>
+<div class="l107-rule">💡 Headline + CTA кнопка работают вместе. Headline "Регистрируйтесь" — кнопка "Записаться".</div>
+</div>
+</div>
+
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">6</span> Описание ссылки</div></div>
+<div class="lesson-block-content">
+<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> снять последнее возражение или усилить срочность. Лимит — 27 символов.</p>
+<div class="l107-bad">✗ Узнайте больше на нашем сайте</div>
+<div class="l107-good">✓ Мест мало — регистрация закрывается скоро</div>
+<div class="l107-rule">💡 Срочность или дефицит в описании = выше CTR. "Мест мало", "До пятницы", "Осталось 3 места".</div>
+</div>
+</div>
+
+<div class="lesson-block">
+<div class="lesson-block-header"><div class="lesson-block-title"><span class="l107-num">7</span> Кнопка CTA</div></div>
+<div class="lesson-block-content">
+<p style="font-size:.88rem;color:#374151;margin-bottom:.65rem"><strong>Задача:</strong> одна конкретная команда к действию. Должна точно соответствовать тому что получит человек после клика.</p>
+<div class="l107-bad">✗ "Узнать больше" когда человек попадает на форму регистрации — обманывает ожидания</div>
+<div class="l107-good">✓ "Записаться" или "Зарегистрироваться" когда ведёшь на регистрацию — человек знает куда идёт</div>
+<div class="l107-rule">💡 Согласованность CTA → лендинг → результат = выше конверсия.</div>
+</div>
 </div>
 
 <div style="background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:12px;padding:.9rem 1rem;margin:.75rem 0;display:flex;gap:.6rem;align-items:flex-start">
-<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-<div style="font-size:.82rem;color:#374151"><strong style="color:#7c3aed">Как технически запустить воронку в мессенджере</strong> — разберём отдельно в разделе "Боты и AI цепочки". Там покажу как автоматизировать так, чтобы воронка работала без твоего участия — 24/7.</div>
+<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="18" height="18" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg>
+<div style="font-size:.82rem;color:#374151"><strong style="color:#7c3aed">AI-ассистент поможет написать все 7 элементов</strong> под твою услугу за 5 минут. Открой ассистент ниже, опиши свою услугу и попроси: "Напиши объявление для Meta со всеми 7 элементами".</div>
 </div>
+`,
 
-Открыть Master of Selling Copy for Ads
-</a>`,
-
-            homework: 'Напиши продаючий текст про свою послугу (3-5 речень). Відкрий AI-асистент, встав текст і попроси: "Зроби тексти для реклами в Meta та Google". Потім попроси: "Зроби прогріваючу воронку для месенджера". Збережи обидва результати — вони знадобляться для наступного кроку.',
-            homework_ru: 'Напиши продающий текст о своей услуге (3-5 предложений). Открой AI-ассистент, вставь текст и попроси: "Сделай тексты для рекламы в Meta и Google". Затем попроси: "Сделай прогревающую воронку для мессенджера". Сохрани оба результата — они понадобятся для следующего шага.',
+            homework: 'Візьми будь-яке своє поточне оголошення (або придумай нове) і перевір кожен з 7 елементів по чеклісту. Відкрий AI-асистент нижче і попроси: "Напиши оголошення для Meta з усіма 7 елементами для моєї послуги [опиши свою послугу]". Порівняй результат з поточним оголошенням.',
+            homework_ru: 'Возьми любое своё текущее объявление (или придумай новое) и проверь каждый из 7 элементов по чеклисту. Открой AI-ассистент ниже и попроси: "Напиши объявление для Meta со всеми 7 элементами для моей услуги [опиши свою услугу]". Сравни результат с текущим объявлением.',
             homeworkLink: 'https://chatgpt.com/g/g-68957c0d5ed48191bc4f014fc36f7942-master-of-selling-copy-for-ads',
-            homeworkLinkName: 'Відкрити AI-асистент копірайтингу',
-            homeworkLinkName_ru: 'Открыть AI-ассистент копирайтинга',
+            homeworkLinkName: '→ AI-асистент копірайтингу для реклами',
+            homeworkLinkName_ru: '→ AI-ассистент копирайтинга для рекламы',
         },
-
     ];
 
-    // Merge into main course data
-    if (window.learningCourseData) {
-        window.learningCourseData = window.learningCourseData.concat(marketingCourseData);
-    } else {
-        window.learningCourseData = marketingCourseData;
-    }
-
-    // Реєстр курсів
-    window.learningCategories = window.learningCategories || [
+    // ── КАТЕГОРІЇ КУРСУ ──────────────────────────────────────
+    window.learningCourseCategories = window.learningCourseCategories || [
         {
             id: 'systematization',
             title: 'Систематизація бізнесу',
