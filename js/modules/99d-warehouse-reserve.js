@@ -20,12 +20,21 @@
 
   // ─── Атомарне резервування ────────────────────────────────────────────────
   // Повертає { success: true } або { success: false, conflicts: [{name, needed, available}] }
+  // БАГ 31: Firestore транзакція має ліміт 500 операцій.
+  // 1 позиція = 1 read + 1 update + 1 set(лог) = 3 ops → максимум 166 позицій.
+  // Ліміт встановлено на 150 для запасу.
+  const MAX_ITEMS_PER_TXN = 150;
+
   window.warehouseReserve = async function(orderId, items) {
     if (!db() || !cid()) return { success: false, error: 'no db/cid' };
 
     const compRef = db().collection('companies').doc(cid());
-    const warehouseItems = items.filter(i => i.warehouseItemId);
+    const warehouseItems = items.filter(i => i.warehouseItemId).slice(0, MAX_ITEMS_PER_TXN);
     if (!warehouseItems.length) return { success: true };
+
+    if (items.filter(i => i.warehouseItemId).length > MAX_ITEMS_PER_TXN) {
+      console.warn(`warehouseReserve: truncated to ${MAX_ITEMS_PER_TXN} items`);
+    }
 
     const conflicts = [];
 
@@ -110,9 +119,8 @@
   // ─── Звільнення резерву (при скасуванні замовлення) ──────────────────────
   window.warehouseRelease = async function(orderId, items) {
     if (!db() || !cid()) return { success: false };
-
     const compRef = db().collection('companies').doc(cid());
-    const warehouseItems = items.filter(i => i.warehouseItemId);
+    const warehouseItems = items.filter(i => i.warehouseItemId).slice(0, MAX_ITEMS_PER_TXN);
     if (!warehouseItems.length) return { success: true };
 
     try {
@@ -167,11 +175,9 @@
   // ─── Атомарне списання (при проведенні реалізації) ───────────────────────
   window.warehouseDeduct = async function(realizationId, items) {
     if (!db() || !cid()) return { success: false };
-
     const compRef = db().collection('companies').doc(cid());
-    const warehouseItems = items.filter(i => i.warehouseItemId);
+    const warehouseItems = items.filter(i => i.warehouseItemId).slice(0, MAX_ITEMS_PER_TXN);
     if (!warehouseItems.length) return { success: true };
-
     const conflicts = [];
 
     try {

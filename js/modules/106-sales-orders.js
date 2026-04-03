@@ -953,17 +953,18 @@
   };
 
   // ─── CREATE REALIZATION (placeholder — module 107 handles it) ─────────────
-  window._soCreateRealization = function (orderId) {
+  window._soCreateRealization = async function (orderId) {
     const order = S.orders.find(o => o.id === orderId);
     if (!order) return;
     if (typeof window.openSalesRealizationModal === 'function') {
-      window.openSalesRealizationModal(null, order);
+      // БАГ 29 fix: await — бо openSalesRealizationModal тепер async (завантажує дані)
+      await window.openSalesRealizationModal(null, order);
     } else {
       showToast(tg('Модуль реалізації завантажується...','Realization module loading...'), 'info');
       if (typeof window.lazyLoad === 'function') {
-        window.lazyLoad('sales', () => {
+        window.lazyLoad('sales', async () => {
           if (typeof window.openSalesRealizationModal === 'function') {
-            window.openSalesRealizationModal(null, order);
+            await window.openSalesRealizationModal(null, order);
           }
         });
       }

@@ -27,21 +27,25 @@
       S.debtors=snap.docs.map(d=>({id:d.id,...d.data()}));
       const today=todayISO();
 
-      // БАГ 27 fix: синхронізуємо overdue в Firestore (batch, не більше 10 за раз щоб не блокувати UI)
+      // БАГ 27+30 fix: синхронізуємо overdue в Firestore — всі через батчі по 400
       const toUpdate = S.debtors.filter(d =>
         (d.status==='open'||d.status==='partial') && d.dueDate && d.dueDate < today
       );
-      // Локально оновлюємо одразу
       toUpdate.forEach(d => { d.status = 'overdue'; });
-      // Асинхронно пишемо в Firestore (не чекаємо — щоб не затримувати UI)
       if (toUpdate.length) {
-        const batch = db().batch();
-        toUpdate.slice(0, 20).forEach(d => {
-          batch.update(db().collection('companies').doc(cid()).collection('sales_debtors').doc(d.id), {
-            status: 'overdue', updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-        });
-        batch.commit().catch(e => console.warn('108 overdue sync:', e.message));
+        const CHUNK = 400;
+        const syncAll = async () => {
+          for (let i = 0; i < toUpdate.length; i += CHUNK) {
+            const b = db().batch();
+            toUpdate.slice(i, i + CHUNK).forEach(d => {
+              b.update(db().collection('companies').doc(cid()).collection('sales_debtors').doc(d.id), {
+                status: 'overdue', updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+            });
+            await b.commit();
+          }
+        };
+        syncAll().catch(e => console.warn('108 overdue sync:', e.message));
       }
 
       renderList(); renderSummary();
