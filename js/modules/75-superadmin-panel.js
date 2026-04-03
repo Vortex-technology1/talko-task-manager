@@ -466,9 +466,13 @@ function _saRenderCompanies(pc) {
             ? `<span style="background:#fef9c3;color:#92400e;padding:1px 5px;border-radius:4px;font-size:0.65rem;">${c.daysSinceActivity}д</span>`
             : `<span style="background:#dcfce7;color:#16a34a;padding:1px 5px;border-radius:4px;font-size:0.65rem;">today</span>`;
 
-        return `<tr data-name="${(d.name||c.id).toLowerCase()}" style="border-bottom:1px solid #f3f4f6;cursor:pointer;"
-            onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background=''">
-            <td style="padding:0.4rem 0.5rem;font-weight:600;font-size:0.8rem;cursor:pointer;" onclick="saOpenCompanyDetail('${c.id}')">${_saEsc(d.name||c.id)}</td>
+        return `<tr data-name="${(d.name||c.id).toLowerCase()}"
+            style="border-bottom:1px solid #f3f4f6;cursor:pointer;${d.disabled && !d.pendingApproval ? 'background:#fff5f5;' : d.pendingApproval ? 'background:#fffbeb;' : ''}"
+            onmouseenter="this.style.background='${d.disabled && !d.pendingApproval ? '#fee2e2' : d.pendingApproval ? '#fef3c7' : '#fafafa'}'"
+            onmouseleave="this.style.background='${d.disabled && !d.pendingApproval ? '#fff5f5' : d.pendingApproval ? '#fffbeb' : ''}'">
+            <td style="padding:0.4rem 0.5rem;font-weight:600;font-size:0.8rem;cursor:pointer;" onclick="saOpenCompanyDetail('${c.id}')">
+                ${d.pendingApproval ? '<span title="Очікує підтвердження" style="color:#f59e0b;">⏳ </span>' : d.disabled ? '<span title="Заблоковано" style="color:#ef4444;">🔒 </span>' : ''}${_saEsc(d.name||c.id)}
+            </td>
             <td style="padding:0.4rem 0.5rem;">${planBadge}</td>
             <td style="padding:0.4rem 0.5rem;font-size:0.78rem;">${c.users.length}</td>
             <td style="padding:0.4rem 0.5rem;font-size:0.78rem;">${c.activeTasks}</td>
