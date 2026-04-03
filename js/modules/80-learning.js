@@ -6052,7 +6052,7 @@
 
     // ── Progress helpers ──────────────────────────────────────
     function updateModulesFromLearningProgress() {
-        learningCourseData.forEach(module => {
+        (window.learningCourseData || learningCourseData).forEach(module => {
             const p = learningProgress[module.id];
             if (p) {
                 module.completed = !!p.completed;
@@ -6065,8 +6065,9 @@
     }
 
     function getLearningStats() {
-        const total = learningCourseData.length;
-        const completed = learningCourseData.filter(m => m.completed).length;
+        const _cdata = window.learningCourseData || learningCourseData;
+        const total = _cdata.length;
+        const completed = _cdata.filter(m => m.completed).length;
         const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
         return { total, completed, pct };
     }
@@ -6108,7 +6109,7 @@
 
             <!-- Modules list -->
             <div class="learning-modules-list" id="learningModulesList">
-                ${learningCourseData.map(module => renderModuleCard(module, isRu)).join('')}
+                ${(window.learningCourseData || learningCourseData).map(module => renderModuleCard(module, isRu)).join('')}
             </div>
         </div>`;
 
@@ -11078,7 +11079,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
 
     window._openLearningModule = function(moduleId) {
-        const module = learningCourseData.find(m => m.id === moduleId);
+        const module = (window.learningCourseData || learningCourseData).find(m => m.id === moduleId);
         if (!module) return;
         currentLearningModule = module;
         const _lang = getLearningLang();
