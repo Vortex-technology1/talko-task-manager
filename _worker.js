@@ -913,7 +913,7 @@ async function handleWhatsAppWebhook(request, url, env) {
                 }
             }
         } else {
-            await waSend(waPhone, 'Вітаємо! Напишіть нам і ми зв'яжемося з вами.');
+            await waSend(waPhone, "Вітаємо! Напишіть нам і ми зв'яжемося з вами.");
         }
     }
 
@@ -2812,7 +2812,7 @@ ${e.stack?.slice(0,200)}`);
                         }
                     }
                 } else {
-                    await igSend(senderId, 'Вітаємо! Напишіть нам і ми зв'яжемося з вами.');
+                    await igSend(senderId, "Вітаємо! Напишіть нам і ми зв'яжемося з вами.");
                 }
             }
         }
