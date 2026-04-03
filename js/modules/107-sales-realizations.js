@@ -117,7 +117,10 @@
             acts.push(`<button onclick="window._srPost('${r.id}')" style="padding:4px 8px;border:none;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;background:#d1fae5;color:#059669">${tg('Провести','Post')}</button>`);
             acts.push(`<button onclick="window.openSalesRealizationModal('${r.id}')" style="padding:4px 6px;border:1px solid #e5e7eb;border-radius:5px;cursor:pointer;background:#fff;color:#6b7280"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>`);
           }
-          if(r.status==='posted'&&r.pdfUrl) acts.push(`<a href="${esc(r.pdfUrl)}" target="_blank" style="padding:4px 8px;border:none;border-radius:5px;font-size:.75rem;font-weight:600;background:#dbeafe;color:#2563eb;text-decoration:none">PDF</a>`);
+          if(r.status==='posted') {
+            acts.push(`<button onclick="window._srOpenPdf('${r.id}','invoice')" style="padding:4px 8px;border:none;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;background:#dbeafe;color:#2563eb">${tg('Накладна','Invoice')}</button>`);
+            if(r.type==='services'||r.type==='mixed') acts.push(`<button onclick="window._srOpenPdf('${r.id}','act')" style="padding:4px 8px;border:none;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;background:#f0fdf4;color:#059669">${tg('Акт','Act')}</button>`);
+          }
         }
         return `<tr style="border-bottom:1px solid #f1f5f9;${i%2?'background:#fafbfc':''}" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='${i%2?'#fafbfc':''}'">
           <td style="padding:10px 12px;font-weight:600;color:#059669;white-space:nowrap">${esc(r.number||'—')}</td>
@@ -334,6 +337,33 @@
     const r=S.realizations.find(x=>x.id===rid); if(!r) return;
     try{await _postRealization(rid,r);toast(tg('Реалізацію проведено','Realization posted'));await loadRealizations();}
     catch(e){console.error('_srPost:',e);toast(tg('Помилка: ','Error: ')+e.message,'error');}
+  };
+
+  // ─── PDF генерація ────────────────────────────────────────────────────────
+  window._srOpenPdf = async function(realizationId, type) {
+    const companyId = window.currentCompanyId;
+    if (!companyId) { toast(tg('Помилка: немає companyId','Error: no companyId'), 'error'); return; }
+
+    let idToken = '';
+    try { idToken = await firebase.auth().currentUser?.getIdToken() || ''; }
+    catch(e) { console.warn('_srOpenPdf getIdToken:', e.message); }
+
+    const url = `https://apptalko.com/api/generate-pdf?type=${type}&realizationId=${encodeURIComponent(realizationId)}&cid=${encodeURIComponent(companyId)}`;
+
+    toast(tg('Генеруємо документ...','Generating document...'), 'info');
+    try {
+      const resp = await fetch(url, { headers: idToken ? { Authorization: `Bearer ${idToken}` } : {} });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const htmlText = await resp.text();
+      const blob = new Blob([htmlText], { type: 'text/html;charset=utf-8' });
+      const blobUrl = URL.createObjectURL(blob);
+      const win = window.open(blobUrl, '_blank');
+      if (!win) toast(tg('Дозвольте спливаючі вікна для apptalko.com','Allow popups for apptalko.com'), 'error');
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+    } catch(e) {
+      console.error('_srOpenPdf:', e);
+      toast(tg('Помилка генерації: ','Generation error: ') + e.message, 'error');
+    }
   };
 
   window.initSalesRealizations=async function(){

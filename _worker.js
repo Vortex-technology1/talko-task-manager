@@ -239,6 +239,9 @@ export default {
         // ── /api/crm-trigger-notify ──────────────────────────
         if (path === '/api/crm-trigger-notify') return handleCrmTriggerNotify(request, env);
 
+        // ── /api/generate-pdf ─── накладні та акти ───────────
+        if (path === '/api/generate-pdf') return handleGeneratePdf(request, url, env);
+
         // ── /api/ping ────────────────────────────────────────
         if (path === '/api/ping') return json({ ok:true, ts:Date.now() });
 
@@ -2081,4 +2084,242 @@ res.textContent='\u041f\u043e\u043c\u0438\u043b\u043a\u0430. \u0421\u043f\u0440\
     case 'html': return b.rawHtml?`<div class="html-block">${b.rawHtml}</div>`:'';
     default: return b.title?`<section class="sec"><div class="wrap"><h2>${esc(b.title)}</h2></div></section>`:'';
     }
+}
+
+// ════════════════════════════════════════════════════════════
+// handleGeneratePdf — генерація PDF (HTML для друку)
+// GET /api/generate-pdf?type=invoice|act&realizationId=X&cid=Y
+// Authorization: Bearer <idToken>
+// ════════════════════════════════════════════════════════════
+async function handleGeneratePdf(request, url, env) {
+    // Auth
+    const authHeader = request.headers.get('Authorization') || '';
+    const idToken = authHeader.replace('Bearer ', '').trim();
+    if (!idToken) return json({ error: 'unauthorized' }, 401);
+
+    const type          = url.searchParams.get('type') || 'invoice'; // invoice | act
+    const realizationId = url.searchParams.get('realizationId');
+    const companyId     = url.searchParams.get('cid');
+
+    if (!realizationId || !companyId) return json({ error: 'missing params' }, 400);
+
+    try {
+        const token = await getServiceAccountToken(env);
+        if (!token) return json({ error: 'auth failed' }, 500);
+
+        // Завантажуємо реалізацію
+        const rDoc = await fsGet(`companies/${companyId}/sales_realizations/${realizationId}`, token);
+        if (!rDoc) return json({ error: 'realization not found' }, 404);
+        const r = fFields(rDoc.fields || {});
+
+        // Завантажуємо налаштування компанії
+        const settDoc = await fsGet(`companies/${companyId}/settings/main`, token);
+        const sett = settDoc ? fFields(settDoc.fields || {}) : {};
+
+        // Завантажуємо назву компанії
+        const compDoc = await fsGet(`companies/${companyId}`, token);
+        const comp = compDoc ? fFields(compDoc.fields || {}) : {};
+
+        const companyName = comp.name || sett.companyName || 'TALKO';
+        const companyEdrpou = sett.edrpou || sett.inn || '';
+        const companyAddress = sett.address || '';
+        const companyPhone = sett.phone || '';
+        const currency = r.currency || 'UAH';
+        const docDate = r.realizationDate || new Date().toISOString().slice(0,10);
+        const docNum  = r.number || realizationId.slice(0,8);
+        const clientName = r.clientName || '—';
+        const items = Array.isArray(r.items) ? r.items : [];
+
+        // Розрахунок підсумку
+        let subtotal = 0;
+        items.forEach(it => { subtotal += Number(it.lineTotal || (Number(it.qty||1)*Number(it.price||0))); });
+        subtotal = Math.round(subtotal * 100) / 100;
+
+        const isInvoice = type === 'invoice';
+        const docTitle  = isInvoice ? 'Видаткова накладна' : 'Акт виконаних робіт';
+        const docTitleEn = isInvoice ? 'Delivery Note' : 'Service Completion Act';
+
+        // Таблиця позицій
+        const rows = items.map((it, idx) => {
+            const qty   = Number(it.qty || 1);
+            const price = Number(it.price || 0);
+            const disc  = Number(it.discount || 0);
+            const line  = Number(it.lineTotal || Math.round(qty * price * (1 - disc/100) * 100) / 100);
+            return `<tr>
+                <td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;color:#6b7280">${idx+1}</td>
+                <td style="padding:7px 10px;border:1px solid #e5e7eb">${escHtml(it.name||'—')}</td>
+                <td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center">${qty}</td>
+                <td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center">${escHtml(it.unit||'шт')}</td>
+                <td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:right">${fmtNum(price)}</td>
+                ${disc>0?`<td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;color:#ef4444">${disc}%</td>`:'<td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;color:#9ca3af">—</td>'}
+                <td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:right;font-weight:600">${fmtNum(line)}</td>
+            </tr>`;
+        }).join('');
+
+        // Сума прописом (спрощена)
+        const amountWords = numToWordsUa(subtotal, currency);
+
+        const htmlDoc = `<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${docTitle} ${docNum}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #111; background: #fff; padding: 20px 30px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; border-bottom: 2px solid #1b4f8a; padding-bottom: 16px; }
+  .header-left { flex: 1; }
+  .header-right { text-align: right; }
+  .doc-title { font-size: 20px; font-weight: 700; color: #1b4f8a; margin-bottom: 4px; }
+  .doc-sub { font-size: 12px; color: #6b7280; }
+  .doc-num { font-size: 14px; font-weight: 600; color: #111; margin-top: 8px; }
+  .parties { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .party-box { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; }
+  .party-label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .party-name { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 4px; }
+  .party-detail { font-size: 12px; color: #374151; line-height: 1.5; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
+  th { background: #1b4f8a; color: #fff; padding: 9px 10px; text-align: center; font-weight: 600; border: 1px solid #1b4f8a; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  .totals { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+  .totals-box { min-width: 280px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+  .total-row { display: flex; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  .total-row:last-child { background: #1b4f8a; color: #fff; font-weight: 700; font-size: 14px; border-bottom: none; }
+  .amount-words { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 10px 14px; margin-bottom: 20px; font-size: 12px; color: #0c4a6e; }
+  .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 20px; }
+  .sig-block { font-size: 12px; color: #374151; }
+  .sig-line { border-bottom: 1px solid #111; margin: 30px 0 4px; min-width: 160px; }
+  .sig-label { font-size: 11px; color: #6b7280; }
+  .footer { margin-top: 30px; text-align: center; font-size: 11px; color: #9ca3af; border-top: 1px solid #f1f5f9; padding-top: 10px; }
+  @media print {
+    body { padding: 10px 15px; }
+    .no-print { display: none !important; }
+    @page { margin: 1cm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Print button (hidden on print) -->
+<div class="no-print" style="text-align:right;margin-bottom:16px">
+  <button onclick="window.print()" style="padding:8px 20px;background:#1b4f8a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600">
+    🖨️ Друкувати / Зберегти PDF
+  </button>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="doc-title">${escHtml(docTitle)}</div>
+    <div class="doc-sub">${docTitleEn}</div>
+  </div>
+  <div class="header-right">
+    <div class="doc-num">№ ${escHtml(docNum)}</div>
+    <div style="font-size:12px;color:#6b7280;margin-top:4px">від ${escHtml(docDate)}</div>
+  </div>
+</div>
+
+<!-- Сторони -->
+<div class="parties">
+  <div class="party-box">
+    <div class="party-label">${isInvoice ? 'Постачальник / Seller' : 'Виконавець / Contractor'}</div>
+    <div class="party-name">${escHtml(companyName)}</div>
+    ${companyEdrpou?`<div class="party-detail">ЄДРПОУ/ІПН: ${escHtml(companyEdrpou)}</div>`:''}
+    ${companyAddress?`<div class="party-detail">${escHtml(companyAddress)}</div>`:''}
+    ${companyPhone?`<div class="party-detail">Тел.: ${escHtml(companyPhone)}</div>`:''}
+  </div>
+  <div class="party-box">
+    <div class="party-label">${isInvoice ? 'Покупець / Buyer' : 'Замовник / Customer'}</div>
+    <div class="party-name">${escHtml(clientName)}</div>
+  </div>
+</div>
+
+<!-- Таблиця позицій -->
+<table>
+  <thead>
+    <tr>
+      <th style="width:36px">№</th>
+      <th style="text-align:left">${isInvoice ? 'Найменування товару' : 'Найменування послуги'}</th>
+      <th style="width:60px">К-сть</th>
+      <th style="width:50px">Од.</th>
+      <th style="width:90px">Ціна</th>
+      <th style="width:60px">Зн.%</th>
+      <th style="width:100px">Сума</th>
+    </tr>
+  </thead>
+  <tbody>${rows}</tbody>
+</table>
+
+<!-- Підсумок -->
+<div class="totals">
+  <div class="totals-box">
+    <div class="total-row"><span>Разом:</span><span>${fmtNum(subtotal)} ${escHtml(currency)}</span></div>
+    <div class="total-row"><span style="font-size:14px">До сплати:</span><span>${fmtNum(subtotal)} ${escHtml(currency)}</span></div>
+  </div>
+</div>
+
+<!-- Сума прописом -->
+<div class="amount-words">
+  <strong>Сума прописом:</strong> ${escHtml(amountWords)}
+</div>
+
+${isInvoice
+  ? `<p style="font-size:12px;color:#374151;margin-bottom:20px">Товар відпущено відповідно до замовлення. Претензій щодо кількості та якості не маємо.</p>`
+  : `<p style="font-size:12px;color:#374151;margin-bottom:20px">Вищезазначені роботи/послуги виконані в повному обсязі. Сторони претензій одна до одної не мають.</p>`
+}
+
+<!-- Підписи -->
+<div class="signatures">
+  <div class="sig-block">
+    <strong>${isInvoice ? 'Відпустив' : 'Виконавець'}:</strong>
+    <div class="sig-line"></div>
+    <div class="sig-label">(підпис) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ПІБ)</div>
+    <div style="margin-top:10px">М.П.</div>
+  </div>
+  <div class="sig-block">
+    <strong>${isInvoice ? 'Отримав' : 'Замовник'}:</strong>
+    <div class="sig-line"></div>
+    <div class="sig-label">(підпис) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ПІБ)</div>
+    <div style="margin-top:10px">М.П.</div>
+  </div>
+</div>
+
+<div class="footer">Документ створено в системі TALKO · apptalko.com</div>
+
+</body>
+</html>`;
+
+        return new Response(htmlDoc, {
+            status: 200,
+            headers: {
+                'Content-Type': 'text/html;charset=utf-8',
+                'Access-Control-Allow-Origin': '*',
+            }
+        });
+
+    } catch(e) {
+        console.error('[generate-pdf]', e.message);
+        return json({ error: e.message }, 500);
+    }
+}
+
+function escHtml(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtNum(n) {
+    return Number(n||0).toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function numToWordsUa(amount, currency) {
+    // Спрощена версія — повертає суму і валюту
+    const intPart = Math.floor(amount);
+    const decPart = Math.round((amount - intPart) * 100);
+    const currLabel = currency === 'UAH' ? 'гривень' : currency === 'USD' ? 'доларів США' : currency === 'EUR' ? 'євро' : currency;
+    const kopLabel  = currency === 'UAH' ? 'копійок' : 'центів';
+    if (decPart > 0) {
+        return `${intPart.toLocaleString('uk-UA')} ${currLabel} ${decPart} ${kopLabel}`;
+    }
+    return `${intPart.toLocaleString('uk-UA')} ${currLabel} 00 ${kopLabel}`;
 }
