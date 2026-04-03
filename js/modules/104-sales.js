@@ -962,6 +962,7 @@
         <button class="sl-subtab" id="slSubOrders" onclick="window._salesSubTab('orders',this)" style="background:transparent;border:1px dashed #6366f1;color:#6366f1">${_tg('Замовлення','Orders')}</button>
         <button class="sl-subtab" id="slSubRealizations" onclick="window._salesSubTab('realizations',this)" style="background:transparent;border:1px dashed #059669;color:#059669">${_tg('Реалізації','Realizations')}</button>
         <button class="sl-subtab" id="slSubDebtors" onclick="window._salesSubTab('debtors',this)" style="background:transparent;border:1px dashed #dc2626;color:#dc2626">${_tg('Дебіторка','Receivables')}</button>
+        <button class="sl-subtab" id="slSubPrices" onclick="window._salesSubTab('prices',this)" style="background:transparent;border:1px dashed #d97706;color:#d97706">${_tg('Прайси','Price lists')}</button>
         <button class="sl-subtab" id="slSubInvoice" onclick="window._salesSubTab('invoice',this)">${_tg('Рахунки','Счета')}</button>
         <button class="sl-subtab" id="slSubReceipt" onclick="window._salesSubTab('receipt',this)">${_tg('Каса','Касса')}</button>
         ${showWorkOrders() ? `<button class="sl-subtab" id="slSubWO" onclick="window._salesSubTab('work_order',this)">${_tg('Наряди','Наряды')}</button>` : ''}
@@ -1020,6 +1021,7 @@
         <div id="salesOrdersContent" style="display:none"><div id="soRootWrap"></div></div>
         <div id="salesRealizationsContent" style="display:none"><div id="srRootWrap"></div></div>
         <div id="salesDebtorsContent" style="display:none"><div id="sdRootWrap"></div></div>
+        <div id="salesPricesContent" style="display:none"><div id="plRootWrap"></div></div>
       </div>
     `;
 
@@ -1063,7 +1065,8 @@
     const ordersCont       = el('salesOrdersContent');
     const realizationsCont = el('salesRealizationsContent');
     const debtorsCont      = el('salesDebtorsContent');
-    const allSecondary = [catalogCont, shiftsCont, vehiclesCont, routesCont, ordersCont, realizationsCont, debtorsCont];
+    const pricesCont       = el('salesPricesContent');
+    const allSecondary = [catalogCont, shiftsCont, vehiclesCont, routesCont, ordersCont, realizationsCont, debtorsCont, pricesCont];
 
     function hideAll() {
       if (tableWrap) tableWrap.style.display = 'none';
@@ -1094,6 +1097,14 @@
         if (!debtorsCont._sdInited) { debtorsCont._sdInited = true; window.initSalesDebtors(); }
       } else {
         if (debtorsCont) debtorsCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">' + _tg('Завантаження...','Loading...') + '</div>';
+      }
+    } else if (tab === 'prices') {
+      hideAll();
+      if (pricesCont) pricesCont.style.display = 'block';
+      if (typeof window.initPriceLists === 'function') {
+        if (!pricesCont._plInited) { pricesCont._plInited = true; window.initPriceLists(); }
+      } else {
+        if (pricesCont) pricesCont.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af">' + _tg('Завантаження...','Loading...') + '</div>';
       }
     } else if (tab === 'catalog') {
       hideAll();

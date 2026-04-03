@@ -804,6 +804,45 @@ service cloud.firestore {
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
+      // =====================
+      // SALES PURCHASE ORDERS — Замовлення покупців
+      // =====================
+      match /sales_purchase_orders/{orderId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isManagerOrOwner(companyId);
+        allow update: if isManagerOrOwner(companyId);
+        allow delete: if isCompanyOwner(companyId);
+      }
+
+      // =====================
+      // SALES REALIZATIONS — Документи реалізації
+      // =====================
+      match /sales_realizations/{realizationId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isManagerOrOwner(companyId);
+        // Після проведення (posted) — тільки власник може редагувати
+        allow update: if isManagerOrOwner(companyId);
+        allow delete: if isCompanyOwner(companyId);
+      }
+
+      // =====================
+      // SALES DEBTORS — Дебіторська заборгованість
+      // =====================
+      match /sales_debtors/{debtorId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isManagerOrOwner(companyId); // також Admin SDK (CF onRealizationPosted)
+        allow update: if isManagerOrOwner(companyId); // реєстрація оплати
+        allow delete: if false; // immutable — тільки status змінюється
+      }
+
+      // =====================
+      // PRICE LISTS — Прайс-листи
+      // =====================
+      match /price_lists/{priceListId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isCompanyOwner(companyId); // тільки власник керує прайсами
+      }
+
       match /{subcollection}/{docId} {
         allow read: if isCompanyMember(companyId);
         allow write: if isManagerOrOwner(companyId);

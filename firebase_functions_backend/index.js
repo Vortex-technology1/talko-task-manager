@@ -3959,3 +3959,233 @@ exports.crmContactReminders = functions
         console.log(`[crmContactReminders] Done. Sent ${totalSent} messages.`);
         return null;
     });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// checkOverdueDebtors — щоденна перевірка прострочених боргів (9:30 Kyiv)
+// ═══════════════════════════════════════════════════════════════════════════
+exports.checkOverdueDebtors = functions
+    .region('europe-west1')
+    .pubsub.schedule('30 6 * * *') // 06:30 UTC = 09:30 Kyiv
+    .timeZone('Europe/Kiev')
+    .onRun(async () => {
+        const today = new Date().toISOString().slice(0, 10);
+        console.log('[checkOverdueDebtors] Running for date:', today);
+
+        let totalOverdue = 0;
+        const companiesSnap = await db.collection('companies').get();
+
+        for (const compDoc of companiesSnap.docs) {
+            const companyId = compDoc.id;
+            try {
+                // Знаходимо відкриті прострочені борги
+                const debtorsSnap = await compDoc.ref
+                    .collection('sales_debtors')
+                    .where('status', 'in', ['open', 'partial'])
+                    .where('dueDate', '<', today)
+                    .get();
+
+                if (debtorsSnap.empty) continue;
+
+                // Оновлюємо статус на overdue
+                const batch = db.batch();
+                debtorsSnap.docs.forEach(d => {
+                    batch.update(d.ref, { status: 'overdue' });
+                });
+                await batch.commit();
+
+                // Групуємо по менеджерах і надсилаємо Telegram
+                const byAssignee = {};
+                for (const d of debtorsSnap.docs) {
+                    const data = d.data();
+                    // Знаходимо менеджера з угоди або реалізації
+                    let assigneeId = null;
+                    if (data.realizationId) {
+                        try {
+                            const rSnap = await compDoc.ref.collection('sales_realizations').doc(data.realizationId).get();
+                            if (rSnap.exists) assigneeId = rSnap.data().createdBy;
+                        } catch(e) { /* skip */ }
+                    }
+                    if (!assigneeId) continue;
+                    if (!byAssignee[assigneeId]) byAssignee[assigneeId] = [];
+                    byAssignee[assigneeId].push(data);
+                }
+
+                // Сповіщення менеджерам
+                for (const [userId, debts] of Object.entries(byAssignee)) {
+                    try {
+                        const userSnap = await compDoc.ref.collection('users').doc(userId).get();
+                        const user = userSnap.data();
+                        if (!user?.telegramChatId) continue;
+
+                        const lang = user.telegramLanguage || user.language || 'ua';
+                        const isUa = lang !== 'en';
+
+                        let msg = isUa
+                            ? `⚠️ <b>Прострочена дебіторка</b>\n\n`
+                            : `⚠️ <b>Overdue receivables</b>\n\n`;
+
+                        const totalSum = debts.reduce((s, d) => s + Number(d.amount || 0) - Number(d.paidAmount || 0), 0);
+
+                        debts.slice(0, 5).forEach(d => {
+                            const bal = Number(d.amount || 0) - Number(d.paidAmount || 0);
+                            const overDays = Math.floor((new Date(today) - new Date(d.dueDate)) / 86400000);
+                            msg += isUa
+                                ? `• <b>${d.clientName || '—'}</b> — ${bal.toLocaleString()} ${d.currency || 'UAH'} (прострочено ${overDays} дн.)\n`
+                                : `• <b>${d.clientName || '—'}</b> — ${bal.toLocaleString()} ${d.currency || 'UAH'} (${overDays} days overdue)\n`;
+                        });
+
+                        if (debts.length > 5) {
+                            msg += isUa
+                                ? `  ...ще ${debts.length - 5}\n`
+                                : `  ...and ${debts.length - 5} more\n`;
+                        }
+
+                        msg += isUa
+                            ? `\n💰 <b>Загалом: ${totalSum.toLocaleString()} UAH</b>\n🔗 <a href="https://apptalko.com">Відкрити TALKO</a>`
+                            : `\n💰 <b>Total: ${totalSum.toLocaleString()} UAH</b>\n🔗 <a href="https://apptalko.com">Open TALKO</a>`;
+
+                        await sendTelegramMessage(user.telegramChatId, msg);
+                        totalOverdue += debts.length;
+                    } catch(userErr) {
+                        console.warn('[checkOverdueDebtors] user error:', userId, userErr.message);
+                    }
+                }
+
+                // Сповіщення власнику (зведене)
+                try {
+                    const ownerSnap = await compDoc.ref.collection('users')
+                        .where('role', '==', 'owner').limit(1).get();
+                    if (!ownerSnap.empty) {
+                        const owner = ownerSnap.docs[0].data();
+                        if (owner.telegramChatId) {
+                            const totalBal = debtorsSnap.docs.reduce((s, d) => {
+                                const data = d.data();
+                                return s + Number(data.amount || 0) - Number(data.paidAmount || 0);
+                            }, 0);
+                            const lang = owner.telegramLanguage || owner.language || 'ua';
+                            const isUa = lang !== 'en';
+                            const ownerMsg = isUa
+                                ? `📊 <b>Прострочена дебіторка: ${debtorsSnap.size} рахунків</b>\nЗагалом: ${totalBal.toLocaleString()} UAH\n🔗 <a href="https://apptalko.com">Відкрити TALKO</a>`
+                                : `📊 <b>Overdue receivables: ${debtorsSnap.size} invoices</b>\nTotal: ${totalBal.toLocaleString()} UAH\n🔗 <a href="https://apptalko.com">Open TALKO</a>`;
+                            await sendTelegramMessage(owner.telegramChatId, ownerMsg);
+                        }
+                    }
+                } catch(ownerErr) {
+                    console.warn('[checkOverdueDebtors] owner notify error:', companyId, ownerErr.message);
+                }
+
+            } catch(compErr) {
+                console.error('[checkOverdueDebtors] company error:', companyId, compErr.message);
+            }
+        }
+
+        console.log(`[checkOverdueDebtors] Done. Overdue: ${totalOverdue}`);
+        return null;
+    });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// onRealizationPosted — Firestore trigger при проведенні реалізації
+// ═══════════════════════════════════════════════════════════════════════════
+exports.onRealizationPosted = functions
+    .region('europe-west1')
+    .firestore
+    .document('companies/{companyId}/sales_realizations/{realizationId}')
+    .onUpdate(async (change, context) => {
+        const before = change.before.data();
+        const after  = change.after.data();
+        const { companyId, realizationId } = context.params;
+
+        // Спрацьовує тільки при переході draft → posted
+        if (before.status === after.status) return null;
+        if (after.status !== 'posted') return null;
+
+        console.log('[onRealizationPosted]', realizationId, 'company:', companyId);
+
+        try {
+            const compRef = db.collection('companies').doc(companyId);
+
+            // Оновлюємо totalDebt клієнта (денормалізація)
+            if (after.clientId && after.debtorEntryId) {
+                const clientRef = compRef.collection('crm_clients').doc(after.clientId);
+                const clientSnap = await clientRef.get();
+                if (clientSnap.exists) {
+                    const currentDebt = Number(clientSnap.data().totalDebt || 0);
+                    const newAmount = Number(after.totalAmount || 0);
+                    await clientRef.update({
+                        totalDebt: currentDebt + newAmount,
+                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    });
+                }
+            }
+
+            // Логуємо в activity_log
+            await compRef.collection('activity_log').add({
+                type:          'realization_posted',
+                realizationId,
+                clientId:      after.clientId || null,
+                clientName:    after.clientName || '',
+                totalAmount:   after.totalAmount || 0,
+                currency:      after.currency || 'UAH',
+                createdBy:     after.createdBy || 'system',
+                createdAt:     admin.firestore.FieldValue.serverTimestamp(),
+            });
+
+        } catch(e) {
+            console.error('[onRealizationPosted] error:', e.message);
+        }
+
+        return null;
+    });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// onDebtorPaid — Firestore trigger при закритті боргу
+// ═══════════════════════════════════════════════════════════════════════════
+exports.onDebtorPaid = functions
+    .region('europe-west1')
+    .firestore
+    .document('companies/{companyId}/sales_debtors/{debtorId}')
+    .onUpdate(async (change, context) => {
+        const before = change.before.data();
+        const after  = change.after.data();
+        const { companyId, debtorId } = context.params;
+
+        // Спрацьовує тільки при переході → paid
+        if (before.status === after.status) return null;
+        if (after.status !== 'paid') return null;
+
+        console.log('[onDebtorPaid]', debtorId, 'company:', companyId);
+
+        try {
+            const compRef = db.collection('companies').doc(companyId);
+
+            // Зменшуємо totalDebt клієнта
+            if (after.clientId) {
+                const clientRef = compRef.collection('crm_clients').doc(after.clientId);
+                const clientSnap = await clientRef.get();
+                if (clientSnap.exists) {
+                    const currentDebt = Number(clientSnap.data().totalDebt || 0);
+                    const paidAmount  = Number(after.paidAmount || after.amount || 0);
+                    await clientRef.update({
+                        totalDebt: Math.max(0, currentDebt - paidAmount),
+                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    });
+                }
+            }
+
+            // Логуємо
+            await compRef.collection('activity_log').add({
+                type:       'debtor_paid',
+                debtorId,
+                clientId:   after.clientId || null,
+                clientName: after.clientName || '',
+                amount:     after.paidAmount || after.amount || 0,
+                currency:   after.currency || 'UAH',
+                createdAt:  admin.firestore.FieldValue.serverTimestamp(),
+            });
+
+        } catch(e) {
+            console.error('[onDebtorPaid] error:', e.message);
+        }
+
+        return null;
+    });
