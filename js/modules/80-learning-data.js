@@ -17284,6 +17284,13 @@ Bist du dabei?</div>
         },
     ];
 
+    // Підключаємо маркетинг уроки до головного масиву
+    if (window.learningCourseData) {
+        window.learningCourseData = window.learningCourseData.concat(marketingCourseData);
+    } else {
+        window.learningCourseData = marketingCourseData;
+    }
+
     // ── КАТЕГОРІЇ КУРСУ ──────────────────────────────────────
     window.learningCourseCategories = window.learningCourseCategories || [
         {
