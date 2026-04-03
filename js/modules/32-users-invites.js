@@ -942,6 +942,7 @@
                     updateData.allowedTabs = firebase.firestore.FieldValue.delete();
                 }
 
+                console.log('[saveUser] updateData:', JSON.stringify(updateData));
                 await db.collection('companies').doc(currentCompany).collection('users').doc(editingUserId).update(updateData);
                 
                 // Оновлюємо функції (assigneeIds в documents functions)
@@ -993,7 +994,16 @@
                 renderUsers();
                 renderFunctions();
                 updateSelects();
+                // Показуємо підтвердження збереження
+                if (typeof showToast === 'function') {
+                    const tabsInfo = Array.isArray(allowedTabs) && allowedTabs.length > 0
+                        ? ` (модулі: ${allowedTabs.join(', ')})`
+                        : allowedTabs === null ? ' (доступ: всі модулі)' : ' (доступ: заблоковано)';
+                    showToast('✅ Збережено' + tabsInfo, 'success');
+                }
+                console.log('[saveUser] allowedTabs збережено:', allowedTabs, 'для userId:', editingUserId);
             } catch (e) {
+                console.error('[saveUser] Помилка:', e.message, e);
                 showAlertModal(window.t('error') + ': ' + e.message);
             }
         }
