@@ -169,9 +169,137 @@ function errHtml(msg, status=400) {
 <h2 style="margin-bottom:.5rem">Помилка</h2><p style="color:#6b7280">${esc(msg)}</p></body></html>`, status);
 }
 
+// ════════════════════════════════════════════════════════════
+// handleGoogleOauth — Google Calendar OAuth 2.0 flow
+// GET /api/google-oauth?action=init&uid=X&companyId=Y  → redirect to Google
+// GET /api/google-oauth?code=X&state=Y                 → exchange code → save tokens → redirect to app
+// ════════════════════════════════════════════════════════════
+async function handleGoogleOauth(request, url, env) {
+    const action = url.searchParams.get('action');
+    const appBase = `https://${new URL(request.url).hostname}`;
+    const redirectUri = `${appBase}/api/google-oauth`;
+
+    const clientId     = env.GOOGLE_CLIENT_ID;
+    const clientSecret = env.GOOGLE_CLIENT_SECRET;
+
+    if (!clientId || !clientSecret) {
+        return new Response('Google OAuth not configured (missing GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET)', { status: 500 });
+    }
+
+    // ── Step 1: init — redirect to Google consent screen ────────
+    if (action === 'init') {
+        const uid       = url.searchParams.get('uid') || '';
+        const companyId = url.searchParams.get('companyId') || '';
+        if (!uid || !companyId) return new Response('Missing uid or companyId', { status: 400 });
+
+        const state = btoa(JSON.stringify({ uid, companyId }));
+        const scope = [
+            'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/calendar.events',
+            'email',
+            'profile',
+        ].join(' ');
+
+        const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+        authUrl.searchParams.set('client_id', clientId);
+        authUrl.searchParams.set('redirect_uri', redirectUri);
+        authUrl.searchParams.set('response_type', 'code');
+        authUrl.searchParams.set('scope', scope);
+        authUrl.searchParams.set('state', state);
+        authUrl.searchParams.set('access_type', 'offline');
+        authUrl.searchParams.set('prompt', 'consent');
+
+        return Response.redirect(authUrl.toString(), 302);
+    }
+
+    // ── Step 2: callback — exchange code for tokens ──────────────
+    const code  = url.searchParams.get('code');
+    const state = url.searchParams.get('state');
+    const error = url.searchParams.get('error');
+
+    if (error) {
+        return Response.redirect(`${appBase}/?google_oauth=error&reason=${encodeURIComponent(error)}`, 302);
+    }
+    if (!code || !state) {
+        return Response.redirect(`${appBase}/?google_oauth=error&reason=missing_params`, 302);
+    }
+
+    let uid, companyId;
+    try {
+        const parsed = JSON.parse(atob(state));
+        uid       = parsed.uid;
+        companyId = parsed.companyId;
+    } catch(e) {
+        return Response.redirect(`${appBase}/?google_oauth=error&reason=invalid_state`, 302);
+    }
+
+    // Exchange code for tokens
+    let tokens;
+    try {
+        const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                code,
+                client_id:     clientId,
+                client_secret: clientSecret,
+                redirect_uri:  redirectUri,
+                grant_type:    'authorization_code',
+            }),
+        });
+        tokens = await tokenRes.json();
+        if (tokens.error) throw new Error(tokens.error_description || tokens.error);
+    } catch(e) {
+        return Response.redirect(`${appBase}/?google_oauth=error&reason=${encodeURIComponent(e.message)}`, 302);
+    }
+
+    // Отримуємо email користувача
+    let email = '';
+    try {
+        const infoRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: { Authorization: `Bearer ${tokens.access_token}` },
+        });
+        const info = await infoRes.json();
+        email = info.email || '';
+    } catch(e) {}
+
+    // Зберігаємо токени у Firestore через service account
+    try {
+        const saToken = await getServiceAccountToken(env);
+        if (saToken) {
+            const expiryMs = Date.now() + (tokens.expires_in || 3600) * 1000;
+            const docPath  = `companies/${companyId}/users/${uid}`;
+            const fields   = {
+                googleCalendarConnected: { booleanValue: true },
+                googleCalendarEmail:     { stringValue: email },
+                googleAccessToken:       { stringValue: tokens.access_token || '' },
+                googleTokenExpiry:       { timestampValue: new Date(expiryMs).toISOString() },
+            };
+            if (tokens.refresh_token) {
+                fields.googleRefreshToken = { stringValue: tokens.refresh_token };
+            }
+            const maskFields = Object.keys(fields).map(k => `updateMask.fieldPaths=${k}`).join('&');
+            await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/${docPath}?${maskFields}`,
+                {
+                    method:  'PATCH',
+                    headers: { 'Authorization': `Bearer ${saToken}`, 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ fields }),
+                }
+            );
+        }
+    } catch(e) {
+        console.error('[GoogleOauth] Firestore save error:', e.message);
+    }
+
+    return Response.redirect(
+        `${appBase}/?google_oauth=success&email=${encodeURIComponent(email)}`,
+        302
+    );
+}
+
 // ── Main router ──────────────────────────────────────────────
 export default {
-    async fetch(request, env, ctx) {
         const url  = new URL(request.url);
         const path = url.pathname;
 
@@ -241,6 +369,9 @@ export default {
 
         // ── /api/generate-pdf ─── накладні та акти ───────────
         if (path === '/api/generate-pdf') return handleGeneratePdf(request, url, env);
+
+        // ── /api/google-oauth ─── Google Calendar OAuth flow ──
+        if (path === '/api/google-oauth') return handleGoogleOauth(request, url, env);
 
         // ── /api/ping ────────────────────────────────────────
         if (path === '/api/ping') return json({ ok:true, ts:Date.now() });
