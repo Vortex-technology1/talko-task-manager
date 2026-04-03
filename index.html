@@ -1425,7 +1425,7 @@ document.addEventListener('mousedown', function(e) {
                     <h3 data-i18n="noProjects">Немає проєктів</h3>
                     <p data-i18n="createFirstProject">Створіть перший проєкт для групування завдань</p>
                     <button class="btn btn-success" onclick="openProjectModal()" style="margin-top:1rem;">
-                        <i data-lucide="plus" class="icon"></i> Создать проект
+                        <i data-lucide="plus" class="icon"></i> <span data-i18n="createProject">Створити проєкт</span>
                     </button>
                 </div>
                 
@@ -1725,9 +1725,9 @@ document.addEventListener('mousedown', function(e) {
                             </div>
                             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
                                 <div>
-                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;" data-i18n="companyNameSetting">Название компании</label>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;" data-i18n="companyNameSetting">Назва компанії</label>
                                     <div style="display:flex;gap:0.5rem;">
-                                        <input id="settingCompanyName" type="text" placeholder="Название компании"
+                                        <input id="settingCompanyName" type="text" placeholder="Назва компанії"
                                             style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
                                         <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">
                                             <i data-lucide="save" class="icon icon-sm"></i> <span data-i18n="saveBtn">Зберегти</span>
@@ -1776,7 +1776,7 @@ document.addEventListener('mousedown', function(e) {
                                     <div style="display:flex;gap:0.5rem;">
                                         <select id="settingNiche"
                                             style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;background:#fff;">
-                                            <option value="">Выберите нишу...</option>
+                                            <option value="">Оберіть нішу...</option>
                                             <optgroup label="── Сервис ──────────────">
                                             <option value="beauty_salon">Бьюти / Салон красоты / Косметология</option>
                                             <option value="medical">Медицинский бизнес / Клиника</option>
@@ -2046,14 +2046,14 @@ document.addEventListener('mousedown', function(e) {
                                 <i data-lucide="bar-chart-3" class="icon icon-sm"></i> Demo Stats
                             </button>
                             <div style="width:1px;height:20px;background:#e5e7eb;margin:0 2px;"></div>
-                            <button onclick="clearAllStatsData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;" title="Необратимо удалить ВСЕ метрики и данные" aria-label="Необратимо удалить ВСЕ метрики и данные">
+                            <button onclick="clearAllStatsData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;" title="Безповоротно видалити ВСІ метрики та дані" aria-label="Безповоротно видалити ВСІ метрики та дані">
                                 <i data-lucide="trash-2" class="icon icon-sm"></i>
                             </button>
                             <button onclick="openAiAssistantsModal()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f3e8ff;color:#7c3aed;">
                                 <i data-lucide="bot" class="icon icon-sm"></i> AI
                             </button>
                             <button onclick="loadAdminCompanies()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
-                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Обновить
+                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Оновити
                             </button>
                         </div>
                     </h3>
@@ -2077,7 +2077,7 @@ document.addEventListener('mousedown', function(e) {
                                 <p style="margin:0.25rem 0 0;font-size:0.8rem;color:#9ca3af;">Настройте что может делать каждая роль в системе</p>
                             </div>
                             <button onclick="renderRolesTab()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
-                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Обновить
+                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Оновити
                             </button>
                         </div>
                         <div id="rolesPermissionsContainer" style="padding:0;">
@@ -2092,11 +2092,11 @@ document.addEventListener('mousedown', function(e) {
                         <h3 style="margin:0 0 1.25rem;font-size:1rem;"><i data-lucide="settings" class="icon" style="color:#6b7280;"></i> Настройки компании</h3>
                         <div style="display:grid;gap:1rem;max-width:560px;">
                             <div class="form-group">
-                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Название компании</label>
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Назва компанії</label>
                                 <div style="display:flex;gap:0.5rem;">
-                                    <input id="settingCompanyName" type="text" placeholder="Название компании"
+                                    <input id="settingCompanyName" type="text" placeholder="Назва компанії"
                                         style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
-                                    <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">Сохранить</button>
+                                    <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">Зберегти</button>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -2109,7 +2109,7 @@ document.addEventListener('mousedown', function(e) {
                                     <option value="Europe/London">Europe/London (UTC+0/+1)</option>
                                     <option value="America/New_York">America/New_York (UTC-5/-4)</option>
                                 </select>
-                                <button onclick="saveCompanySetting('timezone')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Сохранить часовой пояс</button>
+                                <button onclick="saveCompanySetting('timezone')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Зберегти часовий пояс</button>
                             </div>
                             <div class="form-group">
                                 <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Еженедельный отчёт</label>
@@ -2117,7 +2117,7 @@ document.addEventListener('mousedown', function(e) {
                                     <input type="checkbox" id="settingWeeklyReport" style="width:18px;height:18px;accent-color:#22c55e;">
                                     <span style="font-size:0.85rem;color:#374151;">Отправлять еженедельный отчёт владельцу</span>
                                 </label>
-                                <button onclick="saveCompanySetting('weeklyReport')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Сохранить</button>
+                                <button onclick="saveCompanySetting('weeklyReport')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Зберегти</button>
                             </div>
                             <div style="padding:0.75rem;background:#fef9c3;border-radius:8px;border-left:3px solid #f59e0b;">
                                 <p style="margin:0;font-size:0.8rem;color:#92400e;">
@@ -2136,7 +2136,7 @@ document.addEventListener('mousedown', function(e) {
     <!-- PROJECT MODAL -->
     <div id="projectModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
         <div class="modal-content" style="max-width:560px;">
-            <div class="modal-header"><button class="close" onclick="closeModal('projectModal')" aria-label="Закрыть диалог">&times;</button><h2 id="projectModalTitle" data-i18n="newProject">Новий проєкт</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('projectModal')" aria-label="Закрити діалог">&times;</button><h2 id="projectModalTitle" data-i18n="newProject">Новий проєкт</h2></div>
             <div class="modal-body">
                 <form id="projectForm" onsubmit="saveProject(event)">
                     <div class="form-group"><label class="form-label" data-i18n="projectNameLabel">Назва проєкту *</label><input type="text" id="projectName" class="form-input" required placeholder="Наприклад: Редизайн сайту" data-i18n-placeholder="projectNamePh" aria-required="true"></div>
@@ -2155,7 +2155,7 @@ document.addEventListener('mousedown', function(e) {
                             <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#06b6d4" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#06b6d4;border:3px solid transparent;"></span></label>
                         </div>
                     </div>
-                    <div class="form-group"><label class="form-label" >Описание</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту" data-i18n-placeholder="projectDescPh"></textarea></div>
+                    <div class="form-group"><label class="form-label" >Опис</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту" data-i18n-placeholder="projectDescPh"></textarea></div>
                     <!-- Функції проекту -->
                     <div class="form-group">
                         <label class="form-label"><i data-lucide="settings" class="icon icon-sm"></i> <span data-i18n="projectFunctionsLabel">Функції задіяні в проекті</span></label>
@@ -2200,7 +2200,7 @@ document.addEventListener('mousedown', function(e) {
                 <button id="duplicateTaskBtn" onclick="if(window.currentEditingId||editingId){duplicateTask(window.currentEditingId||editingId);}" title="Копировать задачу" style="display:none;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:0.3rem 0.65rem;cursor:pointer;font-size:0.78rem;color:rgba(255,255,255,0.85);align-items:center;gap:0.3rem;flex-shrink:0;transition:background 0.15s;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копировать
                 </button>
-                <button class="close" onclick="closeModal('taskModal')" aria-label="Закрыть диалог">
+                <button class="close" onclick="closeModal('taskModal')" aria-label="Закрити діалог">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -2208,7 +2208,7 @@ document.addEventListener('mousedown', function(e) {
                 <form id="taskForm" onsubmit="saveTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="taskTitle" class="form-input" required aria-required="true"></div>
-                        <div class="form-group"><label class="form-label">Функция</label><select id="taskFunction" class="form-select" onchange="triggerSmartAssign(); filterTaskAssigneesByFunction()"><option value="">Без функции</option></select></div>
+                        <div class="form-group"><label class="form-label">Функция</label><select id="taskFunction" class="form-select" onchange="triggerSmartAssign(); filterTaskAssigneesByFunction()"><option value="">Без функції</option></select></div>
                         <div id="smartAssignHint" style="display:none;margin-top:-0.5rem;margin-bottom:0.25rem;">
                           <div id="smartAssignResult"></div>
                         </div>
@@ -2274,7 +2274,7 @@ document.addEventListener('mousedown', function(e) {
                         
                         <div class="form-group full-width"><label class="form-label" >Ожидаемый результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" >Формат отчёта</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" >Описание</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" >Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width" id="taskAiHelpRow" style="display:none;">
                             <a id="taskAiHelpLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.85rem;color:#16a34a;text-decoration:none;font-weight:500;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -2287,7 +2287,7 @@ document.addEventListener('mousedown', function(e) {
                             <label class="form-label"><i data-lucide="list-checks" class="icon icon-sm"></i> <span >Чеклист</span></label>
                             <div id="taskChecklist" style="margin-top:0.5rem;"></div>
                             <button type="button" onclick="addChecklistItem()" style="margin-top:0.5rem;padding:0.4rem 0.75rem;background:#f9fafb;border:1px dashed #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;color:#6b7280;display:flex;align-items:center;gap:0.4rem;">
-                                <i data-lucide="plus" class="icon icon-sm"></i> <span >Добавить пункт</span>
+                                <i data-lucide="plus" class="icon icon-sm"></i> <span >Додати пункт</span>
                             </button>
                         </div>
                         
@@ -2307,7 +2307,7 @@ document.addEventListener('mousedown', function(e) {
                                     <button type="button" id="timeTrackBtn" onclick="toggleTimeTracker()" style="padding:0.5rem 1rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;">
                                         <i data-lucide="play" class="icon icon-sm"></i> <span >Старт</span>
                                     </button>
-                                    <button type="button" onclick="addManualTime()" style="padding:0.5rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;" title="Добавить время вручную" aria-label="Добавить время вручную" data-i18n-title="addTimeManually">
+                                    <button type="button" onclick="addManualTime()" style="padding:0.5rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;" title="Добавить время вручную" aria-label="Додати час вручну" data-i18n-title="addTimeManually">
                                         <i data-lucide="plus" class="icon icon-sm"></i>
                                     </button>
                                 </div>
@@ -2399,12 +2399,12 @@ document.addEventListener('mousedown', function(e) {
                                 <span id="subtasksBadge" style="display:none;background:#22c55e;color:white;border-radius:10px;font-size:0.68rem;padding:1px 6px;font-weight:700;"></span>
                             </label>
                             <button type="button" onclick="addSubtaskRow()" style="background:#22c55e;color:white;border:none;border-radius:8px;padding:0.3rem 0.7rem;font-size:0.78rem;cursor:pointer;display:flex;align-items:center;gap:0.3rem;">
-                                <i data-lucide="plus" class="icon icon-sm"></i> Добавить
+                                <i data-lucide="plus" class="icon icon-sm"></i> Додати
                             </button>
                         </div>
                         <div id="subtasksList" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
                         <div id="subtasksEmpty" style="text-align:center;color:#9ca3af;font-size:0.82rem;padding:0.75rem 0;">
-                            Нажмите «+ Добавить» чтобы разбить задачу на части
+                            Натисніть «+ Додати» щоб розбити завдання на частини
                         </div>
                     </div>
 
@@ -2479,13 +2479,13 @@ document.addEventListener('mousedown', function(e) {
 
     <div id="functionModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="functionModalTitle">
         <div class="modal-content">
-            <div class="modal-header"><button class="close" onclick="closeModal('functionModal')" aria-label="Закрыть диалог">&times;</button><h2 id="functionModalTitle" data-i18n="newFunction">Нова функція</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('functionModal')" aria-label="Закрити діалог">&times;</button><h2 id="functionModalTitle" data-i18n="newFunction">Нова функція</h2></div>
             <div class="modal-body">
                 <form id="functionForm" onsubmit="saveFunction(event)">
                     <div class="form-grid">
                         <div class="form-group"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="functionName" class="form-input" required aria-required="true"></div>
                         <div class="form-group"><label class="form-label"><i data-lucide="crown" class="icon icon-sm"></i> <span data-i18n="head">Головний *</span></label><select id="functionHead" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
-                        <div class="form-group full-width"><label class="form-label" >Описание</label><textarea id="functionDescription" class="form-textarea"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" >Опис</label><textarea id="functionDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="target" class="icon icon-sm"></i> <span data-i18n="fnCkpLabel">ЦКП — Цінний кінцевий продукт *</span></label><textarea id="functionResult" class="form-textarea" rows="2" data-i18n-placeholder="fnCkpPlaceholder" placeholder="Що є результатом роботи цієї функції? (1-2 речення)" required></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="users" class="icon icon-sm"></i> <span data-i18n="members">Учасники</span></label><div id="functionAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;"></div></div>
                         <div class="form-group"><label class="form-label"><i data-lucide="message-circle" class="icon icon-sm"></i> <span data-i18n="fnContacts">Контакти</span></label><input type="text" id="functionContacts" class="form-input" data-i18n-placeholder="fnContactsPlaceholder" placeholder="Telegram, телефон..."></div>
@@ -2514,7 +2514,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="mergeFunctionsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="mergeFunctionsModalTitle">
         <div class="modal-content" style="max-width:500px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('mergeFunctionsModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('mergeFunctionsModal')" aria-label="Закрити діалог">&times;</button>
                 <h2><i data-lucide="git-merge" class="icon"></i> <span data-i18n="mergeFunctions">Об'єднати функції</span></h2>
             </div>
             <div class="modal-body">
@@ -2557,7 +2557,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="processTemplatesModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="processTemplatesModalTitle">
         <div class="modal-content" style="max-width:700px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('processTemplatesModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('processTemplatesModal')" aria-label="Закрити діалог">&times;</button>
                 <h2><i data-lucide="file-cog" class="icon"></i> <span data-i18n="processTemplates">Шаблони процесів</span></h2>
             </div>
             <div class="modal-body">
@@ -2577,7 +2577,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="editProcessTemplateModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editProcessTemplateModalTitle">
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('editProcessTemplateModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('editProcessTemplateModal')" aria-label="Закрити діалог">&times;</button>
                 <h2 id="editTemplateTitle"><i data-lucide="file-cog" class="icon"></i> <span data-i18n="newTemplate">Новий шаблон</span></h2>
             </div>
             <div class="modal-body">
@@ -2613,7 +2613,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="startProcessModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="startProcessModalTitle">
         <div class="modal-content" style="max-width:500px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('startProcessModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('startProcessModal')" aria-label="Закрити діалог">&times;</button>
                 <h2><i data-lucide="play" class="icon"></i> <span data-i18n="startProcess">Запустити процес</span></h2>
             </div>
             <div class="modal-body">
@@ -2655,7 +2655,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="viewProcessModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="viewProcessModalTitle">
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('viewProcessModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('viewProcessModal')" aria-label="Закрити діалог">&times;</button>
                 <h2 id="viewProcessTitle"><i data-lucide="git-branch" class="icon"></i> Процесс</h2>
             </div>
             <div class="modal-body">
@@ -2668,12 +2668,12 @@ document.addEventListener('mousedown', function(e) {
 
     <div id="regularTaskModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="regularTaskModalTitle">
         <div class="modal-content">
-            <div class="modal-header"><button class="close" onclick="closeModal('regularTaskModal')" aria-label="Закрыть диалог">&times;</button><h2 data-i18n="regularTask">Регулярне завдання</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('regularTaskModal')" aria-label="Закрити діалог">&times;</button><h2 data-i18n="regularTask">Регулярне завдання</h2></div>
             <div class="modal-body">
                 <form id="regularTaskForm" onsubmit="saveRegularTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required aria-required="true"></div>
-                        <div class="form-group"><label class="form-label" >Функция *</label><select id="regularTaskFunction" class="form-select" required><option value="">Выберите</option></select></div>
+                        <div class="form-group"><label class="form-label" >Функция *</label><select id="regularTaskFunction" class="form-select" required><option value="">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label">Исполнитель</label><select id="regularTaskAssignee" class="form-select"><option value="">Из функции (авто)</option></select></div>
                         <div class="form-group"><label class="form-label" >Периодичность *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="daily">Ежедневно</option><option value="weekly">Еженедельно</option><option value="monthly">Ежемесячно</option><option value="quarterly">Ежеквартально</option></select></div>
                         <div class="form-group" id="skipWeekendsGroup" style="display:none;">
@@ -2773,7 +2773,7 @@ document.addEventListener('mousedown', function(e) {
 
     <div id="inviteModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="inviteModalTitle">
         <div class="modal-content">
-            <div class="modal-header"><button class="close" onclick="closeModal('inviteModal')" aria-label="Закрыть диалог">&times;</button><h2 data-i18n="inviteTitle">Запрошення</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('inviteModal')" aria-label="Закрити діалог">&times;</button><h2 data-i18n="inviteTitle">Запрошення</h2></div>
             <div class="modal-body">
                 <form id="inviteForm" onsubmit="sendInvite(event)">
                     <div class="form-group">
@@ -2797,7 +2797,7 @@ document.addEventListener('mousedown', function(e) {
 
     <div id="userModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><button class="close" onclick="closeModal('userModal')" aria-label="Закрыть диалог">&times;</button><h2 id="userModalTitle" data-i18n="editEmployee">Редагувати співробітника</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('userModal')" aria-label="Закрити діалог">&times;</button><h2 id="userModalTitle" data-i18n="editEmployee">Редагувати співробітника</h2></div>
             <div class="modal-body">
                 <form id="userForm" onsubmit="saveUser(event)">
                     <div class="form-grid">
@@ -3269,7 +3269,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="aiGeneratorModal" class="modal">
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('aiGeneratorModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('aiGeneratorModal')" aria-label="Закрити діалог">&times;</button>
                 <h2><i data-lucide="sparkles" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiStructureGenerator">AI Структура</span></h2>
             </div>
             <div class="modal-body">
@@ -3304,7 +3304,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="importStructureModal" class="modal">
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('importStructureModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('importStructureModal')" aria-label="Закрити діалог">&times;</button>
                 <h2><i data-lucide="upload" class="icon"></i> <span data-i18n="importStructure">Імпорт структури</span></h2>
             </div>
             <div class="modal-body">
@@ -3323,7 +3323,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="aiAssistantsModal" class="modal">
         <div class="modal-content" style="max-width:650px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('aiAssistantsModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('aiAssistantsModal')" aria-label="Закрити діалог">&times;</button>
                 <h2><i data-lucide="bot" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiAssistantsConfig">AI Асистенти</span></h2>
             </div>
             <div class="modal-body">
@@ -4244,7 +4244,7 @@ document.addEventListener('mousedown', function(e) {
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 </button>
                 <button onclick="closeModal('metricModal')" style="flex:1;padding:0.85rem;border-radius:14px;font-size:0.95rem;font-weight:600;background:#f3f4f6;color:#374151;border:1.5px solid #e5e7eb;cursor:pointer;">Отменить</button>
-                <button onclick="saveMetric()" style="flex:1;padding:0.85rem;border-radius:14px;font-size:0.95rem;font-weight:700;background:#22c55e;color:#fff;border:none;cursor:pointer;">Сохранить</button>
+                <button onclick="saveMetric()" style="flex:1;padding:0.85rem;border-radius:14px;font-size:0.95rem;font-weight:700;background:#22c55e;color:#fff;border:none;cursor:pointer;">Зберегти</button>
             </div>
 
             </div><!-- end scroll area -->
@@ -4255,7 +4255,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="quickInputModal" class="modal">
         <div class="modal-content" style="max-width:500px;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('quickInputModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('quickInputModal')" aria-label="Закрити діалог">&times;</button>
                 <h2><i data-lucide="edit-3" class="icon" style="color:var(--primary);"></i> <span data-i18n="quickInput">Внести дані</span></h2>
             </div>
             <div id="quickInputDate" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;">
@@ -4272,7 +4272,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="aiAnalysisModal" class="modal">
         <div class="modal-content" style="max-width:700px;max-height:85vh;overflow-y:auto;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('aiAnalysisModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('aiAnalysisModal')" aria-label="Закрити діалог">&times;</button>
                 <h2><i data-lucide="sparkles" class="icon" style="color:#8b5cf6;"></i> <span >AI Анализ метрик</span></h2>
             </div>
             <div id="aiAnalysisContent">
@@ -4285,7 +4285,7 @@ document.addEventListener('mousedown', function(e) {
     <div id="trendsChartModal" class="modal">
         <div class="modal-content" style="max-width:800px;max-height:85vh;overflow-y:auto;">
             <div class="modal-header">
-                <button class="close" onclick="closeModal('trendsChartModal')" aria-label="Закрыть диалог">&times;</button>
+                <button class="close" onclick="closeModal('trendsChartModal')" aria-label="Закрити діалог">&times;</button>
                 <h2 id="trendsChartTitle" style="display:flex;align-items:center;gap:0.5rem;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Графік трендів</h2>
             </div>
             <!-- Metric pills for multi-select -->

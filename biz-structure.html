@@ -8854,7 +8854,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                          style="background: ${getStatColorValue(stat.color)}"
                          tabindex="0"
                          role="button"
-                         aria-label="Выбрать цвет"></div>
+                         aria-label="Обрати колір"></div>
                     <div class="stat-color-options" id="colorOptions${Utils.escapeHtml(stat.id)}">
                         ${STAT_COLORS.map(color => `
                             <div class="stat-color-option ${color}" 
@@ -8865,10 +8865,10 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                         `).join('')}
                     </div>
                 </div>
-                <input type="text" 
-                       class="stat-name-input" 
-                       value="${Utils.escapeHtml(stat.name)}" 
-                       placeholder="Название"
+                <input type="text"
+                       class="stat-name-input"
+                       value="${Utils.escapeHtml(stat.name)}"
+                       placeholder="Назва"
                        data-stat-id="${Utils.escapeHtml(stat.id)}" 
                        data-field="name"
                        maxlength="50">
@@ -8879,10 +8879,10 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                        data-stat-id="${Utils.escapeHtml(stat.id)}" 
                        data-field="value"
                        maxlength="20">
-                <button type="button" 
-                        class="remove-stat-btn" 
+                <button type="button"
+                        class="remove-stat-btn"
                         data-stat-id="${Utils.escapeHtml(stat.id)}"
-                        aria-label="Удалить метрику"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                        aria-label="Видалити метрику"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             `;
             
             setupStatDragAndDrop(row, stat);

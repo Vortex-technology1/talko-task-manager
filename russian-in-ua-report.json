@@ -1,0 +1,182 @@
+[
+  {
+    "key": "startTimer",
+    "value": "Старт",
+    "russian_word": "старт",
+    "line": 107
+  },
+  {
+    "key": "type",
+    "value": "Тип",
+    "russian_word": "тип",
+    "line": 219
+  },
+  {
+    "key": "finTypeLbl",
+    "value": "Тип",
+    "russian_word": "тип",
+    "line": 564
+  },
+  {
+    "key": "finExpPlanFact",
+    "value": "Витрати (план/факт)",
+    "russian_word": "план",
+    "line": 582
+  },
+  {
+    "key": "finAccountTypePh",
+    "value": "Тип (bank / cash / card):",
+    "russian_word": "тип",
+    "line": 734
+  },
+  {
+    "key": "finPlanVsFact",
+    "value": "План vs Факт",
+    "russian_word": "план",
+    "line": 876
+  },
+  {
+    "key": "finPlanExpense",
+    "value": "Витрати (план/факт)",
+    "russian_word": "план",
+    "line": 877
+  },
+  {
+    "key": "finBudgetCtx",
+    "value": "БЮДЖЕТ {month}: план={plan}, факт={fact}, виконання={pct}%",
+    "russian_word": "план",
+    "line": 879
+  },
+  {
+    "key": "taskType",
+    "value": "Тип завдань",
+    "russian_word": "тип",
+    "line": 1215
+  },
+  {
+    "key": "fileTypeNotSupported",
+    "value": "Тип файлу .{ext} не підтримується",
+    "russian_word": "тип",
+    "line": 1393
+  },
+  {
+    "key": "btnStart",
+    "value": "Старт",
+    "russian_word": "старт",
+    "line": 1471
+  },
+  {
+    "key": "fnHowtoWeeklyMetrics",
+    "value": "Ключові KPI функції: план / факт / статус кольором",
+    "russian_word": "план",
+    "line": 1593
+  },
+  {
+    "key": "fnGlos4ex",
+    "value": "Функція «Адміністрування» → метрика «Заповненість розкладу» → план 90%, факт 72% → жовтий. Хто відповідає — відразу видно.",
+    "russian_word": "план",
+    "line": 1627
+  },
+  {
+    "key": "fnConn3res",
+    "value": "✓ Відкриваєш картку Адміністрування — бачиш всі KPI відділу: план/факт, колір. Одна точка для аналізу.",
+    "russian_word": "план",
+    "line": 1654
+  },
+  {
+    "key": "quickInput",
+    "value": "Внести дані",
+    "russian_word": "внести",
+    "line": 1743
+  },
+  {
+    "key": "metricInputType",
+    "value": "Тип введення",
+    "russian_word": "тип",
+    "line": 1754
+  },
+  {
+    "key": "priceType",
+    "value": "Тип цін",
+    "russian_word": "тип",
+    "line": 1896
+  },
+  {
+    "key": "onbBizType",
+    "value": "Тип бізнесу",
+    "russian_word": "тип",
+    "line": 2214
+  },
+  {
+    "key": "flowStart",
+    "value": "Старт",
+    "russian_word": "старт",
+    "line": 2340
+  },
+  {
+    "key": "flowType",
+    "value": "Тип",
+    "russian_word": "тип",
+    "line": 2350
+  },
+  {
+    "key": "flowSt2",
+    "value": "Старт",
+    "russian_word": "старт",
+    "line": 2488
+  },
+  {
+    "key": "flowTyp2",
+    "value": "Тип",
+    "russian_word": "тип",
+    "line": 2509
+  },
+  {
+    "key": "actionType",
+    "value": "Тип дії",
+    "russian_word": "тип",
+    "line": 2910
+  },
+  {
+    "key": "budgetPlan",
+    "value": "Бюджет (план)",
+    "russian_word": "план",
+    "line": 3435
+  },
+  {
+    "key": "revenuePlan",
+    "value": "Виручка (план)",
+    "russian_word": "план",
+    "line": 3436
+  },
+  {
+    "key": "materialsPlan",
+    "value": "Матеріали (план)",
+    "russian_word": "план",
+    "line": 3437
+  },
+  {
+    "key": "laborPlan",
+    "value": "Робота (план)",
+    "russian_word": "план",
+    "line": 3438
+  },
+  {
+    "key": "addWorkType",
+    "value": "Додати тип роботи",
+    "russian_word": "тип",
+    "line": 3546
+  },
+  {
+    "key": "cogsHint",
+    "value": "встановіть тип «Собівартість (COGS)» для категорій прямих витрат.",
+    "russian_word": "тип",
+    "line": 3782
+  },
+  {
+    "key": "expenseTypeLabel",
+    "value": "Тип витрати (для P&L)",
+    "russian_word": "тип",
+    "line": 3828
+  }
+]
