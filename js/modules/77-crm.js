@@ -3789,6 +3789,34 @@ window.crmEditClient = function(clientId) {
                     <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Нотатка','Заметка')}</label>
                     <textarea id="eci_note" rows="3" style="${inp}resize:vertical;overflow:hidden;min-height:72px;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';" onfocus="this.style.borderColor='#22c55e';setTimeout(()=>{this.style.height='auto';this.style.height=this.scrollHeight+'px';},0)" onblur="this.style.borderColor='#e5e7eb'">${_esc(cl.note||'')}</textarea>
                 </div>
+                <!-- Фінансові налаштування клієнта -->
+                <div style="border-top:1px solid #f1f5f9;padding-top:0.75rem;margin-top:0.25rem;">
+                    <div style="font-size:0.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:0.6rem;">${_tg('Фінансові умови','Финансовые условия')}</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+                        <div>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Умова оплати','Условие оплаты')}</label>
+                            <select id="eci_paymentCondition" style="${inp}">
+                                <option value="prepay" ${(cl.paymentCondition||'prepay')==='prepay'?'selected':''}>${_tg('Передоплата','Предоплата')}</option>
+                                <option value="postpay" ${cl.paymentCondition==='postpay'?'selected':''}>${_tg('Відстрочка','Отсрочка')}</option>
+                                <option value="partial" ${cl.paymentCondition==='partial'?'selected':''}>${_tg('Часткова','Частичная')}</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Відстрочка (днів)','Отсрочка (дней)')}</label>
+                            <input id="eci_paymentDueDays" type="number" min="0" max="365" style="${inp}" value="${cl.paymentDueDays||0}">
+                        </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.6rem;">
+                        <div>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Кредитний ліміт','Кредитный лимит')}</label>
+                            <input id="eci_creditLimit" type="number" min="0" step="100" style="${inp}" value="${cl.creditLimit||0}" placeholder="0 = без ліміту">
+                        </div>
+                        <div>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Борг зараз','Долг сейчас')}</label>
+                            <div style="padding:0.5rem 0.65rem;background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;color:${Number(cl.totalDebt||0)>0?'#dc2626':'#059669'};font-weight:600">${Number(cl.totalDebt||0).toLocaleString('uk-UA',{minimumFractionDigits:0,maximumFractionDigits:0})} UAH</div>
+                        </div>
+                    </div>
+                </div>
                 <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
                     <button onclick="document.getElementById('crmEditClientOverlay').remove()"
                         style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;color:#6b7280;">
@@ -3813,6 +3841,9 @@ window.crmSaveClientEdit = async function(clientId) {
     const telegram = document.getElementById('eci_telegram')?.value.trim();
     const niche = document.getElementById('eci_niche')?.value.trim();
     const note  = document.getElementById('eci_note')?.value.trim();
+    const paymentCondition = document.getElementById('eci_paymentCondition')?.value || 'prepay';
+    const paymentDueDays   = Number(document.getElementById('eci_paymentDueDays')?.value) || 0;
+    const creditLimit      = Number(document.getElementById('eci_creditLimit')?.value) || 0;
 
     if (!name && !phone) {
         if (window.showToast) showToast(_tg("Введіть ім'я або телефон", 'Введите имя или телефон'), 'error');
@@ -3824,14 +3855,17 @@ window.crmSaveClientEdit = async function(clientId) {
 
     try {
         const updates = {
-            name:    name  || '',
-            phone:   phone || '',
-            email:   email || '',
-            telegram: telegram || '',
-            niche:   niche || '',
-            clientNiche: niche || '',
-            note:    note  || '',
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            name:             name  || '',
+            phone:            phone || '',
+            email:            email || '',
+            telegram:         telegram || '',
+            niche:            niche || '',
+            clientNiche:      niche || '',
+            note:             note  || '',
+            paymentCondition: paymentCondition,
+            paymentDueDays:   paymentDueDays,
+            creditLimit:      creditLimit,
+            updatedAt:        firebase.firestore.FieldValue.serverTimestamp(),
         };
 
         // Прибираємо порожні поля

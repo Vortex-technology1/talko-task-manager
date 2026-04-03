@@ -820,41 +820,48 @@
     if (!order) return;
 
     try {
-      // Check available stock for all warehouse items
-      const warnings = [];
-      for (const item of (order.items || [])) {
-        if (!item.warehouseItemId) continue;
-        const avail = getAvailable(item.warehouseItemId);
-        if (item.qty > avail) {
-          const wi = S.items.find(w => w.id === item.warehouseItemId);
-          warnings.push(`${wi?.name || item.name}: ${tg('потрібно','needed')} ${item.qty}, ${tg('доступно','available')} ${avail}`);
+      // Атомарне резервування через 99d-warehouse-reserve.js
+      if (typeof window.warehouseReserve === 'function') {
+        const result = await window.warehouseReserve(orderId, order.items || []);
+
+        if (!result.success) {
+          if (result.conflicts?.length) {
+            const conflictText = result.conflicts
+              .map(c => `${c.name}: ${tg('потрібно','needed')} ${c.needed}, ${tg('доступно','available')} ${c.available}`)
+              .join('\n');
+            const proceed = confirm(
+              tg('Недостатньо товарів на складі:\n','Insufficient stock:\n') +
+              conflictText +
+              tg('\n\nВсе одно підтвердити (без резервування)?','\n\nConfirm anyway (without reservation)?')
+            );
+            if (!proceed) return;
+          } else {
+            showToast(tg('Помилка резервування: ','Reservation error: ') + (result.error || ''), 'error');
+            return;
+          }
         }
-      }
 
-      if (warnings.length) {
-        const proceed = confirm(
-          tg('Недостатньо товарів на складі:\n','Insufficient stock:\n') +
-          warnings.join('\n') +
-          tg('\n\nПідтвердити все одно?','\n\nConfirm anyway?')
-        );
-        if (!proceed) return;
-      }
-
-      // Reserve stock — simple update (full atomic transaction in 99d module)
-      const batch = db().batch();
-      for (const item of (order.items || [])) {
-        if (!item.warehouseItemId) continue;
-        const stockRef = db().collection('companies').doc(cid()).collection('warehouse_stock').doc(item.warehouseItemId);
-        const st = S.stock[item.warehouseItemId];
-        const currentReserved = Number(st?.reserved || 0);
-        batch.update(stockRef, { reserved: currentReserved + Number(item.qty || 0) });
-        // update local cache
-        if (S.stock[item.warehouseItemId]) {
-          S.stock[item.warehouseItemId].reserved = currentReserved + Number(item.qty || 0);
+        // Оновлюємо локальний кеш після транзакції
+        for (const item of (order.items || [])) {
+          if (!item.warehouseItemId || !S.stock[item.warehouseItemId]) continue;
+          const st = S.stock[item.warehouseItemId];
+          st.reserved = Number(st.reserved || 0) + Number(item.qty || 0);
         }
+
+      } else {
+        // Fallback — simple batch (якщо 99d ще не завантажений)
+        const batch = db().batch();
+        for (const item of (order.items || [])) {
+          if (!item.warehouseItemId) continue;
+          const stockRef = db().collection('companies').doc(cid()).collection('warehouse_stock').doc(item.warehouseItemId);
+          const st = S.stock[item.warehouseItemId];
+          const cur = Number(st?.reserved || 0);
+          batch.update(stockRef, { reserved: cur + Number(item.qty || 0) });
+          if (S.stock[item.warehouseItemId]) S.stock[item.warehouseItemId].reserved = cur + Number(item.qty || 0);
+        }
+        await batch.commit();
       }
 
-      await batch.commit();
       await col(COL).doc(orderId).update({ status: 'confirmed', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
       showToast(tg('Замовлення підтверджено, товари зарезервовані','Order confirmed, items reserved'));
       await loadOrders();
@@ -867,7 +874,12 @@
   // ─── CANCEL ORDER ─────────────────────────────────────────────────────────
   window._soCancel = async function (orderId) {
     if (!confirm(tg('Скасувати замовлення?','Cancel this order?'))) return;
+    const order = S.orders.find(o => o.id === orderId);
     try {
+      // Якщо замовлення підтверджено — звільняємо резерв
+      if (order?.status === 'confirmed' && typeof window.warehouseRelease === 'function') {
+        await window.warehouseRelease(orderId, order.items || []);
+      }
       await col(COL).doc(orderId).update({ status: 'cancelled', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
       showToast(tg('Замовлення скасовано','Order cancelled'), 'info');
       await loadOrders();

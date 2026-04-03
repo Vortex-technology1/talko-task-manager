@@ -4189,3 +4189,148 @@ exports.onDebtorPaid = functions
 
         return null;
     });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// migrateWarehouseAndClients — одноразова міграція існуючих даних
+// HTTPS endpoint: GET /migrateWarehouseAndClients
+// Додає поля: warehouse_items.reserved=0, crm_clients.creditLimit/priceTypeId/totalDebt
+// Безпечно запускати кілька разів (idempotent)
+// ═══════════════════════════════════════════════════════════════════════════
+exports.migrateWarehouseAndClients = functions
+    .region('europe-west1')
+    .runWith({ timeoutSeconds: 540, memory: '512MB' })
+    .https.onRequest(async (req, res) => {
+        // Тільки суперадмін
+        const authHeader = req.headers.authorization || '';
+        const token = authHeader.replace('Bearer ', '');
+        if (token !== 'talko-migrate-2026') {
+            return res.status(403).json({ error: 'forbidden' });
+        }
+
+        console.log('[migrate] Starting warehouse + clients migration...');
+
+        const results = {
+            warehouseItemsUpdated: 0,
+            warehouseItemsSkipped: 0,
+            clientsUpdated: 0,
+            clientsSkipped: 0,
+            errors: [],
+            companies: 0,
+        };
+
+        try {
+            const companiesSnap = await db.collection('companies').get();
+            results.companies = companiesSnap.size;
+
+            for (const compDoc of companiesSnap.docs) {
+                const cid = compDoc.id;
+                console.log(`[migrate] Processing company: ${cid}`);
+
+                // ── 1. warehouse_items — додаємо reserved:0 якщо немає ──
+                try {
+                    const itemsSnap = await compDoc.ref.collection('warehouse_items').get();
+                    const whBatch = db.batch();
+                    let whCount = 0;
+
+                    for (const itemDoc of itemsSnap.docs) {
+                        const data = itemDoc.data();
+                        // Пропускаємо якщо поле вже є
+                        if (data.reserved !== undefined) {
+                            results.warehouseItemsSkipped++;
+                            continue;
+                        }
+                        whBatch.update(itemDoc.ref, {
+                            reserved:  0,
+                            available: Number(data.quantity || 0),
+                        });
+                        whCount++;
+                        results.warehouseItemsUpdated++;
+
+                        // Firestore batch limit = 500
+                        if (whCount % 400 === 0) {
+                            await whBatch.commit();
+                            console.log(`[migrate] wh batch committed: ${whCount}`);
+                        }
+                    }
+                    if (whCount % 400 !== 0) await whBatch.commit();
+                } catch(e) {
+                    console.error(`[migrate] wh error ${cid}:`, e.message);
+                    results.errors.push(`wh:${cid}: ${e.message}`);
+                }
+
+                // ── 2. warehouse_stock — синхронізуємо available ──
+                try {
+                    const stockSnap = await compDoc.ref.collection('warehouse_stock').get();
+                    const stockBatch = db.batch();
+                    let sCount = 0;
+
+                    for (const stockDoc of stockSnap.docs) {
+                        const data = stockDoc.data();
+                        if (data.reserved !== undefined) continue; // вже мігровано
+                        const qty = Number(data.quantity || 0);
+                        stockBatch.update(stockDoc.ref, { reserved: 0, available: qty });
+                        sCount++;
+                        if (sCount % 400 === 0) await stockBatch.commit();
+                    }
+                    if (sCount % 400 !== 0 && sCount > 0) await stockBatch.commit();
+                } catch(e) {
+                    console.error(`[migrate] stock error ${cid}:`, e.message);
+                    results.errors.push(`stock:${cid}: ${e.message}`);
+                }
+
+                // ── 3. crm_clients — додаємо нові поля якщо немає ──
+                try {
+                    const clientsSnap = await compDoc.ref.collection('crm_clients').get();
+                    const clBatch = db.batch();
+                    let clCount = 0;
+
+                    for (const clientDoc of clientsSnap.docs) {
+                        const data = clientDoc.data();
+                        const updates = {};
+                        let needsUpdate = false;
+
+                        if (data.creditLimit === undefined) {
+                            updates.creditLimit = 0;   // 0 = без ліміту
+                            needsUpdate = true;
+                        }
+                        if (data.priceTypeId === undefined) {
+                            updates.priceTypeId = null; // null = дефолтний прайс
+                            needsUpdate = true;
+                        }
+                        if (data.totalDebt === undefined) {
+                            updates.totalDebt = 0;
+                            needsUpdate = true;
+                        }
+                        if (data.paymentCondition === undefined) {
+                            updates.paymentCondition = 'prepay';
+                            needsUpdate = true;
+                        }
+                        if (data.paymentDueDays === undefined) {
+                            updates.paymentDueDays = 0;
+                            needsUpdate = true;
+                        }
+
+                        if (needsUpdate) {
+                            clBatch.update(clientDoc.ref, updates);
+                            clCount++;
+                            results.clientsUpdated++;
+                            if (clCount % 400 === 0) await clBatch.commit();
+                        } else {
+                            results.clientsSkipped++;
+                        }
+                    }
+                    if (clCount % 400 !== 0 && clCount > 0) await clBatch.commit();
+                } catch(e) {
+                    console.error(`[migrate] clients error ${cid}:`, e.message);
+                    results.errors.push(`clients:${cid}: ${e.message}`);
+                }
+            }
+
+            console.log('[migrate] Done:', JSON.stringify(results));
+            return res.json({ success: true, results });
+
+        } catch(e) {
+            console.error('[migrate] Fatal:', e.message);
+            return res.status(500).json({ error: e.message, results });
+        }
+    });
