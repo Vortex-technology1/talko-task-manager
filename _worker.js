@@ -1631,6 +1631,361 @@ ${e.stack?.slice(0,200)}`);
         return json({ status: 0 });
     }
 
+    // ════════════════════════════════════════════════════════════
+    // BINOTEL CHANNEL
+    // Events: call_start, call_end, call_record
+    // ════════════════════════════════════════════════════════════
+    if (channel === 'binotel') {
+        const bEvent     = body.event || body.type || '';
+        const bPhone     = String(body.externalNumber || body.clientPhone || body.phone || '').replace(/[^+\d]/g, '');
+        const bInternal  = String(body.internalNumber || body.extension || '');
+        const bCallId    = String(body.generalCallID || body.callId || body.id || Date.now());
+        const bDuration  = Number(body.billSecs || body.duration || 0);
+        const bRecordUrl = body.pbxRecordUrl || body.recordUrl || '';
+        const bDisp      = body.disposition || body.status || '';
+
+        if (!bPhone || !cid) return json({ ok: true });
+
+        // Читаємо Binotel credentials
+        const compDocB = await fsGet(`companies/${cid}`, token);
+        if (!compDocB?.fields) return json({ ok: true });
+        const compDataB = fFields(compDocB.fields);
+        const binotelKey    = compDataB.binotelKey    || '';
+        const binotelSecret = compDataB.binotelSecret || '';
+        if (!binotelKey) return json({ ok: true });
+
+        const nowB = new Date().toISOString();
+
+        // ── call_start: новий дзвінок → знаходимо або створюємо контакт + угоду ──
+        if (bEvent === 'call_start' || bEvent === 'CALL_START' || bEvent === 'incoming') {
+            // Шукаємо існуючого клієнта по телефону в crm_clients
+            let clientId   = null;
+            let clientName = bPhone;
+            let dealId     = null;
+
+            const clientsSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents:runQuery`,
+                {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        structuredQuery: {
+                            from: [{ collectionId: `companies/${cid}/crm_clients` }],
+                            where: { fieldFilter: {
+                                field: { fieldPath: 'phone' },
+                                op: 'EQUAL',
+                                value: { stringValue: bPhone },
+                            }},
+                            limit: 1,
+                        }
+                    })
+                }
+            );
+            if (clientsSnap.ok) {
+                const cData = await clientsSnap.json();
+                const found = cData[0]?.document;
+                if (found) {
+                    clientId   = found.name.split('/').pop();
+                    const cf   = fFields(found.fields || {});
+                    clientName = cf.name || cf.clientName || bPhone;
+                }
+            }
+
+            // Якщо немає клієнта — створюємо
+            if (!clientId) {
+                const newClientRef = `companies/${cid}/crm_clients/${bCallId}_client`;
+                await fsSet(newClientRef, {
+                    name:      { stringValue: bPhone },
+                    phone:     { stringValue: bPhone },
+                    source:    { stringValue: 'binotel' },
+                    createdAt: { timestampValue: nowB },
+                    updatedAt: { timestampValue: nowB },
+                }, token);
+                clientId   = `${bCallId}_client`;
+                clientName = bPhone;
+            }
+
+            // Шукаємо відкриту угоду для цього клієнта
+            const dealsSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_deals?pageSize=5`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (dealsSnap.ok) {
+                const dData = await dealsSnap.json();
+                const openDeal = (dData.documents || []).find(d => {
+                    const df = fFields(d.fields || {});
+                    return df.clientId === clientId && !['won','lost'].includes(df.stage);
+                });
+                if (openDeal) dealId = openDeal.name.split('/').pop();
+            }
+
+            // Якщо немає відкритої угоди — створюємо
+            if (!dealId) {
+                // Знаходимо першу стадію pipeline
+                let firstStageId = 'new';
+                const pipSnap = await fetch(
+                    `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_pipelines?pageSize=1`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                if (pipSnap.ok) {
+                    const pipData = await pipSnap.json();
+                    const pip = pipData.documents?.[0];
+                    if (pip) {
+                        const pf = fFields(pip.fields || {});
+                        const stages = pf.stages || [];
+                        if (stages.length > 0) firstStageId = stages[0].id || stages[0].key || 'new';
+                    }
+                }
+
+                const newDealId = `${bCallId}_deal`;
+                await fsSet(`companies/${cid}/crm_deals/${newDealId}`, {
+                    title:      { stringValue: `Дзвінок від ${clientName}` },
+                    clientId:   { stringValue: clientId },
+                    clientName: { stringValue: clientName },
+                    phone:      { stringValue: bPhone },
+                    stage:      { stringValue: firstStageId },
+                    source:     { stringValue: 'binotel' },
+                    amount:     { integerValue: 0 },
+                    createdAt:  { timestampValue: nowB },
+                    updatedAt:  { timestampValue: nowB },
+                }, token);
+                dealId = newDealId;
+            }
+
+            // Зберігаємо дзвінок в history угоди
+            const callHistId = `call_${bCallId}_start`;
+            await fsSet(`companies/${cid}/crm_deals/${dealId}/history/${callHistId}`, {
+                id:         { stringValue: callHistId },
+                type:       { stringValue: 'call' },
+                subtype:    { stringValue: 'incoming' },
+                phone:      { stringValue: bPhone },
+                internal:   { stringValue: bInternal },
+                callId:     { stringValue: bCallId },
+                status:     { stringValue: 'active' },
+                source:     { stringValue: 'binotel' },
+                createdAt:  { timestampValue: nowB },
+            }, token);
+
+            // Зберігаємо активний дзвінок (щоб call_end міг знайти угоду)
+            await fsSet(`companies/${cid}/active_calls/${bCallId}`, {
+                callId:     { stringValue: bCallId },
+                dealId:     { stringValue: dealId },
+                clientId:   { stringValue: clientId },
+                clientName: { stringValue: clientName },
+                phone:      { stringValue: bPhone },
+                internal:   { stringValue: bInternal },
+                startedAt:  { timestampValue: nowB },
+            }, token);
+
+            return json({ ok: true, dealId, clientId });
+        }
+
+        // ── call_end: дзвінок завершено → оновлюємо запис ──
+        if (bEvent === 'call_end' || bEvent === 'CALL_END' || bEvent === 'hangup') {
+            // Знаходимо активний дзвінок
+            const activeCallDoc = await fsGet(`companies/${cid}/active_calls/${bCallId}`, token);
+            if (!activeCallDoc?.fields) return json({ ok: true });
+            const activeCall = fFields(activeCallDoc.fields);
+            const dealId = activeCall.dealId || '';
+
+            if (dealId) {
+                // Оновлюємо history запис
+                const callHistId = `call_${bCallId}_start`;
+                await fsPatch(`companies/${cid}/crm_deals/${dealId}/history/${callHistId}`, {
+                    status:      { stringValue: bDisp === 'ANSWERED' ? 'answered' : 'missed' },
+                    duration:    { integerValue: bDuration },
+                    endedAt:     { timestampValue: nowB },
+                    updatedAt:   { timestampValue: nowB },
+                }, token);
+
+                // Оновлюємо угоду
+                await fsPatch(`companies/${cid}/crm_deals/${dealId}`, {
+                    lastCallAt:       { timestampValue: nowB },
+                    lastCallDuration: { integerValue: bDuration },
+                    lastCallStatus:   { stringValue: bDisp === 'ANSWERED' ? 'answered' : 'missed' },
+                    updatedAt:        { timestampValue: nowB },
+                }, token);
+
+                // Якщо пропущений дзвінок — створюємо задачу "Передзвонити"
+                if (bDisp !== 'ANSWERED' && bDuration === 0) {
+                    const taskId = `task_callback_${bCallId}`;
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    await fsSet(`companies/${cid}/tasks/${taskId}`, {
+                        title:     { stringValue: `Передзвонити: ${activeCall.clientName || bPhone}` },
+                        status:    { stringValue: 'todo' },
+                        priority:  { stringValue: 'high' },
+                        dealId:    { stringValue: dealId },
+                        phone:     { stringValue: bPhone },
+                        source:    { stringValue: 'binotel_missed' },
+                        deadline:  { timestampValue: tomorrow.toISOString() },
+                        createdAt: { timestampValue: nowB },
+                        updatedAt: { timestampValue: nowB },
+                    }, token);
+                }
+            }
+
+            // Видаляємо активний дзвінок
+            await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/active_calls/${bCallId}`,
+                { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }
+            ).catch(() => {});
+
+            return json({ ok: true });
+        }
+
+        // ── call_record: запис дзвінку готовий ──
+        if ((bEvent === 'call_record' || bEvent === 'CALL_RECORD') && bRecordUrl) {
+            const activeCallDoc = await fsGet(`companies/${cid}/active_calls/${bCallId}`, token);
+            const dealId = activeCallDoc ? fFields(activeCallDoc.fields || {}).dealId : null;
+
+            if (dealId) {
+                const callHistId = `call_${bCallId}_start`;
+                await fsPatch(`companies/${cid}/crm_deals/${dealId}/history/${callHistId}`, {
+                    recordUrl: { stringValue: bRecordUrl },
+                    updatedAt: { timestampValue: nowB },
+                }, token);
+            }
+            return json({ ok: true });
+        }
+
+        return json({ ok: true });
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // RINGOSTAT CHANNEL
+    // ════════════════════════════════════════════════════════════
+    if (channel === 'ringostat') {
+        const rEvent    = body.event || body.type || '';
+        const rPhone    = String(body.caller_id || body.phone || body.client_number || '').replace(/[^+\d]/g, '');
+        const rCallId   = String(body.call_id || body.id || Date.now());
+        const rDuration = Number(body.duration || body.billsec || 0);
+        const rRecord   = body.record_url || body.recording || '';
+        const rStatus   = body.disposition || body.call_status || '';
+        const rInternal = String(body.extension || body.called_did || '');
+
+        if (!rPhone || !cid) return json({ ok: true });
+
+        const compDocR = await fsGet(`companies/${cid}`, token);
+        if (!compDocR?.fields) return json({ ok: true });
+        const compDataR = fFields(compDocR.fields);
+        if (!compDataR.ringostatApiKey) return json({ ok: true });
+
+        const nowR = new Date().toISOString();
+
+        // call_start → угода в CRM
+        if (['call_start', 'CALL_INIT', 'incoming', 'ringing'].includes(rEvent)) {
+            let clientId = null, clientName = rPhone, dealId = null;
+
+            // Шукаємо клієнта по телефону
+            const rCliSnap = await fetch(
+                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_clients?pageSize=100`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (rCliSnap.ok) {
+                const rCliData = await rCliSnap.json();
+                const found = (rCliData.documents || []).find(d => {
+                    const f = fFields(d.fields || {});
+                    return f.phone === rPhone || f.phone === rPhone.replace('+', '');
+                });
+                if (found) {
+                    clientId   = found.name.split('/').pop();
+                    clientName = fFields(found.fields || {}).name || rPhone;
+                }
+            }
+
+            if (!clientId) {
+                const newCliId = `${rCallId}_cli`;
+                await fsSet(`companies/${cid}/crm_clients/${newCliId}`, {
+                    name: { stringValue: rPhone }, phone: { stringValue: rPhone },
+                    source: { stringValue: 'ringostat' },
+                    createdAt: { timestampValue: nowR }, updatedAt: { timestampValue: nowR },
+                }, token);
+                clientId = newCliId;
+            }
+
+            const newDealId = `${rCallId}_rdeal`;
+            await fsSet(`companies/${cid}/crm_deals/${newDealId}`, {
+                title:      { stringValue: `Дзвінок (Ringostat): ${clientName}` },
+                clientId:   { stringValue: clientId },
+                clientName: { stringValue: clientName },
+                phone:      { stringValue: rPhone },
+                stage:      { stringValue: 'new' },
+                source:     { stringValue: 'ringostat' },
+                amount:     { integerValue: 0 },
+                createdAt:  { timestampValue: nowR },
+                updatedAt:  { timestampValue: nowR },
+            }, token);
+
+            await fsSet(`companies/${cid}/active_calls/${rCallId}`, {
+                callId:     { stringValue: rCallId },
+                dealId:     { stringValue: newDealId },
+                clientId:   { stringValue: clientId },
+                clientName: { stringValue: clientName },
+                phone:      { stringValue: rPhone },
+                internal:   { stringValue: rInternal },
+                startedAt:  { timestampValue: nowR },
+                source:     { stringValue: 'ringostat' },
+            }, token);
+
+            return json({ ok: true, dealId: newDealId });
+        }
+
+        // call_end
+        if (['call_end', 'CALL_END', 'hangup', 'answered'].includes(rEvent)) {
+            const rActiveDoc = await fsGet(`companies/${cid}/active_calls/${rCallId}`, token);
+            if (rActiveDoc?.fields) {
+                const rActive = fFields(rActiveDoc.fields);
+                if (rActive.dealId) {
+                    await fsPatch(`companies/${cid}/crm_deals/${rActive.dealId}`, {
+                        lastCallAt:       { timestampValue: nowR },
+                        lastCallDuration: { integerValue: rDuration },
+                        lastCallStatus:   { stringValue: rStatus === 'ANSWERED' ? 'answered' : 'missed' },
+                        updatedAt:        { timestampValue: nowR },
+                    }, token);
+
+                    if (rStatus !== 'ANSWERED' && rDuration === 0) {
+                        const tomorrowR = new Date();
+                        tomorrowR.setDate(tomorrowR.getDate() + 1);
+                        await fsSet(`companies/${cid}/tasks/task_cb_${rCallId}`, {
+                            title:     { stringValue: `Передзвонити (Ringostat): ${rActive.clientName || rPhone}` },
+                            status:    { stringValue: 'todo' },
+                            priority:  { stringValue: 'high' },
+                            dealId:    { stringValue: rActive.dealId },
+                            phone:     { stringValue: rPhone },
+                            source:    { stringValue: 'ringostat_missed' },
+                            deadline:  { timestampValue: tomorrowR.toISOString() },
+                            createdAt: { timestampValue: nowR },
+                            updatedAt: { timestampValue: nowR },
+                        }, token);
+                    }
+                }
+                await fetch(
+                    `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/active_calls/${rCallId}`,
+                    { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }
+                ).catch(() => {});
+            }
+            return json({ ok: true });
+        }
+
+        // call_record
+        if (rRecord && ['call_record', 'record_ready'].includes(rEvent)) {
+            const rActiveDoc2 = await fsGet(`companies/${cid}/active_calls/${rCallId}`, token);
+            if (rActiveDoc2?.fields) {
+                const rDeal = fFields(rActiveDoc2.fields).dealId;
+                if (rDeal) {
+                    await fsPatch(`companies/${cid}/crm_deals/${rDeal}`, {
+                        lastCallRecord: { stringValue: rRecord },
+                        updatedAt:      { timestampValue: nowR },
+                    }, token);
+                }
+            }
+            return json({ ok: true });
+        }
+
+        return json({ ok: true });
+    }
+
     // Other channels — just ack
     return json({ok:true, channel, received: true});
 }

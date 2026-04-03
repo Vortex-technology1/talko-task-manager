@@ -804,6 +804,12 @@ service cloud.firestore {
         allow delete: if isManagerOrOwner(companyId);
       }
 
+      // ACTIVE CALLS — тимчасові записи активних дзвінків (Binotel/Ringostat)
+      match /active_calls/{callId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if false; // тільки Admin SDK / Worker
+      }
+
       // FALLBACK
       match /{subcollection}/{docId} {
         allow read: if isCompanyMember(companyId);
