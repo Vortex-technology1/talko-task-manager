@@ -129,10 +129,19 @@
           const reserved  = Number(data.reserved || 0);
           const newReserved = Math.max(0, reserved - Number(item.qty));
 
-          transaction.update(stockRefs[idx], {
-            reserved:  newReserved,
-            available: Math.max(0, qty - newReserved),
-          });
+          if (stockDoc.exists) {
+            transaction.update(stockRefs[idx], {
+              reserved:  newReserved,
+              available: Math.max(0, qty - newReserved),
+            });
+          } else {
+            // Якщо doc не існує — просто створюємо з нульовим резервом
+            transaction.set(stockRefs[idx], {
+              quantity:  0,
+              reserved:  0,
+              available: 0,
+            });
+          }
 
           // Лог
           const opRef = compRef.collection('warehouse_operations').doc();
@@ -180,11 +189,19 @@
           const newQty      = Math.max(0, qty - deduct);
           const newReserved = Math.max(0, reserved - deduct);
 
-          transaction.update(stockRefs[idx], {
-            quantity:  newQty,
-            reserved:  newReserved,
-            available: Math.max(0, newQty - newReserved),
-          });
+          if (stockDoc.exists) {
+            transaction.update(stockRefs[idx], {
+              quantity:  newQty,
+              reserved:  newReserved,
+              available: Math.max(0, newQty - newReserved),
+            });
+          } else {
+            transaction.set(stockRefs[idx], {
+              quantity:  0,
+              reserved:  0,
+              available: 0,
+            });
+          }
 
           // Лог
           const opRef = compRef.collection('warehouse_operations').doc();

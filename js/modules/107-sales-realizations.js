@@ -307,9 +307,17 @@
     if(sBtn)sBtn.disabled=true; if(pBtn){pBtn.disabled=true;pBtn.textContent=tg('Проводимо...','Posting...');}
     try{
       let rid=S.editingId;
-      if(rid){await col(COL).doc(rid).update(payload);}
-      else{payload.number=await generateNumber();payload.createdBy=window.currentUserData?.id||'';payload.createdAt=serverTs();const ref=await col(COL).add(payload);rid=ref.id;}
-      if(doPost)await _postRealization(rid,{...payload,number:payload.number||S.realizations.find(r=>r.id===rid)?.number||''});
+      if(rid){
+        // БАГ 15 fix: підтягуємо number з Firestore якщо редагуємо існуючу
+        if(!payload.number) {
+          const existing = S.realizations.find(r=>r.id===rid);
+          payload.number = existing?.number || (await col(COL).doc(rid).get()).data()?.number || '';
+        }
+        await col(COL).doc(rid).update(payload);
+      } else {
+        payload.number=await generateNumber();payload.createdBy=window.currentUserData?.id||'';payload.createdAt=serverTs();const ref=await col(COL).add(payload);rid=ref.id;
+      }
+      if(doPost)await _postRealization(rid,{...payload});
       toast(doPost?tg('Реалізацію проведено','Realization posted'):tg('Чернетку збережено','Draft saved'));
       window.closeSalesRealizationModal();
       await loadRealizations();

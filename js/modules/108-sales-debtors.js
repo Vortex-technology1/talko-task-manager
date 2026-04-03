@@ -26,7 +26,10 @@
       const snap=await col('sales_debtors').orderBy('createdAt','desc').limit(500).get();
       S.debtors=snap.docs.map(d=>({id:d.id,...d.data()}));
       const today=todayISO();
-      S.debtors.forEach(d=>{if(d.status==='open'&&d.dueDate&&d.dueDate<today)d.status='overdue';});
+      // БАГ 14 fix: і open і partial переходять в overdue якщо прострочені
+      S.debtors.forEach(d=>{
+        if((d.status==='open'||d.status==='partial')&&d.dueDate&&d.dueDate<today) d.status='overdue';
+      });
       renderList(); renderSummary();
     }catch(e){console.warn('108:',e.message);}
   }

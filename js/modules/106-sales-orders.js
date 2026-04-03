@@ -829,7 +829,20 @@
 
     try {
       if (S.editing) {
-        await col(COL).doc(S.editing.id).update(payload);
+        // БАГ 13 fix: для confirmed не оновлюємо items — тільки note, assignee, paymentCondition
+        const editingOrder = S.orders.find(o => o.id === S.editing.id);
+        if (editingOrder?.status === 'confirmed') {
+          const safePayload = {
+            assigneeId:       payload.assigneeId,
+            paymentCondition: payload.paymentCondition,
+            paymentDueDays:   payload.paymentDueDays,
+            note:             payload.note,
+            updatedAt:        firebase.firestore.FieldValue.serverTimestamp(),
+          };
+          await col(COL).doc(S.editing.id).update(safePayload);
+        } else {
+          await col(COL).doc(S.editing.id).update(payload);
+        }
         showToast(tg('Замовлення оновлено','Order updated'));
       } else {
         payload.number    = await generateOrderNumber();

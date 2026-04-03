@@ -25,13 +25,21 @@
 
   // ─── Генерація номера замовлення ─────────────────────────────────────────
   async function generateOrderNumber() {
-    const year=new Date().getFullYear();
+    const year = new Date().getFullYear();
     try {
-      const snap=await col(COL_ORD).orderBy('createdAt','desc').limit(1).get();
-      let seq=1;
-      if(!snap.empty){const m=(snap.docs[0].data().number||'').match(/(\d+)$/);if(m)seq=parseInt(m[1])+1;}
+      // Атомарний лічильник — той самий що в 106-sales-orders.js
+      const counterRef = db().collection('companies').doc(cid()).collection('settings').doc('sales_counters');
+      let seq = 1;
+      await db().runTransaction(async (tx) => {
+        const doc = await tx.get(counterRef);
+        const data = doc.exists ? doc.data() : {};
+        seq = Number(data[`order_${year}`] || 0) + 1;
+        tx.set(counterRef, { [`order_${year}`]: seq }, { merge: true });
+      });
       return `ORD-${year}-${String(seq).padStart(4,'0')}`;
-    } catch(e) { return `ORD-${year}-${String(Date.now()).slice(-4)}`; }
+    } catch(e) {
+      return `ORD-${year}-${String(Date.now()).slice(-6)}`;
+    }
   }
 
   // ─── Перевірка: чи стадія має createOrder ────────────────────────────────
