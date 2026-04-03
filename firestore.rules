@@ -56,9 +56,11 @@ service cloud.firestore {
       let uDoc = getUserDoc(companyId).data;
       if (uDoc.role in ['owner', 'admin', 'manager']) return true;
       // employee: перевіряємо allowedTabs
-      return !('allowedTabs' in uDoc) ||
-             uDoc.allowedTabs == null ||
-             uDoc.allowedTabs.hasAny([tabKey]);
+      // Якщо поля немає або null — доступ є (старий режим, бачить все)
+      // Якщо поле є (навіть порожній масив []) — перевіряємо наявність табу
+      if (!('allowedTabs' in uDoc) || uDoc.allowedTabs == null) return true;
+      // allowedTabs встановлено — перевіряємо конкретний таб
+      return uDoc.allowedTabs.size() > 0 && uDoc.allowedTabs.hasAny([tabKey]);
     }
 
     function isValidString(field, maxLength) {

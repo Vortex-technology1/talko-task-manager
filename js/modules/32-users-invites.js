@@ -893,8 +893,17 @@
                 // Збираємо allowedTabs (тільки якщо роль employee)
                 let allowedTabs = null;
                 if (role === 'employee') {
-                    const checkedTabs = Array.from(document.querySelectorAll('[data-allowed-tab]:checked')).map(cb => cb.dataset.allowedTab);
-                    allowedTabs = checkedTabs.length > 0 ? checkedTabs : null;
+                    // ФІКС: використовуємо tabsContainer а не document — уникаємо зайвих елементів
+                    const _tabsCont = document.getElementById('allowedTabsCheckboxes');
+                    const checkedTabs = _tabsCont
+                        ? Array.from(_tabsCont.querySelectorAll('[data-allowed-tab]:checked')).map(cb => cb.dataset.allowedTab)
+                        : Array.from(document.querySelectorAll('[data-allowed-tab]:checked')).map(cb => cb.dataset.allowedTab);
+                    // ФІКС: якщо жодна галочка — зберігаємо порожній масив, а не null
+                    // null = видалити поле = бачить все; [] = заблоковано все
+                    // Тому якщо блок видимий — зберігаємо масив (навіть порожній означає "нічого")
+                    const tabsGroupEl = document.getElementById('allowedTabsGroup');
+                    const tabsVisible = tabsGroupEl && tabsGroupEl.style.display !== 'none';
+                    allowedTabs = tabsVisible ? checkedTabs : null;
                 }
 
                 // Оновлюємо дані користувача + нові поля функцій
@@ -907,8 +916,15 @@
                     functionRoles: functionRoles
                 };
                 if (role === 'employee') {
-                    updateData.allowedTabs = allowedTabs || firebase.firestore.FieldValue.delete();
+                    // Якщо allowedTabs = [] — зберігаємо порожній масив (заблоковано все)
+                    // Якщо allowedTabs = null — видаляємо поле (бачить все — старий режим)
+                    if (Array.isArray(allowedTabs)) {
+                        updateData.allowedTabs = allowedTabs; // може бути []
+                    } else {
+                        updateData.allowedTabs = firebase.firestore.FieldValue.delete();
+                    }
                 } else {
+                    // Не employee — завжди видаляємо allowedTabs
                     updateData.allowedTabs = firebase.firestore.FieldValue.delete();
                 }
 

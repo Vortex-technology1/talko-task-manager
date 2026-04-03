@@ -307,6 +307,33 @@
                 } else {
                     loadAllData();
                 }
+
+                // ── Real-time listener на зміну allowedTabs юзера ──
+                // Якщо овнер змінив доступи — застосовуємо одразу без перезаходу
+                if (!window._userDocListener && currentUser && currentCompany) {
+                    const _userDocRef = db.collection('companies').doc(currentCompany)
+                        .collection('users').doc(currentUser.uid);
+                    window._userDocListener = _userDocRef.onSnapshot(snap => {
+                        if (!snap.exists) return;
+                        const newData = snap.data();
+                        const oldTabs = JSON.stringify(window.currentUserData?.allowedTabs || null);
+                        const newTabs = JSON.stringify(newData.allowedTabs || null);
+                        if (oldTabs !== newTabs) {
+                            console.log('[TALKO] allowedTabs змінились — оновлюємо доступи');
+                            // Оновлюємо дані і перезавантажуємо сторінку щоб застосувати нові доступи
+                            if (window.currentUserData) {
+                                window.currentUserData.allowedTabs = newData.allowedTabs || null;
+                            }
+                            // М'яке перезавантаження — без повного reload
+                            window._userAllowedTabs = Array.isArray(newData.allowedTabs) && newData.allowedTabs.length > 0
+                                ? newData.allowedTabs : null;
+                            if (typeof showToast === 'function') {
+                                showToast('Ваші доступи оновлено. Сторінка перезавантажиться...', 'info');
+                            }
+                            setTimeout(() => window.location.reload(), 1500);
+                        }
+                    }, err => console.warn('[_userDocListener]', err.message));
+                }
                 // Синхронізуємо обидва stats tab buttons (desktop + mobile) одразу після login
                 if (typeof showStatsTabIfAllowed === 'function') showStatsTabIfAllowed();
                 if (typeof initStatistics === 'function') initStatistics();
@@ -432,6 +459,11 @@
                 window._userAllowedTabs    = null;
                 window._switchTabRestricted = false;
                 window._userHasTabAccess   = function() { return true; };
+                // Закриваємо real-time listener на документ юзера
+                if (typeof window._userDocListener === 'function') {
+                    window._userDocListener();
+                    window._userDocListener = null;
+                }
                 // Очищаємо дані — тільки якщо була активна сесія
                 // (захист: onAuthStateChanged(null) спрацьовує і при першому завантаженні
                 //  поки Firebase відновлює сесію — не очищаємо якщо ще не логінились)
