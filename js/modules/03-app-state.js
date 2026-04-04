@@ -148,6 +148,9 @@
                 updateOverdueBadges();
             });
         }
+        // Виставляємо на window — CRM (77-crm, 77b-calls) викликають scheduleRender
+        // після оновлення tasks, але функція локальна → перевірка typeof поверне false
+        window.scheduleRender = function(myDay, view) { scheduleRender(myDay, view); };
 // ── Глобальний обробник необроблених помилок ──────────────
 window.addEventListener('unhandledrejection', function(e) {
     console.error('[TALKO] Unhandled Promise:', e.reason);

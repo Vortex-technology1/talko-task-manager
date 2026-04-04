@@ -14,13 +14,17 @@ function _t(ua, ru) {
 
 // ── Патчимо _bkCompleteAppointment після завантаження ──────
 function _patchBooking() {
-  const orig = window._bkCompleteAppointment;
-  if (typeof orig !== 'function') {
-    // Модуль ще не завантажено — спробуємо пізніше
-    setTimeout(_patchBooking, 800);
+  if (typeof window._bkCompleteAppointment !== 'function') {
+    // Retry loop замість blind timeout — макс 10с
+    if ((_patchBooking._attempts = (_patchBooking._attempts || 0) + 1) < 100) {
+      setTimeout(_patchBooking, 100);
+    } else {
+      console.warn('[bookingBridge] _bkCompleteAppointment not found after 10s');
+    }
     return;
   }
 
+  const orig = window._bkCompleteAppointment;
   window._bkCompleteAppointment = async function(apptId, amount) {
     // Викликаємо оригінальну функцію
     await orig.call(this, apptId, amount);

@@ -5,10 +5,13 @@
         async function advanceProcessIfLinked(taskId) {
             // AUTO-ADVANCE обробляється backend Cloud Function onProcessTaskCompleted
             // Фронт лише логує для debug
-            const task = tasks.find(t => t.id === taskId);
+            const task = (window.tasks || tasks || []).find(t => t.id === taskId);
             if (!task?.processId) return;
             window.dbg&&dbg('[Process] Task', taskId, 'done — backend will advance process', task.processId);
         }
+
+        // Виставляємо на window для CRM (77-crm.js, 77c перевіряють typeof advanceProcessIfLinked)
+        window.advanceProcessIfLinked = advanceProcessIfLinked;
         
         async function completeProcessStep(processId) {
             const process = processes.find(p => p.id === processId);

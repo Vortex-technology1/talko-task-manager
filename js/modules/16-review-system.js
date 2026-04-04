@@ -17,6 +17,8 @@
             if (task.requireReview === false) return false;
             return true;
         }
+        // Виставляємо на window для CRM (77-crm.js, 77c перевіряють typeof shouldSendForReview)
+        window.shouldSendForReview = shouldSendForReview;
         
         // Постановник приймає завдання
         // Review з модалки

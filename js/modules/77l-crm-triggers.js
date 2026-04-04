@@ -560,7 +560,7 @@ async function _sendTriggerNotify(payload) {
                     const updateObj = {};
                     updateObj[action.field] = action.value || '';
                     updateObj.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await window.companyRef().collection('crm_deals').doc(deal.id).update(updateObj);
+                    await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(deal.id).update(updateObj);
                 } else if (action.type === 'call_webhook' && action.webhookUrl) {
                     // Викликати зовнішній webhook
                     const payload = {
@@ -638,7 +638,7 @@ async function _sendTriggerNotify(payload) {
         window.onTalkoEvent('bot.flow_completed', async (event) => {
             if (!event.dealId) return;
             try {
-                const snap = await window.companyRef().collection('crm_deals').doc(event.dealId).get();
+                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
                 if (snap.exists) {
                     await window.crmRunTriggers({ id: snap.id, ...snap.data() }, 'bot_flow_completed', event);
                 }
@@ -649,7 +649,7 @@ async function _sendTriggerNotify(payload) {
         window.onTalkoEvent('invoice.paid', async (event) => {
             if (!event.dealId) return;
             try {
-                const snap = await window.companyRef().collection('crm_deals').doc(event.dealId).get();
+                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
                 if (snap.exists) {
                     const deal = { id: snap.id, ...snap.data() };
                     await window.crmRunTriggers(deal, 'invoice_paid', event);
@@ -660,7 +660,7 @@ async function _sendTriggerNotify(payload) {
                             await window.crmMoveToStage(deal.id, 'won');
                         } else {
                             // Fallback — прямий update якщо функція не доступна
-                            await window.companyRef().collection('crm_deals').doc(event.dealId)
+                            await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId)
                                 .update({ stage: 'won', wonAt: firebase.firestore.FieldValue.serverTimestamp(),
                                           updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
                             await window.crmRunTriggers({ ...deal, stage: 'won' }, 'deal_won', event);
@@ -674,7 +674,7 @@ async function _sendTriggerNotify(payload) {
         window.onTalkoEvent('form.submitted', async (event) => {
             if (!event.dealId) return;
             try {
-                const snap = await window.companyRef().collection('crm_deals').doc(event.dealId).get();
+                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
                 if (snap.exists) {
                     await window.crmRunTriggers({ id: snap.id, ...snap.data() }, 'form_submitted', event);
                 }
@@ -685,7 +685,7 @@ async function _sendTriggerNotify(payload) {
         window.onTalkoEvent('task.completed', async (event) => {
             if (!event.dealId) return;
             try {
-                const snap = await window.companyRef().collection('crm_deals').doc(event.dealId).get();
+                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
                 if (snap.exists) {
                     await window.crmRunTriggers({ id: snap.id, ...snap.data() }, 'task_completed', event);
                 }
@@ -696,7 +696,7 @@ async function _sendTriggerNotify(payload) {
         window.onTalkoEvent('deal.created', async (event) => {
             if (!event.dealId) return;
             try {
-                const snap = await window.companyRef().collection('crm_deals').doc(event.dealId).get();
+                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
                 if (snap.exists) {
                     await window.crmRunTriggers({ id: snap.id, ...snap.data() }, 'deal_created', event);
                 }

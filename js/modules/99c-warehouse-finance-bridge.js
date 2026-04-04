@@ -13,9 +13,13 @@ function _t(ua, ru) {
 
 
 function _patch() {
-  // Чекаємо поки core завантажиться
+  // Чекаємо поки core завантажиться — retry loop макс 10с
   if (typeof window.whFinanceOnIn !== 'function' || typeof window.whDoOperation !== 'function') {
-    setTimeout(_patch, 600);
+    if ((_patch._attempts = (_patch._attempts || 0) + 1) < 100) {
+      setTimeout(_patch, 100);
+    } else {
+      console.warn('[whBridge] whFinanceOnIn/whDoOperation not found after 10s');
+    }
     return;
   }
 

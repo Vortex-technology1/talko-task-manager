@@ -107,6 +107,10 @@
             }
         }
         
+        // Виставляємо на window для CRM і інших cross-module викликів
+        // (77-crm.js, 77c-crm-tasks.js перевіряють typeof logTaskChange === 'function')
+        window.logTaskChange = logTaskChange;
+
         function renderAuditEntry(entry) {
             const iconData = AUDIT_ICONS[entry.action] || AUDIT_ICONS.edit;
             const time = entry.timestamp?.toDate?.() 

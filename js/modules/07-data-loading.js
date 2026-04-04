@@ -227,12 +227,17 @@
                 users = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 window.users = users; // FIX CH: keep window.users in sync for event-bus
                 functions = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                window.functions = functions; // CRM, diagnostic-agent читають window.functions
                 tasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                window.tasks = tasks; // CRM модулі (77-crm, 77c) пишуть у window.tasks напряму
                 regularTasks = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 window._regularTasks = regularTasks; // global for search
                 processTemplates = templatesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                window.processTemplates = processTemplates; // 87-diagnostic-agent читає
                 processes = processesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                window.processes = processes; // 87-diagnostic-agent читає
                 projects = projectsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                window.projects = projects;
                 
                 updateSelects();
                 updateProcessTemplateFilter();
