@@ -272,82 +272,87 @@ window.openMetricsStepFlow = function(contextText) {
 // ── Крок 1: вузьке місце + втрати ────────────────────────────
 async function _sfRunStep1() {
     _sfSetStep(1);
-    // Визначаємо мову інтерфейсу → AI відповідає тією ж мовою
     const lang = window.currentLang || window.currentUserData?.language || 'uk';
-    const langInstr = lang === 'ru' ? 'Отвечай на русском языке.' 
+    const langInstr = lang === 'ru' ? 'Отвечай на русском языке.'
                     : lang === 'en' ? 'Reply in English.'
                     : lang === 'pl' ? 'Odpowiadaj po polsku.'
                     : 'Відповідай українською мовою.';
 
-    const prompt = `${langInstr}\n\nОсь дані метрик компанії за останні періоди. Проаналізуй і визнач головне вузьке місце. Покажи поточну ситуацію в цифрах, фінансові наслідки якщо не діяти, і ризики через 3 місяці.`;
+    // Передаємо дані — AI сам веде аналіз по своєму промпту з адмінки
+    // Не диктуємо формат — промпт адмінки вже містить структуру 1-5
+    const prompt = `${langInstr}
+
+Ось дані метрик компанії. Проведи повний аналіз згідно твоїх інструкцій.`;
+
     await _sfAskAI(prompt, true);
-    _sfShowButtons([{ label: '💬 Додати контекст', action: 'sfUserComment' },
-                    { label: 'Далі →', action: 'sfStep2' }]);
+
+    // Після аналізу (кроки 1-5 з промпту) AI сам запитає який варіант обирають.
+    // Ми показуємо кнопки щоб спростити вибір — не треба писати текстом
+    _sfShowButtons([
+        { label: '💬 Уточнити / додати контекст', action: 'sfUserComment' },
+        { label: 'Варіант А', action: 'sfChoose', data: 'А' },
+        { label: 'Варіант Б', action: 'sfChoose', data: 'Б' },
+        { label: 'Варіант В', action: 'sfChoose', data: 'В' },
+    ]);
 }
 
-// ── Крок 2: уточнення від користувача ─────────────────────────
-window._sfStep2 = async function(userComment) {
+// ── Крок 2: користувач обрав варіант ─────────────────────────
+window._sfChoose = async function(varName) {
+    _sfChosenVar = varName;
     _sfSetStep(2);
-    const msg = userComment
-        ? `Власник додає контекст: "${userComment}". Скоригуй або підтвердь своє бачення проблеми.`
-        : `Власник підтверджує — додаткового контексту немає. Коротко підсумуй проблему і переходимо до рішень.`;
-    await _sfAskAI(msg);
-    _sfShowButtons([{ label: 'Показати варіанти рішень →', action: 'sfStep3' }]);
-};
+    _sfAppendMsg('user', `Обираю Варіант ${varName}`);
+    _sfHistory.push({ role: 'user', content: `Обираю Варіант ${varName}` });
 
-// ── Крок 3: 2 варіанти рішень ─────────────────────────────────
-window._sfStep3 = async function() {
-    _sfSetStep(3);
-    const msg = `Запропонуй 2 варіанти вирішення цієї проблеми. Для кожного: назва, плюси, мінуси, що отримає бізнес через 3 місяці, орієнтовні витрати. В кінці — твоя рекомендація який обрати і чому.`;
-    await _sfAskAI(msg);
+    // AI складає план дій (він вже знає про це з промпту адмінки)
+    await _sfAskAI(`Обираю Варіант ${varName}. Склади план дій.`);
     _sfShowButtons([
-        { label: '✓ Обираю Варіант 1', action: 'sfChoose', data: 1 },
-        { label: '✓ Обираю Варіант 2', action: 'sfChoose', data: 2 },
-        { label: '💬 Є питання', action: 'sfUserComment3' },
+        { label: '📋 Розбити на задачі в TALKO', action: 'sfStep5' },
+        { label: '💬 Скоригувати план', action: 'sfUserComment4' },
     ]);
 };
 
-// ── Крок 4: вибір варіанту ────────────────────────────────────
-window._sfChoose = async function(varNum) {
-    _sfChosenVar = varNum;
-    _sfSetStep(4);
-    _sfAppendMsg('user', `Обираю Варіант ${varNum}`);
-    _sfHistory.push({ role: 'user', content: `Обираю Варіант ${varNum}` });
-    await _sfStep4();
+// ── Уточнення від користувача (будь-який крок) ────────────────
+window._sfStep2 = async function(userComment) {
+    if (!userComment) return;
+    await _sfAskAI(userComment);
+    _sfShowButtons([
+        { label: 'Варіант А', action: 'sfChoose', data: 'А' },
+        { label: 'Варіант Б', action: 'sfChoose', data: 'Б' },
+        { label: 'Варіант В', action: 'sfChoose', data: 'В' },
+    ]);
 };
-
-async function _sfStep4() {
-    const msg = `Власник обрав Варіант ${_sfChosenVar}. Склади конкретний план дій по тижнях — що робити на 1-му тижні, 2-3-му, далі. В кінці — очікуваний результат через 30/60/90 днів.`;
-    await _sfAskAI(msg);
-    _sfShowButtons([{ label: '📋 Розбити на задачі в TALKO', action: 'sfStep5' },
-                    { label: '💬 Скоригувати план', action: 'sfUserComment4' }]);
-}
 
 // ── Крок 5: розбивка на задачі ────────────────────────────────
 window._sfStep5 = async function() {
-    _sfSetStep(5);
-    // JSON формат потрібен для автоматичного створення задач — це технічна вимога, не стиль
-    const msg = `Розбий цей план на задачі. Відповідай тільки JSON масивом:
+    _sfSetStep(3);
+    const msg = `Розбий цей план на задачі. Відповідай тільки JSON масивом без пояснень:
 [{"title":"назва","deadlineDays":7,"priority":"high"}]
 priority: high/medium/low, deadlineDays: через скільки днів, максимум 8 задач.`;
 
-    _sfAppendMsg('assistant', '⏳ Формую задачі...', 'typing');
+    const typingId = 'sftyping_' + Date.now();
+    _sfAppendTyping(typingId);
     try {
-        const reply = await _sfCallAI(msg);
-        document.querySelector('[data-typing]')?.remove();
+        _sfHistory.push({ role: 'user', content: msg });
+        const reply = await window.aiProxy({
+            messages: _sfHistory,
+            systemPrompt: null,
+            maxTokens: 800,
+            module: 'statistics',
+        });
+        document.getElementById(typingId)?.remove();
+        _sfHistory.push({ role: 'assistant', content: reply });
 
-        // Парсимо JSON
         const jsonMatch = reply.match(/\[[\s\S]*\]/);
         if (!jsonMatch) throw new Error('no json');
         const tasks = JSON.parse(jsonMatch[0]);
-
-        // Показуємо задачі для підтвердження
         _sfShowTasksConfirm(tasks);
     } catch(e) {
+        document.getElementById(typingId)?.remove();
         _sfAppendMsg('error', 'Не вдалось розібрати задачі. Спробуйте ще раз.');
         _sfShowButtons([{ label: '🔄 Спробувати ще', action: 'sfStep5' }]);
     }
 };
+
 
 function _sfShowTasksConfirm(tasks) {
     const msgs = document.getElementById('sfMessages');
@@ -508,15 +513,14 @@ function _sfShowButtons(buttons) {
 
 window._sfHandleBtn = function(action, data) {
     switch(action) {
-        case 'sfStep2':   window._sfStep2(document.getElementById('sfInput')?.value?.trim()||''); break;
-        case 'sfStep3':   window._sfStep3(); break;
-        case 'sfChoose':  window._sfChoose(data); break;
-        case 'sfStep5':   window._sfStep5(); break;
+        case 'sfChoose':      window._sfChoose(data); break;
+        case 'sfStep5':       window._sfStep5(); break;
         case 'sfUserComment':
-        case 'sfUserComment3':
         case 'sfUserComment4':
-            // Input вже показаний — просто фокус
             document.getElementById('sfInput')?.focus(); break;
+        default:
+            // Невідома дія — просто фокус на інпут
+            document.getElementById('sfInput')?.focus();
     }
 };
 
@@ -525,22 +529,25 @@ window._sfSend = function() {
     if (!val) return;
     document.getElementById('sfInput').value = '';
     _sfAppendMsg('user', val);
+    _sfHistory.push({ role: 'user', content: val });
 
-    if (_sfStep === 1) window._sfStep2(val);
-    else if (_sfStep === 3) {
-        _sfHistory.push({ role: 'user', content: val });
-        _sfAskAI(val).then(() => {
+    // AI відповідає на будь-який коментар користувача і показує кнопки варіантів
+    _sfAskAI(val).then(() => {
+        if (_sfStep === 1) {
+            // Після уточнення — знову показуємо варіанти
             _sfShowButtons([
-                { label: '✓ Обираю Варіант 1', action: 'sfChoose', data: 1 },
-                { label: '✓ Обираю Варіант 2', action: 'sfChoose', data: 2 },
+                { label: 'Варіант А', action: 'sfChoose', data: 'А' },
+                { label: 'Варіант Б', action: 'sfChoose', data: 'Б' },
+                { label: 'Варіант В', action: 'sfChoose', data: 'В' },
+                { label: '💬 Ще питання', action: 'sfUserComment' },
             ]);
-        });
-    } else if (_sfStep === 4) {
-        _sfHistory.push({ role: 'user', content: val });
-        _sfAskAI(val).then(() => {
-            _sfShowButtons([{ label: '📋 Створити задачі в TALKO', action: 'sfStep5' }]);
-        });
-    }
+        } else if (_sfStep === 2) {
+            _sfShowButtons([
+                { label: '📋 Розбити на задачі в TALKO', action: 'sfStep5' },
+                { label: '💬 Скоригувати', action: 'sfUserComment4' },
+            ]);
+        }
+    });
 };
 
 function _sfAppendMsg(role, text) {

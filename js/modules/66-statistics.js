@@ -1550,16 +1550,10 @@
             'Визнач вузькі місця, причинно-наслідкові зв\'язки, передбач майбутні ризики, ' +
             'запропонуй 3 варіанти рішень з плюсами/мінусами та сценарним плануванням рентабельності.';
 
-        // Обрізаємо contextText якщо занадто великий — захист від 504
-        const MAX_CONTEXT_CHARS = 6000;
-        const trimmedContext = contextText.length > MAX_CONTEXT_CHARS
-            ? contextText.slice(0, MAX_CONTEXT_CHARS) + '\n\n[...дані обрізані]'
-            : contextText;
-
         try {
-            // Покроковий AI-діалог: вузьке місце → уточнення → варіанти → план → задачі в TALKO
+            // Покроковий AI-діалог: AI веде аналіз по промпту адмінки
             if (typeof window.openMetricsStepFlow === 'function') {
-                window.openMetricsStepFlow(trimmedContext);
+                window.openMetricsStepFlow(contextText); // передаємо всі дані без обрізки
             } else {
                 window.openAiChat({
                     module: 'statistics', title: window.t('aiMetricsAnalysis') || 'AI Аналіз метрик',
