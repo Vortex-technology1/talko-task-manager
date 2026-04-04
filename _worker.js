@@ -1038,35 +1038,42 @@ async function handleAiProxy(request, env) {
     try { token = await getToken(env); } catch(e) { return json({error:'Firebase error'},500); }
 
     // Get AI settings from Firestore
-    let apiKey = env.ANTHROPIC_API_KEY || env.OPENAI_API_KEY || '';
-    let provider = env.ANTHROPIC_API_KEY ? 'anthropic' : 'openai';
+    // Пріоритет ключів: 1) компанія (Firestore) → 2) superadmin (Firestore/адмінка) → 3) env (Cloudflare)
+    let apiKey = '';
+    let provider = 'openai';
     let finalModel = model || 'gpt-4o-mini';
     let finalSystemPrompt = systemPrompt || '';
 
     try {
-        // Try company settings first
+        // 1. Спочатку завжди читаємо superadmin/settings — там ключ з адмінки і промпти агентів
+        const saDoc = await fsGet('superadmin/settings', token);
+        if (saDoc?.fields) {
+            const sa = fFields(saDoc.fields);
+            // Ключ з адмінки (пріоритет над env)
+            if (sa.openaiApiKey) { apiKey = sa.openaiApiKey; provider = 'openai'; }
+            if (sa.anthropicApiKey) { apiKey = sa.anthropicApiKey; provider = 'anthropic'; }
+            // Агентський промпт і модель — читаємо завжди незалежно від ключа
+            if (mod && sa.agents?.[mod]?.systemPrompt) finalSystemPrompt = sa.agents[mod].systemPrompt;
+            if (mod && sa.agents?.[mod]?.model) finalModel = sa.agents[mod].model;
+        }
+
+        // 2. Компанія може перевизначити ключ (свій ключ компанії)
         if (companyId) {
             const cDoc = await fsGet(`companies/${companyId}/settings/ai`, token);
             if (cDoc?.fields) {
                 const cs = fFields(cDoc.fields);
-                if (cs.anthropicApiKey) { apiKey=cs.anthropicApiKey; provider='anthropic'; }
-                else if (cs.openaiApiKey) { apiKey=cs.openaiApiKey; provider='openai'; }
+                if (cs.anthropicApiKey) { apiKey = cs.anthropicApiKey; provider = 'anthropic'; }
+                else if (cs.openaiApiKey) { apiKey = cs.openaiApiKey; provider = 'openai'; }
                 if (cs.model) finalModel = cs.model;
             }
         }
-        // Superadmin settings
-        if (!apiKey) {
-            const saDoc = await fsGet('superadmin/settings', token);
-            if (saDoc?.fields) {
-                const sa = fFields(saDoc.fields);
-                if (sa.anthropicApiKey) { apiKey=sa.anthropicApiKey; provider='anthropic'; }
-                else if (sa.openaiApiKey) { apiKey=sa.openaiApiKey; provider='openai'; }
-                // Agent prompt
-                if (mod && sa.agents?.[mod]?.systemPrompt) finalSystemPrompt = sa.agents[mod].systemPrompt;
-                if (sa.agents?.[mod]?.model) finalModel = sa.agents[mod].model;
-            }
-        }
-    } catch(e) { /* use env keys */ }
+    } catch(e) { /* fallback to env */ }
+
+    // 3. Fallback — env змінні Cloudflare (якщо в адмінці ключ не встановлено)
+    if (!apiKey) {
+        if (env.OPENAI_API_KEY) { apiKey = env.OPENAI_API_KEY; provider = 'openai'; }
+        else if (env.ANTHROPIC_API_KEY) { apiKey = env.ANTHROPIC_API_KEY; provider = 'anthropic'; }
+    }
 
     if (!apiKey) return json({error:'No AI API key configured'},500);
 

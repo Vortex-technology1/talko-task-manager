@@ -1561,6 +1561,7 @@ window.openGlobalAISettings = async function() {
         const s = aiDoc.exists ? aiDoc.data() : {};
         const saSettings = saDoc.exists ? saDoc.data() : {};
         const platformKeyStored = !!saSettings.openaiApiKey;
+        const anthropicKeyStored = !!saSettings.anthropicApiKey;
 
         // Дефолтні моделі — реальні назви API (не маркетингові)
         const defaultModels = {
@@ -1687,20 +1688,41 @@ window.openGlobalAISettings = async function() {
                 <!-- TAB: GENERAL -->
                 <div id="aiTab_general">
                     <!-- Платформний OpenAI ключ -->
-                    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:0.75rem;margin-bottom:1rem;">
-                        <div style="font-size:0.78rem;font-weight:700;color:#1d4ed8;margin-bottom:6px;">
-                            🔑 Платформний OpenAI API Key
+                    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:0.75rem;margin-bottom:0.6rem;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#1d4ed8;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                            Платформний OpenAI API Key
                         </div>
                         <div style="font-size:0.72rem;color:#1e40af;margin-bottom:8px;">
-                            Діє на всі компанії платформи. Компанія може перевизначити власним ключем.
-                            ${platformKeyStored ? '<span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;font-weight:600;">✓ Ключ збережено</span>' : '<span style="background:#fef2f2;color:#dc2626;padding:2px 6px;border-radius:4px;font-weight:600;">⚠ Не встановлено</span>'}
+                            Використовується всіма агентами (статистика, збої, фінанси, координація, адаптація сайтів).
+                            Компанія може перевизначити власним ключем.
+                            ${platformKeyStored ? '<span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px;">✓ Збережено</span>' : '<span style="background:#fef2f2;color:#dc2626;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px;">⚠ Не встановлено</span>'}
                         </div>
                         <div style="display:flex;gap:6px;">
                             <input type="password" id="platformOpenAiKey" placeholder="${platformKeyStored ? '••••••••••••••••' : 'sk-...'}"
                                 style="flex:1;padding:0.45rem 0.6rem;border:1px solid #bfdbfe;border-radius:8px;font-size:0.85rem;font-family:monospace;box-sizing:border-box;">
                             ${platformKeyStored ? `<button onclick="clearPlatformKey()" style="padding:0.45rem 0.7rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">✕ Очистити</button>` : ''}
                         </div>
-                        <div style="font-size:0.7rem;color:#6b7280;margin-top:4px;">Залиш порожнім щоб не змінювати поточний ключ</div>
+                        <div style="font-size:0.7rem;color:#6b7280;margin-top:4px;">Залиш порожнім щоб не змінювати поточний ключ. Отримати ключ: <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#1d4ed8;">platform.openai.com/api-keys</a></div>
+                    </div>
+
+                    <!-- Платформний Anthropic ключ -->
+                    <div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:10px;padding:0.75rem;margin-bottom:1rem;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#7e22ce;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                            Платформний Anthropic API Key
+                            <span style="font-size:0.65rem;background:#f3e8ff;color:#7e22ce;padding:1px 6px;border-radius:4px;border:1px solid #e9d5ff;">Необов'язково</span>
+                        </div>
+                        <div style="font-size:0.72rem;color:#6b21a8;margin-bottom:8px;">
+                            Якщо встановлено — має пріоритет над OpenAI ключем для всіх агентів. Залиш порожнім — буде використовуватись OpenAI.
+                            ${anthropicKeyStored ? '<span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px;">✓ Збережено</span>' : '<span style="background:#f3f4f6;color:#9ca3af;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px;">Не встановлено</span>'}
+                        </div>
+                        <div style="display:flex;gap:6px;">
+                            <input type="password" id="platformAnthropicKey" placeholder="${anthropicKeyStored ? '••••••••••••••••' : 'sk-ant-...'}"
+                                style="flex:1;padding:0.45rem 0.6rem;border:1px solid #e9d5ff;border-radius:8px;font-size:0.85rem;font-family:monospace;box-sizing:border-box;">
+                            ${anthropicKeyStored ? `<button onclick="clearAnthropicKey()" style="padding:0.45rem 0.7rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">✕ Очистити</button>` : ''}
+                        </div>
+                        <div style="font-size:0.7rem;color:#6b7280;margin-top:4px;">Отримати ключ: <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:#7e22ce;">console.anthropic.com</a> → це <b>окремий</b> від підписки Claude.ai акаунт</div>
                     </div>
 
                     <label style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;cursor:pointer;">
@@ -1778,7 +1800,8 @@ window.saveGlobalAISettings = async function() {
     const enabled  = document.getElementById('globalAiEnabled')?.checked ?? true;
     const daily    = parseInt(document.getElementById('globalDailyLimit')?.value) || 0;
     const monthly  = parseInt(document.getElementById('globalMonthlyLimit')?.value) || 0;
-    const newKey   = document.getElementById('platformOpenAiKey')?.value?.trim() || '';
+    const newKey          = document.getElementById('platformOpenAiKey')?.value?.trim() || '';
+    const newAnthropicKey = document.getElementById('platformAnthropicKey')?.value?.trim() || '';
     const botModel = document.getElementById('botModelSelect')?.value || 'gpt-4o-mini';
     const botTemperature = parseFloat(document.getElementById('botTempRange')?.value) || 0.7;
     const botMaxTokens = parseInt(document.getElementById('botMaxTokens')?.value) || 1500;
@@ -1825,6 +1848,10 @@ window.saveGlobalAISettings = async function() {
         const saUpdate = { agents, botModel, botTemperature, botMaxTokens, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
         if (newKey) {
             saUpdate.openaiApiKey = newKey;
+            saUpdate.keyUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
+        }
+        if (newAnthropicKey) {
+            saUpdate.anthropicApiKey = newAnthropicKey;
             saUpdate.keyUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
         }
         batch.set(
@@ -2141,7 +2168,21 @@ window.clearPlatformKey = async function() {
         await firebase.firestore().collection('settings').doc('platform').update({
             openaiApiKey: firebase.firestore.FieldValue.delete(),
         });
-        showToast && showToast('Ключ видалено', 'success');
+        showToast && showToast('OpenAI ключ видалено', 'success');
+        document.getElementById('globalAIOverlay')?.remove();
+    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+};
+
+window.clearAnthropicKey = async function() {
+    const _delOk = window.showConfirmModal
+        ? await showConfirmModal('Видалити Anthropic API ключ?\nАгенти повернуться до OpenAI ключа.',{danger:true})
+        : confirm('Видалити Anthropic API ключ?');
+    if (!_delOk) return;
+    try {
+        await firebase.firestore().collection('settings').doc('platform').update({
+            anthropicApiKey: firebase.firestore.FieldValue.delete(),
+        });
+        showToast && showToast('Anthropic ключ видалено', 'success');
         document.getElementById('globalAIOverlay')?.remove();
     } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
 };
