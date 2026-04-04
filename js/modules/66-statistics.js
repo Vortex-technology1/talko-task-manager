@@ -1550,15 +1550,23 @@
             'Визнач вузькі місця, причинно-наслідкові зв\'язки, передбач майбутні ризики, ' +
             'запропонуй 3 варіанти рішень з плюсами/мінусами та сценарним плануванням рентабельності.';
 
+        // Обрізаємо contextText якщо занадто великий — захист від 504
+        const MAX_CONTEXT_CHARS = 6000;
+        const trimmedContext = contextText.length > MAX_CONTEXT_CHARS
+            ? contextText.slice(0, MAX_CONTEXT_CHARS) + '\n\n[...дані обрізані]'
+            : contextText;
+
         try {
-            window.openAiChat({
-                module:         'statistics',
-                title:          window.t('aiMetricsAnalysis') || 'AI Аналіз метрик',
-                contextText:    contextText,
-                systemPrompt:   null,
-                initialMessage: initialMessage,
-                maxTokens:      4000,
-            });
+            // Покроковий AI-діалог: вузьке місце → уточнення → варіанти → план → задачі в TALKO
+            if (typeof window.openMetricsStepFlow === 'function') {
+                window.openMetricsStepFlow(trimmedContext);
+            } else {
+                window.openAiChat({
+                    module: 'statistics', title: window.t('aiMetricsAnalysis') || 'AI Аналіз метрик',
+                    contextText: trimmedContext, systemPrompt: null,
+                    initialMessage, maxTokens: 1500,
+                });
+            }
         } finally {
             // Відновлюємо кнопку
             if (aiBtn && origBtnText) {

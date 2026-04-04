@@ -1135,20 +1135,30 @@ async function _callProviderAI({ provider, apiKey, model, systemPrompt, messages
     }
 
     if (provider === 'anthropic') {
-        const r = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: model || 'claude-haiku-4-5-20251001',
-                max_tokens: maxTokens,
-                ...(temperature !== undefined ? { temperature: parseFloat(temperature) } : {}),
-                ...(effectiveSystem ? { system: effectiveSystem } : {}),
-                messages: nonSystemMessages,
-            }),
-        });
-        const d = await r.json();
-        if (!r.ok) throw new Error(d.error?.message || 'Anthropic error ' + r.status);
-        return d.content?.[0]?.text || '';
+        const ctrl = new AbortController();
+        const tmr = setTimeout(() => ctrl.abort(), 25000);
+        try {
+            const r = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: model || 'claude-haiku-4-5-20251001',
+                    max_tokens: maxTokens,
+                    ...(temperature !== undefined ? { temperature: parseFloat(temperature) } : {}),
+                    ...(effectiveSystem ? { system: effectiveSystem } : {}),
+                    messages: nonSystemMessages,
+                }),
+                signal: ctrl.signal,
+            });
+            clearTimeout(tmr);
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error?.message || 'Anthropic error ' + r.status);
+            return d.content?.[0]?.text || '';
+        } catch(e) {
+            clearTimeout(tmr);
+            if (e.name === 'AbortError') throw new Error('AI timeout');
+            throw e;
+        }
     } else {
         const finalMessages = effectiveSystem
             ? [{ role: 'system', content: effectiveSystem }, ...nonSystemMessages]
