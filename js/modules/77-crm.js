@@ -2470,6 +2470,8 @@ window.crmCloseDeal = function() {
         window.chat.instances.crmdeal.msgsUnsub();
         window.chat.instances.crmdeal.msgsUnsub = null;
     }
+    // Зупиняємо real-time listener задач угоди
+    if (_dealTasksUnsub) { _dealTasksUnsub(); _dealTasksUnsub = null; }
     document.getElementById('crmDealOverlay')?.remove();
     crm.activeDealId = null;
 };
@@ -2862,120 +2864,115 @@ window.crmToggleHot = async function(dealId) {
 };
 
 // ── Задачі по угоді ────────────────────────────────────────
-async function _loadTasksTab(deal) {
+// real-time onSnapshot: оновлюється при будь-якій зміні задачі
+// (раніше був GET — не оновлювався коли хтось змінював задачу з таск-менеджера)
+let _dealTasksUnsub = null; // cleanup попереднього listener при переключенні угод
+
+function _loadTasksTab(deal) {
     const cnt = document.getElementById('crmDealContent');
     if (!cnt) return;
     cnt.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
-    try {
-        // Завантажуємо повноцінні завдання платформи прив'язані до цієї угоди
-        let dealTasks = [];
-        try {
-            const snap = await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks')
-                .where('crmDealId','==', deal.id).orderBy('createdAt','desc').get();
-            dealTasks = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-        } catch(qErr) {
-            console.warn('[CRM] tasks query fallback:', qErr.message);
-            if (typeof tasks !== 'undefined' && Array.isArray(tasks)) {
-                dealTasks = tasks.filter(t => t.crmDealId === deal.id);
-            }
-        }
 
-        const today = _crmToday();
-        const usersArr = (typeof users !== 'undefined') ? users : [];
-        const statusColors = { new:'#6b7280', in_progress:'#3b82f6', review:'#f59e0b', done:'#22c55e' };
-        const statusLabels = { new:'Нове', in_progress:'В роботі', review:'На перевірці', done:'Виконано' };
+    // Відписуємось від попереднього listener
+    if (_dealTasksUnsub) { _dealTasksUnsub(); _dealTasksUnsub = null; }
 
-        const taskRow = (task) => {
-            const isOverdue = task.deadlineDate && task.deadlineDate < today && task.status !== 'done' && task.status !== 'review';
-            const eff = isOverdue ? 'overdue' : (task.status || 'new');
-            const col = isOverdue ? '#ef4444' : (statusColors[task.status] || '#6b7280');
-            const asgn = usersArr.find(u => u.id === task.assigneeId);
-            const isDone = task.status === 'done';
-            return `<div style="background:white;border:1px solid #e8eaed;border-left:3px solid ${col};
-                border-radius:8px;padding:0.65rem 0.85rem;margin-bottom:0.4rem;
-                cursor:pointer;transition:box-shadow 0.15s;"
-                onclick="crmOpenFullTask('${task.id}')"
-                onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'"
-                onmouseout="this.style.boxShadow='none'">
-                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-size:0.82rem;font-weight:600;color:${isDone?'#9ca3af':'#111827'};
-                            text-decoration:${isDone?'line-through':'none'};
-                            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                            ${_esc(task.title||'')}
-                        </div>
-                        <div style="display:flex;gap:0.4rem;margin-top:4px;flex-wrap:wrap;align-items:center;">
-                            <span style="font-size:0.67rem;padding:1px 6px;border-radius:6px;font-weight:600;
-                                background:${col}18;color:${col};">${isOverdue?'Прострочено':(statusLabels[task.status]||task.status)}</span>
-                            ${task.deadlineDate?`<span style="font-size:0.68rem;color:${isOverdue?'#ef4444':'#9ca3af'};">📅 ${task.deadlineDate}</span>`:''}
-                            ${asgn?`<span style="font-size:0.68rem;color:#6b7280;">👤 ${_esc(asgn.name||asgn.email||'')}</span>`:''}
-                            ${task.priority==='high'?'<span style="font-size:0.67rem;color:#ef4444;font-weight:600;">🔴 Висока</span>':''}
-                            ${task.checklistTotal>0?`<span style="font-size:0.67rem;color:#6b7280;">✓ ${task.checklistDone||0}/${task.checklistTotal}</span>`:''}
-                        </div>
-                    </div>
-                    ${!isDone?`<button onclick="event.stopPropagation();crmMarkTaskDone('${task.id}')"
-                        style="padding:3px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
-                        border-radius:6px;cursor:pointer;font-size:0.7rem;font-weight:600;flex-shrink:0;white-space:nowrap;">
-                        ✓ Готово</button>`:''}
-                </div>
-                ${task.note?`<div style="font-size:0.72rem;color:#9ca3af;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${_esc((task.note||'').slice(0,100))}</div>`:''}
-            </div>`;
-        };
-
-        const openTasks = dealTasks.filter(t => t.status !== 'done');
-        const doneTasks = dealTasks.filter(t => t.status === 'done');
-
-        cnt.innerHTML = `
-            <div style="margin-bottom:0.85rem;display:flex;justify-content:space-between;align-items:center;">
-                <div style="font-size:0.85rem;font-weight:700;color:#111827;">
-                    Завдання по угоді <span style="color:#16a34a;">${_esc(deal.clientName||deal.title||'')}</span>
-                    <span style="font-size:0.72rem;font-weight:400;color:#9ca3af;margin-left:6px;">(${dealTasks.length})</span>
-                </div>
-                <button onclick="crmCreateFullTaskForDeal('${deal.id}')"
-                    style="display:flex;align-items:center;gap:0.35rem;padding:0.45rem 0.85rem;
-                    background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;
-                    font-size:0.8rem;font-weight:600;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    Нове завдання
-                </button>
-            </div>
-            <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.6rem;background:#f0fdf4;
-                border:1px solid #bbf7d0;border-radius:6px;padding:0.4rem 0.6rem;">
-                💡 Завдання автоматично з'являються в «Мій день» виконавця і в загальному списку завдань
-            </div>
-            ${openTasks.length ? openTasks.map(taskRow).join('') : '<div style="text-align:center;padding:1.5rem;background:#f8fafc;border-radius:8px;border:2px dashed #e8eaed;color:#9ca3af;font-size:0.8rem;">Завдань немає — натисніть «Нове завдання»</div>'}
-            ${doneTasks.length ? `
-            <div style="margin-top:0.75rem;">
-                <div style="font-size:0.72rem;color:#9ca3af;font-weight:600;margin-bottom:0.4rem;">
-                    ✓ Виконані (${doneTasks.length})
-                </div>
-                ${doneTasks.map(taskRow).join('')}
-            </div>` : ''}`;
-
-        cnt.onclick = function(e) {
-            const b = e.target.closest('.crm-task-done-btn');
-            if (b) crmMarkTaskDone(b.dataset.taskid);
-        };
-
-    } catch(e) {
-        if (cnt) cnt.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ${_esc(e.message)}</div>`;
-    }
+    _dealTasksUnsub = window.companyRef()
+        .collection(window.DB_COLS.TASKS || 'tasks')
+        .where('crmDealId', '==', deal.id)
+        .orderBy('createdAt', 'desc')
+        .onSnapshot(snap => {
+            const dealTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            _renderTasksTab(cnt, dealTasks, deal);
+        }, err => {
+            // Firestore може не мати індексу для crmDealId → fallback з локального масиву
+            console.warn('[CRM tasks] onSnapshot fallback:', err.message);
+            const allTasks = (typeof tasks !== 'undefined' && Array.isArray(tasks)) ? tasks : [];
+            const dealTasks = allTasks
+                .filter(t => t.crmDealId === deal.id || t.dealId === deal.id)
+                .sort((a, b) => {
+                    const ta = a.createdAt?.toMillis?.() || new Date(a.createdAt || 0).getTime();
+                    const tb = b.createdAt?.toMillis?.() || new Date(b.createdAt || 0).getTime();
+                    return tb - ta;
+                });
+            _renderTasksTab(cnt, dealTasks, deal);
+        });
 }
 
-// ── Таб "Файли" в карточці угоди ───────────────────────────
-function _loadFilesTab(deal) {
-    const cnt = document.getElementById('crmDealContent');
+function _renderTasksTab(cnt, dealTasks, deal) {
     if (!cnt) return;
+    const today = _crmToday();
+    const usersArr = (typeof users !== 'undefined') ? users : [];
+    const statusColors = { new:'#6b7280', progress:'#3b82f6', in_progress:'#3b82f6', review:'#f59e0b', done:'#22c55e' };
+    const statusLabels = { new:'Нове', progress:'В роботі', in_progress:'В роботі', review:'На перевірці', done:'Виконано' };
+
+    const taskRow = (task) => {
+        const isOverdue = task.deadlineDate && task.deadlineDate < today && task.status !== 'done' && task.status !== 'review';
+        const col = isOverdue ? '#ef4444' : (statusColors[task.status] || '#6b7280');
+        const asgn = usersArr.find(u => u.id === task.assigneeId);
+        const isDone = task.status === 'done';
+        const isReview = task.status === 'review';
+        return `<div style="background:white;border:1px solid #e8eaed;border-left:3px solid ${col};
+            border-radius:8px;padding:0.65rem 0.85rem;margin-bottom:0.4rem;
+            cursor:pointer;transition:box-shadow 0.15s;"
+            onclick="crmOpenFullTask('${task.id}')"
+            onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'"
+            onmouseout="this.style.boxShadow='none'">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:0.82rem;font-weight:600;color:${isDone?'#9ca3af':'#111827'};
+                        text-decoration:${isDone?'line-through':'none'};
+                        white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        ${_esc(task.title||'')}
+                    </div>
+                    <div style="display:flex;gap:0.4rem;margin-top:4px;flex-wrap:wrap;align-items:center;">
+                        <span style="font-size:0.67rem;padding:1px 6px;border-radius:6px;font-weight:600;
+                            background:${col}18;color:${col};">${isOverdue?'Прострочено':(statusLabels[task.status]||task.status)}</span>
+                        ${task.deadlineDate?`<span style="font-size:0.68rem;color:${isOverdue?'#ef4444':'#9ca3af'};">📅 ${task.deadlineDate}</span>`:''}
+                        ${asgn?`<span style="font-size:0.68rem;color:#6b7280;">👤 ${_esc(asgn.name||asgn.email||'')}</span>`:''}
+                        ${task.priority==='high'?'<span style="font-size:0.67rem;color:#ef4444;font-weight:600;">🔴 Висока</span>':''}
+                        ${task.checklistTotal>0?`<span style="font-size:0.67rem;color:#6b7280;">✓ ${task.checklistDone||0}/${task.checklistTotal}</span>`:''}
+                        ${task.function?`<span style="font-size:0.67rem;color:#8b5cf6;">⚙ ${_esc(task.function)}</span>`:''}
+                    </div>
+                </div>
+                ${!isDone&&!isReview?`<button onclick="event.stopPropagation();crmMarkTaskDone('${task.id}')"
+                    style="padding:3px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
+                    border-radius:6px;cursor:pointer;font-size:0.7rem;font-weight:600;flex-shrink:0;white-space:nowrap;">
+                    ✓ Готово</button>`:''}
+                ${isReview?`<span style="padding:3px 8px;background:#eef2ff;color:#6366f1;border:1px solid #c7d2fe;
+                    border-radius:6px;font-size:0.7rem;font-weight:600;flex-shrink:0;white-space:nowrap;">
+                    🔍 Перевірка</span>`:''}
+            </div>
+        </div>`;
+    };
+
+    const open = dealTasks.filter(t => t.status !== 'done');
+    const done = dealTasks.filter(t => t.status === 'done');
+
     cnt.innerHTML = `
-        <div style="margin-bottom:0.75rem;display:flex;justify-content:space-between;align-items:center;">
-            <div style="font-size:0.85rem;font-weight:700;color:#111827;">📎 ${_tg('Файли угоди','Файлы сделки')}</div>
-            <div style="font-size:0.72rem;color:#9ca3af;">PDF, DOC, XLSX, зображення — до 20 MB</div>
+        <div style="margin-bottom:0.75rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+            <div style="font-size:0.85rem;font-weight:700;color:#111827;">
+                📎 Задачі по угоді
+                <span style="font-size:0.72rem;font-weight:400;color:#9ca3af;margin-left:6px;">${dealTasks.length} всього</span>
+            </div>
+            <button onclick="crmCreateTaskFromDeal('${deal.id}')"
+                style="padding:5px 12px;background:#22c55e;color:white;border:none;border-radius:8px;
+                cursor:pointer;font-size:0.75rem;font-weight:700;display:flex;align-items:center;gap:4px;">
+                + Нова задача
+            </button>
         </div>
-        <div id="crmDealFilesList"></div>`;
-    if (typeof window.crmRenderDealFiles === 'function') {
-        window.crmRenderDealFiles(deal.id);
-    }
+        ${open.length === 0 && done.length === 0
+            ? '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">Задач немає. Натисніть «+ Нова задача»</div>'
+            : ''}
+        ${open.map(taskRow).join('')}
+        ${done.length ? `
+            <div style="margin-top:0.75rem;">
+                <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.4rem;font-weight:600;">
+                    ✓ Виконані (${done.length})
+                </div>
+                ${done.map(taskRow).join('')}
+            </div>` : ''}`;
 }
+
 
 window.crmMarkTaskDone = async function(taskId) {
     try {
@@ -6350,36 +6347,67 @@ window.crmSaveTaskFromDeal = async function(dealId) {
     if (!title) { if(window.showToast) showToast(window.t('crmEnterTaskTitle'),'error'); return; }
     try {
         const usersArr = typeof users !== 'undefined' ? users : [];
-        const assigneeUser = usersArr.find(u => u.id === (assignee || window.currentUser?.uid));
+        const assigneeId   = assignee || window.currentUser?.uid || '';
+        const assigneeUser = usersArr.find(u => u.id === assigneeId);
         const creatorUser  = usersArr.find(u => u.id === window.currentUser?.uid);
+        const today = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
+
+        // Повний набір полів — ідентичний стандартній задачі + CRM-поля
         const taskData = {
-            title, note: note||'',
-            assigneeId:   assignee || window.currentUser?.uid || '',
+            title,
+            description: note || '',
+            assigneeId,
             assigneeName: assigneeUser ? (assigneeUser.name || assigneeUser.email || '') : '',
-            creatorId:    window.currentUser?.uid || '',
-            creatorName:  creatorUser  ? (creatorUser.name  || creatorUser.email  || '') : '',
-            status:     'new',
+            creatorId:   window.currentUser?.uid || '',
+            creatorName: creatorUser ? (creatorUser.name || creatorUser.email || '') : '',
+            status:       'new',
+            priority:     'medium',
             deadlineDate: deadline || null,
             deadlineTime: null,
-            crmDealId:  dealId,
+            startDate:    null,
+            function:     '',
+            projectId:    '',
+            stageId:      '',
+            pinned:       false,
+            requireReview: false,
+            coExecutorIds: [],
+            observerIds:   [],
+            checklist:     [],
+            notifyOnComplete: [],
+            // CRM-специфіка
+            crmDealId:     dealId,
             crmClientName: deal?.clientName || '',
-            createdAt:  firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt:  firebase.firestore.FieldValue.serverTimestamp(),
+            source:        'crm_manual',
+            createdDate:   today,
+            createdAt:     firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
         };
+
         const ref = await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks').add(taskData);
 
+        // Audit log — та сама функція що і в стандартному save
+        if (typeof logTaskChange === 'function') {
+            logTaskChange(ref.id, 'created', { title, assigneeId, deadlineDate: deadline }, null)
+                .catch(e => console.warn('[CRM] auditLog:', e.message));
+        }
+
+        // ET tracking
+        if (typeof window.trackTaskCreated === 'function') {
+            window.trackTaskCreated(ref.id, taskData);
+        }
+
         // Логуємо в history угоди
-        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+        window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
             .collection('history').add({
                 type: 'task', text: title, taskId: ref.id,
                 by: window.currentUser?.email || 'manager',
                 at: firebase.firestore.FieldValue.serverTimestamp(),
-            });
+            }).catch(() => {});
 
         document.getElementById('crmTaskModal')?.remove();
         if(window.showToast) showToast(window.t('crmTaskCreated'), 'success');
 
-        // Оновлюємо локальний tasks масив якщо доступний
+        // Локальне оновлення
         if (typeof tasks !== 'undefined') {
             tasks.unshift({ id: ref.id, ...taskData, createdAt: new Date() });
             if (typeof scheduleRender === 'function') scheduleRender();
@@ -6389,7 +6417,6 @@ window.crmSaveTaskFromDeal = async function(dealId) {
         console.error('[CRM] crmSaveTaskFromDeal:', e.message);
     }
 };
-
 // ── Повноцінне завдання платформи з контекстом угоди ───────
 // Відкриває стандартний openAddTask() і передає crmDealId + clientName
 // Завдання автоматично потрапляє в "Мій день" виконавця

@@ -173,20 +173,37 @@ window.crmAddDealTask = async function (dealId) {
         const taskRef = await window.companyRef()
             .collection(window.DB_COLS?.TASKS || 'tasks').add({
                 title, status: 'new', priority, assigneeId, assigneeName,
-                creatorId: window.currentUser?.uid || '',
+                creatorId:   window.currentUser?.uid || '',
                 creatorName: window.currentUserData?.name || window.currentUser?.email || '',
                 deadlineDate, deadlineTime: '18:00',
-                deadline: deadlineDate + 'T18:00',
+                deadline:    deadlineDate + 'T18:00',
                 createdDate: new Date().toISOString().split('T')[0],
-                pinned: false,
+                description: '',
+                function:    '',
+                projectId:   '',
+                stageId:     '',
+                pinned:      false,
+                requireReview:    false,
+                coExecutorIds:    [],
+                observerIds:      [],
+                notifyOnComplete: [],
+                checklist:        [],
+                // CRM-специфіка
                 dealId, crmDealId: dealId,
-                source: 'crm_manual',
-                clientName: deal?.clientName || deal?.title || '',
+                source:      'crm_manual',
+                clientName:  deal?.clientName || deal?.title || '',
                 clientPhone: deal?.phone || '',
                 autoCreated: false,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
+        // Audit log + ET — та сама логіка що і в стандартній формі задачі
+        if (typeof logTaskChange === 'function') {
+            logTaskChange(taskRef.id, 'created', { title, assigneeId, deadlineDate }, null).catch(() => {});
+        }
+        if (typeof window.trackTaskCreated === 'function') {
+            window.trackTaskCreated(taskRef.id, { title, assigneeId, dealId, crmDealId: dealId, status: 'new' });
+        }
         inp.value = '';
         if (window.showToast) showToast('Задачу створено і додано в "Мій день"', 'success');
         if (window.tasks && Array.isArray(window.tasks)) {
