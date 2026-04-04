@@ -1844,7 +1844,7 @@ window.saveGlobalAISettings = async function() {
             { globalAiEnabled: enabled, defaultDailyLimit: daily, defaultMonthlyLimit: monthly },
             { merge: true }
         );
-        // Платформний ключ + агенти → superadmin/settings
+        // Платформний ключ + агенти → settings/platform
         const saUpdate = { agents, botModel, botTemperature, botMaxTokens, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
         if (newKey) {
             saUpdate.openaiApiKey = newKey;

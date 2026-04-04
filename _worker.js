@@ -1045,8 +1045,8 @@ async function handleAiProxy(request, env) {
     let finalSystemPrompt = systemPrompt || '';
 
     try {
-        // 1. Спочатку завжди читаємо superadmin/settings — там ключ з адмінки і промпти агентів
-        const saDoc = await fsGet('superadmin/settings', token);
+        // 1. Читаємо settings/platform — там ключ з адмінки і промпти агентів
+        const saDoc = await fsGet('settings/platform', token);
         if (saDoc?.fields) {
             const sa = fFields(saDoc.fields);
             // Ключ з адмінки (пріоритет над env)
