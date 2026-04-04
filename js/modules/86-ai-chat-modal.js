@@ -272,8 +272,14 @@ window.openMetricsStepFlow = function(contextText) {
 // ── Крок 1: вузьке місце + втрати ────────────────────────────
 async function _sfRunStep1() {
     _sfSetStep(1);
-    // Тільки дані + мінімальне питання — формат задає промпт адмінки
-    const prompt = `Ось дані метрик компанії за останні періоди. Проаналізуй і визнач головне вузьке місце. Покажи поточну ситуацію в цифрах, фінансові наслідки якщо не діяти, і ризики через 3 місяці.`;
+    // Визначаємо мову інтерфейсу → AI відповідає тією ж мовою
+    const lang = window.currentLang || window.currentUserData?.language || 'uk';
+    const langInstr = lang === 'ru' ? 'Отвечай на русском языке.' 
+                    : lang === 'en' ? 'Reply in English.'
+                    : lang === 'pl' ? 'Odpowiadaj po polsku.'
+                    : 'Відповідай українською мовою.';
+
+    const prompt = `${langInstr}\n\nОсь дані метрик компанії за останні періоди. Проаналізуй і визнач головне вузьке місце. Покажи поточну ситуацію в цифрах, фінансові наслідки якщо не діяти, і ризики через 3 місяці.`;
     await _sfAskAI(prompt, true);
     _sfShowButtons([{ label: '💬 Додати контекст', action: 'sfUserComment' },
                     { label: 'Далі →', action: 'sfStep2' }]);
