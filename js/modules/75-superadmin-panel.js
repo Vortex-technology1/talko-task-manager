@@ -1884,7 +1884,6 @@ window.saveGlobalAISettings = async function() {
             ? 'Немає прав для збереження. Переконайся що залогінений як SuperAdmin (management.talco@gmail.com)'
             : 'Помилка: ' + e.message;
         showToast && showToast(msg, 'error');
-        if (typeof showToast==='function') showToast(msg, 'success'); else console.log(msg);
     }
 };
 

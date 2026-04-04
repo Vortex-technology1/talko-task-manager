@@ -3240,7 +3240,12 @@ function _interpolate(text, collectedData = {}) {
     });
 }
 
-async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput }) {
+async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput, _depth=0 }) {
+    // Захист від нескінченного циклу між вузлами
+    if (_depth > 10) {
+        console.warn('[FlowEngine] Max depth reached, stopping execution');
+        return;
+    }
     const nodeType = node.type || node.data?.type || '';
     const nodeData = node.data || node;
 
@@ -3308,7 +3313,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     // Якщо наступний — ШІ агент з "бот пише першим" = виконуємо відразу
                     const tType = target.type || target.data?.type || '';
                     if (tType === 'ai_agent' || tType === 'aiAgent') {
-                        await executeNode({ node: target, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+                        await executeNode({ node: target, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
                     }
                 }
             }
@@ -3571,7 +3576,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     currentNodeId: { stringValue: nextNode.id },
                     updatedAt:     { timestampValue: new Date().toISOString() },
                 }, token);
-                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
             }
             return;
         }
@@ -3652,7 +3657,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     currentNodeId: { stringValue: nextNode.id },
                     updatedAt:     { timestampValue: new Date().toISOString() },
                 }, token);
-                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput });
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput , _depth: _depth+1});
             }
         }
         return;
@@ -3692,7 +3697,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     currentNodeId: { stringValue: nextNode.id },
                     updatedAt:     { timestampValue: new Date().toISOString() },
                 }, token);
-                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
             }
             return;
         }
@@ -3770,7 +3775,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 currentNodeId: { stringValue: nextNode.id },
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
-            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
         }
         return;
     }
@@ -3786,7 +3791,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
         if (!reqUrl) {
             const nextNode = getNextNode(node.id);
-            if (nextNode) await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            if (nextNode) await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
             return;
         }
 
@@ -3836,7 +3841,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 currentNodeId: { stringValue: nextNodeHttp.id },
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
-            await executeNode({ node: nextNodeHttp, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            await executeNode({ node: nextNodeHttp, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
         }
         return;
     }
@@ -4001,7 +4006,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 currentNodeId: { stringValue: nextNodeImg.id },
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
-            await executeNode({ node: nextNodeImg, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            await executeNode({ node: nextNodeImg, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
         }
         return;
     }
@@ -4253,8 +4258,10 @@ async function handleBooking(request, url, env) {
 // ════════════════════════════════════════════════════════════
 async function handleStripe(request, url, env) {
     const path = url.pathname;
+    const action = url.searchParams.get('action') || '';
 
-    if (path==='/api/stripe/create-checkout') {
+    // Підтримуємо обидва формати: /api/stripe/create-checkout і /api/stripe?action=create-session
+    if (path==='/api/stripe/create-checkout' || action==='create-session') {
         if (request.method!=='POST') return json({error:'Method not allowed'},405);
         let body;
         try { body = await request.json(); } catch { return json({error:'Invalid JSON'},400); }
