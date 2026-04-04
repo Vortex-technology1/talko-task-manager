@@ -1950,14 +1950,15 @@ window.crmOpenDeal = function(dealId) {
 
             <!-- Sub-tabs -->
             <div style="display:flex;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
-                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['calls','📞 ' + (window.currentLang==='ru' ? 'Звонки' : 'Дзвінки')],['tasks', window.currentLang==='ru' ? 'Задания' : 'Завдання'],['files', '📎 ' + (window.currentLang==='ru' ? 'Файлы' : 'Файли')],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','💅 Beauty']]:
+                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['calls', window.currentLang==='ru' ? 'Звонки' : 'Дзвінки'],['tasks', window.currentLang==='ru' ? 'Задания' : 'Завдання'],['files', window.currentLang==='ru' ? 'Файлы' : 'Файли'],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','Beauty']]:
                         (window.currentCompanyData?.niche==='autoservice'?[['vehicles','🔧 Авто/Наряди']]:
                         (window.currentCompanyData?.niche==='horeca'?[['pos_history','🧾 Чеки']]:
                         (window.currentCompanyData?.niche==='logistics'?[['routes_history','🚛 Рейси']]:
                         []))))]).map(([id,label]) => `
                 <button onclick="crmDealTab('${deal.id}','${id}')" id="cdt_${id}"
                     style="flex:1;padding:0.6rem;background:none;border:none;border-bottom:2px solid transparent;
-                    cursor:pointer;font-size:0.8rem;font-weight:500;color:#6b7280;transition:all 0.15s;">
+                    cursor:pointer;font-size:0.8rem;font-weight:500;color:#6b7280;transition:all 0.15s;
+                    text-align:center;display:flex;align-items:center;justify-content:center;">
                     ${label}
                 </button>`).join('')}
             </div>
