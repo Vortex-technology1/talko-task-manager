@@ -3398,11 +3398,8 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
     if (nodeType === 'ai_agent' || nodeType === 'aiAgent' || nodeType === 'AI' || nodeType === 'ai') {
         // Завантажуємо промпт вузла
         let systemPrompt = nodeData.systemPrompt || nodeData.aiSystem || nodeData.prompt || '';
-        const aiProvider = nodeData.aiProvider || 'openai';
-        const aiModel    = nodeData.model || 'gpt-4o-mini';
         const maxTokens  = nodeData.maxTokens || 1500;
         const writesFirst = nodeData.writesFirst || nodeData.firstMessageEnabled || nodeData.botWritesFirst || false;
-        const firstMessage = nodeData.firstMessage || '';
         const historyLimit = parseInt(nodeData.historyLimit ?? 14) || 14;
 
         // Якщо промпт є посиланням (__ref:nodeId) або порожній — читаємо з nodePrompts
@@ -3416,27 +3413,16 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             }
         }
 
-        // Читаємо settings/platform для AI параметрів
-        let openaiKey = '';
-        let botModel = 'gpt-4o-mini';
-        let botMaxTokens = 1500;
-        let botTemperature = 0.7;
-        const platDocAI = await fsGet(`settings/platform`, token);
-        if (platDocAI?.fields) {
-            const platAI = fFields(platDocAI.fields);
-            openaiKey = platAI.openaiApiKey || '';
-            if (platAI.botModel) botModel = platAI.botModel;
-            if (platAI.botMaxTokens) botMaxTokens = parseInt(platAI.botMaxTokens) || 1500;
-            if (platAI.botTemperature !== undefined) botTemperature = parseFloat(platAI.botTemperature) || 0.7;
-        }
-        if (!openaiKey) openaiKey = env.OPENAI_API_KEY || '';
-        if (!openaiKey) {
-            const aiSettDocFallback = await fsGet(`settings/ai`, token);
-            if (aiSettDocFallback?.fields) {
-                const aiSettFallback = fFields(aiSettDocFallback.fields);
-                openaiKey = aiSettFallback.openaiApiKey || aiSettFallback.apiKey || '';
-            }
-        }
+        // Ключ, провайдер і модель — з адмінки через _resolveAiConfig
+        // platDocPre вже завантажений в runFlowEngine — не робимо зайвий Firestore запит
+        const platAIFields = platDocPre ? fFields(platDocPre.fields || {}) : {};
+        const botTemperature = parseFloat(platAIFields.botTemperature) || 0.7;
+        const botMaxTokens = parseInt(platAIFields.botMaxTokens) || maxTokens;
+
+        // _resolveAiConfig читає ключ з адмінки (settings/platform → company → env)
+        const botAiCfg = await _resolveAiConfig({ companyId: null, agentKey: null, token, env });
+        const openaiKey = botAiCfg.apiKey;
+        const botModel  = platAIFields.botModel || botAiCfg.model || 'gpt-4o-mini';
 
         // Якщо бот пише першим і немає userInput — надсилаємо привітання від ШІ
         if (writesFirst && !userInput) {
@@ -3444,13 +3430,14 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             const botMaxTokens2 = botMaxTokens;
             const botTemperature2 = botTemperature;
             if (openaiKey && systemPrompt) {
-                const aiResp = await callOpenAI({
-                    apiKey: openaiKey,
-                    model: botModel2,
+                const aiResp = await _callProviderAI({
+                    provider: botAiCfg.provider,
+                    apiKey:   openaiKey,
+                    model:    botModel,
                     systemPrompt,
                     messages: [{ role: 'user', content: 'Привітай клієнта і почни розмову.' }],
-                    maxTokens: botMaxTokens2,
-                    temperature: botTemperature2,
+                    maxTokens: botMaxTokens,
+                    temperature: botTemperature,
                 });
                 if (aiResp) {
                     await tgSend(chatId, aiResp);
@@ -3476,9 +3463,10 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         if (!userInput) {
             if (systemPrompt && openaiKey) {
                 // Не передаємо штучне user повідомлення — AI сам починає по system промпту
-                const startResp = await callOpenAI({
-                    apiKey: openaiKey,
-                    model: botModel,
+                const startResp = await _callProviderAI({
+                    provider: botAiCfg.provider,
+                    apiKey:   openaiKey,
+                    model:    botModel,
                     systemPrompt: systemPrompt + '\n\nВАЖЛИВО: Зараз починай розмову першим. Не чекай на запитання — одразу починай з першого кроку по скрипту.',
                     messages: [{ role: 'user', content: '.' }],
                     maxTokens: botMaxTokens,
@@ -3539,9 +3527,10 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
             return;
         }
 
-        const aiResp = await callOpenAI({
-            apiKey: openaiKey,
-            model: botModel,
+        const aiResp = await _callProviderAI({
+            provider: botAiCfg.provider,
+            apiKey:   openaiKey,
+            model:    botModel,
             systemPrompt: systemPrompt || 'Ти корисний асистент. Відповідай коротко і чітко.',
             messages: chatHistory,
             maxTokens: botMaxTokens,
@@ -3595,7 +3584,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
     // ── ВУЗОЛ: ДІЯ (CREATE_LEAD / CRM) ──────────────────────
     if (nodeType === 'action' || nodeType === 'crm' || nodeType === 'createLead') {
         await createCrmLead({ cid, chatId, contact, collectedData, token });
-        // Переходимо далі
+        // Переходимо до наступного вузла і ВИКОНУЄМО його (раніше тільки зберігали ID)
         const nextEdge = edges.find(e=>(e.source||e.fromNode)===node.id);
         if (nextEdge) {
             const nextNode = nodes.find(n=>n.id===(nextEdge.target||nextEdge.toNode));
@@ -3604,6 +3593,10 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     currentNodeId: { stringValue: nextNode.id },
                     updatedAt:     { timestampValue: new Date().toISOString() },
                 }, token);
+                // Виконуємо наступний вузол (наприклад message після create_lead)
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId,
+                    contact, contactPath, collectedData, token, botToken, tgSend, env, userName,
+                    _depth: _depth + 1 });
             }
         }
         return;
@@ -4122,19 +4115,25 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 // Виклик OpenAI API
 async function callOpenAI({ apiKey, model, systemPrompt, messages, maxTokens, temperature }) {
     try {
-        const r = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${apiKey}` },
-            body: JSON.stringify({
-                model: model || 'gpt-4o-mini',
-                max_tokens: maxTokens || 1000,
-                temperature: temperature ?? 0.7,
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    ...messages,
-                ],
-            }),
-        });
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 25000);
+        let r;
+        try {
+            r = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${apiKey}` },
+                body: JSON.stringify({
+                    model: model || 'gpt-4o-mini',
+                    max_tokens: maxTokens || 1000,
+                    temperature: temperature ?? 0.7,
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        ...messages,
+                    ],
+                }),
+                signal: controller.signal,
+            });
+        } finally { clearTimeout(timeout); }
         if (!r.ok) return null;
         const d = await r.json();
         return d.choices?.[0]?.message?.content?.trim() || null;
@@ -4223,61 +4222,91 @@ async function checkAndConvertToLead({ aiResponse, userInput, collectedData, cid
 }
 
 // Створення ліда і угоди в CRM
+// Уніфікована функція — використовується з ai_agent, action/crm, checkAndConvertToLead
 async function createCrmLead({ cid, chatId, contact, collectedData, token }) {
     const now = new Date().toISOString();
+    // Стабільний clientId по chatId — не залежить від часу
     const clientId = `tg_client_${chatId}`;
-    const dealId   = `tg_deal_${chatId}_${Date.now()}`;
     const name = contact.name || collectedData.name || `Telegram ${chatId}`;
     const phone = collectedData.phone || contact.phone || '';
     const note = collectedData.lastMessage || collectedData.request || '';
 
-    // Створюємо/оновлюємо клієнта в CRM
+    // Створюємо/оновлюємо клієнта (upsert — fsSet з merge)
     await fsSet(`companies/${cid}/crm_clients/${clientId}`, {
         id:            { stringValue: clientId },
         name:          { stringValue: name },
         phone:         { stringValue: phone },
-        telegramChatId:{ stringValue: chatId },
+        telegramChatId:{ stringValue: String(chatId) },
         telegramUsername:{ stringValue: contact.username||'' },
-        senderId:      { stringValue: chatId },
-        botContactId:  { stringValue: chatId },
-        contactId:     { stringValue: chatId },
+        senderId:      { stringValue: String(chatId) },
+        botContactId:  { stringValue: String(chatId) },
+        contactId:     { stringValue: String(chatId) },
         channel:       { stringValue: 'telegram' },
         source:        { stringValue: 'telegram_bot' },
         status:        { stringValue: 'active' },
-        createdAt:     { timestampValue: now },
         updatedAt:     { timestampValue: now },
     }, token);
 
-    // Перевіряємо чи угода вже є
-    const existingDeal = await fetch(
-        `${FS_URL}/companies/${cid}/crm_deals?pageSize=1`,
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
-    // Простий пошук по chatId — якщо вже є угода від цього чату — не дублюємо
-    const dealsRaw = await fsQuery(`crm_deals`, [{ field:'telegramChatId', value:chatId }], token, 1);
-    // Примітка: fsQuery шукає по allDescendants, тут треба в межах компанії
-    // Використовуємо простіший підхід — унікальний ID по chatId
-    const existDealDoc = await fsGet(`companies/${cid}/crm_deals/${clientId}_deal`, token);
-    if (existDealDoc?.fields) return; // вже є
+    // Стабільний dealId по chatId — захист від дублювання при race condition
+    // fsSet (PATCH) — ідемпотентний, повторний виклик просто оновить дані
+    const dealDocId = `${clientId}_deal`;
+    const existDealDoc = await fsGet(`companies/${cid}/crm_deals/${dealDocId}`, token);
+    if (existDealDoc?.fields) {
+        // Угода вже є — просто оновлюємо дані якщо є нові
+        const updates = {};
+        if (phone) updates.phone = { stringValue: phone };
+        if (name)  updates.clientName = { stringValue: name };
+        updates.updatedAt = { timestampValue: now };
+        if (note)  updates.note = { stringValue: note };
+        await fsPatch(`companies/${cid}/crm_deals/${dealDocId}`, updates, token);
+        return;
+    }
 
-    // Створюємо угоду
-    await fsSet(`companies/${cid}/crm_deals/${clientId}_deal`, {
-        id:            { stringValue: `${clientId}_deal` },
+    // Читаємо налаштування першої воронки щоб дізнатись стартову стадію
+    let startStage = 'new';
+    try {
+        const pipSnap = await fetch(
+            `${FS_URL}/companies/${cid}/crm_pipelines?pageSize=1`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (pipSnap.ok) {
+            const pd = await pipSnap.json();
+            const firstPip = pd.documents?.[0];
+            if (firstPip?.fields) {
+                const pf = fFields(firstPip.fields);
+                const stages = pf.stages || [];
+                startStage = stages[0]?.id || 'new';
+            }
+        }
+    } catch { /* fallback to 'new' */ }
+
+    // Створюємо угоду — fsSet з документним ID (ідемпотентно)
+    await fsSet(`companies/${cid}/crm_deals/${dealDocId}`, {
+        id:            { stringValue: dealDocId },
         title:         { stringValue: `${name} — Telegram бот` },
         clientName:    { stringValue: name },
         clientId:      { stringValue: clientId },
         phone:         { stringValue: phone },
-        telegramChatId:{ stringValue: chatId },
-        contactId:     { stringValue: chatId },
-        botContactId:  { stringValue: chatId },
+        telegramChatId:{ stringValue: String(chatId) },
+        contactId:     { stringValue: String(chatId) },
+        botContactId:  { stringValue: String(chatId) },
         source:        { stringValue: 'telegram_bot' },
-        stage:         { stringValue: 'new' },
+        stage:         { stringValue: startStage },
         note:          { stringValue: note },
+        status:        { stringValue: 'active' },
+        amount:        { integerValue: '0' },
         createdAt:     { timestampValue: now },
         updatedAt:     { timestampValue: now },
     }, token);
-}
 
+    // Оновлюємо контакт зі статусом і dealId
+    await fsPatch(`companies/${cid}/contacts/${chatId}`, {
+        status:    { stringValue: 'lead' },
+        dealId:    { stringValue: dealDocId },
+        crmDealId: { stringValue: dealDocId },
+        updatedAt: { timestampValue: now },
+    }, token);
+}
 // ════════════════════════════════════════════════════════════
 // BOOKING
 // ════════════════════════════════════════════════════════════
