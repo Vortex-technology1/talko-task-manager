@@ -2055,6 +2055,7 @@ window.crmDealTab = function(dealId, tab) {
     // Запам'ятовуємо активний таб — async функції перевіряють його перед записом в DOM
     crm._activeTab = tab;
     crm._activeTabDealId = dealId;
+    console.log('[CRM Tab] switching to:', tab, 'deal:', dealId);
     const allTabs = ['details','activity','calls','tasks','files','ai','beauty','vehicles','pos_history','routes_history'];
     allTabs.forEach(t => {
         const btn = document.getElementById('cdt_' + t);
@@ -3072,7 +3073,9 @@ window.crmMarkTaskDone = async function(taskId) {
 
 // ── Файли угоди ─────────────────────────────────────────────
 function _loadFilesTab(deal) {
+    console.log('[CRM Files] _loadFilesTab called, deal:', deal?.id, 'activeTab:', crm._activeTab);
     const content = document.getElementById('crmDealContent');
+    console.log('[CRM Files] crmDealContent found:', !!content);
     if (!content) return;
 
     // Рендеримо контейнер і делегуємо в 77c-crm-tasks.js
