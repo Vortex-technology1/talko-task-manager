@@ -514,7 +514,7 @@ function _sfShowButtons(buttons) {
     inputArea.innerHTML = `
         <div style="display:flex;flex-wrap:wrap;gap:0.5rem;padding:0.25rem 0 0.5rem;">
             ${buttons.map(b => `
-                <button onclick="window._sfHandleBtn('${b.action}',${b.data||'null'})"
+                <button onclick="window._sfHandleBtn('${b.action}',${typeof b.data === 'number' ? b.data : b.data ? `'${b.data}'` : 'null'})"
                     style="padding:0.5rem 1rem;border:1.5px solid #8b5cf6;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;
                     background:${b.action.startsWith('sfChoose')||b.action==='sfStep5'?'#8b5cf6':'white'};
                     color:${b.action.startsWith('sfChoose')||b.action==='sfStep5'?'white':'#8b5cf6'};">
