@@ -161,10 +161,12 @@ function _dispatchLocally(eventType, event) {
 
 const _defaultAutomationRules = [
     // БОТ → CRM: лід завершив воронку → створити клієнта + угоду
+    // ВАЖЛИВО: воркер (_worker.js createCrmLead) вже міг створити угоду при phone-конверсії
+    // або _createCrmDealFromFlow при [DONE] тегу. Перевіряємо dealId щоб не дублювати.
     {
         id: 'bot_flow_to_crm',
         triggerEvent: TALKO_EVENTS.BOT_FLOW_COMPLETED,
-        condition: null, // завжди
+        condition: (e) => !e.payload.dealId, // якщо воркер вже створив угоду — пропускаємо
         action: _actionCreateClientAndDeal,
         description: () => window.t('eventBotLead'),
     },
@@ -229,13 +231,15 @@ const _defaultAutomationRules = [
     },
 
     // FORM SUBMITTED → лід у CRM
-    {
-        id: 'form_to_crm',
-        triggerEvent: TALKO_EVENTS.FORM_SUBMITTED,
-        condition: (e) => e.payload.crmIntegration === true,
-        action: _actionCreateClientAndDeal,
-        description: () => window.t('siteFormCRM'),
-    },
+    // ВИМКНЕНО: воркер (handleCrmForm) тепер сам створює угоду одразу при submit.
+    // Якщо ввімкнути — буде дублювання угоди для кожної форми.
+    // {
+    //     id: 'form_to_crm',
+    //     triggerEvent: TALKO_EVENTS.FORM_SUBMITTED,
+    //     condition: (e) => e.payload.crmIntegration === true,
+    //     action: _actionCreateClientAndDeal,
+    //     description: () => window.t('siteFormCRM'),
+    // },
 
     // BUDGET EXCEEDED → задача попередження
     {
@@ -417,6 +421,9 @@ const _defaultAutomationRules = [
     },
 ];
 
+// Захист від подвійного спрацювання: кожна пара (ruleId + dealId/taskId) — один раз за 5с
+const _rulesDedup = new Map();
+
 async function _runAutomationRules(event) {
     // Завантажуємо кастомні правила компанії + default
     const customRules = await _loadCustomRules();
@@ -425,6 +432,15 @@ async function _runAutomationRules(event) {
     for (const rule of allRules) {
         if (rule.triggerEvent !== event.type) continue;
         if (rule.condition && !rule.condition(event)) continue;
+
+        // Дедуплікація: той самий rule + той самий deal/task не повинен спрацювати двічі за 5с
+        const dedupKey = `${rule.id}::${event.payload?.dealId || event.payload?.taskId || ''}`;
+        const lastFired = _rulesDedup.get(dedupKey) || 0;
+        if (Date.now() - lastFired < 5000) {
+            window.dbg && dbg(`[Automation] Dedup skip: ${rule.id}`);
+            continue;
+        }
+        _rulesDedup.set(dedupKey, Date.now());
 
         try {
             const params = rule.actionParams ? rule.actionParams(event) : {};
@@ -588,48 +604,74 @@ async function _actionCreateTask(event, params = {}) {
     const companyId = window.currentCompanyId;
 
     const deadline = _calcDeadline(params.deadlineOffset || '+1d');
+    const now = firebase.firestore.FieldValue.serverTimestamp();
 
     const taskRef = db.collection(`companies/${companyId}/tasks`).doc();
     const taskId = taskRef.id;
-    const now = firebase.firestore.FieldValue.serverTimestamp();
 
-    // FIX BB: add missing fields for task rendering (assigneeName, creatorName, createdDate)
-    const _assignee = users?.find(u => u.id === (params.assigneeId || currentUser?.uid));
-    const _deadline = deadline || ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]);
+    const _assigneeId = params.assigneeId || currentUser?.uid || null;
+    const _assignee = (window.users || []).find(u => u.id === _assigneeId);
+    const _deadline = deadline || ((typeof getLocalDateStr === 'function')
+        ? getLocalDateStr(new Date())
+        : new Date().toISOString().split('T')[0]);
+
     await taskRef.set({
         id: taskId,
         title: params.title,
+        description: params.description || '',
         status: 'new',
         priority: params.priority || 'medium',
-        assigneeId: params.assigneeId || currentUser?.uid || null,
+        assigneeId:   _assigneeId,
         assigneeName: _assignee?.name || currentUser?.displayName || currentUser?.email || '',
-        creatorId: currentUser?.uid || 'system',
-        creatorName: currentUser?.displayName || currentUserData?.name || currentUser?.email || '',
+        creatorId:    currentUser?.uid || 'system',
+        creatorName:  currentUserData?.name || currentUser?.displayName || currentUser?.email || '',
         deadlineDate: _deadline,
-        createdDate: (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0],
-        // Зв'язок з CRM
-        dealId: params.dealId || null,
-        clientId: params.clientId || null,
-        // Автоматично створена
-        autoCreated: true,
-        autoRuleId: params.ruleId || null,
+        deadlineTime: null,
+        createdDate:  (typeof getLocalDateStr === 'function')
+            ? getLocalDateStr(new Date())
+            : new Date().toISOString().split('T')[0],
+        function:     params.function || '',
+        projectId:    params.projectId || '',
+        stageId:      '',
+        pinned:       false,
+        requireReview:    false,
+        coExecutorIds:    [],
+        observerIds:      [],
+        notifyOnComplete: [],
+        checklist:        [],
+        // CRM-зв'язок
+        crmDealId:    params.dealId   || null,
+        dealId:       params.dealId   || null,
+        clientId:     params.clientId || null,
+        // Метадані автоматизації
+        autoCreated:  true,
+        source:       'automation',
+        autoRuleId:   params.ruleId || null,
         createdAt: now,
         updatedAt: now,
     });
 
     // Оновлюємо список taskIds в угоді
     if (params.dealId) {
-        await db.doc(`companies/${companyId}/crm_deals/${params.dealId}`).update({
+        db.doc(`companies/${companyId}/crm_deals/${params.dealId}`).update({
             taskIds: firebase.firestore.FieldValue.arrayUnion(taskId),
             updatedAt: now,
+        }).catch(() => {});
+    }
+
+    // Локальний масив tasks для негайного відображення
+    if (window.tasks && Array.isArray(window.tasks)) {
+        window.tasks.unshift({
+            id: taskId, title: params.title, status: 'new',
+            priority: params.priority || 'medium',
+            assigneeId: _assigneeId, deadlineDate: _deadline,
+            crmDealId: params.dealId || null, autoCreated: true,
         });
+        if (typeof window.scheduleRender === 'function') window.scheduleRender();
     }
 
     await emitTalkoEvent(TALKO_EVENTS.TASK_CREATED, {
-        taskId,
-        title: params.title,
-        dealId: params.dealId,
-        autoCreated: true,
+        taskId, title: params.title, dealId: params.dealId, autoCreated: true,
     }, { triggeredBy: 'system' });
 
     return taskId;

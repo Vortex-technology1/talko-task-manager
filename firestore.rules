@@ -394,8 +394,12 @@ service cloud.firestore {
         allow create: if hasTabAccess(companyId, 'crm');
         allow update: if isManagerOrOwner(companyId) ||
           (hasTabAccess(companyId, 'crm') && (
+            // accessMode='all': менеджер може оновити будь-яку угоду
+            // accessMode='own': тільки свої (assigneeId або creatorId)
+            // Rules перевіряють обидва випадки — фронт 77e-crm-access.js додає UI обмеження
             resource.data.assigneeId == userId() ||
-            resource.data.responsibleId == userId()
+            resource.data.responsibleId == userId() ||
+            resource.data.creatorId == userId()
           ));
         allow delete: if isManagerOrOwner(companyId);
         match /history/{histId} {
@@ -556,10 +560,12 @@ service cloud.firestore {
       match /events/{eventId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId) &&
-          isValidString(request.resource.data.type, 100);
+          isValidString(request.resource.data.type, 100) &&
+          request.resource.data.keys().hasAll(['type', 'createdAt']) &&
+          request.resource.data.size() < 50; // обмеження розміру документа
         allow update: if isCompanyMember(companyId) &&
-          request.resource.data.type == resource.data.type;
-        allow delete: if isSuperAdmin();
+          request.resource.data.type == resource.data.type; // тип не можна змінити
+        allow delete: if isSuperAdmin() || isManagerOrOwner(companyId);
       }
 
       // =====================
