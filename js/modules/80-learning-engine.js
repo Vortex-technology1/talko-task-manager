@@ -124,32 +124,47 @@
         // Вкладки категорій — десктоп: sidebar зліва, мобільний: dropdown
         const categories = window.learningCategories || window.learningCourseCategories || [];
         const activeCategory = categories.find(c => c.id === activeCat) || categories[0];
+        const isDesktop = window.innerWidth >= 768;
 
-        const catTabsHTML = categories.length > 1 ? `
-        <style>
-        @media (min-width: 768px) {
-            #learningCatDropdown { display: none !important; }
-            #learningLayout { display: flex !important; gap: 1.25rem; align-items: flex-start; padding: 0.75rem 1rem; }
-            #learningCatSidebar { display: flex !important; flex-direction: column; gap: 0.3rem; width: 220px; flex-shrink: 0; position: sticky; top: 0; }
-            #learningModulesCol { flex: 1; min-width: 0; }
-        }
-        @media (max-width: 767px) {
-            #learningCatSidebar { display: none !important; }
-            #learningCatDropdown { display: block !important; }
-            #learningLayout { display: block !important; }
-            #learningModulesCol { padding: 0; }
-        }
-        </style>
+        // Sidebar для десктопу
+        const sidebarHTML = (categories.length > 1 && isDesktop) ? `
+        <div style="display:flex;flex-direction:column;gap:0.25rem;width:220px;flex-shrink:0;padding:0.5rem 0;">
+            ${categories.map(cat => {
+                const isActive = cat.id === activeCat;
+                const catTitle = cat['title_' + lang] || cat.title;
+                const catMods = learningCourseData.filter(m => (m.category || 'systematization') === cat.id);
+                const catDoneC = catMods.filter(m => m.completed).length;
+                const catPctC = catMods.length > 0 ? Math.round(catDoneC / catMods.length * 100) : 0;
+                return `<button onclick="window._switchLearningCategory('${cat.id}')"
+                    style="width:100%;display:flex;align-items:center;gap:0.6rem;padding:0.55rem 0.75rem;
+                        border-radius:10px;border:none;cursor:pointer;text-align:left;
+                        background:${isActive ? cat.color + '18' : 'transparent'};
+                        outline:${isActive ? '1.5px solid ' + cat.color + '40' : 'none'};">
+                    <span style="width:10px;height:10px;border-radius:50%;background:${cat.color};flex-shrink:0;"></span>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:0.82rem;font-weight:${isActive ? '700' : '500'};
+                            color:${isActive ? cat.color : '#374151'};
+                            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${catTitle}</div>
+                        <div style="display:flex;align-items:center;gap:0.4rem;margin-top:3px;">
+                            <div style="flex:1;height:3px;background:#e5e7eb;border-radius:2px;">
+                                <div style="width:${catPctC}%;height:100%;background:${cat.color};border-radius:2px;transition:width 0.3s;"></div>
+                            </div>
+                            <span style="font-size:0.68rem;color:#9ca3af;flex-shrink:0;">${catDoneC}/${catMods.length}</span>
+                        </div>
+                    </div>
+                </button>`;
+            }).join('')}
+        </div>` : '';
 
-        <!-- Мобільний dropdown -->
-        <div id="learningCatDropdown" style="padding:0.75rem 1rem 0.5rem;position:relative;">
+        // Мобільний dropdown
+        const catTabsHTML = (categories.length > 1 && !isDesktop) ? `
+        <div style="padding:0.75rem 1rem 0.5rem;position:relative;">
             <button onclick="window._toggleLearningCatMenu()" id="learningCatTrigger"
                 style="width:100%;display:flex;align-items:center;justify-content:space-between;
                     padding:0.65rem 0.9rem;border-radius:12px;border:1.5px solid ${activeCategory?.color || '#22c55e'};
                     background:${activeCategory?.color ? activeCategory.color + '12' : '#f0fdf4'};
                     cursor:pointer;font-size:0.88rem;font-weight:600;color:${activeCategory?.color || '#22c55e'};">
                 <span style="display:flex;align-items:center;gap:0.5rem;">
-                    <i data-lucide="${activeCategory?.icon || 'graduation-cap'}" class="icon" style="width:16px;height:16px;"></i>
                     ${activeCategory ? (activeCategory['title_' + lang] || activeCategory.title) : ''}
                 </span>
                 <span style="display:flex;align-items:center;gap:0.4rem;">
@@ -181,35 +196,6 @@
             </div>
         </div>` : '';
 
-        // Десктоп sidebar HTML — вбудовуємо в layout нижче
-        const sidebarHTML = categories.length > 1 ? `
-        <div id="learningCatSidebar">
-            ${categories.map(cat => {
-                const isActive = cat.id === activeCat;
-                const catTitle = cat['title_' + lang] || cat.title;
-                const catMods = learningCourseData.filter(m => (m.category || 'systematization') === cat.id);
-                const catDoneC = catMods.filter(m => m.completed).length;
-                const catPctC = catMods.length > 0 ? Math.round(catDoneC / catMods.length * 100) : 0;
-                return `<button onclick="window._switchLearningCategory('${cat.id}')"
-                    style="width:100%;display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;
-                        border-radius:10px;border:none;cursor:pointer;text-align:left;
-                        background:${isActive ? cat.color + '15' : 'transparent'};
-                        transition:background 0.15s;">
-                    <span style="width:10px;height:10px;border-radius:50%;background:${cat.color};flex-shrink:0;"></span>
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-size:0.82rem;font-weight:${isActive ? '700' : '500'};color:${isActive ? cat.color : '#374151'};
-                            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${catTitle}</div>
-                        <div style="display:flex;align-items:center;gap:0.4rem;margin-top:2px;">
-                            <div style="flex:1;height:3px;background:#e5e7eb;border-radius:2px;">
-                                <div style="width:${catPctC}%;height:100%;background:${cat.color};border-radius:2px;"></div>
-                            </div>
-                            <span style="font-size:0.68rem;color:#9ca3af;flex-shrink:0;">${catDoneC}/${catMods.length}</span>
-                        </div>
-                    </div>
-                </button>`;
-            }).join('')}
-        </div>` : '';
-
         // (filteredModules, catDone, catPct — визначені вище перед catTabsHTML)
 
         root.innerHTML = `
@@ -234,9 +220,9 @@
                 </div>
             </div>
             ${catTabsHTML}
-            <div id="learningLayout" style="display:block;">
+            <div style="${isDesktop && sidebarHTML ? 'display:flex;gap:1.25rem;align-items:flex-start;padding:0.75rem 1rem;' : ''}">
                 ${sidebarHTML}
-                <div id="learningModulesCol">
+                <div style="flex:1;min-width:0;">
                     <div class="learning-modules-list" id="learningModulesList">
                         ${filteredModules.length === 0
                             ? `<div style="padding:2.5rem 1rem;text-align:center;color:#9ca3af;">
