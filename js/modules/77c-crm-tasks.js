@@ -88,17 +88,20 @@ window.crmRenderDealTasks = async function (dealId) {
     try {
         const snap = await window.companyRef()
             .collection(window.DB_COLS?.TASKS || 'tasks')
-            .where('dealId', '==', dealId)
+            .where('crmDealId', '==', dealId)
             .orderBy('createdAt', 'desc')
             .limit(100).get();
         const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         _crmRenderTasksList(c, tasks, dealId);
     } catch (e) {
         try {
+            // Fallback без orderBy якщо індекс відсутній
             const snap2 = await window.companyRef()
                 .collection(window.DB_COLS?.TASKS || 'tasks')
-                .where('dealId', '==', dealId).limit(100).get();
-            _crmRenderTasksList(c, snap2.docs.map(d => ({ id: d.id, ...d.data() })), dealId);
+                .where('crmDealId', '==', dealId).limit(100).get();
+            const tasks2 = snap2.docs.map(d => ({ id: d.id, ...d.data() }))
+                .sort((a,b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
+            _crmRenderTasksList(c, tasks2, dealId);
         } catch(e2) {
             c.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;padding:0.5rem;">Помилка: ${e2.message}</div>`;
         }

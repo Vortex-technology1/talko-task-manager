@@ -447,6 +447,12 @@
                                 if (task.coExecutorIds?.length > 0) {
                                     badges.push(`<span class="mobile-badge"><i data-lucide="users" class="icon"></i> +${task.coExecutorIds.length}</span>`);
                                 }
+                                // CRM бейдж — якщо задача прив'язана до угоди
+                                if (task.crmDealId || task.dealId) {
+                                    const crmClient = task.clientName || task.crmClientName || 'CRM';
+                                    const dId = task.crmDealId || task.dealId;
+                                    badges.push(`<span class="mobile-badge has-items" onclick="event.stopPropagation();if(typeof window.crmOpenDeal==='function')window.crmOpenDeal('${escId(dId)}')" style="background:#f0fdf4;color:#16a34a;border-color:#bbf7d0;cursor:pointer;" title="Відкрити угоду в CRM"><i data-lucide="phone-call" class="icon"></i> ${esc(crmClient)}</span>`);
+                                }
                                 return badges.length > 0 ? `<div class="mobile-task-badges">${badges.join('')}</div>` : '';
                             })()}
                             
