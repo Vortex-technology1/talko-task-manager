@@ -17266,11 +17266,11 @@ Bist du dabei?</div>
 <div class="l108-intro-title">Що робимо на цьому уроці</div>
 <p>На цьому етапі вам не потрібно робити ідеально. Ваше завдання — зібрати чорновий матеріал, з яким далі працюватиме AI.</p>
 <div class="l108-rules">
-<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не ускладнюйте — пишіть як думаєте</span></div>
-<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не переписуйте по 10 разів</span></div>
-<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не використовуйте AI на цьому етапі</span></div>
-<div class="l108-rule"><span class="l108-rule-ok">✅</span><span>Пишіть швидко — до 60–90 хв на все</span></div>
-<div class="l108-rule"><span class="l108-rule-ok">✅</span><span>Мета — зібрати матеріал, а не створити ідеальну рекламу</span></div>
+<div class="l108-rule"><span class="l108-rule-no"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#ef4444"/><line x1="6" y1="6" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="6" x2="6" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></span><span>Не ускладнюйте — пишіть як думаєте</span></div>
+<div class="l108-rule"><span class="l108-rule-no"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#ef4444"/><line x1="6" y1="6" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="6" x2="6" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></span><span>Не переписуйте по 10 разів</span></div>
+<div class="l108-rule"><span class="l108-rule-no"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#ef4444"/><line x1="6" y1="6" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="6" x2="6" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></span><span>Не використовуйте AI на цьому етапі</span></div>
+<div class="l108-rule"><span class="l108-rule-ok"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#16a34a"/><polyline points="6,10 9,13 14,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Пишіть швидко — до 60–90 хв на все</span></div>
+<div class="l108-rule"><span class="l108-rule-ok"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#16a34a"/><polyline points="6,10 9,13 14,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Мета — зібрати матеріал, а не створити ідеальну рекламу</span></div>
 </div>
 </div>
 
@@ -17366,7 +17366,7 @@ ${[1,2,3,4,5].map(i => `<div class="l108-field-wrap" style="margin-top:.5rem;">
 <div class="l108-section-num">5</div>
 <div class="l108-section-title">ТЕКСТ КНОПКИ</div>
 </div>
-<div class="l108-recommend">✅ Рекомендація: використовуйте <strong>"Дізнатися більше"</strong> — універсально для більшості ніш і добре конвертує.</div>
+<div class="l108-recommend"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#16a34a"/><polyline points="6,10 9,13 14,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Рекомендація: використовуйте <strong>"Дізнатися більше"</strong> — універсально для більшості ніш і добре конвертує.</div>
 <div class="l108-field-wrap">
 <label class="l108-field-label">Кнопка (якщо хочете інший варіант)</label>
 <input type="text" class="l108-input" id="f_btn" placeholder="Дізнатися більше" style="resize:none;">
@@ -17554,11 +17554,11 @@ window.l108ExportExcel = function() {
 <div class="l108-intro-title">Что делаем на этом уроке</div>
 <p>На этом этапе вам не нужно делать идеально. Ваша задача — собрать черновой материал, с которым дальше будет работать AI.</p>
 <div class="l108-rules">
-<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не усложняйте — пишите как думаете</span></div>
-<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не переписывайте по 10 раз</span></div>
-<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не используйте AI на этом этапе</span></div>
-<div class="l108-rule"><span class="l108-rule-ok">✅</span><span>Пишите быстро — до 60–90 мин на всё</span></div>
-<div class="l108-rule"><span class="l108-rule-ok">✅</span><span>Цель — собрать материал, а не создать идеальную рекламу</span></div>
+<div class="l108-rule"><span class="l108-rule-no"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#ef4444"/><line x1="6" y1="6" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="6" x2="6" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></span><span>Не усложняйте — пишите как думаете</span></div>
+<div class="l108-rule"><span class="l108-rule-no"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#ef4444"/><line x1="6" y1="6" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="6" x2="6" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></span><span>Не переписывайте по 10 раз</span></div>
+<div class="l108-rule"><span class="l108-rule-no"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#ef4444"/><line x1="6" y1="6" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="6" x2="6" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></span><span>Не используйте AI на этом этапе</span></div>
+<div class="l108-rule"><span class="l108-rule-ok"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#16a34a"/><polyline points="6,10 9,13 14,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Пишите быстро — до 60–90 мин на всё</span></div>
+<div class="l108-rule"><span class="l108-rule-ok"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#16a34a"/><polyline points="6,10 9,13 14,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Цель — собрать материал, а не создать идеальную рекламу</span></div>
 </div>
 </div>
 
@@ -17648,7 +17648,7 @@ ${[1,2,3,4,5].map(i => `<div class="l108-field-wrap" style="margin-top:.5rem;">
 <div class="l108-section-num">5</div>
 <div class="l108-section-title">ТЕКСТ КНОПКИ</div>
 </div>
-<div class="l108-recommend">✅ Рекомендация: используйте <strong>"Узнать подробнее"</strong> — универсально для большинства ниш и хорошо конвертирует.</div>
+<div class="l108-recommend"><svg viewBox="0 0 20 20" width="16" height="16" style="display:inline-block;vertical-align:middle;flex-shrink:0;margin-top:-1px" fill="none"><circle cx="10" cy="10" r="9" fill="#16a34a"/><polyline points="6,10 9,13 14,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Рекомендация: используйте <strong>"Узнать подробнее"</strong> — универсально для большинства ниш и хорошо конвертирует.</div>
 <div class="l108-field-wrap">
 <label class="l108-field-label">Кнопка (если хотите другой вариант)</label>
 <input type="text" class="l108-input" id="f_btn" placeholder="Узнать подробнее" style="resize:none;">
