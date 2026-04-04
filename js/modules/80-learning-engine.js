@@ -116,18 +116,56 @@
         if (!window._learningActiveCategory) window._learningActiveCategory = 'systematization';
         const activeCat = window._learningActiveCategory;
 
-        // Вкладки категорій
-        const categories = window.learningCategories || window.learningCourseCategories || [];
+        // Вкладки категорій — мобільний dropdown замість горизонтального скролу
+        const activeCategory = categories.find(c => c.id === activeCat) || categories[0];
         const catTabsHTML = categories.length > 1 ? `
-        <div style="display:flex;gap:0;overflow-x:auto;border-bottom:2px solid #e5e7eb;margin-bottom:0;padding:0 0.5rem;">
-            ${categories.map(cat => {
-                const isActive = cat.id === activeCat;
-                const catTitle = cat['title_' + lang] || cat.title;
-                return '<button onclick="window._switchLearningCategory(\'' + cat.id + '\')"'
-                    + ' style="padding:0.5rem 1rem;font-size:0.85rem;font-weight:' + (isActive?'700':'500') + ';border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid ' + (isActive?cat.color:'transparent') + ';margin-bottom:-2px;color:' + (isActive?cat.color:'#6b7280') + ';display:flex;align-items:center;gap:0.4rem;">'
-                    + '<i data-lucide="' + cat.icon + '" class="icon" style="width:14px;height:14px;"></i>'
-                    + catTitle + '</button>';
-            }).join('')}
+        <div style="padding:0.75rem 1rem 0.5rem;position:relative;">
+            <!-- Dropdown trigger -->
+            <button
+                onclick="window._toggleLearningCatMenu()"
+                id="learningCatTrigger"
+                style="width:100%;display:flex;align-items:center;justify-content:space-between;
+                    padding:0.65rem 0.9rem;border-radius:12px;border:1.5px solid ${activeCategory?.color || '#22c55e'};
+                    background:${activeCategory?.color ? activeCategory.color + '12' : '#f0fdf4'};
+                    cursor:pointer;font-size:0.88rem;font-weight:600;color:${activeCategory?.color || '#22c55e'};">
+                <span style="display:flex;align-items:center;gap:0.5rem;">
+                    <i data-lucide="${activeCategory?.icon || 'graduation-cap'}" class="icon" style="width:16px;height:16px;"></i>
+                    ${activeCategory ? (activeCategory['title_' + lang] || activeCategory.title) : ''}
+                </span>
+                <span style="display:flex;align-items:center;gap:0.4rem;">
+                    <span style="font-size:0.75rem;font-weight:500;opacity:0.7;">${catDone}/${filteredModules.length}</span>
+                    <svg id="learningCatChevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+
+            <!-- Dropdown menu -->
+            <div id="learningCatMenu" style="display:none;position:absolute;left:1rem;right:1rem;top:calc(100% - 4px);
+                background:white;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);
+                border:1px solid #e5e7eb;z-index:999;overflow:hidden;">
+                ${categories.map((cat, idx) => {
+                    const isActive = cat.id === activeCat;
+                    const catTitle = cat['title_' + lang] || cat.title;
+                    const catModules = learningCourseData.filter(m => (m.category || 'systematization') === cat.id);
+                    const catDoneCount = catModules.filter(m => m.completed).length;
+                    return `<button onclick="window._switchLearningCategory('${cat.id}')"
+                        style="width:100%;display:flex;align-items:center;justify-content:space-between;
+                            padding:0.75rem 1rem;border:none;background:${isActive ? cat.color + '12' : 'white'};
+                            cursor:pointer;font-size:0.86rem;font-weight:${isActive ? '700' : '500'};
+                            color:${isActive ? cat.color : '#374151'};
+                            border-bottom:${idx < categories.length - 1 ? '1px solid #f3f4f6' : 'none'};
+                            text-align:left;">
+                        <span style="display:flex;align-items:center;gap:0.6rem;">
+                            <span style="width:8px;height:8px;border-radius:50%;background:${cat.color};flex-shrink:0;"></span>
+                            <i data-lucide="${cat.icon}" class="icon" style="width:15px;height:15px;color:${cat.color};"></i>
+                            ${catTitle}
+                        </span>
+                        <span style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0;">
+                            <span style="font-size:0.75rem;color:#9ca3af;">${catDoneCount}/${catModules.length}</span>
+                            ${isActive ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + cat.color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+                        </span>
+                    </button>`;
+                }).join('')}
+            </div>
         </div>` : '';
 
         // Модулі активної категорії
@@ -171,8 +209,33 @@
         if (window.refreshIcons) window.refreshIcons();
     }
 
+    window._toggleLearningCatMenu = function() {
+        const menu = document.getElementById('learningCatMenu');
+        const chevron = document.getElementById('learningCatChevron');
+        if (!menu) return;
+        const isOpen = menu.style.display !== 'none';
+        menu.style.display = isOpen ? 'none' : 'block';
+        if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+        // Закриваємо при кліку поза меню
+        if (!isOpen) {
+            setTimeout(() => {
+                const handler = function(e) {
+                    if (!menu.contains(e.target) && e.target.id !== 'learningCatTrigger') {
+                        menu.style.display = 'none';
+                        if (chevron) chevron.style.transform = '';
+                        document.removeEventListener('click', handler);
+                    }
+                };
+                document.addEventListener('click', handler);
+            }, 10);
+        }
+    };
+
     window._switchLearningCategory = function(catId) {
         window._learningActiveCategory = catId;
+        // Закриваємо меню перед ре-рендером
+        const menu = document.getElementById('learningCatMenu');
+        if (menu) menu.style.display = 'none';
         renderLearning();
     };
 
