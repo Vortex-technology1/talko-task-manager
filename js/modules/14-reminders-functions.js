@@ -346,6 +346,15 @@
                     data.creatorId = currentUser?.uid || '';
                     data.creatorName = currentUserData?.name || currentUser.email;
                     data.pinned = false;
+
+                    // CRM зв'язок: якщо задача відкрита з контексту угоди — прив'язуємо
+                    // window._crmTaskContext встановлює 77-crm.js перед openAddTask()
+                    if (window._crmTaskContext?.dealId) {
+                        data.crmDealId    = window._crmTaskContext.dealId;
+                        data.crmClientName = window._crmTaskContext.clientName || '';
+                        // Очищуємо контекст після використання (захист від race condition)
+                        window._crmTaskContext = null;
+                    }
                     
                     newDocRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(data);
                     

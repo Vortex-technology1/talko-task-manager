@@ -2983,37 +2983,78 @@ window.crmMarkTaskDone = async function(taskId) {
         const allTasks = (typeof tasks !== 'undefined' && Array.isArray(tasks)) ? tasks : [];
         const taskObj  = allTasks.find(t => t.id === taskId);
 
-        await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks').doc(taskId).update({
-            status: 'done',
-            completedDate: todayStr, // FIX BH: потрібен для статистики, owner dashboard, аналітики
-            completedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            doneAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
+        // Якщо задача потребує review — та сама логіка що і в 14-reminders-functions
+        const needsReview = taskObj && typeof shouldSendForReview === 'function' && shouldSendForReview(taskObj);
+        const newStatus = needsReview ? 'review' : 'done';
 
-        // Якщо завдання прив'язане до угоди — логуємо в history CRM
-        if (taskObj?.crmDealId) {
-            try {
-                await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
-                    .doc(taskObj.crmDealId).collection('history').add({
-                        type: 'task_done',
-                        text: _tg('Завдання виконано: ','Задание выполнено: ') + (taskObj.title || taskId),
-                        taskId,
-                        by: window.currentUser?.email || 'manager',
-                        at: firebase.firestore.FieldValue.serverTimestamp(),
-                    });
-            } catch(hErr) { console.warn('[CRM] history write failed:', hErr.message); }
+        const updateData = {
+            status:    newStatus,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        if (newStatus === 'done') {
+            updateData.completedDate = todayStr;
+            updateData.completedAt   = firebase.firestore.FieldValue.serverTimestamp();
+            updateData.completedBy   = window.currentUser?.uid || null;
+            updateData.doneAt        = firebase.firestore.FieldValue.serverTimestamp();
+        } else {
+            updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
+            updateData.completedAt     = null;
+            updateData.completedDate   = null;
+            updateData.completedBy     = null;
         }
 
-        if(window.showToast) showToast(window.t('crmTaskDone'), 'success');
+        await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks').doc(taskId).update(updateData);
+
+        // Локальне оновлення масиву tasks
+        if (taskObj) Object.assign(taskObj, updateData);
+
+        // Audit log — та сама функція що і в таск-менеджері
+        if (typeof logTaskChange === 'function') {
+            logTaskChange(taskId, 'status', { status: newStatus }, taskObj).catch(e => console.warn('[CRM] auditLog:', e.message));
+        }
+
+        // ET tracking
+        if (newStatus === 'done' && typeof window.trackTaskCompleted === 'function') {
+            window.trackTaskCompleted(taskId, updateData, taskObj);
+        }
+
+        // Автопросування процесу якщо задача прив\'язана до процесу
+        if (newStatus === 'done' && typeof advanceProcessIfLinked === 'function') {
+            advanceProcessIfLinked(taskId);
+        }
+
+        // Логуємо в history угоди (CRM-специфіка)
+        const dealId = taskObj?.crmDealId || taskObj?.dealId;
+        if (dealId) {
+            const histText = newStatus === 'done'
+                ? _tg('Завдання виконано: ','Задание выполнено: ') + (taskObj?.title || taskId)
+                : _tg('Завдання на перевірці: ','Задание на проверке: ') + (taskObj?.title || taskId);
+            window.companyRef().collection(window.DB_COLS.CRM_DEALS)
+                .doc(dealId).collection('history').add({
+                    type: newStatus === 'done' ? 'task_done' : 'task_review',
+                    text: histText, taskId,
+                    by: window.currentUser?.email || 'manager',
+                    at: firebase.firestore.FieldValue.serverTimestamp(),
+                }).catch(e => console.warn('[CRM] history write failed:', e.message));
+        }
+
+        const msg = newStatus === 'done'
+            ? (window.t('crmTaskDone') || 'Задачу виконано \u2713')
+            : (window.t('taskSentForReview') || 'Надіслано на перевірку \u2713');
+        if (window.showToast) showToast(msg, 'success');
+
+        // Оновлюємо обидва таби задач
         const activeDealId = window._crmActiveDealId || crm.activeDealId;
         if (activeDealId) {
-            const deal = crm.deals.find(function(d){return d.id === activeDealId;});
+            const deal = crm.deals.find(d => d.id === activeDealId);
             if (deal) _loadTasksTab(deal);
+        }
+        if (dealId && typeof window.crmRenderDealTasks === 'function') {
+            window.crmRenderDealTasks(dealId);
         }
     } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
 };
-
 
 // ── Активності ─────────────────────────────────────────────
 async function _loadActivityTab(deal) {

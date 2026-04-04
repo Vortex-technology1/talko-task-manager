@@ -206,12 +206,40 @@ window.crmOpenDealTask = function(taskId) {
 
 window.crmToggleDealTask = async function (dealId, taskId, done) {
     try {
-        await window.companyRef().collection(window.DB_COLS?.TASKS || 'tasks').doc(taskId).update({
-            status: done ? 'done' : 'new',
-            ...(done ? { completedAt: firebase.firestore.FieldValue.serverTimestamp() } : {}),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        if (window.tasks) { const t = window.tasks.find(t=>t.id===taskId); if(t) t.status = done?'done':'new'; }
+        const allTasks = window.tasks || [];
+        const taskObj  = allTasks.find(t => t.id === taskId);
+
+        // При завершенні — та сама логіка review що і в таск-менеджері
+        const needsReview = done && taskObj && typeof shouldSendForReview === 'function' && shouldSendForReview(taskObj);
+        const newStatus = done ? (needsReview ? 'review' : 'done') : 'new';
+
+        const updateData = { status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+        if (newStatus === 'done') {
+            updateData.completedAt   = firebase.firestore.FieldValue.serverTimestamp();
+            updateData.completedBy   = window.currentUser?.uid || null;
+            updateData.completedDate = new Date().toISOString().split('T')[0];
+        } else if (newStatus === 'review') {
+            updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
+            updateData.completedAt = null; updateData.completedDate = null; updateData.completedBy = null;
+        } else {
+            updateData.completedAt = null; updateData.completedDate = null; updateData.completedBy = null;
+        }
+
+        await window.companyRef().collection(window.DB_COLS?.TASKS || 'tasks').doc(taskId).update(updateData);
+
+        if (taskObj) Object.assign(taskObj, updateData);
+
+        // Audit + ET — та сама логіка
+        if (typeof logTaskChange === 'function') {
+            logTaskChange(taskId, 'status', { status: newStatus }, taskObj).catch(() => {});
+        }
+        if (newStatus === 'done' && typeof window.trackTaskCompleted === 'function') {
+            window.trackTaskCompleted(taskId, updateData, taskObj);
+        }
+        if (newStatus === 'done' && typeof advanceProcessIfLinked === 'function') {
+            advanceProcessIfLinked(taskId);
+        }
+
         window.crmRenderDealTasks(dealId);
     } catch(e) { console.warn('[CRM task toggle]', e); }
 };
