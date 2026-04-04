@@ -2895,9 +2895,12 @@ function _loadTasksTab(deal) {
         .where('crmDealId', '==', deal.id)
         .orderBy('createdAt', 'desc')
         .onSnapshot(snap => {
+            // Guard: не рендеруємо якщо таб вже змінився
+            if (crm._activeTab !== 'tasks' || crm._activeTabDealId !== deal.id) return;
             const dealTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             _renderTasksTab(cnt, dealTasks, deal);
         }, err => {
+            if (crm._activeTab !== 'tasks' || crm._activeTabDealId !== deal.id) return;
             // Firestore може не мати індексу для crmDealId → fallback з локального масиву
             console.warn('[CRM tasks] onSnapshot fallback:', err.message);
             const allTasks = (typeof tasks !== 'undefined' && Array.isArray(tasks)) ? tasks : [];
