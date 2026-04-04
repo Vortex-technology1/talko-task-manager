@@ -684,40 +684,30 @@ window.sitesRenderLibraryGrid = function(templates) {
         return;
     }
     grid.innerHTML = templates.map(t => `
-    <div id="slt_${t.key}"
-        style="background:white;border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;
-        transition:all 0.15s;display:flex;flex-direction:column;"
-        onmouseenter="this.style.borderColor='${t.color}';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.1)'"
-        onmouseleave="if('${t.key}'!==window._sitesSelectedLibKey){this.style.borderColor='#e5e7eb';this.style.boxShadow='none';}"
-        data-key="${t.key}">
-        <div style="height:4px;background:${t.color};flex-shrink:0;"></div>
-        <div style="padding:10px 11px;flex:1;display:flex;flex-direction:column;gap:5px;">
+    <div id="slt_${t.key}" data-key="${t.key}"
+        style="background:white;border:2px solid #e5e7eb;border-radius:12px;
+        display:flex;flex-direction:column;min-height:160px;">
+        <div style="height:4px;background:${t.color};border-radius:10px 10px 0 0;flex-shrink:0;"></div>
+        <div style="padding:10px 11px;flex:1;display:flex;flex-direction:column;gap:4px;">
             <div style="display:flex;gap:4px;flex-wrap:wrap;">
                 <span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;
-                    background:${t.color}20;color:${t.color};">${t.nicheLabel}</span>
+                    background:${t.color}22;color:${t.color};">${t.nicheLabel}</span>
                 <span style="font-size:9px;font-weight:600;padding:2px 6px;border-radius:5px;
                     background:#f1f5f9;color:#6b7280;">${t.typeLabel}</span>
             </div>
             <div style="font-size:0.77rem;font-weight:700;color:#111;line-height:1.3;">${t.title}</div>
-            <div style="font-size:0.67rem;color:#9ca3af;line-height:1.4;flex:1;">${t.desc}</div>
+            <div style="font-size:0.67rem;color:#9ca3af;line-height:1.4;">${t.desc}</div>
         </div>
-        <!-- Кнопки завжди внизу картки -->
-        <div style="display:flex;gap:0;border-top:1px solid #f1f5f9;flex-shrink:0;">
+        <div style="display:flex;border-top:1px solid #f1f5f9;flex-shrink:0;border-radius:0 0 10px 10px;overflow:hidden;">
             <button onclick="sitesPreviewTemplate('${t.key}')"
-                style="flex:1;padding:8px 4px;background:#f8fafc;border:none;border-right:1px solid #f1f5f9;
-                cursor:pointer;font-size:0.67rem;font-weight:600;color:#374151;
-                border-radius:0 0 0 10px;transition:background 0.1s;"
-                onmouseenter="this.style.background='#f0fdf4';this.style.color='#16a34a'"
-                onmouseleave="this.style.background='#f8fafc';this.style.color='#374151'">
+                style="flex:1;padding:7px 2px;background:#f8fafc;border:none;border-right:1px solid #f1f5f9;
+                cursor:pointer;font-size:0.67rem;font-weight:600;color:#16a34a;">
                 👁 Переглянути
             </button>
             <button onclick="sitesCopyTemplateHtmlByKey('${t.key}')"
-                style="flex:1;padding:8px 4px;background:#f8fafc;border:none;
-                cursor:pointer;font-size:0.67rem;font-weight:600;color:#374151;
-                border-radius:0 0 10px 0;transition:background 0.1s;"
-                onmouseenter="this.style.background='#f5f3ff';this.style.color='#7c3aed'"
-                onmouseleave="this.style.background='#f8fafc';this.style.color='#374151'">
-                📋 Копіювати HTML
+                style="flex:1;padding:7px 2px;background:#f8fafc;border:none;
+                cursor:pointer;font-size:0.67rem;font-weight:600;color:#7c3aed;">
+                📋 Скопіювати HTML
             </button>
         </div>
     </div>`).join('');
