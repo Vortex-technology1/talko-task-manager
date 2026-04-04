@@ -1418,6 +1418,611 @@ window.l110ExportExcel = function() {
             homeworkLinkName: null,
             homeworkLinkName_ru: null,
         },
+,
+    {
+        id: 111,
+        category: 'marketing',
+        title: 'ЗАПУСК AI-БОТА',
+        title_ru: 'ЗАПУСК AI-БОТА',
+        subtitle: 'Підключи Telegram, створи бота з AI-ланцюгом і підключи до CRM',
+        subtitle_ru: 'Подключи Telegram, создай бота с AI-цепочкой и подключи к CRM',
+        duration: 60,
+        videoLink: null,
+        materialsLink: null,
+        hideAiBlock: true,
+        lessonContent: `
+<style>
+.l111-intro{background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.5rem;}
+.l111-intro-title{font-size:.72rem;font-weight:700;letter-spacing:.09em;color:#0369a1;text-transform:uppercase;margin-bottom:.4rem;}
+.l111-intro p{font-size:.87rem;color:#0c4a6e;line-height:1.65;margin:0;}
+.l111-phase{margin-bottom:2rem;}
+.l111-phase-hdr{display:flex;align-items:center;gap:.7rem;margin-bottom:1.1rem;padding:.6rem .9rem;border-radius:10px;}
+.l111-phase-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:.85rem;font-weight:700;flex-shrink:0;}
+.l111-phase-title{font-size:1rem;font-weight:700;color:#111827;}
+.l111-phase-sub{font-size:.78rem;margin-top:1px;}
+.l111-step{display:flex;gap:.85rem;margin-bottom:1rem;}
+.l111-step-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:2px;}
+.l111-step-body{flex:1;}
+.l111-step-title{font-size:.88rem;font-weight:700;color:#111827;margin-bottom:.25rem;}
+.l111-step-text{font-size:.83rem;color:#374151;line-height:1.6;}
+.l111-where{display:inline-flex;align-items:center;gap:.3rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:3px 8px;font-size:.75rem;font-weight:600;color:#374151;margin-bottom:.4rem;}
+.l111-tip{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.55rem .8rem;font-size:.8rem;color:#1e40af;margin-top:.5rem;line-height:1.55;}
+.l111-warn{background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.55rem .8rem;font-size:.8rem;color:#92400e;margin-top:.5rem;line-height:1.55;display:flex;align-items:flex-start;gap:.4rem;}
+.l111-schema{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;margin:1rem 0;}
+.l111-schema-title{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.75rem;}
+.l111-divider{height:1px;background:#e5e7eb;margin:1.5rem 0;}
+.l111-result{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.85rem 1rem;margin-top:1.5rem;}
+.l111-result-title{font-size:.78rem;font-weight:700;color:#166534;margin-bottom:.5rem;}
+.l111-result-row{display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:#374151;margin-bottom:.3rem;}
+</style>
+
+<div class="l111-intro">
+<div class="l111-intro-title">Що робимо на цьому уроці</div>
+<p>Запускаємо AI-бота з нуля до живих повідомлень. Три кроки: підключити Telegram → побудувати ланцюг з AI → автоматизувати CRM. Після уроку бот буде відповідати клієнтам замість вас.</p>
+</div>
+
+<!-- СХЕМА ЗАГАЛЬНА -->
+<div class="l111-schema">
+<div class="l111-schema-title">Як це все працює разом</div>
+<svg viewBox="0 0 680 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:0 auto;">
+  <rect x="0" y="18" width="110" height="44" rx="8" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="55" y="36" text-anchor="middle" font-size="10" fill="#1e40af" font-weight="700">Telegram</text>
+  <text x="55" y="50" text-anchor="middle" font-size="9" fill="#3b82f6">@BotFather</text>
+  <text x="55" y="62" text-anchor="middle" font-size="9" fill="#6b7280">токен</text>
+  <path d="M112 40 L148 40" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="150" y="18" width="110" height="44" rx="8" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="205" y="36" text-anchor="middle" font-size="10" fill="#6d28d9" font-weight="700">TALKO</text>
+  <text x="205" y="50" text-anchor="middle" font-size="9" fill="#7c3aed">Боти → Налашт.</text>
+  <text x="205" y="62" text-anchor="middle" font-size="9" fill="#6b7280">вебхук</text>
+  <path d="M262 40 L298 40" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="300" y="18" width="110" height="44" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="355" y="36" text-anchor="middle" font-size="10" fill="#166534" font-weight="700">Flow Canvas</text>
+  <text x="355" y="50" text-anchor="middle" font-size="9" fill="#16a34a">AI-нода</text>
+  <text x="355" y="62" text-anchor="middle" font-size="9" fill="#6b7280">промпт</text>
+  <path d="M412 40 L448 40" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="450" y="18" width="110" height="44" rx="8" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="505" y="36" text-anchor="middle" font-size="10" fill="#92400e" font-weight="700">CRM</text>
+  <text x="505" y="50" text-anchor="middle" font-size="9" fill="#b45309">Тригер</text>
+  <text x="505" y="62" text-anchor="middle" font-size="9" fill="#6b7280">автоматизація</text>
+  <path d="M562 40 L598 40" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="600" y="18" width="78" height="44" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+  <text x="639" y="40" text-anchor="middle" font-size="10" fill="#166534" font-weight="700">Бот</text>
+  <text x="639" y="53" text-anchor="middle" font-size="9" fill="#16a34a">працює!</text>
+  <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9ca3af"/></marker></defs>
+</svg>
+</div>
+
+<!-- ФАЗА 1: TELEGRAM -->
+<div class="l111-phase">
+<div class="l111-phase-hdr" style="background:#dbeafe;">
+<div class="l111-phase-num" style="background:#1d4ed8;">1</div>
+<div>
+<div class="l111-phase-title">Створити бота в Telegram</div>
+<div class="l111-phase-sub" style="color:#3b82f6;">Отримати токен через @BotFather — це займе 2 хвилини</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#1d4ed8;">1</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Відкрийте Telegram і знайдіть @BotFather</div>
+<div class="l111-step-text">У пошуку Telegram введіть <strong>@BotFather</strong> — це офіційний бот від Telegram для створення ботів. Натисніть <strong>START</strong>.</div>
+<div class="l111-schema" style="margin-top:.6rem;padding:.7rem;">
+<svg viewBox="0 0 320 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;">
+  <rect x="0" y="0" width="320" height="60" rx="10" fill="#f0f9ff"/>
+  <circle cx="26" cy="30" r="18" fill="#2563eb"/>
+  <text x="26" y="34" text-anchor="middle" font-size="11" fill="white" font-weight="700">BF</text>
+  <text x="54" y="22" font-size="11" fill="#111827" font-weight="700">BotFather</text>
+  <text x="54" y="38" font-size="9" fill="#6b7280">@BotFather · Telegram</text>
+  <rect x="238" y="18" width="72" height="24" rx="12" fill="#2563eb"/>
+  <text x="274" y="34" text-anchor="middle" font-size="10" fill="white" font-weight="700">START</text>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#1d4ed8;">2</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Надішліть команду /newbot</div>
+<div class="l111-step-text">Напишіть <strong>/newbot</strong> і відправте. BotFather запитає:<br>
+— <em>Ім'я бота</em> (наприклад: "Мій Бізнес Бот")<br>
+— <em>Username бота</em> — має закінчуватись на <strong>_bot</strong> (наприклад: mybusiness_bot)</div>
+<div class="l111-schema" style="margin-top:.6rem;padding:.7rem;">
+<svg viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;">
+  <rect x="0" y="0" width="320" height="100" rx="10" fill="#1e1e2e"/>
+  <rect x="10" y="10" width="120" height="28" rx="14" fill="#374151"/>
+  <text x="70" y="28" text-anchor="middle" font-size="10" fill="#e2e8f0">/newbot</text>
+  <rect x="60" y="50" width="250" height="40" rx="10" fill="#2563eb"/>
+  <text x="185" y="64" text-anchor="middle" font-size="9" fill="white">Alright, a new bot. How are you going</text>
+  <text x="185" y="79" text-anchor="middle" font-size="9" fill="white">to call it? Please choose a name...</text>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#1d4ed8;">3</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Скопіюйте токен — це ключ від бота</div>
+<div class="l111-step-text">Після створення BotFather надішле повідомлення з <strong>токеном</strong>. Це довгий рядок типу: <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:.8rem;">123456789:AAF_xyzABC...</code></div>
+<div class="l111-warn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<div>Токен — це пароль вашого бота. Нікому не передавайте. Якщо він потрапить до чужих рук — ваш бот можуть вкрасти.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="l111-divider"></div>
+
+<!-- ФАЗА 2: TALKO ПІДКЛЮЧЕННЯ -->
+<div class="l111-phase">
+<div class="l111-phase-hdr" style="background:#ede9fe;">
+<div class="l111-phase-num" style="background:#7c3aed;">2</div>
+<div>
+<div class="l111-phase-title">Підключити Telegram до TALKO</div>
+<div class="l111-phase-sub" style="color:#7c3aed;">Вставити токен → система сама налаштує вебхук</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#7c3aed;">1</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Перейдіть в розділ "Боти" на платформі</div>
+<div class="l111-where">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+Де знайти: ліве меню → Боти
+</div>
+<div class="l111-schema" style="margin-top:.5rem;padding:.7rem;">
+<svg viewBox="0 0 320 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;">
+  <rect x="0" y="0" width="80" height="70" rx="0" fill="#1f2937"/>
+  <rect x="8" y="8" width="64" height="54" rx="6" fill="#111827"/>
+  <rect x="14" y="14" width="52" height="12" rx="4" fill="#374151"/>
+  <text x="40" y="24" text-anchor="middle" font-size="7" fill="#9ca3af">CRM</text>
+  <rect x="14" y="30" width="52" height="12" rx="4" fill="#374151"/>
+  <text x="40" y="40" text-anchor="middle" font-size="7" fill="#9ca3af">Задачі</text>
+  <rect x="14" y="46" width="52" height="12" rx="4" fill="#22c55e"/>
+  <text x="40" y="56" text-anchor="middle" font-size="7" fill="white" font-weight="700">Боти</text>
+  <path d="M82 35 L110 35" stroke="#22c55e" stroke-width="2" marker-end="url(#arr2)"/>
+  <rect x="112" y="10" width="200" height="50" rx="10" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="140" y="30" font-size="9" fill="#111827" font-weight="700">Боти</text>
+  <rect x="220" y="18" width="80" height="24" rx="6" fill="#7c3aed"/>
+  <text x="260" y="34" text-anchor="middle" font-size="9" fill="white">Налаштування</text>
+  <defs><marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#22c55e"/></marker></defs>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#7c3aed;">2</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Натисніть вкладку "Налаштування"</div>
+<div class="l111-step-text">Зверху три вкладки: <strong>Боти</strong> / <strong>Сесії</strong> / <strong>Налаштування</strong>. Натисніть <strong>Налаштування</strong>. Ви побачите блок Telegram з полем для токену.</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#7c3aed;">3</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Вставте токен і натисніть "Підключити"</div>
+<div class="l111-step-text">Вставте токен який скопіювали від @BotFather. Натисніть зелену кнопку <strong>"Підключити"</strong>.</div>
+<div class="l111-schema" style="margin-top:.5rem;padding:.7rem;">
+<svg viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;">
+  <rect x="0" y="0" width="320" height="80" rx="10" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="16" y="18" font-size="9" fill="#6b7280">Bot Token (від @BotFather)</text>
+  <rect x="12" y="24" width="220" height="28" rx="6" fill="#f9fafb" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="22" y="42" font-size="9" fill="#9ca3af">123456789:AAF_xyz...</text>
+  <rect x="238" y="24" width="72" height="28" rx="6" fill="#22c55e"/>
+  <text x="274" y="42" text-anchor="middle" font-size="9" fill="white" font-weight="700">Підключити</text>
+  <rect x="12" y="58" width="296" height="16" rx="4" fill="#f0fdf4"/>
+  <text x="20" y="70" font-size="8" fill="#166534">Вебхук: apptalko.com/api/webhook?...</text>
+</svg>
+</div>
+<div class="l111-tip">Якщо підключення пройшло успішно — з'явиться зелений рядок з Вебхуком. Це означає що Telegram тепер передає всі повідомлення в TALKO.</div>
+</div>
+</div>
+</div>
+
+<div class="l111-divider"></div>
+
+<!-- ФАЗА 3: СТВОРЕННЯ БОТА -->
+<div class="l111-phase">
+<div class="l111-phase-hdr" style="background:#f0fdf4;">
+<div class="l111-phase-num" style="background:#16a34a;">3</div>
+<div>
+<div class="l111-phase-title">Створити бота і AI-ланцюг</div>
+<div class="l111-phase-sub" style="color:#16a34a;">Новий бот → Flow Canvas → AI-нода з промптом</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#16a34a;">1</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Перейдіть у вкладку "Боти" і натисніть "+ Новий бот"</div>
+<div class="l111-where">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+Де знайти: Боти → вкладка "Боти" → кнопка "+ Новий бот"
+</div>
+<div class="l111-step-text">Відкриється модальне вікно. Заповніть:<br>
+— <strong>Назва</strong>: будь-яка (наприклад "AI Кваліфікатор")<br>
+— <strong>Канал</strong>: Telegram<br>
+— <strong>Тригер</strong>: /start (за замовчуванням)</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#16a34a;">2</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Відкрийте редактор і додайте AI-ноду</div>
+<div class="l111-step-text">Після створення натисніть на картку бота — відкриється <strong>Flow Canvas</strong> (конструктор). Зліва є панель із типами вузлів. Знайдіть фіолетовий вузол <strong>"AI Агент"</strong> і перетягніть його на полотно.</div>
+<div class="l111-schema" style="margin-top:.5rem;padding:.7rem;">
+<svg viewBox="0 0 340 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;display:block;">
+  <!-- sidebar -->
+  <rect x="0" y="0" width="80" height="120" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="14" text-anchor="middle" font-size="8" fill="#9ca3af" font-weight="700">ВУЗЛИ</text>
+  <rect x="8" y="20" width="64" height="18" rx="4" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+  <text x="40" y="32" text-anchor="middle" font-size="8" fill="#166534">Повідомлення</text>
+  <rect x="8" y="42" width="64" height="18" rx="4" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="40" y="54" text-anchor="middle" font-size="8" fill="#6d28d9" font-weight="700">AI Агент</text>
+  <rect x="8" y="64" width="64" height="18" rx="4" fill="#fef3c7" stroke="#fcd34d" stroke-width="1"/>
+  <text x="40" y="76" text-anchor="middle" font-size="8" fill="#92400e">Угода CRM</text>
+  <rect x="8" y="86" width="64" height="18" rx="4" fill="#f0f9ff" stroke="#bae6fd" stroke-width="1"/>
+  <text x="40" y="98" text-anchor="middle" font-size="8" fill="#0369a1">Запит API</text>
+  <!-- arrow drag -->
+  <path d="M74 51 L110 65" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arr3)"/>
+  <!-- canvas -->
+  <rect x="90" y="10" width="240" height="100" rx="8" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <!-- start node -->
+  <rect x="100" y="40" width="60" height="28" rx="6" fill="#22c55e"/>
+  <text x="130" y="58" text-anchor="middle" font-size="9" fill="white" font-weight="700">START</text>
+  <!-- arrow -->
+  <path d="M162 54 L188 54" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr3)"/>
+  <!-- ai node -->
+  <rect x="190" y="34" width="72" height="40" rx="6" fill="#8b5cf6"/>
+  <text x="226" y="50" text-anchor="middle" font-size="9" fill="white" font-weight="700">AI</text>
+  <text x="226" y="64" text-anchor="middle" font-size="8" fill="#e9d5ff">Агент</text>
+  <defs><marker id="arr3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b5cf6"/></marker></defs>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#16a34a;">3</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Подвійний клік по AI-ноді — відкриється налаштування</div>
+<div class="l111-step-text">Клікніть двічі на фіолетовий вузол. Відкриється панель праворуч з полем <strong>"Системний промпт"</strong>. Це те місце куди вставляється промпт бота з уроку 10.</div>
+<div class="l111-schema" style="margin-top:.5rem;padding:.7rem;">
+<svg viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;">
+  <rect x="0" y="0" width="320" height="120" rx="10" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="10" y="10" width="140" height="100" rx="8" fill="#f8fafc"/>
+  <rect x="60" y="35" width="72" height="40" rx="6" fill="#8b5cf6"/>
+  <text x="96" y="55" text-anchor="middle" font-size="9" fill="white" font-weight="700">AI Агент</text>
+  <text x="96" y="67" text-anchor="middle" font-size="7" fill="#e9d5ff">2x клік</text>
+  <rect x="158" y="10" width="152" height="100" rx="8" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="234" y="28" text-anchor="middle" font-size="9" fill="#6d28d9" font-weight="700">Налаштування AI</text>
+  <text x="168" y="44" font-size="8" fill="#6b7280">Системний промпт:</text>
+  <rect x="166" y="50" width="136" height="52" rx="4" fill="white" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="174" y="65" font-size="7" fill="#9ca3af"># АСИСТЕНТ: TALKO</text>
+  <text x="174" y="76" font-size="7" fill="#9ca3af">Кваліфікаційний Бот</text>
+  <text x="174" y="87" font-size="7" fill="#9ca3af">...</text>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#16a34a;">4</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Вставте промпт з уроку 10 у поле "Системний промпт"</div>
+<div class="l111-step-text">Відкрийте ваш збережений Excel з уроку 10 → скопіюйте готовий адаптований промпт → вставте в поле "Системний промпт". Натисніть <strong>"Зберегти"</strong>.</div>
+<div class="l111-tip">Промпт — це "мозок" бота. Він визначає як бот розмовляє, що запитує і що робить. Чим точніше промпт — тим краще бот кваліфікує клієнтів.</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#16a34a;">5</div>
+<div class="l111-step-body">
+<div class="l111-step-title">З'єднайте START → AI-нода і збережіть флоу</div>
+<div class="l111-step-text">Наведіть курсор на <strong>START</strong>-вузол — з'явиться точка виходу. Потягніть лінію до AI-ноди. Коли з'єднаєте — натисніть кнопку <strong>"Зберегти"</strong> зверху праворуч.</div>
+<div class="l111-schema" style="margin-top:.5rem;padding:.7rem;">
+<svg viewBox="0 0 280 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;">
+  <rect x="10" y="16" width="70" height="28" rx="6" fill="#22c55e"/>
+  <text x="45" y="33" text-anchor="middle" font-size="9" fill="white" font-weight="700">START</text>
+  <circle cx="81" cy="30" r="5" fill="#22c55e" stroke="white" stroke-width="1.5"/>
+  <path d="M87 30 L118 30" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="0" marker-end="url(#arr4)"/>
+  <rect x="120" y="10" width="80" height="40" rx="6" fill="#8b5cf6"/>
+  <text x="160" y="28" text-anchor="middle" font-size="9" fill="white" font-weight="700">AI Агент</text>
+  <text x="160" y="42" text-anchor="middle" font-size="8" fill="#e9d5ff">з промптом</text>
+  <path d="M202 30 L228 30" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr4)"/>
+  <rect x="230" y="16" width="40" height="28" rx="6" fill="#94a3b8"/>
+  <text x="250" y="33" text-anchor="middle" font-size="8" fill="white">END</text>
+  <defs><marker id="arr4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b5cf6"/></marker></defs>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#16a34a;">6</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Скопіюйте посилання на бота і протестуйте</div>
+<div class="l111-step-text">Поверніться до списку ботів. Під назвою бота є посилання типу <code style="background:#f3f4f6;padding:2px 5px;border-radius:4px;font-size:.79rem;">t.me/mybusiness_bot</code>. Натисніть <strong>"Копіювати"</strong> → відкрийте посилання в Telegram → напишіть <strong>/start</strong>. Бот має відповісти.</div>
+<div class="l111-warn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<div>Якщо бот не відповідає — перевірте: 1) Telegram підключений (є зелений вебхук) 2) Флоу збережено 3) Флоу в статусі "active" (не "draft")</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="l111-divider"></div>
+
+<!-- ФАЗА 4: CRM АВТОМАТИЗАЦІЯ -->
+<div class="l111-phase">
+<div class="l111-phase-hdr" style="background:#fef3c7;">
+<div class="l111-phase-num" style="background:#d97706;">4</div>
+<div>
+<div class="l111-phase-title">Підключити автоматизацію в CRM</div>
+<div class="l111-phase-sub" style="color:#b45309;">Тригер "Клієнт пройшов бота" → створити угоду автоматично</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#d97706;">1</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Перейдіть в CRM → Налаштування → Тригери</div>
+<div class="l111-where">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+Де знайти: CRM → шестерня "Налаштування" → вкладка "Тригери"
+</div>
+<div class="l111-schema" style="margin-top:.5rem;padding:.7rem;">
+<svg viewBox="0 0 320 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;">
+  <rect x="0" y="8" width="80" height="44" rx="8" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="40" y="32" text-anchor="middle" font-size="9" fill="#374151" font-weight="700">CRM</text>
+  <path d="M82 30 L108 30" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr5)"/>
+  <rect x="110" y="8" width="90" height="44" rx="8" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="155" y="32" text-anchor="middle" font-size="9" fill="#374151">Налаштування</text>
+  <path d="M202 30 L228 30" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr5)"/>
+  <rect x="230" y="8" width="84" height="44" rx="8" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="272" y="32" text-anchor="middle" font-size="9" fill="#92400e" font-weight="700">Тригери</text>
+  <defs><marker id="arr5" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9ca3af"/></marker></defs>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#d97706;">2</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Натисніть "+ Тригер" і налаштуйте подію</div>
+<div class="l111-step-text">Натисніть зелену кнопку <strong>"+ Тригер"</strong>. Відкриється конструктор. Заповніть по порядку:</div>
+<div class="l111-schema" style="margin-top:.6rem;padding:.85rem;">
+<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px;display:block;">
+  <rect x="0" y="0" width="300" height="160" rx="10" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <!-- step 1 -->
+  <circle cx="22" cy="28" r="10" fill="#d97706"/>
+  <text x="22" y="32" text-anchor="middle" font-size="9" fill="white" font-weight="700">1</text>
+  <text x="38" y="24" font-size="9" fill="#111827" font-weight="700">Назва тригера</text>
+  <text x="38" y="36" font-size="8" fill="#6b7280">Наприклад: "Бот завершено → Угода"</text>
+  <!-- step 2 -->
+  <circle cx="22" cy="65" r="10" fill="#d97706"/>
+  <text x="22" y="69" text-anchor="middle" font-size="9" fill="white" font-weight="700">2</text>
+  <text x="38" y="61" font-size="9" fill="#111827" font-weight="700">Подія (ЯКЩО)</text>
+  <rect x="38" y="68" width="180" height="16" rx="4" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="48" y="80" font-size="8" fill="#1e40af">Клієнт пройшов флоу бота</text>
+  <!-- step 3 -->
+  <circle cx="22" cy="110" r="10" fill="#d97706"/>
+  <text x="22" y="114" text-anchor="middle" font-size="9" fill="white" font-weight="700">3</text>
+  <text x="38" y="106" font-size="9" fill="#111827" font-weight="700">Дія (ТО)</text>
+  <rect x="38" y="113" width="180" height="16" rx="4" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+  <text x="48" y="125" font-size="8" fill="#166534">Створити угоду в CRM</text>
+  <!-- step 4 -->
+  <circle cx="22" cy="148" r="10" fill="#22c55e"/>
+  <text x="22" y="152" text-anchor="middle" font-size="9" fill="white" font-weight="700">4</text>
+  <text x="38" y="148" font-size="9" fill="#111827">Зберегти і увімкнути тригер</text>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#d97706;">3</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Налаштуйте деталі дії</div>
+<div class="l111-step-text">Для дії <strong>"Створити угоду"</strong> вкажіть:<br>
+— <strong>Стадія</strong>: перша стадія вашої воронки (наприклад "Новий лід")<br>
+— <strong>Відповідальний</strong>: хто отримає цю угоду<br>
+— <strong>Тег</strong>: "з-бота" (щоб розрізняти джерело)</div>
+<div class="l111-tip">Можна також додати дію "Telegram-повідомлення" — щоб менеджер отримав сповіщення в Telegram одразу як клієнт пройшов бота.</div>
+</div>
+</div>
+
+<div class="l111-step">
+<div class="l111-step-dot" style="background:#d97706;">4</div>
+<div class="l111-step-body">
+<div class="l111-step-title">Збережіть і увімкніть тригер</div>
+<div class="l111-step-text">Натисніть <strong>"Зберегти"</strong>. Поверніться до списку тригерів — перемкніть тумблер у положення <strong>ON</strong> (зелений).</div>
+<div class="l111-schema" style="margin-top:.5rem;padding:.7rem;">
+<svg viewBox="0 0 280 44" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;">
+  <rect x="0" y="0" width="280" height="44" rx="8" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="14" y="18" font-size="9" fill="#111827" font-weight="700">Бот завершено → Угода</text>
+  <rect x="14" y="24" width="90" height="14" rx="4" fill="#eff6ff"/>
+  <text x="20" y="35" font-size="7" fill="#3b82f6">Клієнт пройшов флоу бота</text>
+  <text x="114" y="35" font-size="7" fill="#9ca3af">→ Створити угоду</text>
+  <!-- toggle ON -->
+  <rect x="236" y="12" width="36" height="20" rx="10" fill="#22c55e"/>
+  <circle cx="262" cy="22" r="8" fill="white"/>
+  <text x="242" y="26" font-size="8" fill="white">ON</text>
+</svg>
+</div>
+</div>
+</div>
+</div>
+
+<div class="l111-divider"></div>
+
+<!-- РЕЗУЛЬТАТ -->
+<div class="l111-result">
+<div class="l111-result-title">Що тепер відбувається автоматично</div>
+<div class="l111-result-row">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+Клієнт пише боту в Telegram → AI веде діалог і кваліфікує
+</div>
+<div class="l111-result-row">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+Після завершення діалогу → автоматично створюється угода в CRM
+</div>
+<div class="l111-result-row">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+Менеджер отримує сповіщення → відкриває угоду → дзвонить клієнту
+</div>
+<div class="l111-result-row">
+<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+Всі відповіді клієнта збережені в угоді
+</div>
+</div>
+`,
+        lessonContent_ru: `
+<style>
+.l111-intro{background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.5rem;}
+.l111-intro-title{font-size:.72rem;font-weight:700;letter-spacing:.09em;color:#0369a1;text-transform:uppercase;margin-bottom:.4rem;}
+.l111-intro p{font-size:.87rem;color:#0c4a6e;line-height:1.65;margin:0;}
+.l111-phase{margin-bottom:2rem;}
+.l111-phase-hdr{display:flex;align-items:center;gap:.7rem;margin-bottom:1.1rem;padding:.6rem .9rem;border-radius:10px;}
+.l111-phase-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:.85rem;font-weight:700;flex-shrink:0;}
+.l111-phase-title{font-size:1rem;font-weight:700;color:#111827;}
+.l111-phase-sub{font-size:.78rem;margin-top:1px;}
+.l111-step{display:flex;gap:.85rem;margin-bottom:1rem;}
+.l111-step-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:2px;}
+.l111-step-body{flex:1;}
+.l111-step-title{font-size:.88rem;font-weight:700;color:#111827;margin-bottom:.25rem;}
+.l111-step-text{font-size:.83rem;color:#374151;line-height:1.6;}
+.l111-where{display:inline-flex;align-items:center;gap:.3rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:3px 8px;font-size:.75rem;font-weight:600;color:#374151;margin-bottom:.4rem;}
+.l111-tip{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.55rem .8rem;font-size:.8rem;color:#1e40af;margin-top:.5rem;line-height:1.55;}
+.l111-warn{background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.55rem .8rem;font-size:.8rem;color:#92400e;margin-top:.5rem;line-height:1.55;display:flex;align-items:flex-start;gap:.4rem;}
+.l111-schema{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;margin:1rem 0;}
+.l111-schema-title{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#9ca3af;text-transform:uppercase;margin-bottom:.75rem;}
+.l111-divider{height:1px;background:#e5e7eb;margin:1.5rem 0;}
+.l111-result{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.85rem 1rem;margin-top:1.5rem;}
+.l111-result-title{font-size:.78rem;font-weight:700;color:#166534;margin-bottom:.5rem;}
+.l111-result-row{display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:#374151;margin-bottom:.3rem;}
+</style>
+
+<div class="l111-intro">
+<div class="l111-intro-title">Что делаем на этом уроке</div>
+<p>Запускаем AI-бота с нуля до живых сообщений. Три шага: подключить Telegram → построить цепочку с AI → автоматизировать CRM. После урока бот будет отвечать клиентам вместо вас.</p>
+</div>
+
+<div class="l111-schema">
+<div class="l111-schema-title">Как всё это работает вместе</div>
+<svg viewBox="0 0 680 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:0 auto;">
+  <rect x="0" y="18" width="110" height="44" rx="8" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="55" y="36" text-anchor="middle" font-size="10" fill="#1e40af" font-weight="700">Telegram</text>
+  <text x="55" y="50" text-anchor="middle" font-size="9" fill="#3b82f6">@BotFather</text>
+  <text x="55" y="62" text-anchor="middle" font-size="9" fill="#6b7280">токен</text>
+  <path d="M112 40 L148 40" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr6)"/>
+  <rect x="150" y="18" width="110" height="44" rx="8" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="205" y="36" text-anchor="middle" font-size="10" fill="#6d28d9" font-weight="700">TALKO</text>
+  <text x="205" y="50" text-anchor="middle" font-size="9" fill="#7c3aed">Боты → Настройки</text>
+  <text x="205" y="62" text-anchor="middle" font-size="9" fill="#6b7280">вебхук</text>
+  <path d="M262 40 L298 40" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr6)"/>
+  <rect x="300" y="18" width="110" height="44" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="355" y="36" text-anchor="middle" font-size="10" fill="#166534" font-weight="700">Flow Canvas</text>
+  <text x="355" y="50" text-anchor="middle" font-size="9" fill="#16a34a">AI-нода</text>
+  <text x="355" y="62" text-anchor="middle" font-size="9" fill="#6b7280">промпт</text>
+  <path d="M412 40 L448 40" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr6)"/>
+  <rect x="450" y="18" width="110" height="44" rx="8" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="505" y="36" text-anchor="middle" font-size="10" fill="#92400e" font-weight="700">CRM</text>
+  <text x="505" y="50" text-anchor="middle" font-size="9" fill="#b45309">Триггер</text>
+  <text x="505" y="62" text-anchor="middle" font-size="9" fill="#6b7280">автоматизация</text>
+  <path d="M562 40 L598 40" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr6)"/>
+  <rect x="600" y="18" width="78" height="44" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+  <text x="639" y="40" text-anchor="middle" font-size="10" fill="#166534" font-weight="700">Бот</text>
+  <text x="639" y="53" text-anchor="middle" font-size="9" fill="#16a34a">работает!</text>
+  <defs><marker id="arr6" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9ca3af"/></marker></defs>
+</svg>
+</div>
+
+<div class="l111-phase">
+<div class="l111-phase-hdr" style="background:#dbeafe;">
+<div class="l111-phase-num" style="background:#1d4ed8;">1</div>
+<div>
+<div class="l111-phase-title">Создать бота в Telegram</div>
+<div class="l111-phase-sub" style="color:#3b82f6;">Получить токен через @BotFather — займёт 2 минуты</div>
+</div>
+</div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#1d4ed8;">1</div><div class="l111-step-body"><div class="l111-step-title">Откройте Telegram и найдите @BotFather</div><div class="l111-step-text">В поиске Telegram введите <strong>@BotFather</strong> — это официальный бот от Telegram для создания ботов. Нажмите <strong>START</strong>.</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#1d4ed8;">2</div><div class="l111-step-body"><div class="l111-step-title">Отправьте команду /newbot</div><div class="l111-step-text">Напишите <strong>/newbot</strong> и отправьте. BotFather спросит:<br>— <em>Имя бота</em> (например: "Мой Бизнес Бот")<br>— <em>Username бота</em> — должен заканчиваться на <strong>_bot</strong> (например: mybusiness_bot)</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#1d4ed8;">3</div><div class="l111-step-body"><div class="l111-step-title">Скопируйте токен — это ключ от бота</div><div class="l111-step-text">После создания BotFather пришлёт сообщение с <strong>токеном</strong>. Это длинная строка типа: <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:.8rem;">123456789:AAF_xyzABC...</code></div><div class="l111-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div>Токен — это пароль вашего бота. Никому не передавайте.</div></div></div></div>
+</div>
+
+<div class="l111-divider"></div>
+
+<div class="l111-phase">
+<div class="l111-phase-hdr" style="background:#ede9fe;">
+<div class="l111-phase-num" style="background:#7c3aed;">2</div>
+<div>
+<div class="l111-phase-title">Подключить Telegram к TALKO</div>
+<div class="l111-phase-sub" style="color:#7c3aed;">Вставить токен → система сама настроит вебхук</div>
+</div>
+</div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#7c3aed;">1</div><div class="l111-step-body"><div class="l111-step-title">Перейдите в раздел "Боты" на платформе</div><div class="l111-where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>Где найти: левое меню → Боты</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#7c3aed;">2</div><div class="l111-step-body"><div class="l111-step-title">Нажмите вкладку "Настройки"</div><div class="l111-step-text">Сверху три вкладки: <strong>Боты</strong> / <strong>Сессии</strong> / <strong>Настройки</strong>. Нажмите <strong>Настройки</strong>. Вы увидите блок Telegram с полем для токена.</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#7c3aed;">3</div><div class="l111-step-body"><div class="l111-step-title">Вставьте токен и нажмите "Подключить"</div><div class="l111-step-text">Вставьте токен скопированный от @BotFather. Нажмите зелёную кнопку <strong>"Подключить"</strong>.</div><div class="l111-tip">Если подключение прошло успешно — появится зелёная строка с Вебхуком. Это значит что Telegram теперь передаёт все сообщения в TALKO.</div></div></div>
+</div>
+
+<div class="l111-divider"></div>
+
+<div class="l111-phase">
+<div class="l111-phase-hdr" style="background:#f0fdf4;">
+<div class="l111-phase-num" style="background:#16a34a;">3</div>
+<div>
+<div class="l111-phase-title">Создать бота и AI-цепочку</div>
+<div class="l111-phase-sub" style="color:#16a34a;">Новый бот → Flow Canvas → AI-нода с промптом</div>
+</div>
+</div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#16a34a;">1</div><div class="l111-step-body"><div class="l111-step-title">Перейдите во вкладку "Боты" и нажмите "+ Новый бот"</div><div class="l111-where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>Где найти: Боты → вкладка "Боты" → кнопка "+ Новый бот"</div><div class="l111-step-text">Откроется модальное окно. Заполните:<br>— <strong>Название</strong>: любое (например "AI Квалификатор")<br>— <strong>Канал</strong>: Telegram<br>— <strong>Триггер</strong>: /start (по умолчанию)</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#16a34a;">2</div><div class="l111-step-body"><div class="l111-step-title">Откройте редактор и добавьте AI-ноду</div><div class="l111-step-text">После создания нажмите на карточку бота — откроется <strong>Flow Canvas</strong> (конструктор). Слева панель с типами узлов. Найдите фиолетовый узел <strong>"AI Агент"</strong> и перетащите его на холст.</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#16a34a;">3</div><div class="l111-step-body"><div class="l111-step-title">Двойной клик по AI-ноде — откроются настройки</div><div class="l111-step-text">Кликните дважды на фиолетовый узел. Откроется панель справа с полем <strong>"Системный промпт"</strong>. Это место куда вставляется промпт бота из урока 10.</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#16a34a;">4</div><div class="l111-step-body"><div class="l111-step-title">Вставьте промпт из урока 10 в поле "Системный промпт"</div><div class="l111-step-text">Откройте ваш сохранённый Excel из урока 10 → скопируйте готовый адаптированный промпт → вставьте в поле "Системный промпт". Нажмите <strong>"Сохранить"</strong>.</div><div class="l111-tip">Промпт — это "мозг" бота. Он определяет как бот разговаривает, что спрашивает и что делает. Чем точнее промпт — тем лучше бот квалифицирует клиентов.</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#16a34a;">5</div><div class="l111-step-body"><div class="l111-step-title">Соедините START → AI-нода и сохраните флоу</div><div class="l111-step-text">Наведите курсор на <strong>START</strong>-узел — появится точка выхода. Потяните линию к AI-ноде. Когда соедините — нажмите кнопку <strong>"Сохранить"</strong> вверху справа.</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#16a34a;">6</div><div class="l111-step-body"><div class="l111-step-title">Скопируйте ссылку на бота и протестируйте</div><div class="l111-step-text">Вернитесь к списку ботов. Под названием бота есть ссылка типа <code style="background:#f3f4f6;padding:2px 5px;border-radius:4px;font-size:.79rem;">t.me/mybusiness_bot</code>. Нажмите <strong>"Копировать"</strong> → откройте ссылку в Telegram → напишите <strong>/start</strong>. Бот должен ответить.</div><div class="l111-warn"><svg viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div>Если бот не отвечает — проверьте: 1) Telegram подключён (есть зелёный вебхук) 2) Флоу сохранён 3) Флоу в статусе "active" (не "draft")</div></div></div></div>
+</div>
+
+<div class="l111-divider"></div>
+
+<div class="l111-phase">
+<div class="l111-phase-hdr" style="background:#fef3c7;">
+<div class="l111-phase-num" style="background:#d97706;">4</div>
+<div>
+<div class="l111-phase-title">Подключить автоматизацию в CRM</div>
+<div class="l111-phase-sub" style="color:#b45309;">Триггер "Клиент прошёл бота" → создать сделку автоматически</div>
+</div>
+</div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#d97706;">1</div><div class="l111-step-body"><div class="l111-step-title">Перейдите в CRM → Настройки → Триггеры</div><div class="l111-where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Где найти: CRM → шестерня "Настройки" → вкладка "Триггеры"</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#d97706;">2</div><div class="l111-step-body"><div class="l111-step-title">Нажмите "+ Триггер" и настройте событие</div><div class="l111-step-text">Нажмите зелёную кнопку <strong>"+ Триггер"</strong>. Откроется конструктор. Заполните:<br>— <strong>Название</strong>: "Бот завершён → Сделка"<br>— <strong>Событие (ЕСЛИ)</strong>: Клиент прошёл флоу бота<br>— <strong>Действие (ТО)</strong>: Создать сделку в CRM</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#d97706;">3</div><div class="l111-step-body"><div class="l111-step-title">Настройте детали действия</div><div class="l111-step-text">Для действия <strong>"Создать сделку"</strong> укажите:<br>— <strong>Стадия</strong>: первая стадия вашей воронки<br>— <strong>Ответственный</strong>: кто получит эту сделку<br>— <strong>Тег</strong>: "из-бота"</div><div class="l111-tip">Можно также добавить действие "Telegram-уведомление" — чтобы менеджер получил уведомление сразу как клиент прошёл бота.</div></div></div>
+<div class="l111-step"><div class="l111-step-dot" style="background:#d97706;">4</div><div class="l111-step-body"><div class="l111-step-title">Сохраните и включите триггер</div><div class="l111-step-text">Нажмите <strong>"Сохранить"</strong>. Вернитесь к списку триггеров — переключите тумблер в положение <strong>ON</strong> (зелёный).</div></div></div>
+</div>
+
+<div class="l111-result">
+<div class="l111-result-title">Что теперь происходит автоматически</div>
+<div class="l111-result-row"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Клиент пишет боту в Telegram → AI ведёт диалог и квалифицирует</div>
+<div class="l111-result-row"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>После завершения диалога → автоматически создаётся сделка в CRM</div>
+<div class="l111-result-row"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Менеджер получает уведомление → открывает сделку → звонит клиенту</div>
+<div class="l111-result-row"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Все ответы клиента сохранены в сделке</div>
+</div>
+`,
+        homework: `<ol style="padding-left:1.25rem;font-size:.88rem;color:#374151;line-height:1.9;"><li>Створи бота в @BotFather і скопіюй токен.</li><li>Підключи Telegram в TALKO (Боти → Налаштування → вставити токен → Підключити).</li><li>Створи новий флоу з AI-нодою і встав промпт з уроку 10.</li><li>Протестуй бота — напиши /start в Telegram і перевір що він відповідає.</li><li>Налаштуй тригер в CRM — щоб після проходження бота створювалась угода.</li><li>Зроби скріншот діалогу з ботом і встав нижче як ДЗ.</li></ol>`,
+        homework_ru: `<ol style="padding-left:1.25rem;font-size:.88rem;color:#374151;line-height:1.9;"><li>Создай бота в @BotFather и скопируй токен.</li><li>Подключи Telegram в TALKO (Боты → Настройки → вставить токен → Подключить).</li><li>Создай новый флоу с AI-нодой и вставь промпт из урока 10.</li><li>Протестируй бота — напиши /start в Telegram и проверь что он отвечает.</li><li>Настрой триггер в CRM — чтобы после прохождения бота создавалась сделка.</li><li>Сделай скриншот диалога с ботом и вставь ниже как ДЗ.</li></ol>`,
+        homeworkLink: null,
+        homeworkLinkName: null,
+        homeworkLinkName_ru: null,
+    },
+
     ];
 
     if (window.learningCourseData) {
