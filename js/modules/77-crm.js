@@ -2065,6 +2065,7 @@ window.crmDealTab = function(dealId, tab) {
     if (tab === 'activity') _loadActivityTab(deal);
     if (tab === 'calls') _loadCallsTab(deal);
     if (tab === 'tasks')    _loadTasksTab(deal);
+    if (tab !== 'tasks' && _dealTasksUnsub) { _dealTasksUnsub(); _dealTasksUnsub = null; }
     if (tab === 'files')    _loadFilesTab(deal);
     if (tab === 'ai')       _loadAITab(deal);
     if (tab === 'beauty')    window._renderBeautyTab && window._renderBeautyTab(deal);
@@ -3203,15 +3204,27 @@ async function _loadCallsTab(deal) {
     content.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
 
     try {
-        const snap = await window.companyRef()
-            .collection(window.DB_COLS.CRM_DEALS).doc(deal.id)
-            .collection('history')
-            .where('type', '==', 'call')
-            .orderBy('createdAt', 'desc')
-            .limit(50)
-            .get();
-
-        const calls = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        let snap;
+        try {
+            snap = await window.companyRef()
+                .collection(window.DB_COLS.CRM_DEALS).doc(deal.id)
+                .collection('history')
+                .where('type', '==', 'call')
+                .orderBy('createdAt', 'desc')
+                .limit(50)
+                .get();
+        } catch(indexErr) {
+            // Fallback без orderBy якщо індекс не створений
+            snap = await window.companyRef()
+                .collection(window.DB_COLS.CRM_DEALS).doc(deal.id)
+                .collection('history')
+                .where('type', '==', 'call')
+                .limit(50)
+                .get();
+        }
+        const calls = snap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => (b.at?.toMillis?.() || 0) - (a.at?.toMillis?.() || 0));
 
         if (calls.length === 0) {
             content.innerHTML = `
