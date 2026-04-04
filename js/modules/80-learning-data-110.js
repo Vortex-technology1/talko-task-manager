@@ -1884,6 +1884,15 @@ window.l110ExportExcel = function() {
 Всі відповіді клієнта збережені в угоді
 </div>
 </div>
+
+<div style="height:1px;background:#e5e7eb;margin:1.5rem 0;"></div>
+
+<div style="background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;padding:1.1rem;margin-top:1rem;">
+<div style="font-size:.88rem;font-weight:700;color:#111827;margin-bottom:.35rem;">Протестуйте свого бота</div>
+<div style="font-size:.82rem;color:#6b7280;margin-bottom:.85rem;">Відкрийте посилання на бота в Telegram → напишіть /start → пройдіть діалог до кінця. Вставте посилання на вашого бота нижче.</div>
+<label style="font-size:.77rem;font-weight:600;color:#374151;margin-bottom:.3rem;display:block;">Посилання на вашого бота (t.me/...)</label>
+<input type="text" id="f111_botlink" placeholder="https://t.me/your_bot" style="width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:8px;padding:.5rem .75rem;font-size:.84rem;color:#111827;background:white;font-family:inherit;">
+</div>
 `,
         lessonContent_ru: `
 <style>
@@ -2014,6 +2023,15 @@ window.l110ExportExcel = function() {
 <div class="l111-result-row"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>После завершения диалога → автоматически создаётся сделка в CRM</div>
 <div class="l111-result-row"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Менеджер получает уведомление → открывает сделку → звонит клиенту</div>
 <div class="l111-result-row"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Все ответы клиента сохранены в сделке</div>
+</div>
+
+<div style="height:1px;background:#e5e7eb;margin:1.5rem 0;"></div>
+
+<div style="background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;padding:1.1rem;margin-top:1rem;">
+<div style="font-size:.88rem;font-weight:700;color:#111827;margin-bottom:.35rem;">Протестируйте своего бота</div>
+<div style="font-size:.82rem;color:#6b7280;margin-bottom:.85rem;">Откройте ссылку на бота в Telegram → напишите /start → пройдите диалог до конца. Вставьте ссылку на вашего бота ниже.</div>
+<label style="font-size:.77rem;font-weight:600;color:#374151;margin-bottom:.3rem;display:block;">Ссылка на вашего бота (t.me/...)</label>
+<input type="text" id="f111_botlink" placeholder="https://t.me/your_bot" style="width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:8px;padding:.5rem .75rem;font-size:.84rem;color:#111827;background:white;font-family:inherit;">
 </div>
 `,
         homework: `<ol style="padding-left:1.25rem;font-size:.88rem;color:#374151;line-height:1.9;"><li>Створи бота в @BotFather і скопіюй токен.</li><li>Підключи Telegram в TALKO (Боти → Налаштування → вставити токен → Підключити).</li><li>Створи новий флоу з AI-нодою і встав промпт з уроку 10.</li><li>Протестуй бота — напиши /start в Telegram і перевір що він відповідає.</li><li>Налаштуй тригер в CRM — щоб після проходження бота створювалась угода.</li><li>Зроби скріншот діалогу з ботом і встав нижче як ДЗ.</li></ol>`,
