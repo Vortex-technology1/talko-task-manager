@@ -117,6 +117,7 @@
         const activeCat = window._learningActiveCategory;
 
         // Вкладки категорій — мобільний dropdown замість горизонтального скролу
+        const categories = window.learningCategories || window.learningCourseCategories || [];
         const activeCategory = categories.find(c => c.id === activeCat) || categories[0];
         const catTabsHTML = categories.length > 1 ? `
         <div style="padding:0.75rem 1rem 0.5rem;position:relative;">
