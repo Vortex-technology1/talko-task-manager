@@ -2007,17 +2007,58 @@ const DEFAULT_AGENTS = {
 
 МОВА: Відповідай ЗАВЖДИ мовою користувача. Якщо пише українською — українською. Англійською — англійською. Російською — російською. Будь-якою іншою — тією ж мовою. Не перемикайся на іншу мову навіть якщо промпт написаний інакше.`,
     },
+    siteAdapter: {
+        label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Адаптація сайтів</span>',
+        where:       'Сайти → Бібліотека → кнопка AI Адаптація',
+        info:        'Отримує плейсхолдери з HTML шаблону + дані бізнесу від користувача. Повертає JSON з адаптованими текстами. JS підставляє тексти в шаблон і публікує готовий лендінг. Використовує той самий OpenAI ключ що і всі інші агенти. Вартість ≈ $0.01–0.02 за одну адаптацію (GPT-4o-mini).',
+        defaultPrompt: `Ти експерт з маркетингу і копірайтингу для малого бізнесу. Отримуєш плейсхолдери лендінгу і дані конкретного бізнесу. Адаптуєш тексти під цей бізнес.
+
+ПРАВИЛА:
+- Відповідай ТІЛЬКИ валідним JSON без коментарів, без markdown, без пояснень
+- Зберігай HTML теги всередині текстів якщо вони є (наприклад <strong>, <span>)
+- Зберігай спеціальні символи як є: &mdash; &ndash; &bull; &laquo; &raquo; тощо
+- Тексти адаптуй під конкретну нішу і місто — без загальних фраз
+- Болі клієнтів мають відповідати реальним проблемам саме цієї ніші
+- CTA посилання заміни на контакт що вказав користувач
+- Мову визнач по даних бізнесу і місту — не переключайся на мову шаблону
+- Не вигадуй контакти — тільки те що надав користувач
+- Якщо поле author_name не вказано — залиш як є в плейсхолдері
+
+ФОРМАТ: Тільки JSON з тими самими ключами що в запиті. Нічого більше.`,
+    }
 };
 
 // ── Рендер вкладки Агенти ───────────────────────────────
 window._renderAgentsTab = function(savedAgents) {
     const cards = Object.entries(DEFAULT_AGENTS).map(([key, agent]) => {
-        const saved  = savedAgents[key] || {};
-        const prompt = saved.systemPrompt || '';
-        const model  = saved.model || 'gpt-4o-mini';
+        const saved     = savedAgents[key] || {};
+        const prompt    = saved.systemPrompt || '';
+        const model     = saved.model || 'gpt-4o-mini';
         const hasPrompt = !!prompt;
+        const isFull    = key === 'siteAdapter'; // full-width картка
+
+        const infoHtml = agent.info ? `
+            <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:10px 13px;">
+                <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span style="font-size:0.7rem;font-weight:700;color:#92400e;">Як це працює</span>
+                </div>
+                <p style="font-size:0.71rem;color:#78350f;line-height:1.55;margin:0 0 8px;">${agent.info}</p>
+                <div style="border-top:1px solid #fde68a;padding-top:7px;display:flex;gap:16px;flex-wrap:wrap;">
+                    <span style="font-size:0.7rem;color:#92400e;">
+                        <b>API ключ:</b> використовує платформний OpenAI ключ (вкладка Загальні)
+                    </span>
+                    <span style="font-size:0.7rem;color:#92400e;">
+                        <b>Вартість:</b> ≈ $0.01–0.02 за адаптацію (GPT-4o-mini)
+                    </span>
+                </div>
+            </div>` : '';
+
         return `
-        <div style="border:1px solid #e5e7eb;border-radius:12px;padding:1rem;display:flex;flex-direction:column;gap:0.5rem;background:${hasPrompt?'white':'#fafafa'};">
+        <div style="border:1px solid ${isFull ? '#fde68a' : '#e5e7eb'};border-radius:12px;padding:1rem;
+            display:flex;flex-direction:column;gap:0.6rem;
+            background:${hasPrompt ? 'white' : '#fafafa'};
+            ${isFull ? 'grid-column:1/-1;' : ''}">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
                 <div>
                     <div style="font-weight:700;font-size:0.88rem;margin-bottom:2px;">${agent.label}</div>
@@ -2027,12 +2068,13 @@ window._renderAgentsTab = function(savedAgents) {
                     </div>
                 </div>
                 <span style="font-size:0.68rem;padding:2px 8px;border-radius:20px;white-space:nowrap;
-                    background:${hasPrompt?'#f0fdf4':'#f3f4f6'};
-                    color:${hasPrompt?'#16a34a':'#9ca3af'};
-                    border:1px solid ${hasPrompt?'#bbf7d0':'#e5e7eb'};">
-                    ${hasPrompt?'✓ Налаштовано':'Дефолт з коду'}
+                    background:${hasPrompt ? '#f0fdf4' : '#f3f4f6'};
+                    color:${hasPrompt ? '#16a34a' : '#9ca3af'};
+                    border:1px solid ${hasPrompt ? '#bbf7d0' : '#e5e7eb'};">
+                    ${hasPrompt ? '✓ Налаштовано' : 'Дефолт з коду'}
                 </span>
             </div>
+            ${infoHtml}
             <div style="display:flex;gap:6px;align-items:center;">
                 <label style="font-size:0.72rem;font-weight:600;color:#374151;white-space:nowrap;">Модель:</label>
                 <input id="agent_model_${key}" value="${model}" placeholder="gpt-4o-mini"
@@ -2042,16 +2084,16 @@ window._renderAgentsTab = function(savedAgents) {
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
                     <label style="font-size:0.72rem;font-weight:600;color:#374151;">Системний промпт:</label>
                     <div style="display:flex;gap:6px;align-items:center;">
-                        ${hasPrompt ? `<button onclick="document.getElementById('agent_prompt_${key}').value='';window._saveModuleInline && window._saveModuleInline()" style="font-size:0.68rem;color:#ef4444;background:none;border:none;cursor:pointer;">✕ Очистити</button>` : ''}
+                        ${hasPrompt ? `<button onclick="document.getElementById('agent_prompt_${key}').value='';window._saveModuleInline&&window._saveModuleInline()" style="font-size:0.68rem;color:#ef4444;background:none;border:none;cursor:pointer;">✕ Очистити</button>` : ''}
                         <button onclick="window._resetAgentPrompt('${key}')"
                             style="font-size:0.68rem;color:#6366f1;background:#f0f0ff;border:1px solid #e0e0ff;border-radius:5px;padding:2px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;">
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Дефолт
                         </button>
                     </div>
                 </div>
-                <textarea id="agent_prompt_${key}" rows="12"
+                <textarea id="agent_prompt_${key}" rows="${isFull ? 8 : 12}"
                     placeholder="Порожньо = використовується вбудований дефолт з коду..."
-                    style="width:100%;padding:8px 10px;border:1px solid ${hasPrompt?'#6366f1':'#e5e7eb'};border-radius:8px;font-size:0.78rem;line-height:1.55;resize:vertical;box-sizing:border-box;font-family:inherit;transition:border-color .2s;"
+                    style="width:100%;padding:8px 10px;border:1px solid ${hasPrompt ? '#6366f1' : '#e5e7eb'};border-radius:8px;font-size:0.78rem;line-height:1.55;resize:vertical;box-sizing:border-box;font-family:inherit;transition:border-color .2s;"
                     onfocus="this.style.borderColor='#6366f1'"
                     onblur="this.style.borderColor=this.value?'#6366f1':'#e5e7eb'"
                     >${prompt}</textarea>
