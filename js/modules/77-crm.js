@@ -1911,7 +1911,7 @@ window.crmOpenDeal = function(dealId) {
         </div>
 
         <!-- КАРТКА УГОДИ (зліва) -->
-        <div style="background:white;${_isMob ? 'width:100%;max-height:65vh;overflow-y:auto;' : 'width:100%;max-width:520px;order:1;'}
+        <div style="background:white;${_isMob ? 'width:100%;height:100%;overflow-y:auto;' : 'width:100%;max-width:520px;order:1;'}
             display:flex;flex-direction:column;
             box-shadow:${_isMob ? '0 -4px 24px rgba(0,0,0,0.12)' : '-8px 0 32px rgba(0,0,0,0.12)'};">
 
