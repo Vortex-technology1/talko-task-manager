@@ -1095,6 +1095,27 @@ async function handleGenerateImage(request, env) {
 // SHARED AI CALLER — єдина точка виклику OpenAI / Anthropic
 // Використовується в handleAiProxy, handleAiCrm, handleFunnelAi
 // ════════════════════════════════════════════════════════════
+
+// Очищає відповідь AI від службових тегів перед відправкою клієнту
+// Теги що AI використовує в промптах для власної логіки — не мають бачити клієнти
+function _cleanAiResponse(text) {
+    if (!text) return text;
+    return text
+        // Службові теги в дужках — різні варіанти написання
+        .replace(/\[КІНЕЦЬ ПОВІДОМЛЕННЯ\]/gi, '')
+        .replace(/\[КОНЕЦ СООБЩЕНИЯ\]/gi, '')
+        .replace(/\[END OF MESSAGE\]/gi, '')
+        .replace(/\[END_MESSAGE\]/gi, '')
+        .replace(/\[END\]/gi, '')
+        .replace(/\[DONE\]/g, '')          // [DONE] — тригер CRM, обробляємо окремо
+        .replace(/\[NEXT\]/gi, '')
+        .replace(/\[CONTINUE\]/gi, '')
+        .replace(/\[STOP\]/gi, '')
+        // Прибираємо порожні рядки що залишились після видалення тегів
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+}
+
 async function _callProviderAI({ provider, apiKey, model, systemPrompt, messages, maxTokens = 800, temperature }) {
     const cleanMessages = messages
         .filter(m => m && m.role && m.content != null && m.content !== '')
@@ -3445,7 +3466,8 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     temperature: botTemperature,
                 });
                 if (aiResp) {
-                    await tgSend(chatId, aiResp);
+                    const aiRespClean1 = _cleanAiResponse(aiResp);
+                    await tgSend(chatId, aiRespClean1);
                     const bm = `msg_${Date.now()}_bot`;
                     const bmTs = new Date().toISOString();
                     await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bm}`, {
@@ -3453,12 +3475,12 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                         role:      { stringValue: 'bot' },
                         from:      { stringValue: 'bot' },
                         direction: { stringValue: 'out' },
-                        text:      { stringValue: aiResp },
+                        text:      { stringValue: aiRespClean1 },
                         timestamp: { timestampValue: bmTs },
                         createdAt: { timestampValue: bmTs },
                     }, token);
                     // Перевіряємо чи ШІ кваліфікував ліда
-                    await checkAndConvertToLead({ aiResponse: aiResp, userInput: '', collectedData, cid, chatId, contact, contactPath, token });
+                    await checkAndConvertToLead({ aiResponse: aiRespClean1, userInput: '', collectedData, cid, chatId, contact, contactPath, token });
                 }
             }
             return;
@@ -3478,18 +3500,19 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     temperature: botTemperature,
                 });
                 if (startResp) {
+                    const startRespClean = _cleanAiResponse(startResp);
                     const parts = [];
-                    for (let i = 0; i < startResp.length; i += 4096) parts.push(startResp.slice(i, i + 4096));
+                    for (let i = 0; i < startRespClean.length; i += 4096) parts.push(startRespClean.slice(i, i + 4096));
                     for (const p of parts) await tgSend(chatId, p);
                     const bm0 = `msg_${Date.now()}_bot`;
                     const bTs0 = new Date().toISOString();
                     await fsSet(`companies/${cid}/contacts/${chatId}/messages/${bm0}`, {
                         id:{ stringValue:bm0 }, role:{ stringValue:'bot' }, from:{ stringValue:'bot' },
-                        direction:{ stringValue:'out' }, text:{ stringValue:startResp },
+                        direction:{ stringValue:'out' }, text:{ stringValue:startRespClean },
                         timestamp:{ timestampValue:bTs0 }, createdAt:{ timestampValue:bTs0 },
                     }, token);
                     await fsPatch(`companies/${cid}/contacts/${chatId}`, {
-                        lastMessage:{ stringValue:startResp.slice(0,100) },
+                        lastMessage:{ stringValue:startRespClean.slice(0,100) },
                         lastMessageAt:{ timestampValue:bTs0 },
                         updatedAt:{ timestampValue:bTs0 },
                     }, token);
@@ -3543,11 +3566,15 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         });
 
         if (aiResp) {
+            // Очищаємо службові теги перед відправкою клієнту
+            // Зберігаємо оригінал для перевірки [DONE] тригера
+            const aiRespClean = _cleanAiResponse(aiResp);
+
             // Telegram обмежує 4096 символів — розбиваємо на частини
             const MAX_TG = 4096;
             const parts = [];
-            for (let i = 0; i < aiResp.length; i += MAX_TG) {
-                parts.push(aiResp.slice(i, i + MAX_TG));
+            for (let i = 0; i < aiRespClean.length; i += MAX_TG) {
+                parts.push(aiRespClean.slice(i, i + MAX_TG));
             }
             for (const part of parts) await tgSend(chatId, part);
             const bm = `msg_${Date.now()}_bot`;
@@ -3557,22 +3584,20 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 role:      { stringValue: 'bot' },
                 from:      { stringValue: 'bot' },
                 direction: { stringValue: 'out' },
-                text:      { stringValue: aiResp },
+                text:      { stringValue: aiRespClean },
                 timestamp: { timestampValue: bmTs2 },
                 createdAt: { timestampValue: bmTs2 },
             }, token);
             // Оновлюємо lastMessage + скидаємо waitingForInput
-            // (якщо клієнт раніше проходив question ноду — waitingForInput лишається true
-            //  і наступне повідомлення трактується як відповідь на question, а не input для AI)
             await fsPatch(`companies/${cid}/contacts/${chatId}`, {
-                lastMessage:    { stringValue: aiResp.slice(0, 100) },
+                lastMessage:    { stringValue: aiRespClean.slice(0, 100) },
                 lastMessageAt:  { timestampValue: bmTs2 },
                 waitingForInput:{ booleanValue: false },
                 waitingVarName: { stringValue: '' },
                 updatedAt:      { timestampValue: bmTs2 },
             }, token);
-            await checkAndConvertToLead({ aiResponse: aiResp, userInput, collectedData, cid, chatId, contact, contactPath, token });
-            // CRM тригер done_tag — якщо AI відповідь містить [DONE]
+            await checkAndConvertToLead({ aiResponse: aiRespClean, userInput, collectedData, cid, chatId, contact, contactPath, token });
+            // CRM тригер done_tag — перевіряємо ОРИГІНАЛ (до очистки) бо [DONE] міг бути видалений
             if (aiResp.includes('[DONE]')) {
                 const fDoc2 = await fsGet(`companies/${cid}/bots/${botId}/flows/${flowId}`, token);
                 if (fDoc2?.fields) {
