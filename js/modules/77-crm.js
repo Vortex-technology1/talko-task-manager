@@ -2052,6 +2052,9 @@ window.crmOpenDeal = function(dealId) {
 window.crmDealTab = function(dealId, tab) {
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;
+    // Запам'ятовуємо активний таб — async функції перевіряють його перед записом в DOM
+    crm._activeTab = tab;
+    crm._activeTabDealId = dealId;
     const allTabs = ['details','activity','calls','tasks','files','ai','beauty','vehicles','pos_history','routes_history'];
     allTabs.forEach(t => {
         const btn = document.getElementById('cdt_' + t);
@@ -3322,12 +3325,14 @@ window.crmAddActivity = async function(dealId) {
 async function _loadAITab(deal) {
     const content = document.getElementById('crmDealContent');
     if (!content) return;
+    const tabGuard = () => crm._activeTab === 'ai' && crm._activeTabDealId === deal.id;
 
     const analyzedAt = deal.aiAnalyzedAt
         ? (deal.aiAnalyzedAt.toDate ? deal.aiAnalyzedAt.toDate() : new Date(deal.aiAnalyzedAt)).toLocaleDateString('uk-UA',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})
         : '';
 
     if (deal.aiAnalysis) {
+        if (!tabGuard()) return; // таб вже змінився
         content.innerHTML = `
         <div style="margin-bottom:0.75rem;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.65rem;">
@@ -3354,6 +3359,7 @@ async function _loadAITab(deal) {
         deal.note ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> ${_esc(deal.note.slice(0,60))}${deal.note.length>60?'...':''}` : null,
     ].filter(Boolean);
 
+    if (!tabGuard()) return; // таб вже змінився
     content.innerHTML = `
     <div style="text-align:center;padding:1.5rem 1rem;">
         <div style="width:52px;height:52px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:14px;
