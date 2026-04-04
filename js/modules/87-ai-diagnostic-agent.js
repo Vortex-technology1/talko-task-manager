@@ -338,6 +338,8 @@ async function _enrichWithAI(signals, ctx) {
             if (_user) _idToken = await _user.getIdToken();
         } catch(e) { console.warn('[ai-diagnostic] getIdToken:', e.message); }
 
+        // systemPrompt=null → воркер бере промпт з адмінки (агент 'diagnostic_agent')
+        // temperature=0.3 — важливо для стабільного JSON виводу
         const response = await fetch('/api/ai-proxy', {
             method: 'POST',
             headers: {
@@ -348,12 +350,10 @@ async function _enrichWithAI(signals, ctx) {
                 companyId:    window.currentCompanyId,
                 module:       'diagnostic_agent',
                 messages: [{ role: 'user', content: prompt }],
-                systemPrompt: `Ти операційний аналітик бізнесу. Твоя задача — видати короткі, конкретні, практичні рекомендації власнику малого бізнесу. 
-Відповідай ТІЛЬКИ у форматі JSON масиву. Жодного тексту поза JSON.
-Формат кожного елементу: {"id":"...", "insight":"..."}
-де insight — одне речення: що конкретно треба зробити СЬОГОДНІ. Без вступів, без "варто розглянути".`,
-                maxTokens: 600,
-                temperature: 0.3,
+                systemPrompt: null,   // з адмінки (агент 'diagnostic_agent')
+                model:        null,   // з адмінки
+                maxTokens:    600,
+                temperature:  0.3,
             }),
         });
 

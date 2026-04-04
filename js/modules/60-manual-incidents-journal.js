@@ -182,12 +182,19 @@ window._sendAiMessage = async function () {
 
   try {
     const functions = _getFunctionsList();
-    const systemPrompt = _buildSystemPrompt(functions);
+    const localContext = _buildSystemPrompt(functions);
+
+    // systemPrompt=null → воркер бере промпт з адмінки (агент 'incidents')
+    // Контекст компанії передаємо як частину першого повідомлення
+    const _incMsgs = localContext && aiChat.messages.length > 0
+      ? [{ role: 'user', content: '[КОНТЕКСТ]\n' + localContext + '\n\n[ЗАПИТ]\n' + (aiChat.messages[aiChat.messages.length-1]?.content||'') },
+         ...aiChat.messages.slice(0,-1)]
+      : aiChat.messages;
 
     const reply = await window.aiProxy({
-      messages:     aiChat.messages,
-      systemPrompt: systemPrompt,
-      model:        'gpt-4o-mini',
+      messages:     _incMsgs,
+      systemPrompt: null,   // з адмінки
+      model:        null,   // з адмінки
       maxTokens:    800,
       module:       'incidents',
     });

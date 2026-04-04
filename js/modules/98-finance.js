@@ -4684,39 +4684,20 @@ ${context}
 - Формат: емодзі-маркери для кожного блоку (📊 Діагноз, 🔍 Причина, <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Наслідок, <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Дія)
 - Максимум 4-5 речень на блок`;
 
-    // Читаємо OpenAI ключ з settings/ai
-    const sSnap = await getDb().collection('settings').doc('ai').get();
-    const apiKey = sSnap.data()?.openaiApiKey || sSnap.data()?.apiKey || '';
+    // systemPrompt=null → воркер бере промпт з адмінки (агент 'finance')
+    // Контекст фінансових даних передаємо як частину messages
+    const _finMsgs = systemPrompt && _aiFinHistory.length > 0
+      ? [{ role: 'user', content: '[КОНТЕКСТ ФІНАНСІВ]\n' + systemPrompt + '\n\n[ПИТАННЯ]\n' + (_aiFinHistory[_aiFinHistory.length-1]?.content||'') },
+         ..._aiFinHistory.slice(0,-1)]
+      : _aiFinHistory;
 
-    let aiText;
-    try {
-      aiText = await window.aiProxy({
-        messages:     _aiFinHistory,
-        systemPrompt: systemPrompt,
-        model:        'gpt-4o-mini',
-        maxTokens:    1000,
-        module:       'finance',
-      });
-    } catch(proxyErr) {
-      // fallback — пряме звернення якщо є ключ компанії
-      if (!apiKey) throw proxyErr;
-      const _oaiCtrl = new AbortController();
-      const _oaiTimer = setTimeout(() => _oaiCtrl.abort(), 30000); // 30s для LLM
-      let response;
-      try {
-        response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini', max_tokens: 1000,
-            messages: [{ role: 'system', content: systemPrompt }, ..._aiFinHistory]
-          }),
-          signal: _oaiCtrl.signal,
-        });
-      } finally { clearTimeout(_oaiTimer); }
-      const data = await response.json();
-      aiText = data.choices?.[0]?.message?.content || data.error?.message || window.t('failedGetResponse');
-    }
+    const aiText = await window.aiProxy({
+      messages:     _finMsgs,
+      systemPrompt: null,   // з адмінки (агент 'finance')
+      model:        null,   // з адмінки
+      maxTokens:    1000,
+      module:       'finance',
+    });
 
     // Видаляємо індикатор
     const loadElDone = document.getElementById('aiFinLoading');
