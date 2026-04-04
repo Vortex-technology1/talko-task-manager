@@ -292,12 +292,78 @@ const SITE_TEMPLATES = [
         key: 'horeca-catering',
         niche: 'horeca',
         nicheLabel: 'Хорека',
-        type: 'consult',
+        type: 'calc',
         typeLabel: 'Прорахунок',
         title: 'Кейтеринг — розрахунок меню і вартості',
         desc: 'Форма замовлення кейтерингу на захід',
         color: '#f59e0b',
         html: `<!DOCTYPE html><html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Кейтеринг на ваш захід</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;color:#1a1a1a;line-height:1.6}.hero{background:linear-gradient(135deg,#1c0a00,#431407);padding:56px 20px;text-align:center}.hero h1{font-size:clamp(22px,5vw,34px);font-weight:800;color:#fff;margin-bottom:12px}.hero p{font-size:17px;color:#fdba74;margin-bottom:28px}.wrap{max-width:640px;margin:0 auto;padding:0 20px}.btn{display:inline-block;background:#f59e0b;color:#1a1a1a;padding:16px 36px;border-radius:12px;font-weight:700;font-size:16px;text-decoration:none;border:none;cursor:pointer}.sec{padding:48px 0}.sec-h{font-size:24px;font-weight:800;margin-bottom:18px}.events{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}.event{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;text-align:center}.event .ico{font-size:32px;margin-bottom:8px}.event h3{font-size:14px;font-weight:700}.benefits-list{display:grid;gap:10px;margin-bottom:28px}.benefit-item{display:flex;gap:12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:13px 15px;font-size:15px}.benefit-item::before{content:"✓";color:#f59e0b;font-weight:700;flex-shrink:0}.form-wrap{background:linear-gradient(135deg,#fff7ed,#fef3c7);border-radius:16px;padding:28px;text-align:center}.form-wrap h2{font-size:22px;font-weight:800;margin-bottom:8px}.form-wrap p{color:#92400e;margin-bottom:20px}.form-wrap input,.form-wrap select{width:100%;padding:12px 14px;border:1.5px solid #fed7aa;border-radius:10px;font-size:15px;margin-bottom:12px;font-family:inherit;background:#fff}.ftr{background:#1c0a00;color:#57534e;text-align:center;padding:16px;font-size:13px}</style></head><body><header class="hero"><div class="wrap"><h1>Кейтеринг на ваш захід — розрахунок меню безкоштовно</h1><p>Весілля, корпоративи, дні народження від 20 до 500 гостей</p><a href="#form" class="btn">Розрахувати вартість</a></div></header><section class="sec"><div class="wrap"><h2 class="sec-h">Для яких заходів</h2><div class="events"><div class="event"><div class="ico">💍</div><h3>Весілля</h3></div><div class="event"><div class="ico">🏢</div><h3>Корпоратив</h3></div><div class="event"><div class="ico">🎂</div><h3>День народження</h3></div><div class="event"><div class="ico">🎓</div><h3>Випускний</h3></div></div><h2 class="sec-h">Чому обирають нас</h2><div class="benefits-list"><div class="benefit-item">Власна кухня і кондитерський цех — без посередників</div><div class="benefit-item">Обладнання та посуд — включено у вартість</div><div class="benefit-item">Офіціанти та координатор заходу — у вашому розпорядженні</div><div class="benefit-item">Дегустація меню до підписання договору — безкоштовно</div></div></div></section><section class="sec" style="background:#f8fafc"><div class="wrap"><div class="form-wrap" id="form"><h2>Розрахувати вартість кейтерингу</h2><p>Заповніть форму — надішлемо прорахунок меню протягом 2 годин</p><input type="text" placeholder="Ваше ім\'я"><input type="tel" placeholder="Номер телефону"><select><option value="">Тип заходу</option><option>Весілля</option><option>Корпоратив</option><option>День народження</option><option>Інше</option></select><input type="number" placeholder="Кількість гостей"><button class="btn" style="width:100%">Отримати прорахунок →</button><p style="font-size:12px;color:#9ca3af;margin-top:10px">Відповімо протягом 2 годин у робочий час</p></div></div></section><footer class="ftr"><p>© 2026 Кейтеринг. Смачно і без турбот.</p></footer></body></html>`
+    },
+    {
+        key: 'hire-horeca',
+        niche: 'horeca',
+        nicheLabel: 'Хорека',
+        type: 'hire',
+        typeLabel: 'Найм',
+        title: 'Шукаємо кухаря / офіціанта в ресторан',
+        desc: 'Вакансія з умовами і формою відгуку',
+        color: '#ef4444',
+        html: `<!DOCTYPE html><html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Вакансія в ресторан</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;color:#1a1a1a;line-height:1.6}.hero{background:linear-gradient(135deg,#1c0a00,#431407);padding:52px 20px;text-align:center}.hero-badge{display:inline-block;background:#f59e0b;color:#1a1a1a;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:14px}.hero h1{font-size:clamp(20px,5vw,32px);font-weight:800;color:#fff;margin-bottom:10px}.hero p{font-size:16px;color:#fdba74;margin-bottom:24px}.wrap{max-width:640px;margin:0 auto;padding:0 20px}.btn{display:inline-block;background:#f59e0b;color:#1a1a1a;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;border:none;cursor:pointer}.sec{padding:44px 0}.sec-h{font-size:22px;font-weight:800;margin-bottom:16px}.conditions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}.cond{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px}.cond .val{font-size:20px;font-weight:800;color:#f59e0b;margin-bottom:4px}.cond p{font-size:12px;color:#6b7280}.req-list{display:grid;gap:9px;margin-bottom:24px}.req-item{display:flex;gap:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:12px 14px;font-size:14px}.req-item::before{content:"✓";color:#f59e0b;font-weight:700;flex-shrink:0}.form-wrap{background:linear-gradient(135deg,#fff7ed,#fef3c7);border-radius:14px;padding:26px;text-align:center}.form-wrap h2{font-size:20px;font-weight:800;margin-bottom:6px}.form-wrap p{color:#92400e;margin-bottom:18px}.form-wrap input,.form-wrap select{width:100%;padding:11px 13px;border:1.5px solid #fed7aa;border-radius:9px;font-size:14px;margin-bottom:10px;font-family:inherit;background:#fff}.ftr{background:#1c0a00;color:#57534e;text-align:center;padding:14px;font-size:12px}</style></head><body><header class="hero"><div class="wrap"><div class="hero-badge">🔥 Гаряча вакансія</div><h1>Шукаємо кухаря і офіціанта в ресторан</h1><p>Офіційне оформлення · Стабільна зарплата · Дружня команда</p><a href="#form" class="btn">Відгукнутись</a></div></header><section class="sec"><div class="wrap"><h2 class="sec-h">Умови роботи</h2><div class="conditions"><div class="cond"><div class="val">800–1200 €</div><p>Зарплата на місяць (нетто)</p></div><div class="cond"><div class="val">Офіційно</div><p>Umowa o pracę або zlecenie</p></div><div class="cond"><div class="val">Харчування</div><p>Безкоштовне харчування під час зміни</p></div><div class="cond"><div class="val">Графік</div><p>Змінна робота, стабільний розклад</p></div></div><h2 class="sec-h">Що нам важливо</h2><div class="req-list"><div class="req-item">Досвід роботи кухарем або офіціантом від 6 місяців</div><div class="req-item">Відповідальність і акуратність</div><div class="req-item">Польська або англійська мова — базовий рівень</div><div class="req-item">Готовність до фізичної роботи у швидкому темпі</div></div></div></section><section class="sec" style="background:#f8fafc"><div class="wrap"><div class="form-wrap" id="form"><h2>Відгукнутись на вакансію</h2><p>Залиште контакти — зв\'яжемося протягом доби</p><input type="text" placeholder="Ваше ім\'я"><input type="tel" placeholder="Номер телефону"><select><option value="">Яка посада цікавить?</option><option>Кухар</option><option>Офіціант</option><option>Бармен</option><option>Посудомийник</option></select><button class="btn" style="width:100%;background:#f59e0b;color:#1a1a1a">Відгукнутись →</button></div></div></section><footer class="ftr"><p>© 2026 Ресторан. Всі права захищені.</p></footer></body></html>`
+    },
+    {
+        key: 'consult-clinic',
+        niche: 'dental',
+        nicheLabel: 'Медицина',
+        type: 'consult',
+        typeLabel: 'Консультація',
+        title: 'МК для власників медичного бізнесу',
+        desc: 'Система управління клінікою без хаосу',
+        color: '#0ea5e9',
+        html: `<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Мастер-класс для медицинского бизнеса</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;color:#1a1a1a;line-height:1.6}:root{--blue:#0ea5e9;--bg:#0a1628}.hero{background:var(--bg);padding:52px 20px;text-align:center;position:relative}.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(14,165,233,0.15),transparent)}.hero-in{position:relative}.wrap{max-width:640px;margin:0 auto;padding:0 20px}.hero h1{font-size:clamp(22px,5vw,34px);font-weight:800;color:#fff;margin-bottom:12px}.hero p{font-size:16px;color:#7dd3fc;margin-bottom:24px}.btn{display:inline-block;background:#0088cc;color:#fff;padding:15px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;border:none;cursor:pointer}.gold-box{background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.3);border-radius:12px;padding:18px;margin-bottom:22px}.gold-box li{list-style:none;padding:5px 0;color:#e0f2fe;font-size:15px}.gold-box li::before{content:"▸ ";color:#0ea5e9}.sec{padding:44px 0}.sec-h{font-size:22px;font-weight:800;margin-bottom:16px}.pain-list{display:grid;gap:9px;margin-bottom:22px}.pain-item{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:9px;padding:12px 14px;font-size:14px;color:#525252}.pain-item::before{content:"✗ ";color:#ef4444;font-weight:700}.prog-list{display:grid;gap:11px;margin-bottom:22px}.prog-item{display:flex;gap:13px;background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:14px}.prog-num{width:34px;height:34px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex-shrink:0}.prog-item h3{font-size:13px;font-weight:700;margin-bottom:3px}.prog-item p{font-size:12px;color:#6b7280}.cta-fin{background:var(--bg);padding:48px 20px;text-align:center}.cta-fin h2{color:#fff;font-size:20px;font-weight:800;margin-bottom:10px}.cta-fin p{color:#7dd3fc;font-size:14px;margin-bottom:22px}.ftr{background:var(--bg);border-top:1px solid rgba(255,255,255,0.07);padding:14px;text-align:center;color:#475569;font-size:12px}</style></head><body><section class="hero"><div class="wrap hero-in"><h1>Как перестать тащить медицинский бизнес на себе</h1><p>Бесплатный мастер-класс для владельцев клиник и медицинских центров</p><div class="gold-box"><ul><li>80–90% операционных вопросов без вашего участия</li><li>Администраторы работают по стандартам — без постоянного контроля</li><li>Запись, оплата и повторные визиты — в автоматическом режиме</li></ul></div><a href="https://t.me/" class="btn">Зарегистрироваться в Telegram</a></div></section><section class="sec" style="background:#f8fafc"><div class="wrap"><h2 class="sec-h">Вы узнаете себя?</h2><div class="pain-list"><div class="pain-item">Администратор не может записать пациента без вашего участия</div><div class="pain-item">Врачи не заполняют карты — вы разбираетесь с этим лично</div><div class="pain-item">Кассовый разрыв — не знаете сколько денег реально в клинике</div><div class="pain-item">Без вас клиника работает в два раза хуже</div></div></div></section><section class="sec"><div class="wrap"><h2 class="sec-h">Что вы получите за 60 минут</h2><div class="prog-list"><div class="prog-item"><div class="prog-num">1</div><div><h3>Почему клиника зависит от владельца</h3><p>Какие процессы создают хаос и почему МИС не решает проблему</p></div></div><div class="prog-item"><div class="prog-num">2</div><div><h3>Операционная система медицинского бизнеса</h3><p>От первичного звонка до повторного визита — без вашего участия</p></div></div><div class="prog-item"><div class="prog-num">3</div><div><h3>Как удвоить прибыль за 8 недель</h3><p>Возврат пациентов, допродажи и контроль дебиторки — автоматически</p></div></div></div></div></section><section class="cta-fin"><div class="wrap"><h2>Зарегистрируйтесь на бесплатный мастер-класс</h2><p>Четверг · 18:30 · Zoom · Без теории — только рабочие решения</p><a href="https://t.me/" class="btn">Зарегистрироваться →</a></div></section><footer class="ftr"><p>© 2026 TALKO Management System</p></footer></body></html>`
+    },
+    {
+        key: 'hire-dental',
+        niche: 'dental',
+        nicheLabel: 'Медицина',
+        type: 'hire',
+        typeLabel: 'Найм',
+        title: 'Шукаємо адміністратора в медичний центр',
+        desc: 'Вакансія адміністратора / менеджера клініки',
+        color: '#ef4444',
+        html: `<!DOCTYPE html><html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Вакансія адміністратора клініки</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;color:#1a1a1a;line-height:1.6}.hero{background:linear-gradient(135deg,#0a1628,#0c2340);padding:52px 20px;text-align:center}.hero-badge{display:inline-block;background:#22c55e;color:#fff;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:14px}.hero h1{font-size:clamp(20px,5vw,32px);font-weight:800;color:#fff;margin-bottom:10px}.hero p{font-size:16px;color:#7dd3fc;margin-bottom:24px}.wrap{max-width:640px;margin:0 auto;padding:0 20px}.btn{display:inline-block;background:#22c55e;color:#fff;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;border:none;cursor:pointer}.sec{padding:44px 0}.sec-h{font-size:22px;font-weight:800;margin-bottom:16px}.perks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}.perk{background:#fff;border:1px solid #e0f2fe;border-radius:12px;padding:16px;text-align:center}.perk .val{font-size:18px;font-weight:800;color:#0ea5e9;margin-bottom:4px}.perk p{font-size:12px;color:#6b7280}.req-list{display:grid;gap:9px;margin-bottom:22px}.req-item{display:flex;gap:10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:9px;padding:12px 14px;font-size:14px}.req-item::before{content:"✓";color:#0ea5e9;font-weight:700;flex-shrink:0}.form-wrap{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-radius:14px;padding:26px;text-align:center}.form-wrap h2{font-size:20px;font-weight:800;margin-bottom:6px}.form-wrap p{color:#0369a1;margin-bottom:18px}.form-wrap input{width:100%;padding:11px 13px;border:1.5px solid #bae6fd;border-radius:9px;font-size:14px;margin-bottom:10px;font-family:inherit;background:#fff}.ftr{background:#0a1628;color:#475569;text-align:center;padding:14px;font-size:12px}</style></head><body><header class="hero"><div class="wrap"><div class="hero-badge">🔥 Відкрита вакансія</div><h1>Шукаємо адміністратора в медичний центр</h1><p>Офіційне оформлення · Стабільна зарплата · Навчання за рахунок клініки</p><a href="#form" class="btn">Відгукнутись</a></div></header><section class="sec"><div class="wrap"><h2 class="sec-h">Що ми пропонуємо</h2><div class="perks"><div class="perk"><div class="val">800–1100 €</div><p>Зарплата на місяць</p></div><div class="perk"><div class="val">Навчання</div><p>Повне навчання стандартам клініки</p></div><div class="perk"><div class="val">Графік</div><p>Змінна робота 2/2 або 5/2</p></div><div class="perk"><div class="val">Кар\'єра</div><p>Ріст до старшого адміністратора</p></div></div><h2 class="sec-h">Що нам важливо</h2><div class="req-list"><div class="req-item">Досвід роботи на ресепшені або адміністратором від 6 місяців</div><div class="req-item">Грамотна мова, привітний зовнішній вигляд</div><div class="req-item">Впевнений користувач ПК та CRM-систем</div><div class="req-item">Стресостійкість і вміння вирішувати конфліктні ситуації</div></div></div></section><section class="sec" style="background:#f8fafc"><div class="wrap"><div class="form-wrap" id="form"><h2>Відгукнутись на вакансію</h2><p>Залиште контакти — зв\'яжемося протягом доби</p><input type="text" placeholder="Ваше ім\'я"><input type="tel" placeholder="Номер телефону"><input type="text" placeholder="Ваш досвід роботи (коротко)"><button class="btn" style="width:100%">Відгукнутись →</button></div></div></section><footer class="ftr"><p>© 2026 Медичний центр. Всі права захищені.</p></footer></body></html>`
+    },
+    {
+        key: 'consult-auto',
+        niche: 'auto',
+        nicheLabel: 'Авто',
+        type: 'consult',
+        typeLabel: 'Запис',
+        title: 'Запис на діагностику автомобіля',
+        desc: 'Безкоштовна комп\'ютерна діагностика, форма запису',
+        color: '#64748b',
+        html: `<!DOCTYPE html><html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Запис на діагностику авто</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;color:#1a1a1a;line-height:1.6}.hero{background:linear-gradient(135deg,#0f172a,#1e293b);padding:56px 20px;text-align:center}.hero h1{font-size:clamp(22px,5vw,34px);font-weight:800;color:#fff;margin-bottom:12px}.hero p{font-size:16px;color:#94a3b8;margin-bottom:12px}.hero-promo{display:inline-block;background:#22c55e;color:#fff;padding:7px 18px;border-radius:20px;font-size:14px;font-weight:700;margin-bottom:22px}.wrap{max-width:640px;margin:0 auto;padding:0 20px}.btn{display:inline-block;background:#22c55e;color:#fff;padding:15px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;border:none;cursor:pointer}.sec{padding:44px 0}.sec-h{font-size:22px;font-weight:800;margin-bottom:16px}.services{display:grid;gap:10px;margin-bottom:24px}.svc{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:14px 16px}.svc h3{font-size:14px;font-weight:700}.svc .price{font-size:15px;font-weight:800;color:#22c55e}.svc .old{text-decoration:line-through;color:#9ca3af;font-size:13px;margin-right:6px}.why-list{display:grid;gap:9px;margin-bottom:24px}.why-item{display:flex;gap:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:12px 14px;font-size:14px}.why-item::before{content:"✓";color:#22c55e;font-weight:700;flex-shrink:0}.form-wrap{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:14px;padding:26px;text-align:center}.form-wrap h2{font-size:20px;font-weight:800;margin-bottom:6px}.form-wrap p{color:#6b7280;margin-bottom:18px}.form-wrap input,.form-wrap select{width:100%;padding:11px 13px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:14px;margin-bottom:10px;font-family:inherit}.ftr{background:#0f172a;color:#475569;text-align:center;padding:14px;font-size:12px}</style></head><body><header class="hero"><div class="wrap"><div class="hero-promo">🎁 Безкоштовна діагностика</div><h1>Запишіться на комп\'ютерну діагностику автомобіля</h1><p>Перевіримо 60 параметрів авто за 20 хвилин</p><a href="#form" class="btn">Записатись безкоштовно</a></div></header><section class="sec"><div class="wrap"><h2 class="sec-h">Наші послуги</h2><div class="services"><div class="svc"><div><h3>Комп\'ютерна діагностика</h3><p style="font-size:12px;color:#6b7280">60 параметрів, 20 хвилин</p></div><div><span class="old">500 грн</span><span class="price">Безкоштовно</span></div></div><div class="svc"><div><h3>Заміна масла + фільтр</h3><p style="font-size:12px;color:#6b7280">З матеріалом, 30 хвилин</p></div><div><span class="price">від 800 грн</span></div></div><div class="svc"><div><h3>Гальмівна система</h3><p style="font-size:12px;color:#6b7280">Перевірка і ремонт</p></div><div><span class="price">від 600 грн</span></div></div></div><h2 class="sec-h">Чому нам довіряють</h2><div class="why-list"><div class="why-item">Досвідчені майстри з 10+ роками досвіду</div><div class="why-item">Прозора вартість — погоджуємо перед початком робіт</div><div class="why-item">Гарантія на всі роботи 6 місяців</div><div class="why-item">Оригінальні запчастини або аналоги на вибір клієнта</div></div></div></section><section class="sec" style="background:#f8fafc"><div class="wrap"><div class="form-wrap" id="form"><h2>Записатись на безкоштовну діагностику</h2><p>Вкажіть зручний час — підтвердимо протягом 30 хвилин</p><input type="text" placeholder="Ваше ім\'я"><input type="tel" placeholder="Номер телефону"><input type="text" placeholder="Марка та модель авто"><select><option value="">Зручний час</option><option>Ранок (9:00–12:00)</option><option>День (12:00–16:00)</option><option>Вечір (16:00–19:00)</option></select><button class="btn" style="width:100%">Записатись →</button></div></div></section><footer class="ftr"><p>© 2026 Автосервіс. Всі права захищені.</p></footer></body></html>`
+    },
+    {
+        key: 'consult-legal',
+        niche: 'legal',
+        nicheLabel: 'Юристи',
+        type: 'consult',
+        typeLabel: 'Консультація',
+        title: 'Безкоштовна консультація юриста',
+        desc: 'Перший прийом безкоштовно, форма запису',
+        color: '#6366f1',
+        html: `<!DOCTYPE html><html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Консультація юриста</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;color:#1a1a1a;line-height:1.6}.hero{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:56px 20px;text-align:center}.hero h1{font-size:clamp(22px,5vw,34px);font-weight:800;color:#fff;margin-bottom:12px}.hero p{font-size:16px;color:#a5b4fc;margin-bottom:28px}.wrap{max-width:640px;margin:0 auto;padding:0 20px}.btn{display:inline-block;background:#6366f1;color:#fff;padding:15px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;border:none;cursor:pointer}.sec{padding:44px 0}.sec-h{font-size:22px;font-weight:800;margin-bottom:16px}.areas{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}.area{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:16px;display:flex;align-items:center;gap:10px}.area .ico{font-size:22px;flex-shrink:0}.area h3{font-size:13px;font-weight:700}.area p{font-size:11px;color:#6b7280}.why-list{display:grid;gap:9px;margin-bottom:24px}.why-item{display:flex;gap:10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:9px;padding:12px 14px;font-size:14px}.why-item::before{content:"✓";color:#6366f1;font-weight:700;flex-shrink:0}.form-wrap{background:linear-gradient(135deg,#eef2ff,#e0e7ff);border-radius:14px;padding:26px;text-align:center}.form-wrap h2{font-size:20px;font-weight:800;margin-bottom:6px}.form-wrap p{color:#4338ca;margin-bottom:18px}.form-wrap input,.form-wrap textarea{width:100%;padding:11px 13px;border:1.5px solid #c7d2fe;border-radius:9px;font-size:14px;margin-bottom:10px;font-family:inherit;background:#fff}.ftr{background:#1e1b4b;color:#6b7280;text-align:center;padding:14px;font-size:12px}</style></head><body><header class="hero"><div class="wrap"><h1>Безкоштовна консультація юриста — отримайте відповідь сьогодні</h1><p>Перший прийом безкоштовно. Конфіденційно. Без зайвих обіцянок.</p><a href="#form" class="btn">Записатись на консультацію</a></div></header><section class="sec"><div class="wrap"><h2 class="sec-h">З якими питаннями ми допомагаємо</h2><div class="areas"><div class="area"><div class="ico">🏠</div><div><h3>Нерухомість</h3><p>Купівля, продаж, оренда, спори</p></div></div><div class="area"><div class="ico">💼</div><div><h3>Бізнес</h3><p>Реєстрація, договори, суперечки</p></div></div><div class="area"><div class="ico">👨‍👩‍👧</div><div><h3>Сімейне право</h3><p>Розлучення, аліменти, спадщина</p></div></div><div class="area"><div class="ico">⚖️</div><div><h3>Трудові спори</h3><p>Звільнення, невиплата зарплати</p></div></div></div><h2 class="sec-h">Чому нам довіряють</h2><div class="why-list"><div class="why-item">10+ років досвіду у різних галузях права</div><div class="why-item">Конфіденційність — ваші дані не передаються третім особам</div><div class="why-item">Прозора вартість — погоджуємо бюджет до початку роботи</div><div class="why-item">Результат, а не процес — тільки конкретні рішення</div></div></div></section><section class="sec" style="background:#f8fafc"><div class="wrap"><div class="form-wrap" id="form"><h2>Записатись на безкоштовну консультацію</h2><p>Опишіть ситуацію — зв\'яжемося протягом 2 годин</p><input type="text" placeholder="Ваше ім\'я"><input type="tel" placeholder="Номер телефону"><textarea rows="3" placeholder="Коротко опишіть вашу ситуацію"></textarea><button class="btn" style="width:100%">Записатись →</button><p style="font-size:12px;color:#9ca3af;margin-top:10px">Перша консультація — безкоштовно</p></div></div></section><footer class="ftr"><p>© 2026 Юридична компанія. Всі права захищені.</p></footer></body></html>`
+    },
+    {
+        key: 'hire-furniture',
+        niche: 'furniture',
+        nicheLabel: 'Меблі',
+        type: 'hire',
+        typeLabel: 'Найм',
+        title: 'Шукаємо майстра меблевого виробництва',
+        desc: 'Вакансія столяра / складальника меблів',
+        color: '#ef4444',
+        html: `<!DOCTYPE html><html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Вакансія майстра меблів</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;color:#1a1a1a;line-height:1.6}.hero{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:52px 20px;text-align:center}.hero-badge{display:inline-block;background:#fbbf24;color:#1a1a1a;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:14px}.hero h1{font-size:clamp(20px,5vw,32px);font-weight:800;color:#fff;margin-bottom:10px}.hero p{font-size:15px;color:#a5b4fc;margin-bottom:24px}.wrap{max-width:640px;margin:0 auto;padding:0 20px}.btn{display:inline-block;background:#8b5cf6;color:#fff;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;border:none;cursor:pointer}.sec{padding:44px 0}.sec-h{font-size:22px;font-weight:800;margin-bottom:16px}.perks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}.perk{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;text-align:center}.perk .val{font-size:18px;font-weight:800;color:#8b5cf6;margin-bottom:4px}.perk p{font-size:12px;color:#6b7280}.req-list{display:grid;gap:9px;margin-bottom:22px}.req-item{display:flex;gap:10px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:9px;padding:12px 14px;font-size:14px}.req-item::before{content:"✓";color:#8b5cf6;font-weight:700;flex-shrink:0}.form-wrap{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:14px;padding:26px;text-align:center}.form-wrap h2{font-size:20px;font-weight:800;margin-bottom:6px}.form-wrap p{color:#6d28d9;margin-bottom:18px}.form-wrap input{width:100%;padding:11px 13px;border:1.5px solid #ddd6fe;border-radius:9px;font-size:14px;margin-bottom:10px;font-family:inherit;background:#fff}.ftr{background:#1e1b4b;color:#6b7280;text-align:center;padding:14px;font-size:12px}</style></head><body><header class="hero"><div class="wrap"><div class="hero-badge">🔥 Відкрита вакансія</div><h1>Шукаємо майстра меблевого виробництва</h1><p>Меблева майстерня · Постійна зайнятість · Офіційне оформлення</p><a href="#form" class="btn">Відгукнутись</a></div></header><section class="sec"><div class="wrap"><h2 class="sec-h">Умови роботи</h2><div class="perks"><div class="perk"><div class="val">1000–1500 €</div><p>Зарплата на місяць (нетто)</p></div><div class="perk"><div class="val">Офіційно</div><p>Umowa o pracę, соціальний пакет</p></div><div class="perk"><div class="val">Обладнання</div><p>Сучасне обладнання і інструменти</p></div><div class="perk"><div class="val">Стабільно</div><p>Постійне завантаження без простоїв</p></div></div><h2 class="sec-h">Що нам важливо</h2><div class="req-list"><div class="req-item">Досвід роботи столяром або складальником меблів від 1 року</div><div class="req-item">Вміння читати креслення і схеми збірки</div><div class="req-item">Акуратність і уважність до деталей</div><div class="req-item">Фізична витривалість, відповідальність</div></div></div></section><section class="sec" style="background:#f8fafc"><div class="wrap"><div class="form-wrap" id="form"><h2>Відгукнутись на вакансію</h2><p>Залиште контакти — зв\'яжемося протягом доби</p><input type="text" placeholder="Ваше ім\'я"><input type="tel" placeholder="Номер телефону"><input type="text" placeholder="Ваш досвід (коротко)"><button class="btn" style="width:100%">Відгукнутись →</button></div></div></section><footer class="ftr"><p>© 2026 Меблева майстерня. Всі права захищені.</p></footer></body></html>`
     },
 ];
 
@@ -319,77 +385,67 @@ window.sitesOpenCreate = function () {
 
     document.body.insertAdjacentHTML('beforeend', `
     <div id="sitesCreateOverlay" onclick="if(event.target===this)this.remove()"
-        style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10030;
+        style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10030;
         display:flex;align-items:center;justify-content:center;padding:1rem;">
-        <div style="background:white;border-radius:18px;width:100%;max-width:860px;max-height:92vh;
-            display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.18);">
+        <div style="background:white;border-radius:18px;width:100%;max-width:1060px;height:88vh;
+            display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.22);">
 
             <!-- Хедер -->
-            <div style="padding:1rem 1.5rem;border-bottom:1px solid #f1f5f9;
-                display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-                <div>
-                    <div style="font-weight:800;font-size:1rem;">${window.t('sitesNew')}</div>
-                    <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">Виберіть режим і налаштуйте сайт</div>
+            <div style="padding:0.85rem 1.25rem;border-bottom:1px solid #f1f5f9;
+                display:flex;align-items:center;gap:1rem;flex-shrink:0;">
+                <div style="flex:1;">
+                    <div style="font-weight:800;font-size:0.95rem;">+ Новий сайт</div>
+                    <div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;">Виберіть спосіб створення</div>
+                </div>
+                <!-- Таби режимів у хедері -->
+                <div style="display:flex;gap:0.3rem;background:#f1f5f9;border-radius:10px;padding:3px;">
+                    <button id="sc_mode_blocks" onclick="sitesSetCreateMode('blocks')"
+                        style="padding:0.4rem 0.9rem;border:none;border-radius:8px;font-size:0.78rem;font-weight:700;
+                        cursor:pointer;background:#22c55e;color:white;display:flex;align-items:center;gap:0.35rem;white-space:nowrap;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        Конструктор
+                    </button>
+                    <button id="sc_mode_html" onclick="sitesSetCreateMode('html')"
+                        style="padding:0.4rem 0.9rem;border:none;border-radius:8px;font-size:0.78rem;font-weight:600;
+                        cursor:pointer;background:transparent;color:#6b7280;display:flex;align-items:center;gap:0.35rem;white-space:nowrap;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        HTML
+                    </button>
+                    <button id="sc_mode_library" onclick="sitesSetCreateMode('library')"
+                        style="padding:0.4rem 0.9rem;border:none;border-radius:8px;font-size:0.78rem;font-weight:600;
+                        cursor:pointer;background:transparent;color:#6b7280;display:flex;align-items:center;gap:0.35rem;white-space:nowrap;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        Бібліотека
+                    </button>
                 </div>
                 <button onclick="document.getElementById('sitesCreateOverlay').remove()"
-                    style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;line-height:1;">✕</button>
+                    style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;line-height:1;flex-shrink:0;">✕</button>
             </div>
 
-            <!-- Тіло — два стовпці -->
+            <!-- Тіло -->
             <div style="display:flex;flex:1;overflow:hidden;">
 
-                <!-- Ліва колонка — налаштування -->
-                <div style="width:320px;flex-shrink:0;padding:1.25rem;border-right:1px solid #f1f5f9;
-                    overflow-y:auto;display:flex;flex-direction:column;gap:0.85rem;">
-
+                <!-- ══ РЕЖИМ: КОНСТРУКТОР та HTML — ліва + права ══ -->
+                <div id="sc_left_col" style="width:280px;flex-shrink:0;padding:1rem;border-right:1px solid #f1f5f9;overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;">
                     <div>
-                        <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Назва сайту</label>
-                        <input id="sc_name" placeholder="${window.t('siteNameEx')}"
-                            style="${inp}" autofocus>
-                    </div>
-
-                    <!-- Режим -->
-                    <div>
-                        <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;">Режим створення</label>
-                        <div style="display:flex;flex-direction:column;gap:0.3rem;">
-                            <button id="sc_mode_blocks" onclick="sitesSetCreateMode('blocks')"
-                                style="width:100%;padding:0.55rem 0.75rem;border:2px solid #22c55e;border-radius:10px;
-                                background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:700;cursor:pointer;
-                                display:flex;align-items:center;gap:0.4rem;text-align:left;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                                Конструктор блоків
-                            </button>
-                            <button id="sc_mode_html" onclick="sitesSetCreateMode('html')"
-                                style="width:100%;padding:0.55rem 0.75rem;border:2px solid #e5e7eb;border-radius:10px;
-                                background:white;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;
-                                display:flex;align-items:center;gap:0.4rem;text-align:left;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                                Вставити HTML
-                            </button>
-                            <button id="sc_mode_library" onclick="sitesSetCreateMode('library')"
-                                style="width:100%;padding:0.55rem 0.75rem;border:2px solid #e5e7eb;border-radius:10px;
-                                background:white;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;
-                                display:flex;align-items:center;gap:0.4rem;text-align:left;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                                З бібліотеки шаблонів
-                            </button>
-                        </div>
+                        <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Назва сайту</label>
+                        <input id="sc_name" placeholder="${window.t('siteNameEx')}" style="${inp}" autofocus>
                     </div>
 
                     <!-- Блоки секція -->
-                    <div id="sc_blocks_section" style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <div id="sc_blocks_section" style="display:flex;flex-direction:column;gap:0.65rem;">
                         <div>
-                            <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Опис (необов\'язково)</label>
+                            <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Опис (необов\'язково)</label>
                             <input id="sc_desc" placeholder="${window.t('sitesDescPh')}" style="${inp}">
                         </div>
                         <div>
-                            <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.45rem;">Шаблон (ніша)</label>
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.35rem;" id="sc_niches">
+                            <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;">Шаблон (ніша)</label>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;" id="sc_niches">
                                 ${niches.map(n => `
                                 <div onclick="sitesSelectNiche('${n.key}')" id="scn_${n.key}"
-                                    style="padding:0.45rem 0.6rem;border:2px solid #e5e7eb;border-radius:9px;
-                                    cursor:pointer;font-size:0.75rem;font-weight:500;transition:all 0.15s;
-                                    display:flex;align-items:center;gap:0.35rem;">
+                                    style="padding:0.4rem 0.5rem;border:2px solid #e5e7eb;border-radius:9px;
+                                    cursor:pointer;font-size:0.73rem;font-weight:500;transition:all 0.15s;
+                                    display:flex;align-items:center;gap:0.3rem;">
                                     ${_esc(n.label)}
                                 </div>`).join('')}
                             </div>
@@ -398,95 +454,111 @@ window.sitesOpenCreate = function () {
 
                     <!-- HTML секція -->
                     <div id="sc_html_section" style="display:none;flex-direction:column;gap:0.5rem;">
-                        <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">HTML код сторінки</label>
-                        <textarea id="sc_html" rows="12"
-                            placeholder="<!DOCTYPE html>&#10;<html>&#10;  <head>...</head>&#10;  <body>&#10;    <!-- Ваш HTML сюди -->&#10;  </body>&#10;</html>"
+                        <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">HTML код сторінки</label>
+                        <textarea id="sc_html" rows="14"
+                            placeholder="<!DOCTYPE html>&#10;<html>&#10;  <head>...</head>&#10;  <body>&#10;    <!-- Ваш HTML -->&#10;  </body>&#10;</html>"
                             style="width:100%;padding:0.5rem;border:1.5px solid #e5e7eb;border-radius:9px;
-                            font-size:0.72rem;font-family:monospace;box-sizing:border-box;resize:vertical;
-                            line-height:1.5;min-height:220px;"></textarea>
-                        <div style="font-size:0.65rem;color:#9ca3af;">
+                            font-size:0.7rem;font-family:monospace;box-sizing:border-box;resize:vertical;
+                            line-height:1.5;min-height:260px;"></textarea>
+                        <div style="font-size:0.63rem;color:#9ca3af;">
                             ${window.t('siteHtmlHint')||'Вставте повний HTML — сайт буде одразу опублікований'}
                         </div>
                     </div>
+                </div>
 
-                    <!-- Бібліотека секція — фільтри -->
-                    <div id="sc_library_section" style="display:none;flex-direction:column;gap:0.5rem;">
-                        <div>
-                            <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;">Ніша</label>
+                <!-- Права частина — для конструктора/html підказка, для бібліотеки — каталог -->
+                <div id="sc_right_area" style="flex:1;overflow:hidden;display:flex;flex-direction:column;background:#f8fafc;">
+
+                    <!-- Підказка (конструктор/html режим) -->
+                    <div id="sc_preview_hint" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#9ca3af;text-align:center;gap:0.5rem;padding:2rem;">
+                        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        <div style="font-size:0.88rem;font-weight:700;margin-top:4px;">Попередній перегляд</div>
+                        <div style="font-size:0.75rem;line-height:1.5;">Перейдіть у <b>Бібліотеку</b>, щоб обрати<br>готовий шаблон і побачити превью</div>
+                        <button onclick="sitesSetCreateMode('library')"
+                            style="margin-top:8px;padding:8px 18px;background:#f59e0b;color:white;border:none;
+                            border-radius:9px;cursor:pointer;font-size:0.78rem;font-weight:700;">
+                            📚 Відкрити бібліотеку
+                        </button>
+                    </div>
+
+                    <!-- ══ БІБЛІОТЕКА — займає весь правий простір ══ -->
+                    <div id="sc_library_area" style="display:none;flex:1;overflow:hidden;flex-direction:column;">
+                        <!-- Фільтри бібліотеки -->
+                        <div style="padding:0.75rem 1rem;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:0.5rem;background:white;flex-shrink:0;flex-wrap:wrap;">
+                            <span style="font-size:0.72rem;font-weight:700;color:#374151;">Фільтр:</span>
                             <select id="sc_lib_niche" onchange="sitesFilterLibrary()"
-                                style="${inp}">
+                                style="padding:0.35rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.75rem;font-family:inherit;background:white;cursor:pointer;">
                                 <option value="">Всі ніші</option>
                                 <option value="dental">Медицина</option>
                                 <option value="construction">Будівництво</option>
                                 <option value="furniture">Меблі</option>
                                 <option value="beauty">Б\'юті</option>
                                 <option value="horeca">Хорека</option>
+                                <option value="auto">Авто</option>
+                                <option value="legal">Юристи</option>
                             </select>
-                        </div>
-                        <div>
-                            <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;">Тип сторінки</label>
                             <select id="sc_lib_type" onchange="sitesFilterLibrary()"
-                                style="${inp}">
+                                style="padding:0.35rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.75rem;font-family:inherit;background:white;cursor:pointer;">
                                 <option value="">Всі типи</option>
                                 <option value="consult">Консультація / Запис</option>
                                 <option value="masterclass">Майстер-клас</option>
                                 <option value="hire">Найм</option>
                                 <option value="booking">Бронювання</option>
+                                <option value="calc">Прорахунок</option>
                             </select>
+                            <span id="sc_lib_count" style="font-size:0.7rem;color:#9ca3af;margin-left:auto;"></span>
                         </div>
-                        <div id="sc_lib_selected" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:10px 12px;">
-                            <div style="font-size:0.7rem;font-weight:700;color:#16a34a;margin-bottom:3px;">✓ Шаблон обрано</div>
-                            <div id="sc_lib_selected_title" style="font-size:0.78rem;color:#15803d;font-weight:600;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Права колонка — превью -->
-                <div style="flex:1;overflow-y:auto;padding:1.25rem;background:#f8fafc;">
-
-                    <!-- Превью блоків/HTML режим -->
-                    <div id="sc_preview_hint" style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#9ca3af;text-align:center;gap:0.5rem;">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                        <div style="font-size:0.85rem;font-weight:600;">Превью сайту</div>
-                        <div style="font-size:0.75rem;">Оберіть шаблон з бібліотеки<br>щоб побачити попередній перегляд</div>
+                        <!-- Грід карток -->
+                        <div id="sc_library_grid" style="flex:1;overflow-y:auto;padding:0.85rem;
+                            display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;align-content:start;"></div>
                     </div>
 
-                    <!-- Бібліотека карток -->
-                    <div id="sc_library_grid" style="display:none;display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;"></div>
-
-                    <!-- iframe превью обраного шаблону -->
-                    <div id="sc_preview_wrap" style="display:none;height:100%;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-                            <span style="font-size:0.75rem;font-weight:700;color:#374151;">Попередній перегляд</span>
-                            <button onclick="sitesBackToLibrary()"
-                                style="font-size:0.72rem;color:#6b7280;background:white;border:1px solid #e5e7eb;
-                                border-radius:7px;padding:4px 10px;cursor:pointer;">← Назад до бібліотеки</button>
+                    <!-- iframe превью шаблону -->
+                    <div id="sc_preview_wrap" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+                        <div style="padding:0.6rem 1rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;background:white;flex-shrink:0;">
+                            <div style="display:flex;align-items:center;gap:0.5rem;">
+                                <button onclick="sitesBackToLibrary()"
+                                    style="font-size:0.72rem;color:#6b7280;background:#f1f5f9;border:none;
+                                    border-radius:7px;padding:5px 10px;cursor:pointer;font-weight:600;">← Назад</button>
+                                <span id="sc_preview_title" style="font-size:0.78rem;font-weight:700;color:#111;"></span>
+                            </div>
+                            <button id="sc_copy_html_btn" onclick="sitesCopyTemplateHtml()"
+                                style="padding:6px 14px;background:#8b5cf6;color:white;border:none;
+                                border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;
+                                display:flex;align-items:center;gap:5px;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                Скопіювати HTML
+                            </button>
                         </div>
                         <iframe id="sc_preview_iframe"
-                            style="width:100%;height:calc(100% - 40px);border:none;border-radius:10px;
-                            box-shadow:0 2px 12px rgba(0,0,0,0.08);background:#fff;"></iframe>
+                            style="flex:1;width:100%;border:none;background:#fff;"></iframe>
                     </div>
                 </div>
             </div>
 
             <!-- Футер -->
-            <div style="padding:0.85rem 1.5rem;border-top:1px solid #f1f5f9;display:flex;justify-content:flex-end;gap:0.4rem;flex-shrink:0;">
-                <button onclick="document.getElementById('sitesCreateOverlay').remove()"
-                    style="padding:0.5rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;">
-                    Скасувати
-                </button>
-                <button onclick="sitesCreate()"
-                    style="padding:0.5rem 1.4rem;background:#22c55e;color:white;border:none;
-                    border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;
-                    box-shadow:0 2px 8px rgba(34,197,94,0.3);">
-                    Створити сайт →
-                </button>
+            <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+                <div id="sc_lib_selected_bar" style="display:none;align-items:center;gap:0.5rem;">
+                    <span style="font-size:0.72rem;color:#16a34a;font-weight:700;">✓ Обрано:</span>
+                    <span id="sc_lib_selected_title" style="font-size:0.75rem;color:#15803d;font-weight:600;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+                </div>
+                <div style="display:flex;gap:0.4rem;margin-left:auto;">
+                    <button onclick="document.getElementById('sitesCreateOverlay').remove()"
+                        style="padding:0.5rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;">
+                        Скасувати
+                    </button>
+                    <button onclick="sitesCreate()"
+                        style="padding:0.5rem 1.4rem;background:#22c55e;color:white;border:none;
+                        border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;
+                        box-shadow:0 2px 8px rgba(34,197,94,0.3);">
+                        Створити сайт →
+                    </button>
+                </div>
             </div>
         </div>
     </div>`);
 
     document.getElementById('sc_name')?.focus();
-    // Ініціалізуємо бібліотеку карток
     sitesRenderLibraryGrid(SITE_TEMPLATES);
 };
 
@@ -573,75 +645,91 @@ let _selectedLibraryTemplate = null;
 
 window.sitesSetCreateMode = function(mode) {
     _createMode = mode;
-    const btnBlocks  = document.getElementById('sc_mode_blocks');
-    const btnHtml    = document.getElementById('sc_mode_html');
-    const btnLib     = document.getElementById('sc_mode_library');
-    const secBlocks  = document.getElementById('sc_blocks_section');
-    const secHtml    = document.getElementById('sc_html_section');
-    const secLib     = document.getElementById('sc_library_section');
-    const prevHint   = document.getElementById('sc_preview_hint');
-    const prevGrid   = document.getElementById('sc_library_grid');
-    const prevWrap   = document.getElementById('sc_preview_wrap');
+    const btnBlocks = document.getElementById('sc_mode_blocks');
+    const btnHtml   = document.getElementById('sc_mode_html');
+    const btnLib    = document.getElementById('sc_mode_library');
+    const leftCol   = document.getElementById('sc_left_col');
+    const secBlocks = document.getElementById('sc_blocks_section');
+    const secHtml   = document.getElementById('sc_html_section');
+    const prevHint  = document.getElementById('sc_preview_hint');
+    const libArea   = document.getElementById('sc_library_area');
+    const prevWrap  = document.getElementById('sc_preview_wrap');
 
-    // скидаємо всі кнопки
-    const btns = [btnBlocks, btnHtml, btnLib];
-    btns.forEach(b => { if(b){ b.style.borderColor='#e5e7eb'; b.style.background='white'; b.style.color='#6b7280'; b.style.fontWeight='600'; }});
+    // скидаємо таби
+    [btnBlocks, btnHtml, btnLib].forEach(b => {
+        if(b){ b.style.background='transparent'; b.style.color='#6b7280'; b.style.fontWeight='600'; }
+    });
 
     // ховаємо всі секції
-    [secBlocks, secHtml, secLib].forEach(s => { if(s) s.style.display='none'; });
-    if (prevHint) prevHint.style.display='flex';
-    if (prevGrid) prevGrid.style.display='none';
-    if (prevWrap) prevWrap.style.display='none';
+    [secBlocks, secHtml].forEach(s => { if(s) s.style.display='none'; });
+    if(leftCol)  leftCol.style.display = 'flex';
+    if(prevHint) prevHint.style.display = 'none';
+    if(libArea)  { libArea.style.display='none'; }
+    if(prevWrap) { prevWrap.style.display='none'; }
 
     if (mode === 'html') {
-        if (btnHtml) { btnHtml.style.borderColor='#8b5cf6'; btnHtml.style.background='#f5f3ff'; btnHtml.style.color='#7c3aed'; btnHtml.style.fontWeight='700'; }
-        if (secHtml) secHtml.style.display='flex';
+        if(btnHtml) { btnHtml.style.background='#8b5cf6'; btnHtml.style.color='white'; btnHtml.style.fontWeight='700'; }
+        if(secHtml) secHtml.style.display='flex';
         setTimeout(() => document.getElementById('sc_html')?.focus(), 50);
+
     } else if (mode === 'library') {
-        if (btnLib) { btnLib.style.borderColor='#f59e0b'; btnLib.style.background='#fffbeb'; btnLib.style.color='#b45309'; btnLib.style.fontWeight='700'; }
-        if (secLib) secLib.style.display='flex';
-        if (prevHint) prevHint.style.display='none';
-        if (prevGrid) { prevGrid.style.display='grid'; }
+        if(btnLib) { btnLib.style.background='#f59e0b'; btnLib.style.color='white'; btnLib.style.fontWeight='700'; }
+        // Бібліотека займає весь простір — ховаємо ліву колонку
+        if(leftCol) leftCol.style.display = 'none';
+        if(libArea) { libArea.style.display='flex'; }
         sitesFilterLibrary();
-    } else {
-        if (btnBlocks) { btnBlocks.style.borderColor='#22c55e'; btnBlocks.style.background='#f0fdf4'; btnBlocks.style.color='#16a34a'; btnBlocks.style.fontWeight='700'; }
-        if (secBlocks) secBlocks.style.display='flex';
+
+    } else { // blocks
+        if(btnBlocks) { btnBlocks.style.background='#22c55e'; btnBlocks.style.color='white'; btnBlocks.style.fontWeight='700'; }
+        if(secBlocks) secBlocks.style.display='flex';
+        if(prevHint)  prevHint.style.display='flex';
     }
 };
 
 // ── Бібліотека: рендер карток ─────────────────────────────
 window.sitesRenderLibraryGrid = function(templates) {
     const grid = document.getElementById('sc_library_grid');
+    const count = document.getElementById('sc_lib_count');
     if (!grid) return;
+    if(count) count.textContent = templates.length + ' шаблонів';
     if (!templates.length) {
-        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;padding:2rem;font-size:0.85rem;">Шаблони не знайдено</div>';
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;padding:3rem;font-size:0.85rem;">Шаблони не знайдено</div>';
         return;
     }
     grid.innerHTML = templates.map(t => `
     <div onclick="sitesSelectLibraryTemplate('${t.key}')" id="slt_${t.key}"
         style="background:white;border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;
-        cursor:pointer;transition:all 0.15s;"
-        onmouseenter="this.style.borderColor='${t.color}';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.1)'"
-        onmouseleave="this.style.borderColor=window._selectedLibraryTemplate===this.dataset.key?'${t.color}':'#e5e7eb';this.style.boxShadow='none'"
+        cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;"
+        onmouseenter="this.style.borderColor='${t.color}';this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.1)'"
+        onmouseleave="if('${t.key}'!==window._sitesSelectedLibKey){this.style.borderColor='#e5e7eb';this.style.transform='none';this.style.boxShadow='none';}"
         data-key="${t.key}">
-        <div style="height:6px;background:${t.color};"></div>
-        <div style="padding:12px 14px;">
-            <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
-                <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;
+        <div style="height:5px;background:${t.color};flex-shrink:0;"></div>
+        <div style="padding:10px 12px;flex:1;display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                <span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;
                     background:${t.color}18;color:${t.color};">${t.nicheLabel}</span>
-                <span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;
+                <span style="font-size:9px;font-weight:600;padding:2px 6px;border-radius:6px;
                     background:#f1f5f9;color:#6b7280;">${t.typeLabel}</span>
             </div>
-            <div style="font-size:0.82rem;font-weight:700;color:#111;margin-bottom:4px;line-height:1.3;">${t.title}</div>
-            <div style="font-size:0.72rem;color:#9ca3af;line-height:1.4;">${t.desc}</div>
-            <button onclick="event.stopPropagation();sitesPreviewTemplate('${t.key}')"
-                style="margin-top:10px;width:100%;padding:6px;background:#f8fafc;border:1px solid #e5e7eb;
-                border-radius:7px;cursor:pointer;font-size:0.72rem;font-weight:600;color:#374151;">
-                👁 Переглянути
-            </button>
+            <div style="font-size:0.78rem;font-weight:700;color:#111;line-height:1.35;">${t.title}</div>
+            <div style="font-size:0.68rem;color:#9ca3af;line-height:1.4;flex:1;">${t.desc}</div>
+            <div style="display:flex;gap:5px;margin-top:6px;">
+                <button onclick="event.stopPropagation();sitesPreviewTemplate('${t.key}')"
+                    style="flex:1;padding:5px 0;background:#f0fdf4;border:1px solid #bbf7d0;
+                    border-radius:7px;cursor:pointer;font-size:0.68rem;font-weight:600;color:#16a34a;">
+                    👁 Переглянути
+                </button>
+                <button onclick="event.stopPropagation();sitesCopyTemplateHtmlByKey('${t.key}')"
+                    style="flex:1;padding:5px 0;background:#f5f3ff;border:1px solid #ddd6fe;
+                    border-radius:7px;cursor:pointer;font-size:0.68rem;font-weight:600;color:#7c3aed;">
+                    📋 Копіювати HTML
+                </button>
+            </div>
         </div>
     </div>`).join('');
 };
+
+window._sitesSelectedLibKey = null;
 
 window.sitesFilterLibrary = function() {
     const niche = document.getElementById('sc_lib_niche')?.value || '';
@@ -655,21 +743,23 @@ window.sitesFilterLibrary = function() {
 
 window.sitesSelectLibraryTemplate = function(key) {
     _selectedLibraryTemplate = key;
+    window._sitesSelectedLibKey = key;
     const t = SITE_TEMPLATES.find(x => x.key === key);
     if (!t) return;
     // підсвічуємо картку
     document.querySelectorAll('[id^="slt_"]').forEach(el => {
         el.style.borderColor = '#e5e7eb';
+        el.style.transform   = 'none';
         el.style.boxShadow   = 'none';
     });
     const card = document.getElementById('slt_' + key);
-    if (card) { card.style.borderColor = t.color; card.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)'; }
-    // показуємо обраний шаблон
-    const sel = document.getElementById('sc_lib_selected');
-    const selTitle = document.getElementById('sc_lib_selected_title');
-    if (sel) sel.style.display = 'block';
-    if (selTitle) selTitle.textContent = t.title;
-    // підставляємо назву в поле якщо порожнє
+    if (card) { card.style.borderColor = t.color; card.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)'; }
+    // показуємо обраний у футері
+    const bar = document.getElementById('sc_lib_selected_bar');
+    const title = document.getElementById('sc_lib_selected_title');
+    if (bar)   bar.style.display = 'flex';
+    if (title) title.textContent = t.title;
+    // підставляємо назву якщо порожнє (повертаємось до лівої колонки)
     const nameInput = document.getElementById('sc_name');
     if (nameInput && !nameInput.value.trim()) nameInput.value = t.title;
 };
@@ -677,24 +767,52 @@ window.sitesSelectLibraryTemplate = function(key) {
 window.sitesPreviewTemplate = function(key) {
     const t = SITE_TEMPLATES.find(x => x.key === key);
     if (!t) return;
-    // позначаємо як обраний
     sitesSelectLibraryTemplate(key);
-    // показуємо iframe
-    const grid = document.getElementById('sc_library_grid');
-    const wrap  = document.getElementById('sc_preview_wrap');
+    const libArea = document.getElementById('sc_library_area');
+    const prevWrap = document.getElementById('sc_preview_wrap');
+    const prevTitle = document.getElementById('sc_preview_title');
     const iframe = document.getElementById('sc_preview_iframe');
-    if (grid) grid.style.display = 'none';
-    if (wrap) wrap.style.display = 'block';
-    if (iframe) {
-        iframe.srcdoc = t.html;
-    }
+    if (libArea) libArea.style.display = 'none';
+    if (prevWrap) { prevWrap.style.display='flex'; }
+    if (prevTitle) prevTitle.textContent = t.title;
+    if (iframe) iframe.srcdoc = t.html;
 };
 
 window.sitesBackToLibrary = function() {
-    const grid = document.getElementById('sc_library_grid');
-    const wrap  = document.getElementById('sc_preview_wrap');
-    if (grid) grid.style.display = 'grid';
-    if (wrap) wrap.style.display = 'none';
+    const libArea = document.getElementById('sc_library_area');
+    const prevWrap = document.getElementById('sc_preview_wrap');
+    if (libArea) { libArea.style.display='flex'; }
+    if (prevWrap) prevWrap.style.display='none';
+};
+
+// Копіювати HTML з превью (кнопка у хедері превью)
+window.sitesCopyTemplateHtml = function() {
+    if (!_selectedLibraryTemplate) return;
+    sitesCopyTemplateHtmlByKey(_selectedLibraryTemplate);
+};
+
+// Копіювати HTML по ключу (кнопка на картці)
+window.sitesCopyTemplateHtmlByKey = function(key) {
+    const t = SITE_TEMPLATES.find(x => x.key === key);
+    if (!t) return;
+    sitesSelectLibraryTemplate(key);
+    try {
+        navigator.clipboard.writeText(t.html).then(() => {
+            if(typeof showToast === 'function') showToast('📋 HTML скопійовано — вставте у вкладці HTML', 'success');
+            // Підсвічуємо кнопку
+            const btn = document.getElementById('sc_copy_html_btn');
+            if(btn) { const orig = btn.textContent; btn.textContent='✓ Скопійовано!'; btn.style.background='#22c55e'; setTimeout(()=>{ btn.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Скопіювати HTML`; btn.style.background='#8b5cf6'; }, 2000); }
+        });
+    } catch(e) {
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = t.html;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        if(typeof showToast === 'function') showToast('📋 HTML скопійовано!', 'success');
+    }
 };
 
 window.sitesCreate = async function () {
