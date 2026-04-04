@@ -278,32 +278,50 @@ async function _sfRunStep1() {
                     : lang === 'pl' ? 'Odpowiadaj po polsku.'
                     : 'Відповідай українською мовою.';
 
-    // Передаємо дані — AI сам веде аналіз по своєму промпту з адмінки
-    // Не диктуємо формат — промпт адмінки вже містить структуру 1-5
+    // Запитуємо ТІЛЬКИ діагностику (крок 1 промпту) — не весь аналіз одразу.
+    // Інакше: system(57р) + дані + велика відповідь = >25s → 504
+    // Покроково: кожен запит ~5-8s, відповідь приходить швидко
     const prompt = `${langInstr}
 
-Ось дані метрик компанії. Проведи повний аналіз згідно твоїх інструкцій.`;
+Виконай тільки КРОК 1 — ДІАГНОСТИКУ:
+Визнач ТОП-3 критичних вузьких місця з цифрами, відхиленнями від цілі і причинно-наслідковими зв'язками.`;
 
     await _sfAskAI(prompt, true);
 
-    // Після аналізу (кроки 1-5 з промпту) AI сам запитає який варіант обирають.
-    // Ми показуємо кнопки щоб спростити вибір — не треба писати текстом
     _sfShowButtons([
-        { label: '💬 Уточнити / додати контекст', action: 'sfUserComment' },
-        { label: 'Варіант А', action: 'sfChoose', data: 'А' },
-        { label: 'Варіант Б', action: 'sfChoose', data: 'Б' },
-        { label: 'Варіант В', action: 'sfChoose', data: 'В' },
+        { label: '💬 Додати контекст', action: 'sfUserComment' },
+        { label: 'Прогноз ризиків →', action: 'sfChoose', data: 'risks' },
     ]);
 }
 
-// ── Крок 2: користувач обрав варіант ─────────────────────────
+// ── Крок 2: прогноз ризиків ───────────────────────────────────
+window._sfRisks = async function() {
+    _sfSetStep(2);
+    await _sfAskAI('Виконай КРОК 2 — ПРОГНОЗ РИЗИКІВ: які метрики впадуть якщо нічого не робити, тренди, критичність.');
+    _sfShowButtons([
+        { label: 'Варіанти рішень →', action: 'sfChoose', data: 'solutions' },
+    ]);
+};
+
+// ── Крок 3: варіанти рішень ────────────────────────────────────
+window._sfSolutions = async function() {
+    _sfSetStep(3);
+    await _sfAskAI('Виконай КРОКИ 3, 4, 5 — три варіанти рішень для головного вузького місця, сценарне планування і твою рекомендацію.');
+    _sfShowButtons([
+        { label: 'Варіант А', action: 'sfChoose', data: 'А' },
+        { label: 'Варіант Б', action: 'sfChoose', data: 'Б' },
+        { label: 'Варіант В', action: 'sfChoose', data: 'В' },
+        { label: '💬 Питання', action: 'sfUserComment' },
+    ]);
+};
+
+// ── Крок 4: вибір варіанту → план дій ────────────────────────
 window._sfChoose = async function(varName) {
     _sfChosenVar = varName;
-    _sfSetStep(2);
+    _sfSetStep(4);
     _sfAppendMsg('user', `Обираю Варіант ${varName}`);
     _sfHistory.push({ role: 'user', content: `Обираю Варіант ${varName}` });
 
-    // AI складає план дій (він вже знає про це з промпту адмінки)
     await _sfAskAI(`Обираю Варіант ${varName}. Склади план дій.`);
     _sfShowButtons([
         { label: '📋 Розбити на задачі в TALKO', action: 'sfStep5' },
@@ -513,13 +531,15 @@ function _sfShowButtons(buttons) {
 
 window._sfHandleBtn = function(action, data) {
     switch(action) {
-        case 'sfChoose':      window._sfChoose(data); break;
+        case 'sfChoose':
+            if (data === 'risks')     { window._sfRisks(); break; }
+            if (data === 'solutions') { window._sfSolutions(); break; }
+            window._sfChoose(data); break;
         case 'sfStep5':       window._sfStep5(); break;
         case 'sfUserComment':
         case 'sfUserComment4':
             document.getElementById('sfInput')?.focus(); break;
         default:
-            // Невідома дія — просто фокус на інпут
             document.getElementById('sfInput')?.focus();
     }
 };
@@ -531,17 +551,20 @@ window._sfSend = function() {
     _sfAppendMsg('user', val);
     _sfHistory.push({ role: 'user', content: val });
 
-    // AI відповідає на будь-який коментар користувача і показує кнопки варіантів
     _sfAskAI(val).then(() => {
-        if (_sfStep === 1) {
-            // Після уточнення — знову показуємо варіанти
+        if (_sfStep <= 2) {
+            _sfShowButtons([
+                { label: 'Прогноз ризиків →', action: 'sfChoose', data: 'risks' },
+                { label: 'Варіанти рішень →', action: 'sfChoose', data: 'solutions' },
+                { label: '💬 Ще питання', action: 'sfUserComment' },
+            ]);
+        } else if (_sfStep === 3) {
             _sfShowButtons([
                 { label: 'Варіант А', action: 'sfChoose', data: 'А' },
                 { label: 'Варіант Б', action: 'sfChoose', data: 'Б' },
                 { label: 'Варіант В', action: 'sfChoose', data: 'В' },
-                { label: '💬 Ще питання', action: 'sfUserComment' },
             ]);
-        } else if (_sfStep === 2) {
+        } else {
             _sfShowButtons([
                 { label: '📋 Розбити на задачі в TALKO', action: 'sfStep5' },
                 { label: '💬 Скоригувати', action: 'sfUserComment4' },
