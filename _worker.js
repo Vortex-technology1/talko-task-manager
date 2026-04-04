@@ -124,12 +124,15 @@ async function fsSet(path, fields, token) {
 
 function fVal(v) {
     if (!v) return null;
+    if (v.nullValue    !== undefined) return null;
     if (v.stringValue  !== undefined) return v.stringValue;
     if (v.booleanValue !== undefined) return v.booleanValue;
     if (v.integerValue !== undefined) return parseInt(v.integerValue);
     if (v.doubleValue  !== undefined) return parseFloat(v.doubleValue);
+    if (v.timestampValue !== undefined) return v.timestampValue; // ISO string
     if (v.arrayValue   !== undefined) return (v.arrayValue.values||[]).map(fVal);
     if (v.mapValue     !== undefined) return fFields(v.mapValue.fields||{});
+    if (v.referenceValue !== undefined) return v.referenceValue;
     return null;
 }
 function fFields(f) { const o={}; for(const k in f) o[k]=fVal(f[k]); return o; }
@@ -287,7 +290,7 @@ async function handleGoogleOauth(request, url, env) {
             }
             const maskFields = Object.keys(fields).map(k => `updateMask.fieldPaths=${k}`).join('&');
             await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/${docPath}?${maskFields}`,
+                `${FS_URL}/${docPath}?${maskFields}`,
                 {
                     method:  'PATCH',
                     headers: { 'Authorization': `Bearer ${saToken}`, 'Content-Type': 'application/json' },
@@ -395,7 +398,7 @@ export default {
             try { tok2 = await getToken(env); } catch(e) { return json({ error: e.message }); }
             // Читаємо canvasData/layout де edges точно є
             const cvSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid2}/bots/${bid2}/flows/${fid2}/canvasData/layout`,
+                `${FS_URL}/companies/${cid2}/bots/${bid2}/flows/${fid2}/canvasData/layout`,
                 { headers: { Authorization: `Bearer ${tok2}` } }
             );
             if (!cvSnap.ok) return json({ error: 'canvasData/layout not found' });
@@ -870,7 +873,7 @@ async function handleWhatsAppWebhook(request, url, env) {
         // /start або перше повідомлення → шукаємо активний флоу
         if (!activeFlowId || text === '/start') {
             const botsSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
+                `${FS_URL}/companies/${cid}/bots`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (botsSnap.ok) {
@@ -878,7 +881,7 @@ async function handleWhatsAppWebhook(request, url, env) {
                 for (const botDoc of (botsData.documents || [])) {
                     const bid = botDoc.name?.split('/').pop();
                     const flowsSnap = await fetch(
-                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+                        `${FS_URL}/companies/${cid}/bots/${bid}/flows`,
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
                     if (!flowsSnap.ok) continue;
@@ -956,11 +959,16 @@ async function handleWhatsAppWebhook(request, url, env) {
 async function handleGenerateImage(request, env) {
     if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
-    // Auth
+    // Auth — Firebase token або внутрішній CRON_SECRET
     const _authHdr = request.headers.get('Authorization') || '';
-    if (!_authHdr.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
-    const _user = await verifyIdToken(_authHdr.slice(7), env);
-    if (!_user) return json({ error: 'Invalid token' }, 401);
+    const _imgCron = env.CRON_SECRET || '';
+    if (_imgCron && _authHdr === `Bearer ${_imgCron}`) {
+        // Внутрішній виклик з flow engine — пропускаємо
+    } else {
+        if (!_authHdr.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
+        const _user = await verifyIdToken(_authHdr.slice(7), env);
+        if (!_user) return json({ error: 'Invalid token' }, 401);
+    }
 
     let body;
     try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
@@ -1433,7 +1441,7 @@ async function handleBotDebug(request, url, env) {
     
     // Тестовий запит до Firestore (публічна колекція)
     const testReq = await fetch(
-        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/settings/ai`,
+        `${FS_URL}/settings/ai`,
         { headers: { Authorization: `Bearer ${token}` } }
     );
     result.firestoreTestStatus = testReq.status;
@@ -1446,7 +1454,7 @@ async function handleBotDebug(request, url, env) {
 
     // 1. Читаємо компанію — з деталями помилки
     const compRaw = await fetch(
-        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}`,
+        `${FS_URL}/companies/${cid}`,
         { headers: { Authorization: `Bearer ${token}` } }
     );
     result.compDocHttpStatus = compRaw.status;
@@ -1473,7 +1481,7 @@ async function handleBotDebug(request, url, env) {
 
     // 3. Bots підколекція
     const botsSnap = await fetch(
-        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots?pageSize=10`,
+        `${FS_URL}/companies/${cid}/bots?pageSize=10`,
         { headers: { Authorization: `Bearer ${token}` } }
     );
     if (botsSnap.ok) {
@@ -1493,7 +1501,7 @@ async function handleBotDebug(request, url, env) {
     // 4. Flows
     for (const bot of (result.bots||[])) {
         const flowsSnap = await fetch(
-            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bot.id}/flows`,
+            `${FS_URL}/companies/${cid}/bots/${bot.id}/flows`,
             { headers: { Authorization: `Bearer ${token}` } }
         );
         if (flowsSnap.ok) {
@@ -1514,7 +1522,7 @@ async function handleBotDebug(request, url, env) {
         }
     };
     const allCompSnap = await fetch(
-        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents:runQuery`,
+        `${FS_QUERY}`,
         {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -1531,7 +1539,7 @@ async function handleBotDebug(request, url, env) {
 
     // 5. Список компаній (перші 5)
     const companiesSnap = await fetch(
-        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies?pageSize=5`,
+        `${FS_URL}/companies?pageSize=5`,
         { headers: { Authorization: `Bearer ${token}` } }
     );
     if (companiesSnap.ok) {
@@ -1675,7 +1683,7 @@ async function handleWebhook(request, url, env) {
         // Fallback: перший активний бот компанії
         if (!botTokenForSend) {
             const botsSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${companyId}/bots?pageSize=5`,
+                `${FS_URL}/companies/${companyId}/bots?pageSize=5`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (botsSnap.ok) {
@@ -1776,7 +1784,7 @@ async function handleWebhook(request, url, env) {
             }
             if (!botToken) {
                 const botsSnap = await fetch(
-                    `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots?pageSize=10`,
+                    `${FS_URL}/companies/${cid}/bots?pageSize=10`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 if (botsSnap.ok) {
@@ -2006,7 +2014,7 @@ async function handleWebhook(request, url, env) {
                 ? [foundBotId]
                 : await (async () => {
                     const snap = await fetch(
-                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
+                        `${FS_URL}/companies/${cid}/bots`,
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
                     if (!snap.ok) return [];
@@ -2016,7 +2024,7 @@ async function handleWebhook(request, url, env) {
 
             for (const bid of botsToSearch) {
                 const flowsSnap = await fetch(
-                    `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+                    `${FS_URL}/companies/${cid}/bots/${bid}/flows`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 if (!flowsSnap.ok) continue;
@@ -2212,7 +2220,7 @@ ${e.stack?.slice(0,200)}`);
         // /start → шукаємо активний flow
         if (text === '/start') {
             const botsSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
+                `${FS_URL}/companies/${cid}/bots`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (botsSnap.ok) {
@@ -2220,7 +2228,7 @@ ${e.stack?.slice(0,200)}`);
                 for (const botDoc of (botsData.documents || [])) {
                     const bid = botDoc.name?.split('/').pop();
                     const flowsSnap = await fetch(
-                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+                        `${FS_URL}/companies/${cid}/bots/${bid}/flows`,
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
                     if (!flowsSnap.ok) continue;
@@ -2340,7 +2348,7 @@ ${e.stack?.slice(0,200)}`);
             let dealId     = null;
 
             const clientsSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents:runQuery`,
+                `${FS_QUERY}`,
                 {
                     method: 'POST',
                     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -2383,7 +2391,7 @@ ${e.stack?.slice(0,200)}`);
 
             // Шукаємо відкриту угоду для цього клієнта
             const dealsSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_deals?pageSize=5`,
+                `${FS_URL}/companies/${cid}/crm_deals?pageSize=5`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (dealsSnap.ok) {
@@ -2400,7 +2408,7 @@ ${e.stack?.slice(0,200)}`);
                 // Знаходимо першу стадію pipeline
                 let firstStageId = 'new';
                 const pipSnap = await fetch(
-                    `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_pipelines?pageSize=1`,
+                    `${FS_URL}/companies/${cid}/crm_pipelines?pageSize=1`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 if (pipSnap.ok) {
@@ -2503,7 +2511,7 @@ ${e.stack?.slice(0,200)}`);
 
             // Видаляємо активний дзвінок
             await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/active_calls/${bCallId}`,
+                `${FS_URL}/companies/${cid}/active_calls/${bCallId}`,
                 { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }
             ).catch(() => {});
 
@@ -2555,7 +2563,7 @@ ${e.stack?.slice(0,200)}`);
 
             // Шукаємо клієнта по телефону
             const rCliSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_clients?pageSize=100`,
+                `${FS_URL}/companies/${cid}/crm_clients?pageSize=100`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (rCliSnap.ok) {
@@ -2637,7 +2645,7 @@ ${e.stack?.slice(0,200)}`);
                     }
                 }
                 await fetch(
-                    `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/active_calls/${rCallId}`,
+                    `${FS_URL}/companies/${cid}/active_calls/${rCallId}`,
                     { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }
                 ).catch(() => {});
             }
@@ -2823,7 +2831,7 @@ ${e.stack?.slice(0,200)}`);
 
                 if (!activeFlowId || text === '/start') {
                     const botsSnap = await fetch(
-                        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots`,
+                        `${FS_URL}/companies/${cid}/bots`,
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
                     if (botsSnap.ok) {
@@ -2831,7 +2839,7 @@ ${e.stack?.slice(0,200)}`);
                         for (const botDoc of (botsData.documents || [])) {
                             const bid = botDoc.name?.split('/').pop();
                             const flowsSnap = await fetch(
-                                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${bid}/flows`,
+                                `${FS_URL}/companies/${cid}/bots/${bid}/flows`,
                                 { headers: { Authorization: `Bearer ${token}` } }
                             );
                             if (!flowsSnap.ok) continue;
@@ -2910,7 +2918,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
     // Паралельно завантажуємо flow і platform settings
     const [flowSnap, platDocPre] = await Promise.all([
         fetch(
-            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${botId}/flows/${flowId}`,
+            `${FS_URL}/companies/${cid}/bots/${botId}/flows/${flowId}`,
             { headers: { Authorization: `Bearer ${token}` } }
         ),
         fsGet(`settings/platform`, token),
@@ -2928,7 +2936,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
     // Fallback: canvasData/layout
     if (!nodes.length) {
         const canvasSnap = await fetch(
-            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/bots/${botId}/flows/${flowId}/canvasData/layout`,
+            `${FS_URL}/companies/${cid}/bots/${botId}/flows/${flowId}/canvasData/layout`,
             { headers: { Authorization: `Bearer ${token}` } }
         );
         if (canvasSnap.ok) {
@@ -3263,7 +3271,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         // Завантажуємо історію чату для контексту
         const limit = Math.max((historyLimit || 14) * 2, 30);
         const histSnap = await fetch(
-            `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/contacts/${chatId}/messages?pageSize=${limit}&orderBy=createdAt%20desc`,
+            `${FS_URL}/companies/${cid}/contacts/${chatId}/messages?pageSize=${limit}&orderBy=createdAt%20desc`,
             { headers: { Authorization: `Bearer ${token}` } }
         );
         let chatHistory = [];
@@ -3557,7 +3565,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         if (!dealId) {
             // Шукаємо угоду по chatId
             const dealsSnap = await fetch(
-                `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_deals?pageSize=5`,
+                `${FS_URL}/companies/${cid}/crm_deals?pageSize=5`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (dealsSnap.ok) {
@@ -3747,9 +3755,14 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
         await tgSend(chatId, loadingMsg);
 
         try {
+            // Отримуємо CRON_SECRET для внутрішнього виклику
+            const _cronKey = env.CRON_SECRET || '';
             const genResp = await fetch(`https://apptalko.com/api/generate-image`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(_cronKey ? { 'Authorization': `Bearer ${_cronKey}` } : {}),
+                },
                 body: JSON.stringify({
                     companyId:  cid,
                     style:      imgStyle,
@@ -3940,9 +3953,14 @@ async function _createCrmDealFromFlow({ cid, chatId, contact, fd, token, userNam
 // Перевірка кваліфікації ліда і конвертація в CRM
 async function checkAndConvertToLead({ aiResponse, userInput, collectedData, cid, chatId, contact, contactPath, token }) {
     // Витягуємо телефон з повідомлення користувача
-    const phoneMatch = userInput.match(/(\+?[\d\s\-()]{10,15})/);
+    // Більш точний патерн: починається з + або цифри, мінімум 10 цифр підряд (без пробілів між)
+    const phoneMatch = userInput.match(/(\+?\d[\d\s\-().]{8,}\d)/);
     if (phoneMatch) {
-        collectedData.phone = phoneMatch[1].replace(/\s/g,'');
+        const cleaned = phoneMatch[1].replace(/[\s\-().]/g, '');
+        // Перевіряємо що це справді телефон: мінімум 10 цифр
+        if (/^\+?\d{10,15}$/.test(cleaned)) {
+            collectedData.phone = cleaned;
+        }
     }
 
     // Зберігаємо зібрані дані
@@ -3995,7 +4013,7 @@ async function createCrmLead({ cid, chatId, contact, collectedData, token }) {
 
     // Перевіряємо чи угода вже є
     const existingDeal = await fetch(
-        `https://firestore.googleapis.com/v1/projects/task-manager-44e84/databases/(default)/documents/companies/${cid}/crm_deals?pageSize=1`,
+        `${FS_URL}/companies/${cid}/crm_deals?pageSize=1`,
         { headers: { Authorization: `Bearer ${token}` } }
     );
     // Простий пошук по chatId — якщо вже є угода від цього чату — не дублюємо
@@ -4048,6 +4066,9 @@ async function handleBooking(request, url, env) {
         try { body = await request.json(); } catch { return json({error:'Invalid JSON'},400); }
         const { cid, masterId, date, time, name, phone, service } = body;
         if (!cid||!date||!time||!phone) return json({error:'Missing required fields'},400);
+        // Базова валідація телефону — тільки цифри і +, мінімум 10 символів
+        const cleanPhone = phone.replace(/[^\d+]/g,'');
+        if (cleanPhone.length < 10) return json({error:'Invalid phone number'},400);
 
         const bookId = `book_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
         await fsSet(`companies/${cid}/bookings/${bookId}`, {
