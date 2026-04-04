@@ -2049,7 +2049,7 @@ document.addEventListener('mousedown', function(e) {
                             <button onclick="clearAllStatsData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;" title="Безповоротно видалити ВСІ метрики та дані" aria-label="Безповоротно видалити ВСІ метрики та дані">
                                 <i data-lucide="trash-2" class="icon icon-sm"></i>
                             </button>
-                            <button onclick="openAiAssistantsModal()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f3e8ff;color:#7c3aed;">
+                            <button onclick="openGlobalAISettings()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f3e8ff;color:#7c3aed;" title="Глобальні AI налаштування">
                                 <i data-lucide="bot" class="icon icon-sm"></i> AI
                             </button>
                             <button onclick="loadAdminCompanies()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
@@ -3601,7 +3601,7 @@ document.addEventListener('mousedown', function(e) {
                             <span style="font-size:0.88rem;font-weight:500;color:#111827;" data-i18n="mobileNotifications">Сповіщення</span>
                             <i data-lucide="chevron-right" style="width:14px;height:14px;color:#d1d5db;margin-left:auto;"></i>
                         </button>
-                        <button id="aiAssistantsBtnMenu" onclick="openAiAssistantsModal();closeMobileMenu();" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:none;border:none;cursor:pointer;text-align:left;">
+                        <button id="aiAssistantsBtnMenu" onclick="openGlobalAISettings();closeMobileMenu();" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:none;border:none;cursor:pointer;text-align:left;">
                             <div style="width:32px;height:32px;border-radius:8px;background:#7c3aed18;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <i data-lucide="bot" style="width:16px;height:16px;color:#7c3aed;"></i>
                             </div>

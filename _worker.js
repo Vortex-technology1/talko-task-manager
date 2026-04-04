@@ -1204,9 +1204,6 @@ async function handleAiProxy(request, env) {
 }
 
 // ════════════════════════════════════════════════════════════
-// CRM TRIGGER NOTIFY — sends Telegram messages from CRM triggers
-// ════════════════════════════════════════════════════════════
-// ════════════════════════════════════════════════════════════
 // AI CRM — аналіз угоди через AI
 // POST /api/ai-crm { dealId, companyId }
 // Authorization: Bearer <idToken>

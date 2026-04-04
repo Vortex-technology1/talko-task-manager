@@ -572,20 +572,7 @@ async function _saveIncident(data) {
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 
-function _getAiKey() {
-  // Читаємо з кешу якщо вже завантажили
-  if (window._cachedAiKey) return Promise.resolve(window._cachedAiKey);
-  // Читаємо з Firebase settings/ai (як 98-finance.js)
-  try {
-    return window.companyRef().collection('settings').doc('ai').get()
-      .then(snap => {
-        const key = snap.data()?.openaiApiKey || snap.data()?.apiKey || '';
-        if (key) window._cachedAiKey = key;
-        return key;
-      })
-      .catch(() => '');
-  } catch(_) { return Promise.resolve(''); }
-}
+// _getAiKey() removed — key resolution handled by worker via aiProxy
 
 function _getFunctionsList() {
   try {
