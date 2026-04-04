@@ -883,6 +883,13 @@ window.sitesOpenCreate = function () {
                             <span id="sc_preview_title" style="font-size:0.78rem;font-weight:700;color:#111;"></span>
                         </div>
                         <div style="display:flex;gap:0.4rem;">
+                            <button id="sc_ai_adapt_btn" onclick="sitesOpenAiAdaptForm()"
+                                style="padding:6px 14px;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:white;border:none;
+                                border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;
+                                display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(124,58,237,0.3);">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v4l3 3"/><circle cx="18" cy="6" r="3" fill="currentColor" stroke="none"/></svg>
+                                AI Адаптувати
+                            </button>
                             <button id="sc_copy_html_btn" onclick="sitesCopyTemplateHtml()"
                                 style="padding:6px 14px;background:#8b5cf6;color:white;border:none;
                                 border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;
@@ -1494,5 +1501,224 @@ document.addEventListener('DOMContentLoaded', function () {
             togglePublish: window.sitesTogglePublish,
         });
     }
+
+// ── AI Адаптація сайту (siteAdapter агент) ───────────────────
+// Відкриває модальну форму з полями бізнесу,
+// відправляє в aiProxy → агент siteAdapter → отримує адаптований HTML
+// ─────────────────────────────────────────────────────────────
+window.sitesOpenAiAdaptForm = function() {
+    if (!_selectedLibraryTemplate) {
+        showToast && showToast('Спочатку оберіть шаблон', 'warning');
+        return;
+    }
+    const tmpl = SITE_TEMPLATES.find(x => x.key === _selectedLibraryTemplate);
+    if (!tmpl) return;
+
+    document.getElementById('sitesAiAdaptOverlay')?.remove();
+
+    const inp = 'width:100%;padding:0.55rem 0.7rem;border:1.5px solid #e5e7eb;border-radius:9px;font-size:0.84rem;box-sizing:border-box;font-family:inherit;outline:none;';
+
+    document.body.insertAdjacentHTML('beforeend', `
+    <div id="sitesAiAdaptOverlay" onclick="if(event.target===this)this.remove()"
+        style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:10040;
+        display:flex;align-items:center;justify-content:center;padding:1rem;">
+        <div style="background:white;border-radius:18px;width:100%;max-width:520px;
+            box-shadow:0 24px 64px rgba(0,0,0,0.25);overflow:hidden;">
+
+            <!-- Хедер -->
+            <div style="background:linear-gradient(135deg,#7c3aed,#5b21b6);padding:1rem 1.25rem;
+                display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                    <div style="font-weight:800;font-size:0.95rem;color:white;">✦ AI Адаптація лендінгу</div>
+                    <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:2px;">Шаблон: ${tmpl.title}</div>
+                </div>
+                <button onclick="document.getElementById('sitesAiAdaptOverlay').remove()"
+                    style="background:rgba(255,255,255,0.15);border:none;cursor:pointer;color:white;
+                    width:30px;height:30px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+            </div>
+
+            <!-- Форма -->
+            <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.8rem;">
+                <div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:10px;padding:10px 13px;font-size:0.75rem;color:#3730a3;line-height:1.55;">
+                    <b>Як це працює:</b> заповніть дані бізнесу → AI адаптує всі тексти шаблону під ваш оффер, нішу і місто → готовий HTML підставляється у Крок 2.
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
+                    <div>
+                        <label style="font-size:0.65rem;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px;">Назва бізнесу *</label>
+                        <input id="saa_name" placeholder="Стоматологія 'Усмішка'" style="${inp}">
+                    </div>
+                    <div>
+                        <label style="font-size:0.65rem;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px;">Місто *</label>
+                        <input id="saa_city" placeholder="Київ" style="${inp}">
+                    </div>
+                </div>
+
+                <div>
+                    <label style="font-size:0.65rem;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px;">Ніша / специфіка *</label>
+                    <input id="saa_niche" placeholder="Стоматологія — імплантація, відбілювання, лікування карієсу" style="${inp}">
+                </div>
+
+                <div>
+                    <label style="font-size:0.65rem;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px;">Telegram або телефон (CTA посилання) *</label>
+                    <input id="saa_contact" placeholder="https://t.me/username або +380..." style="${inp}">
+                </div>
+
+                <div>
+                    <label style="font-size:0.65rem;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px;">Головна вигода / оффер</label>
+                    <textarea id="saa_benefit" rows="2" placeholder="Безкоштовна консультація + знімок. Без черг. Лікуємо без болю."
+                        style="${inp}resize:none;line-height:1.45;"></textarea>
+                </div>
+
+                <div id="saa_error" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;font-size:0.77rem;color:#dc2626;"></div>
+
+                <div style="display:flex;gap:0.5rem;">
+                    <button onclick="document.getElementById('sitesAiAdaptOverlay').remove()"
+                        style="flex:1;padding:0.65rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;cursor:pointer;font-size:0.84rem;font-weight:600;">
+                        Скасувати
+                    </button>
+                    <button id="saa_submit_btn" onclick="sitesRunAiAdaptation('${tmpl.key}')"
+                        style="flex:2;padding:0.65rem;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:white;border:none;
+                        border-radius:10px;cursor:pointer;font-size:0.84rem;font-weight:700;
+                        box-shadow:0 2px 8px rgba(124,58,237,0.35);display:flex;align-items:center;justify-content:center;gap:6px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Адаптувати через AI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>`);
+
+    document.getElementById('saa_name')?.focus();
+};
+
+window.sitesRunAiAdaptation = async function(templateKey) {
+    const name    = document.getElementById('saa_name')?.value.trim();
+    const city    = document.getElementById('saa_city')?.value.trim();
+    const niche   = document.getElementById('saa_niche')?.value.trim();
+    const contact = document.getElementById('saa_contact')?.value.trim();
+    const benefit = document.getElementById('saa_benefit')?.value.trim();
+    const errEl   = document.getElementById('saa_error');
+    const btn     = document.getElementById('saa_submit_btn');
+
+    const showErr = (msg) => { if(errEl){ errEl.textContent = msg; errEl.style.display = 'block'; } };
+
+    if (!name || !city || !niche || !contact) {
+        showErr('Заповніть обов\'язкові поля (*)');
+        return;
+    }
+
+    const tmpl = SITE_TEMPLATES.find(x => x.key === templateKey);
+    if (!tmpl) { showErr('Шаблон не знайдено'); return; }
+
+    // UI: стан завантаження
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Адаптую...`;
+    }
+    if (errEl) errEl.style.display = 'none';
+
+    // Стиль спінера (якщо ще немає)
+    if (!document.getElementById('spinStyle')) {
+        const s = document.createElement('style');
+        s.id = 'spinStyle';
+        s.textContent = '@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}';
+        document.head.appendChild(s);
+    }
+
+    try {
+        // Передаємо перші 8000 символів HTML (обмеження токенів)
+        const htmlSnippet = tmpl.html.slice(0, 8000);
+
+        const userPrompt = `Дані бізнесу:
+- Назва: ${name}
+- Місто: ${city}
+- Ніша/специфіка: ${niche}
+- Контакт (Telegram або телефон): ${contact}
+- Головна вигода/оффер: ${benefit || 'не вказано'}
+
+Шаблон (ключ): ${templateKey}
+Назва шаблону: ${tmpl.title}
+
+Ось перша частина HTML шаблону для аналізу структури:
+${htmlSnippet}
+
+Поверни JSON об'єкт де ключі — це назви елементів для заміни, а значення — адаптовані тексти.
+Обов'язково включи ці ключі якщо вони є в шаблоні:
+HERO_H1, HERO_SUB, GOLD_1, GOLD_2, GOLD_3, PAIN_1, PAIN_2, PAIN_3, CTA_BUTTON, CTA_LINK, AUTHOR_NAME, FOOTER, BUSINESS_NAME, CITY, NICHE_SPECIFIC.
+
+CTA_LINK має бути: ${contact}
+BUSINESS_NAME: ${name}
+CITY: ${city}
+
+Додатково поверни ключ ADAPTED_HTML — повний адаптований HTML шаблону з підставленими текстами.`;
+
+        const result = await window.aiProxy({
+            messages:    [{ role: 'user', content: userPrompt }],
+            systemPrompt: null,   // з адмінки — агент siteAdapter
+            model:        null,
+            maxTokens:    4000,
+            temperature:  0.4,
+            module:       'siteAdapter',
+        });
+
+        // Парсимо відповідь — очікуємо JSON або HTML
+        let adaptedHtml = '';
+        let parsed = null;
+
+        try {
+            const clean = result.replace(/```json|```html|```/g, '').trim();
+            parsed = JSON.parse(clean);
+
+            if (parsed.ADAPTED_HTML) {
+                // Агент повернув повний HTML
+                adaptedHtml = parsed.ADAPTED_HTML;
+            } else {
+                // Агент повернув словник ключ→значення — робимо заміни в оригінальному HTML
+                adaptedHtml = tmpl.html;
+                Object.entries(parsed).forEach(([key, val]) => {
+                    if (typeof val === 'string') {
+                        // Замінюємо %%KEY%% плейсхолдери якщо є
+                        adaptedHtml = adaptedHtml.replaceAll(`%%${key}%%`, val);
+                    }
+                });
+            }
+        } catch(parseErr) {
+            // AI повернув не JSON — можливо чистий HTML
+            if (result.trim().startsWith('<!DOCTYPE') || result.trim().startsWith('<html')) {
+                adaptedHtml = result.trim();
+            } else {
+                throw new Error('Не вдалось розпарсити відповідь AI. Спробуйте ще раз.');
+            }
+        }
+
+        if (!adaptedHtml) throw new Error('AI повернув порожню відповідь');
+
+        // Закриваємо форму
+        document.getElementById('sitesAiAdaptOverlay')?.remove();
+
+        // Підставляємо HTML у крок 2 і назву сайту
+        const htmlTextarea = document.getElementById('sc_html');
+        const nameInput    = document.getElementById('sc_name');
+        if (htmlTextarea) htmlTextarea.value = adaptedHtml;
+        if (nameInput && !nameInput.value) nameInput.value = name;
+
+        // Переходимо на крок 2 і показуємо preview в iframe
+        sitesGoStep(2);
+
+        // Оновлюємо preview в бібліотечному iframe теж
+        const iframe = document.getElementById('sc_preview_iframe');
+        if (iframe) iframe.srcdoc = adaptedHtml;
+
+        showToast && showToast('✦ AI адаптував шаблон! Перевірте HTML у Кроці 2', 'success');
+
+    } catch(e) {
+        showErr(e.message || 'Помилка AI адаптації');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Адаптувати через AI`;
+        }
+    }
+};
 
 })();
