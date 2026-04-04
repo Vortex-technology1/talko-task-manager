@@ -1557,7 +1557,7 @@
             } else {
                 window.openAiChat({
                     module: 'statistics', title: window.t('aiMetricsAnalysis') || 'AI Аналіз метрик',
-                    contextText: trimmedContext, systemPrompt: null,
+                    contextText: contextText, systemPrompt: null,
                     initialMessage, maxTokens: 1500,
                 });
             }

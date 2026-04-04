@@ -67,9 +67,8 @@ window.crmAutoTasksOnStageChange = async function (deal, newStage) {
         }).catch(e => console.warn('[CRM autoTask]', e.message));
     }
 
-    // Оновити таб задач якщо відкритий
-    const tasksContainer = document.getElementById('crmDealTasksList');
-    if (tasksContainer && window._crmActiveDealId === deal.id) {
+    // Оновлюємо таб задач якщо картка відкрита
+    if (window._crmActiveDealId === deal.id && typeof window.crmRenderDealTasks === 'function') {
         window.crmRenderDealTasks(deal.id);
     }
 };
