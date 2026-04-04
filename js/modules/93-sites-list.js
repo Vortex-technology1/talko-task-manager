@@ -387,190 +387,204 @@ window.sitesOpenCreate = function () {
     <div id="sitesCreateOverlay" onclick="if(event.target===this)this.remove()"
         style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10030;
         display:flex;align-items:center;justify-content:center;padding:1rem;">
-        <div style="background:white;border-radius:18px;width:100%;max-width:680px;max-height:90vh;
+        <div style="background:white;border-radius:18px;width:100%;max-width:860px;max-height:92vh;
             display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.22);">
 
             <!-- Хедер -->
-            <div style="padding:0.85rem 1.25rem;border-bottom:1px solid #f1f5f9;
+            <div style="padding:0.85rem 1.5rem;border-bottom:1px solid #f1f5f9;
                 display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-                <div>
-                    <div style="font-weight:800;font-size:0.95rem;">+ Новий сайт</div>
-                    <div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;">Виберіть спосіб і налаштуйте</div>
+                <div style="display:flex;align-items:center;gap:1rem;">
+                    <div>
+                        <div style="font-weight:800;font-size:0.95rem;">+ Новий сайт</div>
+                        <div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;">Оберіть шаблон або вставте готовий HTML</div>
+                    </div>
+                    <!-- Степери -->
+                    <div style="display:flex;align-items:center;gap:0.3rem;margin-left:0.5rem;">
+                        <div id="sc_step1_pill" style="display:flex;align-items:center;gap:0.35rem;padding:4px 12px;border-radius:20px;background:#22c55e;color:white;font-size:0.72rem;font-weight:700;cursor:pointer;" onclick="sitesGoStep(1)">
+                            <span>1</span> Бібліотека
+                        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                        <div id="sc_step2_pill" style="display:flex;align-items:center;gap:0.35rem;padding:4px 12px;border-radius:20px;background:#f1f5f9;color:#9ca3af;font-size:0.72rem;font-weight:700;cursor:pointer;" onclick="sitesGoStep(2)">
+                            <span>2</span> HTML
+                        </div>
+                    </div>
                 </div>
                 <button onclick="document.getElementById('sitesCreateOverlay').remove()"
-                    style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;line-height:1;flex-shrink:0;">✕</button>
+                    style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;line-height:1;">✕</button>
             </div>
 
-            <!-- ══ ОДНЕ ВЕРТИКАЛЬНЕ ВІКНО — весь скрол тут ══ -->
-            <div style="flex:1;overflow-y:auto;padding:1.25rem;display:flex;flex-direction:column;gap:1.1rem;">
+            <!-- ══ КРОК 1: БІБЛІОТЕКА ══ -->
+            <div id="sc_step1" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
 
-                <!-- 1. Назва -->
-                <div>
-                    <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Назва сайту</label>
-                    <input id="sc_name" placeholder="${window.t('siteNameEx')}" style="${inp}" autofocus>
-                </div>
-
-                <!-- 2. Вибір способу -->
-                <div>
-                    <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;">Спосіб створення</label>
-                    <div style="display:flex;gap:0.4rem;">
-                        <button id="sc_mode_blocks" onclick="sitesSetCreateMode('blocks')"
-                            style="flex:1;padding:0.6rem 0.5rem;border:2px solid #22c55e;border-radius:11px;
-                            background:#f0fdf4;color:#16a34a;font-size:0.78rem;font-weight:700;cursor:pointer;
-                            display:flex;align-items:center;justify-content:center;gap:0.35rem;">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                            Конструктор
-                        </button>
-                        <button id="sc_mode_html" onclick="sitesSetCreateMode('html')"
-                            style="flex:1;padding:0.6rem 0.5rem;border:2px solid #e5e7eb;border-radius:11px;
-                            background:white;color:#6b7280;font-size:0.78rem;font-weight:600;cursor:pointer;
-                            display:flex;align-items:center;justify-content:center;gap:0.35rem;">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                            Вставити HTML
-                        </button>
-                        <button id="sc_mode_library" onclick="sitesSetCreateMode('library')"
-                            style="flex:1;padding:0.6rem 0.5rem;border:2px solid #e5e7eb;border-radius:11px;
-                            background:white;color:#6b7280;font-size:0.78rem;font-weight:600;cursor:pointer;
-                            display:flex;align-items:center;justify-content:center;gap:0.35rem;">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                            Бібліотека
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 3а. Конструктор секція -->
-                <div id="sc_blocks_section" style="display:flex;flex-direction:column;gap:0.65rem;">
-                    <div>
-                        <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Опис (необов\'язково)</label>
-                        <input id="sc_desc" placeholder="${window.t('sitesDescPh')}" style="${inp}">
-                    </div>
-                    <div>
-                        <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;">Шаблон (ніша)</label>
-                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.3rem;" id="sc_niches">
-                            ${niches.map(n => `
-                            <div onclick="sitesSelectNiche('${n.key}')" id="scn_${n.key}"
-                                style="padding:0.4rem 0.5rem;border:2px solid #e5e7eb;border-radius:9px;
-                                cursor:pointer;font-size:0.72rem;font-weight:500;transition:all 0.15s;
-                                display:flex;align-items:center;gap:0.3rem;justify-content:center;text-align:center;">
-                                ${_esc(n.label)}
-                            </div>`).join('')}
+                <!-- Підказка -->
+                <div style="padding:0.75rem 1.5rem;background:linear-gradient(135deg,#fffbeb,#fef9ee);border-bottom:1px solid #fde68a;flex-shrink:0;">
+                    <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+                        <div style="font-size:0.75rem;font-weight:700;color:#92400e;">💡 Як адаптувати під свій бізнес:</div>
+                        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                            <span style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:#78350f;">
+                                <span style="background:#f59e0b;color:white;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;flex-shrink:0;">1</span>
+                                Знайдіть шаблон → <b>Скопіювати HTML</b>
+                            </span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            <span style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:#78350f;">
+                                <span style="background:#f59e0b;color:white;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;flex-shrink:0;">2</span>
+                                Відкрийте <a href="https://claude.ai" target="_blank" style="color:#d97706;font-weight:700;text-decoration:underline;">claude.ai</a> → вставте HTML
+                            </span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            <span style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:#78350f;">
+                                <span style="background:#f59e0b;color:white;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;flex-shrink:0;">3</span>
+                                Напишіть: <i>"Адаптуй під мій бізнес: [офер, ніша, місто]"</i>
+                            </span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            <span style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:#78350f;">
+                                <span style="background:#22c55e;color:white;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;flex-shrink:0;">4</span>
+                                Скопіюйте результат → <b>Крок 2 → Вставити</b>
+                            </span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3б. HTML секція -->
-                <div id="sc_html_section" style="display:none;flex-direction:column;gap:0.5rem;">
-                    <textarea id="sc_html" rows="8"
-                        placeholder="<!DOCTYPE html>&#10;<html>&#10;  <head>...</head>&#10;  <body>&#10;    <!-- Ваш HTML -->&#10;  </body>&#10;</html>"
-                        style="width:100%;padding:0.5rem;border:1.5px solid #e5e7eb;border-radius:9px;
-                        font-size:0.7rem;font-family:monospace;box-sizing:border-box;resize:vertical;
-                        line-height:1.5;min-height:180px;"></textarea>
-                    <div style="font-size:0.63rem;color:#9ca3af;">
-                        ${window.t('siteHtmlHint')||'Вставте повний HTML — сайт буде одразу опублікований'}
-                    </div>
+                <!-- Фільтри + кількість -->
+                <div style="padding:0.6rem 1.5rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:0.5rem;flex-shrink:0;background:white;">
+                    <select id="sc_lib_niche" onchange="sitesFilterLibrary()"
+                        style="padding:0.35rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.75rem;font-family:inherit;background:white;cursor:pointer;">
+                        <option value="">Всі ніші</option>
+                        <option value="dental">Медицина</option>
+                        <option value="construction">Будівництво</option>
+                        <option value="furniture">Меблі</option>
+                        <option value="beauty">Б\'юті</option>
+                        <option value="horeca">Хорека</option>
+                        <option value="auto">Авто</option>
+                        <option value="legal">Юристи</option>
+                    </select>
+                    <select id="sc_lib_type" onchange="sitesFilterLibrary()"
+                        style="padding:0.35rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.75rem;font-family:inherit;background:white;cursor:pointer;">
+                        <option value="">Всі типи</option>
+                        <option value="consult">Консультація / Запис</option>
+                        <option value="masterclass">Майстер-клас</option>
+                        <option value="hire">Найм</option>
+                        <option value="booking">Бронювання</option>
+                        <option value="calc">Прорахунок</option>
+                    </select>
+                    <span id="sc_lib_count" style="font-size:0.7rem;color:#9ca3af;margin-left:auto;white-space:nowrap;"></span>
                 </div>
 
-                <!-- 3в. Бібліотека секція -->
-                <div id="sc_library_section" style="display:none;flex-direction:column;gap:0.75rem;">
+                <!-- Грід карток -->
+                <div id="sc_library_grid" style="flex:1;overflow-y:auto;padding:1rem 1.5rem;
+                    display:grid;grid-template-columns:repeat(4,1fr);gap:0.65rem;align-content:start;"></div>
 
-                    <!-- Підказка як використати -->
-                    <div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:12px;padding:14px 16px;">
-                        <div style="font-size:0.78rem;font-weight:700;color:#92400e;margin-bottom:8px;">💡 Як адаптувати шаблон під себе за 5 хвилин</div>
-                        <div style="display:flex;flex-direction:column;gap:6px;">
-                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.75rem;color:#78350f;">
-                                <span style="background:#f59e0b;color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0;">1</span>
-                                Оберіть підходящий шаблон нижче і натисніть <b>Скопіювати HTML</b>
-                            </div>
-                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.75rem;color:#78350f;">
-                                <span style="background:#f59e0b;color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0;">2</span>
-                                Перейдіть у <a href="https://claude.ai" target="_blank" style="color:#d97706;font-weight:700;text-decoration:underline;">Claude AI (claude.ai)</a> і вставте HTML
-                            </div>
-                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.75rem;color:#78350f;">
-                                <span style="background:#f59e0b;color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0;">3</span>
-                                Напишіть: <i>"Адаптуй цей HTML під мій бізнес: [опишіть свій офер, ніша, місто, контакти]"</i>
-                            </div>
-                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.75rem;color:#78350f;">
-                                <span style="background:#22c55e;color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0;">4</span>
-                                Скопіюйте готовий HTML від Claude → вставте у вкладку <b>Вставити HTML</b> → публікуйте
-                            </div>
+                <!-- Превью iframe (прихований) -->
+                <div id="sc_preview_wrap" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+                    <div style="padding:0.6rem 1.5rem;background:#f8fafc;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <button onclick="sitesBackToLibrary()"
+                                style="font-size:0.72rem;color:#6b7280;background:white;border:1px solid #e5e7eb;
+                                border-radius:7px;padding:5px 10px;cursor:pointer;font-weight:600;">← Назад</button>
+                            <span id="sc_preview_title" style="font-size:0.78rem;font-weight:700;color:#111;"></span>
                         </div>
-                    </div>
-
-                    <!-- Фільтри -->
-                    <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">
-                        <select id="sc_lib_niche" onchange="sitesFilterLibrary()"
-                            style="${inp} width:auto;flex:1;">
-                            <option value="">Всі ніші</option>
-                            <option value="dental">Медицина</option>
-                            <option value="construction">Будівництво</option>
-                            <option value="furniture">Меблі</option>
-                            <option value="beauty">Б\'юті</option>
-                            <option value="horeca">Хорека</option>
-                            <option value="auto">Авто</option>
-                            <option value="legal">Юристи</option>
-                        </select>
-                        <select id="sc_lib_type" onchange="sitesFilterLibrary()"
-                            style="${inp} width:auto;flex:1;">
-                            <option value="">Всі типи</option>
-                            <option value="consult">Консультація / Запис</option>
-                            <option value="masterclass">Майстер-клас</option>
-                            <option value="hire">Найм</option>
-                            <option value="booking">Бронювання</option>
-                            <option value="calc">Прорахунок</option>
-                        </select>
-                        <span id="sc_lib_count" style="font-size:0.7rem;color:#9ca3af;white-space:nowrap;"></span>
-                    </div>
-
-                    <!-- Грід карток — 3 колонки -->
-                    <div id="sc_library_grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;"></div>
-
-                    <!-- iframe превью — прихований, з'являється при кліку "Переглянути" -->
-                    <div id="sc_preview_wrap" style="display:none;flex-direction:column;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">
-                        <div style="padding:0.6rem 0.9rem;background:#f8fafc;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;">
-                            <div style="display:flex;align-items:center;gap:0.5rem;">
-                                <button onclick="sitesBackToLibrary()"
-                                    style="font-size:0.72rem;color:#6b7280;background:white;border:1px solid #e5e7eb;
-                                    border-radius:7px;padding:4px 9px;cursor:pointer;font-weight:600;">← Назад</button>
-                                <span id="sc_preview_title" style="font-size:0.75rem;font-weight:700;color:#111;"></span>
-                            </div>
+                        <div style="display:flex;gap:0.4rem;">
                             <button id="sc_copy_html_btn" onclick="sitesCopyTemplateHtml()"
-                                style="padding:5px 12px;background:#8b5cf6;color:white;border:none;
-                                border-radius:7px;cursor:pointer;font-size:0.72rem;font-weight:700;
-                                display:flex;align-items:center;gap:4px;">
+                                style="padding:6px 14px;background:#8b5cf6;color:white;border:none;
+                                border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;
+                                display:flex;align-items:center;gap:5px;">
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                                 Скопіювати HTML
                             </button>
+                            <button onclick="sitesGoStep(2)"
+                                style="padding:6px 14px;background:#22c55e;color:white;border:none;
+                                border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;">
+                                Вставити HTML → Крок 2
+                            </button>
                         </div>
-                        <iframe id="sc_preview_iframe" style="width:100%;height:420px;border:none;background:#fff;"></iframe>
                     </div>
+                    <iframe id="sc_preview_iframe" style="flex:1;width:100%;border:none;background:#fff;"></iframe>
+                </div>
+            </div>
 
-                    <!-- Обраний шаблон -->
-                    <div id="sc_lib_selected_bar" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:10px 14px;align-items:center;gap:0.5rem;">
-                        <span style="font-size:0.72rem;color:#16a34a;font-weight:700;">✓ Обрано для створення сайту:</span>
-                        <span id="sc_lib_selected_title" style="font-size:0.75rem;color:#15803d;font-weight:600;"></span>
-                    </div>
+            <!-- ══ КРОК 2: НАЗВА + HTML ══ -->
+            <div id="sc_step2" style="display:none;flex:1;overflow-y:auto;padding:1.25rem 1.5rem;flex-direction:column;gap:1rem;">
+
+                <!-- Назва сайту -->
+                <div>
+                    <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Назва сайту</label>
+                    <input id="sc_name" placeholder="${window.t('siteNameEx')}" style="${inp}">
                 </div>
 
+                <!-- Підказка що вставляти -->
+                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px;font-size:0.75rem;color:#15803d;line-height:1.6;">
+                    <b>✓ Як це працює:</b> Вставте HTML який ви отримали від Claude AI після адаптації шаблону під ваш бізнес. Сайт буде одразу опублікований.
+                    <br>Немає адаптованого HTML? <button onclick="sitesGoStep(1)" style="background:none;border:none;color:#16a34a;font-weight:700;cursor:pointer;font-size:0.75rem;text-decoration:underline;">← Повернутись до бібліотеки</button>
+                </div>
+
+                <!-- HTML textarea -->
+                <div style="display:flex;flex-direction:column;gap:0.4rem;flex:1;">
+                    <label style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;">HTML код сторінки</label>
+                    <textarea id="sc_html" rows="14"
+                        placeholder="<!DOCTYPE html>&#10;<html>&#10;  <head>...</head>&#10;  <body>&#10;    <!-- Вставте HTML який адаптував Claude AI -->&#10;  </body>&#10;</html>"
+                        style="width:100%;padding:0.6rem;border:1.5px solid #e5e7eb;border-radius:10px;
+                        font-size:0.72rem;font-family:monospace;box-sizing:border-box;resize:vertical;
+                        line-height:1.55;min-height:280px;"></textarea>
+                </div>
             </div>
 
             <!-- Футер -->
-            <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;display:flex;justify-content:flex-end;gap:0.4rem;flex-shrink:0;">
-                <button onclick="document.getElementById('sitesCreateOverlay').remove()"
-                    style="padding:0.5rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;">
-                    Скасувати
-                </button>
-                <button onclick="sitesCreate()"
-                    style="padding:0.5rem 1.4rem;background:#22c55e;color:white;border:none;
-                    border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;
-                    box-shadow:0 2px 8px rgba(34,197,94,0.3);">
-                    Створити сайт →
-                </button>
+            <div style="padding:0.75rem 1.5rem;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+                <div id="sc_lib_selected_bar" style="display:none;align-items:center;gap:0.4rem;">
+                    <span style="font-size:0.7rem;color:#16a34a;font-weight:700;">✓</span>
+                    <span id="sc_lib_selected_title" style="font-size:0.72rem;color:#15803d;font-weight:600;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+                </div>
+                <div style="display:flex;gap:0.4rem;margin-left:auto;">
+                    <button onclick="document.getElementById('sitesCreateOverlay').remove()"
+                        style="padding:0.5rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;">
+                        Скасувати
+                    </button>
+                    <!-- Крок 1: кнопка "Далі" -->
+                    <button id="sc_btn_next" onclick="sitesGoStep(2)"
+                        style="padding:0.5rem 1.4rem;background:#f59e0b;color:white;border:none;
+                        border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;">
+                        Вставити HTML → Далі
+                    </button>
+                    <!-- Крок 2: кнопка "Створити" (прихована) -->
+                    <button id="sc_btn_create" onclick="sitesCreate()" style="display:none;
+                        padding:0.5rem 1.4rem;background:#22c55e;color:white;border:none;
+                        border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;
+                        box-shadow:0 2px 8px rgba(34,197,94,0.3);">
+                        Опублікувати сайт →
+                    </button>
+                </div>
             </div>
         </div>
     </div>`);
 
     document.getElementById('sc_name')?.focus();
     sitesRenderLibraryGrid(SITE_TEMPLATES);
+};
+
+// ── Навігація між кроками ────────────────────────────────
+window.sitesGoStep = function(step) {
+    const s1 = document.getElementById('sc_step1');
+    const s2 = document.getElementById('sc_step2');
+    const p1 = document.getElementById('sc_step1_pill');
+    const p2 = document.getElementById('sc_step2_pill');
+    const btnNext   = document.getElementById('sc_btn_next');
+    const btnCreate = document.getElementById('sc_btn_create');
+
+    if (step === 2) {
+        if(s1) s1.style.display = 'none';
+        if(s2) { s2.style.display = 'flex'; s2.style.flexDirection = 'column'; }
+        if(p1) { p1.style.background='#f1f5f9'; p1.style.color='#6b7280'; }
+        if(p2) { p2.style.background='#22c55e'; p2.style.color='white'; }
+        if(btnNext)   btnNext.style.display   = 'none';
+        if(btnCreate) btnCreate.style.display = 'block';
+        setTimeout(() => document.getElementById('sc_name')?.focus(), 50);
+    } else {
+        if(s1) s1.style.display = 'flex';
+        if(s2) s2.style.display = 'none';
+        if(p1) { p1.style.background='#22c55e'; p1.style.color='white'; }
+        if(p2) { p2.style.background='#f1f5f9'; p2.style.color='#9ca3af'; }
+        if(btnNext)   btnNext.style.display   = 'block';
+        if(btnCreate) btnCreate.style.display = 'none';
+    }
 };
 
 let _selectedNiche = 'custom';
@@ -651,43 +665,12 @@ window.sitesSaveHtml = async function(siteId) {
     }
 };
 
-let _createMode = 'blocks'; // 'blocks' | 'html' | 'library'
+let _createMode = 'html'; // завжди html для нового флоу
 let _selectedLibraryTemplate = null;
 
+// sitesSetCreateMode — залишаємо для сумісності зі старим кодом
 window.sitesSetCreateMode = function(mode) {
     _createMode = mode;
-    const btnBlocks  = document.getElementById('sc_mode_blocks');
-    const btnHtml    = document.getElementById('sc_mode_html');
-    const btnLib     = document.getElementById('sc_mode_library');
-    const secBlocks  = document.getElementById('sc_blocks_section');
-    const secHtml    = document.getElementById('sc_html_section');
-    const secLib     = document.getElementById('sc_library_section');
-
-    // скидаємо всі кнопки
-    const active   = 'border:2px solid var(--c);border-radius:11px;background:var(--bg);color:var(--fg);font-weight:700;';
-    const inactive = 'border:2px solid #e5e7eb;border-radius:11px;background:white;color:#6b7280;font-weight:600;';
-
-    if(btnBlocks) { btnBlocks.style.cssText = btnBlocks.style.cssText; btnBlocks.style.borderColor='#e5e7eb'; btnBlocks.style.background='white'; btnBlocks.style.color='#6b7280'; btnBlocks.style.fontWeight='600'; }
-    if(btnHtml)   { btnHtml.style.borderColor='#e5e7eb'; btnHtml.style.background='white'; btnHtml.style.color='#6b7280'; btnHtml.style.fontWeight='600'; }
-    if(btnLib)    { btnLib.style.borderColor='#e5e7eb'; btnLib.style.background='white'; btnLib.style.color='#6b7280'; btnLib.style.fontWeight='600'; }
-
-    // ховаємо всі секції
-    [secBlocks, secHtml, secLib].forEach(s => { if(s) s.style.display='none'; });
-
-    if (mode === 'html') {
-        if(btnHtml) { btnHtml.style.borderColor='#8b5cf6'; btnHtml.style.background='#f5f3ff'; btnHtml.style.color='#7c3aed'; btnHtml.style.fontWeight='700'; }
-        if(secHtml) secHtml.style.display='flex';
-        setTimeout(() => document.getElementById('sc_html')?.focus(), 50);
-
-    } else if (mode === 'library') {
-        if(btnLib) { btnLib.style.borderColor='#f59e0b'; btnLib.style.background='#fffbeb'; btnLib.style.color='#b45309'; btnLib.style.fontWeight='700'; }
-        if(secLib) secLib.style.display='flex';
-        sitesFilterLibrary();
-
-    } else { // blocks
-        if(btnBlocks) { btnBlocks.style.borderColor='#22c55e'; btnBlocks.style.background='#f0fdf4'; btnBlocks.style.color='#16a34a'; btnBlocks.style.fontWeight='700'; }
-        if(secBlocks) secBlocks.style.display='flex';
-    }
 };
 
 // ── Бібліотека: рендер карток ─────────────────────────────
@@ -823,123 +806,42 @@ window.sitesCopyTemplateHtmlByKey = function(key) {
 
 window.sitesCreate = async function () {
     const name = document.getElementById('sc_name')?.value.trim();
-    if (!name) { if(window.showToast)showToast(window.t('sitesEnterName'),'warning'); else alert(window.t('sitesEnterName')); return; }
+    if (!name) { if(window.showToast)showToast(window.t('sitesEnterName'),'warning'); return; }
 
-    // ── Бібліотека режим ──────────────────────────────────
-    if (_createMode === 'library') {
-        if (!_selectedLibraryTemplate) {
-            if(window.showToast) showToast('Оберіть шаблон з бібліотеки', 'warning');
-            return;
-        }
-        const tpl = SITE_TEMPLATES.find(x => x.key === _selectedLibraryTemplate);
-        if (!tpl) return;
-        try {
-            await window.companyRef().collection(window.DB_COLS?.SITES || 'sites').add({
-                name,
-                description: tpl.desc || '',
-                niche: tpl.nicheLabel,
-                nicheKey: tpl.niche,
-                status: 'published',
-                mode: 'html',
-                rawHtml: tpl.html,
-                templateKey: tpl.key,
-                blocks: [],
-                companyId: window.currentCompanyId || '',
-                theme: { primaryColor: '#22c55e', fontFamily: 'Inter', borderRadius: '12px' },
-                visits: 0,
-                formSubmissions: 0,
-                analyticsHeadCode: '',
-                bodyCode: '',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-            _selectedLibraryTemplate = null;
-            document.getElementById('sitesCreateOverlay')?.remove();
-            if (typeof showToast === 'function') showToast('🚀 Сайт зі шаблону створено і опубліковано!', 'success');
-            if (typeof window.initSitesModule === 'function') window.initSitesModule();
-        } catch(e) {
-            if(window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
-        }
+    const rawHtml = document.getElementById('sc_html')?.value.trim() || '';
+    if (!rawHtml) {
+        if(window.showToast) showToast('Вставте HTML код сторінки', 'warning');
         return;
     }
-
-    // ── HTML режим ────────────────────────────────────────
-    if (_createMode === 'html') {
-        const rawHtml = document.getElementById('sc_html')?.value.trim() || '';
-        if (!rawHtml) {
-            if(window.showToast) showToast('Вставте HTML код', 'warning');
-            return;
-        }
-        try {
-            const ref = await window.companyRef().collection(window.DB_COLS?.SITES || 'sites').add({
-                name,
-                description: '',
-                niche: 'custom',
-                nicheKey: 'custom',
-                status: 'published',          // одразу публікуємо
-                mode: 'html',                  // маркер режиму
-                rawHtml,                       // повний HTML код
-                blocks: [],
-                companyId: window.currentCompanyId || '',
-                theme: { primaryColor: '#22c55e', fontFamily: 'Inter', borderRadius: '12px' },
-                visits: 0,
-                formSubmissions: 0,
-                analyticsHeadCode: '',
-                bodyCode: '',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-            document.getElementById('sitesCreateOverlay')?.remove();
-            if (typeof showToast === 'function') showToast(window.t('siteCreatedPublished')||'🚀 Сайт створено і опубліковано!', 'success');
-            // Оновлюємо список — не відкриваємо білдер (HTML режим)
-            if (typeof window.initSitesModule === 'function') window.initSitesModule();
-        } catch(e) {
-            if(window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
-        }
-        return;
-    }
-
-    // ── Блоки режим ───────────────────────────────────────
-    const desc = document.getElementById('sc_desc')?.value.trim() || '';
-
-    const nicheTemplates = {
-        dental:       { niche: window.t('nicheDental'),  blocks: ['hero','benefits','services','team','reviews','form'] },
-        construction: { niche: window.t('nicheConstruction2'),   blocks: ['hero','services','gallery','reviews','form'] },
-        legal:        { niche: window.t('nicheLawyers'),        blocks: ['hero','services','team','faq','form'] },
-        auto:         { niche: window.t('botsAuto'),          blocks: ['hero','services','prices','reviews','form'] },
-        beauty:       { niche: window.t('nicheBeauty'),         blocks: ['hero','services','team','portfolio','form'] },
-        fitness:      { niche: window.t('nicheFitness'),        blocks: ['hero','programs','team','prices','form'] },
-        education:    { niche: window.t('nicheEducation'),        blocks: ['hero','program','about','reviews','prices','form'] },
-        custom:       { niche: '',              blocks: ['hero'] },
-    };
-
-    const tmpl  = nicheTemplates[_selectedNiche] || nicheTemplates.custom;
-    const blocks = tmpl.blocks.map((type, i) => _defaultBlock(type, i));
-
     try {
-        const db   = firebase.firestore();
-        const ref  = await window.companyRef()
-            .collection('sites').add({
-                name, description: desc,
-                niche:    tmpl.niche,
-                nicheKey: _selectedNiche,
-                status:   'draft',
-                blocks,
-                companyId: window.currentCompanyId || '',  // FIX: needed for track-visit
-                theme: { primaryColor: '#22c55e', fontFamily: 'Inter', borderRadius: '12px' },
-                visits:           0,
-                formSubmissions:  0,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-
+        await window.companyRef().collection(window.DB_COLS?.SITES || 'sites').add({
+            name,
+            description: '',
+            niche: _selectedLibraryTemplate ? (SITE_TEMPLATES.find(x=>x.key===_selectedLibraryTemplate)?.nicheLabel||'') : '',
+            nicheKey: _selectedLibraryTemplate ? (SITE_TEMPLATES.find(x=>x.key===_selectedLibraryTemplate)?.niche||'custom') : 'custom',
+            status: 'published',
+            mode: 'html',
+            rawHtml,
+            templateKey: _selectedLibraryTemplate || '',
+            blocks: [],
+            companyId: window.currentCompanyId || '',
+            theme: { primaryColor: '#22c55e', fontFamily: 'Inter', borderRadius: '12px' },
+            visits: 0,
+            formSubmissions: 0,
+            analyticsHeadCode: '',
+            bodyCode: '',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        _selectedLibraryTemplate = null;
         document.getElementById('sitesCreateOverlay')?.remove();
-        if (typeof showToast === 'function') showToast(window.t('sitesCreated'), 'success');
-
-        // Одразу відкриваємо редактор
-        sitesOpenBuilder(ref.id);
-    } catch (e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
+        if (typeof showToast === 'function') showToast('🚀 Сайт опубліковано!', 'success');
+        if (typeof window.initSitesModule === 'function') window.initSitesModule();
+    } catch(e) {
+        if(window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
+    }
 };
+
 
 function _defaultBlock(type, order) {
     const defaults = {
