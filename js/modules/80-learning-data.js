@@ -19289,10 +19289,10 @@ window.l109ExportExcel = function() {
         {
             id: 301,
             category: 'strategy',
-            title: 'ТИ ПРОДАЄШ ПРОДУКТ АБО РЕЗУЛЬТАТ?',
+            title: 'ЯК ПОЗБУТИСЯ ЦІНОВОЇ КОНКУРЕНЦІЇ І ПОСТІЙНОГО ТОРГУ, за допомогою переупаковки продукту в результат, навіть без зміни самої послуги',
             title_ru: 'ТЫ ПРОДАЁШЬ ПРОДУКТ ИЛИ РЕЗУЛЬТАТ?',
             title_en: 'DO YOU SELL A PRODUCT OR A RESULT?',
-            subtitle: '7 технік які змінюють логіку бізнесу і збільшують середній чек у 10 разів',
+            subtitle: 'Як підняти середній чек у 3–10 разів, за допомогою 7 технік продажу результату, навіть якщо конкуренти продають дешевше',
             subtitle_ru: '7 техник которые меняют логику бизнеса и увеличивают средний чек в 10 раз',
             subtitle_en: '7 techniques that change business logic and increase the average deal by 10x',
             duration: 40,
@@ -19567,10 +19567,10 @@ window.l109ExportExcel = function() {
         {
             id: 302,
             category: 'strategy',
-            title: 'ВИБІР НІШІ: від хаосу до прибуткового напряму',
+            title: 'ЯК ПЕРЕСТАТИ ВИТРАЧАТИ РІК НА НІШУ ЯКА НЕ ЗЛЕТИТЬ, за допомогою AI-аналізу ринку, навіть без досвіду підприємництва',
             title_ru: 'ВЫБОР НИШИ: от хаоса к прибыльному направлению',
             title_en: 'NICHE SELECTION: from chaos to a profitable direction',
-            subtitle: 'Покроковий AI-процес: знайди свою нішу під ресурси, цілі та навички за 30 хвилин',
+            subtitle: 'Як знайти прибуткову нішу під ваші ресурси та навички, за допомогою покрокового AI-процесу за 30 хвилин, навіть якщо вже пробували і не вийшло',
             subtitle_ru: 'Пошаговый AI-процесс: найди свою нишу под ресурсы, цели и навыки за 30 минут',
             subtitle_en: 'Step-by-step AI process: find your niche based on resources, goals and skills in 30 minutes',
             duration: 30,
@@ -19817,6 +19817,1763 @@ window.l109ExportExcel = function() {
             homeworkLinkName: null,
             homeworkLinkName_ru: null,
         },
+        {
+            id: 303,
+            category: 'strategy',
+            title: 'ЯК ПЕРЕСТАТИ ГАСИТИ ПОЖЕЖІ В БІЗНЕСІ ЩОДНЯ, за допомогою трьох ключових питань стратегії, навіть без MBA та консультантів',
+            title_ru: 'ЧТО ТАКОЕ СТРАТЕГИЯ И КАКОЙ ОНА БЫВАЕТ',
+            title_en: 'WHAT IS STRATEGY AND WHAT TYPES EXIST',
+            subtitle: 'Як отримати чіткий напрямок розвитку на 2–5 років, за допомогою простої системи з 3 типів стратегій, навіть якщо раніше всі плани залишались на папері',
+            subtitle_ru: 'Три типа стратегий владельца, ключевые метрики и почему без стратегии бизнес топчется на месте',
+            subtitle_en: 'Three owner strategy types, key metrics and why business stagnates without strategy',
+            duration: 45,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s303-lbl{font-size:.68rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.45rem;}
+.s303-ttl{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.6rem;}
+.s303-sub{font-size:.85rem;color:#525252;line-height:1.6;margin-bottom:1rem;}
+.s303-div{height:1px;background:#e2e8f0;margin:1.25rem 0;}
+.s303-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.55rem;}
+.s303-card p{font-size:.86rem;color:#374151;line-height:1.65;}
+.s303-card p+p{margin-top:.5rem;}
+.s303-warn{display:flex;align-items:flex-start;gap:.55rem;padding:.6rem .85rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.83rem;color:#7f1d1d;margin-bottom:.35rem;line-height:1.5;}
+.s303-ok{display:flex;align-items:flex-start;gap:.55rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.83rem;color:#14532d;margin-bottom:.35rem;line-height:1.5;}
+.s303-vs{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:1rem;}
+.s303-vsbad{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:.8rem;}
+.s303-vsgood{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.8rem;}
+.s303-vshdr{font-size:.82rem;font-weight:700;margin-bottom:.55rem;display:flex;align-items:center;gap:.4rem;}
+.s303-vsbad .s303-vshdr{color:#dc2626;}
+.s303-vsgood .s303-vshdr{color:#16a34a;}
+.s303-vsitem{font-size:.77rem;line-height:1.5;padding:.25rem 0;border-bottom:1px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:.4rem;}
+.s303-vsitem:last-child{border-bottom:none;}
+.s303-quote{margin:.75rem 0;padding:.85rem 1rem;background:#f8fafc;border-left:2px solid #f59e0b;border-radius:0;font-size:.87rem;color:#525252;font-style:italic;line-height:1.6;}
+.s303-q3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.45rem;margin-bottom:1rem;}
+.s303-qcard{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.7rem .75rem;}
+.s303-qnum{width:20px;height:20px;background:#22c55e;color:white;border-radius:50%;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:.4rem;}
+.s303-qttl{font-size:.78rem;font-weight:700;color:#1a1a1a;margin-bottom:.25rem;}
+.s303-qtext{font-size:.72rem;color:#525252;line-height:1.45;}
+.s303-imp{background:#f8fafc;border-left:2px solid #f59e0b;padding:.7rem .9rem;margin:.75rem 0;font-size:.84rem;color:#525252;line-height:1.6;}
+.s303-imp strong{color:#1a1a1a;}
+.s303-tabs{display:flex;gap:.4rem;margin-bottom:.75rem;flex-wrap:wrap;}
+.s303-tab{padding:.4rem .85rem;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;border:1px solid #e2e8f0;background:#f8fafc;color:#525252;transition:all .15s;}
+.s303-tab.active{background:#3b82f6;color:white;border-color:#3b82f6;}
+.s303-strat{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.9rem 1rem;}
+.s303-sname{font-size:.95rem;font-weight:700;color:#1a1a1a;}
+.s303-smotto{font-size:.8rem;color:#525252;font-style:italic;margin-top:.15rem;}
+.s303-sdesc{font-size:.83rem;color:#525252;line-height:1.6;margin:.65rem 0;padding-bottom:.65rem;border-bottom:1px solid #e2e8f0;}
+.s303-s2col{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.75rem;}
+.s303-collbl{font-size:.7rem;font-weight:700;color:#525252;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;display:flex;align-items:center;gap:.35rem;}
+.s303-sli{font-size:.78rem;color:#525252;padding:.22rem 0;display:flex;align-items:flex-start;gap:.35rem;line-height:1.45;}
+.s303-kpirow{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:.6rem .8rem;margin-bottom:.35rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.s303-kpiname{font-size:.83rem;color:#1a1a1a;}
+.s303-kpibody{display:none;font-size:.79rem;color:#525252;line-height:1.55;padding:.5rem .8rem .6rem;background:#f8fafc;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px;margin-bottom:.35rem;}
+.s303-mgrid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;}
+.s303-mcard{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.8rem .9rem;}
+.s303-mhdr{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;padding-bottom:.5rem;border-bottom:1px solid #e2e8f0;}
+.s303-micon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s303-mttl{font-size:.84rem;font-weight:700;color:#1a1a1a;}
+.s303-mitem{padding:.3rem 0;border-bottom:1px solid #f1f5f9;display:flex;align-items:flex-start;gap:.4rem;}
+.s303-mitem:last-child{border-bottom:none;}
+.s303-mdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.s303-mitmttl{font-size:.79rem;font-weight:700;color:#1a1a1a;}
+.s303-mitsub{font-size:.72rem;color:#525252;}
+.s303-gold{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.75rem .9rem;margin-bottom:.75rem;display:flex;gap:.65rem;align-items:flex-start;}
+.s303-goldlbl{font-size:.7rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem;}
+.s303-goldtext{font-size:.81rem;color:#525252;line-height:1.55;}
+.result-block{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;margin-top:1rem;}
+.result-block strong{font-size:.82rem;color:#14532d;}
+.result-block p{font-size:.82rem;color:#14532d;line-height:1.55;margin-top:.3rem;}
+svg.s303ico{width:14px;height:14px;flex-shrink:0;}
+</style>
+
+<div class="s303-lbl">Блок 1</div>
+<div class="s303-ttl">Типові проблеми малого бізнесу</div>
+<div class="s303-sub">Без чіткої стратегії власники стикаються з одними і тими ж проблемами знову і знову</div>
+
+<div class="s303-card" style="background:#fff7ed;border-color:#fed7aa;">
+<p style="font-size:.84rem;color:#92400e;"><strong>Якщо впізнаєте себе хоча б у 2–3 пунктах нижче — ваш бізнес потребує стратегії.</strong> Не презентацію на 50 слайдів. Чіткий план дій.</p>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;">
+<div class="s303-card" style="border-left:3px solid #ef4444;"><div style="font-size:.67rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Проблема #1</div><div style="font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.3rem;">Власник тягне все сам</div><div style="font-size:.76rem;color:#525252;line-height:1.5;">Немає часу на розвиток — постійно В бізнесі замість НАД бізнесом.<br><strong>Приклад:</strong> Особисто контролюєте кожне замовлення і відповідаєте клієнтам.</div></div>
+<div class="s303-card" style="border-left:3px solid #ef4444;"><div style="font-size:.67rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Проблема #2</div><div style="font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.3rem;">Качелі прибутковості</div><div style="font-size:.76rem;color:#525252;line-height:1.5;">Немає стабільного доходу — один місяць добре, наступний провал.<br><strong>Приклад:</strong> У грудні 500 000 грн, у січні мінус 50 000 грн.</div></div>
+<div class="s303-card" style="border-left:3px solid #ef4444;"><div style="font-size:.67rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Проблема #3</div><div style="font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.3rem;">Багато роботи — мало грошей</div><div style="font-size:.76rem;color:#525252;line-height:1.5;">70% часу команди іде на клієнтів які приносять лише 20% прибутку.</div></div>
+<div class="s303-card" style="border-left:3px solid #ef4444;"><div style="font-size:.67rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Проблема #4</div><div style="font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.3rem;">Постійна зміна курсу</div><div style="font-size:.76rem;color:#525252;line-height:1.5;">Сьогодні масштаб, завтра пасивний дохід, післязавтра продати.<br><strong>Приклад:</strong> За рік 3 напрямки, 5 запустили, 4 закрили.</div></div>
+<div class="s303-card" style="border-left:3px solid #ef4444;"><div style="font-size:.67rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Проблема #5</div><div style="font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.3rem;">Хаотичний ріст</div><div style="font-size:.76rem;color:#525252;line-height:1.5;">Бізнес росте, але кожен новий клієнт додає хаосу а не прибутку.<br><strong>Приклад:</strong> Відкрили другу точку — подвоєння головного болю.</div></div>
+<div class="s303-card" style="border-left:3px solid #ef4444;"><div style="font-size:.67rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Проблема #6</div><div style="font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.3rem;">Все «по ситуації»</div><div style="font-size:.76rem;color:#525252;line-height:1.5;">Немає правил і процесів. Кожне рішення — з голови власника.<br><strong>Приклад:</strong> Клієнт просить знижку — думаєте 20 хвилин. Щодня.</div></div>
+</div>
+
+<div class="s303-div"></div>
+
+<div class="s303-lbl">Блок 2</div>
+<div class="s303-ttl">Бізнес зі стратегією vs без</div>
+
+<div class="s303-vs">
+<div class="s303-vsbad">
+<div class="s303-vshdr"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Без стратегії</div>
+<div class="s303-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;"><strong>Реагує</strong> на проблеми</span></div>
+<div class="s303-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;">Працює <strong>В бізнесі</strong></span></div>
+<div class="s303-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;">Тушить пожежі</span></div>
+<div class="s303-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;">Рішення з голови — виснажливо</span></div>
+<div class="s303-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;">Команда не розуміє куди</span></div>
+</div>
+<div class="s303-vsgood">
+<div class="s303-vshdr"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><polyline points="20 6 9 17 4 12"/></svg>Зі стратегією</div>
+<div class="s303-vsitem"><span style="color:#16a34a;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#14532d;"><strong>Управляє</strong> проактивно</span></div>
+<div class="s303-vsitem"><span style="color:#16a34a;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#14532d;">Працює <strong>НАД бізнесом</strong></span></div>
+<div class="s303-vsitem"><span style="color:#16a34a;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#14532d;">Заробляє замість тушить пожежі</span></div>
+<div class="s303-vsitem"><span style="color:#16a34a;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#14532d;">Швидкі рішення на основі критеріїв</span></div>
+<div class="s303-vsitem"><span style="color:#16a34a;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#14532d;">Команда розуміє цілі та пріоритети</span></div>
+</div>
+</div>
+
+<div class="s303-div"></div>
+
+<div class="s303-lbl">Блок 3</div>
+<div class="s303-ttl">Що таке стратегія насправді?</div>
+
+<div class="s303-card" style="background:#f0fdf4;border-color:#bbf7d0;">
+<div style="font-size:.68rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem;">Визначення</div>
+<p style="color:#1a1a1a;"><strong>Стратегія</strong> — це не документ на 100 сторінок. Це <strong style="color:#16a34a;">чіткі відповіді на три питання</strong>, які визначають кожне ваше бізнес-рішення: куди ви рухаєтесь, як будете заробляти, і що НЕ будете робити взагалі.</p>
+</div>
+
+<div class="s303-imp">
+<strong>Важливо:</strong> Стратегія починається не з аналізу ринку, не з продукту, не з команди. <strong>Стратегія починається з ВЛАСНИКА.</strong> З питання: «Навіщо мені цей бізнес і що я хочу від нього через 2–5 років?»
+</div>
+
+<div class="s303-q3">
+<div class="s303-qcard"><div class="s303-qnum">1</div><div class="s303-qttl">Куди я веду бізнес?</div><div class="s303-qtext">Яка ціль через 2–5 років? Продати? Пасивний дохід? Побудувати мережу? Від відповіді залежить ВСЕ інше.</div></div>
+<div class="s303-qcard"><div class="s303-qnum">2</div><div class="s303-qttl">На чому заробляю найбільше?</div><div class="s303-qtext">Які продукти/послуги дають максимум прибутку при мінімумі зусиль? Які клієнти найприбутковіші?</div></div>
+<div class="s303-qcard"><div class="s303-qnum">3</div><div class="s303-qttl">Що потрібно зробити?</div><div class="s303-qtext">Які конкретні кроки приведуть до мети? І головне — що НЕ робити, щоб не розпорошуватись?</div></div>
+</div>
+
+<div class="s303-div"></div>
+
+<div class="s303-lbl">Блок 4</div>
+<div class="s303-ttl">Три типи стратегій власника</div>
+<div class="s303-sub">У малого бізнесу є тільки 3 варіанти. Оберіть свій.</div>
+
+<div class="s303-tabs" id="s303tabs">
+<div class="s303-tab active" onclick="s303strat('sale',this)">Бізнес для продажу</div>
+<div class="s303-tab" onclick="s303strat('bankomat',this)">Бізнес-банкомат</div>
+<div class="s303-tab" onclick="s303strat('empire',this)">Бізнес-імперія</div>
+</div>
+
+<div id="s303-sale" class="s303-strat">
+<div class="s303-sname">Стратегія #1: Бізнес для продажу</div>
+<div class="s303-smotto">«Вирости і продати дорого»</div>
+<div class="s303-sdesc">Ви будуєте бізнес як актив, який через 3–7 років продасте стратегічному покупцю або інвестору. Весь фокус — на зростанні вартості компанії, а не на поточному прибутку.</div>
+<div class="s303-s2col">
+<div><div class="s303-collbl">Для кого</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Хто хоче вийти з великою виплатою</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Готовий 3–7 років інвестувати</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Планує наступний проєкт після продажу</div>
+</div>
+<div><div class="s303-collbl">На практиці</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Максимальний реінвест у ріст</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Системи без участі власника</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Прозора фінансова звітність</div>
+</div>
+</div>
+<div style="font-size:.78rem;font-weight:700;color:#525252;margin-bottom:.45rem;">Ключові показники</div>
+<div class="s303-kpirow" onclick="s303kpi('k1a')"><span class="s303-kpiname">Темп росту доходу (Revenue Growth Rate)</span><span style="font-size:.8rem;color:#9ca3af;">▾</span></div>
+<div class="s303-kpibody" id="k1a">Скільки % зростає виручка рік до року. Для стратегії продажу — мінімум 30–50% на рік. Інвестор купить бізнес що росте, а не стагнує.</div>
+<div class="s303-kpirow" onclick="s303kpi('k1b')"><span class="s303-kpiname">Прибутковість (Net Profit Margin)</span><span style="font-size:.8rem;color:#9ca3af;">▾</span></div>
+<div class="s303-kpibody" id="k1b">Чистий прибуток / виручка × 100%. Показує наскільки ефективно бізнес перетворює продажі на гроші. Для продажу — важливіший за сам оборот.</div>
+<div class="s303-kpirow" onclick="s303kpi('k1c')"><span class="s303-kpiname">Оцінка вартості бізнесу (Valuation)</span><span style="font-size:.8rem;color:#9ca3af;">▾</span></div>
+<div class="s303-kpibody" id="k1c">EBITDA × мультиплікатор (3–10х залежно від галузі). Відстежуйте щоквартально — це ваша кінцева ціль.</div>
+</div>
+
+<div id="s303-bankomat" class="s303-strat" style="display:none;">
+<div class="s303-sname">Стратегія #2: Бізнес-банкомат</div>
+<div class="s303-smotto">«Стабільний дохід при мінімумі участі»</div>
+<div class="s303-sdesc">Бізнес як джерело стабільного особистого доходу. Мета — максимальний прибуток при мінімальній залежності від вас особисто. Виїхали на місяць — бізнес продовжує працювати.</div>
+<div class="s303-s2col">
+<div><div class="s303-collbl">Для кого</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Хто хоче свободу і стабільний дохід</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Не хоче масштаб заради масштабу</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Цінує час і якість життя</div>
+</div>
+<div><div class="s303-collbl">На практиці</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Регламенти на всі процеси</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Сильний операційний менеджер</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Максимальні дивіденди власнику</div>
+</div>
+</div>
+<div style="font-size:.78rem;font-weight:700;color:#525252;margin-bottom:.45rem;">Ключові показники</div>
+<div class="s303-kpirow" onclick="s303kpi('k2a')"><span class="s303-kpiname">Net Profit — Чистий прибуток</span><span style="font-size:.8rem;color:#9ca3af;">▾</span></div>
+<div class="s303-kpibody" id="k2a">Скільки реально залишається власнику після всіх витрат. Не оборот, не виручка — саме чистий прибуток у гривнях на місяць.</div>
+<div class="s303-kpirow" onclick="s303kpi('k2b')"><span class="s303-kpiname">ROI власника (прибуток на годину часу)</span><span style="font-size:.8rem;color:#9ca3af;">▾</span></div>
+<div class="s303-kpibody" id="k2b">Скільки заробляє бізнес на годину часу власника. Чим менше ви працюєте в бізнесі і чим більший прибуток — тим вища ефективність.</div>
+<div class="s303-kpirow" onclick="s303kpi('k2c')"><span class="s303-kpiname">Залежність від власника (ціль: менше 20%)</span><span style="font-size:.8rem;color:#9ca3af;">▾</span></div>
+<div class="s303-kpibody" id="k2c">Який % процесів вимагає особистої участі власника. Якщо більше 20% — банкомат не працює, ви найнятий директор у власній компанії.</div>
+</div>
+
+<div id="s303-empire" class="s303-strat" style="display:none;">
+<div class="s303-sname">Стратегія #3: Бізнес-імперія</div>
+<div class="s303-smotto">«Домінування в ніші або регіоні»</div>
+<div class="s303-sdesc">Побудова масштабної компанії або мережі. Мета — стати лідером ринку, захопити максимальну частку ніші або регіону.</div>
+<div class="s303-s2col">
+<div><div class="s303-collbl">Для кого</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Хто хоче бути №1 у своїй ніші</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Готовий агресивно реінвестувати</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Мислить категоріями 10+ років</div>
+</div>
+<div><div class="s303-collbl">На практиці</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Масштабування через франшизу або філії</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Сильний бренд і PR</div>
+<div class="s303-sli"><svg class="s303ico" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><polyline points="20 6 9 17 4 12"/></svg>Поглинання або партнерства</div>
+</div>
+</div>
+<div style="font-size:.78rem;font-weight:700;color:#525252;margin-bottom:.45rem;">Ключові показники</div>
+<div class="s303-kpirow" onclick="s303kpi('k3a')"><span class="s303-kpiname">Частка ринку (Market Share)</span><span style="font-size:.8rem;color:#9ca3af;">▾</span></div>
+<div class="s303-kpibody" id="k3a">Яку частку ринку займає ваша компанія в ніші або регіоні. Зростання частки — головна метрика на цьому етапі.</div>
+<div class="s303-kpirow" onclick="s303kpi('k3b')"><span class="s303-kpiname">LTV клієнта (Lifetime Value)</span><span style="font-size:.8rem;color:#9ca3af;">▾</span></div>
+<div class="s303-kpibody" id="k3b">Скільки один клієнт принесе за весь час роботи з компанією. Для імперії критично будувати довгострокові відносини, а не разові угоди.</div>
+</div>
+
+<div class="s303-div"></div>
+
+<div class="s303-lbl">Блок 5</div>
+<div class="s303-ttl">Повний список метрик для малого бізнесу</div>
+
+<div class="s303-gold">
+<div style="width:32px;height:32px;background:#f0fdf4;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+<div><div class="s303-goldlbl">Золоте правило</div><div class="s303-goldtext">Краще відстежувати 5–7 ключових показників щотижня, ніж 50 показників раз на рік. Оберіть метрики відповідно до вашої стратегії.</div></div>
+</div>
+
+<div class="s303-mgrid">
+<div class="s303-mcard">
+<div class="s303-mhdr"><div class="s303-micon" style="background:#dcfce7;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div><div class="s303-mttl">Фінанси</div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#22c55e;"></div><div><div class="s303-mitmttl">Дохід</div><div class="s303-mitsub">Місячний та річний оборот</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#22c55e;"></div><div><div class="s303-mitmttl">Маржинальність</div><div class="s303-mitsub">% прибутку від продажу</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#22c55e;"></div><div><div class="s303-mitmttl">Чистий прибуток</div><div class="s303-mitsub">Що залишається після всіх витрат</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#22c55e;"></div><div><div class="s303-mitmttl">Собівартість</div><div class="s303-mitsub">Прямі витрати на продукт/послугу</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#22c55e;"></div><div><div class="s303-mitmttl">Оборотний капітал</div><div class="s303-mitsub">Чи є касові розриви?</div></div></div>
+</div>
+<div class="s303-mcard">
+<div class="s303-mhdr"><div class="s303-micon" style="background:#dbeafe;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.75"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="s303-mttl">Продажі й маркетинг</div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#3b82f6;"></div><div><div class="s303-mitmttl">Кількість лідів</div><div class="s303-mitsub">Скільки потенційних клієнтів</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#3b82f6;"></div><div><div class="s303-mitmttl">Вартість ліда (CPL)</div><div class="s303-mitsub">Скільки коштує залучити 1 ліда</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#3b82f6;"></div><div><div class="s303-mitmttl">Конверсія в продаж</div><div class="s303-mitsub">% лідів що стали клієнтами</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#3b82f6;"></div><div><div class="s303-mitmttl">Повторні продажі</div><div class="s303-mitsub">% клієнтів що купують знову</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#3b82f6;"></div><div><div class="s303-mitmttl">Середній чек</div><div class="s303-mitsub">Середня сума покупки</div></div></div>
+</div>
+<div class="s303-mcard">
+<div class="s303-mhdr"><div class="s303-micon" style="background:#ffedd5;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div><div class="s303-mttl">Операційна частина</div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#f97316;"></div><div><div class="s303-mitmttl">Час виконання</div><div class="s303-mitsub">Скільки часу на послугу/замовлення</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#f97316;"></div><div><div class="s303-mitmttl">Якість</div><div class="s303-mitsub">% браку, кількість скарг</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#f97316;"></div><div><div class="s303-mitmttl">Завантаженість команди</div><div class="s303-mitsub">% робочого часу у роботі</div></div></div>
+</div>
+<div class="s303-mcard">
+<div class="s303-mhdr"><div class="s303-micon" style="background:#ede9fe;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div class="s303-mttl">Стратегічні</div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#8b5cf6;"></div><div><div class="s303-mitmttl">Темп росту</div><div class="s303-mitsub">Для стратегії «продаж»</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#8b5cf6;"></div><div><div class="s303-mitmttl">Net Profit</div><div class="s303-mitsub">Для стратегії «банкомат»</div></div></div>
+<div class="s303-mitem"><div class="s303-mdot" style="background:#8b5cf6;"></div><div><div class="s303-mitmttl">Частка ринку</div><div class="s303-mitsub">Для стратегії «імперія»</div></div></div>
+</div>
+</div>
+
+<div class="result-block">
+<strong>Результат уроку.</strong>
+<p>Після цього уроку ви розумієте: що таке стратегія насправді, яка стратегія підходить вам особисто, і які 5–7 метрик потрібно відстежувати щотижня. Наступний крок — домашнє завдання нижче.</p>
+</div>
+
+<script>
+function s303strat(type,btn){['sale','bankomat','empire'].forEach(t=>{document.getElementById('s303-'+t).style.display='none';});document.getElementById('s303-'+type).style.display='block';document.querySelectorAll('.s303-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function s303kpi(id){const el=document.getElementById(id);const isOpen=el.style.display==='block';document.querySelectorAll('.s303-kpibody').forEach(e=>e.style.display='none');el.style.display=isOpen?'none':'block';}
+</script>`,
+
+            lessonContent_ru: `<style>.s303r-note{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;color:#525252;font-size:.9rem;}</style><div class="s303r-note">Русская версия урока 303 в разработке. Используйте украинскую версию.</div>`,
+
+            homework: 'Крок 1: Вирішіть — яка з трьох стратегій описує ВАШ бізнес зараз (Продаж / Банкомат / Імперія). Не яка хотілась б — а яка є насправді. Крок 2: Випишіть 5–7 метрик зі списку уроку які відповідають вашій стратегії. Крок 3: Збережіть відповідь — ці метрики стануть основою дашборду в уроці 304.',
+            homework_ru: 'Шаг 1: Решите — какая из трёх стратегий описывает ВАШ бизнес сейчас (Продажа / Банкомат / Империя). Не какая хотелась бы — а какая есть на самом деле. Шаг 2: Выпишите 5–7 метрик из списка урока которые соответствуют вашей стратегии. Шаг 3: Сохраните ответ — эти метрики станут основой дашборда в уроке 304.',
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
+        {
+            id: 304,
+            category: 'strategy',
+            title: 'ЯК ЗРОЗУМІТИ ДЕ БІЗНЕС РЕАЛЬНО ЗАРОБЛЯЄ, а де витрачає ресурси в нікуди, за допомогою матриці Продукт–Ринок, навіть без фінансового аналітика',
+            title_ru: 'МАТРИЦА «ПРОДУКТ–РЫНОК»: где ваш бизнес реально зарабатывает',
+            title_en: 'PRODUCT-MARKET MATRIX: where your business really earns',
+            subtitle: 'Як знайти одну точку фокусу і направити туди 80% зусиль, за допомогою AI-аналізу вашого портфеля, навіть якщо здається що всі напрямки однаково важливі',
+            subtitle_ru: 'Инструмент фокуса: найдите наиболее прибыльную комбинацию и направьте туда 80% ресурсов',
+            subtitle_en: 'Focus tool: find the most profitable combination and direct 80% of resources there',
+            duration: 45,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s304-lbl{font-size:.68rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.45rem;}
+.s304-ttl{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.6rem;}
+.s304-sub{font-size:.85rem;color:#525252;line-height:1.6;margin-bottom:1rem;}
+.s304-div{height:1px;background:#e2e8f0;margin:1.25rem 0;}
+.s304-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.55rem;}
+.s304-card p{font-size:.86rem;color:#374151;line-height:1.65;}
+.s304-warn{display:flex;align-items:flex-start;gap:.55rem;padding:.6rem .85rem;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;font-size:.83rem;color:#92400e;margin-bottom:.55rem;line-height:1.5;}
+.s304-why-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem;}
+.s304-why{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.75rem .85rem;display:flex;gap:.65rem;}
+.s304-why-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s304-why-ttl{font-size:.82rem;font-weight:700;color:#1a1a1a;margin-bottom:.2rem;}
+.s304-why-text{font-size:.77rem;color:#525252;line-height:1.45;}
+.s304-matrix-wrap{overflow-x:auto;margin-bottom:.75rem;}
+.s304-matrix{width:100%;border-collapse:collapse;font-size:.76rem;min-width:340px;}
+.s304-matrix th{background:#1e3a5f;color:white;padding:.4rem .55rem;text-align:center;font-weight:700;}
+.s304-matrix th.corner{background:linear-gradient(135deg,#1e3a5f 50%,#3b82f6 50%);font-size:.65rem;}
+.s304-matrix th.mh{background:#3b82f6;}
+.s304-matrix td{padding:.4rem .55rem;text-align:center;border:.5px solid #e2e8f0;}
+.s304-matrix td.pname{background:#dbeafe;color:#1e3a5f;font-weight:700;text-align:left;}
+.s304-matrix td.total{background:#e0f2fe;color:#0369a1;font-weight:700;}
+.s304-matrix td.focus-cell{background:#f0fdf4;border:2px solid #22c55e;position:relative;}
+.r-bad{color:#ef4444;font-weight:700;}
+.r-ok{color:#f97316;font-weight:700;}
+.r-good{color:#ca8a04;font-weight:700;}
+.r-best{color:#22c55e;font-weight:700;}
+.s304-fbadge{display:inline-block;background:#22c55e;color:white;font-size:.58rem;font-weight:700;padding:.1rem .3rem;border-radius:3px;margin-left:.2rem;}
+.s304-ratings{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.4rem;margin-bottom:.75rem;}
+.s304-rcard{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.65rem .75rem;text-align:center;}
+.s304-rsym{font-size:1.5rem;font-weight:700;margin-bottom:.25rem;}
+.s304-rttl{font-size:.77rem;font-weight:700;color:#1a1a1a;margin-bottom:.2rem;}
+.s304-rtext{font-size:.7rem;color:#525252;line-height:1.4;}
+.s304-arrows{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.75rem;}
+.s304-arr{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.7rem .75rem;text-align:center;}
+.s304-arr-ico{width:40px;height:40px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .5rem;}
+.s304-arr-ttl{font-size:.8rem;font-weight:700;color:#1a1a1a;margin-bottom:.2rem;}
+.s304-arr-text{font-size:.72rem;color:#525252;line-height:1.4;}
+.s304-focus-ins{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;display:flex;gap:.65rem;margin-bottom:.75rem;}
+.s304-focus-icon{width:40px;height:40px;background:#22c55e;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s304-focus-ttl{font-size:.9rem;font-weight:700;color:#14532d;margin-bottom:.3rem;}
+.s304-focus-text{font-size:.82rem;color:#14532d;line-height:1.55;}
+.s304-sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem;}
+.s304-sum{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.7rem .85rem;display:flex;gap:.55rem;}
+.s304-sum-icon{width:30px;height:30px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s304-sum-ttl{font-size:.8rem;font-weight:700;color:#1a1a1a;margin-bottom:.2rem;}
+.s304-sum-text{font-size:.74rem;color:#525252;line-height:1.4;}
+.s304-ai-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1rem 1.1rem;}
+.s304-ai-hdr{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.75rem;}
+.s304-ai-icon{width:40px;height:40px;background:#ede9fe;border:1px solid #ddd6fe;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s304-ai-ttl{font-weight:700;color:#1a1a1a;font-size:.93rem;margin-bottom:.2rem;}
+.s304-ai-desc{font-size:.81rem;color:#525252;line-height:1.5;}
+.s304-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.05rem;background:#8b5cf6;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none;}
+.result-block{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;margin-top:1rem;}
+.result-block strong{font-size:.82rem;color:#14532d;}
+.result-block p{font-size:.82rem;color:#14532d;line-height:1.55;margin-top:.3rem;}
+</style>
+
+<div class="s304-lbl">Навіщо цей інструмент</div>
+<div class="s304-ttl">Головна проблема малого бізнесу — спроба продавати все всім</div>
+
+<div class="s304-warn">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.75" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<div><strong>Ви не можете пропонувати всьому ринку всі продукти.</strong> Саме тому вам потрібен фокус. Матриця показує де реально є гроші — і де ви витрачаєте ресурси без результату.</div>
+</div>
+
+<div class="s304-why-grid">
+<div class="s304-why"><div class="s304-why-icon" style="background:#dcfce7;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><div><div class="s304-why-ttl">Фокус замість хаосу</div><div class="s304-why-text">Чітко бачите куди вкладати ресурси</div></div></div>
+<div class="s304-why"><div class="s304-why-icon" style="background:#fef2f2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.75"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><div class="s304-why-ttl">Відсікаєте зайве</div><div class="s304-why-text">Знаєте від чого відмовитись</div></div></div>
+<div class="s304-why"><div class="s304-why-icon" style="background:#eff6ff;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.75"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div><div class="s304-why-ttl">Бачите потенціал</div><div class="s304-why-text">Які комбінації варто масштабувати</div></div></div>
+<div class="s304-why"><div class="s304-why-icon" style="background:#dcfce7;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div><div><div class="s304-why-ttl">Рахуєте гроші</div><div class="s304-why-text">Кожна комбінація = конкретна маржа</div></div></div>
+</div>
+
+<div class="s304-div"></div>
+
+<div class="s304-lbl">Крок 1 · Структура</div>
+<div class="s304-ttl">Як читати матрицю</div>
+<div class="s304-sub">По вертикалі — продукти (що продаємо), по горизонталі — ринки (кому продаємо). Кожна клітинка = одна комбінація.</div>
+
+<div class="s304-matrix-wrap">
+<table class="s304-matrix">
+<thead>
+<tr>
+<th class="corner">Продукт ↓<br>Ринок →</th>
+<th class="mh">Ринок 1</th>
+<th class="mh">Ринок 2</th>
+<th class="mh">Ринок 3</th>
+<th class="mh">Ринок 4 (новий)</th>
+<th class="mh">Всього</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="pname">Продукт 1</td>
+<td><span class="r-bad">−</span><br><span style="font-size:.65rem;color:#9ca3af;">5%</span></td>
+<td><span class="r-ok">+</span><br><span style="font-size:.65rem;color:#9ca3af;">10%</span></td>
+<td><span class="r-ok">+</span><br><span style="font-size:.65rem;color:#9ca3af;">5%</span></td>
+<td><span style="font-size:.72rem;color:#9ca3af;">—</span></td>
+<td class="total">20%</td>
+</tr>
+<tr>
+<td class="pname">Продукт 2</td>
+<td><span class="r-ok">+</span><br><span style="font-size:.65rem;color:#9ca3af;">20%</span></td>
+<td><span class="r-good">++</span><br><span style="font-size:.65rem;color:#9ca3af;">20%</span></td>
+<td><span style="font-size:.72rem;color:#9ca3af;">—</span></td>
+<td><span class="r-ok">+</span><br><span style="font-size:.65rem;color:#9ca3af;">—</span></td>
+<td class="total">40%</td>
+</tr>
+<tr>
+<td class="pname">Продукт 3</td>
+<td><span class="r-good">++</span><br><span style="font-size:.65rem;color:#9ca3af;">15%</span></td>
+<td class="focus-cell"><span class="r-best">+++</span><span class="s304-fbadge">ФОКУС</span><br><span style="font-size:.65rem;color:#16a34a;">25%</span></td>
+<td><span style="font-size:.72rem;color:#9ca3af;">—</span></td>
+<td><span style="font-size:.72rem;color:#9ca3af;">—</span></td>
+<td class="total">40%</td>
+</tr>
+<tr>
+<td class="pname">Продукт 4 (новий)</td>
+<td><span style="font-size:.72rem;color:#9ca3af;">—</span></td>
+<td><span style="font-size:.72rem;color:#9ca3af;">—</span></td>
+<td><span class="r-best">+++</span><br><span style="font-size:.65rem;color:#9ca3af;">—</span></td>
+<td><span style="font-size:.72rem;color:#9ca3af;">—</span></td>
+<td class="total">—</td>
+</tr>
+<tr>
+<td class="pname" style="background:#e0f2fe;color:#0369a1;">Прибутковість</td>
+<td class="total">40%</td>
+<td class="total">55%</td>
+<td class="total">5%</td>
+<td class="total">—</td>
+<td class="total" style="background:#3b82f6;color:white;">100%</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="s304-div"></div>
+
+<div class="s304-lbl">Крок 2 · Оцінки</div>
+<div class="s304-ttl">Що означає кожна оцінка</div>
+
+<div class="s304-ratings">
+<div class="s304-rcard"><div class="s304-rsym r-bad">−</div><div class="s304-rttl">Непривабливо</div><div class="s304-rtext">Низька маржа, багато зусиль. Кандидат на закриття.</div></div>
+<div class="s304-rcard"><div class="s304-rsym r-ok">+</div><div class="s304-rttl">Нормально</div><div class="s304-rtext">Працює, але не пріоритет. Тримаємо без інвестицій.</div></div>
+<div class="s304-rcard"><div class="s304-rsym r-good">++</div><div class="s304-rttl">Добре</div><div class="s304-rtext">Хороша маржа. Варто розвивати.</div></div>
+<div class="s304-rcard"><div class="s304-rsym r-best">+++</div><div class="s304-rttl">Відмінно</div><div class="s304-rtext">Найкраща комбінація. Максимум ресурсів сюди!</div></div>
+</div>
+
+<div class="s304-card" style="background:#eff6ff;border-color:#bfdbfe;">
+<p style="color:#1e3a5f;"><strong>Як визначати оцінку?</strong> На основі трьох факторів: маржинальність комбінації, обсяг ринку (потенціал), та ваші конкурентні переваги в цьому сегменті.</p>
+</div>
+
+<div class="s304-div"></div>
+
+<div class="s304-lbl">Крок 3 · Частки %</div>
+<div class="s304-ttl">Що означають відсотки</div>
+
+<div class="s304-card">
+<p>Відсотки показують яку частину загальних продажів дає кожна комбінація. <strong>Рядок «Всього» праворуч</strong> — сума по всіх ринках для одного продукту. <strong>Рядок «Прибутковість» знизу</strong> — внесок кожного ринку в загальну прибутковість компанії.</p>
+<p style="margin-top:.5rem;"><strong>Висновок з прикладу:</strong> Ринок 2 приносить 55% всієї прибутковості — це ключовий сегмент. Ринок 3 дає лише 5% — кандидат на скорочення витрат.</p>
+</div>
+
+<div class="s304-div"></div>
+
+<div class="s304-lbl">Крок 4 · Стрілки</div>
+<div class="s304-ttl">Напрямок руху ресурсів</div>
+
+<div class="s304-arrows">
+<div class="s304-arr"><div class="s304-arr-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.75"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><div class="s304-arr-ttl">Горизонтальна →</div><div class="s304-arr-text">Той самий продукт виходить на новий ринок/сегмент</div></div>
+<div class="s304-arr"><div class="s304-arr-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.75"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div><div class="s304-arr-ttl">Вертикальна ↑</div><div class="s304-arr-text">Новий продукт для того ж ринку</div></div>
+<div class="s304-arr"><div class="s304-arr-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div><div class="s304-arr-ttl">Діагональна ↗</div><div class="s304-arr-text">Концентрація на найприбутковішій комбінації</div></div>
+</div>
+
+<div class="s304-div"></div>
+
+<div class="s304-lbl">Крок 5 · Точка фокусу</div>
+<div class="s304-ttl">Головний результат аналізу</div>
+
+<div class="s304-focus-ins">
+<div class="s304-focus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+<div>
+<div class="s304-focus-ttl">Продукт 3 × Ринок 2 = головна ставка</div>
+<div class="s304-focus-text">Ця комбінація має найвищу оцінку (+++) і вже дає 25% продажів. Сюди направляємо маркетинг, процеси, людей. Все інше — або підтримуємо, або скорочуємо.</div>
+</div>
+</div>
+
+<div class="s304-div"></div>
+
+<div class="s304-lbl">Підсумок</div>
+<div class="s304-ttl">4 ключові елементи для аналізу</div>
+
+<div class="s304-sum-grid">
+<div class="s304-sum"><div class="s304-sum-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div><div><div class="s304-sum-ttl">Структура</div><div class="s304-sum-text">Кожна клітинка = комбінація Продукт × Ринок для окремого аналізу</div></div></div>
+<div class="s304-sum"><div class="s304-sum-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div><div class="s304-sum-ttl">Оцінки −/+/++/+++</div><div class="s304-sum-text">Привабливість: маржа × ринок × ваші переваги</div></div></div>
+<div class="s304-sum"><div class="s304-sum-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div><div><div class="s304-sum-ttl">Частки %</div><div class="s304-sum-text">Скільки кожна комбінація дає у продажі та прибутковість</div></div></div>
+<div class="s304-sum"><div class="s304-sum-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><div><div class="s304-sum-ttl">Стрілки → Фокус</div><div class="s304-sum-text">Концентрація ресурсів до найприбутковішої точки</div></div></div>
+</div>
+
+<div class="s304-div"></div>
+
+<div class="s304-lbl">Інструмент</div>
+<div class="s304-ai-box">
+<div class="s304-ai-hdr">
+<div class="s304-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.75" width="20" height="20"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2z"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg></div>
+<div>
+<div class="s304-ai-ttl">AI-асистент побудує матрицю для вашого бізнесу</div>
+<div class="s304-ai-desc">Опишіть свої продукти та ринки — AI побудує повну матрицю з оцінками, частками та визначить точку фокусу. Виходите з готовим документом для прийняття рішень.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-693c20f56f748191b33bb48788c7212a-talko-ai" target="_blank" class="s304-ai-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Побудувати матрицю для мого бізнесу
+</a>
+</div>
+
+<div class="result-block">
+<strong>Результат уроку.</strong>
+<p>Ви вмієте читати матрицю Продукт–Ринок, розумієте оцінки і частки, і знаєте де точка фокусу вашого бізнесу. Домашнє завдання — побудувати власну матрицю через AI-асистент.</p>
+</div>`,
+
+            lessonContent_ru: `<style>.s304r-note{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;color:#525252;font-size:.9rem;}</style><div class="s304r-note">Русская версия урока 304 в разработке. Используйте украинскую версию.</div>`,
+
+            homework: 'Крок 1: Відкрийте AI-асистент за посиланням в уроці. Крок 2: Опишіть свої 3–5 продуктів/послуг і 2–4 сегменти клієнтів. Крок 3: Попросіть AI побудувати матрицю і визначити точку фокусу. Крок 4: Збережіть результат у Google Документ і вставте посилання нижче.',
+            homework_ru: 'Шаг 1: Откройте AI-ассистент по ссылке в уроке. Шаг 2: Опишите свои 3–5 продуктов/услуг и 2–4 сегмента клиентов. Шаг 3: Попросите AI построить матрицу и определить точку фокуса. Шаг 4: Сохраните результат в Google Документ и вставьте ссылку ниже.',
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
+        {
+            id: 305,
+            category: 'strategy',
+            title: 'ЯК ВИРОСТИ В ДОХОДІ НЕ ЗБІЛЬШУЮЧИ БЮДЖЕТ НА РЕКЛАМУ, за допомогою матриці Ансоффа, навіть якщо ринок здається насиченим',
+            title_ru: 'МАТРИЦА АНСОФФА: 4 стратегии роста бизнеса',
+            title_en: 'ANSOFF MATRIX: 4 business growth strategies',
+            subtitle: 'Як обрати правильну стратегію росту з мінімальним ризиком, за допомогою 4 напрямків Ансоффа, навіть без великого бюджету на експансію',
+            subtitle_ru: 'Как выбрать правильное направление развития — с минимальным риском и максимальным результатом',
+            subtitle_en: 'How to choose the right growth direction — with minimum risk and maximum result',
+            duration: 40,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s305-lbl{font-size:.68rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.45rem;}
+.s305-ttl{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.55rem;}
+.s305-sub{font-size:.85rem;color:#525252;line-height:1.6;margin-bottom:.9rem;}
+.s305-div{height:1px;background:#e2e8f0;margin:1.25rem 0;}
+.s305-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.55rem;}
+.s305-card p{font-size:.86rem;color:#374151;line-height:1.65;}
+.s305-warn{padding:.75rem 1rem;background:#fefce8;border-left:2px solid #eab308;font-size:.84rem;color:#78350f;line-height:1.6;margin-bottom:.75rem;}
+.s305-mini-matrix{display:grid;grid-template-columns:55px 1fr 1fr;grid-template-rows:36px 1fr 1fr;gap:3px;margin-bottom:.75rem;}
+.s305-mc{background:#1e3a5f;color:white;display:flex;align-items:center;justify-content:center;font-size:.67rem;font-weight:700;border-radius:6px;padding:.4rem;}
+.s305-mc.corner{background:linear-gradient(135deg,#1e3a5f 50%,#3b82f6 50%);font-size:.6rem;}
+.s305-mc.side{background:#3b82f6;writing-mode:vertical-rl;transform:rotate(180deg);}
+.s305-mq{border-radius:8px;padding:.65rem .5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:70px;}
+.s305-mq.pen{background:#dcfce7;}
+.s305-mq.mkt{background:#ffedd5;}
+.s305-mq.prd{background:#dbeafe;}
+.s305-mq.div{background:#ede9fe;}
+.s305-mq-lbl{font-size:.67rem;font-weight:700;}
+.s305-mq.pen .s305-mq-lbl{color:#16a34a;}
+.s305-mq.mkt .s305-mq-lbl{color:#ea580c;}
+.s305-mq.prd .s305-mq-lbl{color:#2563eb;}
+.s305-mq.div .s305-mq-lbl{color:#7c3aed;}
+.s305-mq-risk{font-size:.62rem;margin-top:.25rem;}
+.s305-mq.pen .s305-mq-risk{color:#16a34a;}
+.s305-mq.mkt .s305-mq-risk{color:#ea580c;}
+.s305-mq.prd .s305-mq-risk{color:#2563eb;}
+.s305-mq.div .s305-mq-risk{color:#7c3aed;}
+.s305-strats{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem;}
+.s305-sc{border-radius:12px;padding:.85rem .9rem;border-left:3px solid;}
+.s305-sc.pen{background:#f0fdf4;border-color:#22c55e;}
+.s305-sc.prd{background:#eff6ff;border-color:#3b82f6;}
+.s305-sc.mkt{background:#fff7ed;border-color:#f97316;}
+.s305-sc.div{background:#f5f3ff;border-color:#8b5cf6;}
+.s305-sc-hdr{display:flex;align-items:center;gap:.55rem;margin-bottom:.5rem;}
+.s305-sc-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s305-sc.pen .s305-sc-icon{background:#22c55e;}
+.s305-sc.prd .s305-sc-icon{background:#3b82f6;}
+.s305-sc.mkt .s305-sc-icon{background:#f97316;}
+.s305-sc.div .s305-sc-icon{background:#8b5cf6;}
+.s305-sc-ttl{font-size:.84rem;font-weight:700;}
+.s305-sc.pen .s305-sc-ttl{color:#16a34a;}
+.s305-sc.prd .s305-sc-ttl{color:#2563eb;}
+.s305-sc.mkt .s305-sc-ttl{color:#ea580c;}
+.s305-sc.div .s305-sc-ttl{color:#7c3aed;}
+.s305-sc-sub{font-size:.68rem;color:#9ca3af;}
+.s305-sc-desc{font-size:.78rem;color:#525252;line-height:1.55;margin-bottom:.5rem;}
+.s305-sc-li{font-size:.74rem;color:#525252;padding:.2rem 0;display:flex;align-items:flex-start;gap:.35rem;line-height:1.4;}
+.s305-risk-bar-wrap{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.9rem 1rem;margin-bottom:.75rem;}
+.s305-risk-bar{height:12px;background:linear-gradient(90deg,#22c55e 0%,#eab308 50%,#ef4444 100%);border-radius:6px;margin-bottom:.75rem;}
+.s305-risk-markers{display:flex;justify-content:space-between;}
+.s305-risk-m{display:flex;flex-direction:column;align-items:center;width:25%;text-align:center;}
+.s305-risk-dot{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto .35rem;}
+.s305-risk-mttl{font-size:.72rem;font-weight:700;}
+.s305-risk-msub{font-size:.65rem;color:#9ca3af;}
+.s305-when-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:.75rem;}
+.s305-when{border-radius:10px;padding:.7rem .85rem;border-top:2px solid;}
+.s305-when.pen{background:#f8fafc;border-color:#22c55e;}
+.s305-when.prd{background:#f8fafc;border-color:#3b82f6;}
+.s305-when.mkt{background:#f8fafc;border-color:#f97316;}
+.s305-when.div{background:#f8fafc;border-color:#8b5cf6;}
+.s305-when-ttl{font-size:.78rem;font-weight:700;margin-bottom:.3rem;display:flex;align-items:center;gap:.35rem;}
+.s305-when.pen .s305-when-ttl{color:#16a34a;}
+.s305-when.prd .s305-when-ttl{color:#2563eb;}
+.s305-when.mkt .s305-when-ttl{color:#ea580c;}
+.s305-when.div .s305-when-ttl{color:#7c3aed;}
+.s305-when-text{font-size:.74rem;color:#525252;line-height:1.5;}
+.s305-ai-box{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:14px;padding:1rem 1.1rem;}
+.s305-ai-hdr{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.75rem;}
+.s305-ai-icon{width:40px;height:40px;background:#8b5cf6;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s305-ai-ttl{font-weight:700;color:#1a1a1a;font-size:.93rem;margin-bottom:.2rem;}
+.s305-ai-desc{font-size:.81rem;color:#525252;line-height:1.5;}
+.s305-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.05rem;background:#8b5cf6;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none;}
+.result-block{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;margin-top:1rem;}
+.result-block strong{font-size:.82rem;color:#14532d;}
+.result-block p{font-size:.82rem;color:#14532d;line-height:1.55;margin-top:.3rem;}
+</style>
+
+<div class="s305-lbl">Логіка уроку</div>
+<div class="s305-ttl">Де ви зараз і куди рости далі?</div>
+<div class="s305-sub">В уроці 304 ви знайшли свою точку фокусу — найприбутковішу комбінацію продукт–ринок. Тепер питання: як звідси рости? Матриця Ансоффа дає 4 чіткі відповіді.</div>
+
+<div class="s305-warn">
+<strong>Ігор Ансофф, 1957:</strong> «Ви не можете зростати хаотично. Кожен крок росту має бути свідомим вибором між знайомим і невідомим — і цей вибір визначає ваш ризик.»
+</div>
+
+<div class="s305-div"></div>
+
+<div class="s305-lbl">Структура матриці</div>
+<div class="s305-ttl">Два виміри — чотири стратегії</div>
+<div class="s305-sub">По вертикалі — продукт (існуючий або новий). По горизонталі — ринок (існуючий або новий). Комбінація дає стратегію.</div>
+
+<div class="s305-mini-matrix">
+  <div class="s305-mc corner" style="font-size:.58rem;">Продукт↓<br>Ринок→</div>
+  <div class="s305-mc">Існуючий ринок</div>
+  <div class="s305-mc">Новий ринок</div>
+  <div class="s305-mc side">Існуючий продукт</div>
+  <div class="s305-mq pen"><div class="s305-mq-lbl">Проникнення</div><div class="s305-mq-risk">● Низький ризик</div></div>
+  <div class="s305-mq mkt"><div class="s305-mq-lbl">Розвиток ринку</div><div class="s305-mq-risk">●● Середній ризик</div></div>
+  <div class="s305-mc side">Новий продукт</div>
+  <div class="s305-mq prd"><div class="s305-mq-lbl">Розвиток продукту</div><div class="s305-mq-risk">●● Середній ризик</div></div>
+  <div class="s305-mq div"><div class="s305-mq-lbl">Диверсифікація</div><div class="s305-mq-risk">●●● Високий ризик</div></div>
+</div>
+
+<div class="s305-div"></div>
+
+<div class="s305-lbl">4 стратегії росту</div>
+<div class="s305-ttl">Детальний розбір кожного напрямку</div>
+
+<div class="s305-strats">
+  <div class="s305-sc pen">
+    <div class="s305-sc-hdr">
+      <div class="s305-sc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+      <div><div class="s305-sc-ttl">Проникнення</div><div class="s305-sc-sub">Існуючий × Існуючий</div></div>
+    </div>
+    <div class="s305-sc-desc">Більше продавати тим же клієнтам той самий продукт. Найбезпечніший шлях.</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Збільшити рекламу і маркетинг</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Покращити сервіс і утримання</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Запустити програму лояльності</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Забрати клієнтів конкурентів</div>
+  </div>
+  <div class="s305-sc prd">
+    <div class="s305-sc-hdr">
+      <div class="s305-sc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
+      <div><div class="s305-sc-ttl">Розвиток продукту</div><div class="s305-sc-sub">Новий продукт × Існуючий ринок</div></div>
+    </div>
+    <div class="s305-sc-desc">Нові продукти для тих самих клієнтів. Ви знаєте аудиторію — даєте їй більше.</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Розширити лінійку продуктів</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Створити преміум-версію</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Запустити супутні послуги</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Додати нові функції до існуючого</div>
+  </div>
+  <div class="s305-sc mkt">
+    <div class="s305-sc-hdr">
+      <div class="s305-sc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+      <div><div class="s305-sc-ttl">Розвиток ринку</div><div class="s305-sc-sub">Існуючий продукт × Новий ринок</div></div>
+    </div>
+    <div class="s305-sc-desc">Той самий продукт — нові клієнти. Ви знаєте продукт, шукаєте нових покупців.</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Вийти в нові регіони або країни</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Знайти нові сегменти клієнтів</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Використати нові канали продажу</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Адаптувати продукт для іншої аудиторії</div>
+  </div>
+  <div class="s305-sc div">
+    <div class="s305-sc-hdr">
+      <div class="s305-sc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div><div class="s305-sc-ttl">Диверсифікація</div><div class="s305-sc-sub">Новий продукт × Новий ринок</div></div>
+    </div>
+    <div class="s305-sc-desc">Новий продукт для нових клієнтів. Найризикованіша стратегія — ви не знаєте ні продукт, ні ринок.</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Придбати інший бізнес</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Запустити абсолютно нову лінійку</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Інвестувати в нову галузь</div>
+    <div class="s305-sc-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Створити новий бренд</div>
+  </div>
+</div>
+
+<div class="s305-div"></div>
+
+<div class="s305-lbl">Шкала ризику</div>
+<div class="s305-ttl">Чим далі від поточного бізнесу — тим вищий ризик</div>
+
+<div class="s305-risk-bar-wrap">
+  <div class="s305-risk-bar"></div>
+  <div class="s305-risk-markers">
+    <div class="s305-risk-m">
+      <div class="s305-risk-dot" style="background:#22c55e;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <div class="s305-risk-mttl" style="color:#16a34a;">Проникнення</div>
+      <div class="s305-risk-msub">Низький ризик</div>
+    </div>
+    <div class="s305-risk-m">
+      <div class="s305-risk-dot" style="background:#3b82f6;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg></div>
+      <div class="s305-risk-mttl" style="color:#2563eb;">Продукт</div>
+      <div class="s305-risk-msub">Помірний</div>
+    </div>
+    <div class="s305-risk-m">
+      <div class="s305-risk-dot" style="background:#f97316;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg></div>
+      <div class="s305-risk-mttl" style="color:#ea580c;">Ринок</div>
+      <div class="s305-risk-msub">Помірний</div>
+    </div>
+    <div class="s305-risk-m">
+      <div class="s305-risk-dot" style="background:#8b5cf6;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/></svg></div>
+      <div class="s305-risk-mttl" style="color:#7c3aed;">Диверсифікація</div>
+      <div class="s305-risk-msub">Високий ризик</div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:.7rem;color:#9ca3af;margin-top:.75rem;padding:0 .25rem;">
+    <span>← Безпечно</span><span>Ризиковано →</span>
+  </div>
+</div>
+
+<div class="s305-div"></div>
+
+<div class="s305-lbl">Коли що використовувати</div>
+<div class="s305-ttl">Вибір стратегії залежить від ситуації бізнесу</div>
+
+<div class="s305-when-grid">
+  <div class="s305-when pen">
+    <div class="s305-when-ttl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>Проникнення</div>
+    <div class="s305-when-text">Ринок ще не насичений. Є потенціал забрати клієнтів у конкурентів. Обмежені ресурси. Хочете мінімізувати ризики.</div>
+  </div>
+  <div class="s305-when prd">
+    <div class="s305-when-ttl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg>Розвиток продукту</div>
+    <div class="s305-when-text">Лояльна база клієнтів. Клієнти хочуть більше від вас. Конкуренти виводять нові продукти.</div>
+  </div>
+  <div class="s305-when mkt">
+    <div class="s305-when-ttl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>Розвиток ринку</div>
+    <div class="s305-when-text">Продукт вичерпав поточний ринок. Є успішний продукт для масштабування. Нові ринки мають попит на ваше рішення.</div>
+  </div>
+  <div class="s305-when div">
+    <div class="s305-when-ttl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/></svg>Диверсифікація</div>
+    <div class="s305-when-text">Поточний ринок скорочується. Хочете зменшити залежність від одного напрямку. Є значні вільні ресурси.</div>
+  </div>
+</div>
+
+<div class="s305-div"></div>
+
+<div class="s305-lbl">Інструмент</div>
+<div class="s305-ai-box">
+<div class="s305-ai-hdr">
+<div class="s305-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="20" height="20"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2z"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg></div>
+<div>
+<div class="s305-ai-ttl">AI-асистент TALKO — Матриця Ансоффа</div>
+<div class="s305-ai-desc">Опишіть свій бізнес — AI проаналізує вашу ситуацію і визначить яка з 4 стратегій підходить саме вам. Виходите з конкретним планом дій.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-693c2799b97481919e18a12530570e0b-talko-ai-ansoff-matrix" target="_blank" class="s305-ai-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Визначити свою стратегію росту
+</a>
+</div>
+
+<div class="result-block">
+<strong>Результат уроку.</strong>
+<p>Ви знаєте 4 стратегії росту, розумієте їх ризики і знаєте коли яку застосовувати. Домашнє завдання — визначити яку стратегію використовуєте зараз і яку плануєте наступною.</p>
+</div>`,
+
+            lessonContent_ru: `<style>.s305r{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;color:#525252;font-size:.9rem;}</style><div class="s305r">Русская версия урока 305 в разработке. Используйте украинскую версию.</div>`,
+
+            homework: 'Крок 1: Визначте яку стратегію з матриці Ансоффа ви використовуєте ЗАРАЗ (проникнення / розвиток продукту / розвиток ринку / диверсифікація). Крок 2: Відкрийте AI-асистент і опишіть свій бізнес — він підтвердить або скоригує вашу відповідь. Крок 3: Визначте яка стратегія є НАСТУПНИМ кроком росту для вашого бізнесу і що для цього потрібно.',
+            homework_ru: 'Шаг 1: Определите какую стратегию из матрицы Ансоффа вы используете СЕЙЧАС (проникновение / развитие продукта / развитие рынка / диверсификация). Шаг 2: Откройте AI-ассистент и опишите свой бизнес — он подтвердит или скорректирует ваш ответ. Шаг 3: Определите какая стратегия является СЛЕДУЮЩИМ шагом роста для вашего бизнеса и что для этого нужно.',
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
+        {
+            id: 306,
+            category: 'strategy',
+            title: 'ЯК ПОБАЧИТИ ВСІ ДІРКИ В БІЗНЕС-МОДЕЛІ ЗА 1 ГОДИНУ, за допомогою Canvas на одній сторінці, навіть замість 50-сторінкового бізнес-плану',
+            title_ru: 'БИЗНЕС-МОДЕЛЬ CANVAS: опиши весь бизнес на одной странице',
+            title_en: 'BUSINESS MODEL CANVAS: describe your entire business on one page',
+            subtitle: 'Як описати всю логіку бізнесу і знайти де губляться гроші, за допомогою 9 блоків Canvas з AI-асистентом, навіть якщо ніколи не займались стратегічним плануванням',
+            subtitle_ru: '9 блоков, которые заменяют 50-страничный бизнес-план — и показывают где на самом деле деньги',
+            subtitle_en: '9 blocks that replace a 50-page business plan — and show where the money really is',
+            duration: 50,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s306-lbl{font-size:.68rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.45rem;}
+.s306-ttl{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.55rem;}
+.s306-sub{font-size:.85rem;color:#525252;line-height:1.6;margin-bottom:.9rem;}
+.s306-div{height:1px;background:#e2e8f0;margin:1.25rem 0;}
+.s306-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.55rem;}
+.s306-card p{font-size:.86rem;color:#374151;line-height:1.65;}
+.s306-idea{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.75rem;}
+.s306-idea p{font-size:.85rem;color:#14532d;line-height:1.65;}
+.s306-canvas-wrap{background:#1a1a1a;border-radius:12px;padding:1rem;margin-bottom:.75rem;}
+.s306-cgrid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;grid-template-rows:auto auto;gap:4px;}
+.s306-cb{background:#fff;border-radius:6px;padding:.6rem .7rem;min-height:80px;}
+.s306-cb h5{font-size:.68rem;font-weight:700;margin-bottom:.3rem;display:flex;align-items:center;gap:.3rem;}
+.s306-cb p{font-size:.67rem;color:#525252;line-height:1.4;margin:0;}
+.s306-cb.partners{grid-column:1;grid-row:1/3;border-left:3px solid #8b5cf6;}
+.s306-cb.partners h5{color:#7c3aed;}
+.s306-cb.activities{grid-column:2;grid-row:1;border-left:3px solid #3b82f6;}
+.s306-cb.activities h5{color:#2563eb;}
+.s306-cb.resources{grid-column:2;grid-row:2;border-left:3px solid #3b82f6;}
+.s306-cb.resources h5{color:#2563eb;}
+.s306-cb.value{grid-column:3;grid-row:1/3;border-left:3px solid #22c55e;}
+.s306-cb.value h5{color:#16a34a;}
+.s306-cb.relations{grid-column:4;grid-row:1;border-left:3px solid #f97316;}
+.s306-cb.relations h5{color:#ea580c;}
+.s306-cb.channels{grid-column:4;grid-row:2;border-left:3px solid #f97316;}
+.s306-cb.channels h5{color:#ea580c;}
+.s306-cb.segments{grid-column:5;grid-row:1/3;border-left:3px solid #ef4444;}
+.s306-cb.segments h5{color:#dc2626;}
+.s306-cbottom{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px;}
+.s306-cbot{background:#fff;border-radius:6px;padding:.6rem .7rem;}
+.s306-cbot h5{font-size:.68rem;font-weight:700;margin-bottom:.3rem;}
+.s306-cbot p{font-size:.67rem;color:#525252;line-height:1.4;margin:0;}
+.s306-cbot.costs{border-left:3px solid #eab308;}
+.s306-cbot.costs h5{color:#a16207;}
+.s306-cbot.revenue{border-left:3px solid #06b6d4;}
+.s306-cbot.revenue h5{color:#0891b2;}
+.s306-blocks{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem;}
+.s306-block{border-radius:10px;padding:.75rem .9rem;border-left:3px solid;}
+.s306-block-hdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.45rem;}
+.s306-block-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:white;flex-shrink:0;}
+.s306-block-ttl{font-size:.85rem;font-weight:700;}
+.s306-block-sub{font-size:.7rem;color:#9ca3af;}
+.s306-block-desc{font-size:.8rem;color:#525252;line-height:1.55;margin-bottom:.45rem;}
+.s306-block-ex{font-size:.75rem;color:#374151;line-height:1.5;}
+.s306-block-ex strong{color:#1a1a1a;}
+.s306-block.seg{background:#fef2f2;border-color:#ef4444;}
+.s306-block.seg .s306-block-num{background:#ef4444;}
+.s306-block.seg .s306-block-ttl{color:#dc2626;}
+.s306-block.val{background:#f0fdf4;border-color:#22c55e;}
+.s306-block.val .s306-block-num{background:#22c55e;}
+.s306-block.val .s306-block-ttl{color:#16a34a;}
+.s306-block.ch{background:#fff7ed;border-color:#f97316;}
+.s306-block.ch .s306-block-num{background:#f97316;}
+.s306-block.ch .s306-block-ttl{color:#ea580c;}
+.s306-block.rel{background:#fff7ed;border-color:#f97316;}
+.s306-block.rel .s306-block-num{background:#f97316;}
+.s306-block.rel .s306-block-ttl{color:#ea580c;}
+.s306-block.rev{background:#ecfeff;border-color:#06b6d4;}
+.s306-block.rev .s306-block-num{background:#06b6d4;}
+.s306-block.rev .s306-block-ttl{color:#0891b2;}
+.s306-block.res{background:#eff6ff;border-color:#3b82f6;}
+.s306-block.res .s306-block-num{background:#3b82f6;}
+.s306-block.res .s306-block-ttl{color:#2563eb;}
+.s306-block.act{background:#eff6ff;border-color:#3b82f6;}
+.s306-block.act .s306-block-num{background:#3b82f6;}
+.s306-block.act .s306-block-ttl{color:#2563eb;}
+.s306-block.par{background:#f5f3ff;border-color:#8b5cf6;}
+.s306-block.par .s306-block-num{background:#8b5cf6;}
+.s306-block.par .s306-block-ttl{color:#7c3aed;}
+.s306-block.cos{background:#fefce8;border-color:#eab308;}
+.s306-block.cos .s306-block-num{background:#eab308;}
+.s306-block.cos .s306-block-ttl{color:#a16207;}
+.s306-steps{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.75rem;}
+.s306-step{display:flex;gap:.65rem;padding:.65rem .75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;}
+.s306-snum{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.s306-sttl{font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.2rem;}
+.s306-stext{font-size:.78rem;color:#525252;line-height:1.5;}
+.s306-warn{display:flex;gap:.6rem;padding:.7rem .9rem;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;font-size:.82rem;color:#92400e;margin-bottom:.75rem;line-height:1.5;}
+.s306-tips{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:.75rem;}
+.s306-tip{background:#f8fafc;border-left:2px solid #22c55e;border-radius:0 8px 8px 0;padding:.6rem .75rem;}
+.s306-tip-ttl{font-size:.78rem;font-weight:700;color:#16a34a;margin-bottom:.2rem;}
+.s306-tip-text{font-size:.73rem;color:#525252;line-height:1.45;}
+.s306-ai-box{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:14px;padding:1rem 1.1rem;}
+.s306-ai-hdr{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.75rem;}
+.s306-ai-icon{width:40px;height:40px;background:#8b5cf6;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s306-ai-ttl{font-weight:700;color:#1a1a1a;font-size:.93rem;margin-bottom:.2rem;}
+.s306-ai-desc{font-size:.81rem;color:#525252;line-height:1.5;}
+.s306-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.05rem;background:#8b5cf6;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none;}
+.result-block{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;margin-top:1rem;}
+.result-block strong{font-size:.82rem;color:#14532d;}
+.result-block p{font-size:.82rem;color:#14532d;line-height:1.55;margin-top:.3rem;}
+</style>
+
+<div class="s306-lbl">Логіка уроку</div>
+<div class="s306-ttl">Після Ансоффа — опиши свою модель</div>
+<div class="s306-sub">В уроці 305 ви обрали стратегію росту. Тепер — опишіть всю бізнес-модель на одній сторінці. Це зробить стратегію конкретною і покаже де реально гроші.</div>
+
+<div class="s306-idea">
+<p><strong>Головна ідея:</strong> Замість 50-сторінкового бізнес-плану — <strong>одна сторінка з 9 блоками</strong>. Олександр Остервальдер і Ів Піньє створили цей інструмент у 2008 році. Сьогодні це світовий стандарт для стартапів, корпорацій і консультантів.</p>
+</div>
+
+<div class="s306-div"></div>
+
+<div class="s306-lbl">Структура Canvas</div>
+<div class="s306-ttl">9 блоків — повна картина бізнесу</div>
+
+<div class="s306-canvas-wrap">
+  <div class="s306-cgrid">
+    <div class="s306-cb partners">
+      <h5><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> 8. Партнери</h5>
+      <p>Хто допомагає вашому бізнесу працювати?</p>
+    </div>
+    <div class="s306-cb activities">
+      <h5><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg> 7. Діяльність</h5>
+      <p>Що ви робите щодня?</p>
+    </div>
+    <div class="s306-cb value">
+      <h5><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> 2. Цінність ★</h5>
+      <p>Яку проблему вирішуєте? Що отримує клієнт?</p>
+    </div>
+    <div class="s306-cb relations">
+      <h5><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> 4. Відносини</h5>
+      <p>Як спілкуєтесь з клієнтами?</p>
+    </div>
+    <div class="s306-cb segments">
+      <h5><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> 1. Клієнти ★</h5>
+      <p>Для кого ви працюєте?</p>
+    </div>
+    <div class="s306-cb resources">
+      <h5><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> 6. Ресурси</h5>
+      <p>Що потрібно для роботи?</p>
+    </div>
+    <div class="s306-cb channels">
+      <h5><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 3. Канали</h5>
+      <p>Як клієнт дізнається і купує?</p>
+    </div>
+  </div>
+  <div class="s306-cbottom">
+    <div class="s306-cbot costs">
+      <h5>9. Витрати — на що витрачаєте?</h5>
+      <p>Постійні (зарплати, оренда) + змінні (реклама, матеріали)</p>
+    </div>
+    <div class="s306-cbot revenue">
+      <h5>5. Доходи — за що платять клієнти?</h5>
+      <p>Разова оплата, підписка, комісія, ліцензія</p>
+    </div>
+  </div>
+</div>
+
+<div style="font-size:.72rem;color:#9ca3af;text-align:center;margin-bottom:.75rem;">★ — починайте заповнення з цих блоків</div>
+
+<div class="s306-div"></div>
+
+<div class="s306-lbl">9 блоків детально</div>
+<div class="s306-ttl">Що писати в кожному блоці</div>
+
+<div class="s306-blocks">
+  <div class="s306-block seg">
+    <div class="s306-block-hdr"><div class="s306-block-num">1</div><div><div class="s306-block-ttl">Сегменти клієнтів</div><div class="s306-block-sub">Для кого ви створюєте цінність?</div></div></div>
+    <div class="s306-block-desc">Найважливіший блок. Без чіткого розуміння клієнта всі інші не мають сенсу.</div>
+    <div class="s306-block-ex"><strong>Питання:</strong> Хто ваші клієнти? Їх характеристики (вік, дохід, біль)? Чи є різні сегменти з різними потребами?<br><strong>Приклад:</strong> Власники МСБ 35–55 років, оборот 100–2000 тис EUR, 10+ годин роботи на день, хочуть систему але не знають як.</div>
+  </div>
+  <div class="s306-block val">
+    <div class="s306-block-hdr"><div class="s306-block-num">2</div><div><div class="s306-block-ttl">Ціннісна пропозиція</div><div class="s306-block-sub">Яку цінність ви даєте клієнту?</div></div></div>
+    <div class="s306-block-desc">Серце бізнес-моделі. Чому клієнт обирає вас, а не конкурентів?</div>
+    <div class="s306-block-ex"><strong>Питання:</strong> Яку проблему вирішуєте? Що унікального? Який результат клієнт отримує?<br><strong>Приклад:</strong> 13 систем управління за 65 днів → власник вивільняє 50–70% часу і фокусується на стратегії. AI 24/7. Гарантія результату.</div>
+  </div>
+  <div class="s306-block ch">
+    <div class="s306-block-hdr"><div class="s306-block-num">3</div><div><div class="s306-block-ttl">Канали</div><div class="s306-block-sub">Як клієнт дізнається і купує?</div></div></div>
+    <div class="s306-block-desc">Весь шлях клієнта: від першого контакту до покупки і підтримки після.</div>
+    <div class="s306-block-ex"><strong>Приклад:</strong> Обізнаність — FB/IG реклама, YouTube. Оцінка — безкоштовна діагностика. Покупка — дзвінок → оплата онлайн. Доставка — платформа + Zoom. Підтримка — AI + Telegram.</div>
+  </div>
+  <div class="s306-block rel">
+    <div class="s306-block-hdr"><div class="s306-block-num">4</div><div><div class="s306-block-ttl">Відносини з клієнтами</div><div class="s306-block-sub">Який тип відносин ви будуєте?</div></div></div>
+    <div class="s306-block-desc">Особисто чи автоматизовано, разово чи постійно, масово чи персонально?</div>
+    <div class="s306-block-ex"><strong>Типи:</strong> Персональна підтримка / Самообслуговування / Автоматизація / Спільнота / Співтворення<br><strong>Приклад:</strong> До покупки — персональна консультація. Під час — груповий формат + коуч. Після — AI 24/7 + спільнота випускників.</div>
+  </div>
+  <div class="s306-block rev">
+    <div class="s306-block-hdr"><div class="s306-block-num">5</div><div><div class="s306-block-ttl">Потоки доходів</div><div class="s306-block-sub">За що і як платять клієнти?</div></div></div>
+    <div class="s306-block-desc">Може бути один потік або декілька. Чим більше — тим стабільніший бізнес.</div>
+    <div class="s306-block-ex"><strong>Типи:</strong> Разова оплата / Підписка / Ліцензія / Комісія / Реклама<br><strong>Приклад:</strong> Основний продукт 890–3890 EUR. Підписка 49 EUR/міс. Індивідуальний коучинг 500 EUR/міс. Реферальна програма 15%.</div>
+  </div>
+  <div class="s306-block res">
+    <div class="s306-block-hdr"><div class="s306-block-num">6</div><div><div class="s306-block-ttl">Ключові ресурси</div><div class="s306-block-sub">Що потрібно для роботи бізнес-моделі?</div></div></div>
+    <div class="s306-block-desc">Активи без яких бізнес-модель не працюватиме.</div>
+    <div class="s306-block-ex"><strong>Типи:</strong> Фізичні (офіс, обладнання) / Інтелектуальні (бренд, методологія) / Людські (команда) / Фінансові (капітал)<br><strong>Приклад:</strong> Методологія + AI-асистент + база шаблонів + команда коучів + платформа.</div>
+  </div>
+  <div class="s306-block act">
+    <div class="s306-block-hdr"><div class="s306-block-num">7</div><div><div class="s306-block-ttl">Ключова діяльність</div><div class="s306-block-sub">Що ви робите щодня?</div></div></div>
+    <div class="s306-block-desc">Найважливіші дії для функціонування бізнес-моделі.</div>
+    <div class="s306-block-ex"><strong>Приклад:</strong> Проведення діагностик і консультацій. Ведення програм. Розробка контенту. Маркетинг (реклама, вебінари). Підтримка клієнтів.</div>
+  </div>
+  <div class="s306-block par">
+    <div class="s306-block-hdr"><div class="s306-block-num">8</div><div><div class="s306-block-ttl">Ключові партнери</div><div class="s306-block-sub">Хто допомагає вашому бізнесу?</div></div></div>
+    <div class="s306-block-desc">Зовнішні компанії та люди, без яких бізнес-модель працює гірше.</div>
+    <div class="s306-block-ex"><strong>Типи:</strong> Стратегічні альянси / Постачальники / Реферальні партнери<br><strong>Приклад:</strong> OpenAI, Firebase, таргетологи, відеооператори, бізнес-школи, бухгалтерські компанії.</div>
+  </div>
+  <div class="s306-block cos">
+    <div class="s306-block-hdr"><div class="s306-block-num">9</div><div><div class="s306-block-ttl">Структура витрат</div><div class="s306-block-sub">На що витрачаєте гроші?</div></div></div>
+    <div class="s306-block-desc">Всі витрати для функціонування бізнес-моделі.</div>
+    <div class="s306-block-ex"><strong>Постійні:</strong> Зарплати, підписки, оренда (не залежать від продажів)<br><strong>Змінні:</strong> Реклама, комісії, матеріали (залежать від обсягу)<br><strong>Приклад:</strong> Маркетинг 40%, команда 35%, технології 15%, інше 10%.</div>
+  </div>
+</div>
+
+<div class="s306-div"></div>
+
+<div class="s306-lbl">Як заповнювати</div>
+<div class="s306-ttl">7 кроків у правильній послідовності</div>
+
+<div class="s306-steps">
+  <div class="s306-step"><div class="s306-snum">1</div><div><div class="s306-sttl">Клієнт (блок 1)</div><div class="s306-stext">Без розуміння для кого ви працюєте — всі інші блоки не мають сенсу. Опишіть 1–3 сегменти максимально конкретно.</div></div></div>
+  <div class="s306-step"><div class="s306-snum">2</div><div><div class="s306-sttl">Цінність (блок 2)</div><div class="s306-stext">Яку проблему вирішуєте? Який результат отримує клієнт? Чому саме ви?</div></div></div>
+  <div class="s306-step"><div class="s306-snum">3</div><div><div class="s306-sttl">Канали та відносини (блоки 3–4)</div><div class="s306-stext">Як клієнт дізнається, оцінює, купує? Який тип взаємодії ви будуєте?</div></div></div>
+  <div class="s306-step"><div class="s306-snum">4</div><div><div class="s306-sttl">Доходи (блок 5)</div><div class="s306-stext">За що платить клієнт? Скільки? Як часто? Які є додаткові потоки?</div></div></div>
+  <div class="s306-step"><div class="s306-snum">5</div><div><div class="s306-sttl">Ресурси та діяльність (блоки 6–7)</div><div class="s306-stext">Що потрібно для роботи? Які ключові процеси?</div></div></div>
+  <div class="s306-step"><div class="s306-snum">6</div><div><div class="s306-sttl">Партнери та витрати (блоки 8–9)</div><div class="s306-stext">Хто вам допомагає? На що витрачаєте?</div></div></div>
+  <div class="s306-step"><div class="s306-snum">7</div><div><div class="s306-sttl">Перевірте зв'язки</div><div class="s306-stext">Чи логічно пов'язані всі блоки? Чи достатньо доходів для покриття витрат?</div></div></div>
+</div>
+
+<div class="s306-warn">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.75" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  <div><strong>Типова помилка:</strong> Заповнювати Canvas "з голови" без перевірки на реальних клієнтах. Canvas — це гіпотеза, яку потрібно тестувати і оновлювати. Переглядайте раз на квартал або при змінах у бізнесі.</div>
+</div>
+
+<div class="s306-div"></div>
+
+<div class="s306-lbl">Практичні поради</div>
+<div class="s306-tips">
+  <div class="s306-tip"><div class="s306-tip-ttl">Один стікер — одна ідея</div><div class="s306-tip-text">Не пишіть абзаци. Кожен елемент — 3–5 слів максимум.</div></div>
+  <div class="s306-tip"><div class="s306-tip-ttl">Оновлюйте регулярно</div><div class="s306-tip-text">Canvas — живий документ. Переглядайте раз на квартал.</div></div>
+  <div class="s306-tip"><div class="s306-tip-ttl">Тестуйте гіпотези</div><div class="s306-tip-text">Canvas — припущення, а не факт. Перевіряйте кожен блок на реальних клієнтах.</div></div>
+  <div class="s306-tip"><div class="s306-tip-ttl">Порівнюйте з конкурентами</div><div class="s306-tip-text">Заповніть Canvas для 2–3 конкурентів — побачите свої переваги та слабкості.</div></div>
+  <div class="s306-tip"><div class="s306-tip-ttl">Заповнюйте командою</div><div class="s306-tip-text">Різні погляди дають повнішу картину. Залучіть ключових людей.</div></div>
+  <div class="s306-tip"><div class="s306-tip-ttl">Зв'язуйте блоки</div><div class="s306-tip-text">Якщо змінюєте один блок — перевірте вплив на решту.</div></div>
+</div>
+
+<div class="s306-div"></div>
+
+<div class="s306-lbl">Інструмент</div>
+<div class="s306-ai-box">
+<div class="s306-ai-hdr">
+<div class="s306-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="20" height="20"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2z"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg></div>
+<div>
+<div class="s306-ai-ttl">TALKO AI Business Model Canvas</div>
+<div class="s306-ai-desc">Опишіть свій бізнес — AI заповнить всі 9 блоків, знайде слабкі місця і дасть рекомендації для покращення бізнес-моделі.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-693c2c7d12608191b813d08e3f173294-talko-ai-business-model-canvas" target="_blank" class="s306-ai-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Побудувати свою бізнес-модель
+</a>
+</div>
+
+<div class="result-block">
+<strong>Результат уроку.</strong>
+<p>Ви розумієте всі 9 блоків Canvas, знаєте як і в якій послідовності їх заповнювати. Домашнє завдання — заповнити Canvas для вашого бізнесу через AI-асистент і зберегти результат.</p>
+</div>`,
+
+            lessonContent_ru: `<style>.s306r{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;color:#525252;font-size:.9rem;}</style><div class="s306r">Русская версия урока 306 в разработке. Используйте украинскую версию.</div>`,
+
+            homework: 'Крок 1: Відкрийте AI-асистент TALKO Business Model Canvas за посиланням в уроці. Крок 2: Опишіть свій бізнес — AI заповнить всі 9 блоків. Крок 3: Перегляньте результат — які блоки найслабші? Де є протиріччя між блоками? Крок 4: Збережіть Canvas в Google Документ і вставте посилання нижче.',
+            homework_ru: 'Шаг 1: Откройте AI-ассистент TALKO Business Model Canvas по ссылке в уроке. Шаг 2: Опишите свой бизнес — AI заполнит все 9 блоков. Шаг 3: Просмотрите результат — какие блоки наиболее слабые? Где есть противоречия между блоками? Шаг 4: Сохраните Canvas в Google Документ и вставьте ссылку ниже.',
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
+        {
+            id: 307,
+            category: 'strategy',
+            title: 'ЯК ПЕРЕСТАТИ БУТИ НОРМАЛЬНИМ ДЛЯ ВСІХ І СТАТИ №1 У СВОЇЙ НІШІ, за допомогою моделі трьох ціннісних дисциплін, навіть без мільйонних бюджетів',
+            title_ru: 'ТРЕУГОЛЬНИК ТРЕЙСИ И ВИРСЕМЫ: в чём ваше конкурентное преимущество',
+            title_en: 'TREACY & WIERSEMA TRIANGLE: what is your competitive advantage',
+            subtitle: 'Як визначити одну конкурентну перевагу і вбудувати її в кожен процес, за допомогою оцінки за 15 критеріями, навіть якщо здається що у вас немає унікальності',
+            subtitle_ru: 'Value Disciplines: выберите одну дисциплину для лидерства — и станьте лучшими в ней',
+            subtitle_en: 'Value Disciplines: choose one discipline for leadership — and become the best at it',
+            duration: 40,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s307-lbl{font-size:.68rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.45rem;}
+.s307-ttl{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.55rem;}
+.s307-sub{font-size:.85rem;color:#525252;line-height:1.6;margin-bottom:.9rem;}
+.s307-div{height:1px;background:#e2e8f0;margin:1.25rem 0;}
+.s307-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.55rem;}
+.s307-card p{font-size:.86rem;color:#374151;line-height:1.65;}
+.s307-idea{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:.85rem 1rem;margin-bottom:.75rem;}
+.s307-idea p{font-size:.85rem;color:#1e3a5f;line-height:1.65;}
+.s307-key{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.75rem;}
+.s307-key p{font-size:.85rem;color:#14532d;line-height:1.65;}
+.s307-3grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.75rem;}
+.s307-dc{border-radius:12px;padding:.85rem .9rem;text-align:center;border:2px solid;}
+.s307-dc.op{background:#fff7ed;border-color:#f97316;}
+.s307-dc.pr{background:#f5f3ff;border-color:#8b5cf6;}
+.s307-dc.cu{background:#ecfeff;border-color:#06b6d4;}
+.s307-dc-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .5rem;}
+.s307-dc.op .s307-dc-icon{background:#f97316;}
+.s307-dc.pr .s307-dc-icon{background:#8b5cf6;}
+.s307-dc.cu .s307-dc-icon{background:#06b6d4;}
+.s307-dc-ttl{font-size:.82rem;font-weight:700;margin-bottom:.3rem;}
+.s307-dc.op .s307-dc-ttl{color:#ea580c;}
+.s307-dc.pr .s307-dc-ttl{color:#7c3aed;}
+.s307-dc.cu .s307-dc-ttl{color:#0891b2;}
+.s307-dc-desc{font-size:.72rem;color:#525252;line-height:1.45;margin-bottom:.5rem;}
+.s307-dc-ex{background:rgba(255,255,255,.8);border-radius:7px;padding:.45rem .55rem;font-size:.7rem;color:#374151;line-height:1.4;}
+.s307-table-wrap{overflow-x:auto;margin-bottom:.75rem;border-radius:10px;border:1px solid #e2e8f0;}
+.s307-table{width:100%;border-collapse:collapse;font-size:.77rem;min-width:320px;}
+.s307-table th{background:#f8fafc;padding:.5rem .65rem;text-align:left;font-weight:700;border-bottom:1px solid #e2e8f0;}
+.s307-table td{padding:.5rem .65rem;border-bottom:1px solid #f1f5f9;color:#374151;line-height:1.4;}
+.s307-table tr:last-child td{border-bottom:none;}
+.s307-table .th{font-weight:700;color:#1a1a1a;background:#f8fafc;}
+.s307-warn{display:flex;gap:.6rem;padding:.7rem .9rem;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:.82rem;color:#7f1d1d;margin-bottom:.75rem;line-height:1.5;}
+.s307-blocks{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem;}
+.s307-block{border-radius:10px;padding:.75rem .9rem;border-left:3px solid;}
+.s307-block.op{background:#fff7ed;border-color:#f97316;}
+.s307-block.pr{background:#f5f3ff;border-color:#8b5cf6;}
+.s307-block.cu{background:#ecfeff;border-color:#06b6d4;}
+.s307-block-hdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;}
+.s307-block-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:white;flex-shrink:0;}
+.s307-block.op .s307-block-num{background:#f97316;}
+.s307-block.pr .s307-block-num{background:#8b5cf6;}
+.s307-block.cu .s307-block-num{background:#06b6d4;}
+.s307-block-ttl{font-size:.85rem;font-weight:700;}
+.s307-block.op .s307-block-ttl{color:#ea580c;}
+.s307-block.pr .s307-block-ttl{color:#7c3aed;}
+.s307-block.cu .s307-block-ttl{color:#0891b2;}
+.s307-block-desc{font-size:.79rem;color:#525252;line-height:1.55;margin-bottom:.45rem;}
+.s307-block-li{font-size:.74rem;color:#525252;padding:.18rem 0;display:flex;align-items:flex-start;gap:.35rem;line-height:1.4;}
+.s307-steps{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.75rem;}
+.s307-step{display:flex;gap:.65rem;padding:.65rem .75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;}
+.s307-snum{width:24px;height:24px;background:#3b82f6;color:white;border-radius:50%;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.s307-sttl{font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.2rem;}
+.s307-stext{font-size:.78rem;color:#525252;line-height:1.5;}
+.s307-ai-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:1rem 1.1rem;}
+.s307-ai-hdr{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.75rem;}
+.s307-ai-icon{width:40px;height:40px;background:#3b82f6;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s307-ai-ttl{font-weight:700;color:#1a1a1a;font-size:.93rem;margin-bottom:.2rem;}
+.s307-ai-desc{font-size:.81rem;color:#525252;line-height:1.5;}
+.s307-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.05rem;background:#3b82f6;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none;}
+.result-block{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;margin-top:1rem;}
+.result-block strong{font-size:.82rem;color:#14532d;}
+.result-block p{font-size:.82rem;color:#14532d;line-height:1.55;margin-top:.3rem;}
+</style>
+
+<div class="s307-lbl">Логіка уроку</div>
+<div class="s307-ttl">Canvas заповнений. Тепер — де ваша конкурентна перевага?</div>
+<div class="s307-sub">В уроці 306 ви описали всю бізнес-модель. Тепер головне питання: чому клієнт обирає вас, а не конкурента? Модель Трейсі та Вірсема дає чітку відповідь.</div>
+
+<div class="s307-idea">
+<p><strong>Майкл Трейсі та Фред Вірсема, 1995:</strong> "The Discipline of Market Leaders" — неможливо бути найкращим у всьому. Компанії, які намагаються бути "всім для всіх", в результаті не є найкращими ні в чому. Потрібно обрати <strong>одну дисципліну для лідерства</strong>.</p>
+</div>
+
+<div class="s307-key">
+<p><strong>Ключовий принцип:</strong> Успішні компанії лідирують в <strong>одній з трьох дисциплін</strong> і підтримують прийнятний рівень у двох інших. Спроба бути найкращим у всьому призводить до посередності в кожному.</p>
+</div>
+
+<div class="s307-div"></div>
+
+<div class="s307-lbl">Три ціннісні дисципліни</div>
+<div class="s307-ttl">Оберіть свій шлях до лідерства</div>
+
+<div class="s307-3grid">
+  <div class="s307-dc op">
+    <div class="s307-dc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.6 9a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9"/></svg></div>
+    <div class="s307-dc-ttl">Операційна досконалість</div>
+    <div class="s307-dc-desc">Найнижча ціна, найзручніший сервіс, мінімум проблем</div>
+    <div class="s307-dc-ex"><strong>Приклади:</strong> McDonald's, IKEA, Walmart, Amazon</div>
+  </div>
+  <div class="s307-dc pr">
+    <div class="s307-dc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+    <div class="s307-dc-ttl">Лідерство продукту</div>
+    <div class="s307-dc-desc">Найкращий продукт, інновації, передові технології</div>
+    <div class="s307-dc-ex"><strong>Приклади:</strong> Apple, Tesla, Nike, Dyson, Sony</div>
+  </div>
+  <div class="s307-dc cu">
+    <div class="s307-dc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+    <div class="s307-dc-ttl">Близькість до клієнта</div>
+    <div class="s307-dc-desc">Глибоке розуміння, персоналізація, довгострокові відносини</div>
+    <div class="s307-dc-ex"><strong>Приклади:</strong> Nordstrom, IBM, McKinsey, Ritz-Carlton</div>
+  </div>
+</div>
+
+<div class="s307-div"></div>
+
+<div class="s307-lbl">Порівняння дисциплін</div>
+
+<div class="s307-table-wrap">
+<table class="s307-table">
+<thead><tr>
+<th>Аспект</th>
+<th style="color:#ea580c;">Операційна</th>
+<th style="color:#7c3aed;">Продукт</th>
+<th style="color:#0891b2;">Клієнт</th>
+</tr></thead>
+<tbody>
+<tr><td class="th">Фокус</td><td>Ефективність процесів</td><td>Інновації та R&D</td><td>Відносини з клієнтом</td></tr>
+<tr><td class="th">Цінність</td><td>Низька ціна, зручність</td><td>Найкращий продукт</td><td>Персональне рішення</td></tr>
+<tr><td class="th">Перевага</td><td>Масштаб, стандартизація</td><td>Унікальність, патенти</td><td>Знання клієнта, лояльність</td></tr>
+<tr><td class="th">Культура</td><td>Дисципліна, KPI</td><td>Креативність, ризик</td><td>Сервіс, гнучкість</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="s307-div"></div>
+
+<div class="s307-lbl">Детальний розбір</div>
+<div class="s307-ttl">Що означає лідерство в кожній дисципліні</div>
+
+<div class="s307-blocks">
+  <div class="s307-block op">
+    <div class="s307-block-hdr"><div class="s307-block-num">1</div><div><div class="s307-block-ttl">Операційна досконалість</div></div></div>
+    <div class="s307-block-desc">Ваша конкурентна перевага — ефективність, стандартизація і низькі витрати. Клієнт обирає вас за зручність і ціну, а не унікальність продукту.</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Інвестуйте в автоматизацію та стандартизацію процесів</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Оптимізуйте ланцюжок постачання і витрати</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Масштабуйте через об'єм, а не через маржу</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Усуньте будь-які зайві кроки в обслуговуванні клієнта</div>
+  </div>
+  <div class="s307-block pr">
+    <div class="s307-block-hdr"><div class="s307-block-num">2</div><div><div class="s307-block-ttl">Лідерство продукту</div></div></div>
+    <div class="s307-block-desc">Ваша конкурентна перевага — найкращий продукт або послуга на ринку. Клієнт платить преміум тому що немає кращої альтернативи.</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Інвестуйте в R&D і постійне покращення продукту</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Будуйте культуру інновацій в команді</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Не змагайтесь ціною — продавайте преміум</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Виводьте нові продукти до того як конкуренти скопіюють старі</div>
+  </div>
+  <div class="s307-block cu">
+    <div class="s307-block-hdr"><div class="s307-block-num">3</div><div><div class="s307-block-ttl">Близькість до клієнта</div></div></div>
+    <div class="s307-block-desc">Ваша конкурентна перевага — глибоке розуміння клієнта і персоналізація. Клієнт залишається з вами бо відчуває що ви знаєте його краще за будь-кого.</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Інвестуйте в CRM і збір даних про клієнтів</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Фокусуйтесь на LTV і утриманні, а не залученні</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Адаптуйте рішення під кожного клієнта індивідуально</div>
+    <div class="s307-block-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><polyline points="9 18 15 12 9 6"/></svg>Будуйте довгострокові партнерства, а не разові угоди</div>
+  </div>
+</div>
+
+<div class="s307-div"></div>
+
+<div class="s307-lbl">Типова помилка</div>
+
+<div class="s307-warn">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <div><strong>Відсутність фокусу = посередність у всьому.</strong> Якщо ваші оцінки майже однакові в усіх трьох дисциплінах — ви намагаєтесь бути "всім для всіх". Клієнт не розуміє чому має обрати вас. Конкуренти, що мають чіткий фокус, перемагатимуть вас у кожному напрямку окремо.</div>
+</div>
+
+<div class="s307-div"></div>
+
+<div class="s307-lbl">Як визначити свою дисципліну</div>
+<div class="s307-ttl">4 кроки до правильного вибору</div>
+
+<div class="s307-steps">
+  <div class="s307-step"><div class="s307-snum">1</div><div><div class="s307-sttl">Запитайте своїх клієнтів</div><div class="s307-stext">Чому вони обирають вас? Не що ви думаєте — а що говорять вони. Відповідь часто відрізняється від вашого уявлення.</div></div></div>
+  <div class="s307-step"><div class="s307-snum">2</div><div><div class="s307-sttl">Проаналізуйте де ви реально виграєте</div><div class="s307-stext">В яких угодах ви перемагаєте конкурентів? За якими критеріями? Де ваша конверсія найвища?</div></div></div>
+  <div class="s307-step"><div class="s307-snum">3</div><div><div class="s307-sttl">Оцініть де у вас найсильніша команда і процеси</div><div class="s307-stext">Лідерство в дисципліні потребує відповідної культури і людей. Де ваша команда найсильніша?</div></div></div>
+  <div class="s307-step"><div class="s307-snum">4</div><div><div class="s307-sttl">Пройдіть оцінку через AI-асистент</div><div class="s307-stext">AI задасть вам 15 питань і визначить де ваш реальний потенціал для лідерства. Отримаєте конкретний план.</div></div></div>
+</div>
+
+<div class="s307-div"></div>
+
+<div class="s307-lbl">Інструмент</div>
+<div class="s307-ai-box">
+<div class="s307-ai-hdr">
+<div class="s307-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="20" height="20"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2z"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg></div>
+<div>
+<div class="s307-ai-ttl">TALKO AI — Трикутник Трейсі та Вірсема</div>
+<div class="s307-ai-desc">Пройдіть оцінку за 15 критеріями, побачте свій трикутник дисциплін і отримайте конкретні рекомендації що покращити для лідерства у вашій дисципліні.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-693c30a1c6148191a5822e4fef9fb702-talko-ai-tracy-wiersem-triangle" target="_blank" class="s307-ai-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Визначити свою конкурентну перевагу
+</a>
+</div>
+
+<div class="result-block">
+<strong>Результат уроку.</strong>
+<p>Ви знаєте три ціннісні дисципліни, розумієте чому фокус важливіший за охоплення, і маєте чітке уявлення як обрати свою стратегію конкурентної переваги. Домашнє завдання нижче.</p>
+</div>`,
+
+            lessonContent_ru: `<style>.s307r{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;color:#525252;font-size:.9rem;}</style><div class="s307r">Русская версия урока 307 в разработке. Используйте украинскую версию.</div>`,
+
+            homework: 'Крок 1: Відкрийте AI-асистент TALKO за посиланням в уроці. Крок 2: Пройдіть оцінку за 15 критеріями — отримайте свій трикутник. Крок 3: Визначте яка дисципліна є вашою основною і яка має бути фокусом росту. Крок 4: Запишіть 3 конкретні кроки які зробите в наступні 30 днів для посилення цієї дисципліни.',
+            homework_ru: 'Шаг 1: Откройте AI-ассистент TALKO по ссылке в уроке. Шаг 2: Пройдите оценку по 15 критериям — получите свой треугольник. Шаг 3: Определите какая дисциплина является вашей основной и какая должна быть фокусом роста. Шаг 4: Запишите 3 конкретных шага которые сделаете в ближайшие 30 дней для усиления этой дисциплины.',
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
+        {
+            id: 308,
+            category: 'strategy',
+            title: 'ЯК ВИЙТИ З ЦІНОВОЇ КОНКУРЕНЦІЇ І ЗРОБИТИ КОНКУРЕНТІВ НЕАКТУАЛЬНИМИ, за допомогою Strategy Canvas та моделі ERRC, навіть в переповненій ніші',
+            title_ru: 'STRATEGY CANVAS: найди свой голубой океан',
+            title_en: 'STRATEGY CANVAS: find your blue ocean',
+            subtitle: 'Як знайти свій блакитний океан і створити попит там де конкуренції немає, за допомогою AI-аналізу галузі, навіть якщо здається що всі ніші вже зайняті',
+            subtitle_ru: 'В. Чан Ким и Рене Моборн: как выйти из кровавой конкуренции и создать новое рыночное пространство',
+            subtitle_en: 'W. Chan Kim & Renée Mauborgne: how to escape bloody competition and create new market space',
+            duration: 45,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s308-lbl{font-size:.68rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.45rem;}
+.s308-ttl{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.55rem;}
+.s308-sub{font-size:.85rem;color:#525252;line-height:1.6;margin-bottom:.9rem;}
+.s308-div{height:1px;background:#e2e8f0;margin:1.25rem 0;}
+.s308-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.55rem;}
+.s308-card p{font-size:.86rem;color:#374151;line-height:1.65;}
+.s308-idea{background:#e0f2fe;border:1px solid #bae6fd;border-radius:12px;padding:.85rem 1rem;margin-bottom:.75rem;}
+.s308-idea p{font-size:.85rem;color:#0369a1;line-height:1.65;}
+.s308-vs{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem;}
+.s308-red{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:.8rem;}
+.s308-blue{background:#e0f2fe;border:1px solid #bae6fd;border-radius:12px;padding:.8rem;}
+.s308-vshdr{font-size:.85rem;font-weight:700;margin-bottom:.55rem;display:flex;align-items:center;gap:.4rem;}
+.s308-red .s308-vshdr{color:#dc2626;}
+.s308-blue .s308-vshdr{color:#0369a1;}
+.s308-vsitem{font-size:.77rem;line-height:1.5;padding:.25rem 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:.4rem;}
+.s308-vsitem:last-child{border-bottom:none;}
+.s308-chart-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.75rem;}
+.s308-chart-lbl{font-size:.72rem;font-weight:700;color:#525252;text-align:center;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.06em;}
+.s308-chart-area{position:relative;height:160px;margin-bottom:.5rem;}
+.s308-chart-legend{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.s308-ldot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:.3rem;}
+.s308-chart-note{font-size:.72rem;color:#9ca3af;text-align:center;margin-top:.45rem;}
+.s308-errc{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem;}
+.s308-errc-card{border-radius:10px;padding:.75rem .85rem;border-left:3px solid;}
+.s308-errc-card.e{background:#fef2f2;border-color:#ef4444;}
+.s308-errc-card.r{background:#fff7ed;border-color:#f97316;}
+.s308-errc-card.ra{background:#f0fdf4;border-color:#22c55e;}
+.s308-errc-card.c{background:#e0f2fe;border-color:#0ea5e9;}
+.s308-errc-ttl{font-size:.82rem;font-weight:700;margin-bottom:.3rem;}
+.s308-errc-card.e .s308-errc-ttl{color:#dc2626;}
+.s308-errc-card.r .s308-errc-ttl{color:#ea580c;}
+.s308-errc-card.ra .s308-errc-ttl{color:#16a34a;}
+.s308-errc-card.c .s308-errc-ttl{color:#0369a1;}
+.s308-errc-q{font-size:.78rem;color:#525252;line-height:1.5;margin-bottom:.4rem;}
+.s308-errc-ex{font-size:.73rem;color:#374151;line-height:1.45;}
+.s308-errc-ex strong{color:#1a1a1a;}
+.s308-cases{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem;}
+.s308-case{background:#f8fafc;border:.5px solid #e2e8f0;border-radius:10px;padding:.75rem .9rem;}
+.s308-case-hdr{font-size:.78rem;font-weight:700;color:#0369a1;margin-bottom:.35rem;}
+.s308-case-text{font-size:.78rem;color:#525252;line-height:1.55;}
+.s308-case-text strong{color:#1a1a1a;}
+.s308-steps{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.75rem;}
+.s308-step{display:flex;gap:.65rem;padding:.65rem .75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;}
+.s308-snum{width:24px;height:24px;background:#0ea5e9;color:white;border-radius:50%;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.s308-sttl{font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.2rem;}
+.s308-stext{font-size:.78rem;color:#525252;line-height:1.5;}
+.s308-ai-box{background:#e0f2fe;border:1px solid #bae6fd;border-radius:14px;padding:1rem 1.1rem;}
+.s308-ai-hdr{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.75rem;}
+.s308-ai-icon{width:40px;height:40px;background:#0ea5e9;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s308-ai-ttl{font-weight:700;color:#1a1a1a;font-size:.93rem;margin-bottom:.2rem;}
+.s308-ai-desc{font-size:.81rem;color:#525252;line-height:1.5;}
+.s308-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.05rem;background:#0ea5e9;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none;}
+.result-block{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;margin-top:1rem;}
+.result-block strong{font-size:.82rem;color:#14532d;}
+.result-block p{font-size:.82rem;color:#14532d;line-height:1.55;margin-top:.3rem;}
+</style>
+
+<div class="s308-lbl">Логіка уроку</div>
+<div class="s308-ttl">Ви обрали дисципліну. Тепер — де ваша унікальна позиція?</div>
+<div class="s308-sub">В уроці 307 ви визначили конкурентну перевагу. Тепер — найважливіше питання стратегії: чи змагаєтесь ви в існуючих правилах гри, чи створюєте нові?</div>
+
+<div class="s308-idea">
+<p><strong>В. Чан Кім та Рене Моборн, 2005:</strong> "Blue Ocean Strategy" — книга продана тиражем 4+ млн копій. Головна ідея: перестаньте конкурувати в існуючому ринку. <strong>Створіть новий ринковий простір де конкуренції немає взагалі.</strong></p>
+</div>
+
+<div class="s308-div"></div>
+
+<div class="s308-lbl">Червоний vs Блакитний океан</div>
+<div class="s308-ttl">Де ви зараз?</div>
+
+<div class="s308-vs">
+  <div class="s308-red">
+    <div class="s308-vshdr">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      Червоний океан
+    </div>
+    <div class="s308-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;">Конкуренція на існуючому ринку</span></div>
+    <div class="s308-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;">Боротьба за частку ринку</span></div>
+    <div class="s308-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;">Вибір: ціна або цінність</span></div>
+    <div class="s308-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;">Криваві битви з конкурентами</span></div>
+    <div class="s308-vsitem"><span style="color:#ef4444;font-size:.75rem;">✕</span><span style="font-size:.77rem;color:#7f1d1d;">Маржа падає з часом</span></div>
+  </div>
+  <div class="s308-blue">
+    <div class="s308-vshdr">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><polyline points="20 6 9 17 4 12"/></svg>
+      Блакитний океан
+    </div>
+    <div class="s308-vsitem"><span style="color:#0ea5e9;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#075985;">Новий ринковий простір</span></div>
+    <div class="s308-vsitem"><span style="color:#0ea5e9;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#075985;">Конкуренція неактуальна</span></div>
+    <div class="s308-vsitem"><span style="color:#0ea5e9;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#075985;">Низька ціна І висока цінність</span></div>
+    <div class="s308-vsitem"><span style="color:#0ea5e9;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#075985;">Створення нового попиту</span></div>
+    <div class="s308-vsitem"><span style="color:#0ea5e9;font-size:.75rem;">✓</span><span style="font-size:.77rem;color:#075985;">Простір для зростання без бою</span></div>
+  </div>
+</div>
+
+<div class="s308-div"></div>
+
+<div class="s308-lbl">Strategy Canvas — канва стратегії</div>
+<div class="s308-ttl">Як читати і будувати</div>
+
+<div class="s308-chart-wrap">
+  <div class="s308-chart-lbl">Приклад: авіалінії</div>
+  <div class="s308-chart-area">
+    <svg width="100%" height="160" viewBox="0 0 460 160" preserveAspectRatio="none">
+      <line x1="40" y1="10" x2="40" y2="140" stroke="#e5e7eb" stroke-width=".5"/>
+      <line x1="40" y1="140" x2="450" y2="140" stroke="#e5e7eb" stroke-width=".5"/>
+      <text x="35" y="15" text-anchor="end" font-size="8" fill="#9ca3af">Висок.</text>
+      <text x="35" y="140" text-anchor="end" font-size="8" fill="#9ca3af">Низьк.</text>
+      <text x="80" y="155" text-anchor="middle" font-size="7.5" fill="#9ca3af">Ціна</text>
+      <text x="137" y="155" text-anchor="middle" font-size="7.5" fill="#9ca3af">Їжа</text>
+      <text x="194" y="155" text-anchor="middle" font-size="7.5" fill="#9ca3af">Зал ожид.</text>
+      <text x="251" y="155" text-anchor="middle" font-size="7.5" fill="#9ca3af">Сервіс</text>
+      <text x="308" y="155" text-anchor="middle" font-size="7.5" fill="#9ca3af">Швидкість</text>
+      <text x="365" y="155" text-anchor="middle" font-size="7.5" fill="#9ca3af">Частота</text>
+      <text x="422" y="155" text-anchor="middle" font-size="7.5" fill="#9ca3af">Ціна/якість</text>
+      <polyline points="80,20 137,35 194,35 251,35 308,70 365,70 422,55" fill="none" stroke="#3b82f6" stroke-width="2"/>
+      <circle cx="80" cy="20" r="4" fill="#3b82f6"/>
+      <circle cx="137" cy="35" r="4" fill="#3b82f6"/>
+      <circle cx="194" cy="35" r="4" fill="#3b82f6"/>
+      <circle cx="251" cy="35" r="4" fill="#3b82f6"/>
+      <circle cx="308" cy="70" r="4" fill="#3b82f6"/>
+      <circle cx="365" cy="70" r="4" fill="#3b82f6"/>
+      <circle cx="422" cy="55" r="4" fill="#3b82f6"/>
+      <polyline points="80,110 137,120 194,120 251,105 308,30 365,30 422,110" fill="none" stroke="#ef4444" stroke-width="2"/>
+      <circle cx="80" cy="110" r="4" fill="#ef4444"/>
+      <circle cx="137" cy="120" r="4" fill="#ef4444"/>
+      <circle cx="194" cy="120" r="4" fill="#ef4444"/>
+      <circle cx="251" cy="105" r="4" fill="#ef4444"/>
+      <circle cx="308" cy="30" r="4" fill="#ef4444"/>
+      <circle cx="365" cy="30" r="4" fill="#ef4444"/>
+      <circle cx="422" cy="110" r="4" fill="#ef4444"/>
+    </svg>
+  </div>
+  <div class="s308-chart-legend">
+    <span><span class="s308-ldot" style="background:#3b82f6;"></span>Звичайні авіалінії</span>
+    <span><span class="s308-ldot" style="background:#ef4444;"></span>Southwest (блакитний океан)</span>
+  </div>
+  <div class="s308-chart-note">Горизонталь — фактори конкуренції. Вертикаль — рівень пропозиції (низький → високий)</div>
+</div>
+
+<div class="s308-card">
+<p><strong>Як читати:</strong> Дві криві майже дзеркальні — де звичайні авіалінії інвестують багато (їжа, зал очікування), Southwest інвестує мало. Де Southwest інвестує — швидкість і частота рейсів — конкуренти відстають. Це і є блакитний океан: інша гра за іншими правилами.</p>
+</div>
+
+<div class="s308-div"></div>
+
+<div class="s308-lbl">Модель чотирьох дій (ERRC)</div>
+<div class="s308-ttl">Як створити блакитний океан</div>
+
+<div class="s308-errc">
+  <div class="s308-errc-card e">
+    <div class="s308-errc-ttl">E — Eliminate (Усунути)</div>
+    <div class="s308-errc-q">Які фактори, що сприймаються як належне, слід повністю усунути?</div>
+    <div class="s308-errc-ex"><strong>Southwest:</strong> Їжа на борту, зал очікування, вибір місця — усунуто повністю</div>
+  </div>
+  <div class="s308-errc-card r">
+    <div class="s308-errc-ttl">R — Reduce (Зменшити)</div>
+    <div class="s308-errc-q">Які фактори слід значно зменшити нижче стандарту галузі?</div>
+    <div class="s308-errc-ex"><strong>Cirque du Soleil:</strong> Тварини, зірки-виконавці — зменшено до мінімуму</div>
+  </div>
+  <div class="s308-errc-card ra">
+    <div class="s308-errc-ttl">R — Raise (Підвищити)</div>
+    <div class="s308-errc-q">Які фактори слід значно підвищити вище стандарту галузі?</div>
+    <div class="s308-errc-ex"><strong>Southwest:</strong> Швидкість, частота рейсів, дружність персоналу — підвищено суттєво</div>
+  </div>
+  <div class="s308-errc-card c">
+    <div class="s308-errc-ttl">C — Create (Створити)</div>
+    <div class="s308-errc-q">Які абсолютно нові фактори слід створити яких немає в галузі?</div>
+    <div class="s308-errc-ex"><strong>Cirque du Soleil:</strong> Тема/сюжет, артистичність, атмосфера — створено з нуля</div>
+  </div>
+</div>
+
+<div class="s308-div"></div>
+
+<div class="s308-lbl">Реальні кейси</div>
+
+<div class="s308-cases">
+  <div class="s308-case">
+    <div class="s308-case-hdr">📍 Southwest Airlines (США, авіація)</div>
+    <div class="s308-case-text">Усі авіакомпанії конкурували за якість сервісу на борту, залів очікування і вибору місць. Southwest усунула все це і зробила ставку на швидкість і ціну. <strong>Результат: стала прибутковою коли всі конкуренти фіксували збитки після 9/11.</strong></div>
+  </div>
+  <div class="s308-case">
+    <div class="s308-case-hdr">📍 Cirque du Soleil (Канада, розваги)</div>
+    <div class="s308-case-text">Класичний цирк конкурував за зірок і тварин. Cirque усунула тварин і зірок, підняла артистизм і додала сюжет як у театрі. <strong>Вийшла з конкуренції з цирками і увійшла в конкуренцію з театрами та Бродвеєм — з вищим чеком.</strong></div>
+  </div>
+  <div class="s308-case">
+    <div class="s308-case-hdr">📍 [yellow tail] (Австралія, вино)</div>
+    <div class="s308-case-text">Ринок вина ділився на преміум (складно, дорого) і бюджет (дешево, але без іміджу). [yellow tail] прибрала складність вибору і додала простоту та веселощі. <strong>За 2 роки стала найпродаванішим вином у США — обігнавши французькі та каліфорнійські марки.</strong></div>
+  </div>
+</div>
+
+<div class="s308-div"></div>
+
+<div class="s308-lbl">Як побудувати свою канву</div>
+<div class="s308-ttl">5 кроків для малого бізнесу</div>
+
+<div class="s308-steps">
+  <div class="s308-step"><div class="s308-snum">1</div><div><div class="s308-sttl">Визначте фактори конкуренції у вашій галузі</div><div class="s308-stext">Що всі гравці вашого ринку вважають обов'язковим? Ціна, якість, швидкість, сервіс, локація — запишіть 5–8 факторів.</div></div></div>
+  <div class="s308-step"><div class="s308-snum">2</div><div><div class="s308-sttl">Оцініть себе та 2–3 конкурентів</div><div class="s308-stext">По кожному фактору від 1 до 5: де ви, де конкурент 1, де конкурент 2. Намалюйте криві на графіку.</div></div></div>
+  <div class="s308-step"><div class="s308-snum">3</div><div><div class="s308-sttl">Знайдіть де всі роблять одне й те саме</div><div class="s308-stext">Де криві конкурентів паралельні? Це червоний океан — там всі конкурують за одне. Саме тут треба думати по-іншому.</div></div></div>
+  <div class="s308-step"><div class="s308-snum">4</div><div><div class="s308-sttl">Застосуйте модель ERRC</div><div class="s308-stext">Що можете усунути, зменшити, підвищити, створити? Мета — не стати кращим у тій самій грі, а змінити правила гри.</div></div></div>
+  <div class="s308-step"><div class="s308-snum">5</div><div><div class="s308-sttl">Намалюйте нову криву — вашу стратегію</div><div class="s308-stext">Нова крива має різко відрізнятися від конкурентів. Якщо вона схожа — ви ще в червоному океані.</div></div></div>
+</div>
+
+<div class="s308-div"></div>
+
+<div class="s308-lbl">Інструмент</div>
+<div class="s308-ai-box">
+<div class="s308-ai-hdr">
+<div class="s308-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="20" height="20"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+<div>
+<div class="s308-ai-ttl">TALKO AI — Blue Ocean Strategy Canvas</div>
+<div class="s308-ai-desc">Опишіть вашу галузь і конкурентів — AI побудує канву стратегії, знайде де ваш потенційний блакитний океан і дасть рекомендації за моделлю ERRC.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-693c327113248191a6dc2226c1197889-talko-ai-blue-ocean" target="_blank" class="s308-ai-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Побудувати канву стратегії
+</a>
+</div>
+
+<div class="result-block">
+<strong>Результат уроку.</strong>
+<p>Ви розумієте різницю між червоним і блакитним океаном, знаєте як читати Strategy Canvas і як застосовувати модель ERRC. Домашнє завдання — побудувати канву для вашого бізнесу і знайти де ваш потенційний блакитний океан.</p>
+</div>`,
+
+            lessonContent_ru: `<style>.s308r{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;color:#525252;font-size:.9rem;}</style><div class="s308r">Русская версия урока 308 в разработке. Используйте украинскую версию.</div>`,
+
+            homework: 'Крок 1: Запишіть 5–8 ключових факторів конкуренції у вашій галузі. Крок 2: Оцініть себе та 2 конкурентів по кожному фактору (1–5). Крок 3: Відкрийте AI-асистент і побудуйте канву стратегії для вашого бізнесу. Крок 4: Застосуйте модель ERRC — знайдіть де ваш потенційний блакитний океан. Крок 5: Намалюйте нову стратегічну криву.',
+            homework_ru: 'Шаг 1: Запишите 5–8 ключевых факторов конкуренции в вашей отрасли. Шаг 2: Оцените себя и 2 конкурентов по каждому фактору (1–5). Шаг 3: Откройте AI-ассистент и постройте канву стратегии для вашего бизнеса. Шаг 4: Примените модель ERRC — найдите где ваш потенциальный голубой океан. Шаг 5: Нарисуйте новую стратегическую кривую.',
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
+        {
+            id: 309,
+            category: 'strategy',
+            title: 'ЯК ДІЗНАВАТИСЯ ПРО ПРОБЛЕМИ ДО ТОГО ЯК ВОНИ СТАЮТЬ КАТАСТРОФОЮ, за допомогою матриці ризиків, навіть без знань з ризик-менеджменту',
+            title_ru: 'МАТРИЦА РИСКОВ: что может остановить ваш бизнес и как это предотвратить',
+            title_en: 'RISK MATRIX: what can stop your business and how to prevent it',
+            subtitle: 'Як виявити і знешкодити загрози до того як вони зупинять бізнес, за допомогою AI-аналізу за формулою Ймовірність × Вплив, навіть якщо раніше просто сподівались що обійдеться',
+            subtitle_ru: 'Оцените вероятность и влияние каждого риска — и расставьте приоритеты действий',
+            subtitle_en: 'Assess probability and impact of each risk — and prioritize your actions',
+            duration: 35,
+            videoLink: null,
+            materialsLink: null,
+
+            lessonContent: `<style>
+.s309-lbl{font-size:.68rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.45rem;}
+.s309-ttl{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.55rem;}
+.s309-sub{font-size:.85rem;color:#525252;line-height:1.6;margin-bottom:.9rem;}
+.s309-div{height:1px;background:#e2e8f0;margin:1.25rem 0;}
+.s309-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:.85rem 1rem;margin-bottom:.55rem;}
+.s309-card p{font-size:.86rem;color:#374151;line-height:1.65;}
+.s309-idea{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:.85rem 1rem;margin-bottom:.75rem;}
+.s309-idea p{font-size:.85rem;color:#991b1b;line-height:1.65;}
+.s309-formula{background:#1f2937;border-radius:12px;padding:.85rem 1rem;margin-bottom:.75rem;text-align:center;}
+.s309-formula p{font-size:.95rem;color:white;font-weight:700;letter-spacing:.03em;margin:0;}
+.s309-formula span{color:#f87171;}
+.s309-levels{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:.75rem;}
+.s309-lcard{border-radius:10px;padding:.7rem .85rem;text-align:center;}
+.s309-lcard.cr{background:linear-gradient(135deg,#dc2626,#991b1b);color:white;}
+.s309-lcard.hi{background:linear-gradient(135deg,#f97316,#ea580c);color:white;}
+.s309-lcard.me{background:linear-gradient(135deg,#eab308,#ca8a04);color:white;}
+.s309-lcard.lo{background:linear-gradient(135deg,#22c55e,#16a34a);color:white;}
+.s309-lcard-ttl{font-size:.82rem;font-weight:700;margin-bottom:.2rem;}
+.s309-lcard-score{font-size:1.4rem;font-weight:700;font-family:Montserrat,sans-serif;margin-bottom:.2rem;}
+.s309-lcard-desc{font-size:.7rem;opacity:.9;line-height:1.4;}
+.s309-matrix-wrap{background:#1f2937;border-radius:12px;padding:.85rem;margin-bottom:.75rem;}
+.s309-matrix-title{color:white;font-size:.8rem;font-weight:700;text-align:center;margin-bottom:.65rem;text-transform:uppercase;letter-spacing:.06em;}
+.s309-matrix{display:grid;grid-template-columns:30px repeat(5,1fr);grid-template-rows:repeat(5,1fr) 24px;gap:2px;}
+.s309-mc{border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.85);min-height:28px;}
+.s309-mc.s1{background:#22c55e;}.s309-mc.s2{background:#22c55e;}.s309-mc.s3{background:#84cc16;}.s309-mc.s4{background:#84cc16;}.s309-mc.s5{background:#eab308;}
+.s309-mc.s6{background:#eab308;}.s309-mc.s8{background:#f97316;}.s309-mc.s9{background:#f97316;}.s309-mc.s10{background:#f97316;}
+.s309-mc.s12{background:#ef4444;}.s309-mc.s15{background:#dc2626;}.s309-mc.s16{background:#dc2626;}.s309-mc.s20{background:#991b1b;}.s309-mc.s25{background:#7f1d1d;}
+.s309-ml{color:#9ca3af;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.s309-ml.side{writing-mode:vertical-rl;transform:rotate(180deg);}
+.s309-ax{display:flex;justify-content:space-between;padding:0 30px;margin-top:.3rem;}
+.s309-ax span{color:#6b7280;font-size:.65rem;}
+.s309-strategies{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:.75rem;}
+.s309-strat{border-radius:10px;padding:.75rem .85rem;border-left:3px solid;}
+.s309-strat.av{background:#f0fdf4;border-color:#22c55e;}
+.s309-strat.tr{background:#eff6ff;border-color:#3b82f6;}
+.s309-strat.re{background:#fff7ed;border-color:#f97316;}
+.s309-strat.ac{background:#fefce8;border-color:#eab308;}
+.s309-strat-ttl{font-size:.8rem;font-weight:700;margin-bottom:.25rem;}
+.s309-strat.av .s309-strat-ttl{color:#16a34a;}
+.s309-strat.tr .s309-strat-ttl{color:#2563eb;}
+.s309-strat.re .s309-strat-ttl{color:#ea580c;}
+.s309-strat.ac .s309-strat-ttl{color:#a16207;}
+.s309-strat-text{font-size:.75rem;color:#525252;line-height:1.5;}
+.s309-cases{display:flex;flex-direction:column;gap:.45rem;margin-bottom:.75rem;}
+.s309-case{background:#f8fafc;border:.5px solid #e2e8f0;border-radius:10px;padding:.75rem .9rem;}
+.s309-case-hdr{font-size:.77rem;font-weight:700;color:#dc2626;margin-bottom:.3rem;}
+.s309-case-text{font-size:.77rem;color:#525252;line-height:1.55;}
+.s309-case-text strong{color:#1a1a1a;}
+.s309-steps{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.75rem;}
+.s309-step{display:flex;gap:.65rem;padding:.65rem .75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;}
+.s309-snum{width:24px;height:24px;background:#dc2626;color:white;border-radius:50%;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.s309-sttl{font-size:.84rem;font-weight:700;color:#1a1a1a;margin-bottom:.2rem;}
+.s309-stext{font-size:.78rem;color:#525252;line-height:1.5;}
+.s309-ai-box{background:#fef2f2;border:1px solid #fecaca;border-radius:14px;padding:1rem 1.1rem;}
+.s309-ai-hdr{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.75rem;}
+.s309-ai-icon{width:40px;height:40px;background:#dc2626;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s309-ai-ttl{font-weight:700;color:#1a1a1a;font-size:.93rem;margin-bottom:.2rem;}
+.s309-ai-desc{font-size:.81rem;color:#525252;line-height:1.5;}
+.s309-ai-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.05rem;background:#dc2626;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none;}
+.result-block{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.85rem 1rem;margin-top:1rem;}
+.result-block strong{font-size:.82rem;color:#14532d;}
+.result-block p{font-size:.82rem;color:#14532d;line-height:1.55;margin-top:.3rem;}
+</style>
+
+<div class="s309-lbl">Логіка уроку</div>
+<div class="s309-ttl">Стратегія готова. Тепер — що може піти не так?</div>
+<div class="s309-sub">Ви побудували стратегію, обрали напрямок і дисципліну. Останній крок блоку — зрозуміти які ризики можуть зупинити реалізацію і що з ними робити.</div>
+
+<div class="s309-idea">
+<p><strong>Головна помилка власників МСБ:</strong> будувати плани без оцінки ризиків. Потім коли щось іде не так — кажуть "не передбачили". Матриця ризиків дозволяє побачити загрози до того як вони стають проблемами.</p>
+</div>
+
+<div class="s309-div"></div>
+
+<div class="s309-lbl">Як це працює</div>
+<div class="s309-ttl">Формула оцінки ризику</div>
+
+<div class="s309-formula">
+<p><span>Рівень ризику</span> = Ймовірність (1–5) × Вплив (1–5)</p>
+</div>
+
+<div class="s309-card">
+<p><strong>Ймовірність:</strong> шанс що ризик реалізується. 1 — малоймовірно, 5 — майже напевно.<br>
+<strong>Вплив:</strong> серйозність наслідків якщо ризик реалізується. 1 — незначний, 5 — катастрофічний.<br>
+<strong>Результат:</strong> число від 1 до 25 — рівень ризику.</p>
+</div>
+
+<div class="s309-div"></div>
+
+<div class="s309-lbl">4 рівні ризику</div>
+
+<div class="s309-levels">
+  <div class="s309-lcard cr">
+    <div class="s309-lcard-ttl">Критичний</div>
+    <div class="s309-lcard-score">15–25</div>
+    <div class="s309-lcard-desc">Негайні дії. Ескалація власнику. Всі ресурси на вирішення.</div>
+  </div>
+  <div class="s309-lcard hi">
+    <div class="s309-lcard-ttl">Високий</div>
+    <div class="s309-lcard-score">8–12</div>
+    <div class="s309-lcard-desc">Активне управління. Конкретний план мітигації.</div>
+  </div>
+  <div class="s309-lcard me">
+    <div class="s309-lcard-ttl">Середній</div>
+    <div class="s309-lcard-score">4–6</div>
+    <div class="s309-lcard-desc">Моніторинг щотижня. Превентивні заходи.</div>
+  </div>
+  <div class="s309-lcard lo">
+    <div class="s309-lcard-ttl">Низький</div>
+    <div class="s309-lcard-score">1–3</div>
+    <div class="s309-lcard-desc">Прийняти або ігнорувати. Перевіряти раз на місяць.</div>
+  </div>
+</div>
+
+<div class="s309-div"></div>
+
+<div class="s309-lbl">Візуалізація матриці</div>
+
+<div class="s309-matrix-wrap">
+  <div class="s309-matrix-title">Матриця ймовірності та впливу</div>
+  <div class="s309-matrix">
+    <div class="s309-ml side">5</div>
+    <div class="s309-mc s5">5</div><div class="s309-mc s10">10</div><div class="s309-mc s15">15</div><div class="s309-mc s20">20</div><div class="s309-mc s25">25</div>
+    <div class="s309-ml side">4</div>
+    <div class="s309-mc s4">4</div><div class="s309-mc s8">8</div><div class="s309-mc s12">12</div><div class="s309-mc s16">16</div><div class="s309-mc s20">20</div>
+    <div class="s309-ml side">3</div>
+    <div class="s309-mc s3">3</div><div class="s309-mc s6">6</div><div class="s309-mc s9">9</div><div class="s309-mc s12">12</div><div class="s309-mc s15">15</div>
+    <div class="s309-ml side">2</div>
+    <div class="s309-mc s2">2</div><div class="s309-mc s4">4</div><div class="s309-mc s6">6</div><div class="s309-mc s8">8</div><div class="s309-mc s10">10</div>
+    <div class="s309-ml side">1</div>
+    <div class="s309-mc s1">1</div><div class="s309-mc s2">2</div><div class="s309-mc s3">3</div><div class="s309-mc s4">4</div><div class="s309-mc s5">5</div>
+    <div class="s309-ml"></div>
+    <div class="s309-ml">1</div><div class="s309-ml">2</div><div class="s309-ml">3</div><div class="s309-ml">4</div><div class="s309-ml">5</div>
+  </div>
+  <div class="s309-ax"><span>← Незначний</span><span>Вплив</span><span>Катастрофічний →</span></div>
+</div>
+
+<div class="s309-div"></div>
+
+<div class="s309-lbl">4 стратегії реагування</div>
+<div class="s309-ttl">Що робити з кожним ризиком</div>
+
+<div class="s309-strategies">
+  <div class="s309-strat av">
+    <div class="s309-strat-ttl">Уникнення (Avoid)</div>
+    <div class="s309-strat-text">Змінити план щоб ризик взагалі не виник.<br><strong>Коли:</strong> критичний ризик, є альтернатива.</div>
+  </div>
+  <div class="s309-strat tr">
+    <div class="s309-strat-ttl">Передача (Transfer)</div>
+    <div class="s309-strat-text">Передати відповідальність: страхування, аутсорс, контракт.<br><strong>Коли:</strong> є хто взяти ризик за вас.</div>
+  </div>
+  <div class="s309-strat re">
+    <div class="s309-strat-ttl">Зменшення (Reduce)</div>
+    <div class="s309-strat-text">Знизити ймовірність або вплив превентивними заходами.<br><strong>Коли:</strong> ризик не можна уникнути, але можна зменшити.</div>
+  </div>
+  <div class="s309-strat ac">
+    <div class="s309-strat-ttl">Прийняття (Accept)</div>
+    <div class="s309-strat-text">Усвідомлено прийняти ризик і створити резерв.<br><strong>Коли:</strong> низький ризик або вартість мітигації вища за збиток.</div>
+  </div>
+</div>
+
+<div class="s309-div"></div>
+
+<div class="s309-lbl">Типові ризики МСБ</div>
+
+<div class="s309-cases">
+  <div class="s309-case">
+    <div class="s309-case-hdr">Фінансові ризики</div>
+    <div class="s309-case-text"><strong>Касовий розрив</strong> (ймовірність 4, вплив 5 = 20 — критичний). Стратегія: кредитна лінія + тижневе фінансове планування (урок 404).<br><strong>Втрата ключового клієнта</strong> (3×4 = 12 — висок.). Стратегія: диверсифікація — жоден клієнт не має давати більше 30% виручки.</div>
+  </div>
+  <div class="s309-case">
+    <div class="s309-case-hdr">Операційні ризики</div>
+    <div class="s309-case-text"><strong>Відхід ключового співробітника</strong> (3×4 = 12 — висок.). Стратегія: документування знань + дублер + конкурентна зарплата.<br><strong>Збій в постачанні</strong> (2×4 = 8 — висок.). Стратегія: 2–3 постачальники на кожну критичну позицію.</div>
+  </div>
+  <div class="s309-case">
+    <div class="s309-case-hdr">Стратегічні ризики</div>
+    <div class="s309-case-text"><strong>Новий сильний конкурент</strong> (2×5 = 10 — висок.). Стратегія: блакитний океан (урок 308) — унікальна позиція.<br><strong>Зміна законодавства</strong> (2×3 = 6 — серед.). Стратегія: юридичний моніторинг, гнучкість бізнес-моделі.</div>
+  </div>
+</div>
+
+<div class="s309-div"></div>
+
+<div class="s309-lbl">Як побудувати матрицю</div>
+<div class="s309-ttl">5 кроків для вашого бізнесу</div>
+
+<div class="s309-steps">
+  <div class="s309-step"><div class="s309-snum">1</div><div><div class="s309-sttl">Зберіть всі ризики</div><div class="s309-stext">Запишіть все що може піти не так: фінанси, люди, ринок, операції, технології, регулювання. Мінімум 10–15 ризиків.</div></div></div>
+  <div class="s309-step"><div class="s309-snum">2</div><div><div class="s309-sttl">Оцініть кожен ризик</div><div class="s309-stext">По кожному: ймовірність (1–5) і вплив (1–5). Будьте чесними — краще переоцінити ризик ніж недооцінити.</div></div></div>
+  <div class="s309-step"><div class="s309-snum">3</div><div><div class="s309-sttl">Розставте пріоритети</div><div class="s309-stext">Відсортуйте за балом (ймовірність × вплив). Критичні і високі — фокус уваги прямо зараз.</div></div></div>
+  <div class="s309-step"><div class="s309-snum">4</div><div><div class="s309-sttl">Оберіть стратегію для кожного</div><div class="s309-stext">Уникнення, передача, зменшення або прийняття. Для критичних — конкретний план мітигації з відповідальним і дедлайном.</div></div></div>
+  <div class="s309-step"><div class="s309-snum">5</div><div><div class="s309-sttl">Переглядайте щокварталу</div><div class="s309-stext">Ризики змінюються разом з бізнесом. Раз на квартал — актуалізуйте матрицю. Деякі ризики зникають, нові з'являються.</div></div></div>
+</div>
+
+<div class="s309-div"></div>
+
+<div class="s309-lbl">Інструмент</div>
+<div class="s309-ai-box">
+<div class="s309-ai-hdr">
+<div class="s309-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="20" height="20"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+<div>
+<div class="s309-ai-ttl">TALKO AI — Матриця ризиків</div>
+<div class="s309-ai-desc">Опишіть ваш бізнес і напрямок розвитку — AI виявить ключові ризики, оцінить їх і запропонує конкретний план мітигації для кожного критичного ризику.</div>
+</div>
+</div>
+<a href="https://chatgpt.com/g/g-693c383f49e881919c2e6d65f27d1c04-talko-ai-risk-matrix" target="_blank" class="s309-ai-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+Побудувати матрицю ризиків
+</a>
+</div>
+
+<div class="result-block">
+<strong>Результат уроку.</strong>
+<p>Ви знаєте як оцінювати ризики за формулою Ймовірність × Вплив, розумієте 4 рівні та 4 стратегії реагування. Домашнє завдання — скласти матрицю ризиків для вашого бізнесу через AI-асистент.</p>
+</div>`,
+
+            lessonContent_ru: `<style>.s309r{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;color:#525252;font-size:.9rem;}</style><div class="s309r">Русская версия урока 309 в разработке. Используйте украинскую версию.</div>`,
+
+            homework: 'Крок 1: Запишіть мінімум 10 ризиків для вашого бізнесу (фінанси, люди, ринок, операції). Крок 2: Оцініть кожен ризик: ймовірність (1–5) × вплив (1–5). Крок 3: Відкрийте AI-асистент і побудуйте повну матрицю ризиків. Крок 4: Для кожного критичного і високого ризику — оберіть стратегію і запишіть конкретні дії.',
+            homework_ru: 'Шаг 1: Запишите минимум 10 рисков для вашего бизнеса (финансы, люди, рынок, операции). Шаг 2: Оцените каждый риск: вероятность (1–5) × влияние (1–5). Шаг 3: Откройте AI-ассистент и постройте полную матрицу рисков. Шаг 4: Для каждого критического и высокого риска — выберите стратегию и запишите конкретные действия.',
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
+
     ];
     if (window.learningCourseData) {
         window.learningCourseData = window.learningCourseData.concat(strategyCourseData);
