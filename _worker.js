@@ -136,7 +136,11 @@ function fFields(f) { const o={}; for(const k in f) o[k]=fVal(f[k]); return o; }
 
 // Verifyidtoken via Firebase Auth REST
 async function verifyIdToken(token, env) {
-    if (!env.FIREBASE_API_KEY) return { uid: 'unknown' }; // skip if no key
+    if (!env.FIREBASE_API_KEY) {
+        // Якщо ключа немає — логуємо але не пропускаємо запит
+        console.warn('[auth] FIREBASE_API_KEY not set — cannot verify user token');
+        return null;
+    }
     try {
         const controller = new AbortController();
         setTimeout(() => controller.abort(), 5000);
@@ -1032,7 +1036,7 @@ async function handleAiProxy(request, env) {
     const user = await verifyIdToken(idToken, env);
     if (!user) return json({error:'Invalid token'},401);
 
-    const { messages=[], model, systemPrompt, companyId, module:mod, maxTokens } = body;
+    const { messages=[], model, systemPrompt, companyId, module:mod, maxTokens, temperature } = body;
 
     let token;
     try { token = await getToken(env); } catch(e) { return json({error:'Firebase error'},500); }
@@ -1105,6 +1109,7 @@ async function handleAiProxy(request, env) {
                 body: JSON.stringify({
                     model: finalModel||'claude-sonnet-4-20250514',
                     max_tokens: maxTokens||4096,
+                    ...(temperature !== undefined ? { temperature: parseFloat(temperature) } : {}),
                     system: finalSystemPrompt||undefined,
                     messages: messages.filter(m=>m.role!=='system'),
                 }),
@@ -1119,7 +1124,12 @@ async function handleAiProxy(request, env) {
                 const r = await fetch('https://api.openai.com/v1/chat/completions', {
                     method:'POST',
                     headers:{ Authorization:`Bearer ${apiKey}`, 'Content-Type':'application/json' },
-                    body: JSON.stringify({ model:finalModel||'gpt-4o-mini', messages:finalMessages, max_tokens: maxTokens||2048 }),
+                    body: JSON.stringify({
+                        model: finalModel||'gpt-4o-mini',
+                        messages: finalMessages,
+                        max_tokens: maxTokens||2048,
+                        ...(temperature !== undefined ? { temperature: parseFloat(temperature) } : {}),
+                    }),
                     signal: controller.signal,
                 });
                 clearTimeout(timeout);

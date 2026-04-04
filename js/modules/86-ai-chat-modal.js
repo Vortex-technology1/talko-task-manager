@@ -109,8 +109,8 @@ async function _callAI() {
         const reply = await window.aiProxy({
             messages:     messages,
             systemPrompt: _chatSystemPrompt,
-            model:        'claude-haiku-4-5-20251001', // FIX: Anthropic модель замість gpt-4o-mini
-            maxTokens:    _chatMaxTokens,              // FIX: передаємо збережений maxTokens
+            model:        null,        // воркер сам візьме модель з налаштувань агента в адмінці
+            maxTokens:    _chatMaxTokens,
             module:       _chatModule,
         });
 

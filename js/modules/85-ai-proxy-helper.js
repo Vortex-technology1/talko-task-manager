@@ -18,8 +18,9 @@
 window.aiProxy = async function({
     messages,
     systemPrompt,
-    model       = 'gpt-4o-mini',
+    model       = null,
     maxTokens   = 800,
+    temperature,
     module: mod = 'unknown',
 } = {}) {
     const companyId = window.currentCompanyId;
@@ -48,6 +49,7 @@ window.aiProxy = async function({
                 systemPrompt,
                 model,
                 maxTokens,
+                ...(temperature !== undefined ? { temperature } : {}),
                 module: mod,
             }),
             signal: _ctrl.signal,
