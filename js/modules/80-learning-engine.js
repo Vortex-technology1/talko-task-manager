@@ -121,15 +121,29 @@
         const catDone = filteredModules.filter(m => m.completed).length;
         const catPct = filteredModules.length > 0 ? Math.round(catDone / filteredModules.length * 100) : 0;
 
-        // Вкладки категорій — мобільний dropdown замість горизонтального скролу
+        // Вкладки категорій — десктоп: sidebar зліва, мобільний: dropdown
         const categories = window.learningCategories || window.learningCourseCategories || [];
         const activeCategory = categories.find(c => c.id === activeCat) || categories[0];
+
         const catTabsHTML = categories.length > 1 ? `
-        <div style="padding:0.75rem 1rem 0.5rem;position:relative;">
-            <!-- Dropdown trigger -->
-            <button
-                onclick="window._toggleLearningCatMenu()"
-                id="learningCatTrigger"
+        <style>
+        @media (min-width: 768px) {
+            #learningCatDropdown { display: none !important; }
+            #learningLayout { display: flex !important; gap: 1.25rem; align-items: flex-start; padding: 0.75rem 1rem; }
+            #learningCatSidebar { display: flex !important; flex-direction: column; gap: 0.3rem; width: 220px; flex-shrink: 0; position: sticky; top: 0; }
+            #learningModulesCol { flex: 1; min-width: 0; }
+        }
+        @media (max-width: 767px) {
+            #learningCatSidebar { display: none !important; }
+            #learningCatDropdown { display: block !important; }
+            #learningLayout { display: block !important; }
+            #learningModulesCol { padding: 0; }
+        }
+        </style>
+
+        <!-- Мобільний dropdown -->
+        <div id="learningCatDropdown" style="padding:0.75rem 1rem 0.5rem;position:relative;">
+            <button onclick="window._toggleLearningCatMenu()" id="learningCatTrigger"
                 style="width:100%;display:flex;align-items:center;justify-content:space-between;
                     padding:0.65rem 0.9rem;border-radius:12px;border:1.5px solid ${activeCategory?.color || '#22c55e'};
                     background:${activeCategory?.color ? activeCategory.color + '12' : '#f0fdf4'};
@@ -143,8 +157,6 @@
                     <svg id="learningCatChevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
                 </span>
             </button>
-
-            <!-- Dropdown menu -->
             <div id="learningCatMenu" style="display:none;position:absolute;left:1rem;right:1rem;top:calc(100% - 4px);
                 background:white;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);
                 border:1px solid #e5e7eb;z-index:999;overflow:hidden;">
@@ -158,20 +170,44 @@
                             padding:0.75rem 1rem;border:none;background:${isActive ? cat.color + '12' : 'white'};
                             cursor:pointer;font-size:0.86rem;font-weight:${isActive ? '700' : '500'};
                             color:${isActive ? cat.color : '#374151'};
-                            border-bottom:${idx < categories.length - 1 ? '1px solid #f3f4f6' : 'none'};
-                            text-align:left;">
+                            border-bottom:${idx < categories.length - 1 ? '1px solid #f3f4f6' : 'none'};text-align:left;">
                         <span style="display:flex;align-items:center;gap:0.6rem;">
                             <span style="width:8px;height:8px;border-radius:50%;background:${cat.color};flex-shrink:0;"></span>
-                            <i data-lucide="${cat.icon}" class="icon" style="width:15px;height:15px;color:${cat.color};"></i>
                             ${catTitle}
                         </span>
-                        <span style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0;">
-                            <span style="font-size:0.75rem;color:#9ca3af;">${catDoneCount}/${catModules.length}</span>
-                            ${isActive ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + cat.color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
-                        </span>
+                        <span style="font-size:0.75rem;color:#9ca3af;">${catDoneCount}/${catModules.length}</span>
                     </button>`;
                 }).join('')}
             </div>
+        </div>` : '';
+
+        // Десктоп sidebar HTML — вбудовуємо в layout нижче
+        const sidebarHTML = categories.length > 1 ? `
+        <div id="learningCatSidebar">
+            ${categories.map(cat => {
+                const isActive = cat.id === activeCat;
+                const catTitle = cat['title_' + lang] || cat.title;
+                const catMods = learningCourseData.filter(m => (m.category || 'systematization') === cat.id);
+                const catDoneC = catMods.filter(m => m.completed).length;
+                const catPctC = catMods.length > 0 ? Math.round(catDoneC / catMods.length * 100) : 0;
+                return `<button onclick="window._switchLearningCategory('${cat.id}')"
+                    style="width:100%;display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;
+                        border-radius:10px;border:none;cursor:pointer;text-align:left;
+                        background:${isActive ? cat.color + '15' : 'transparent'};
+                        transition:background 0.15s;">
+                    <span style="width:10px;height:10px;border-radius:50%;background:${cat.color};flex-shrink:0;"></span>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:0.82rem;font-weight:${isActive ? '700' : '500'};color:${isActive ? cat.color : '#374151'};
+                            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${catTitle}</div>
+                        <div style="display:flex;align-items:center;gap:0.4rem;margin-top:2px;">
+                            <div style="flex:1;height:3px;background:#e5e7eb;border-radius:2px;">
+                                <div style="width:${catPctC}%;height:100%;background:${cat.color};border-radius:2px;"></div>
+                            </div>
+                            <span style="font-size:0.68rem;color:#9ca3af;flex-shrink:0;">${catDoneC}/${catMods.length}</span>
+                        </div>
+                    </div>
+                </button>`;
+            }).join('')}
         </div>` : '';
 
         // (filteredModules, catDone, catPct — визначені вище перед catTabsHTML)
@@ -198,14 +234,19 @@
                 </div>
             </div>
             ${catTabsHTML}
-            <div class="learning-modules-list" id="learningModulesList">
-                ${filteredModules.length === 0
-                    ? `<div style="padding:2.5rem 1rem;text-align:center;color:#9ca3af;">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin-bottom:0.75rem;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                        <div style="font-size:0.95rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">${window.t('learningComingSoon') || 'Уроки скоро появляться'}</div>
-                        <div style="font-size:0.82rem;color:#9ca3af;">${window.t('learningComingSoonSub') || 'Контент в розробці'}</div>
-                      </div>`
-                    : filteredModules.map(module => renderModuleCard(module, filteredModules)).join('')}
+            <div id="learningLayout" style="display:block;">
+                ${sidebarHTML}
+                <div id="learningModulesCol">
+                    <div class="learning-modules-list" id="learningModulesList">
+                        ${filteredModules.length === 0
+                            ? `<div style="padding:2.5rem 1rem;text-align:center;color:#9ca3af;">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin-bottom:0.75rem;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                <div style="font-size:0.95rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">${window.t('learningComingSoon') || 'Уроки скоро появляться'}</div>
+                                <div style="font-size:0.82rem;color:#9ca3af;">${window.t('learningComingSoonSub') || 'Контент в розробці'}</div>
+                              </div>`
+                            : filteredModules.map(module => renderModuleCard(module, filteredModules)).join('')}
+                    </div>
+                </div>
             </div>
         </div>`;
 
