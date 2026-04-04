@@ -159,13 +159,27 @@ window.renderCrmTodo = function() {
     const noDate    = all.filter(d => !d.nextContactDate);
     const stages    = (window.crm&&window.crm.pipeline&&window.crm.pipeline.stages) || [];
 
+    // i18n змінні — обчислюємо ДО innerHTML щоб уникнути проблем з вкладеними тернарниками
+    const _lang = window.currentLang || 'uk';
+    const _i18n = {
+        title:       _lang==='ru'?'Что делать сейчас':_lang==='en'?'What to do now':'Що робити зараз',
+        newLeads:    _lang==='ru'?'новых':_lang==='en'?'new':'нових',
+        forgotten:   _lang==='ru'?'забытых лидов':_lang==='en'?'forgotten leads':'забутих лідів',
+        search:      _lang==='ru'?'Поиск по имени, телефону, email...':_lang==='en'?'Search by name, phone, email...':'Пошук за іменем, телефоном...',
+        allFilter:   _lang==='ru'?'Все':_lang==='en'?'All':'Всі',
+        allDone:     _lang==='ru'?'Всё сделано!':_lang==='en'?'All done!':'Все зроблено!',
+        noLeads:     _lang==='ru'?'Лидов нет или все в статусе «Выиграно/Проиграно»':_lang==='en'?'No leads or all won/lost':'Лідів немає або всі виграно/програно',
+        totalCrm:    _lang==='ru'?'Всего в CRM: ':_lang==='en'?'Total in CRM: ':'Всього в CRM: ',
+        newDate:     _lang==='ru'?'Новая':_lang==='en'?'New':'Нова',
+    };
+
     el.innerHTML = `
     <div style="padding:1rem 1.5rem;">
 
       <!-- Хедер -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
         <div style="display:flex;align-items:center;gap:0.75rem;">
-          <span style="font-size:1rem;font-weight:700;color:#111827;">window.currentLang==='ru'?'Что делать сейчас':window.currentLang==='en'?'What to do now':'Що робити зараз'</span>
+          <span style="font-size:1rem;font-weight:700;color:#111827;">${_i18n.title}</span>
           <span style="background:#374151;color:#fff;border-radius:10px;padding:2px 9px;font-size:0.72rem;font-weight:700;">${all.length}</span>
         </div>
         <div style="display:flex;gap:0.5rem;">
@@ -179,15 +193,15 @@ window.renderCrmTodo = function() {
       <div style="display:flex;gap:0.4rem;margin-bottom:0.85rem;flex-wrap:wrap;">
         ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} ${window.t('crmOverdue')||'прострочено'}</div>`:''}
         ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} ${window.t('crmToday')||'на сьогодні'}</div>`:''}
-        ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} ${window.currentLang==='ru'?'новых':window.currentLang==='en'?'new':'нових'}</div>`:''}
-        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${sla.length} ${window.currentLang==='ru'?'забытых лидов':window.currentLang==='en'?'forgotten leads':'забутих лідів'}</div>`:''})()}
+        ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} ${_i18n.newLeads}</div>`:''}
+        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${sla.length} ${_i18n.forgotten}</div>`:''})()}
       </div>
 
       <!-- Пошук -->
       <div style="position:relative;margin-bottom:0.65rem;">
         <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="crm-todo-search"
-          placeholder="${window.currentLang==='ru'?'Поиск по имени, телефону, email...':window.currentLang==='en'?'Search by name, phone, email...':'Пошук за іменем, телефоном...'}"
+          placeholder="${_i18n.search}"
           value="${search}"
           oninput="window._crmTodoSearch=this.value;renderCrmTodo()"
           style="width:100%;padding:7px 32px 7px 32px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.83rem;outline:none;box-sizing:border-box;transition:border-color .15s;"
@@ -200,7 +214,7 @@ window.renderCrmTodo = function() {
         <button onclick="window._crmTodoFilter='';renderCrmTodo()"
           style="padding:4px 12px;border-radius:20px;border:1px solid ${!filter?'#22c55e':'#e5e7eb'};
           background:${!filter?'#f0fdf4':'white'};color:${!filter?'#16a34a':'#6b7280'};
-          font-size:0.75rem;font-weight:${!filter?'700':'500'};cursor:pointer;white-space:nowrap;">${window.currentLang==='ru'?'Все':window.currentLang==='en'?'All':'Всі'} ${all.length}</button>
+          font-size:0.75rem;font-weight:${!filter?'700':'500'};cursor:pointer;white-space:nowrap;">${_i18n.allFilter} ${all.length}</button>
         ${stages.filter(s=>s.id!=='lost'&&s.id!=='won').map(s=>{
             const cnt=all.filter(d=>d.stage===s.id).length;
             if(!cnt)return'';
@@ -218,9 +232,9 @@ window.renderCrmTodo = function() {
         ${deals.length===0
             ?`<div style="padding:3rem;text-align:center;color:#9ca3af;">
                 <div style="font-size:2rem;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-                <div style="font-weight:600;color:#374151;">${window.currentLang==='ru'?'Всё сделано!':window.currentLang==='en'?'All done!':'Все зроблено!'}</div>
-                <div style="font-size:0.82rem;margin-top:0.25rem;">${window.currentLang==='ru'?'Лидов нет или все в статусе «Выиграно/Проиграно»':window.currentLang==='en'?'No leads or all won/lost':'Лідів немає або всі виграно/програно'}</div>
-                <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">${window.currentLang==='ru'?'Всего в CRM: ':window.currentLang==='en'?'Total in CRM: ':'Всього в CRM: '}${window.crm&&window.crm.deals?window.crm.deals.length:0} лидов</div>
+                <div style="font-weight:600;color:#374151;">${_i18n.allDone}</div>
+                <div style="font-size:0.82rem;margin-top:0.25rem;">${_i18n.noLeads}</div>
+                <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">${_i18n.totalCrm}${window.crm&&window.crm.deals?window.crm.deals.length:0} лидов</div>
                 <button onclick="crmOpenCreateDeal()" style="margin-top:0.75rem;background:#22c55e;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Додати лід</button>
                 ${['owner','admin'].includes(window.currentUserData?.role) ? '<button onclick="_crmTodoAddTestDeals()" style="margin-top:0.5rem;margin-left:0.5rem;background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:8px 16px;font-size:0.82rem;cursor:pointer;">+ Тестові ліди</button>' : ''}
               </div>`
@@ -243,6 +257,11 @@ window.renderCrmTodo = function() {
 };
 
 function _renderRow(d, i) {
+    const _rl = window.currentLang || 'uk';
+    const _confirmed  = _rl==='ru'?'Подтверждено':_rl==='en'?'Confirmed':'Підтверджено';
+    const _confirm    = _rl==='ru'?'Подтвердить':_rl==='en'?'Confirm':'Підтвердити';
+    const _consult    = _rl==='ru'?'Консультация':_rl==='en'?'Consultation':'Консультація';
+
     const p         = _priority(d);
     const fmt       = _fmtDate(d.nextContactDate);
     // Прострочені — інтенсивність кольору залежить від кількості днів
@@ -287,7 +306,7 @@ function _renderRow(d, i) {
             ? `<span onclick="event.stopPropagation()"
                 style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
                 background:#f0fdf4;border:1px solid #86efac;color:#16a34a;font-size:0.72rem;font-weight:600;white-space:nowrap;flex-shrink:0;">
-                ${TI.confirm} ${window.currentLang==='ru'?'Подтверждено':window.currentLang==='en'?'Confirmed':'Підтверджено'}</span>
+                ${TI.confirm} ${_confirmed}</span>
                <button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
@@ -300,7 +319,7 @@ function _renderRow(d, i) {
             : `<button onclick="event.stopPropagation();_crmTodoConfirmConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
                 background:#fffbeb;border:1px solid #fde68a;color:#b45309;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-                ${TI.cal} ${d.consultationDate} ${d.consultationTime||''} — ${window.currentLang==='ru'?'Подтвердить':window.currentLang==='en'?'Confirm':'Підтвердити'}</button>
+                ${TI.cal} ${d.consultationDate} ${d.consultationTime||''} — ${_confirm}</button>
                <button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
                 style="display:inline-flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
@@ -313,7 +332,7 @@ function _renderRow(d, i) {
         : `<button onclick="event.stopPropagation();_crmTodoScheduleConsultation('${d.id}')"
             style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;
             background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-            ${TI.cal} ${window.currentLang==='ru'?'Консультация':window.currentLang==='en'?'Consultation':'Консультація'}</button>`;
+            ${TI.cal} ${_consult}</button>`;
 
     return `
     <div onclick="crmTodoOpenCard('${d.id}')"
@@ -328,7 +347,7 @@ function _renderRow(d, i) {
       <div style="min-width:72px;flex-shrink:0;">
         <div style="background:${dateBg};border-radius:8px;padding:4px 8px;text-align:center;">
           <div style="font-size:0.73rem;font-weight:700;color:${dateClr};white-space:nowrap;line-height:1.2;">
-            ${fmt?fmt.label:(window.currentLang==='ru'?'Новая':window.currentLang==='en'?'New':'Нова')}
+            ${fmt?fmt.label:_i18n.newDate}
           </div>
           ${timeTag}
         </div>
