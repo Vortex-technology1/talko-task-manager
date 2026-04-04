@@ -322,6 +322,20 @@ function trackTaskCompleted(taskId, task, prevTask) {
         priority:       task.priority   || 'medium',
         wasOverdue:     !!(deadline && deadline < today),
     }, 'tasks');
+
+    // Емітуємо в Event Bus → CRM тригери по пов'язаній угоді (77l-crm-triggers.js)
+    // Раніше: тригер task_completed ніколи не спрацьовував — event не емітувався
+    if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS?.TASK_COMPLETED) {
+        const dealId = task.crmDealId || task.dealId || null;
+        emitTalkoEvent(window.TALKO_EVENTS.TASK_COMPLETED, {
+            taskId,
+            dealId,
+            title:      task.title      || '',
+            assigneeId: task.assigneeId || '',
+            function:   task.function   || '',
+            crmDealId:  dealId,
+        }).catch(e => console.warn('[ET] task.completed emit:', e.message));
+    }
 }
 
 /**

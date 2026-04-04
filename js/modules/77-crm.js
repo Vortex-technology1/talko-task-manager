@@ -6803,6 +6803,28 @@ function _startRemindersScheduler() {
 
     // ── Register in TALKO namespace ──────────────────────────
     if (window.TALKO) {
+// ── Публічний API для переміщення угоди в стадію ──────────
+// Використовується з 77l (invoice.paid) та зовнішніх модулів.
+// Проходить через повний _doStageChange: history, hooks, triggers.
+window.crmMoveToStage = async function(dealId, newStage) {
+    const deal = crm.deals?.find(d => d.id === dealId);
+    if (!deal) {
+        // Якщо угода не в пам'яті — завантажуємо з Firestore
+        try {
+            const snap = await window.companyRef().collection(window.DB_COLS.CRM_DEALS || 'crm_deals').doc(dealId).get();
+            if (!snap.exists) { console.warn('[crmMoveToStage] deal not found:', dealId); return; }
+            const loadedDeal = { id: snap.id, ...snap.data() };
+            const oldStage = loadedDeal.stage;
+            if (oldStage === newStage) return;
+            await _doStageChange(loadedDeal, newStage, oldStage);
+        } catch(e) { console.warn('[crmMoveToStage]', e.message); }
+        return;
+    }
+    const oldStage = deal.stage;
+    if (oldStage === newStage) return;
+    await _doStageChange(deal, newStage, oldStage);
+};
+
         window.TALKO.crm = {
             init:           window.initCRMModule,
             selectPipeline: window.crmSelectPipeline,
@@ -6819,6 +6841,7 @@ function _startRemindersScheduler() {
             removeStage:    window.crmRemoveStage,
             filterClients:  window.crmFilterClients,
             createTask:     window.crmCreateTaskFromDeal,
+            moveToStage:    window.crmMoveToStage,
         };
     }
 

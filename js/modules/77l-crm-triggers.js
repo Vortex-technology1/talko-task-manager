@@ -1,17 +1,20 @@
 
-// Helper: crm trigger notify з auth токеном
+// Helper: crm trigger notify з auth токеном (обов'язковий)
 async function _sendTriggerNotify(payload) {
     try {
-        const _tok = await firebase.auth().currentUser?.getIdToken().catch(()=>null);
+        const user = firebase.auth().currentUser;
+        if (!user) { console.warn('[_sendTriggerNotify] not authenticated'); return; }
+        const _tok = await user.getIdToken().catch(() => null);
+        if (!_tok) { console.warn('[_sendTriggerNotify] getIdToken failed'); return; }
         return fetch('/api/crm-trigger-notify', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                ...(_tok ? { 'Authorization': 'Bearer ' + _tok } : {}),
+                'Authorization': 'Bearer ' + _tok,
             },
             body: JSON.stringify(payload),
-        }).catch(()=>{});
-    } catch(_e) {}
+        }).catch(() => {});
+    } catch(_e) { console.warn('[_sendTriggerNotify]', _e.message); }
 }
 // ============================================================
 // js/modules/77l-crm-triggers.js — CRM Тригери
@@ -470,18 +473,42 @@ async function _sendTriggerNotify(payload) {
                 if (action.type === 'create_task') {
                     const dl = new Date();
                     dl.setDate(dl.getDate() + (action.dueDays || 1));
-                    await window.companyRef().collection('tasks').add({
-                        title: (action.title || 'Задача') + (deal.clientName ? ' — ' + deal.clientName : ''),
-                        dealId: deal.id,
-                        clientName: deal.clientName || '',
-                        assigneeId: deal.assigneeId || uid,
-                        assigneeName: deal.assigneeName || '',
-                        status: 'new',
-                        priority: 'medium',
-                        deadlineDate: dl.toISOString().split('T')[0],
-                        triggerName: trigger.name,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        creatorId: uid,
+                    const deadlineDate = dl.toISOString().split('T')[0];
+                    const today = new Date().toISOString().split('T')[0];
+                    const assigneeId = deal.assigneeId || uid;
+                    const users = window.companyUsers || window.users || [];
+                    const assigneeUser = users.find(u => u.id === assigneeId);
+                    await window.companyRef().collection(window.DB_COLS?.TASKS || 'tasks').add({
+                        title:        (action.title || 'Задача') + (deal.clientName ? ' — ' + deal.clientName : ''),
+                        status:       'new',
+                        priority:     action.priority || 'medium',
+                        assigneeId,
+                        assigneeName: assigneeUser ? (assigneeUser.name || assigneeUser.email || '') : (deal.assigneeName || ''),
+                        creatorId:    uid,
+                        creatorName:  window.currentUserData?.name || window.currentUser?.email || '',
+                        deadlineDate,
+                        deadlineTime: '18:00',
+                        deadline:     deadlineDate + 'T18:00',
+                        createdDate:  today,
+                        description:  action.description || '',
+                        function:     '',
+                        projectId:    '',
+                        stageId:      '',
+                        pinned:       false,
+                        requireReview:    false,
+                        coExecutorIds:    [],
+                        observerIds:      [],
+                        notifyOnComplete: [],
+                        checklist:        [],
+                        autoCreated:  true,
+                        source:       'crm_trigger',
+                        triggerName:  trigger.name || '',
+                        // CRM-зв'язок
+                        crmDealId:    deal.id,
+                        dealId:       deal.id,
+                        clientName:   deal.clientName || '',
+                        createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt:    firebase.firestore.FieldValue.serverTimestamp(),
                     });
                 } else if (action.type === 'change_assignee' && action.userId) {
                     const users = window.companyUsers || window.users || [];
@@ -626,11 +653,18 @@ async function _sendTriggerNotify(payload) {
                 if (snap.exists) {
                     const deal = { id: snap.id, ...snap.data() };
                     await window.crmRunTriggers(deal, 'invoice_paid', event);
-                    // Автоматично → deal_won якщо ще не виграна
+                    // Переводимо в won через публічний API — щоб спрацювали всі хуки:
+                    // history, crmAutoTasksOnStageChange, whDealWon, crmTriggerHooks
                     if (deal.stage !== 'won') {
-                        await window.companyRef().collection('crm_deals').doc(event.dealId)
-                            .update({ stage: 'won', wonAt: firebase.firestore.FieldValue.serverTimestamp() });
-                        await window.crmRunTriggers({ ...deal, stage: 'won' }, 'deal_won', event);
+                        if (typeof window.crmMoveToStage === 'function') {
+                            await window.crmMoveToStage(deal.id, 'won');
+                        } else {
+                            // Fallback — прямий update якщо функція не доступна
+                            await window.companyRef().collection('crm_deals').doc(event.dealId)
+                                .update({ stage: 'won', wonAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                          updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                            await window.crmRunTriggers({ ...deal, stage: 'won' }, 'deal_won', event);
+                        }
                     }
                 }
             } catch(e) { console.warn('[trigger:invoice_paid]', e.message); }

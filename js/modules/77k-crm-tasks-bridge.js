@@ -42,6 +42,15 @@ const DEFAULT_WON_TASKS = [
 
 // ── Патчимо crmAutoTasksOnStageChange після завантаження 77c ─
 function _patch() {
+  // Захист від race condition: якщо 77c ще не завантажено — retry
+  if (typeof window.crmAutoTasksOnStageChange !== 'function') {
+    if ((_patch._attempts = (_patch._attempts || 0) + 1) < 50) {
+      setTimeout(_patch, 100);
+    } else {
+      console.warn('[crmTasksBridge] crmAutoTasksOnStageChange not found after 5s');
+    }
+    return;
+  }
   const orig = window.crmAutoTasksOnStageChange;
 
   window.crmAutoTasksOnStageChange = async function(deal, newStage) {
@@ -107,7 +116,7 @@ function _patch() {
   console.log('[crmTasksBridge] v1.1 patched ✓');
 }
 
-// Патчимо після завантаження 77c
-setTimeout(_patch, 200);
+// Запускаємо одразу — _patch сам зробить retry якщо 77c ще не завантажено
+_patch();
 
 })();
