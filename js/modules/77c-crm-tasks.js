@@ -81,31 +81,19 @@ function _calcDueDate(days) {
 }
 
 // ── Таб "Задачі" в картці угоди ────────────────────────────
-window.crmRenderDealTasks = async function (dealId) {
-    const c = document.getElementById('crmDealTasksList');
-    if (!c) return;
-    c.innerHTML = '<div style="text-align:center;padding:1rem;color:#9ca3af;font-size:0.8rem;">Завантаження...</div>';
-    try {
-        const snap = await window.companyRef()
-            .collection(window.DB_COLS?.TASKS || 'tasks')
-            .where('crmDealId', '==', dealId)
-            .orderBy('createdAt', 'desc')
-            .limit(100).get();
-        const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        _crmRenderTasksList(c, tasks, dealId);
-    } catch (e) {
-        try {
-            // Fallback без orderBy якщо індекс відсутній
-            const snap2 = await window.companyRef()
-                .collection(window.DB_COLS?.TASKS || 'tasks')
-                .where('crmDealId', '==', dealId).limit(100).get();
-            const tasks2 = snap2.docs.map(d => ({ id: d.id, ...d.data() }))
-                .sort((a,b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
-            _crmRenderTasksList(c, tasks2, dealId);
-        } catch(e2) {
-            c.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;padding:0.5rem;">Помилка: ${e2.message}</div>`;
-        }
+// crmRenderDealTasks — делегує в _loadTasksTab з 77-crm.js (єдина реалізація)
+// Зберігаємо для зворотної сумісності (викликається з crmAutoTasksOnStageChange і crmToggleDealTask)
+window.crmRenderDealTasks = function (dealId) {
+    // Якщо відкрита картка угоди і активний таб tasks — перезавантажуємо через _loadTasksTab
+    const activeDealId = window.crm?.activeDealId;
+    if (activeDealId === dealId && typeof window._crmLoadTasksTab === 'function') {
+        const deal = window.crm?.deals?.find(d => d.id === dealId);
+        if (deal) window._crmLoadTasksTab(deal);
+        return;
     }
+    // Fallback: якщо картка не відкрита — просто оновлюємо локальний масив tasks
+    // (scheduleRender підхопить зміни через onSnapshot в _loadTasksTab)
+    if (window.scheduleRender) window.scheduleRender();
 };
 
 function _crmRenderTasksList(container, tasks, dealId) {
@@ -195,6 +183,7 @@ window.crmAddDealTask = async function (dealId) {
                 dealId, crmDealId: dealId,
                 source:      'crm_manual',
                 clientName:  deal?.clientName || deal?.title || '',
+                crmClientName: deal?.clientName || deal?.title || '',
                 clientPhone: deal?.phone || '',
                 autoCreated: false,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),

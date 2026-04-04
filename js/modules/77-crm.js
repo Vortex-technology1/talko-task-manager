@@ -2885,6 +2885,7 @@ window.crmToggleHot = async function(dealId) {
 let _dealTasksUnsub = null; // cleanup попереднього listener при переключенні угод
 
 function _loadTasksTab(deal) {
+    window._crmLoadTasksTab = _loadTasksTab; // виставляємо для 77c-crm-tasks.js
     const cnt = document.getElementById('crmDealContent');
     if (!cnt) return;
     cnt.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
