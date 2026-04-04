@@ -1471,7 +1471,7 @@
 
         // Збираємо дані по ВСІХ частотах і ВСІХ доступних періодах
         const freqs = ['monthly', 'weekly', 'daily'];
-        const periodCounts = { monthly: 12, weekly: 12, daily: 14 };
+        const periodCounts = { monthly: 12, weekly: 5, daily: 7 };
         let contextParts = [];
 
         freqs.forEach(freq => {
