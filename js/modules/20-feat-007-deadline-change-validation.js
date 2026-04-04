@@ -108,8 +108,18 @@
 
         
         // Listener для завдань на перевірці (сповіщення постановнику)
-        let reviewTasksUnsubscribe = null;
+        let reviewTasksUnsubscribe  = null;
+        let rejectedTasksUnsubscribe = null;
         let knownReviewTaskIds = new Set();
+
+        // Реєструємо cleanup в глобальному ланцюгу _cleanupNotifications
+        // щоб listeners відписувались при logout (раніше залишались активними)
+        const _feat007OrigCleanup = window._cleanupNotifications;
+        window._cleanupNotifications = function() {
+            if (_feat007OrigCleanup) _feat007OrigCleanup();
+            if (reviewTasksUnsubscribe)  { reviewTasksUnsubscribe();  reviewTasksUnsubscribe  = null; }
+            if (rejectedTasksUnsubscribe){ rejectedTasksUnsubscribe(); rejectedTasksUnsubscribe = null; }
+        };
         
         function initReviewTasksListener() {
             if (!currentCompany || !currentUser) return;
@@ -163,7 +173,6 @@
         }
         
         // Listener для повернених на доопрацювання (сповіщення виконавцю)
-        let rejectedTasksUnsubscribe = null;
         let knownRejectedTimestamps = new Map();
         
         function initRejectedTasksListener() {
