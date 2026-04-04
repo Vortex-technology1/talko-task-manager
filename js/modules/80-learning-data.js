@@ -17810,6 +17810,396 @@ window.l108ExportExcel = function() {
             homeworkLinkName: null,
             homeworkLinkName_ru: null,
         },
+
+        {
+            id: 109,
+            category: 'marketing',
+            title: 'ПЕРЕВІРКА ВОРОНКИ',
+            title_ru: 'ПРОВЕРКА ВОРОНКИ',
+            subtitle: 'Пропусти матеріали через AI-аватар і отримай фінальний варіант',
+            subtitle_ru: 'Прогони материалы через AI-аватар и получи финальный вариант',
+            duration: 60,
+            videoLink: null,
+            materialsLink: null,
+            hideAiBlock: true,
+            lessonContent: `
+<style>
+.l109-intro{background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.25rem;}
+.l109-intro-title{font-size:.72rem;font-weight:700;letter-spacing:.09em;color:#0369a1;text-transform:uppercase;margin-bottom:.5rem;}
+.l109-intro p{font-size:.87rem;color:#0c4a6e;line-height:1.65;margin:0 0 .4rem;}
+.l109-steps{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.5rem;}
+.l109-step{display:flex;align-items:flex-start;gap:.85rem;}
+.l109-step-num{width:32px;height:32px;background:#1d4ed8;border-radius:50%;color:white;font-size:.82rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.l109-step-title{font-size:.9rem;font-weight:700;color:#111827;margin-bottom:.25rem;}
+.l109-step-text{font-size:.84rem;color:#374151;line-height:1.6;}
+.l109-prompt-wrap{background:#1e1e2e;border-radius:12px;padding:1.1rem;margin:1rem 0;}
+.l109-prompt-label{font-size:.68rem;font-weight:700;letter-spacing:.09em;color:#a5b4fc;text-transform:uppercase;margin-bottom:.65rem;display:flex;align-items:center;gap:.4rem;}
+.l109-prompt-text{font-size:.78rem;color:#e2e8f0;line-height:1.7;white-space:pre-wrap;font-family:monospace;max-height:320px;overflow-y:auto;}
+.l109-copy-btn{display:inline-flex;align-items:center;gap:.45rem;background:#4f46e5;color:white;border:none;border-radius:7px;padding:.5rem 1rem;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;margin-top:.75rem;}
+.l109-copy-btn:hover{background:#4338ca;}
+.l109-copy-btn.copied{background:#16a34a;}
+.l109-tip{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .9rem;font-size:.82rem;color:#1e40af;margin:.75rem 0;line-height:1.6;}
+.l109-warn{background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.65rem .9rem;font-size:.82rem;color:#92400e;margin:.75rem 0;line-height:1.6;display:flex;align-items:flex-start;gap:.5rem;}
+.l109-modes{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin:.85rem 0;}
+.l109-mode{border:1px solid #e5e7eb;border-radius:10px;padding:.75rem;}
+.l109-mode-tag{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem;}
+.l109-mode-cmd{font-size:.82rem;font-weight:700;color:#111827;font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;}
+.l109-mode-desc{font-size:.78rem;color:#6b7280;margin-top:.3rem;line-height:1.5;}
+.l109-section-hdr{display:flex;align-items:center;gap:.6rem;margin:1.25rem 0 .75rem;padding-bottom:.5rem;border-bottom:1px solid #e5e7eb;}
+.l109-section-num{width:26px;height:26px;background:#7c3aed;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:.75rem;font-weight:700;flex-shrink:0;}
+.l109-section-title{font-size:.95rem;font-weight:700;color:#111827;}
+.l109-field-label{font-size:.77rem;font-weight:600;color:#374151;margin-bottom:.3rem;display:block;}
+.l109-input{width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:8px;padding:.5rem .75rem;font-size:.84rem;color:#111827;background:white;resize:vertical;font-family:inherit;line-height:1.5;}
+.l109-input:focus{outline:none;border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.15);}
+.l109-export-wrap{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;padding:1.1rem;text-align:center;margin-top:1.5rem;}
+.l109-export-btn{display:inline-flex;align-items:center;gap:.5rem;background:#16a34a;color:white;border:none;border-radius:8px;padding:.6rem 1.25rem;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;}
+.l109-export-btn:hover{background:#15803d;}
+@media(max-width:560px){.l109-modes{grid-template-columns:1fr;}}
+</style>
+
+<div class="l109-intro">
+<div class="l109-intro-title">Що робимо на цьому уроці</div>
+<p>Ви підготували чорновики в уроці 8. Тепер AI перевірить всю воронку очима вашого клієнта — і скаже де логіка рвється, де не вірить, де відвалиться.</p>
+<p>Після перевірки — правите і отримуєте фінальний погоджений варіант всієї воронки.</p>
+</div>
+
+<div class="l109-steps">
+<div class="l109-step"><div class="l109-step-num">1</div><div><div class="l109-step-title">Відкрийте новий чат Claude</div><div class="l109-step-text">Відкрийте <a href="https://claude.ai" target="_blank" style="color:#1d4ed8;font-weight:600;">claude.ai</a> у новій вкладці. Важливо — саме новий чат, без попередньої історії.</div></div></div>
+<div class="l109-step"><div class="l109-step-num">2</div><div><div class="l109-step-title">Скопіюйте промпт нижче і вставте його першим повідомленням</div><div class="l109-step-text">Промпт активує режим AI-аватара — нейросканера, який буде дивитись на вашу воронку очима реального клієнта.</div></div></div>
+<div class="l109-step"><div class="l109-step-num">3</div><div><div class="l109-step-title">Напишіть: "проверь воронку" і передайте матеріали</div><div class="l109-step-text">Після того як Claude підтвердить що зрозумів роль — напишіть команду і вставте всі матеріали з уроку 8: креативи, тексти оголошень, заголовки, текст сайту, логіку бота.</div></div></div>
+<div class="l109-step"><div class="l109-step-num">4</div><div><div class="l109-step-title">Ітеруйте — правте за зауваженнями аватара</div><div class="l109-step-text">Аватар скаже де рветься логіка і що не так. Правте — і показуйте знову. Цикл до фінального "ок, тепер зачепило".</div></div></div>
+<div class="l109-step"><div class="l109-step-num">5</div><div><div class="l109-step-title">Попросіть фінальний варіант воронки</div><div class="l109-step-text">Коли аватар погодить — напишіть: <strong>"дай финальный вариант всей воронки"</strong>. Скопіюйте результат у поле нижче.</div></div></div>
+</div>
+
+<div class="l109-section-hdr">
+<div class="l109-section-num" style="background:#1e1e2e;font-size:.85rem;">P</div>
+<div class="l109-section-title">Промпт для Claude — скопіюйте і вставте першим повідомленням</div>
+</div>
+
+<div class="l109-prompt-wrap">
+<div class="l109-prompt-label">НЕЙРОСКАНЕР v2.2 — СИСТЕМНАЯ ИНСТРУКЦИЯ</div>
+<div class="l109-prompt-text" id="l109-prompt-content"># СИСТЕМНАЯ ИНСТРУКЦИЯ: Нейросканер v2.2
+
+Ты — нейросканер. Ты проходишь глазами аватара всю воронку — от первого касания (реклама) через текст сайта до оффера — и проверяешь связность смыслов на каждом переходе.
+
+Ты не рекламный аналитик. Ты становишься конкретным человеком из ЦА и реагируешь как он: остановился или пролистал. Узнал себя или нет. Поверил или насторожился. Дошёл до оффера или отвалился.
+
+## Четыре режима
+
+| Команда | Что делаешь |
+|---|---|
+| проверь воронку | Проходишь весь путь от рекламы до оффера, проверяешь связность |
+| дай обратную связь | Даёшь развёрнутую критику на конкретный текст словами аватара |
+| прогони | Сканируешь массив заголовков через 3-ступенчатую воронку |
+| дай финальный вариант всей воронки | Выдаёшь полный согласованный вариант всех элементов |
+
+## Режим "проверь воронку" — как работаешь
+
+Шаг 1 — Реакция на рекламу (креатив + текст объявления):
+- Остановился? Да/Нет. Почему.
+- Узнал себя? Что ожидает увидеть после клика.
+
+Шаг 2 — Переход реклама → сайт:
+- Ожидание совпало с реальностью?
+- Продолжение истории или "другая история"?
+- Решение: читаю дальше или закрываю.
+
+Шаг 3 — Путь через текст сайта:
+- Вовлечённость: читает / сканирует / начал скучать / потерялся
+- Узнавание: "это про меня" / "интересно но не про меня"
+- Доверие: растёт / стабильно / падает
+- Точка отвала: где и почему
+
+Шаг 4 — Реакция на бот:
+- Приветствие зацепило?
+- Вопросы логичны или раздражают?
+- Что дальше — понятно?
+
+Шаг 5 — Итог:
+- Где теряем и почему
+- Что исправить конкретно
+- После правок: "теперь нормально" или следующий круг критики
+
+## Правила поведения аватара
+
+1. Забываешь что ты AI. Реагируешь как живой человек из ЦА.
+2. Не анализируешь — реагируешь. Не "заголовок использует социальное доказательство", а "о, у кого-то тоже так?"
+3. Не будь лояльным. Если не зацепило — говори прямо.
+4. Конкретика. Не "текст размытый", а "не понимаю что получу если нажму".
+5. Не хвали без причины. Если слабо — говори что слабо.
+
+## Быстрый старт
+
+При получении этого промпта ответь кратко:
+
+"Нейросканер активирован. Напиши проверь воронку и вставь все материалы из урока 8: креативы, тексты объявлений, заголовки, текст сайта, логику бота, кнопку. Пройду глазами твоего клиента и скажу где теряем."</div>
+</div>
+<button class="l109-copy-btn" id="l109-copy-btn" onclick="window.l109CopyPrompt()">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+Скопіювати промпт
+</button>
+
+<div class="l109-tip" style="margin-top:1rem;">
+Після того як Claude відповість — напишіть: <strong>"проверь воронку"</strong> і вставте всі матеріали з уроку 8.
+</div>
+
+<div class="l109-modes" style="margin-top:1.25rem;">
+<div class="l109-mode"><div class="l109-mode-tag" style="color:#0369a1;">Режим 4</div><div class="l109-mode-cmd">дай обратную связь</div><div class="l109-mode-desc">Критика по конкретному тексту — заголовку або оголошенню окремо</div></div>
+<div class="l109-mode"><div class="l109-mode-tag" style="color:#7c3aed;">Режим 2</div><div class="l109-mode-cmd">прогони</div><div class="l109-mode-desc">Відфільтрувати масив заголовків — які зупинять, які пролистають</div></div>
+<div class="l109-mode"><div class="l109-mode-tag" style="color:#166534;">Фінал</div><div class="l109-mode-cmd">дай финальный вариант всей воронки</div><div class="l109-mode-desc">Коли аватар погодив — отримуєте повний фінальний варіант одним блоком</div></div>
+<div class="l109-mode"><div class="l109-mode-tag" style="color:#92400e;">Важливо</div><div class="l109-mode-cmd">ітеруйте</div><div class="l109-mode-desc">Мета: аватар каже "тепер зачепило" — не поспішайте з фінальним варіантом</div></div>
+</div>
+
+<div class="l109-section-hdr" style="margin-top:1.5rem;">
+<div class="l109-section-num">5</div>
+<div class="l109-section-title">Фінальний варіант воронки</div>
+</div>
+
+<div class="l109-warn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="1.75" width="15" height="15" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<div>Вставляйте тільки фінальний варіант — після того як аватар погодив. Не чернетки.</div>
+</div>
+
+<div style="margin-bottom:.65rem;">
+<label class="l109-field-label">Фінальний варіант воронки (з Claude)</label>
+<textarea class="l109-input" rows="12" id="f109_final" placeholder="Вставте сюди фінальний варіант воронки який видав Claude після погодження..."></textarea>
+</div>
+
+<div class="l109-export-wrap">
+<div style="font-size:.88rem;font-weight:600;color:#374151;margin-bottom:.5rem;">Збережіть фінальний варіант</div>
+<div style="font-size:.81rem;color:#6b7280;margin-bottom:.85rem;">Завантажте Excel і збережіть у Google Таблиці — це ваша готова воронка для запуску реклами</div>
+<button class="l109-export-btn" onclick="window.l109ExportExcel()">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+Завантажити Excel
+</button>
+<div style="font-size:.75rem;color:#6b7280;margin-top:.6rem;">Після завантаження: Google Таблиці → Файл → Імпорт → скопіюйте посилання → вставте в ДЗ нижче</div>
+</div>
+
+<script>
+window.l109CopyPrompt = function() {
+  var text = document.getElementById("l109-prompt-content").innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.getElementById("l109-copy-btn");
+    btn.classList.add("copied");
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg> Скопійовано!';
+    setTimeout(function() {
+      btn.classList.remove("copied");
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Скопіювати промпт';
+    }, 2500);
+  });
+};
+window.l109ExportExcel = function() {
+  var finalText = document.getElementById("f109_final").value || "";
+  var rows = [["Урок 9 — Фінальна воронка",""],["Статус","Погоджено аватаром"],["",""],["ФІНАЛЬНИЙ ВАРІАНТ ВОРОНКИ",""],["Текст",finalText]];
+  var xml = '<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>';
+  xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">';
+  xml += '<Styles><Style ss:ID="hdr"><Interior ss:Color="#7c3aed" ss:Pattern="Solid"/><Font ss:Color="#FFFFFF" ss:Bold="1"/></Style>';
+  xml += '<Style ss:ID="sec"><Font ss:Bold="1"/><Interior ss:Color="#f3f4f6" ss:Pattern="Solid"/></Style></Styles>';
+  xml += '<Worksheet ss:Name="Voronka"><Table><Column ss:Width="200"/><Column ss:Width="500"/>';
+  rows.forEach(function(row,i){
+    var s=i===0?"hdr":(row[1]===""&&row[0]!==""?"sec":"");
+    xml+="<Row>";
+    row.forEach(function(c){var safe=String(c).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");xml+=s?'<Cell ss:StyleID="'+s+'"><Data ss:Type="String">'+safe+"</Data></Cell>":'<Cell><Data ss:Type="String">'+safe+"</Data></Cell>";});
+    xml+="</Row>";
+  });
+  xml+="</Table></Worksheet></Workbook>";
+  var blob=new Blob([xml],{type:"application/vnd.ms-excel;charset=utf-8"});
+  var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="finalna-voronka.xls";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+};
+</script>
+`,
+            lessonContent_ru: `
+<style>
+.l109-intro{background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.25rem;}
+.l109-intro-title{font-size:.72rem;font-weight:700;letter-spacing:.09em;color:#0369a1;text-transform:uppercase;margin-bottom:.5rem;}
+.l109-intro p{font-size:.87rem;color:#0c4a6e;line-height:1.65;margin:0 0 .4rem;}
+.l109-steps{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.5rem;}
+.l109-step{display:flex;align-items:flex-start;gap:.85rem;}
+.l109-step-num{width:32px;height:32px;background:#1d4ed8;border-radius:50%;color:white;font-size:.82rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.l109-step-title{font-size:.9rem;font-weight:700;color:#111827;margin-bottom:.25rem;}
+.l109-step-text{font-size:.84rem;color:#374151;line-height:1.6;}
+.l109-prompt-wrap{background:#1e1e2e;border-radius:12px;padding:1.1rem;margin:1rem 0;}
+.l109-prompt-label{font-size:.68rem;font-weight:700;letter-spacing:.09em;color:#a5b4fc;text-transform:uppercase;margin-bottom:.65rem;}
+.l109-prompt-text{font-size:.78rem;color:#e2e8f0;line-height:1.7;white-space:pre-wrap;font-family:monospace;max-height:320px;overflow-y:auto;}
+.l109-copy-btn{display:inline-flex;align-items:center;gap:.45rem;background:#4f46e5;color:white;border:none;border-radius:7px;padding:.5rem 1rem;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;margin-top:.75rem;}
+.l109-copy-btn:hover{background:#4338ca;}
+.l109-copy-btn.copied{background:#16a34a;}
+.l109-tip{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.65rem .9rem;font-size:.82rem;color:#1e40af;margin:.75rem 0;line-height:1.6;}
+.l109-warn{background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.65rem .9rem;font-size:.82rem;color:#92400e;margin:.75rem 0;line-height:1.6;display:flex;align-items:flex-start;gap:.5rem;}
+.l109-modes{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin:.85rem 0;}
+.l109-mode{border:1px solid #e5e7eb;border-radius:10px;padding:.75rem;}
+.l109-mode-tag{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem;}
+.l109-mode-cmd{font-size:.82rem;font-weight:700;color:#111827;font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;}
+.l109-mode-desc{font-size:.78rem;color:#6b7280;margin-top:.3rem;line-height:1.5;}
+.l109-section-hdr{display:flex;align-items:center;gap:.6rem;margin:1.25rem 0 .75rem;padding-bottom:.5rem;border-bottom:1px solid #e5e7eb;}
+.l109-section-num{width:26px;height:26px;background:#7c3aed;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:.75rem;font-weight:700;flex-shrink:0;}
+.l109-section-title{font-size:.95rem;font-weight:700;color:#111827;}
+.l109-field-label{font-size:.77rem;font-weight:600;color:#374151;margin-bottom:.3rem;display:block;}
+.l109-input{width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:8px;padding:.5rem .75rem;font-size:.84rem;color:#111827;background:white;resize:vertical;font-family:inherit;line-height:1.5;}
+.l109-input:focus{outline:none;border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.15);}
+.l109-export-wrap{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;padding:1.1rem;text-align:center;margin-top:1.5rem;}
+.l109-export-btn{display:inline-flex;align-items:center;gap:.5rem;background:#16a34a;color:white;border:none;border-radius:8px;padding:.6rem 1.25rem;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;}
+.l109-export-btn:hover{background:#15803d;}
+@media(max-width:560px){.l109-modes{grid-template-columns:1fr;}}
+</style>
+
+<div class="l109-intro">
+<div class="l109-intro-title">Что делаем на этом уроке</div>
+<p>Вы подготовили черновики в уроке 8. Теперь AI проверит всю воронку глазами вашего клиента — и скажет где логика рвётся, где не верит, где отвалится.</p>
+<p>После проверки — правите и получаете финальный согласованный вариант всей воронки.</p>
+</div>
+
+<div class="l109-steps">
+<div class="l109-step"><div class="l109-step-num">1</div><div><div class="l109-step-title">Откройте новый чат Claude</div><div class="l109-step-text">Откройте <a href="https://claude.ai" target="_blank" style="color:#1d4ed8;font-weight:600;">claude.ai</a> в новой вкладке. Важно — именно новый чат, без предыдущей истории.</div></div></div>
+<div class="l109-step"><div class="l109-step-num">2</div><div><div class="l109-step-title">Скопируйте промпт ниже и вставьте его первым сообщением</div><div class="l109-step-text">Промпт активирует режим AI-аватара — нейросканера, который будет смотреть на вашу воронку глазами реального клиента.</div></div></div>
+<div class="l109-step"><div class="l109-step-num">3</div><div><div class="l109-step-title">Напишите: "проверь воронку" и передайте материалы</div><div class="l109-step-text">После того как Claude подтвердит что понял роль — напишите команду и вставьте все материалы из урока 8: креативы, тексты объявлений, заголовки, текст сайта, логику бота.</div></div></div>
+<div class="l109-step"><div class="l109-step-num">4</div><div><div class="l109-step-title">Итерируйте — правьте по замечаниям аватара</div><div class="l109-step-text">Аватар скажет где рвётся логика. Правьте — и показывайте снова. Цикл до финального "ок, теперь зацепило".</div></div></div>
+<div class="l109-step"><div class="l109-step-num">5</div><div><div class="l109-step-title">Попросите финальный вариант воронки</div><div class="l109-step-text">Когда аватар согласует — напишите: <strong>"дай финальный вариант всей воронки"</strong>. Скопируйте результат в поле ниже.</div></div></div>
+</div>
+
+<div class="l109-section-hdr">
+<div class="l109-section-num" style="background:#1e1e2e;font-size:.85rem;">P</div>
+<div class="l109-section-title">Промпт для Claude — скопируйте и вставьте первым сообщением</div>
+</div>
+
+<div class="l109-prompt-wrap">
+<div class="l109-prompt-label">НЕЙРОСКАНЕР v2.2 — СИСТЕМНАЯ ИНСТРУКЦИЯ</div>
+<div class="l109-prompt-text" id="l109-prompt-content"># СИСТЕМНАЯ ИНСТРУКЦИЯ: Нейросканер v2.2
+
+Ты — нейросканер. Ты проходишь глазами аватара всю воронку — от первого касания (реклама) через текст сайта до оффера — и проверяешь связность смыслов на каждом переходе.
+
+Ты не рекламный аналитик. Ты становишься конкретным человеком из ЦА и реагируешь как он: остановился или пролистал. Узнал себя или нет. Поверил или насторожился. Дошёл до оффера или отвалился.
+
+## Четыре режима
+
+| Команда | Что делаешь |
+|---|---|
+| проверь воронку | Проходишь весь путь от рекламы до оффера, проверяешь связность |
+| дай обратную связь | Даёшь развёрнутую критику на конкретный текст словами аватара |
+| прогони | Сканируешь массив заголовков через 3-ступенчатую воронку |
+| дай финальный вариант всей воронки | Выдаёшь полный согласованный вариант всех элементов |
+
+## Режим "проверь воронку" — как работаешь
+
+Шаг 1 — Реакция на рекламу (креатив + текст объявления):
+- Остановился? Да/Нет. Почему.
+- Узнал себя? Что ожидает увидеть после клика.
+
+Шаг 2 — Переход реклама → сайт:
+- Ожидание совпало с реальностью?
+- Продолжение истории или "другая история"?
+- Решение: читаю дальше или закрываю.
+
+Шаг 3 — Путь через текст сайта:
+- Вовлечённость: читает / сканирует / начал скучать / потерялся
+- Узнавание: "это про меня" / "интересно но не про меня"
+- Доверие: растёт / стабильно / падает
+- Точка отвала: где и почему
+
+Шаг 4 — Реакция на бот:
+- Приветствие зацепило?
+- Вопросы логичны или раздражают?
+- Что дальше — понятно?
+
+Шаг 5 — Итог:
+- Где теряем и почему
+- Что исправить конкретно
+- После правок: "теперь нормально" или следующий круг критики
+
+## Правила поведения аватара
+
+1. Забываешь что ты AI. Реагируешь как живой человек из ЦА.
+2. Не анализируешь — реагируешь. Не "заголовок использует социальное доказательство", а "о, у кого-то тоже так?"
+3. Не будь лояльным. Если не зацепило — говори прямо.
+4. Конкретика. Не "текст размытый", а "не понимаю что получу если нажму".
+5. Не хвали без причины. Если слабо — говори что слабо.
+
+## Быстрый старт
+
+При получении этого промпта ответь кратко:
+
+"Нейросканер активирован. Напиши проверь воронку и вставь все материалы из урока 8: креативы, тексты объявлений, заголовки, текст сайта, логику бота, кнопку. Пройду глазами твоего клиента и скажу где теряем."</div>
+</div>
+<button class="l109-copy-btn" id="l109-copy-btn" onclick="window.l109CopyPrompt()">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+Скопировать промпт
+</button>
+
+<div class="l109-tip" style="margin-top:1rem;">
+После того как Claude ответит — напишите: <strong>"проверь воронку"</strong> и вставьте все материалы из урока 8.
+</div>
+
+<div class="l109-modes" style="margin-top:1.25rem;">
+<div class="l109-mode"><div class="l109-mode-tag" style="color:#0369a1;">Режим 4</div><div class="l109-mode-cmd">дай обратную связь</div><div class="l109-mode-desc">Критика по конкретному тексту — заголовку или объявлению отдельно</div></div>
+<div class="l109-mode"><div class="l109-mode-tag" style="color:#7c3aed;">Режим 2</div><div class="l109-mode-cmd">прогони</div><div class="l109-mode-desc">Отфильтровать массив заголовков — какие остановят, какие пролистают</div></div>
+<div class="l109-mode"><div class="l109-mode-tag" style="color:#166534;">Финал</div><div class="l109-mode-cmd">дай финальный вариант всей воронки</div><div class="l109-mode-desc">Когда аватар согласовал — получаете полный финальный вариант одним блоком</div></div>
+<div class="l109-mode"><div class="l109-mode-tag" style="color:#92400e;">Важно</div><div class="l109-mode-cmd">итерируйте</div><div class="l109-mode-desc">Цель: аватар говорит "теперь зацепило" — не торопитесь с финальным вариантом</div></div>
+</div>
+
+<div class="l109-section-hdr" style="margin-top:1.5rem;">
+<div class="l109-section-num">5</div>
+<div class="l109-section-title">Финальный вариант воронки</div>
+</div>
+
+<div class="l109-warn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="1.75" width="15" height="15" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<div>Вставляйте только финальный вариант — после того как аватар согласовал. Не черновики.</div>
+</div>
+
+<div style="margin-bottom:.65rem;">
+<label class="l109-field-label">Финальный вариант воронки (из Claude)</label>
+<textarea class="l109-input" rows="12" id="f109_final" placeholder="Вставьте сюда финальный вариант воронки который выдал Claude после согласования..."></textarea>
+</div>
+
+<div class="l109-export-wrap">
+<div style="font-size:.88rem;font-weight:600;color:#374151;margin-bottom:.5rem;">Сохраните финальный вариант</div>
+<div style="font-size:.81rem;color:#6b7280;margin-bottom:.85rem;">Скачайте Excel и сохраните в Google Таблицы — это ваша готовая воронка для запуска рекламы</div>
+<button class="l109-export-btn" onclick="window.l109ExportExcel()">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+Скачать Excel
+</button>
+<div style="font-size:.75rem;color:#6b7280;margin-top:.6rem;">После скачивания: Google Таблицы → Файл → Импорт → скопируйте ссылку → вставьте в ДЗ ниже</div>
+</div>
+
+<script>
+window.l109CopyPrompt = function() {
+  var text = document.getElementById("l109-prompt-content").innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.getElementById("l109-copy-btn");
+    btn.classList.add("copied");
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg> Скопировано!';
+    setTimeout(function() {
+      btn.classList.remove("copied");
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Скопировать промпт';
+    }, 2500);
+  });
+};
+window.l109ExportExcel = function() {
+  var finalText = document.getElementById("f109_final").value || "";
+  var rows = [["Урок 9 — Финальная воронка",""],["Статус","Согласовано аватаром"],["",""],["ФИНАЛЬНЫЙ ВАРИАНТ ВОРОНКИ",""],["Текст",finalText]];
+  var xml = '<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>';
+  xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">';
+  xml += '<Styles><Style ss:ID="hdr"><Interior ss:Color="#7c3aed" ss:Pattern="Solid"/><Font ss:Color="#FFFFFF" ss:Bold="1"/></Style>';
+  xml += '<Style ss:ID="sec"><Font ss:Bold="1"/><Interior ss:Color="#f3f4f6" ss:Pattern="Solid"/></Style></Styles>';
+  xml += '<Worksheet ss:Name="Voronka"><Table><Column ss:Width="200"/><Column ss:Width="500"/>';
+  rows.forEach(function(row,i){
+    var s=i===0?"hdr":(row[1]===""&&row[0]!==""?"sec":"");
+    xml+="<Row>";
+    row.forEach(function(c){var safe=String(c).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");xml+=s?'<Cell ss:StyleID="'+s+'"><Data ss:Type="String">'+safe+"</Data></Cell>":'<Cell><Data ss:Type="String">'+safe+"</Data></Cell>";});
+    xml+="</Row>";
+  });
+  xml+="</Table></Worksheet></Workbook>";
+  var blob=new Blob([xml],{type:"application/vnd.ms-excel;charset=utf-8"});
+  var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="finalnaya-voronka.xls";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+};
+</script>
+`,
+            homework: `<ol style="padding-left:1.25rem;font-size:.88rem;color:#374151;line-height:1.9;"><li>Відкрий новий чат <a href="https://claude.ai" target="_blank" style="color:#1d4ed8;">claude.ai</a> → вставте промпт з уроку.</li><li>Напишіть <strong>"проверь воронку"</strong> і вставте всі матеріали з уроку 8.</li><li>Ітеруйте — правте за зауваженнями аватара.</li><li>Коли аватар погодить — напишіть <strong>"дай финальный вариант всей воронки"</strong>.</li><li>Вставте фінальний варіант у поле в уроці → завантажте Excel → Google Таблиці → скопіюйте посилання і вставте нижче.</li></ol>`,
+            homework_ru: `<ol style="padding-left:1.25rem;font-size:.88rem;color:#374151;line-height:1.9;"><li>Открой новый чат <a href="https://claude.ai" target="_blank" style="color:#1d4ed8;">claude.ai</a> → вставь промпт из урока.</li><li>Напиши <strong>"проверь воронку"</strong> и вставь все материалы из урока 8.</li><li>Итерируй — правь по замечаниям аватара.</li><li>Когда аватар согласует — напиши <strong>"дай финальный вариант всей воронки"</strong>.</li><li>Вставь финальный вариант в поле в уроке → скачай Excel → Google Таблицы → скопируй ссылку и вставь ниже.</li></ol>`,
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
     ];
 
     // Підключаємо маркетинг уроки до головного масиву
