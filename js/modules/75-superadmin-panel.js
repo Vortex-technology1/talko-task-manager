@@ -1444,13 +1444,26 @@ async function renderPendingRegistrations() {
     const wrap = document.getElementById('saPendingRegs');
     if (!wrap) return;
     try {
-        const snap = await firebase.firestore().collection('registration_requests')
-            .where('status', '==', 'pending').orderBy('createdAt', 'desc').limit(50).get();
+        let snap;
+        try {
+            snap = await firebase.firestore().collection('registration_requests')
+                .where('status', '==', 'pending').orderBy('createdAt', 'desc').limit(50).get();
+        } catch(indexErr) {
+            // Fallback без orderBy якщо індекс не створений
+            snap = await firebase.firestore().collection('registration_requests')
+                .where('status', '==', 'pending').limit(50).get();
+        }
         if (snap.empty) {
             wrap.innerHTML = '<div style="color:#9ca3af;font-size:0.82rem;padding:0.5rem 0;">Нових заявок немає ✓</div>';
             return;
         }
-        wrap.innerHTML = snap.docs.map(doc => {
+        // Клієнтське сортування
+        const docs = snap.docs.sort((a, b) => {
+            const ta = a.data().createdAt?.toMillis?.() || 0;
+            const tb = b.data().createdAt?.toMillis?.() || 0;
+            return tb - ta;
+        });
+        wrap.innerHTML = docs.map(doc => {
             const r = doc.data();
             const date = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleDateString('uk-UA') : '—';
             return `
