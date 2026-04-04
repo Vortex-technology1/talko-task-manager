@@ -538,18 +538,18 @@ window.sitesOpenCreate = function () {
                         style="padding:0.5rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;">
                         Скасувати
                     </button>
-                    <!-- Крок 1: кнопка "Далі" -->
+                    <!-- Крок 1: перейти до HTML -->
                     <button id="sc_btn_next" onclick="sitesGoStep(2)"
-                        style="padding:0.5rem 1.4rem;background:#f59e0b;color:white;border:none;
-                        border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;">
-                        Вставити HTML → Далі
+                        style="padding:0.5rem 1.2rem;background:#f1f5f9;color:#374151;border:1px solid #e5e7eb;
+                        border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">
+                        Вставити HTML →
                     </button>
-                    <!-- Крок 2: кнопка "Створити" (прихована) -->
-                    <button id="sc_btn_create" onclick="sitesCreate()" style="display:none;
-                        padding:0.5rem 1.4rem;background:#22c55e;color:white;border:none;
+                    <!-- Завжди зелена кнопка "Створити сайт" -->
+                    <button id="sc_btn_create" onclick="sitesCreate()"
+                        style="padding:0.5rem 1.4rem;background:#22c55e;color:white;border:none;
                         border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;
-                        box-shadow:0 2px 8px rgba(34,197,94,0.3);">
-                        Опублікувати сайт →
+                        box-shadow:0 2px 8px rgba(34,197,94,0.3);display:none;">
+                        ✓ Створити сайт
                     </button>
                 </div>
             </div>
@@ -578,7 +578,7 @@ window.sitesGoStep = function(step) {
         if(btnCreate) btnCreate.style.display = 'block';
         setTimeout(() => document.getElementById('sc_name')?.focus(), 50);
     } else {
-        if(s1) s1.style.display = 'flex';
+        if(s1) { s1.style.display = 'flex'; s1.style.flexDirection = 'column'; }
         if(s2) s2.style.display = 'none';
         if(p1) { p1.style.background='#22c55e'; p1.style.color='white'; }
         if(p2) { p2.style.background='#f1f5f9'; p2.style.color='#9ca3af'; }
@@ -684,34 +684,41 @@ window.sitesRenderLibraryGrid = function(templates) {
         return;
     }
     grid.innerHTML = templates.map(t => `
-    <div onclick="sitesSelectLibraryTemplate('${t.key}')" id="slt_${t.key}"
+    <div id="slt_${t.key}"
         style="background:white;border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;
-        cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;"
-        onmouseenter="this.style.borderColor='${t.color}';this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.1)'"
-        onmouseleave="if('${t.key}'!==window._sitesSelectedLibKey){this.style.borderColor='#e5e7eb';this.style.transform='none';this.style.boxShadow='none';}"
+        transition:all 0.15s;display:flex;flex-direction:column;"
+        onmouseenter="this.style.borderColor='${t.color}';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.1)'"
+        onmouseleave="if('${t.key}'!==window._sitesSelectedLibKey){this.style.borderColor='#e5e7eb';this.style.boxShadow='none';}"
         data-key="${t.key}">
-        <div style="height:5px;background:${t.color};flex-shrink:0;"></div>
-        <div style="padding:10px 12px;flex:1;display:flex;flex-direction:column;gap:5px;">
-            <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                <span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;
-                    background:${t.color}18;color:${t.color};">${t.nicheLabel}</span>
-                <span style="font-size:9px;font-weight:600;padding:2px 6px;border-radius:6px;
+        <div style="height:4px;background:${t.color};flex-shrink:0;"></div>
+        <div style="padding:10px 11px;flex:1;display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                <span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;
+                    background:${t.color}20;color:${t.color};">${t.nicheLabel}</span>
+                <span style="font-size:9px;font-weight:600;padding:2px 6px;border-radius:5px;
                     background:#f1f5f9;color:#6b7280;">${t.typeLabel}</span>
             </div>
-            <div style="font-size:0.78rem;font-weight:700;color:#111;line-height:1.35;">${t.title}</div>
-            <div style="font-size:0.68rem;color:#9ca3af;line-height:1.4;flex:1;">${t.desc}</div>
-            <div style="display:flex;gap:5px;margin-top:6px;">
-                <button onclick="event.stopPropagation();sitesPreviewTemplate('${t.key}')"
-                    style="flex:1;padding:5px 0;background:#f0fdf4;border:1px solid #bbf7d0;
-                    border-radius:7px;cursor:pointer;font-size:0.68rem;font-weight:600;color:#16a34a;">
-                    👁 Переглянути
-                </button>
-                <button onclick="event.stopPropagation();sitesCopyTemplateHtmlByKey('${t.key}')"
-                    style="flex:1;padding:5px 0;background:#f5f3ff;border:1px solid #ddd6fe;
-                    border-radius:7px;cursor:pointer;font-size:0.68rem;font-weight:600;color:#7c3aed;">
-                    📋 Копіювати HTML
-                </button>
-            </div>
+            <div style="font-size:0.77rem;font-weight:700;color:#111;line-height:1.3;">${t.title}</div>
+            <div style="font-size:0.67rem;color:#9ca3af;line-height:1.4;flex:1;">${t.desc}</div>
+        </div>
+        <!-- Кнопки завжди внизу картки -->
+        <div style="display:flex;gap:0;border-top:1px solid #f1f5f9;flex-shrink:0;">
+            <button onclick="sitesPreviewTemplate('${t.key}')"
+                style="flex:1;padding:8px 4px;background:#f8fafc;border:none;border-right:1px solid #f1f5f9;
+                cursor:pointer;font-size:0.67rem;font-weight:600;color:#374151;
+                border-radius:0 0 0 10px;transition:background 0.1s;"
+                onmouseenter="this.style.background='#f0fdf4';this.style.color='#16a34a'"
+                onmouseleave="this.style.background='#f8fafc';this.style.color='#374151'">
+                👁 Переглянути
+            </button>
+            <button onclick="sitesCopyTemplateHtmlByKey('${t.key}')"
+                style="flex:1;padding:8px 4px;background:#f8fafc;border:none;
+                cursor:pointer;font-size:0.67rem;font-weight:600;color:#374151;
+                border-radius:0 0 10px 0;transition:background 0.1s;"
+                onmouseenter="this.style.background='#f5f3ff';this.style.color='#7c3aed'"
+                onmouseleave="this.style.background='#f8fafc';this.style.color='#374151'">
+                📋 Копіювати HTML
+            </button>
         </div>
     </div>`).join('');
 };
@@ -736,19 +743,27 @@ window.sitesSelectLibraryTemplate = function(key) {
     // підсвічуємо картку
     document.querySelectorAll('[id^="slt_"]').forEach(el => {
         el.style.borderColor = '#e5e7eb';
-        el.style.transform   = 'none';
         el.style.boxShadow   = 'none';
     });
     const card = document.getElementById('slt_' + key);
     if (card) { card.style.borderColor = t.color; card.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)'; }
     // показуємо обраний у футері
-    const bar = document.getElementById('sc_lib_selected_bar');
+    const bar   = document.getElementById('sc_lib_selected_bar');
     const title = document.getElementById('sc_lib_selected_title');
     if (bar)   bar.style.display = 'flex';
     if (title) title.textContent = t.title;
-    // підставляємо назву якщо порожнє (повертаємось до лівої колонки)
+    // підставляємо назву
     const nameInput = document.getElementById('sc_name');
     if (nameInput && !nameInput.value.trim()) nameInput.value = t.title;
+    // підсвічуємо кнопку "Вставити HTML →" щоб було зрозуміло що далі
+    const btnNext = document.getElementById('sc_btn_next');
+    if (btnNext) {
+        btnNext.style.background = '#22c55e';
+        btnNext.style.color      = 'white';
+        btnNext.style.border     = 'none';
+        btnNext.style.fontWeight = '700';
+        btnNext.textContent      = 'Скопіюй → адаптуй у Claude → Вставити HTML →';
+    }
 };
 
 window.sitesPreviewTemplate = function(key) {
