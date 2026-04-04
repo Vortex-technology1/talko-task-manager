@@ -147,6 +147,7 @@
                 if (af && task.assigneeId !== af) return false;
                 if (tf === 'my' && task.assigneeId !== currentUser?.uid) return false;
                 if (tf === 'created' && task.creatorId !== currentUser?.uid) return false;
+                if (tf === 'crm' && !task.crmDealId && !task.dealId) return false;
                 if (searchQuery && !(task.title || '').toLowerCase().includes(searchQuery) && 
                     !(task.description || '').toLowerCase().includes(searchQuery) &&
                     !(task.assigneeName || '').toLowerCase().includes(searchQuery)) return false;
@@ -283,6 +284,7 @@
                         ${typeof isBulkModeActive === 'function' && isBulkModeActive() ? `<td style="width:36px;padding:0 0.5rem;"><input type="checkbox" data-bulk-id="${task.id}" ${typeof isTaskSelected === 'function' && isTaskSelected(task.id) ? 'checked' : ''} onclick="toggleBulkSelect('${task.id}',event)" style="width:16px;height:16px;accent-color:#22c55e;cursor:pointer;"></td>` : ''}
                         <td class="task-title-cell">
                             <span class="task-title-text ${task.pinned ? 'pinned' : ''}" onclick="${typeof isBulkModeActive === 'function' && isBulkModeActive() ? `toggleBulkSelect('${escId(task.id)}',event)` : `openTaskModal('${escId(task.id)}')`}">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${processIndicator}${task.parentId ? '<span style="font-size:0.68rem;color:#6b7280;margin-right:3px;">↳</span>' : ''}${esc(task.title)}${!task.parentId && (subtaskCountMap[task.id] || 0) > 0 ? '<span style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 5px;margin-left:4px;border:1px solid #bbf7d0;">⊕'+(subtaskCountMap[task.id] || 0)+'</span>' : ''}</span>
+                            ${(task.crmDealId||task.dealId) ? `<span onclick="event.stopPropagation();if(typeof window.crmOpenDeal==='function')window.crmOpenDeal('${escId(task.crmDealId||task.dealId)}')" style="margin-left:4px;font-size:0.65rem;padding:1px 6px;border-radius:4px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;cursor:pointer;white-space:nowrap;" title="CRM угода">${esc(task.clientName||'CRM')}</span>` : ''}
                         </td>
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td class="col-hide-md">${esc(task.creatorName) || '-'}</td>
