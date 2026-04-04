@@ -3241,7 +3241,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
                 currentNodeId: { stringValue: nextNode.id },
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
-            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre });
         }
         return;
     }
@@ -3252,7 +3252,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
             currentNodeId: { stringValue: currentNode.id },
             updatedAt:     { timestampValue: new Date().toISOString() },
         }, token);
-        await executeNode({ node: currentNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName });
+        await executeNode({ node: currentNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre });
         return;
     }
 
@@ -3270,7 +3270,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
                 // Якщо наступний вузол AI — передаємо стартовий текст щоб AI почав
                 // При callback не передаємо text бота як userInput — тільки для не-AI вузлів
                 const inputForAI = isAI ? '' : undefined;
-                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput: inputForAI });
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, userInput: inputForAI });
             } catch(ex) {
                 await tgSend(chatId, `⚠️ executeNode error: ${ex.message?.slice(0,200)}`);
             }
@@ -3296,7 +3296,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
                         currentNodeId: { stringValue: nextNode.id },
                         updatedAt:     { timestampValue: new Date().toISOString() },
                     }, token);
-                    await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput: text });
+                    await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, userInput: text });
                     return;
                 }
             }
@@ -3305,7 +3305,7 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
         }
     }
     
-    await executeNode({ node: currentNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput: text });
+    await executeNode({ node: currentNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, userInput: text });
 }
 
 // ══════════════════════════════════════════════════════════
@@ -3318,7 +3318,7 @@ function _interpolate(text, collectedData = {}) {
     });
 }
 
-async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput, _depth=0 }) {
+async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput, platDocPre=null, _depth=0 }) {
     // Захист від нескінченного циклу між вузлами
     if (_depth > 10) {
         console.warn('[FlowEngine] Max depth reached, stopping execution');
@@ -3391,7 +3391,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     // Якщо наступний — ШІ агент з "бот пише першим" = виконуємо відразу
                     const tType = target.type || target.data?.type || '';
                     if (tType === 'ai_agent' || tType === 'aiAgent') {
-                        await executeNode({ node: target, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
+                        await executeNode({ node: target, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, _depth: _depth+1});
                     }
                 }
             }
@@ -3604,7 +3604,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 }, token);
                 // Виконуємо наступний вузол (наприклад message після create_lead)
                 await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId,
-                    contact, contactPath, collectedData, token, botToken, tgSend, env, userName,
+                    contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre,
                     _depth: _depth + 1 });
             }
         }
@@ -3651,7 +3651,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     currentNodeId: { stringValue: nextNode.id },
                     updatedAt:     { timestampValue: new Date().toISOString() },
                 }, token);
-                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, _depth: _depth+1});
             }
             return;
         }
@@ -3732,7 +3732,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     currentNodeId: { stringValue: nextNode.id },
                     updatedAt:     { timestampValue: new Date().toISOString() },
                 }, token);
-                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, userInput , _depth: _depth+1});
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, userInput, _depth: _depth+1});
             }
         }
         return;
@@ -3772,7 +3772,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                     currentNodeId: { stringValue: nextNode.id },
                     updatedAt:     { timestampValue: new Date().toISOString() },
                 }, token);
-                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
+                await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, _depth: _depth+1});
             }
             return;
         }
@@ -3844,7 +3844,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 currentNodeId: { stringValue: nextNode.id },
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
-            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
+            await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, _depth: _depth+1});
         }
         return;
     }
@@ -3860,7 +3860,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
 
         if (!reqUrl) {
             const nextNode = getNextNode(node.id);
-            if (nextNode) await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
+            if (nextNode) await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, _depth: _depth+1});
             return;
         }
 
@@ -3910,7 +3910,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 currentNodeId: { stringValue: nextNodeHttp.id },
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
-            await executeNode({ node: nextNodeHttp, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
+            await executeNode({ node: nextNodeHttp, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, _depth: _depth+1});
         }
         return;
     }
@@ -4075,7 +4075,7 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 currentNodeId: { stringValue: nextNodeImg.id },
                 updatedAt:     { timestampValue: new Date().toISOString() },
             }, token);
-            await executeNode({ node: nextNodeImg, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName , _depth: _depth+1});
+            await executeNode({ node: nextNodeImg, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, _depth: _depth+1});
         }
         return;
     }
