@@ -122,6 +122,17 @@ async function fsSet(path, fields, token) {
     });
 }
 
+// POST до колекції — Firestore генерує ID автоматично, повертає документ з name
+async function fsAdd(collectionPath, fields, token) {
+    const r = await fetch(`${FS_URL}/${collectionPath}`, {
+        method:'POST',
+        headers:{ Authorization:`Bearer ${token}`, 'Content-Type':'application/json' },
+        body: JSON.stringify({ fields }),
+    });
+    if (!r.ok) throw new Error(`fsAdd ${collectionPath}: HTTP ${r.status}`);
+    return r.json(); // { name: 'projects/.../documents/collectionPath/docId', fields: {...} }
+}
+
 function fVal(v) {
     if (!v) return null;
     if (v.nullValue    !== undefined) return null;
@@ -1498,9 +1509,11 @@ async function handleCrmForm(request, env) {
     let token;
     try { token = await getToken(env); } catch(e) { return json({error:'Firebase error'},500); }
 
+    const now = new Date().toISOString();
     const leadId = `lead_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
     const leadPath = `companies/${companyId}/leads/${leadId}`;
 
+    // Зберігаємо лід
     await fsSet(leadPath, {
         id:        { stringValue: leadId },
         name:      { stringValue: name||'' },
@@ -1510,10 +1523,90 @@ async function handleCrmForm(request, env) {
         source:    { stringValue: source||'site' },
         formId:    { stringValue: formId||'' },
         status:    { stringValue: 'new' },
-        createdAt: { timestampValue: new Date().toISOString() },
+        createdAt: { timestampValue: now },
     }, token);
 
-    return json({ ok:true, leadId });
+    // Читаємо налаштування форми щоб дізнатись стадію і відповідального
+    let dealId = null;
+    try {
+        let formStage = 'new';
+        let formAssigneeId = '';
+        let formAssigneeName = '';
+        let formTitle = name || phone || 'Нова заявка';
+
+        if (formId) {
+            const formDoc = await fsGet(`companies/${companyId}/crm_forms/${formId}`, token);
+            if (formDoc?.fields) {
+                const fd = fFields(formDoc.fields);
+                formStage = fd.stage || 'new';
+                formAssigneeId = fd.assigneeId || '';
+                formAssigneeName = fd.assigneeName || '';
+                // Інкрементуємо лічильник заявок
+                fsPatch(`companies/${companyId}/crm_forms/${formId}`, {
+                    submitCount: { integerValue: String((fd.submitCount || 0) + 1) },
+                }, token).catch(() => {});
+            }
+        }
+
+        // Створюємо угоду в CRM
+        const dealRef = await fsAdd(`companies/${companyId}/crm_deals`, {
+            title:       { stringValue: formTitle },
+            clientName:  { stringValue: name || '' },
+            phone:       { stringValue: phone || '' },
+            email:       { stringValue: email || '' },
+            note:        { stringValue: message || '' },
+            source:      { stringValue: source || 'web_form' },
+            formId:      { stringValue: formId || '' },
+            leadId:      { stringValue: leadId },
+            stage:       { stringValue: formStage },
+            assigneeId:  { stringValue: formAssigneeId },
+            assigneeName:{ stringValue: formAssigneeName },
+            amount:      { integerValue: '0' },
+            status:      { stringValue: 'active' },
+            createdAt:   { timestampValue: now },
+            updatedAt:   { timestampValue: now },
+        }, token);
+
+        dealId = dealRef?.name?.split('/').pop() || null;
+
+        // Оновлюємо лід з dealId
+        if (dealId) {
+            fsPatch(leadPath, {
+                dealId:    { stringValue: dealId },
+                updatedAt: { timestampValue: now },
+            }, token).catch(() => {});
+        }
+    } catch(dealErr) {
+        console.warn('[handleCrmForm] deal creation failed:', dealErr.message);
+        // Не ламаємо відповідь — лід вже збережено
+    }
+
+    // Telegram-сповіщення компанії про нову заявку (non-blocking)
+    try {
+        const tgDoc = await fsGet(`companies/${companyId}/settings/telegram`, token);
+        if (tgDoc?.fields) {
+            const tgData = fFields(tgDoc.fields);
+            const botToken  = tgData.botToken || tgData.telegramBotToken;
+            const adminChat = tgData.adminChatId || tgData.notifyChatId;
+            if (botToken && adminChat) {
+                const msgLines = [
+                    `📩 *Нова заявка з форми*`,
+                    name  ? `👤 ${name}`  : null,
+                    phone ? `📞 ${phone}` : null,
+                    email ? `✉️ ${email}` : null,
+                    message ? `💬 ${message.slice(0,200)}` : null,
+                    dealId ? `🔗 Угода створена в CRM` : null,
+                ].filter(Boolean).join('\n');
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: adminChat, text: msgLines, parse_mode: 'Markdown' }),
+                }).catch(() => {});
+            }
+        }
+    } catch(tgErr) { /* non-blocking — не ламаємо відповідь */ }
+
+    return json({ ok:true, leadId, dealId });
 }
 
 // ════════════════════════════════════════════════════════════

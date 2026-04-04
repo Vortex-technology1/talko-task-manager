@@ -42,11 +42,11 @@ window._renderVehiclesTab = async function(deal) {
         let vehicles = [];
         if (clientId) {
             const snap = await _col('sales_vehicles').where('clientId','==',clientId).get();
-            vehicles = snap.docs.map(d => ({id:d.id,...d.data()}));
+            vehicles = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
         }
         if (!vehicles.length && phone) {
             const snap = await _col('sales_vehicles').where('clientPhone','==',phone).get();
-            vehicles = snap.docs.map(d => ({id:d.id,...d.data()}));
+            vehicles = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
         }
 
         // Load work orders
@@ -55,15 +55,15 @@ window._renderVehiclesTab = async function(deal) {
             const snap = await _col('sales_orders')
                 .where('type','==','work_order')
                 .where('clientId','==',clientId)
-                .orderBy('createdAt','desc').limit(20).get();
-            orders = snap.docs.map(d => ({id:d.id,...d.data()}));
+                .limit(20).get();
+            orders = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
         }
         if (!orders.length && phone) {
             const snap = await _col('sales_orders')
                 .where('type','==','work_order')
                 .where('clientPhone','==',phone)
-                .orderBy('createdAt','desc').limit(20).get();
-            orders = snap.docs.map(d => ({id:d.id,...d.data()}));
+                .limit(20).get();
+            orders = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
         }
 
         const totalSpent = orders.filter(o=>o.status==='paid'||o.status==='closed').reduce((s,o)=>s+(o.total||0),0);
@@ -147,8 +147,8 @@ window._renderPosHistoryTab = async function(deal) {
             const snap = await _col('sales_orders')
                 .where('type','==','receipt')
                 .where('clientName','==',clientName)
-                .orderBy('createdAt','desc').limit(30).get();
-            orders = snap.docs.map(d => ({id:d.id,...d.data()}));
+                .limit(30).get();
+            orders = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
         }
 
         const totalSpent = orders.reduce((s,o) => s+(o.total||0), 0);
@@ -222,15 +222,15 @@ window._renderRoutesHistoryTab = async function(deal) {
             const snap = await _col('sales_orders')
                 .where('type','==','route')
                 .where('clientId','==',clientId)
-                .orderBy('createdAt','desc').limit(20).get();
-            routes = snap.docs.map(d => ({id:d.id,...d.data()}));
+                .limit(20).get();
+            routes = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
         }
         if (!routes.length && clientName) {
             const snap = await _col('sales_orders')
                 .where('type','==','route')
                 .where('clientName','==',clientName)
-                .orderBy('createdAt','desc').limit(20).get();
-            routes = snap.docs.map(d => ({id:d.id,...d.data()}));
+                .limit(20).get();
+            routes = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
         }
 
         const totalRev = routes.reduce((s,r) => s+(r.total||0), 0);

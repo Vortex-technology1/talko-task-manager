@@ -6835,6 +6835,10 @@ window.crmMoveToStage = async function(dealId, newStage) {
     await _doStageChange(deal, newStage, oldStage);
 };
 
+// Виставляємо _filteredDeals для 77f-crm-mobile (навігація між угодами)
+// Ця функція враховує права доступу + активні фільтри
+window._filteredDealsForNav = function() { return _filteredDeals(); };
+
         window.TALKO.crm = {
             init:           window.initCRMModule,
             selectPipeline: window.crmSelectPipeline,
