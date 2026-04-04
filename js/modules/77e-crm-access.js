@@ -31,11 +31,16 @@ window.crmAccess = (function () {
         return r === 'owner' || r === 'superadmin' || window.isSuperAdmin;
     }
 
-    // Менеджер може редагувати тільки свої угоди; owner — будь-які
+    // Менеджер може редагувати угоду тільки якщо:
+    // - accessMode !== 'own' (всі угоди дозволені) АБО угода його
     function canEdit(deal) {
         if (canViewAll()) return true;
-        if (_role() === 'manager') return deal?.assigneeId === myUid() || deal?.creatorId === myUid();
-        return false;
+        if (_role() !== 'manager') return false;
+        const uid = myUid();
+        const isOwner = deal?.assigneeId === uid || deal?.creatorId === uid;
+        const mode = window.crm?.pipeline?.accessMode || 'all';
+        if (mode === 'own') return isOwner;
+        return true; // mode === 'all' — менеджер може редагувати будь-яку
     }
 
     // Видаляти можуть тільки owner / superadmin

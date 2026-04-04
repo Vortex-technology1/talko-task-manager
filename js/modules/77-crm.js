@@ -1569,16 +1569,18 @@ async function _doStageChange(deal, newStage, oldStage) {
         });
     }
     if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
-    // Склад: списання при закритті угоди "Виграно"
+    // Хуки зміни стадії — порядок важливий:
+    // 1. Авто-задачі (77c/77k) — першими, щоб задачі були до тригерів
+    if (typeof window.crmAutoTasksOnStageChange === 'function')
+        window.crmAutoTasksOnStageChange(deal, newStage);
+    // 2. Фінансовий bridge — один раз тут (НЕ дублюється в тригерах)
     if (newStage === 'won' && typeof window.whDealWon === 'function') {
         window.whDealWon(deal).catch(e => console.warn('[wh] deal_won hook', e.message));
     }
-    if (typeof window.crmAutoTasksOnStageChange === 'function')
-        window.crmAutoTasksOnStageChange(deal, newStage);
-    // ── Замовлення покупця (77m-crm-orders-bridge) ───────────
+    // 3. Замовлення покупця (77m)
     if (typeof window.crmOrdersBridgeOnStageChange === 'function')
         window.crmOrdersBridgeOnStageChange(deal, newStage).catch(e => console.warn('[77m]', e.message));
-    // ── Тригери ──────────────────────────────────────────────
+    // 4. Тригери (77l) — deal_won/deal_lost fired inside hook
     if (Array.isArray(window.crmTriggerHooks)) {
         window.crmTriggerHooks.forEach(fn => {
             try { fn(deal, newStage, oldStage); } catch(e) {}
@@ -1861,6 +1863,14 @@ window.crmOpenDeal = function(dealId) {
     crm.activeDealId = dealId;
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;
+
+    // Перевірка прав: менеджер з accessMode='own' може бачити тільки свої
+    if (window.crmAccess && !window.crmAccess.canEdit(deal)) {
+        if (window.showToast) showToast(window.t('noPermissionTask') || 'Немає доступу до цієї угоди', 'error');
+        crm.activeDealId = null;
+        return;
+    }
+
     document.getElementById('crmDealOverlay')?.remove();
 
     const stages = crm.pipeline?.stages || [];

@@ -68,6 +68,11 @@ const TALKO_EVENTS = {
     FORM_SUBMITTED:          'form.submitted',          // заявка з сайту → лід у CRM
     SITE_VISITED:            'site.visited',            // відвідування сайту
 
+    // CALLS
+    CALL_RECEIVED:           'call.received',           // дзвінок відповіли
+    CALL_MISSED:             'call.missed',             // пропущений дзвінок → задача
+    CALL_CALLBACK:           'call.callback',           // треба передзвонити → задача
+
     // BROADCAST
     BROADCAST_SENT:          'broadcast.sent',
     BROADCAST_FAILED:        'broadcast.failed',
