@@ -17212,6 +17212,604 @@ Bist du dabei?</div>
             homeworkLinkName: '→ AI-асистент копірайтингу для реклами',
             homeworkLinkName_ru: '→ AI-ассистент копирайтинга для рекламы',
         },
+
+        {
+            id: 108,
+            category: 'marketing',
+            title: 'МАТЕРІАЛИ ДЛЯ РЕКЛАМИ',
+            title_ru: 'МАТЕРИАЛЫ ДЛЯ РЕКЛАМЫ',
+            subtitle: 'Підготуй чорновики — AI перетворить їх у систему',
+            subtitle_ru: 'Подготовь черновики — AI превратит их в систему',
+            duration: 90,
+            videoLink: null,
+            materialsLink: null,
+            hideAiBlock: true,
+            lessonContent: `
+<style>
+.l108-intro{background:#fefce8;border:1px solid #fde68a;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.25rem;}
+.l108-intro-title{font-size:.72rem;font-weight:700;letter-spacing:.09em;color:#92400e;text-transform:uppercase;margin-bottom:.5rem;}
+.l108-intro p{font-size:.87rem;color:#78350f;line-height:1.65;margin:0 0 .4rem;}
+.l108-rules{display:flex;flex-direction:column;gap:.35rem;margin-top:.6rem;}
+.l108-rule{display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:#374151;line-height:1.5;}
+.l108-rule-ok{color:#16a34a;font-weight:700;flex-shrink:0;}
+.l108-rule-no{color:#dc2626;font-weight:700;flex-shrink:0;}
+.l108-section{margin-bottom:1.5rem;}
+.l108-section-hdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #e5e7eb;}
+.l108-section-num{width:26px;height:26px;background:#1d4ed8;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:.75rem;font-weight:700;flex-shrink:0;}
+.l108-section-title{font-size:.95rem;font-weight:700;color:#111827;}
+.l108-section-sub{font-size:.76rem;color:#6b7280;margin-left:.25rem;}
+.l108-field-wrap{margin-bottom:.65rem;}
+.l108-field-label{font-size:.77rem;font-weight:600;color:#374151;margin-bottom:.3rem;display:block;}
+.l108-field-hint{font-size:.71rem;color:#9ca3af;margin-bottom:.3rem;font-style:italic;}
+.l108-input{width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:8px;padding:.5rem .75rem;font-size:.84rem;color:#111827;background:white;resize:vertical;font-family:inherit;line-height:1.5;}
+.l108-input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15);}
+.l108-creative-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.l108-creative-card{border:1px solid #e5e7eb;border-radius:10px;padding:.75rem;}
+.l108-creative-num{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#6b7280;text-transform:uppercase;margin-bottom:.5rem;}
+.l108-tip{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.6rem .85rem;font-size:.81rem;color:#1e40af;margin-top:.5rem;line-height:1.55;}
+.l108-tip-icon{display:inline-flex;vertical-align:middle;margin-right:4px;}
+.l108-recommend{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.6rem .85rem;font-size:.82rem;color:#166534;margin-bottom:.65rem;}
+.l108-export-wrap{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;padding:1.1rem;text-align:center;margin-top:1.5rem;}
+.l108-export-btn{display:inline-flex;align-items:center;gap:.5rem;background:#16a34a;color:white;border:none;border-radius:8px;padding:.6rem 1.25rem;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;}
+.l108-export-btn:hover{background:#15803d;}
+.l108-export-hint{font-size:.75rem;color:#6b7280;margin-top:.6rem;}
+.l108-hw{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem 1.1rem;margin-top:1.5rem;}
+.l108-hw-title{display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:700;color:#166534;margin-bottom:.75rem;}
+.l108-hw-step{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.6rem;}
+.l108-hw-num{width:22px;height:22px;background:#16a34a;border-radius:50%;color:white;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.l108-hw-text{font-size:.84rem;color:#374151;line-height:1.55;}
+.l108-hw-text strong{color:#166534;}
+@media(max-width:560px){.l108-creative-grid{grid-template-columns:1fr;}}
+</style>
+
+<div class="l108-intro">
+<div class="l108-intro-title">Що робимо на цьому уроці</div>
+<p>На цьому етапі вам не потрібно робити ідеально. Ваше завдання — зібрати чорновий матеріал, з яким далі працюватиме AI.</p>
+<div class="l108-rules">
+<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не ускладнюйте — пишіть як думаєте</span></div>
+<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не переписуйте по 10 разів</span></div>
+<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не використовуйте AI на цьому етапі</span></div>
+<div class="l108-rule"><span class="l108-rule-ok">✅</span><span>Пишіть швидко — до 60–90 хв на все</span></div>
+<div class="l108-rule"><span class="l108-rule-ok">✅</span><span>Мета — зібрати матеріал, а не створити ідеальну рекламу</span></div>
+</div>
+</div>
+
+<!-- КРОК 0: ОСНОВА -->
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">0</div>
+<div class="l108-section-title">ОСНОВА <span class="l108-section-sub">— обов'язково перед початком</span></div>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Хто ваш клієнт?</label>
+<span class="l108-field-hint">Вік, стать, посада, ситуація в житті</span>
+<textarea class="l108-input" rows="2" id="f_client" placeholder="Наприклад: власник малого бізнесу, 35–50 років, замотаний операційкою"></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Яка у нього проблема?</label>
+<span class="l108-field-hint">Що болить прямо зараз</span>
+<textarea class="l108-input" rows="2" id="f_problem" placeholder="Наприклад: все тримається на ньому, немає часу, команда не працює без контролю"></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Що ви продаєте?</label>
+<textarea class="l108-input" rows="2" id="f_product" placeholder="Наприклад: програма систематизації бізнесу за 65 днів"></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Який результат отримає клієнт?</label>
+<textarea class="l108-input" rows="2" id="f_result" placeholder="Наприклад: бізнес працює без власника, прибуток зростає на 30–50%"></textarea>
+</div>
+</div>
+
+<!-- КРОК 1: КРЕАТИВИ -->
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">1</div>
+<div class="l108-section-title">ІДЕЇ ДЛЯ КАРТИНОК <span class="l108-section-sub">— мінімум 8 варіантів</span></div>
+</div>
+<div class="l108-tip">Опишіть що буде зображено на картинці і який текст на ній. Не дизайн — просто ідея.<br><strong>Приклад:</strong> власник сидить в хаосі документів / текст: "Все на мені"</div>
+<div class="l108-creative-grid" style="margin-top:.75rem;">
+${[1,2,3,4,5,6,7,8].map(i => `<div class="l108-creative-card">
+<div class="l108-creative-num">Креатив ${i}</div>
+<div class="l108-field-wrap" style="margin-bottom:.4rem;">
+<span class="l108-field-hint" style="margin-bottom:.25rem;display:block;">Що зображено</span>
+<textarea class="l108-input" rows="2" id="f_cr${i}_img" placeholder="Опис сцени або образу..."></textarea>
+</div>
+<div class="l108-field-wrap" style="margin-bottom:0;">
+<span class="l108-field-hint" style="margin-bottom:.25rem;display:block;">Текст на картинці</span>
+<textarea class="l108-input" rows="2" id="f_cr${i}_txt" placeholder="Текст..."></textarea>
+</div>
+</div>`).join('')}
+</div>
+</div>
+
+<!-- КРОК 2: ОГОЛОШЕННЯ -->
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">2</div>
+<div class="l108-section-title">ТЕКСТИ ОГОЛОШЕНЬ <span class="l108-section-sub">— 3–5 варіантів</span></div>
+</div>
+<div class="l108-tip">Напишіть так, як би пояснювали клієнту вживу. Один текст — одна думка.</div>
+${[1,2,3,4,5].map(i => `<div class="l108-field-wrap" style="margin-top:.65rem;">
+<label class="l108-field-label">Оголошення ${i}</label>
+<textarea class="l108-input" rows="3" id="f_ad${i}" placeholder="${i <= 3 ? 'Текст оголошення...' : 'Необов\'язково'}"></textarea>
+</div>`).join('')}
+</div>
+
+<!-- КРОК 3: ЗАГОЛОВКИ -->
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">3</div>
+<div class="l108-section-title">ЗАГОЛОВКИ <span class="l108-section-sub">— 5 варіантів, коротко в 1 рядок</span></div>
+</div>
+${[1,2,3,4,5].map(i => `<div class="l108-field-wrap">
+<label class="l108-field-label">Заголовок ${i}</label>
+<input type="text" class="l108-input" id="f_h${i}" placeholder="${i <= 3 ? 'Короткий заголовок...' : 'Необов\'язково'}" style="resize:none;">
+</div>`).join('')}
+</div>
+
+<!-- КРОК 4: ОПИСИ ПОСИЛАННЯ -->
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">4</div>
+<div class="l108-section-title">ОПИСИ ПОСИЛАННЯ <span class="l108-section-sub">— 3–5 варіантів, дуже коротко</span></div>
+</div>
+<div class="l108-tip">Приклади: "Покроковий план", "Безкоштовний розбір", "Готове рішення"</div>
+${[1,2,3,4,5].map(i => `<div class="l108-field-wrap" style="margin-top:.5rem;">
+<label class="l108-field-label">Опис ${i}</label>
+<input type="text" class="l108-input" id="f_desc${i}" placeholder="${i <= 3 ? 'Короткий опис...' : 'Необов\'язково'}" style="resize:none;">
+</div>`).join('')}
+</div>
+
+<!-- КРОК 5: КНОПКА -->
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">5</div>
+<div class="l108-section-title">ТЕКСТ КНОПКИ</div>
+</div>
+<div class="l108-recommend">✅ Рекомендація: використовуйте <strong>"Дізнатися більше"</strong> — універсально для більшості ніш і добре конвертує.</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Кнопка (якщо хочете інший варіант)</label>
+<input type="text" class="l108-input" id="f_btn" placeholder="Дізнатися більше" style="resize:none;">
+</div>
+</div>
+
+<!-- КРОК 6: ТЕКСТ ДЛЯ САЙТУ -->
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">6</div>
+<div class="l108-section-title">ТЕКСТ ДЛЯ САЙТУ <span class="l108-section-sub">— чорновик, відповісти на 5 питань</span></div>
+</div>
+<div class="l108-tip">Пишіть все в одному полі. Просто відповідайте на питання нижче одне за одним.<br>1. Що ви продаєте? 2. Для кого? 3. Яку проблему вирішуєте? 4. Який результат даєте? 5. Як це працює?</div>
+<div class="l108-field-wrap" style="margin-top:.65rem;">
+<textarea class="l108-input" rows="8" id="f_site" placeholder="Ми продаємо... Для... Проблема клієнта... Результат... Як це працює..."></textarea>
+</div>
+</div>
+
+<!-- КРОК 7: БОТ -->
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">7</div>
+<div class="l108-section-title">БОТ <span class="l108-section-sub">— чорновик логіки</span></div>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Привітальне повідомлення</label>
+<textarea class="l108-input" rows="2" id="f_bot_hello" placeholder="Що бот каже людині при першому контакті..."></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Питання 1</label>
+<textarea class="l108-input" rows="2" id="f_bot_q1" placeholder="Перше питання яке задає бот..."></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Питання 2</label>
+<textarea class="l108-input" rows="2" id="f_bot_q2" placeholder="Друге питання..."></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Питання 3</label>
+<textarea class="l108-input" rows="2" id="f_bot_q3" placeholder="Третє питання..."></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Що далі — після питань?</label>
+<textarea class="l108-input" rows="2" id="f_bot_next" placeholder="Наприклад: запис на дзвінок / надсилаємо результат / передаємо менеджеру..."></textarea>
+</div>
+</div>
+
+<!-- ЕКСПОРТ -->
+<div class="l108-export-wrap">
+<div style="font-size:.88rem;font-weight:600;color:#374151;margin-bottom:.5rem;">Заповнили всі поля?</div>
+<div style="font-size:.81rem;color:#6b7280;margin-bottom:.85rem;">Завантажте Excel з вашими відповідями — і завантажте його в Google Таблиці для ДЗ</div>
+<button class="l108-export-btn" onclick="window.l108ExportExcel()">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+Завантажити Excel
+</button>
+<div class="l108-export-hint">Після завантаження: відкрийте файл → завантажте в Google Таблиці → скопіюйте посилання → вставте в поле ДЗ нижче</div>
+</div>
+
+<script>
+window.l108ExportExcel = function() {
+  var rows = [
+    ["Блок / Поле", "Відповідь"],
+    ["ОСНОВА", ""],
+    ["Хто ваш клієнт?", document.getElementById("f_client").value || ""],
+    ["Яка у нього проблема?", document.getElementById("f_problem").value || ""],
+    ["Що ви продаєте?", document.getElementById("f_product").value || ""],
+    ["Який результат отримає клієнт?", document.getElementById("f_result").value || ""],
+    ["КРЕАТИВИ", ""],
+    ["Креатив 1 — що зображено", document.getElementById("f_cr1_img").value || ""],
+    ["Креатив 1 — текст на картинці", document.getElementById("f_cr1_txt").value || ""],
+    ["Креатив 2 — що зображено", document.getElementById("f_cr2_img").value || ""],
+    ["Креатив 2 — текст на картинці", document.getElementById("f_cr2_txt").value || ""],
+    ["Креатив 3 — що зображено", document.getElementById("f_cr3_img").value || ""],
+    ["Креатив 3 — текст на картинці", document.getElementById("f_cr3_txt").value || ""],
+    ["Креатив 4 — що зображено", document.getElementById("f_cr4_img").value || ""],
+    ["Креатив 4 — текст на картинці", document.getElementById("f_cr4_txt").value || ""],
+    ["Креатив 5 — що зображено", document.getElementById("f_cr5_img").value || ""],
+    ["Креатив 5 — текст на картинці", document.getElementById("f_cr5_txt").value || ""],
+    ["Креатив 6 — що зображено", document.getElementById("f_cr6_img").value || ""],
+    ["Креатив 6 — текст на картинці", document.getElementById("f_cr6_txt").value || ""],
+    ["Креатив 7 — що зображено", document.getElementById("f_cr7_img").value || ""],
+    ["Креатив 7 — текст на картинці", document.getElementById("f_cr7_txt").value || ""],
+    ["Креатив 8 — що зображено", document.getElementById("f_cr8_img").value || ""],
+    ["Креатив 8 — текст на картинці", document.getElementById("f_cr8_txt").value || ""],
+    ["ТЕКСТИ ОГОЛОШЕНЬ", ""],
+    ["Оголошення 1", document.getElementById("f_ad1").value || ""],
+    ["Оголошення 2", document.getElementById("f_ad2").value || ""],
+    ["Оголошення 3", document.getElementById("f_ad3").value || ""],
+    ["Оголошення 4", document.getElementById("f_ad4").value || ""],
+    ["Оголошення 5", document.getElementById("f_ad5").value || ""],
+    ["ЗАГОЛОВКИ", ""],
+    ["Заголовок 1", document.getElementById("f_h1").value || ""],
+    ["Заголовок 2", document.getElementById("f_h2").value || ""],
+    ["Заголовок 3", document.getElementById("f_h3").value || ""],
+    ["Заголовок 4", document.getElementById("f_h4").value || ""],
+    ["Заголовок 5", document.getElementById("f_h5").value || ""],
+    ["ОПИСИ ПОСИЛАННЯ", ""],
+    ["Опис 1", document.getElementById("f_desc1").value || ""],
+    ["Опис 2", document.getElementById("f_desc2").value || ""],
+    ["Опис 3", document.getElementById("f_desc3").value || ""],
+    ["Опис 4", document.getElementById("f_desc4").value || ""],
+    ["Опис 5", document.getElementById("f_desc5").value || ""],
+    ["ТЕКСТ КНОПКИ", ""],
+    ["Кнопка", document.getElementById("f_btn").value || "Дізнатися більше"],
+    ["ТЕКСТ ДЛЯ САЙТУ", ""],
+    ["Текст сайту (чорновик)", document.getElementById("f_site").value || ""],
+    ["БОТ", ""],
+    ["Привітальне повідомлення", document.getElementById("f_bot_hello").value || ""],
+    ["Питання 1", document.getElementById("f_bot_q1").value || ""],
+    ["Питання 2", document.getElementById("f_bot_q2").value || ""],
+    ["Питання 3", document.getElementById("f_bot_q3").value || ""],
+    ["Що далі", document.getElementById("f_bot_next").value || ""]
+  ];
+
+  var xml = '<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>';
+  xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">';
+  xml += '<Styles><Style ss:ID="header"><Font ss:Bold="1"/><Interior ss:Color="#1d4ed8" ss:Pattern="Solid"/><Font ss:Color="#FFFFFF" ss:Bold="1"/></Style>';
+  xml += '<Style ss:ID="section"><Font ss:Bold="1"/><Interior ss:Color="#f3f4f6" ss:Pattern="Solid"/></Style></Styles>';
+  xml += '<Worksheet ss:Name="Матеріали для реклами"><Table>';
+  xml += '<Column ss:Width="260"/><Column ss:Width="420"/>';
+
+  rows.forEach(function(row) {
+    var isHeader = row[1] === "" && row[0] !== "" && row[0] === rows[0][0];
+    var isSection = row[1] === "" && row[0] !== "" && row[0] !== rows[0][0];
+    var styleId = isHeader ? "header" : isSection ? "section" : "";
+    xml += "<Row>";
+    row.forEach(function(cell) {
+      var safe = String(cell).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+      xml += styleId ? '<Cell ss:StyleID="' + styleId + '"><Data ss:Type="String">' + safe + "</Data></Cell>"
+                     : "<Cell><Data ss:Type=\"String\">" + safe + "</Data></Cell>";
+    });
+    xml += "</Row>";
+  });
+
+  xml += "</Table></Worksheet></Workbook>";
+  var blob = new Blob([xml], {type:"application/vnd.ms-excel;charset=utf-8"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "materialy-dlya-reklamy.xls";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+</script>
+`,
+            lessonContent_ru: `
+<style>
+.l108-intro{background:#fefce8;border:1px solid #fde68a;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.25rem;}
+.l108-intro-title{font-size:.72rem;font-weight:700;letter-spacing:.09em;color:#92400e;text-transform:uppercase;margin-bottom:.5rem;}
+.l108-intro p{font-size:.87rem;color:#78350f;line-height:1.65;margin:0 0 .4rem;}
+.l108-rules{display:flex;flex-direction:column;gap:.35rem;margin-top:.6rem;}
+.l108-rule{display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:#374151;line-height:1.5;}
+.l108-rule-ok{color:#16a34a;font-weight:700;flex-shrink:0;}
+.l108-rule-no{color:#dc2626;font-weight:700;flex-shrink:0;}
+.l108-section{margin-bottom:1.5rem;}
+.l108-section-hdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #e5e7eb;}
+.l108-section-num{width:26px;height:26px;background:#1d4ed8;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:.75rem;font-weight:700;flex-shrink:0;}
+.l108-section-title{font-size:.95rem;font-weight:700;color:#111827;}
+.l108-section-sub{font-size:.76rem;color:#6b7280;margin-left:.25rem;}
+.l108-field-wrap{margin-bottom:.65rem;}
+.l108-field-label{font-size:.77rem;font-weight:600;color:#374151;margin-bottom:.3rem;display:block;}
+.l108-field-hint{font-size:.71rem;color:#9ca3af;margin-bottom:.3rem;font-style:italic;}
+.l108-input{width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:8px;padding:.5rem .75rem;font-size:.84rem;color:#111827;background:white;resize:vertical;font-family:inherit;line-height:1.5;}
+.l108-input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15);}
+.l108-creative-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.l108-creative-card{border:1px solid #e5e7eb;border-radius:10px;padding:.75rem;}
+.l108-creative-num{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#6b7280;text-transform:uppercase;margin-bottom:.5rem;}
+.l108-tip{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.6rem .85rem;font-size:.81rem;color:#1e40af;margin-top:.5rem;line-height:1.55;}
+.l108-recommend{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.6rem .85rem;font-size:.82rem;color:#166534;margin-bottom:.65rem;}
+.l108-export-wrap{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;padding:1.1rem;text-align:center;margin-top:1.5rem;}
+.l108-export-btn{display:inline-flex;align-items:center;gap:.5rem;background:#16a34a;color:white;border:none;border-radius:8px;padding:.6rem 1.25rem;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;}
+.l108-export-btn:hover{background:#15803d;}
+.l108-export-hint{font-size:.75rem;color:#6b7280;margin-top:.6rem;}
+.l108-hw{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem 1.1rem;margin-top:1.5rem;}
+.l108-hw-title{display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:700;color:#166534;margin-bottom:.75rem;}
+.l108-hw-step{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.6rem;}
+.l108-hw-num{width:22px;height:22px;background:#16a34a;border-radius:50%;color:white;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.l108-hw-text{font-size:.84rem;color:#374151;line-height:1.55;}
+.l108-hw-text strong{color:#166534;}
+@media(max-width:560px){.l108-creative-grid{grid-template-columns:1fr;}}
+</style>
+
+<div class="l108-intro">
+<div class="l108-intro-title">Что делаем на этом уроке</div>
+<p>На этом этапе вам не нужно делать идеально. Ваша задача — собрать черновой материал, с которым дальше будет работать AI.</p>
+<div class="l108-rules">
+<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не усложняйте — пишите как думаете</span></div>
+<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не переписывайте по 10 раз</span></div>
+<div class="l108-rule"><span class="l108-rule-no">⛔</span><span>Не используйте AI на этом этапе</span></div>
+<div class="l108-rule"><span class="l108-rule-ok">✅</span><span>Пишите быстро — до 60–90 мин на всё</span></div>
+<div class="l108-rule"><span class="l108-rule-ok">✅</span><span>Цель — собрать материал, а не создать идеальную рекламу</span></div>
+</div>
+</div>
+
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">0</div>
+<div class="l108-section-title">ОСНОВА <span class="l108-section-sub">— обязательно перед началом</span></div>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Кто ваш клиент?</label>
+<span class="l108-field-hint">Возраст, пол, должность, жизненная ситуация</span>
+<textarea class="l108-input" rows="2" id="f_client" placeholder="Например: владелец малого бизнеса, 35–50 лет, замотан операционкой"></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Какая у него проблема?</label>
+<span class="l108-field-hint">Что болит прямо сейчас</span>
+<textarea class="l108-input" rows="2" id="f_problem" placeholder="Например: всё держится на нём, нет времени, команда не работает без контроля"></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Что вы продаёте?</label>
+<textarea class="l108-input" rows="2" id="f_product" placeholder="Например: программа систематизации бизнеса за 65 дней"></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Какой результат получит клиент?</label>
+<textarea class="l108-input" rows="2" id="f_result" placeholder="Например: бизнес работает без владельца, прибыль растёт на 30–50%"></textarea>
+</div>
+</div>
+
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">1</div>
+<div class="l108-section-title">ИДЕИ ДЛЯ КАРТИНОК <span class="l108-section-sub">— минимум 8 вариантов</span></div>
+</div>
+<div class="l108-tip">Опишите что будет изображено на картинке и какой текст на ней. Не дизайн — просто идея.<br><strong>Пример:</strong> владелец сидит в хаосе документов / текст: "Всё на мне"</div>
+<div class="l108-creative-grid" style="margin-top:.75rem;">
+${[1,2,3,4,5,6,7,8].map(i => `<div class="l108-creative-card">
+<div class="l108-creative-num">Креатив ${i}</div>
+<div class="l108-field-wrap" style="margin-bottom:.4rem;">
+<span class="l108-field-hint" style="margin-bottom:.25rem;display:block;">Что изображено</span>
+<textarea class="l108-input" rows="2" id="f_cr${i}_img" placeholder="Описание сцены или образа..."></textarea>
+</div>
+<div class="l108-field-wrap" style="margin-bottom:0;">
+<span class="l108-field-hint" style="margin-bottom:.25rem;display:block;">Текст на картинке</span>
+<textarea class="l108-input" rows="2" id="f_cr${i}_txt" placeholder="Текст..."></textarea>
+</div>
+</div>`).join('')}
+</div>
+</div>
+
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">2</div>
+<div class="l108-section-title">ТЕКСТЫ ОБЪЯВЛЕНИЙ <span class="l108-section-sub">— 3–5 вариантов</span></div>
+</div>
+<div class="l108-tip">Напишите так, как бы объясняли клиенту вживую. Один текст — одна мысль.</div>
+${[1,2,3,4,5].map(i => `<div class="l108-field-wrap" style="margin-top:.65rem;">
+<label class="l108-field-label">Объявление ${i}</label>
+<textarea class="l108-input" rows="3" id="f_ad${i}" placeholder="${i <= 3 ? 'Текст объявления...' : 'Необязательно'}"></textarea>
+</div>`).join('')}
+</div>
+
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">3</div>
+<div class="l108-section-title">ЗАГОЛОВКИ <span class="l108-section-sub">— 5 вариантов, коротко в 1 строку</span></div>
+</div>
+${[1,2,3,4,5].map(i => `<div class="l108-field-wrap">
+<label class="l108-field-label">Заголовок ${i}</label>
+<input type="text" class="l108-input" id="f_h${i}" placeholder="${i <= 3 ? 'Короткий заголовок...' : 'Необязательно'}" style="resize:none;">
+</div>`).join('')}
+</div>
+
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">4</div>
+<div class="l108-section-title">ОПИСАНИЯ ССЫЛКИ <span class="l108-section-sub">— 3–5 вариантов, очень коротко</span></div>
+</div>
+<div class="l108-tip">Примеры: "Пошаговый план", "Бесплатный разбор", "Готовое решение"</div>
+${[1,2,3,4,5].map(i => `<div class="l108-field-wrap" style="margin-top:.5rem;">
+<label class="l108-field-label">Описание ${i}</label>
+<input type="text" class="l108-input" id="f_desc${i}" placeholder="${i <= 3 ? 'Короткое описание...' : 'Необязательно'}" style="resize:none;">
+</div>`).join('')}
+</div>
+
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">5</div>
+<div class="l108-section-title">ТЕКСТ КНОПКИ</div>
+</div>
+<div class="l108-recommend">✅ Рекомендация: используйте <strong>"Узнать подробнее"</strong> — универсально для большинства ниш и хорошо конвертирует.</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Кнопка (если хотите другой вариант)</label>
+<input type="text" class="l108-input" id="f_btn" placeholder="Узнать подробнее" style="resize:none;">
+</div>
+</div>
+
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">6</div>
+<div class="l108-section-title">ТЕКСТ ДЛЯ САЙТА <span class="l108-section-sub">— черновик, ответить на 5 вопросов</span></div>
+</div>
+<div class="l108-tip">Пишите всё в одном поле. Просто отвечайте на вопросы ниже по очереди.<br>1. Что вы продаёте? 2. Для кого? 3. Какую проблему решаете? 4. Какой результат даёте? 5. Как это работает?</div>
+<div class="l108-field-wrap" style="margin-top:.65rem;">
+<textarea class="l108-input" rows="8" id="f_site" placeholder="Мы продаём... Для... Проблема клиента... Результат... Как это работает..."></textarea>
+</div>
+</div>
+
+<div class="l108-section">
+<div class="l108-section-hdr">
+<div class="l108-section-num">7</div>
+<div class="l108-section-title">БОТ <span class="l108-section-sub">— черновик логики</span></div>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Приветственное сообщение</label>
+<textarea class="l108-input" rows="2" id="f_bot_hello" placeholder="Что бот говорит человеку при первом контакте..."></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Вопрос 1</label>
+<textarea class="l108-input" rows="2" id="f_bot_q1" placeholder="Первый вопрос который задаёт бот..."></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Вопрос 2</label>
+<textarea class="l108-input" rows="2" id="f_bot_q2" placeholder="Второй вопрос..."></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Вопрос 3</label>
+<textarea class="l108-input" rows="2" id="f_bot_q3" placeholder="Третий вопрос..."></textarea>
+</div>
+<div class="l108-field-wrap">
+<label class="l108-field-label">Что дальше — после вопросов?</label>
+<textarea class="l108-input" rows="2" id="f_bot_next" placeholder="Например: запись на звонок / отправляем результат / передаём менеджеру..."></textarea>
+</div>
+</div>
+
+<div class="l108-export-wrap">
+<div style="font-size:.88rem;font-weight:600;color:#374151;margin-bottom:.5rem;">Заполнили все поля?</div>
+<div style="font-size:.81rem;color:#6b7280;margin-bottom:.85rem;">Скачайте Excel с вашими ответами — и загрузите его в Google Таблицы для ДЗ</div>
+<button class="l108-export-btn" onclick="window.l108ExportExcel()">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+Скачать Excel
+</button>
+<div class="l108-export-hint">После скачивания: откройте файл → загрузите в Google Таблицы → скопируйте ссылку → вставьте в поле ДЗ ниже</div>
+</div>
+
+<script>
+window.l108ExportExcel = function() {
+  var rows = [
+    ["Блок / Поле", "Ответ"],
+    ["ОСНОВА", ""],
+    ["Кто ваш клиент?", document.getElementById("f_client").value || ""],
+    ["Какая у него проблема?", document.getElementById("f_problem").value || ""],
+    ["Что вы продаёте?", document.getElementById("f_product").value || ""],
+    ["Какой результат получит клиент?", document.getElementById("f_result").value || ""],
+    ["КРЕАТИВЫ", ""],
+    ["Креатив 1 — что изображено", document.getElementById("f_cr1_img").value || ""],
+    ["Креатив 1 — текст на картинке", document.getElementById("f_cr1_txt").value || ""],
+    ["Креатив 2 — что изображено", document.getElementById("f_cr2_img").value || ""],
+    ["Креатив 2 — текст на картинке", document.getElementById("f_cr2_txt").value || ""],
+    ["Креатив 3 — что изображено", document.getElementById("f_cr3_img").value || ""],
+    ["Креатив 3 — текст на картинке", document.getElementById("f_cr3_txt").value || ""],
+    ["Креатив 4 — что изображено", document.getElementById("f_cr4_img").value || ""],
+    ["Креатив 4 — текст на картинке", document.getElementById("f_cr4_txt").value || ""],
+    ["Креатив 5 — что изображено", document.getElementById("f_cr5_img").value || ""],
+    ["Креатив 5 — текст на картинке", document.getElementById("f_cr5_txt").value || ""],
+    ["Креатив 6 — что изображено", document.getElementById("f_cr6_img").value || ""],
+    ["Креатив 6 — текст на картинке", document.getElementById("f_cr6_txt").value || ""],
+    ["Креатив 7 — что изображено", document.getElementById("f_cr7_img").value || ""],
+    ["Креатив 7 — текст на картинке", document.getElementById("f_cr7_txt").value || ""],
+    ["Креатив 8 — что изображено", document.getElementById("f_cr8_img").value || ""],
+    ["Креатив 8 — текст на картинке", document.getElementById("f_cr8_txt").value || ""],
+    ["ТЕКСТЫ ОБЪЯВЛЕНИЙ", ""],
+    ["Объявление 1", document.getElementById("f_ad1").value || ""],
+    ["Объявление 2", document.getElementById("f_ad2").value || ""],
+    ["Объявление 3", document.getElementById("f_ad3").value || ""],
+    ["Объявление 4", document.getElementById("f_ad4").value || ""],
+    ["Объявление 5", document.getElementById("f_ad5").value || ""],
+    ["ЗАГОЛОВКИ", ""],
+    ["Заголовок 1", document.getElementById("f_h1").value || ""],
+    ["Заголовок 2", document.getElementById("f_h2").value || ""],
+    ["Заголовок 3", document.getElementById("f_h3").value || ""],
+    ["Заголовок 4", document.getElementById("f_h4").value || ""],
+    ["Заголовок 5", document.getElementById("f_h5").value || ""],
+    ["ОПИСАНИЯ ССЫЛКИ", ""],
+    ["Описание 1", document.getElementById("f_desc1").value || ""],
+    ["Описание 2", document.getElementById("f_desc2").value || ""],
+    ["Описание 3", document.getElementById("f_desc3").value || ""],
+    ["Описание 4", document.getElementById("f_desc4").value || ""],
+    ["Описание 5", document.getElementById("f_desc5").value || ""],
+    ["ТЕКСТ КНОПКИ", ""],
+    ["Кнопка", document.getElementById("f_btn").value || "Узнать подробнее"],
+    ["ТЕКСТ ДЛЯ САЙТА", ""],
+    ["Текст сайта (черновик)", document.getElementById("f_site").value || ""],
+    ["БОТ", ""],
+    ["Приветственное сообщение", document.getElementById("f_bot_hello").value || ""],
+    ["Вопрос 1", document.getElementById("f_bot_q1").value || ""],
+    ["Вопрос 2", document.getElementById("f_bot_q2").value || ""],
+    ["Вопрос 3", document.getElementById("f_bot_q3").value || ""],
+    ["Что дальше", document.getElementById("f_bot_next").value || ""]
+  ];
+
+  var xml = '<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>';
+  xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">';
+  xml += '<Styles><Style ss:ID="header"><Font ss:Bold="1"/><Interior ss:Color="#1d4ed8" ss:Pattern="Solid"/><Font ss:Color="#FFFFFF" ss:Bold="1"/></Style>';
+  xml += '<Style ss:ID="section"><Font ss:Bold="1"/><Interior ss:Color="#f3f4f6" ss:Pattern="Solid"/></Style></Styles>';
+  xml += '<Worksheet ss:Name="Материалы для рекламы"><Table>';
+  xml += '<Column ss:Width="260"/><Column ss:Width="420"/>';
+
+  rows.forEach(function(row) {
+    var isHeader = row[1] === "" && row[0] !== "" && row[0] === rows[0][0];
+    var isSection = row[1] === "" && row[0] !== "" && row[0] !== rows[0][0];
+    var styleId = isHeader ? "header" : isSection ? "section" : "";
+    xml += "<Row>";
+    row.forEach(function(cell) {
+      var safe = String(cell).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+      xml += styleId ? '<Cell ss:StyleID="' + styleId + '"><Data ss:Type="String">' + safe + "</Data></Cell>"
+                     : "<Cell><Data ss:Type=\"String\">" + safe + "</Data></Cell>";
+    });
+    xml += "</Row>";
+  });
+
+  xml += "</Table></Worksheet></Workbook>";
+  var blob = new Blob([xml], {type:"application/vnd.ms-excel;charset=utf-8"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "materialy-dlya-reklamy.xls";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+</script>
+`,
+            homework: `<ol style="padding-left:1.25rem;font-size:.88rem;color:#374151;line-height:1.9;">
+<li>Заповни всі поля в уроці вище.</li>
+<li>Натисни <strong>"Завантажити Excel"</strong> — збережи файл.</li>
+<li>Відкрий <a href="https://sheets.google.com" target="_blank" style="color:#1d4ed8;">Google Таблиці</a> → завантаж файл (Файл → Імпорт).</li>
+<li>Налаштуй доступ: <strong>Усі, хто має посилання — можуть переглядати</strong>.</li>
+<li>Скопіюй посилання і встав його нижче як відповідь на ДЗ.</li>
+</ol>`,
+            homework_ru: `<ol style="padding-left:1.25rem;font-size:.88rem;color:#374151;line-height:1.9;">
+<li>Заполни все поля в уроке выше.</li>
+<li>Нажми <strong>"Скачать Excel"</strong> — сохрани файл.</li>
+<li>Открой <a href="https://sheets.google.com" target="_blank" style="color:#1d4ed8;">Google Таблицы</a> → загрузи файл (Файл → Импорт).</li>
+<li>Настрой доступ: <strong>Все, у кого есть ссылка — могут просматривать</strong>.</li>
+<li>Скопируй ссылку и вставь её ниже как ответ на ДЗ.</li>
+</ol>`,
+            homeworkLink: null,
+            homeworkLinkName: null,
+            homeworkLinkName_ru: null,
+        },
     ];
 
     // Підключаємо маркетинг уроки до головного масиву
