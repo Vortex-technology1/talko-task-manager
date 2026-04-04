@@ -48,19 +48,19 @@ service cloud.firestore {
     }
 
     function hasTabAccess(companyId, tabKey) {
-      // Спочатку швидкі перевірки без get()
-      if (!isAuthenticated()) return false;
-      if (isSuperAdmin()) return true;
-      if (!exists(/databases/$(database)/documents/companies/$(companyId)/users/$(userId()))) return false;
-      // Один get() для перевірки і ролі і allowedTabs
-      let uDoc = getUserDoc(companyId).data;
-      if (uDoc.role in ['owner', 'admin', 'manager']) return true;
-      // employee: перевіряємо allowedTabs
-      // Якщо поля немає або null — доступ є (старий режим, бачить все)
-      // Якщо поле є (навіть порожній масив []) — перевіряємо наявність табу
-      if (!('allowedTabs' in uDoc) || uDoc.allowedTabs == null) return true;
-      // allowedTabs встановлено — перевіряємо конкретний таб
-      return uDoc.allowedTabs.size() > 0 && uDoc.allowedTabs.hasAny([tabKey]);
+      return isAuthenticated() && (
+        isSuperAdmin() ||
+        (
+          exists(/databases/$(database)/documents/companies/$(companyId)/users/$(userId())) &&
+          (
+            getUserDoc(companyId).data.role in ['owner', 'admin', 'manager'] ||
+            !('allowedTabs' in getUserDoc(companyId).data) ||
+            getUserDoc(companyId).data.allowedTabs == null ||
+            (getUserDoc(companyId).data.allowedTabs.size() > 0 &&
+             getUserDoc(companyId).data.allowedTabs.hasAny([tabKey]))
+          )
+        )
+      );
     }
 
     function isValidString(field, maxLength) {
