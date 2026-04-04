@@ -234,7 +234,7 @@ window.renderCrmTodo = function() {
                 <div style="font-size:2rem;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                 <div style="font-weight:600;color:#374151;">${_i18n.allDone}</div>
                 <div style="font-size:0.82rem;margin-top:0.25rem;">${_i18n.noLeads}</div>
-                <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">${_i18n.totalCrm}${window.crm&&window.crm.deals?window.crm.deals.length:0} лидов</div>
+                <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">${_i18n.totalCrm}${window.crm&&window.crm.deals?window.crm.deals.length:0}</div>
                 <button onclick="crmOpenCreateDeal()" style="margin-top:0.75rem;background:#22c55e;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Додати лід</button>
                 ${['owner','admin'].includes(window.currentUserData?.role) ? '<button onclick="_crmTodoAddTestDeals()" style="margin-top:0.5rem;margin-left:0.5rem;background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:8px 16px;font-size:0.82rem;cursor:pointer;">+ Тестові ліди</button>' : ''}
               </div>`
@@ -261,6 +261,7 @@ function _renderRow(d, i) {
     const _confirmed  = _rl==='ru'?'Подтверждено':_rl==='en'?'Confirmed':'Підтверджено';
     const _confirm    = _rl==='ru'?'Подтвердить':_rl==='en'?'Confirm':'Підтвердити';
     const _consult    = _rl==='ru'?'Консультация':_rl==='en'?'Consultation':'Консультація';
+    const _newDate    = _rl==='ru'?'Новая':_rl==='en'?'New':'Нова';
 
     const p         = _priority(d);
     const fmt       = _fmtDate(d.nextContactDate);
@@ -347,7 +348,7 @@ function _renderRow(d, i) {
       <div style="min-width:72px;flex-shrink:0;">
         <div style="background:${dateBg};border-radius:8px;padding:4px 8px;text-align:center;">
           <div style="font-size:0.73rem;font-weight:700;color:${dateClr};white-space:nowrap;line-height:1.2;">
-            ${fmt?fmt.label:_i18n.newDate}
+            ${fmt?fmt.label:_newDate}
           </div>
           ${timeTag}
         </div>
