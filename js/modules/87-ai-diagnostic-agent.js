@@ -331,12 +331,20 @@ async function _enrichWithAI(signals, ctx) {
     try {
         const prompt = _buildAIPrompt(signals, ctx);
 
-        // Отримуємо Firebase ID token для авторизації
+        // Отримуємо Firebase ID token для авторизації — обов'язково
         let _idToken = '';
         try {
             const _user = firebase.auth().currentUser;
-            if (_user) _idToken = await _user.getIdToken();
-        } catch(e) { console.warn('[ai-diagnostic] getIdToken:', e.message); }
+            if (_user) {
+                _idToken = await _user.getIdToken();
+            } else {
+                console.warn('[ai-diagnostic] Користувач не авторизований — діагностика пропущена');
+                return null;
+            }
+        } catch(e) {
+            console.warn('[ai-diagnostic] getIdToken failed:', e.message);
+            return null;
+        }
 
         // systemPrompt=null → воркер бере промпт з адмінки (агент 'diagnostic_agent')
         // temperature=0.3 — важливо для стабільного JSON виводу
@@ -344,7 +352,7 @@ async function _enrichWithAI(signals, ctx) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                ...(_idToken ? { 'Authorization': 'Bearer ' + _idToken } : {}),
+                'Authorization': 'Bearer ' + _idToken,
             },
             body: JSON.stringify({
                 companyId:    window.currentCompanyId,

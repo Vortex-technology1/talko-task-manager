@@ -96,20 +96,31 @@ async function _callAI() {
     const typingId = 'typing_' + Date.now();
     _appendTyping(typingId);
 
-    // Додаємо контекст до першого повідомлення якщо є
+    // FIX: контекст (метрики/патерни) передаємо через systemPrompt — так він
+    // присутній у КОЖНОМУ повідомленні чату, а не тільки в першому.
+    // Пріоритет: явний systemPrompt з виклику → додаємо контекст як префікс.
+    // Якщо systemPrompt null — воркер сам підтягне промпт агента з адмінки,
+    // тому контекст додаємо окремим system повідомленням через messages.
     let messages = [..._chatHistory];
-    if (_chatContext && messages.length === 1) {
-        messages = [{
-            role: 'user',
-            content: _chatContext + '\n\n---\n\n' + messages[0].content
-        }];
+    let effectiveSystemPrompt = _chatSystemPrompt;
+
+    if (_chatContext) {
+        const contextBlock = `=== ДАНІ ДЛЯ АНАЛІЗУ ===\n${_chatContext}\n=== КІНЕЦЬ ДАНИХ ===`;
+        if (effectiveSystemPrompt) {
+            // Є явний system prompt — додаємо контекст на початок
+            effectiveSystemPrompt = contextBlock + '\n\n' + effectiveSystemPrompt;
+        } else {
+            // System prompt береться з адмінки (null) — вставляємо контекст
+            // як перше system повідомлення в messages (воркер прибере дублі)
+            messages = [{ role: 'system', content: contextBlock }, ...messages];
+        }
     }
 
     try {
         const reply = await window.aiProxy({
             messages:     messages,
-            systemPrompt: _chatSystemPrompt,
-            model:        null,        // воркер сам візьме модель з налаштувань агента в адмінці
+            systemPrompt: effectiveSystemPrompt,
+            model:        null,     // воркер бере модель з налаштувань агента в адмінці
             maxTokens:    _chatMaxTokens,
             module:       _chatModule,
         });

@@ -1080,6 +1080,122 @@ async function handleGenerateImage(request, env) {
     }
 }
 
+// ════════════════════════════════════════════════════════════
+// SHARED AI CALLER — єдина точка виклику OpenAI / Anthropic
+// Використовується в handleAiProxy, handleAiCrm, handleFunnelAi
+// ════════════════════════════════════════════════════════════
+async function _callProviderAI({ provider, apiKey, model, systemPrompt, messages, maxTokens = 800, temperature }) {
+    const cleanMessages = messages
+        .filter(m => m && m.role && m.content != null && m.content !== '')
+        .map(m => ({ role: m.role, content: String(m.content) }));
+
+    // Якщо systemPrompt не переданий явно — витягуємо з messages (якщо є)
+    const systemFromMessages = cleanMessages.find(m => m.role === 'system');
+    const nonSystemMessages = cleanMessages.filter(m => m.role !== 'system');
+
+    // Об'єднуємо: systemPrompt (агент з адмінки) + context block з messages
+    // Порядок: context → агентський промпт (промпт завжди останній — щоб AI слідував йому)
+    let effectiveSystem = '';
+    if (systemFromMessages?.content && systemPrompt) {
+        effectiveSystem = systemFromMessages.content + '\n\n' + systemPrompt;
+    } else {
+        effectiveSystem = systemPrompt || systemFromMessages?.content || '';
+    }
+
+    if (provider === 'anthropic') {
+        const r = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: model || 'claude-haiku-4-5-20251001',
+                max_tokens: maxTokens,
+                ...(temperature !== undefined ? { temperature: parseFloat(temperature) } : {}),
+                ...(effectiveSystem ? { system: effectiveSystem } : {}),
+                messages: nonSystemMessages,
+            }),
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error?.message || 'Anthropic error ' + r.status);
+        return d.content?.[0]?.text || '';
+    } else {
+        const finalMessages = effectiveSystem
+            ? [{ role: 'system', content: effectiveSystem }, ...nonSystemMessages]
+            : nonSystemMessages;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 25000);
+        try {
+            const r = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: model || 'gpt-4o-mini',
+                    messages: finalMessages,
+                    max_tokens: maxTokens,
+                    ...(temperature !== undefined ? { temperature: parseFloat(temperature) } : {}),
+                }),
+                signal: controller.signal,
+            });
+            clearTimeout(timeout);
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error?.message || 'OpenAI error ' + r.status);
+            return d.choices?.[0]?.message?.content || '';
+        } catch(e) {
+            clearTimeout(timeout);
+            if (e.name === 'AbortError') throw new Error('OpenAI timeout');
+            throw e;
+        }
+    }
+}
+
+// ════════════════════════════════════════════════════════════
+// SHARED KEY RESOLVER — читає ключ і провайдер з Firestore/env
+// Повертає { apiKey, provider, model } з пріоритетом:
+//   1. settings/platform (адмінка)
+//   2. companies/{id}/settings/ai (ключ компанії)
+//   3. env Cloudflare (fallback)
+// Якщо передати agentKey — також повертає агентський model і systemPrompt
+// ════════════════════════════════════════════════════════════
+async function _resolveAiConfig({ companyId, agentKey, token, env }) {
+    let apiKey = '';
+    let provider = 'openai';
+    let model = null;
+    let systemPrompt = null;
+
+    try {
+        const saDoc = await fsGet('settings/platform', token);
+        if (saDoc?.fields) {
+            const sa = fFields(saDoc.fields);
+            if (sa.openaiApiKey)    { apiKey = sa.openaiApiKey;    provider = 'openai'; }
+            if (sa.anthropicApiKey) { apiKey = sa.anthropicApiKey; provider = 'anthropic'; }
+            if (agentKey && sa.agents?.[agentKey]?.systemPrompt) systemPrompt = sa.agents[agentKey].systemPrompt;
+            if (agentKey && sa.agents?.[agentKey]?.model)        model        = sa.agents[agentKey].model;
+        }
+
+        if (companyId) {
+            const cDoc = await fsGet(`companies/${companyId}/settings/ai`, token);
+            if (cDoc?.fields) {
+                const cs = fFields(cDoc.fields);
+                if (cs.anthropicApiKey) { apiKey = cs.anthropicApiKey; provider = 'anthropic'; }
+                else if (cs.openaiApiKey) { apiKey = cs.openaiApiKey; provider = 'openai'; }
+                if (cs.model) model = cs.model;
+            }
+        }
+    } catch(e) { /* fallback */ }
+
+    if (!apiKey) {
+        if (env.OPENAI_API_KEY)    { apiKey = env.OPENAI_API_KEY;    provider = 'openai'; }
+        else if (env.ANTHROPIC_API_KEY) { apiKey = env.ANTHROPIC_API_KEY; provider = 'anthropic'; }
+    }
+
+    // Нормалізація моделі під провайдера
+    if (model) {
+        if (provider === 'anthropic' && model.startsWith('gpt'))    model = 'claude-haiku-4-5-20251001';
+        if (provider === 'openai'    && model.startsWith('claude')) model = 'gpt-4o-mini';
+    }
+
+    return { apiKey, provider, model, systemPrompt };
+}
+
 async function handleAiProxy(request, env) {
     if (request.method!=='POST') return json({error:'Method not allowed'},405);
     let body;
@@ -1087,9 +1203,7 @@ async function handleAiProxy(request, env) {
 
     const authHeader = request.headers.get('Authorization')||'';
     if (!authHeader.startsWith('Bearer ')) return json({error:'Unauthorized'},401);
-
-    const idToken = authHeader.slice(7);
-    const user = await verifyIdToken(idToken, env);
+    const user = await verifyIdToken(authHeader.slice(7), env);
     if (!user) return json({error:'Invalid token'},401);
 
     const { messages=[], model, systemPrompt, companyId, module:mod, maxTokens, temperature } = body;
@@ -1097,110 +1211,30 @@ async function handleAiProxy(request, env) {
     let token;
     try { token = await getToken(env); } catch(e) { return json({error:'Firebase error'},500); }
 
-    // Get AI settings from Firestore
-    // Пріоритет ключів: 1) компанія (Firestore) → 2) superadmin (Firestore/адмінка) → 3) env (Cloudflare)
-    let apiKey = '';
-    let provider = 'openai';
-    let finalModel = model || 'gpt-4o-mini';
-    let finalSystemPrompt = systemPrompt || '';
+    // Вирішуємо ключ, провайдер, модель і промпт агента через спільну функцію
+    const cfg = await _resolveAiConfig({ companyId, agentKey: mod, token, env });
+    if (!cfg.apiKey) return json({error:'No AI API key configured'},500);
+
+    // systemPrompt з тіла запиту перевизначає агентський (якщо передано явно)
+    const finalSystemPrompt = systemPrompt || cfg.systemPrompt || '';
+    // model з тіла перевизначає агентський (якщо передано явно і не null)
+    const finalModel = model !== null && model !== undefined ? model : (cfg.model || null);
 
     try {
-        // 1. Читаємо settings/platform — там ключ з адмінки і промпти агентів
-        const saDoc = await fsGet('settings/platform', token);
-        if (saDoc?.fields) {
-            const sa = fFields(saDoc.fields);
-            // Ключ з адмінки (пріоритет над env)
-            if (sa.openaiApiKey) { apiKey = sa.openaiApiKey; provider = 'openai'; }
-            if (sa.anthropicApiKey) { apiKey = sa.anthropicApiKey; provider = 'anthropic'; }
-            // Агентський промпт і модель — читаємо завжди незалежно від ключа
-            if (mod && sa.agents?.[mod]?.systemPrompt) finalSystemPrompt = sa.agents[mod].systemPrompt;
-            if (mod && sa.agents?.[mod]?.model) finalModel = sa.agents[mod].model;
-        }
-
-        // 2. Компанія може перевизначити ключ (свій ключ компанії)
-        if (companyId) {
-            const cDoc = await fsGet(`companies/${companyId}/settings/ai`, token);
-            if (cDoc?.fields) {
-                const cs = fFields(cDoc.fields);
-                if (cs.anthropicApiKey) { apiKey = cs.anthropicApiKey; provider = 'anthropic'; }
-                else if (cs.openaiApiKey) { apiKey = cs.openaiApiKey; provider = 'openai'; }
-                if (cs.model) finalModel = cs.model;
-            }
-        }
-    } catch(e) { /* fallback to env */ }
-
-    // 3. Fallback — env змінні Cloudflare (якщо в адмінці ключ не встановлено)
-    if (!apiKey) {
-        if (env.OPENAI_API_KEY) { apiKey = env.OPENAI_API_KEY; provider = 'openai'; }
-        else if (env.ANTHROPIC_API_KEY) { apiKey = env.ANTHROPIC_API_KEY; provider = 'anthropic'; }
+        const text = await _callProviderAI({
+            provider: cfg.provider,
+            apiKey:   cfg.apiKey,
+            model:    finalModel,
+            systemPrompt: finalSystemPrompt,
+            messages,
+            maxTokens: maxTokens || 2048,
+            temperature,
+        });
+        return json({ text, choices: [{ message: { role: 'assistant', content: text } }] });
+    } catch(e) {
+        if (e.message === 'OpenAI timeout') return json({error:'OpenAI timeout'},504);
+        return json({error: e.message}, 500);
     }
-
-    if (!apiKey) return json({error:'No AI API key configured'},500);
-
-    // FIX: нормалізуємо модель під провайдера — не можна відправити gpt-* на Anthropic
-    const isGptModel = finalModel && finalModel.startsWith('gpt');
-    const isClaudeModel = finalModel && finalModel.startsWith('claude');
-    if (provider === 'anthropic' && isGptModel) {
-        finalModel = 'claude-haiku-4-5-20251001'; // fallback для Anthropic
-    }
-    if (provider === 'openai' && isClaudeModel) {
-        finalModel = 'gpt-4o-mini'; // fallback для OpenAI
-    }
-
-    // Clean messages — remove null content
-    const cleanMessages = messages
-        .filter(m => m && m.role && m.content != null && m.content !== '')
-        .map(m => ({ role: m.role, content: String(m.content) }));
-
-    const finalMessages = finalSystemPrompt
-        ? [{ role:'system', content: String(finalSystemPrompt) }, ...cleanMessages.filter(m=>m.role!=='system')]
-        : cleanMessages;
-
-    try {
-        let aiResp;
-        if (provider==='anthropic') {
-            const r = await fetch('https://api.anthropic.com/v1/messages', {
-                method:'POST',
-                headers:{ 'x-api-key':apiKey, 'anthropic-version':'2023-06-01', 'Content-Type':'application/json' },
-                body: JSON.stringify({
-                    model: finalModel||'claude-sonnet-4-20250514',
-                    max_tokens: maxTokens||4096,
-                    ...(temperature !== undefined ? { temperature: parseFloat(temperature) } : {}),
-                    system: finalSystemPrompt||undefined,
-                    messages: messages.filter(m=>m.role!=='system'),
-                }),
-            });
-            const d = await r.json();
-            if (!r.ok) return json({error:d.error?.message||'Anthropic error'},500);
-            aiResp = { choices:[{ message:{ role:'assistant', content:d.content?.[0]?.text||'' } }] };
-        } else {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 25000);
-            try {
-                const r = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method:'POST',
-                    headers:{ Authorization:`Bearer ${apiKey}`, 'Content-Type':'application/json' },
-                    body: JSON.stringify({
-                        model: finalModel||'gpt-4o-mini',
-                        messages: finalMessages,
-                        max_tokens: maxTokens||2048,
-                        ...(temperature !== undefined ? { temperature: parseFloat(temperature) } : {}),
-                    }),
-                    signal: controller.signal,
-                });
-                clearTimeout(timeout);
-                const d = await r.json();
-                if (!r.ok) return json({error:d.error?.message||'OpenAI error: '+r.status},500);
-                aiResp = d;
-            } catch(e) {
-                clearTimeout(timeout);
-                if (e.name === 'AbortError') return json({error:'OpenAI timeout'},504);
-                throw e;
-            }
-        }
-        const text = aiResp?.choices?.[0]?.message?.content || '';
-        return json({ ...aiResp, text });
-    } catch(e) { return json({error:e.message},500); }
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1211,7 +1245,6 @@ async function handleAiProxy(request, env) {
 async function handleAiCrm(request, env) {
     if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
-    // Auth
     const authHdr = request.headers.get('Authorization') || '';
     if (!authHdr.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
     const user = await verifyIdToken(authHdr.slice(7), env);
@@ -1225,126 +1258,76 @@ async function handleAiCrm(request, env) {
     let token;
     try { token = await getToken(env); } catch(e) { return json({ error: 'Firebase error' }, 500); }
 
-    // Читаємо угоду
     const dealDoc = await fsGet(`companies/${companyId}/crm_deals/${dealId}`, token);
     if (!dealDoc?.fields) return json({ error: 'Deal not found' }, 404);
     const deal = fFields(dealDoc.fields);
 
-    // Читаємо AI налаштування та ключ
-    let apiKey = '';
-    let provider = 'openai';
-    let systemPrompt = '';
-    const platDoc = await fsGet('settings/platform', token);
-    if (platDoc?.fields) {
-        const plat = fFields(platDoc.fields);
-        if (plat.openaiApiKey) { apiKey = plat.openaiApiKey; provider = 'openai'; }
-        if (plat.anthropicApiKey) { apiKey = plat.anthropicApiKey; provider = 'anthropic'; }
-        if (plat.agents?.crm?.systemPrompt) systemPrompt = plat.agents.crm.systemPrompt;
-    }
-    if (!apiKey) apiKey = env.OPENAI_API_KEY || env.ANTHROPIC_API_KEY || '';
-    if (!apiKey) return json({ error: 'No AI API key configured' }, 500);
+    // Ключ, провайдер, модель і промпт з адмінки через агент 'crm'
+    const cfg = await _resolveAiConfig({ companyId, agentKey: 'crm', token, env });
+    if (!cfg.apiKey) return json({ error: 'No AI API key configured' }, 500);
 
-    if (!systemPrompt) {
-        systemPrompt = `Ти досвідчений менеджер з продажів. Аналізуєш угоду і даєш конкретні рекомендації.
-Відповідь — коротко, по суті, мовою даних угоди. Структура: стан угоди, ризики, наступний крок.`;
-    }
+    const systemPrompt = cfg.systemPrompt ||
+        `Ти досвідчений менеджер з продажів. Аналізуєш угоду і даєш конкретні рекомендації.\nСтруктура: стан угоди, ризики, наступний крок. Коротко, по суті.`;
 
-    const dealSummary = `Угода: ${deal.title || dealId}
-Статус: ${deal.stage || deal.status || 'невідомо'}
-Сума: ${deal.amount || deal.price || 0}
-Клієнт: ${deal.clientName || deal.name || '—'}
-Примітка: ${deal.note || deal.description || '—'}
-Активність: ${deal.lastActivity || '—'}`;
+    const dealSummary = `Угода: ${deal.title || dealId}\nСтатус: ${deal.stage || deal.status || 'невідомо'}\nСума: ${deal.amount || deal.price || 0}\nКлієнт: ${deal.clientName || deal.name || '—'}\nПримітка: ${deal.note || deal.description || '—'}\nАктивність: ${deal.lastActivity || '—'}`;
 
-    const messages = [{ role: 'user', content: `Проаналізуй цю угоду:\n${dealSummary}` }];
-
-    // Викликаємо AI
-    let analysis = '';
     try {
-        if (provider === 'anthropic') {
-            const r = await fetch('https://api.anthropic.com/v1/messages', {
-                method: 'POST',
-                headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 800, system: systemPrompt, messages }),
-            });
-            const d = await r.json();
-            analysis = d.content?.[0]?.text || '';
-        } else {
-            const r = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 800, messages: [{ role: 'system', content: systemPrompt }, ...messages] }),
-            });
-            const d = await r.json();
-            analysis = d.choices?.[0]?.message?.content || '';
-        }
+        const analysis = await _callProviderAI({
+            provider:     cfg.provider,
+            apiKey:       cfg.apiKey,
+            model:        cfg.model,
+            systemPrompt,
+            messages:     [{ role: 'user', content: `Проаналізуй цю угоду:\n${dealSummary}` }],
+            maxTokens:    800,
+        });
+        if (!analysis) return json({ error: 'Empty AI response' }, 500);
+
+        await fsPatch(`companies/${companyId}/crm_deals/${dealId}`, {
+            aiAnalysis:   { stringValue: analysis },
+            aiAnalyzedAt: { timestampValue: new Date().toISOString() },
+            updatedAt:    { timestampValue: new Date().toISOString() },
+        }, token);
+
+        return json({ ok: true, analysis });
     } catch(e) { return json({ error: 'AI request failed: ' + e.message }, 500); }
-
-    if (!analysis) return json({ error: 'Empty AI response' }, 500);
-
-    // Зберігаємо аналіз в угоду
-    await fsPatch(`companies/${companyId}/crm_deals/${dealId}`, {
-        aiAnalysis:   { stringValue: analysis },
-        aiAnalyzedAt: { timestampValue: new Date().toISOString() },
-        updatedAt:    { timestampValue: new Date().toISOString() },
-    }, token);
-
-    return json({ ok: true, analysis });
 }
 
-// ════════════════════════════════════════════════════════════
-// FUNNEL AI — AI відповіді у воронці лідів
-// POST /api/funnel-ai { companyId, stepPrompt, leadData, provider }
-// Authorization: Bearer <idToken> (опційно — публічний funnel)
+
 // ════════════════════════════════════════════════════════════
 async function handleFunnelAi(request, env) {
     if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
+    // Auth — обов'язковий: stepPrompt містить промпт компанії, ключ платформний
+    const authHdr = request.headers.get('Authorization') || '';
+    if (!authHdr.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
+    const user = await verifyIdToken(authHdr.slice(7), env);
+    if (!user) return json({ error: 'Invalid token' }, 401);
+
     let body;
     try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
-    const { companyId, stepPrompt, leadData, provider: reqProvider } = body;
+    const { companyId, stepPrompt, leadData } = body;
     if (!companyId || !stepPrompt) return json({ error: 'companyId and stepPrompt required' }, 400);
 
     let token;
     try { token = await getToken(env); } catch(e) { return json({ error: 'Firebase error' }, 500); }
 
-    // Читаємо ключ
-    let apiKey = '';
-    let provider = reqProvider || 'openai';
-    const platDoc = await fsGet('settings/platform', token);
-    if (platDoc?.fields) {
-        const plat = fFields(platDoc.fields);
-        if (plat.openaiApiKey) apiKey = plat.openaiApiKey;
-        if (plat.anthropicApiKey && provider === 'anthropic') apiKey = plat.anthropicApiKey;
-    }
-    if (!apiKey) apiKey = provider === 'anthropic' ? (env.ANTHROPIC_API_KEY || '') : (env.OPENAI_API_KEY || '');
-    if (!apiKey) return json({ error: 'No AI key' }, 500);
+    // Ключ і провайдер з адмінки (без агентського промпту — промпт береться зі степу воронки)
+    const cfg = await _resolveAiConfig({ companyId, agentKey: null, token, env });
+    if (!cfg.apiKey) return json({ error: 'No AI key' }, 500);
 
     const userMsg = `Дані ліда: ${JSON.stringify(leadData || {}).slice(0, 500)}`;
-    const messages = [{ role: 'user', content: userMsg }];
 
-    let response = '';
     try {
-        if (provider === 'anthropic') {
-            const r = await fetch('https://api.anthropic.com/v1/messages', {
-                method: 'POST',
-                headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 600, system: stepPrompt, messages }),
-            });
-            const d = await r.json();
-            response = d.content?.[0]?.text || '';
-        } else {
-            const r = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 600, messages: [{ role: 'system', content: stepPrompt }, ...messages] }),
-            });
-            const d = await r.json();
-            response = d.choices?.[0]?.message?.content || '';
-        }
-    } catch(e) { return json({ error: 'AI failed' }, 500); }
-
-    return json({ ok: true, response });
+        const response = await _callProviderAI({
+            provider:     cfg.provider,
+            apiKey:       cfg.apiKey,
+            model:        cfg.model,
+            systemPrompt: stepPrompt,
+            messages:     [{ role: 'user', content: userMsg }],
+            maxTokens:    600,
+        });
+        return json({ ok: true, response });
+    } catch(e) { return json({ error: 'AI failed: ' + e.message }, 500); }
 }
 
 async function handleCrmTriggerNotify(request, env) {

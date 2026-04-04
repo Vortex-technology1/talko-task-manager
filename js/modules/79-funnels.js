@@ -545,7 +545,9 @@
         async function callFunnelAI(step, data, history, cId) {
             if (isTest) return window.t('testModeAIHere');
             try {
-                const _funnelIdToken = await (firebase.auth().currentUser?.getIdToken().catch(()=>null));
+                const _funnelUser = firebase.auth().currentUser;
+                if (!_funnelUser) throw new Error('Not authenticated');
+                const _funnelIdToken = await _funnelUser.getIdToken().catch(() => { throw new Error('Auth token failed'); });
                 const _funnelCtrl = new AbortController();
                 const _funnelTimer = setTimeout(() => _funnelCtrl.abort(), 30000);
                 let response;
@@ -554,9 +556,9 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            ..._funnelIdToken ? { 'Authorization': 'Bearer ' + _funnelIdToken } : {},
+                            'Authorization': 'Bearer ' + _funnelIdToken,
                         },
-                        body: JSON.stringify({ companyId: cId, stepPrompt: step.systemPrompt || '', leadData: data, provider: step.aiProvider || 'openai' }),
+                        body: JSON.stringify({ companyId: cId, stepPrompt: step.systemPrompt || '', leadData: data }),
                         signal: _funnelCtrl.signal,
                     });
                 } finally { clearTimeout(_funnelTimer); }
