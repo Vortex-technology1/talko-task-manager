@@ -3279,7 +3279,14 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
 
     // Якщо прийшов callback (натиснута кнопка) — знаходимо наступний вузол
     if (isCallback && callbackData) {
-        const nextNode = getNextNode(currentNode.id, callbackData);
+        let nextNode = getNextNode(currentNode.id, callbackData);
+
+        // Fallback: якщо по callbackData не знайшли — беремо перший edge
+        // Це буває коли edge не має sourceHandle або має інший формат
+        if (!nextNode) {
+            nextNode = getNextNode(currentNode.id);
+        }
+
         if (nextNode) {
             await fsPatch(contactPath, {
                 currentNodeId: { stringValue: nextNode.id },
@@ -3288,13 +3295,14 @@ async function runFlowEngine({ cid, chatId, botId, flowId, currentNodeId, text, 
             try {
                 const nextType = nextNode.type || nextNode.data?.type || '';
                 const isAI = nextType === 'ai_agent' || nextType === 'aiAgent' || nextType === 'AI' || nextType === 'ai';
-                // Якщо наступний вузол AI — передаємо стартовий текст щоб AI почав
-                // При callback не передаємо text бота як userInput — тільки для не-AI вузлів
                 const inputForAI = isAI ? '' : undefined;
                 await executeNode({ node: nextNode, nodes, edges, cid, chatId, botId, flowId, contact, contactPath, collectedData, token, botToken, tgSend, env, userName, platDocPre, userInput: inputForAI });
             } catch(ex) {
                 await tgSend(chatId, `⚠️ executeNode error: ${ex.message?.slice(0,200)}`);
             }
+        } else {
+            // Немає наступного вузла — логуємо для debug
+            console.warn(`[FlowEngine] callback '${callbackData}' from node '${currentNode.id}': no next node found. Edges: ${JSON.stringify(edges.filter(e=>(e.source||e.fromNode)===currentNode.id))}`);
         }
         return;
     }
