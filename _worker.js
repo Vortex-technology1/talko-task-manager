@@ -135,6 +135,9 @@ function fVal(v) {
 function fFields(f) { const o={}; for(const k in f) o[k]=fVal(f[k]); return o; }
 
 // Verifyidtoken via Firebase Auth REST
+
+// Alias — getToken і getServiceAccountToken одна і та сама функція
+const getServiceAccountToken = getToken;
 async function verifyIdToken(token, env) {
     if (!env.FIREBASE_API_KEY) {
         // Якщо ключа немає — логуємо але не пропускаємо запит
@@ -307,6 +310,19 @@ async function handleGoogleOauth(request, url, env) {
 // ════════════════════════════════════════════════════════════
 async function handleNotifyNewRegistration(request, env) {
     if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+
+    // Auth — внутрішній виклик із фронту при реєстрації, перевіряємо Bearer або CRON_SECRET
+    const _ntfAuth = request.headers.get('Authorization') || '';
+    const _ntfCron = env.CRON_SECRET || '';
+    if (!_ntfAuth && !_ntfCron) {
+        // Якщо немає ні секрету ні токена — пропускаємо (legacy)
+    } else if (_ntfCron && _ntfAuth === `Bearer ${_ntfCron}`) {
+        // CRON_SECRET — ok
+    } else if (_ntfAuth.startsWith('Bearer ')) {
+        const _ntfUser = await verifyIdToken(_ntfAuth.slice(7), env);
+        if (!_ntfUser) return json({ error: 'Invalid token' }, 401);
+    }
+
     let body;
     try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
 
@@ -364,6 +380,13 @@ export default {
 
         // ── /api/fix-edges ─── запис edges в flow document ────────
         if (path === '/api/fix-edges') {
+            const _edAuth = request.headers.get('Authorization') || '';
+            const _edCron = env.CRON_SECRET || '';
+            if (!(_edCron && _edAuth === `Bearer ${_edCron}`)) {
+                if (!_edAuth.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
+                const _edUser = await verifyIdToken(_edAuth.slice(7), env);
+                if (!_edUser) return json({ error: 'Invalid token' }, 401);
+            }
             const cid2 = url.searchParams.get('cid') || url.searchParams.get('companyId') || '';
             const bid2 = url.searchParams.get('botId') || '';
             const fid2 = url.searchParams.get('flowId') || '';
@@ -933,6 +956,12 @@ async function handleWhatsAppWebhook(request, url, env) {
 async function handleGenerateImage(request, env) {
     if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
+    // Auth
+    const _authHdr = request.headers.get('Authorization') || '';
+    if (!_authHdr.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
+    const _user = await verifyIdToken(_authHdr.slice(7), env);
+    if (!_user) return json({ error: 'Invalid token' }, 401);
+
     let body;
     try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
 
@@ -946,18 +975,24 @@ async function handleGenerateImage(request, env) {
         prompt: customPrompt = '',
     } = body;
 
-    // Отримуємо OpenAI ключ
-    let openaiKey = env.OPENAI_API_KEY || '';
-    if (companyId) {
-        try {
-            const token = await getToken(env);
-            const cDoc = await fsGet(`companies/${companyId}/settings/ai`, token);
+    // Отримуємо OpenAI ключ: platform → company → env
+    let openaiKey = '';
+    try {
+        const _imgToken = await getToken(env);
+        // 1. Платформний ключ з адмінки
+        const _platDoc = await fsGet('settings/platform', _imgToken);
+        if (_platDoc?.fields) openaiKey = fFields(_platDoc.fields).openaiApiKey || '';
+        // 2. Ключ компанії перевизначає
+        if (companyId) {
+            const cDoc = await fsGet(`companies/${companyId}/settings/ai`, _imgToken);
             if (cDoc?.fields) {
                 const cs = fFields(cDoc.fields);
                 if (cs.openaiApiKey) openaiKey = cs.openaiApiKey;
             }
-        } catch {}
-    }
+        }
+    } catch {}
+    // 3. Fallback — env
+    if (!openaiKey) openaiKey = env.OPENAI_API_KEY || '';
     if (!openaiKey) return json({ error: 'No OpenAI API key' }, 500);
 
     // Будуємо промпт
@@ -1153,6 +1188,15 @@ async function handleAiProxy(request, env) {
 async function handleCrmTriggerNotify(request, env) {
     if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
+    // Auth
+    const _crmAuth = request.headers.get('Authorization') || '';
+    const _crmCron = env.CRON_SECRET || '';
+    if (!(_crmCron && _crmAuth === `Bearer ${_crmCron}`)) {
+        if (!_crmAuth.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
+        const _crmUser = await verifyIdToken(_crmAuth.slice(7), env);
+        if (!_crmUser) return json({ error: 'Invalid token' }, 401);
+    }
+
     let body;
     try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
 
@@ -1331,6 +1375,14 @@ async function handleCrmForm(request, env) {
 // WEBHOOK — Telegram, Viber, Facebook, Binotel etc.
 // ════════════════════════════════════════════════════════════
 async function handleFixCompany(request, url, env) {
+    // Auth — тільки авторизовані
+    const _fxAuth = request.headers.get('Authorization') || '';
+    const _fxCron = env.CRON_SECRET || '';
+    if (!(_fxCron && _fxAuth === `Bearer ${_fxCron}`)) {
+        if (!_fxAuth.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
+        const _fxUser = await verifyIdToken(_fxAuth.slice(7), env);
+        if (!_fxUser) return json({ error: 'Invalid token' }, 401);
+    }
     const uid = url.searchParams.get('uid') || '';
     const correctCid = url.searchParams.get('cid') || '';
     if (!uid || !correctCid) return json({ error: 'need uid and cid params' });
@@ -1359,6 +1411,15 @@ async function handleFixCompany(request, url, env) {
 }
 
 async function handleBotDebug(request, url, env) {
+    // Auth — тільки для авторизованих користувачів
+    const _dbgAuth = request.headers.get('Authorization') || '';
+    const _cronSecret = env.CRON_SECRET || '';
+    const _isCron = _cronSecret && _dbgAuth === `Bearer ${_cronSecret}`;
+    if (!_isCron) {
+        if (!_dbgAuth.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
+        const _dbgUser = await verifyIdToken(_dbgAuth.slice(7), env);
+        if (!_dbgUser) return json({ error: 'Invalid token' }, 401);
+    }
     const cid = url.searchParams.get('cid') || url.searchParams.get('companyId') || '';
     if (!cid) return json({ error: 'no cid' });
     let token;
