@@ -2034,17 +2034,22 @@ async function handleWebhook(request, url, env) {
 
         const tgSend = async (chat_id, txt) => {
             try {
-                const r = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                    method:'POST', headers:{'Content-Type':'application/json'},
-                    body: JSON.stringify({ chat_id, text: txt, parse_mode:'HTML' }),
-                });
-                if (!r.ok) {
-                    // Fallback без HTML якщо parse_mode помилка
-                    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                const ctrl = new AbortController();
+                const tmr = setTimeout(() => ctrl.abort(), 10000);
+                try {
+                    const r = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                         method:'POST', headers:{'Content-Type':'application/json'},
-                        body: JSON.stringify({ chat_id, text: txt.replace(/<[^>]*>/g,'') }),
-                    }).catch(()=>{});
-                }
+                        body: JSON.stringify({ chat_id, text: txt, parse_mode:'HTML' }),
+                        signal: ctrl.signal,
+                    });
+                    if (!r.ok) {
+                        // Fallback без HTML якщо parse_mode помилка
+                        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                            method:'POST', headers:{'Content-Type':'application/json'},
+                            body: JSON.stringify({ chat_id, text: txt.replace(/<[^>]*>/g,'') }),
+                        }).catch(()=>{});
+                    }
+                } finally { clearTimeout(tmr); }
             } catch(e) {}
         };
 
@@ -3556,11 +3561,15 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
                 timestamp: { timestampValue: bmTs2 },
                 createdAt: { timestampValue: bmTs2 },
             }, token);
-            // Оновлюємо lastMessage контакту (bot відповідь)
+            // Оновлюємо lastMessage + скидаємо waitingForInput
+            // (якщо клієнт раніше проходив question ноду — waitingForInput лишається true
+            //  і наступне повідомлення трактується як відповідь на question, а не input для AI)
             await fsPatch(`companies/${cid}/contacts/${chatId}`, {
-                lastMessage:   { stringValue: aiResp.slice(0, 100) },
-                lastMessageAt: { timestampValue: bmTs2 },
-                updatedAt:     { timestampValue: bmTs2 },
+                lastMessage:    { stringValue: aiResp.slice(0, 100) },
+                lastMessageAt:  { timestampValue: bmTs2 },
+                waitingForInput:{ booleanValue: false },
+                waitingVarName: { stringValue: '' },
+                updatedAt:      { timestampValue: bmTs2 },
             }, token);
             await checkAndConvertToLead({ aiResponse: aiResp, userInput, collectedData, cid, chatId, contact, contactPath, token });
             // CRM тригер done_tag — якщо AI відповідь містить [DONE]
@@ -3790,21 +3799,15 @@ async function executeNode({ node, nodes, edges, cid, chatId, botId, flowId, con
     // ══════════════════════════════════════════════════════════
     if (nodeType === 'crm_update' || nodeType === 'updateDeal' || nodeType === 'update_deal') {
         // Знаходимо активну угоду контакту або створюємо нову
-        let dealId = contact.crmDealId || collectedData._dealId || null;
+        // Пріоритет: contact.crmDealId → stable ID по chatId → fallback scan
+        let dealId = contact.crmDealId || contact.dealId || collectedData._dealId || null;
 
         if (!dealId) {
-            // Шукаємо угоду по chatId
-            const dealsSnap = await fetch(
-                `${FS_URL}/companies/${cid}/crm_deals?pageSize=5`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            if (dealsSnap.ok) {
-                const dd = await dealsSnap.json();
-                const found = (dd.documents || []).find(d => {
-                    const f = fFields(d.fields || {});
-                    return f.botChatId === String(chatId) || f.telegramChatId === String(chatId);
-                });
-                if (found) dealId = found.name.split('/').pop();
+            // Стабільний ID який createCrmLead завжди використовує
+            const stableDealId = `tg_client_${chatId}_deal`;
+            const stableDoc = await fsGet(`companies/${cid}/crm_deals/${stableDealId}`, token);
+            if (stableDoc?.fields) {
+                dealId = stableDealId;
             }
         }
 
