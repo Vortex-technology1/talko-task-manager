@@ -1,3 +1,18 @@
+
+// Helper: crm trigger notify з auth токеном
+async function _sendTriggerNotify(payload) {
+    try {
+        const _tok = await firebase.auth().currentUser?.getIdToken().catch(()=>null);
+        return fetch('/api/crm-trigger-notify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(_tok ? { 'Authorization': 'Bearer ' + _tok } : {}),
+            },
+            body: JSON.stringify(payload),
+        }).catch(()=>{});
+    } catch(_e) {}
+}
 // ============================================================
 // js/modules/77l-crm-triggers.js — CRM Тригери
 // "ЯКЩО подія + умови → ТО дії"
@@ -502,16 +517,12 @@
                 } else if (action.type === 'send_bot_message' && deal.botChatId) {
                     // Надіслати повідомлення клієнту через бота (Telegram або Viber)
                     const msgText = _interpolateTrigger(action.message || trigger.name, deal);
-                    await fetch('/api/crm-trigger-notify', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
+                    await _sendTriggerNotify({
                             cid:     window.currentCompanyId,
                             chatId:  deal.botChatId,
                             channel: deal.botChannel || 'telegram',
                             message: msgText,
-                        }),
-                    }).catch(() => {});
+                        });
                 } else if (action.type === 'create_order') {
                     // Створити замовлення з угоди
                     if (typeof window._crmCreateOrderFromDeal === 'function') {
@@ -539,16 +550,12 @@
                 } else if (action.type === 'send_viber' && deal.botChatId) {
                     // Надіслати через Viber
                     const vMsg = _interpolateTrigger(action.message || trigger.name, deal);
-                    await fetch('/api/crm-trigger-notify', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
+                    await _sendTriggerNotify({
                             cid:     window.currentCompanyId,
                             chatId:  deal.botChatId,
                             channel: 'viber',
                             message: vMsg,
-                        }),
-                    }).catch(() => {});
+                        });
                 }
             } catch(actErr) {
                 console.warn('[crmRunTriggers] action failed:', action.type, actErr.message);
@@ -578,17 +585,13 @@
         try {
             const cid = window.currentCompanyId;
             if (!cid) return;
-            await fetch('/api/crm-trigger-notify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+            await _sendTriggerNotify({
                     companyId: cid,
                     to: to || 'owner',
                     message,
                     dealId:    deal?.id    || null,
                     dealTitle: deal?.title || deal?.clientName || null,
-                }),
-            });
+                });
         } catch(e) {
             console.warn('[_sendTriggerTelegram]', e.message);
         }

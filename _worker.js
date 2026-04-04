@@ -430,6 +430,12 @@ export default {
         // ── /api/crm-trigger-notify ──────────────────────────
         if (path === '/api/crm-trigger-notify') return handleCrmTriggerNotify(request, env);
 
+        // ── /api/ai-crm ─── AI аналіз угоди CRM ─────────────
+        if (path === '/api/ai-crm') return handleAiCrm(request, env);
+
+        // ── /api/funnel-ai ─── AI для воронок ────────────────
+        if (path === '/api/funnel-ai') return handleFunnelAi(request, env);
+
         // ── /api/generate-pdf ─── накладні та акти ───────────
         if (path === '/api/generate-pdf') return handleGeneratePdf(request, url, env);
 
@@ -1200,6 +1206,150 @@ async function handleAiProxy(request, env) {
 // ════════════════════════════════════════════════════════════
 // CRM TRIGGER NOTIFY — sends Telegram messages from CRM triggers
 // ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
+// AI CRM — аналіз угоди через AI
+// POST /api/ai-crm { dealId, companyId }
+// Authorization: Bearer <idToken>
+// ════════════════════════════════════════════════════════════
+async function handleAiCrm(request, env) {
+    if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+
+    // Auth
+    const authHdr = request.headers.get('Authorization') || '';
+    if (!authHdr.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401);
+    const user = await verifyIdToken(authHdr.slice(7), env);
+    if (!user) return json({ error: 'Invalid token' }, 401);
+
+    let body;
+    try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
+    const { dealId, companyId } = body;
+    if (!dealId || !companyId) return json({ error: 'dealId and companyId required' }, 400);
+
+    let token;
+    try { token = await getToken(env); } catch(e) { return json({ error: 'Firebase error' }, 500); }
+
+    // Читаємо угоду
+    const dealDoc = await fsGet(`companies/${companyId}/crm_deals/${dealId}`, token);
+    if (!dealDoc?.fields) return json({ error: 'Deal not found' }, 404);
+    const deal = fFields(dealDoc.fields);
+
+    // Читаємо AI налаштування та ключ
+    let apiKey = '';
+    let provider = 'openai';
+    let systemPrompt = '';
+    const platDoc = await fsGet('settings/platform', token);
+    if (platDoc?.fields) {
+        const plat = fFields(platDoc.fields);
+        if (plat.openaiApiKey) { apiKey = plat.openaiApiKey; provider = 'openai'; }
+        if (plat.anthropicApiKey) { apiKey = plat.anthropicApiKey; provider = 'anthropic'; }
+        if (plat.agents?.crm?.systemPrompt) systemPrompt = plat.agents.crm.systemPrompt;
+    }
+    if (!apiKey) apiKey = env.OPENAI_API_KEY || env.ANTHROPIC_API_KEY || '';
+    if (!apiKey) return json({ error: 'No AI API key configured' }, 500);
+
+    if (!systemPrompt) {
+        systemPrompt = `Ти досвідчений менеджер з продажів. Аналізуєш угоду і даєш конкретні рекомендації.
+Відповідь — коротко, по суті, мовою даних угоди. Структура: стан угоди, ризики, наступний крок.`;
+    }
+
+    const dealSummary = `Угода: ${deal.title || dealId}
+Статус: ${deal.stage || deal.status || 'невідомо'}
+Сума: ${deal.amount || deal.price || 0}
+Клієнт: ${deal.clientName || deal.name || '—'}
+Примітка: ${deal.note || deal.description || '—'}
+Активність: ${deal.lastActivity || '—'}`;
+
+    const messages = [{ role: 'user', content: `Проаналізуй цю угоду:\n${dealSummary}` }];
+
+    // Викликаємо AI
+    let analysis = '';
+    try {
+        if (provider === 'anthropic') {
+            const r = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 800, system: systemPrompt, messages }),
+            });
+            const d = await r.json();
+            analysis = d.content?.[0]?.text || '';
+        } else {
+            const r = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 800, messages: [{ role: 'system', content: systemPrompt }, ...messages] }),
+            });
+            const d = await r.json();
+            analysis = d.choices?.[0]?.message?.content || '';
+        }
+    } catch(e) { return json({ error: 'AI request failed: ' + e.message }, 500); }
+
+    if (!analysis) return json({ error: 'Empty AI response' }, 500);
+
+    // Зберігаємо аналіз в угоду
+    await fsPatch(`companies/${companyId}/crm_deals/${dealId}`, {
+        aiAnalysis:   { stringValue: analysis },
+        aiAnalyzedAt: { timestampValue: new Date().toISOString() },
+        updatedAt:    { timestampValue: new Date().toISOString() },
+    }, token);
+
+    return json({ ok: true, analysis });
+}
+
+// ════════════════════════════════════════════════════════════
+// FUNNEL AI — AI відповіді у воронці лідів
+// POST /api/funnel-ai { companyId, stepPrompt, leadData, provider }
+// Authorization: Bearer <idToken> (опційно — публічний funnel)
+// ════════════════════════════════════════════════════════════
+async function handleFunnelAi(request, env) {
+    if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+
+    let body;
+    try { body = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
+    const { companyId, stepPrompt, leadData, provider: reqProvider } = body;
+    if (!companyId || !stepPrompt) return json({ error: 'companyId and stepPrompt required' }, 400);
+
+    let token;
+    try { token = await getToken(env); } catch(e) { return json({ error: 'Firebase error' }, 500); }
+
+    // Читаємо ключ
+    let apiKey = '';
+    let provider = reqProvider || 'openai';
+    const platDoc = await fsGet('settings/platform', token);
+    if (platDoc?.fields) {
+        const plat = fFields(platDoc.fields);
+        if (plat.openaiApiKey) apiKey = plat.openaiApiKey;
+        if (plat.anthropicApiKey && provider === 'anthropic') apiKey = plat.anthropicApiKey;
+    }
+    if (!apiKey) apiKey = provider === 'anthropic' ? (env.ANTHROPIC_API_KEY || '') : (env.OPENAI_API_KEY || '');
+    if (!apiKey) return json({ error: 'No AI key' }, 500);
+
+    const userMsg = `Дані ліда: ${JSON.stringify(leadData || {}).slice(0, 500)}`;
+    const messages = [{ role: 'user', content: userMsg }];
+
+    let response = '';
+    try {
+        if (provider === 'anthropic') {
+            const r = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 600, system: stepPrompt, messages }),
+            });
+            const d = await r.json();
+            response = d.content?.[0]?.text || '';
+        } else {
+            const r = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 600, messages: [{ role: 'system', content: stepPrompt }, ...messages] }),
+            });
+            const d = await r.json();
+            response = d.choices?.[0]?.message?.content || '';
+        }
+    } catch(e) { return json({ error: 'AI failed' }, 500); }
+
+    return json({ ok: true, response });
+}
+
 async function handleCrmTriggerNotify(request, env) {
     if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
