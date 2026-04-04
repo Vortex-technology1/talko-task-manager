@@ -3063,6 +3063,35 @@ window.crmMarkTaskDone = async function(taskId) {
     } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
 };
 
+// ── Файли угоди ─────────────────────────────────────────────
+function _loadFilesTab(deal) {
+    const content = document.getElementById('crmDealContent');
+    if (!content) return;
+
+    // Рендеримо контейнер і делегуємо в 77c-crm-tasks.js
+    content.innerHTML = `
+        <div style="padding:0.75rem 0;">
+            <div id="crmDealFilesList">
+                <div style="text-align:center;padding:1rem;color:#9ca3af;font-size:0.78rem;">Завантаження...</div>
+            </div>
+            <div style="margin-top:0.75rem;padding:0 0.25rem;">
+                <label style="display:flex;align-items:center;gap:0.5rem;padding:0.55rem 0.85rem;
+                    background:#f0fdf4;border:1.5px dashed #22c55e;border-radius:10px;
+                    cursor:pointer;font-size:0.82rem;font-weight:600;color:#16a34a;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Прикріпити файл
+                    <input type="file" style="display:none;" multiple
+                        onchange="crmUploadDealFiles('${deal.id}', this)">
+                </label>
+            </div>
+        </div>`;
+
+    // Завантажуємо список файлів через 77c
+    if (typeof window.crmRenderDealFiles === 'function') {
+        window.crmRenderDealFiles(deal.id);
+    }
+}
+
 // ── Активності ─────────────────────────────────────────────
 async function _loadActivityTab(deal) {
     const content = document.getElementById('crmDealContent');
