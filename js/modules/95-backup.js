@@ -167,7 +167,7 @@ async function runManualBackup() {
 
             status.style.display = 'block';
             status.style.color = '#16a34a';
-            status.innerHTML = `✅ Резервная копия создана: ${data.date} · ${data.sizeKb} KB`;
+            status.innerHTML = `✅ Резервна копія створена: ${String(data.date||'').replace(/</g,'&lt;')} · ${parseInt(data.sizeKb)||0} KB`;
             await loadBackupList();
         } else {
             throw new Error(data.error || 'Неизвестная ошибка');

@@ -776,7 +776,7 @@ function _safeMakeCondition(conditionStr) {
     if (conditionStr.length > 500) {
         console.warn('[EventBus] condition too long, rejected'); return null;
     }
-    const blocked = /fetch\(|XMLHttpRequest|eval\(|Function\(|import\(|require\(|process\.|document\.cookie/i;
+    const blocked = /fetch\(|XMLHttpRequest|eval\(|Function\(|import\(|require\(|process\.|document\.cookie|window\.|localStorage|sessionStorage|location\.|\.src\s*=|\.href\s*=|setTimeout|setInterval|alert\(|confirm\(|prompt\(/i;
     if (blocked.test(conditionStr)) {
         console.warn('[EventBus] condition blocked'); return null;
     }

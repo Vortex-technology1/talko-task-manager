@@ -778,7 +778,9 @@ service cloud.firestore {
       // =====================
       match /settings/{settingId} {
         allow read: if isCompanyMember(companyId);
-        allow write: if isCompanyMember(companyId);
+        // Тільки менеджер+ може змінювати налаштування компанії
+        // Виняток: AI settings може читати і писати будь-який member (для особистих налаштувань)
+        allow write: if isManagerOrOwner(companyId) || settingId == 'ai_user_prefs';
       }
 
       match /aiUsageLog/{docId} {
@@ -871,11 +873,14 @@ service cloud.firestore {
     // SETTINGS (global)
     // =====================
     match /settings/{doc} {
-      allow read: if isSuperAdmin() || (isAuthenticated() && doc != 'main');
+      // 'main' — заблоковано для всіх крім суперадміна
+      // 'ai', 'aiModels' — публічні налаштування (моделі, ліміти) — ok для авторизованих
+      // 'platform' — містить OpenAI/Anthropic ключі — тільки суперадмін!
+      allow read: if isSuperAdmin() || (isAuthenticated() && doc != 'main' && doc != 'platform');
       allow write: if isSuperAdmin();
     }
     match /settings/{doc}/{sub=**} {
-      allow read: if isSuperAdmin() || isAuthenticated();
+      allow read: if isSuperAdmin() || (isAuthenticated() && doc != 'platform');
       allow write: if isSuperAdmin();
     }
 
@@ -883,7 +888,13 @@ service cloud.firestore {
     // TELEGRAM INDEX
     // =====================
     match /telegramIndex/{doc} {
-      allow read, write: if request.auth != null;
+      // telegramIndex використовується Worker для маппінгу chatId→companyId
+      // Читання дозволено всім авторизованим (для перевірки реєстрації)
+      // Запис тільки через Worker (service account) — але Firestore Rules не можуть
+      // перевірити service account окремо від звичайного auth, тому дозволяємо 
+      // автентифікованим користувачам (реєстрація бота)
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
     }
 
     // =====================
