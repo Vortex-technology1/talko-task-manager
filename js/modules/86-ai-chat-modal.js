@@ -504,15 +504,27 @@ async function _sfAskAI(prompt, isFirst) {
 }
 
 async function _sfCallAI(prompt, isFirst) {
-    const messages = isFirst
-        ? [{ role: 'user', content: prompt }]
-        : _sfHistory;
+    // Промпт з адмінки ('statistics' агент) стає системним автоматично у воркері.
+    // Контекст метрик додаємо як system повідомлення — воркер об'єднає їх з промптом адмінки.
+    // Наші покрокові інструкції йдуть як user повідомлення поверх системного промпту.
+
+    let messages;
+    if (isFirst) {
+        // Перший крок: контекст метрик в системному + інструкція кроку в user
+        messages = [
+            { role: 'system', content: `=== ДАНІ МЕТРИК КОМПАНІЇ ===\n${_sfContext}\n=== КІНЕЦЬ ДАНИХ ===` },
+            { role: 'user', content: prompt },
+        ];
+    } else {
+        // Наступні кроки: весь history (вже містить контекст з першого кроку)
+        messages = _sfHistory;
+    }
 
     const reply = await window.aiProxy({
         messages,
-        systemPrompt: null,
+        systemPrompt: null,   // null → воркер бере промпт агента 'statistics' з адмінки
         maxTokens: 1200,
-        module: 'statistics',
+        module: 'statistics', // ключ агента в адмінці
     });
     return reply;
 }
