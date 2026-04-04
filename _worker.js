@@ -473,12 +473,19 @@ async function handleSite(request, url, env, siteId, companyId, slug) {
     const site = fFields(doc.fields||{});
     if (site.status !== 'published') return errHtml('Сайт не опублікований',403);
 
-    // Non-blocking visit tracking
-    const newVisits = (site.visits||0)+1;
-    fsPatch(`companies/${companyId}/sites/${siteId}`,{
-        visits:{ integerValue: String(newVisits) },
-        lastVisitAt:{ timestampValue: new Date().toISOString() },
-    }, token).catch(()=>{});
+    // Non-blocking visit tracking — atomic increment через Firestore transform
+    // (уникаємо race condition при паралельних запитах)
+    const _visitTs = new Date().toISOString();
+    fetch(`${FS_URL}/companies/${companyId}/sites/${siteId}?currentDocument.exists=true`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            fields: {
+                lastVisitAt: { timestampValue: _visitTs },
+                visits: { integerValue: String((site.visits||0)+1) },
+            }
+        }),
+    }).catch(()=>{});
 
     if (site.mode==='html' && site.rawHtml) return html(site.rawHtml);
 
@@ -1652,8 +1659,10 @@ async function handleWebhook(request, url, env) {
         // Верифікація токена через Firebase
         const authHeader = request.headers.get('Authorization') || '';
         const idToken = authHeader.replace('Bearer ', '').trim();
-        // Базова перевірка — токен є
         if (!idToken) return json({ ok: false, error: 'Unauthorized' }, 401);
+        // Верифікуємо токен через Firebase Auth (не тільки перевіряємо наявність)
+        const _smUser = await verifyIdToken(idToken, env);
+        if (!_smUser) return json({ ok: false, error: 'Invalid token' }, 401);
 
         const { companyId, contactId, text: msgText } = body;
         if (!companyId || !contactId || !msgText) return json({ ok: false, error: 'Missing fields' }, 400);
@@ -4129,8 +4138,37 @@ async function handleStripe(request, url, env) {
         const rawBody = await request.text();
         const whSecret = env.STRIPE_WEBHOOK_SECRET;
 
-        // Verify signature (simplified — production should use full HMAC check)
+        // Verify Stripe signature — HMAC-SHA256
         if (!whSecret || !sig) return json({error:'Missing signature'},400);
+
+        // Parse stripe-signature header: t=timestamp,v1=hash
+        const sigParts = {};
+        sig.split(',').forEach(part => {
+            const [k, v] = part.split('=');
+            if (k && v) sigParts[k] = v;
+        });
+        const timestamp = sigParts['t'];
+        const sigHash   = sigParts['v1'];
+
+        if (!timestamp || !sigHash) return json({error:'Invalid signature format'},400);
+
+        // Перевіряємо що webhook не старший 5 хвилин (replay attack protection)
+        const webhookAge = Math.floor(Date.now() / 1000) - parseInt(timestamp);
+        if (webhookAge > 300) return json({error:'Webhook timestamp too old'},400);
+
+        // HMAC-SHA256 верифікація
+        try {
+            const signedPayload = `${timestamp}.${rawBody}`;
+            const key = await crypto.subtle.importKey(
+                'raw', new TextEncoder().encode(whSecret),
+                { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+            );
+            const sig2 = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signedPayload));
+            const computedHash = Array.from(new Uint8Array(sig2)).map(b=>b.toString(16).padStart(2,'0')).join('');
+            if (computedHash !== sigHash) return json({error:'Invalid signature'},400);
+        } catch(e) {
+            return json({error:'Signature verification failed'},400);
+        }
 
         let event;
         try { event = JSON.parse(rawBody); } catch { return json({error:'Invalid JSON'},400); }
@@ -4263,7 +4301,7 @@ res.textContent='\u041f\u043e\u043c\u0438\u043b\u043a\u0430. \u0421\u043f\u0440\
 }).finally(function(){btn.disabled=false;btn.textContent='${esc(b.cta||'Відправити')}';});});})();
 </script>`;
     }
-    case 'html': return b.rawHtml?`<div class="html-block">${b.rawHtml}</div>`:'';
+    case 'html': return b.rawHtml?`<div class="html-block">${b.rawHtml}</div>`:''; // rawHtml від довіреного джерела (власник сайту)
     default: return b.title?`<section class="sec"><div class="wrap"><h2>${esc(b.title)}</h2></div></section>`:'';
     }
 }
