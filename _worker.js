@@ -1263,13 +1263,34 @@ async function handleAiProxy(request, env) {
     const finalModel = model !== null && model !== undefined ? model : (cfg.model || null);
 
     try {
+        // Захист від 504: обрізаємо якщо сумарний контент > 12000 символів
+        const MAX_CHARS = 12000;
+        let trimmedMessages = messages;
+        const totalChars = (finalSystemPrompt || '').length +
+            messages.reduce((s, m) => s + String(m.content || '').length, 0);
+        if (totalChars > MAX_CHARS) {
+            let budget = MAX_CHARS - (finalSystemPrompt || '').length;
+            trimmedMessages = [];
+            for (let i = messages.length - 1; i >= 0; i--) {
+                const len = String(messages[i].content || '').length;
+                if (budget - len < 0) break;
+                trimmedMessages.unshift(messages[i]);
+                budget -= len;
+            }
+            if (!trimmedMessages.length && messages.length) {
+                // Мінімум — останнє повідомлення обрізане
+                const last = messages[messages.length - 1];
+                trimmedMessages = [{ ...last, content: String(last.content || '').slice(0, MAX_CHARS) }];
+            }
+        }
+
         const text = await _callProviderAI({
             provider: cfg.provider,
             apiKey:   cfg.apiKey,
             model:    finalModel,
             systemPrompt: finalSystemPrompt,
-            messages,
-            maxTokens: maxTokens || 2048,
+            messages: trimmedMessages,
+            maxTokens: maxTokens || 1500,
             temperature,
         });
         return json({ text, choices: [{ message: { role: 'assistant', content: text } }] });
