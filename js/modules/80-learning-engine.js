@@ -116,6 +116,11 @@
         if (!window._learningActiveCategory) window._learningActiveCategory = 'systematization';
         const activeCat = window._learningActiveCategory;
 
+        // Модулі активної категорії — обчислюємо ДО catTabsHTML (використовується в dropdown)
+        const filteredModules = learningCourseData.filter(m => (m.category || 'systematization') === activeCat);
+        const catDone = filteredModules.filter(m => m.completed).length;
+        const catPct = filteredModules.length > 0 ? Math.round(catDone / filteredModules.length * 100) : 0;
+
         // Вкладки категорій — мобільний dropdown замість горизонтального скролу
         const categories = window.learningCategories || window.learningCourseCategories || [];
         const activeCategory = categories.find(c => c.id === activeCat) || categories[0];
@@ -169,10 +174,7 @@
             </div>
         </div>` : '';
 
-        // Модулі активної категорії
-        const filteredModules = learningCourseData.filter(m => (m.category || 'systematization') === activeCat);
-        const catDone = filteredModules.filter(m => m.completed).length;
-        const catPct = filteredModules.length > 0 ? Math.round(catDone / filteredModules.length * 100) : 0;
+        // (filteredModules, catDone, catPct — визначені вище перед catTabsHTML)
 
         root.innerHTML = `
         <div class="learning-wrap">
