@@ -403,7 +403,7 @@
                                         <span style="font-size:0.72rem;color:#6b7280;">${active} активных</span>
                                         ${overdue > 0 ? `<span style="background:#fef2f2;color:#ef4444;padding:1px 7px;border-radius:8px;font-size:0.7rem;font-weight:600;">⚠ ${overdue}</span>` : ''}
                                         ${returned > 0 ? `<span style="background:#fffbeb;color:#b45309;padding:1px 7px;border-radius:8px;font-size:0.7rem;">↩ ${returned}</span>` : ''}
-                                        ${autonomy !== null ? `<span style="font-weight:700;color:${autoColor};font-size:0.78rem;" title=window.t('выполненныхБезВозврата')>${autonomy}% авт.</span>` : ''}
+                                        ${autonomy !== null ? `<span style="font-weight:700;color:${autoColor};font-size:0.78rem;" title="% выполненных без возврата">${autonomy}% авт.</span>` : ''}
                                         <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i>
                                     </div>
                                 </div>
@@ -427,7 +427,7 @@
                                                     <span class="task-title" style="flex:1;">${esc(tk.title)}</span>
                                                     ${tk.function ? `<span style="font-size:0.65rem;color:#9ca3af;background:#f3f4f6;padding:1px 5px;border-radius:3px;">${esc(tk.function)}</span>` : ''}
                                                     <span style="font-size:0.68rem;color:${isOv?'#ef4444':'#9ca3af'};">${tk.deadlineDate || ''}</span>
-                                                    <span style="font-size:0.68rem;font-weight:600;color:${_tkColor};white-space:nowrap;" title="Затрачено времени${_tkPlan>0?window.t('план')+(_tkPlan>=60?Math.floor(_tkPlan/60)+'ч'+((_tkPlan%60)?(_tkPlan%60)+'мин':''):_tkPlan+'мин'):''}">⏱ ${_tkFmt || '—'}</span>
+                                                    <span style="font-size:0.68rem;font-weight:600;color:${_tkColor};white-space:nowrap;" title="Затрачено времени${_tkPlan>0?' / план: '+(_tkPlan>=60?Math.floor(_tkPlan/60)+'ч'+((_tkPlan%60)?(_tkPlan%60)+'мин':''):_tkPlan+'мин'):''}">⏱ ${_tkFmt || '—'}</span>
                                                 </div>`;
                                             }).join('')}
                                             ${data[s.key].length > 10 ? `<div style="font-size:0.7rem;color:#9ca3af;padding:0.2rem;">+${data[s.key].length - 10} ещё...</div>` : ''}
@@ -511,10 +511,10 @@
                 const autoSignals = [];
                 allVisible.filter(tk => tk.deadlineDate && tk.deadlineDate < todayStr && tk.status !== 'done' && tk.status !== 'review').forEach(tk => {
                     const d = Math.floor((new Date() - new Date(tk.deadlineDate)) / 86400000);
-                    if (d >= 3) autoSignals.push({ icon: '<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg>window.t('textПростроченоDдTktitle')', taskId: tk.id });
+                    if (d >= 3) autoSignals.push({ icon: '<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg>', text: `Прострочено ${d}д: ${tk.title}`, person: tk.assigneeName || '', taskId: tk.id });
                 });
                 allVisible.filter(tk => tk.reviewRejectedAt).forEach(tk => {
-                    autoSignals.push({ icon: '↩window.t('textПовернутоTktitlePerson')', taskId: tk.id });
+                    autoSignals.push({ icon: '↩', text: `Повернуто: ${tk.title}`, person: tk.assigneeName || '', taskId: tk.id });
                 });
 
                 content.innerHTML = `

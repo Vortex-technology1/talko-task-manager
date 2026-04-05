@@ -314,7 +314,7 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
         box-shadow:${i===0?'0 1px 3px rgba(0,0,0,0.1)':'none'};">
         ${svgIcon(t.icon, 12)} ${t.label}
     </button>`).join('')}
-    <button onclick="loadSuperadminData()" title=window.t('оновити')
+    <button onclick="loadSuperadminData()" title="Оновити"
         style="margin-left:auto;padding:0.45rem 0.6rem;border:none;border-radius:7px;cursor:pointer;background:transparent;color:#6b7280;">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
     </button>
@@ -471,7 +471,7 @@ function _saRenderCompanies(pc) {
             onmouseenter="this.style.background='${d.disabled && !d.pendingApproval ? '#fee2e2' : d.pendingApproval ? '#fef3c7' : '#fafafa'}'"
             onmouseleave="this.style.background='${d.disabled && !d.pendingApproval ? '#fff5f5' : d.pendingApproval ? '#fffbeb' : ''}'">
             <td style="padding:0.4rem 0.5rem;font-weight:600;font-size:0.8rem;cursor:pointer;" onclick="saOpenCompanyDetail('${c.id}')">
-                ${d.pendingApproval ? '<span title=window.t('очікуєПідтвердження') style="color:#f59e0b;">⏳ </span>' : d.disabled ? '<span title=window.t('заблоковано') style="color:#ef4444;">🔒 </span>' : ''}${_saEsc(d.name||c.id)}
+                ${d.pendingApproval ? '<span title="Очікує підтвердження" style="color:#f59e0b;">⏳ </span>' : d.disabled ? '<span title="Заблоковано" style="color:#ef4444;">🔒 </span>' : ''}${_saEsc(d.name||c.id)}
             </td>
             <td style="padding:0.4rem 0.5rem;">${planBadge}</td>
             <td style="padding:0.4rem 0.5rem;font-size:0.78rem;">${c.users.length}</td>
@@ -506,7 +506,7 @@ function _saRenderCompanies(pc) {
 
     return `
     <div style="margin-bottom:0.6rem;display:flex;gap:0.5rem;">
-        <input id="saCompanySearch" placeholder=window.t('пошукПоНазві') oninput="saFilterCompanies(this.value)"
+        <input id="saCompanySearch" placeholder="Пошук по назві..." oninput="saFilterCompanies(this.value)"
             style="flex:1;padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;">
         <button onclick="deleteEmptyCompanies()"
             style="padding:0.4rem 0.75rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;cursor:pointer;font-size:0.78rem;font-weight:600;white-space:nowrap;">
@@ -1257,7 +1257,7 @@ window.saFilterCompanies = function(query) {
 // ── Нотатки суперадміна ──────────────────────────────────────
 window.saAddNote = async function(companyId) {
     const text = await (window.showInputModal
-        ? showInputModal(window.t('нотаткаДляКомпанії'), '', {placeholder:'Введіть нотатку...', multiline:true})
+        ? showInputModal('Нотатка для компанії', '', {placeholder:'Введіть нотатку...', multiline:true})
         : (async()=>prompt('Нотатка:'))());
     if (!text?.trim()) return;
     try {
@@ -1315,7 +1315,7 @@ window.saExportCsv = function() {
 window.saBroadcastTelegram = async function() {
     const text = await (window.showInputModal
         ? showInputModal('Broadcast в Telegram', '', {
-            placeholder: window.t('повідомленняДляВсіхВласників'),
+            placeholder: 'Повідомлення для всіх власників з TG...',
             multiline: true,
           })
         : (async()=>prompt('Повідомлення:'))());
@@ -1641,7 +1641,7 @@ window.openGlobalAISettings = async function() {
                             <input value="${m[0]}" placeholder="model-id"
                                 onchange="window._editingModels[window._currentModelProvider][${i}][0]=this.value"
                                 style="flex:1;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;font-family:monospace;">
-                            <input value="${m[1]}" placeholder=window.t('назва')
+                            <input value="${m[1]}" placeholder="Назва"
                                 onchange="window._editingModels[window._currentModelProvider][${i}][1]=this.value"
                                 style="flex:1.5;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;">
                             <button onclick="window._removeModel(${i})"
@@ -1714,7 +1714,7 @@ window.openGlobalAISettings = async function() {
                         <div style="display:flex;gap:6px;">
                             <input type="password" id="platformOpenAiKey" placeholder="${platformKeyStored ? '••••••••••••••••' : 'sk-...'}"
                                 style="flex:1;padding:0.45rem 0.6rem;border:1px solid #bfdbfe;border-radius:8px;font-size:0.85rem;font-family:monospace;box-sizing:border-box;">
-                            ${platformKeyStored ? `${window.t('buttonOnclickclearplatformkeyStylepaddin')}` : ''}
+                            ${platformKeyStored ? `<button onclick="clearPlatformKey()" style="padding:0.45rem 0.7rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">✕ Очистити</button>` : ''}
                         </div>
                         <div style="font-size:0.7rem;color:#6b7280;margin-top:4px;">Залиш порожнім щоб не змінювати поточний ключ. Отримати ключ: <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#1d4ed8;">platform.openai.com/api-keys</a></div>
                     </div>
@@ -1733,7 +1733,7 @@ window.openGlobalAISettings = async function() {
                         <div style="display:flex;gap:6px;">
                             <input type="password" id="platformAnthropicKey" placeholder="${anthropicKeyStored ? '••••••••••••••••' : 'sk-ant-...'}"
                                 style="flex:1;padding:0.45rem 0.6rem;border:1px solid #e9d5ff;border-radius:8px;font-size:0.85rem;font-family:monospace;box-sizing:border-box;">
-                            ${anthropicKeyStored ? `${window.t('buttonOnclickclearanthropickeyStylepaddi')}` : ''}
+                            ${anthropicKeyStored ? `<button onclick="clearAnthropicKey()" style="padding:0.45rem 0.7rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">✕ Очистити</button>` : ''}
                         </div>
                         <div style="font-size:0.7rem;color:#6b7280;margin-top:4px;">Отримати ключ: <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:#7e22ce;">console.anthropic.com</a> → це <b>окремий</b> від підписки Claude.ai акаунт</div>
                     </div>
@@ -1847,7 +1847,7 @@ window.saveGlobalAISettings = async function() {
     } catch(_) {}
 
     const saveBtn = document.querySelector('#globalAIOverlay button[onclick="saveGlobalAISettings()"]');
-    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = window.t('збереження'); }
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Збереження...'; }
 
     try {
         const batch = firebase.firestore().batch();
@@ -2166,7 +2166,7 @@ window._renderAgentsTab = function(savedAgents) {
                     </div>
                 </div>
                 <textarea id="agent_prompt_${key}" rows="${isFull ? 8 : 12}"
-                    placeholder=window.t('порожньоВикористовуєтьсяВбудованийДефолт')
+                    placeholder="Порожньо = використовується вбудований дефолт з коду..."
                     style="width:100%;padding:8px 10px;border:1px solid ${hasPrompt ? '#6366f1' : '#e5e7eb'};border-radius:8px;font-size:0.78rem;line-height:1.55;resize:vertical;box-sizing:border-box;font-family:inherit;transition:border-color .2s;"
                     onfocus="this.style.borderColor='#6366f1'"
                     onblur="this.style.borderColor=this.value?'#6366f1':'#e5e7eb'"
@@ -2270,16 +2270,16 @@ function _saRenderSubscriptions(pc) {
             ${ownerPhone ? `<div style="font-size:0.73rem;color:#6b7280;margin-top:1px;">${ownerPhoneSafe}</div>` : ''}`;
 
         // Статус підписки
-        let statusBadge = `${window.t('spanStylebackgroundf3f4f6color6b7280padd')}`;
+        let statusBadge = `<span style="background:#f3f4f6;color:#6b7280;padding:2px 7px;border-radius:10px;font-size:0.71rem;">без підписки</span>`;
         let dateStr = '<span style="color:#9ca3af;font-size:0.75rem;">—</span>';
 
         if (subEnd) {
             const daysLeft = Math.ceil((subEnd - now) / (1000 * 60 * 60 * 24));
             dateStr = `${String(subEnd.getDate()).padStart(2,'0')}.${String(subEnd.getMonth()+1).padStart(2,'0')}.${subEnd.getFullYear()}`;
-            if (daysLeft > 30)     statusBadge = `${window.t('spanStylebackgrounddcfce7color16a34apadd')}`;
+            if (daysLeft > 30)     statusBadge = `<span style="background:#dcfce7;color:#16a34a;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;">✓ активна</span>`;
             else if (daysLeft > 7) statusBadge = `<span style="background:#fef9c3;color:#b45309;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;">⚠ ${daysLeft}д</span>`;
             else if (daysLeft > 0) statusBadge = `<span style="background:#fee2e2;color:#dc2626;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;">🔴 ${daysLeft}д</span>`;
-            else                   statusBadge = `${window.t('spanStylebackgroundfee2e2colordc2626padd')}`;
+            else                   statusBadge = `<span style="background:#fee2e2;color:#dc2626;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;">✗ прострочена</span>`;
         }
 
         return `<tr onclick="saOpenSubModal('${_saEsc(c.id)}','${_saEsc(data.name||c.id)}','${ownerEmailSafe}','${ownerNameSafe}','${ownerPhoneSafe}','${ownerTgSafe}')"
