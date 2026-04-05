@@ -4984,12 +4984,12 @@ function _renderAnalytics() {
         ${(_afManager||_afPeriod!=='all') ? `<div style="font-size:0.75rem;color:#6366f1;background:#eef2ff;border-radius:7px;padding:4px 10px;margin-bottom:2px;">
           Показано: <b>${total}</b> угод${_afManager ? ` · ${(window.users||[]).find(u=>u.id===_afManager)?.name||'менеджер'}` : ''}${_afPeriod!=='all'?` · ${_afPeriod==='custom'?`${_afFrom||'...'} — ${_afTo||'...'}`:_afPeriod+' дн'}`:''}</div>` : ''}
 
-        <!-- KPI картки -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;">
+        <!-- KPI картки — компактні, 3 колонки -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.4rem;margin-bottom:0.75rem;">
             ${kpis.map(([l,v,col]) => `
-            <div style="background:white;border-radius:10px;padding:0.9rem;border:1px solid #e8eaed;border-top:3px solid ${col};text-align:center;">
-                <div style="font-size:1.3rem;font-weight:800;color:${col};">${v}</div>
-                <div style="font-size:0.69rem;color:#9ca3af;margin-top:2px;">${l}</div>
+            <div style="background:white;border-radius:12px;padding:0.65rem 0.5rem;border:1px solid #f2f2f7;text-align:center;">
+                <div style="font-size:1.1rem;font-weight:700;color:${col};letter-spacing:-0.02em;">${v}</div>
+                <div style="font-size:0.65rem;color:#8e8e93;margin-top:1px;font-weight:500;">${l}</div>
             </div>`).join('')}
         </div>
 
@@ -5007,7 +5007,7 @@ function _renderAnalytics() {
             const color = pct >= 100 ? '#22c55e' : pct >= 70 ? '#f59e0b' : '#ef4444';
             return `<div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
-                    <span style="font-size:0.82rem;font-weight:700;color:#111827;">🎯 План місяця</span>
+                    <span style="font-size:0.82rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> План місяця</span>
                     <span style="font-size:0.82rem;font-weight:700;color:${color};">${_fmt(monthRevenue)} / ${_fmt(goal)} (${pct}%)</span>
                 </div>
                 <div style="background:#f3f4f6;border-radius:8px;height:10px;overflow:hidden;">

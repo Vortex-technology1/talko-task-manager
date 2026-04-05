@@ -176,25 +176,25 @@ window.renderCrmTodo = function() {
     el.innerHTML = `
     <div style="padding:1rem 1.5rem;">
 
-      <!-- Хедер -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="display:flex;align-items:center;gap:0.75rem;">
-          <span style="font-size:1rem;font-weight:700;color:#111827;">${_i18n.title}</span>
-          <span style="background:#374151;color:#fff;border-radius:10px;padding:2px 9px;font-size:0.72rem;font-weight:700;">${all.length}</span>
+      <!-- Хедер — компактний Apple style -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <span style="font-size:1rem;font-weight:700;color:#1c1c1e;">${_i18n.title}</span>
+          <span style="background:#e5e5ea;color:#3a3a3c;border-radius:10px;padding:1px 8px;font-size:0.72rem;font-weight:700;">${all.length}</span>
         </div>
-        <div style="display:flex;gap:0.5rem;">
-          <button onclick="renderCrmTodo()" style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:5px 8px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${TI.refresh}</button>
-          ${window.isSuperAdmin ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v11l3.5 6H5.5L9 14V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg> Тест</button>' : ''}
-          <button onclick="crmOpenCreateDeal()" style="background:#22c55e;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem;">${TI.plus} ${window.t('crmNewLead')||'Новий лід'}</button>
+        <div style="display:flex;gap:0.4rem;align-items:center;">
+          <button onclick="renderCrmTodo()" style="background:none;border:none;cursor:pointer;color:#8e8e93;padding:4px;display:flex;align-items:center;">${TI.refresh}</button>
+          ${window.isSuperAdmin ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f2f2f7;color:#3a3a3c;border:none;border-radius:8px;padding:5px 10px;font-size:0.75rem;cursor:pointer;">Тест</button>' : ''}
+          <button onclick="crmOpenCreateDeal()" style="background:#34c759;color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.3rem;">${TI.plus} ${window.t('crmNewLead')||'Новий лід'}</button>
         </div>
       </div>
 
-      <!-- Лічильники -->
-      <div style="display:flex;gap:0.4rem;margin-bottom:0.85rem;flex-wrap:wrap;">
-        ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} ${window.t('crmOverdue')||'прострочено'}</div>`:''}
-        ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} ${window.t('crmToday')||'на сьогодні'}</div>`:''}
-        ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} ${_i18n.newLeads}</div>`:''}
-        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${sla.length} ${_i18n.forgotten}</div>`:''})()}
+      <!-- Лічильники — компактний рядок -->
+      <div style="display:flex;gap:0.3rem;margin-bottom:0.65rem;flex-wrap:wrap;">
+        ${overdue.length?`<span style="background:#fff2f2;border-radius:8px;padding:3px 8px;font-size:0.72rem;color:#ff3b30;font-weight:600;">${overdue.length} прострочено</span>`:''}
+        ${todayList.length?`<span style="background:#fff8e6;border-radius:8px;padding:3px 8px;font-size:0.72rem;color:#ff9500;font-weight:600;">${todayList.length} сьогодні</span>`:''}
+        ${noDate.length?`<span style="background:#f2f2f7;border-radius:8px;padding:3px 8px;font-size:0.72rem;color:#8e8e93;">+${noDate.length} ${_i18n.newLeads}</span>`:''}
+        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<span style="background:#f5f0ff;border-radius:8px;padding:3px 8px;font-size:0.72rem;color:#af52de;font-weight:600;">${sla.length} ${_i18n.forgotten}</span>`:''})()}
       </div>
 
       <!-- Пошук -->

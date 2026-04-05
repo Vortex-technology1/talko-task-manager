@@ -347,31 +347,30 @@
             container.innerHTML = `<div class="projects-grid">${filtered.map(p => {
                 const s = getProjectStats(p.id);
                 const isOverdue = p.deadline && p.deadline < todayStr && p.status === 'active';
+                const statusColor = p.status === 'active' ? '#34c759' : p.status === 'completed' ? '#007aff' : '#ff9500';
+                const statusLabel = p.status === 'active' ? window.t('projectActive') : p.status === 'completed' ? window.t('projectCompleted') : window.t('projectPaused');
+                const lockSvg = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
                 return `
                 <div class="project-card" style="--pc:${safeColor(p.color)};" onclick="openProjectDetail('${escId(p.id)}')">
-                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${safeColor(p.color)};border-radius:12px 12px 0 0;"></div>
-                    <div class="project-card-header">
-                        <div class="project-card-title">${p.isPrivate ? '🔒 ' : ''}${esc(p.name)}</div>
-                        <span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? window.t('projectActive') : p.status === 'completed' ? window.t('projectCompleted') : window.t('projectPaused')}</span>
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${safeColor(p.color)};border-radius:12px 12px 0 0;"></div>
+                    <div class="project-card-header" style="margin-bottom:0.25rem;">
+                        <div class="project-card-title" style="font-size:0.88rem;font-weight:600;color:#1c1c1e;line-height:1.3;">${p.isPrivate ? lockSvg + ' ' : ''}${esc(p.name)}</div>
+                        <span style="font-size:0.62rem;font-weight:600;color:${statusColor};background:${statusColor}18;padding:2px 6px;border-radius:8px;flex-shrink:0;">${statusLabel}</span>
                     </div>
-                    ${p.description ? `<div class="project-card-desc">${esc(p.description)}</div>` : ''}
-                    ${p.functionIds?.length ? `<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.4rem;">${p.functionIds.slice(0,3).map(fId => {
-                        const f = (typeof functions !== 'undefined') ? functions.find(fn => fn.id === fId) : null;
-                        return f ? `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 6px;border-radius:4px;">⚙ ${esc(f.name)}</span>` : '';
-                    }).filter(Boolean).join('')}${p.functionIds.length > 3 ? `<span style="font-size:0.65rem;color:#9ca3af;">+${p.functionIds.length - 3}</span>` : ''}</div>` : ''}
-                    <div class="project-card-stats">
-                        <span><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total} ${window.t('tasksWord')}</span>
-                        <span><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done} ${window.t('doneWord')}</span>
-                        ${s.overdue > 0 ? `<span style="color:var(--danger);font-weight:600;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue} ${window.t('overdueWord')}</span>` : ''}
-                        ${s.deadlineConflicts.length > 0 ? `<span style="color:#ea580c;font-weight:600;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${s.deadlineConflicts.length} ${window.t('pastDeadline')}</span>` : ''}
+                    ${p.description ? `<div style="font-size:0.72rem;color:#8e8e93;margin-bottom:0.35rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${esc(p.description)}</div>` : ''}
+                    <div style="display:flex;gap:0.6rem;margin-bottom:0.4rem;flex-wrap:wrap;">
+                        <span style="font-size:0.7rem;color:#8e8e93;display:flex;align-items:center;gap:2px;"><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total}</span>
+                        <span style="font-size:0.7rem;color:#34c759;display:flex;align-items:center;gap:2px;"><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done}</span>
+                        ${s.overdue > 0 ? `<span style="font-size:0.7rem;color:#ff3b30;font-weight:600;display:flex;align-items:center;gap:2px;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue}</span>` : ''}
                     </div>
-                    <div class="project-progress-bar"><div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(p.color)};"></div></div>
-                    <div class="project-progress-label"><span>${s.done}/${s.total}</span><span>${s.percent}%</span></div>
-                    ${p.deadline ? `<div class="project-card-deadline ${isOverdue ? 'overdue' : ''}"><i data-lucide="calendar" class="icon icon-sm"></i> ${formatDateShort(p.deadline)}</div>` : ''}
+                    <div style="height:3px;border-radius:2px;background:#f2f2f7;margin-bottom:0.2rem;"><div style="width:${s.percent}%;height:100%;background:${safeColor(p.color)};border-radius:2px;transition:width 0.3s;"></div></div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:#8e8e93;">
+                        <span>${s.done}/${s.total}</span>
+                        ${p.deadline ? `<span style="color:${isOverdue ? '#ff3b30' : '#8e8e93'};">${formatDateShort(p.deadline)}</span>` : `<span>${s.percent}%</span>`}
+                    </div>
                 </div>`;
             }).join('')}</div>`;
         }
-        
         function renderProjectsList(container, filtered) {
             const todayStr = getLocalDateStr();
             container.innerHTML = `<table class="projects-list-table"><thead><tr>
