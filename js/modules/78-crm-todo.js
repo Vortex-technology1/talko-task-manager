@@ -261,6 +261,7 @@ function _renderRow(d, i) {
     const _confirmed  = _rl==='ru'?'Подтверждено':_rl==='en'?'Confirmed':'Підтверджено';
     const _confirm    = _rl==='ru'?'Подтвердить':_rl==='en'?'Confirm':'Підтвердити';
     const _consult    = _rl==='ru'?'Консультация':_rl==='en'?'Consultation':'Консультація';
+    const _newDate    = window.t('newDateLabel') || (_rl==='ru'?'Новая':_rl==='en'?'New':'Нова');
 
     const p         = _priority(d);
     const fmt       = _fmtDate(d.nextContactDate);
@@ -347,7 +348,7 @@ function _renderRow(d, i) {
       <div style="min-width:72px;flex-shrink:0;">
         <div style="background:${dateBg};border-radius:8px;padding:4px 8px;text-align:center;">
           <div style="font-size:0.73rem;font-weight:700;color:${dateClr};white-space:nowrap;line-height:1.2;">
-            ${fmt?fmt.label:_i18n.newDate}
+            ${fmt?fmt.label:_newDate}
           </div>
           ${timeTag}
         </div>
