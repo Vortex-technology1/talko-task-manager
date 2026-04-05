@@ -462,11 +462,106 @@ export default {
         if (path === '/api/whatsapp-send') return handleWhatsAppSend(request, env);
         if (path === '/api/whatsapp-webhook') return handleWhatsAppWebhook(request, url, env);
         if (path === '/api/bot-resume-flow') return handleBotResumeFlow(request, env);
+        if (path === '/api/payment-reminders') return handlePaymentReminders(request, env);
 
         // ── Static assets ────────────────────────────────────
         return env.ASSETS.fetch(request);
+    },
+
+    // ── Cron Trigger — щодня о 9:00 UTC ─────────────────────
+    async scheduled(event, env, ctx) {
+        ctx.waitUntil(handlePaymentReminders(null, env));
     }
 };
+
+// ════════════════════════════════════════════════════════════
+// PAYMENT REMINDERS — щоденний cron для нагадувань по дебіторці
+// ════════════════════════════════════════════════════════════
+async function handlePaymentReminders(request, env) {
+    // Auth перевірка якщо це HTTP запит (не cron)
+    if (request) {
+        const auth = request.headers.get('Authorization') || '';
+        const secret = env.CRON_SECRET || '';
+        if (secret && auth !== `Bearer ${secret}`) {
+            return json({ error: 'Unauthorized' }, 401);
+        }
+    }
+
+    let token;
+    try { token = await getToken(env); } catch(e) {
+        console.error('[PayReminders] getToken error:', e.message);
+        return request ? json({ error: 'Firebase error' }, 500) : null;
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+
+    let sent = 0, errors = 0;
+
+    try {
+        // Знаходимо всі дебіторки зі статусом open де dueDate = завтра
+        const debtorsSnap = await fsQuery('sales_debtors', [
+            { field: 'status', op: 'in', value: ['open', 'partial'] },
+            { field: 'dueDate', value: tomorrow },
+        ], token, 200).catch(() => []);
+
+        // Групуємо по компаніях
+        const byCompany = {};
+        for (const doc of debtorsSnap) {
+            const d = fFields(doc.fields || {});
+            const cid = doc.name?.split('/')[6]; // companies/{cid}/sales_debtors/{id}
+            if (!cid || !d.dueDate) continue;
+            if (!byCompany[cid]) byCompany[cid] = [];
+            byCompany[cid].push({ ...d, id: doc.name.split('/').pop() });
+        }
+
+        // Для кожної компанії відправляємо нагадування власнику
+        for (const [companyId, debtors] of Object.entries(byCompany)) {
+            try {
+                // Отримуємо бот токен компанії
+                const settDoc = await fsGet(`companies/${companyId}/settings/telegram`, token);
+                const sett = settDoc?.fields ? fFields(settDoc.fields) : {};
+                const botToken = sett.botToken || sett.telegramBotToken || env.TELEGRAM_BOT_TOKEN;
+                if (!botToken) continue;
+
+                // Отримуємо chatId власника
+                const compDoc = await fsGet(`companies/${companyId}`, token);
+                const comp = compDoc?.fields ? fFields(compDoc.fields) : {};
+                const ownerId = comp.ownerId || comp.createdBy;
+                if (!ownerId) continue;
+
+                const userDoc = await fsGet(`companies/${companyId}/users/${ownerId}`, token);
+                const user = userDoc?.fields ? fFields(userDoc.fields) : {};
+                const chatId = user.telegramChatId;
+                if (!chatId) continue;
+
+                // Формуємо повідомлення
+                const fmt = (n) => Number(n||0).toLocaleString('uk-UA', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                const lines = debtors.map(d =>
+                    `• <b>${d.clientName || '—'}</b> — ${fmt(d.amount - (d.paidAmount||0))} грн`
+                ).join('\n');
+
+                const msg = `💳 <b>Нагадування про платежі завтра</b>\n\n${lines}\n\n📅 Дата: ${tomorrow}`;
+
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: 'HTML' }),
+                });
+
+                sent++;
+            } catch(e) {
+                console.error(`[PayReminders] company ${companyId}:`, e.message);
+                errors++;
+            }
+        }
+    } catch(e) {
+        console.error('[PayReminders] main error:', e.message);
+    }
+
+    console.log(`[PayReminders] Done. sent=${sent} errors=${errors} date=${tomorrow}`);
+    return request ? json({ ok: true, sent, errors, reminderDate: tomorrow }) : null;
+}
 
 // ════════════════════════════════════════════════════════════
 // SITE HANDLER — renders public landing pages
