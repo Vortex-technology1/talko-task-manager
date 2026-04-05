@@ -335,6 +335,27 @@
           <textarea id="slInvNotes" class="sl-inp" rows="2" placeholder="Коментар...">${esc(order?.notes||'')}</textarea>
         </div>
 
+        <!-- Графік платежів -->
+        <div style="margin-bottom:1.25rem;border:1.5px solid #e5e7eb;border-radius:10px;padding:1rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+            <b style="font-size:.85rem;color:#374151;">📅 ${_tg('Графік платежів','График платежей')}</b>
+            <button onclick="window._salesAddPaymentRow()" class="sl-btn-sm" style="background:#f0fdf4;color:#16a34a;">+ ${_tg('Додати платіж','Добавить платеж')}</button>
+          </div>
+          <div id="slPaymentSchedule" style="display:flex;flex-direction:column;gap:0.5rem;">
+            ${(order?.paymentSchedule||[]).map((p,i)=>`
+            <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:0.5rem;align-items:center;" id="slPayRow_${i}">
+              <input type="date" class="sl-inp-sm" value="${p.date||''}" placeholder="${_tg('Дата','Дата')}"
+                onchange="window._salesPayRowChange(${i},'date',this.value)" style="padding:6px 8px;">
+              <input type="number" class="sl-inp-sm" value="${p.amount||''}" placeholder="${_tg('Сума','Сумма')}"
+                onchange="window._salesPayRowChange(${i},'amount',+this.value)" style="padding:6px 8px;text-align:right;">
+              <button onclick="window._salesRemovePayRow(${i})" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:1.1rem;padding:0 4px;">×</button>
+            </div>`).join('')}
+          </div>
+          <div style="margin-top:0.5rem;font-size:0.75rem;color:#9ca3af;">
+            ${_tg('Вказані платежі автоматично потраплять в дебіторку і нагадування','Указанные платежи автоматически попадут в дебиторку и напоминания')}
+          </div>
+        </div>
+
         <!-- Actions -->
         <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:flex-end">
           <button onclick="document.getElementById('salesInvoiceOverlay').remove()" class="sl-btn" style="background:#f3f4f6;color:#374151">${_tg('Скасувати','Отмена')}</button>
@@ -348,6 +369,7 @@
 
     // Render items
     S._invoiceItems = items.map(i => ({ ...i }));
+    S._paySchedule = (order?.paymentSchedule || []).map(p => ({ ...p }));
     renderInvoiceItems();
 
     // Client autocomplete fill phone
@@ -412,12 +434,49 @@
   window._salesAddInvoiceItem = function() {
     S._invoiceItems.push({ id: Date.now()+'', name:'', qty:1, unit:'шт', price:0, discount:0, total:0 });
     renderInvoiceItems();
-    // focus last name input
     setTimeout(() => {
       const rows = el('slInvItemsTbody')?.querySelectorAll('tr');
       if (rows?.length) rows[rows.length-1].querySelector('input')?.focus();
     }, 50);
   };
+
+  // ── Графік платежів ──────────────────────────────────────
+  if (!S._paySchedule) S._paySchedule = [];
+
+  window._salesAddPaymentRow = function() {
+    S._paySchedule = S._paySchedule || [];
+    S._paySchedule.push({ date: '', amount: 0, paid: false });
+    _renderPaySchedule();
+  };
+
+  window._salesPayRowChange = function(idx, field, val) {
+    if (!S._paySchedule[idx]) return;
+    S._paySchedule[idx][field] = val;
+  };
+
+  window._salesRemovePayRow = function(idx) {
+    S._paySchedule.splice(idx, 1);
+    _renderPaySchedule();
+  };
+
+  function _renderPaySchedule() {
+    const wrap = el('slPaymentSchedule');
+    if (!wrap) return;
+    wrap.innerHTML = (S._paySchedule || []).map((p, i) => `
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:0.5rem;align-items:center;">
+        <input type="date" class="sl-inp-sm" value="${p.date||''}"
+          onchange="window._salesPayRowChange(${i},'date',this.value)"
+          style="padding:6px 8px;">
+        <input type="number" class="sl-inp-sm" value="${p.amount||''}"
+          placeholder="${_tg('Сума','Сумма')}"
+          onchange="window._salesPayRowChange(${i},'amount',+this.value)"
+          style="padding:6px 8px;text-align:right;">
+        <button onclick="window._salesRemovePayRow(${i})"
+          style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:1.1rem;padding:0 4px;">×</button>
+      </div>`).join('');
+  }
+
+
 
   window._salesAddCatalogItem = function() {
     if (!S.products.length) { toast(_tg('Каталог порожній. Додайте товари/послуги в розділ "Каталог".', 'Каталог пуст. Добавьте товары/услуги в раздел "Каталог".'), 'info'); return; }
@@ -502,28 +561,90 @@
       paymentStatus: markPaid ? 'paid' : (S.editingOrder?.paymentStatus || 'unpaid'),
       paidAmount: markPaid ? total : (S.editingOrder?.paidAmount || 0),
       notes: notes || '',
+      paymentSchedule: (S._paySchedule || []).filter(p => p.date && p.amount > 0),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     try {
+      let orderId;
       if (S.editingOrderId) {
         await col('sales_orders').doc(S.editingOrderId).update(data);
-        if (markPaid) await recordSaleInFinance({ ...data, id: S.editingOrderId, paidAmount: total });
+        orderId = S.editingOrderId;
+        if (markPaid) await recordSaleInFinance({ ...data, id: orderId, paidAmount: total });
         toast(_tg('Рахунок оновлено','Счет обновлён'));
       } else {
         data.isDemo = false;
         data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
         data.createdBy = window.currentUser?.uid || '';
         const ref = await col('sales_orders').add(data);
-        if (markPaid) await recordSaleInFinance({ ...data, id: ref.id, paidAmount: total });
+        orderId = ref.id;
+        if (markPaid) await recordSaleInFinance({ ...data, id: orderId, paidAmount: total });
         toast(_tg('Рахунок створено','Счет создан'));
       }
+
+      // Автоматично створюємо/оновлюємо дебіторку для кожного платежу в графіку
+      const schedule = (S._paySchedule || []).filter(p => p.date && p.amount > 0);
+      if (schedule.length > 0) {
+        await _createDebtorsFromSchedule(orderId, data, schedule);
+      }
+
       document.getElementById('salesInvoiceOverlay')?.remove();
       await loadOrders();
     } catch(e) { toast('Помилка: ' + e.message, 'error'); }
   };
 
   // ─── finance integration ──────────────────────────────────────────────────
+  async function _createDebtorsFromSchedule(orderId, orderData, schedule) {
+    try {
+      const batch = firebase.firestore().batch();
+      const today = todayISO();
+
+      for (let i = 0; i < schedule.length; i++) {
+        const p = schedule[i];
+        const debtorId = `${orderId}_pay${i}`;
+        const isOverdue = p.date < today && !p.paid;
+        const debtorRef = col('sales_debtors').doc(debtorId);
+        batch.set(debtorRef, {
+          orderId,
+          orderNumber: orderData.number || '',
+          clientName: orderData.clientName || '',
+          clientPhone: orderData.clientPhone || '',
+          amount: p.amount,
+          paidAmount: p.paid ? p.amount : 0,
+          dueDate: p.date,
+          status: p.paid ? 'paid' : (isOverdue ? 'overdue' : 'open'),
+          paymentScheduleIndex: i,
+          currency: 'UAH',
+          sourceModule: 'sales',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+
+        // Очікуване надходження у фінансах (якщо не оплачено)
+        if (!p.paid) {
+          const finRef = col('finance_transactions').doc(`expected_${debtorId}`);
+          batch.set(finRef, {
+            type: 'income_expected',
+            amount: p.amount,
+            categoryName: _tg('Очікувана оплата (дебіторка)', 'Ожидаемая оплата (дебиторка)'),
+            note: `${_tg('Рахунок','Счет')} ${orderData.number||''} · ${orderData.clientName||''} · платіж ${i+1}`,
+            date: p.date,
+            dueDate: p.date,
+            sourceModule: 'sales',
+            sourceId: orderId,
+            debtorId,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          }, { merge: true });
+        }
+      }
+
+      await batch.commit();
+      console.log(`[Sales] Created ${schedule.length} debtor entries for order ${orderId}`);
+    } catch(e) {
+      console.warn('[Sales] _createDebtorsFromSchedule error:', e.message);
+    }
+  }
+
   async function recordSaleInFinance(order) {
     if (!order.paidAmount) return;
     try {
