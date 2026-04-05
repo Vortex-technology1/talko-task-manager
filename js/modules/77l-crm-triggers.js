@@ -198,7 +198,7 @@ async function _sendTriggerNotify(payload) {
                 <select data-cond-op style="flex:1;${inp}">
                     ${Object.entries(OP_LABELS).map(([k,v])=>`<option value="${k}" ${c.op===k?'selected':''}>${_tl(v)}</option>`).join('')}
                 </select>
-                <input data-cond-val value="${_esc(c.value||'')}" placeholder="Значення" style="flex:1;${inp}">
+                <input data-cond-val value="${_esc(c.value||'')}" placeholder=window.t('значення') style="flex:1;${inp}">
                 <button onclick="this.closest('.trg-cond-row').remove()" style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px;flex-shrink:0;">✕</button>
             </div>`).join('');
         }
@@ -283,18 +283,18 @@ async function _sendTriggerNotify(payload) {
     function _actParamsHTML(a, stageOpts, userOpts, inp) {
         switch(a.type) {
             case 'create_task':
-                return `<input data-act-title placeholder="Назва задачі" value="${_esc(a.title||'')}" style="${inp}margin-bottom:0.3rem;">
-                        <input data-act-duedays type="number" placeholder="Дедлайн (днів)" value="${a.dueDays||1}" style="${inp}">`;
+                return `<input data-act-title placeholder=window.t('назваЗадачі') value="${_esc(a.title||'')}" style="${inp}margin-bottom:0.3rem;">
+                        <input data-act-duedays type="number" placeholder=window.t('дедлайнДнів') value="${a.dueDays||1}" style="${inp}">`;
             case 'send_telegram':
                 return `<select data-act-to style="${inp}margin-bottom:0.3rem;">
                             <option value="owner" ${a.to==='owner'?'selected':''}>Власнику</option>
                             <option value="assignee" ${a.to==='assignee'?'selected':''}>Відповідальному</option>
                         </select>
-                        <input data-act-message placeholder="Текст повідомлення" value="${_esc(a.message||'')}" style="${inp}">`;
+                        <input data-act-message placeholder=window.t('текстПовідомлення1') value="${_esc(a.message||'')}" style="${inp}">`;
             case 'change_assignee':
                 return `<select data-act-userid style="${inp}">${userOpts}</select>`;
             case 'add_tag':
-                return `<input data-act-tag placeholder="Назва тегу" value="${_esc(a.tag||'')}" style="${inp}">`;
+                return `<input data-act-tag placeholder=window.t('назваТегу') value="${_esc(a.tag||'')}" style="${inp}">`;
             case 'move_stage':
                 return `<select data-act-stage style="${inp}">${stageOpts}</select>`;
             default:
@@ -479,7 +479,7 @@ async function _sendTriggerNotify(payload) {
                     const users = window.companyUsers || window.users || [];
                     const assigneeUser = users.find(u => u.id === assigneeId);
                     await window.companyRef().collection(window.DB_COLS?.TASKS || 'tasks').add({
-                        title:        (action.title || 'Задача') + (deal.clientName ? ' — ' + deal.clientName : ''),
+                        title:        (action.title || window.t('задача')) + (deal.clientName ? ' — ' + deal.clientName : ''),
                         status:       'new',
                         priority:     action.priority || 'medium',
                         assigneeId,

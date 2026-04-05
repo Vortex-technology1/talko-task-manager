@@ -124,7 +124,7 @@
                 const isOverdue = t.deadlineDate && t.deadlineDate < today && t.status !== 'done' && t.status !== 'review';
                 results.push({
                     category: gs_t('gsSearchTasks','Завдання'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>',
-                    title: t.title||'(без назви)',
+                    title: t.title||window.t('безНазви'),
                     subtitle: [assigneeName, t.deadlineDate].filter(Boolean).join(' · '),
                     badge: t.status==='done'?gs_t('gsStatusDone','Виконано'):t.status==='progress'?gs_t('gsStatusProgress','В роботі'):gs_t('gsStatusNew','Нове'),
                     badgeColor: statusColor, overdue: isOverdue,
@@ -145,7 +145,7 @@
                 results.push({
                     category: gs_t('gsSearchUsers','Співробітники'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>',
                     title: u.name||u.email,
-                    subtitle: `${u.email} · ${userTasks.length} ${gs_t('gsActive','активних')}`,
+                    subtitle: `${u.email} · ${userTasks.length} ${gs_t('gsActive',window.t('активних'))}`,
                     badge: (roleMap[u.role]||u.role),
                     badgeColor: u.role==='owner'?'#22c55e':u.role==='manager'?'#f97316':'#6b7280',
                     action: () => {
@@ -220,7 +220,7 @@
                 const taskCount = (typeof tasks!=='undefined') ? tasks.filter(t=>t.projectId===p.id&&t.status!=='done').length : 0;
                 results.push({
                     category: gs_t('gsSearchProjects','Проєкти'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>',
-                    title: p.name, subtitle:`${taskCount} ${gs_t('gsActiveTasks','активних завдань')}`,
+                    title: p.name, subtitle:`${taskCount} ${gs_t('gsActiveTasks',window.t('активнихЗавдань'))}`,
                     badge: gs_t('gsSearchProjectBadge','Проєкт'), badgeColor:'#3b82f6',
                     action: () => {
                         if (typeof switchTab==='function') switchTab('projects');
@@ -282,7 +282,7 @@
                 const assignee = (typeof users!=='undefined') ? users.find(u=>u.id===t.assigneeId) : null;
                 results.push({
                     category: gs_t('gsSearchRegular','Регулярні'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>',
-                    title: t.title||'(без назви)',
+                    title: t.title||window.t('безНазви'),
                     subtitle: assignee ? (assignee.name||assignee.email) : '',
                     badge: gs_t('gsSearchRegularBadge','Регулярне'), badgeColor:'#06b6d4',
                     action: () => { if (typeof switchTab==='function') switchTab('regular'); }
@@ -298,7 +298,7 @@
             ).slice(0, 3).forEach(c => {
                 results.push({
                     category: gs_t('gsSearchCoordination','Координація'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>',
-                    title: c.name||'(без назви)',
+                    title: c.name||window.t('безНазви'),
                     subtitle: c.type||'',
                     badge: c.status==='active'?gs_t('gsStatusActive','Активна'):gs_t('gsStatusDone2','Завершена'),
                     badgeColor: c.status==='active'?'#22c55e':'#9ca3af',
@@ -319,7 +319,7 @@
                 results.push({
                     category: gs_t('gsSearchStatistics','Статистика'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>',
                     title: m.name,
-                    subtitle: m.unit ? gs_t('gsUnit','Одиниця: ') + m.unit : '',
+                    subtitle: m.unit ? gs_t('gsUnit',window.t('одиниця1')) + m.unit : '',
                     badge: gs_t('gsSearchMetric','Метрика'), badgeColor:'#8b5cf6',
                     action: () => { if (typeof switchTab==='function') switchTab('statistics'); }
                 });
@@ -342,7 +342,7 @@
                 results.push({
                     category: gs_t('gsSearchDeals','CRM — Угоди'),
                     categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>',
-                    title: d.name || d.clientName || '(без назви)',
+                    title: d.name || d.clientName || window.t('безНазви'),
                     subtitle: (d.clientName||'') + amt,
                     badge: stageLbl, badgeColor: stageColor,
                     action: () => {
@@ -397,7 +397,7 @@
                 results.push({
                     category: gs_t('gsSearchTransactions','Фінанси — Транзакції'),
                     categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>',
-                    title: tx.description || tx.comment || tx.categoryName || '(без опису)',
+                    title: tx.description || tx.comment || tx.categoryName || window.t('безОпису'),
                     subtitle: [dateStr, tx.categoryName, tx.accountName].filter(Boolean).join(' · '),
                     badge: amt, badgeColor: isIncome ? '#22c55e' : '#ef4444',
                     action: () => { if (typeof switchTab==='function') switchTab('finance'); }
@@ -446,7 +446,7 @@
                     category: gs_t('gsSearchWarehouse','Склад'),
                     categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M9 21v-6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6"/></svg></span>',
                     title: i.name,
-                    subtitle: [i.sku ? 'SKU: '+i.sku : '', i.category, `${gs_t('gsQty','Залишок')}: ${qty}`].filter(Boolean).join(' · '),
+                    subtitle: [i.sku ? 'SKU: '+i.sku : '', i.category, `${gs_t('gsQty',window.t('залишок'))}: ${qty}`].filter(Boolean).join(' · '),
                     badge: statusLbl, badgeColor: statusColor,
                     action: () => {
                         if (typeof switchTab==='function') switchTab('warehouse');
@@ -472,7 +472,7 @@
                 results.push({
                     category: gs_t('gsSearchBooking','Booking'),
                     categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>',
-                    title: b.title || b.clientName || '(без назви)',
+                    title: b.title || b.clientName || window.t('безНазви'),
                     subtitle: [dateStr, b.serviceName||b.service, b.clientPhone].filter(Boolean).join(' · '),
                     badge: gs_t('gsSearchBookingBadge','Запис'), badgeColor:'#8b5cf6',
                     action: () => { if (typeof switchTab==='function') switchTab('booking'); }
@@ -496,7 +496,7 @@
                 results.push({
                     category: gs_t('gsSearchLearning','Навчання'),
                     categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>',
-                    title: title || '(без назви)',
+                    title: title || window.t('безНазви'),
                     subtitle: sub.length > 60 ? sub.substring(0,60)+'…' : sub,
                     badge: gs_t('gsSearchLessonBadge','Урок'), badgeColor:'#0ea5e9',
                     action: () => {
@@ -566,7 +566,7 @@
                 results.push({
                     category: gs_t('gsSearchNav','Перейти'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>',
                     title: item.label,
-                    subtitle: gs_t('gsOpenTab','Відкрити вкладку'),
+                    subtitle: gs_t('gsOpenTab',window.t('відкритиВкладку')),
                     badge: gs_t('gsSearchNavBadge','Навігація'), badgeColor:'#6b7280',
                     action: () => {
                         if (typeof switchTab==='function') switchTab(item.tab);

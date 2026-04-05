@@ -224,7 +224,7 @@ function mountCanvas() {
                     onmouseleave="if(document.activeElement!==this)this.style.borderColor='transparent'"
                     onfocus="this.style.borderColor='#22c55e';this.style.background='#1e293b';this.select()"
                     onblur="this.style.borderColor='transparent';this.style.background='transparent';window._fcSaveTitle(this.value)"
-                    onkeydown="if(event.key==='Enter'){this.blur();}if(event.key==='Escape'){this.value=fc.flowData.name||'Без назви';this.blur();}"
+                    onkeydown="if(event.key==='Enter'){this.blur();}if(event.key==='Escape'){this.value=fc.flowData.name||window.t('безНазви1');this.blur();}"
                 />
                 <svg style="position:absolute;right:6px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:0.4;"
                     width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
@@ -303,7 +303,7 @@ function mountCanvas() {
         </button>
 
         <!-- Close -->
-        <button id="fcBtnClose" title="Закрити"
+        <button id="fcBtnClose" title=window.t('закрити')
             style="padding:6px 9px;background:transparent;border:none;border-radius:7px;
             color:#475569;cursor:pointer;display:flex;align-items:center;transition:all 0.15s;margin-left:2px;"
             onmouseenter="this.style.background='#ef444420';this.style.color='#ef4444'"
@@ -419,7 +419,7 @@ function mountCanvas() {
     document.getElementById('fcBtnFit').onclick = fitView;
     document.getElementById('fcBtnUndo').onclick = undo;
     document.getElementById('fcBtnRedo').onclick = redo;
-    document.getElementById('fcFlowTitle').value = fc.flowData.name || 'Без назви';
+    document.getElementById('fcFlowTitle').value = fc.flowData.name || window.t('безНазви1');
     // Автоматично підганяємо ширину input під текст
     (function() {
         const el = document.getElementById('fcFlowTitle');
@@ -488,7 +488,7 @@ function buildSidebar() {
     const aiFunnelBtn = `
         <div style="margin-top:8px;border-top:1px solid #1e293b;padding-top:8px;">
             <div onclick="fcOpenAiFunnelModal()"
-                title="AI Асистент воронки"
+                title=window.t('aiАсистентВоронки')
                 style="width:60px;display:flex;flex-direction:column;align-items:center;
                 gap:4px;padding:6px 4px;border-radius:10px;cursor:pointer;
                 transition:background 0.12s;"
@@ -716,7 +716,7 @@ function buildNodeEl(node) {
                 <div style="font-size:12px;color:white;font-weight:600;margin-top:1px;
                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(nodeName) || cfg.label}</div>
             </div>
-            <div data-dup="${node.id}" title="Копіювати вузол (Ctrl+D)"
+            <div data-dup="${node.id}" title=window.t('копіюватиВузолCtrld')
                 style="width:22px;height:22px;border-radius:6px;background:rgba(0,0,0,0.15);
                 display:flex;align-items:center;justify-content:center;cursor:pointer;
                 flex-shrink:0;transition:background 0.15s;margin-right:3px;"
@@ -1317,7 +1317,7 @@ window.fcOpenAiFunnelModal = function() {
             <div style="margin-bottom:12px;">
                 <div style="font-size:11px;color:#94a3b8;margin-bottom:6px;">Опишіть ваш бізнес і ціль воронки:</div>
                 <textarea id="fcAiFunnelInput" rows="4"
-                    placeholder="Наприклад: Стоматологічна клініка в Києві, 3 лікарі. Ціль — записати людину на безкоштовну консультацію через Telegram бот. Аудиторія — люди 25-45 років."
+                    placeholder=window.t('наприкладСтоматологічнаКлінікаВ')
                     style="width:100%;padding:10px;background:#0f172a;border:1px solid #334155;
                     border-radius:8px;color:white;font-size:12px;box-sizing:border-box;resize:vertical;"></textarea>
             </div>
@@ -1499,7 +1499,7 @@ window.fcTestAiNode = async function(nodeId) {
 
     // Кнопка в стан "завантаження"
     const testBtn = document.querySelector(`button[onclick="fcTestAiNode('${nodeId}')"]`);
-    if (testBtn) { testBtn.textContent = '⏳ Запит...'; testBtn.disabled = true; }
+    if (testBtn) { testBtn.textContent = window.t('запит'); testBtn.disabled = true; }
 
     try {
         let responseText = '';
@@ -1664,7 +1664,7 @@ function renderPropPanel() {
                         <div style="flex:1;">
                             <div style="font-size:9px;color:#64748b;margin-bottom:3px;">ТЕКСТ КНОПКИ</div>
                             <input id="fcp_btn_label_${i}" value="${escAttr(b.label||'')}"
-                                placeholder="Наприклад: Продовжити"
+                                placeholder=window.t('наприкладПродовжити')
                                 style="width:100%;padding:6px 8px;background:#1e293b;border:1px solid #475569;
                                 border-radius:6px;color:white;font-size:12px;box-sizing:border-box;"
                                 oninput="fcUpdateButton(${i})">
@@ -1734,7 +1734,7 @@ function renderPropPanel() {
                         placeholder=${window.t('newLeadStarted')}
                         style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
                         border-radius:7px;color:white;font-size:11px;box-sizing:border-box;resize:vertical;">${d.notifyText||'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Новий лід: {{senderName}}\nКанал: {{channel}}\nВоронка: {{flowName}}\nДані: {{ai_response}}'}</textarea>
-                </div>` : fld('Параметри (JSON)', ta('actionPayload', d.actionPayload, '{"variable":"phone","value":"{{input}}"}', 3));
+                </div>` : fld('${window.t('параметриJson')}', ta('actionPayload', d.actionPayload, '{"variable":"phone","value":"{{input}}"}', 3));
             const actionSel = `<select id="fcp_actionType"
                 onchange="fcSetActionType(this.value)"
                 style="width:100%;padding:8px;background:#0f172a;border:1px solid #334155;
@@ -1865,7 +1865,7 @@ function renderPropPanel() {
                 window._fcLoadLiveModels = async function(prov, key) {
                     if (!key || key.includes('•')) { if (window.showToast) showToast('Введіть API ключ', 'warning'); return; }
                     const btn = document.getElementById('fcLoadModelsBtn');
-                    if (btn) { btn.textContent = '⏳ Завантаження...'; btn.disabled = true; }
+                    if (btn) { btn.textContent = window.t('завантаження1'); btn.disabled = true; }
                     try {
                         let models = [];
                         if (prov === 'openai') {
@@ -1898,7 +1898,7 @@ function renderPropPanel() {
                         } else { throw new Error(window.t('modelsListEmpty')); }
                     } catch(e) {
                         if (window.showToast) showToast('❌ ' + e.message, 'error');
-                        if (btn) { btn.textContent = '🔄 Оновити список'; btn.disabled = false; }
+                        if (btn) { btn.textContent = window.t('оновитиСписок'); btn.disabled = false; }
                     }
                 };
             }
@@ -1979,7 +1979,7 @@ function renderPropPanel() {
                     <textarea id="fcp_firstMessage" rows="2"
                         style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
                         border-radius:7px;color:white;font-size:11px;resize:vertical;box-sizing:border-box;"
-                        placeholder="Привіт! 👋 Я AI-асистент. Чим можу допомогти?">${firstMsg}</textarea>
+                        placeholder=window.t('привітЯAiасистентЧим')>${firstMsg}</textarea>
                 </div>
             </div>`
 

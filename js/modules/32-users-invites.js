@@ -808,7 +808,7 @@
                 document.getElementById('userForm').reset();
                 document.getElementById('userModalTitle').textContent = window.t('addEmployee');
                 _refreshPrimaryFunctionSelect([], '');
-                document.getElementById('userFunctionRoles').textContent = 'Выбери функции выше, щоб налаштувати ролі';
+                document.getElementById('userFunctionRoles').textContent = window.t('выбериФункцииВышеЩоб');
                 if (tabsGroup) tabsGroup.style.display = 'none';
             }
 
@@ -831,7 +831,7 @@
                 if (!f) return '';
                 return `<option value="${esc(f.id)}" ${currentPrimary === f.id ? 'selected' : ''}>${esc(f.name)}</option>`;
             }).join('');
-            sel.innerHTML = `<option value="">— не вибрано —</option>` + opts;
+            sel.innerHTML = `${window.t('optionValueНеВибрано')}` + opts;
         }
 
         function _refreshFunctionRolesUI(selectedFuncIds, existingRoles) {

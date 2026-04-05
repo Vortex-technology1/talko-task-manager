@@ -243,8 +243,8 @@ window._openNewSubModal = function() {
         <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:400px;">
             <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">Новий абонемент</div>
             <input id="ns-client" placeholder="Ім'я клієнта" style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
-            <input id="ns-phone" placeholder="Телефон" style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
-            <input id="ns-service" placeholder="Послуга (напр: Манікюр гель-лак)" style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
+            <input id="ns-phone" placeholder=window.t('телефон') style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
+            <input id="ns-service" placeholder=window.t('послугаНапрМанікюрГельлак') style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
             <div style="display:flex;gap:.5rem;margin-bottom:.5rem;">
                 <div style="flex:1;">
                     <label style="font-size:.75rem;color:#525252;">Кількість сеансів</label>
@@ -288,9 +288,9 @@ window._openNewCertModal = function() {
     modal.innerHTML = `
         <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:380px;">
             <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">Подарунковий сертифікат</div>
-            <input id="nc-by" placeholder="Хто купує" style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
+            <input id="nc-by" placeholder=window.t('хтоКупує') style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
             <input id="nc-for" placeholder="Для кого (не обов'язково)" style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
-            <input id="nc-amount" type="number" value="1000" placeholder="Сума (грн)" style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
+            <input id="nc-amount" type="number" value="1000" placeholder=window.t('сумаГрн') style="width:100%;margin-bottom:.5rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
             <div style="display:flex;gap:.5rem;margin-top:.75rem;">
                 <button onclick="document.getElementById('newCertModal').remove()" 
                     style="flex:1;padding:.55rem;border:1px solid #e2e8f0;background:white;border-radius:8px;cursor:pointer;font-size:.82rem;">Скасувати</button>

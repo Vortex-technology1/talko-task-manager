@@ -1,0 +1,721 @@
+================================================================================
+Nested Translation Call Fixer
+================================================================================
+Base path: C:\Users\User\talko-task-manager
+Scanning: C:\Users\User\talko-task-manager\js\modules
+
+[INFO] Found 155 JavaScript files in C:\Users\User\talko-task-manager\js\modules
+Processing 155 files...
+
+  Checking: 00-module-links.js (no changes)
+  Checking: 01-translations-v2.js (no changes)
+  Checking: 02-firebase-config.js (no changes)
+  Checking: 03-app-state.js (no changes)
+  Checking: 04-google-calendar-config.js (no changes)
+  Checking: 05-auth-functions.js (no changes)
+  Checking: 06-auth-state-listener.js (no changes)
+  Checking: 07-data-loading.js (no changes)
+  Checking: 08-notifications-sound-badge-title.js (no changes)
+  Checking: 09-auto-generate-regular-tasks.js (no changes)
+  Checking: 10-auto-archive-done-tasks-30-days.js (no changes)
+  Checking: 100-booking.js (no changes)
+  Checking: 100b-booking-bridge.js [FIXED]
+  Checking: 101-loyalty.js (no changes)
+  Checking: 102-subscriptions.js (no changes)
+  Checking: 103-notifications.js (no changes)
+  Checking: 104-sales.js (no changes)
+  Checking: 104b-sales-pdf.js (no changes)
+  Checking: 104c-sales-shifts.js (no changes)
+  Checking: 104d-sales-vehicles.js (no changes)
+  Checking: 104e-sales-routes.js (no changes)
+  Checking: 105-food-production.js (no changes)
+  Checking: 106-sales-orders.js (no changes)
+  Checking: 107-sales-realizations.js (no changes)
+  Checking: 108-sales-debtors.js (no changes)
+  Checking: 109-price-lists.js (no changes)
+  Checking: 11-archive-ui.js (no changes)
+  Checking: 12-my-day-popup.js (no changes)
+  Checking: 13-tasks.js (no changes)
+  Checking: 14-reminders-functions.js (no changes)
+  Checking: 15-validation-security.js (no changes)
+  Checking: 16-review-system.js (no changes)
+  Checking: 17-feat-006-time-tracking.js (no changes)
+  Checking: 18-checklist.js (no changes)
+  Checking: 19-user-checkboxes-co-executors-observers.js (no changes)
+  Checking: 20-feat-007-deadline-change-validation.js (no changes)
+  Checking: 21-calendar-view.js (no changes)
+  Checking: 22-my-day-rendering.js (no changes)
+  Checking: 23-status-multi-select-filter.js (no changes)
+  Checking: 23b-welcome-banner.js (no changes)
+  Checking: 24-table-column-resize-sort.js (no changes)
+  Checking: 25-functions.js (no changes)
+  Checking: 26-functions-structure-view.js (no changes)
+  Checking: 26-staff-schedule.js (no changes)
+  Checking: 27-processes.js (no changes)
+  Checking: 28-projects.js (no changes)
+  Checking: 29-auto-advance.js (no changes)
+  Checking: 30-regular-tasks.js (no changes)
+  Checking: 31-regular-calendar-view.js (no changes)
+  Checking: 32-users-invites.js (no changes)
+  Checking: 33-control-dashboard.js (no changes)
+  Checking: 34-admin-functions.js (no changes)
+  Checking: 35-helpers.js (no changes)
+  Checking: 36-swipe-to-complete-event-delegation.js (no changes)
+  Checking: 37-browser-notifications.js (no changes)
+  Checking: 38-google-calendar-integration.js (no changes)
+  Checking: 39-telegram-integration.js (no changes)
+  Checking: 40-calendar-quick-actions.js (no changes)
+  Checking: 41-demo-data.js (no changes)
+  Checking: 42-demo-niches.js (no changes)
+  Checking: 42-niche-autoservice.js (no changes)
+  Checking: 42-niche-beauty.js (no changes)
+  Checking: 42-niche-bundle.js (no changes)
+  Checking: 42-niche-cleaning-us.js (no changes)
+  Checking: 42-niche-cleaning.js (no changes)
+  Checking: 42-niche-construction.js (no changes)
+  Checking: 42-niche-food.js (no changes)
+  Checking: 42-niche-furniture.js (no changes)
+  Checking: 42-niche-horeca.js (no changes)
+  Checking: 42-niche-logistics.js (no changes)
+  Checking: 42-niche-medical.js (no changes)
+  Checking: 42-niche-trucking-us.js (no changes)
+  Checking: 43-demo-tour.js (no changes)
+  Checking: 43-pull-to-refresh-mobile.js (no changes)
+  Checking: 43b-swipe-between-tabs.js (no changes)
+  Checking: 44-offline-support.js (no changes)
+  Checking: 45-comments-system.js (no changes)
+  Checking: 46-audit-log.js (no changes)
+  Checking: 47-cascading-escalation.js (no changes)
+  Checking: 47b-activity-registry.js (no changes)
+  Checking: 48-kanban-board-status-deadlines.js (no changes)
+  Checking: 49-file-attachments.js (no changes)
+  Checking: 50-next-task-ai-like-task-prioritization.js (no changes)
+  Checking: 51-morning-start-auto-start-day.js (no changes)
+  Checking: 52-task-timer-track-execution-time.js (no changes)
+  Checking: 53-onboarding-hints-step-by-step-tooltips-for-new-use.js (no changes)
+  Checking: 54-personal-analytics-employee-self-insight.js (no changes)
+  Checking: 55-team-dashboard-manager-overview.js (no changes)
+  Checking: 56-daily-snapshot-data-for-future-agi-analysis.js (no changes)
+  Checking: 57-decision-log-track-manual-management-decisions-for.js (no changes)
+  Checking: 58-ai-structure-generator-import-assistants-config.js (no changes)
+  Checking: 59-ai-assistants-config-owner-panel.js (no changes)
+  Checking: 60-manual-incidents-journal.js (no changes)
+  Checking: 61-task-templates.js (no changes)
+  Checking: 62-completion-report.js (no changes)
+  Checking: 63-notification-center.js (no changes)
+  Checking: 64-focus-mode.js (no changes)
+  Checking: 65-business-structure.js (no changes)
+  Checking: 66-statistics.js (no changes)
+  Checking: 67-project-stages.js (no changes)
+  Checking: 68-project-templates-qc.js (no changes)
+  Checking: 69-ai-bottleneck-dashboard.js (no changes)
+  Checking: 70-roles-permissions.js (no changes)
+  Checking: 71-owner-dashboard.js (no changes)
+  Checking: 72-global-search.js (no changes)
+  Checking: 73-subtasks.js (no changes)
+  Checking: 74-bulk-duplicate.js (no changes)
+  Checking: 75-superadmin-panel.js (no changes)
+  Checking: 76-coordination.js (no changes)
+  Checking: 77-crm.js (no changes)
+  Checking: 77b-crm-calls.js (no changes)
+  Checking: 77c-crm-tasks.js (no changes)
+  Checking: 77d-crm-import.js (no changes)
+  Checking: 77e-crm-access.js (no changes)
+  Checking: 77f-crm-mobile.js (no changes)
+  Checking: 77g-crm-forms.js (no changes)
+  Checking: 77h-crm-beauty.js (no changes)
+  Checking: 77i-crm-niches.js (no changes)
+  Checking: 77j-crm-finance-bridge.js (no changes)
+  Checking: 77k-crm-tasks-bridge.js (no changes)
+  Checking: 77l-crm-triggers.js (no changes)
+  Checking: 77m-crm-orders-bridge.js (no changes)
+  Checking: 78-crm-todo.js (no changes)
+  Checking: 78-landing-pages.js (no changes)
+  Checking: 79-funnels.js (no changes)
+  Checking: 80-learning-data-110.js (no changes)
+  Checking: 80-learning-data.js (no changes)
+  Checking: 80-learning-engine.js (no changes)
+  Checking: 80-learning.js (no changes)
+  Checking: 81-bots-flows.js (no changes)
+  Checking: 82-flow-canvas.js (no changes)
+  Checking: 83-bots-contacts.js (no changes)
+  Checking: 84-event-bus.js (no changes)
+  Checking: 84b-event-tracking.js (no changes)
+  Checking: 85-ai-proxy-helper.js (no changes)
+  Checking: 85-estimate.js (no changes)
+  Checking: 86-ai-chat-modal.js (no changes)
+  Checking: 87-ai-diagnostic-agent.js (no changes)
+  Checking: 90-sales-assistant.js (no changes)
+  Checking: 90b-sales-deepgram.js (no changes)
+  Checking: 93-sites-list.js (no changes)
+  Checking: 94-sites-builder.js (no changes)
+  Checking: 95-backup.js (no changes)
+  Checking: 95-sites-forms.js (no changes)
+  Checking: 96-integrations.js (no changes)
+  Checking: 97-onboarding-i18n.js (no changes)
+  Checking: 97-onboarding.js (no changes)
+  Checking: 98-finance-balance.js (no changes)
+  Checking: 98-finance-weekly-plan.js (no changes)
+  Checking: 98-finance.js (no changes)
+  Checking: 99-warehouse-alerts.js (no changes)
+  Checking: 99-warehouse-core.js (no changes)
+  Checking: 99-warehouse-ui.js (no changes)
+  Checking: 99c-warehouse-finance-bridge.js (no changes)
+  Checking: 99d-warehouse-reserve.js (no changes)
+
+================================================================================
+SUMMARY
+================================================================================
+Files scanned:          155
+Files fixed:            1
+Nested calls fixed:     1
+Backups created:        1
+Errors:                 0
+
+================================================================================
+DETAILED CHANGES
+================================================================================
+
+[FILE] C:\Users\User\talko-task-manager\js\modules\100b-booking-bridge.js
+  1. Pattern: _t with two window.t arguments
+     FROM: _t(window.t('збереження'),window.t('сохранение'))
+     TO:   window.t('збереження')
+
+================================================================================
+REMAINING _tg() CALLS (55)
+================================================================================
+  [FILE] C:\Users\User\talko-task-manager\js\modules\100-booking.js:369
+     _tg("Обов'язковий",'Обязательный')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104-sales.js:3
+     _tg(ua,ru)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104-sales.js:248
+     _tg(order ? 'Редагувати рахунок' : 'Новий рахунок', order ? 'Редактировать счет' : 'Новый счет')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104-sales.js:423
+     _tg('Каталог порожній. Додайте товари/послуги в розділ "Каталог".', 'Каталог пуст. Добавьте товары/услуги в раздел "Каталог".')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104-sales.js:650
+     _tg(order ? 'Редагувати чек' : 'Касовий чек', order ? 'Редактировать чек' : 'Кассовый чек')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104-sales.js:656
+     _tg("Клієнт (необов'язково)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104-sales.js:657
+     _tg("Ім'я клієнта", 'Имя клиента')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104-sales.js:842
+     _tg(p ? 'Редагувати' : 'Новий товар/послуга', p ? 'Редактировать' : 'Новый товар/услуга')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\105-food-production.js:86
+     _tg(recipe ? 'Редагувати рецептуру' : 'Нова рецептура', recipe ? 'Редактировать рецептуру' : 'Новая рецептура')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\105-food-production.js:513
+     _tg('Натисніть "+ Додати в план" щоб запланувати виробництво','Нажмите "+ Добавить в план" чтобы запланировать производство')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\105-food-production.js:678
+     _tg(`✓ Виробництво завершено. Зі складу списано інгредієнти для ${plan.portions} порц.`, `✓ Производство завершено. Со склада списаны ингредиенты для ${plan.portions} порц.`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\105-food-production.js:770
+     _tg(`Скільки порцій "${recipe.name}" виробити?`, `Сколько порций "${recipe.name}" произвести?`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\105-food-production.js:781
+     _tg(`${recipe.name}: ${portions} порц. додано в план`, `${recipe.name}: ${portions} порц. добавлено в план`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:1285
+     _tg('Видалити ' + count + ' угод(и)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:1286
+     _tg('Видалити ' + count + ' угод(и)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:2285
+     _tg('Адреса об\'єкту','Адрес объекта')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:4001
+     _tg("Ім'я *","Имя *")
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:4081
+     _tg("Введіть ім'я або телефон", 'Введите имя или телефон')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:4172
+     _tg(`Конвертувати угоду «${deal.title || deal.clientName}» в проєкт?`, `Конвертировать сделку «${deal.title || deal.clientName}» в проект?`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:4177
+     _tg(`Створити проєкт для «${cl.name}»?`, `Создать проект для «${cl.name}»?`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:4349
+     _tg(`Процес «${template.name}» запущено`,`Процесс «${template.name}» запущен`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:4466
+     _tg(`Процес «${template.name}» запущено`,`Процесс «${template.name}» запущен`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:5317
+     _tg(['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'],['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'])
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:5817
+     _tg(`Перемістити "${deal.clientName || deal.title || 'лід'}" у воронку "${targetPipelineName}"?`,`Переместить "${deal.clientName || deal.title || 'лид'}" в воронку "${targetPipelineName}"?`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:5836
+     _tg(`Переміщено у воронку "${targetPipelineName}"`,`Перемещено в воронку "${targetPipelineName}"`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:5942
+     _tg(`Завантажено ще ${morDeals.length} угод`,`Загружено ещё ${morDeals.length} сделок`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:6144
+     _tg("Обов'язкові поля",'Обязательные поля')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js:6554
+     _tg("Файл CSV має містити колонки: <b>name</b> (обов'язково)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\83-bots-contacts.js:414
+     _tg(nodeCount===1?'':nodeCount<5?'и':'ів', nodeCount===1?'':nodeCount<5?'а':'ов')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\83-bots-contacts.js:780
+     _tg('При тегу [DONE] в відповіді AI','При теге [DONE] в ответе AI')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\83-bots-contacts.js:1527
+     _tg('Ім\'я,Username,Telegram ID,Телефон,Канал,Роль,Ніша,Проблема,Ціль,Термін,Теги,Воронка,Бот,Дата,Примітка','Имя,Username,Telegram ID,Телефон,Канал,Роль,Ниша,Проблема,Цель,Срок,Теги,Воронка,Бот,Дата,Примечание')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\83-bots-contacts.js:2084
+     _tg('Дякуємо за відповідь! Наш менеджер зв\'яжеться з вами найближчим часом.','Спасибо за ответ! Наш менеджер свяжется с вами в ближайшее время.')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\83-bots-contacts.js:2858
+     _tg(`Надіслати розсилку ${targets.length} контактам?\n\n⚠️ Орієнтовний час: ~${_bcastMins} хв.\nНЕ закривайте вкладку до завершення!`,`Отправить рассылку ${targets.length} контактам?\n\n⚠️ Ориентировочное время: ~${_bcastMins} мин.\nНЕ закрывайте вкладку до завершения!`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:9
+     _tg(ua, ru)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:239
+     _tg('Зв\'язки з іншими модулями','Связи с другими модулями')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:299
+     _tg('Схема — як все пов\'язано','Схема — как всё связано')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:437
+     _tg('Натисніть "+ Новий кошторис" щоб почати','Нажмите "+ Новая смета" чтобы начать')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:607
+     _tg(normId?'Редагувати норму':'Нова норма витрат', normId?'Редактировать норму':'Новая норма расходов')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:821
+     _tg(`Додано ${normsToAdd.length} стандартних норм`,`Добавлено ${normsToAdd.length} стандартных норм`)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:887
+     _tg('Натисніть "Перерахувати" щоб побачити матеріали','Нажмите "Пересчитать" чтобы увидеть материалы')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:897
+     _tg(estimateId?'Редагувати кошторис':'Новий кошторис',estimateId?'Редактировать смету':'Новая смета')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:910
+     _tg('Прив\'язати до проекту','Привязать к проекту')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:924
+     _tg('Функція (ТЗ: кошторис прив\'язаний до функції)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:1001
+     _tg('Спочатку додайте норми витрат у Довіднику норм (вкладка "Довідник норм")
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js:1145
+     _tg(status === 'approved' ? 'Кошторис затверджено' : 'Кошторис збережено', status === 'approved' ? 'Смета утверждена' : 'Смета сохранена')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\96-integrations.js:582
+     _tg('Тест з\'єднання','Тест соединения')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\96-integrations.js:636
+     _tg('Тест з\'єднання','Тест соединения')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\96-integrations.js:689
+     _tg('Тест з\'єднання','Тест соединения')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance.js:2688
+     _tg(`🚨 Бюджет «${catName}» вичерпано! (${fmt(fact, currency)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance.js:2699
+     _tg(`⚠️ Бюджет «${catName}» використано на ${pct}% (${fmt(fact, currency)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance.js:3142
+     _tg(`Використано ${a.usedPct}% бюджету — залишилось ${fmt(a.remaining,currency)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance.js:5775
+     _tg(ua, ru)
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance.js:5850
+     _tg('Налаштування → Зв\'язки модулів. CRM→Фінанси: угода «Виграно» = автодохід.','Настройки → Связи модулей. CRM→Финансы: сделка «Выиграно» = автодоход.')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance.js:5898
+     _tg('Автоматичні зв\'язки з іншими модулями','Автоматические связи с другими модулями')
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance.js:5919
+     _tg('Увімкнути: <b>Налаштування → Зв\'язки між модулями</b> (toggles)
+
+================================================================================
+WARNINGS (81)
+================================================================================
+  [FILE] C:\Users\User\talko-task-manager\js\modules\00-module-links.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\01-translations-v2.js
+     Type: syntax
+     - Mismatched parentheses: 1078 open, 1085 close
+     - Mismatched braces: 1483 open, 1484 close
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\03-app-state.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\05-auth-functions.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\06-auth-state-listener.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\08-notifications-sound-badge-title.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\10-auto-archive-done-tasks-30-days.js
+     Type: syntax
+     - Mismatched parentheses: 47 open, 49 close
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\100b-booking-bridge.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104-sales.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104c-sales-shifts.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104d-sales-vehicles.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\104e-sales-routes.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\105-food-production.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\106-sales-orders.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\107-sales-realizations.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\108-sales-debtors.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\109-price-lists.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\15-validation-security.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\16-review-system.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\20-feat-007-deadline-change-validation.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\22-my-day-rendering.js
+     Type: syntax
+     - Mismatched parentheses: 364 open, 366 close
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\23-status-multi-select-filter.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\24-table-column-resize-sort.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\25-functions.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\26-staff-schedule.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\28-projects.js
+     Type: syntax
+     - Mismatched parentheses: 1396 open, 1397 close
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\42-niche-autoservice.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\42-niche-beauty.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\42-niche-bundle.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\42-niche-cleaning-us.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\42-niche-food.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\42-niche-furniture.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\42-niche-horeca.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\42-niche-logistics.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\42-niche-trucking-us.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\43-demo-tour.js
+     Type: syntax
+     - Mismatched parentheses: 916 open, 951 close
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\43b-swipe-between-tabs.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\45-comments-system.js
+     Type: syntax
+     - Mismatched parentheses: 245 open, 246 close
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\47-cascading-escalation.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\47b-activity-registry.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\50-next-task-ai-like-task-prioritization.js
+     Type: syntax
+     - Mismatched parentheses: 27 open, 32 close
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\60-manual-incidents-journal.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\64-focus-mode.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\66-statistics.js
+     Type: syntax
+     - Mismatched parentheses: 1707 open, 1708 close
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\69-ai-bottleneck-dashboard.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\72-global-search.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\73-subtasks.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\74-bulk-duplicate.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\76-coordination.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77-crm.js
+     Type: syntax
+     - Mismatched braces: 2193 open, 2192 close
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77b-crm-calls.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77d-crm-import.js
+     Type: syntax
+     - Mismatched parentheses: 276 open, 277 close
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77i-crm-niches.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77j-crm-finance-bridge.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77k-crm-tasks-bridge.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\77l-crm-triggers.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\78-crm-todo.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\78-landing-pages.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\79-funnels.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\80-learning-data-110.js
+     Type: syntax
+     - Mismatched parentheses: 185 open, 191 close
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\80-learning-data.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\80-learning-engine.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\80-learning.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\81-bots-flows.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\82-flow-canvas.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\83-bots-contacts.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\84-event-bus.js
+     Type: syntax
+     - Mismatched parentheses: 459 open, 451 close
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\85-estimate.js
+     Type: syntax
+     - Mismatched parentheses: 772 open, 774 close
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\86-ai-chat-modal.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\87-ai-diagnostic-agent.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\90b-sales-deepgram.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\93-sites-list.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\95-sites-forms.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\96-integrations.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\97-onboarding-i18n.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\97-onboarding.js
+     Type: syntax
+     - Mismatched parentheses: 393 open, 397 close
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance-balance.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance-weekly-plan.js
+     Type: syntax
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\98-finance.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\99-warehouse-core.js
+     Type: syntax
+     - Possible unclosed single quotes
+
+  [FILE] C:\Users\User\talko-task-manager\js\modules\99-warehouse-ui.js
+     Type: syntax
+     - Possible unclosed single quotes
+     - Possible unclosed double quotes
+
+================================================================================
+BACKUPS
+================================================================================
+Backup location: C:\Users\User\talko-task-manager\backups\backup_20260405_102552
+
+================================================================================
+[SUCCESS] Processing complete! Files have been modified.
+          Review the changes and test thoroughly.
+================================================================================

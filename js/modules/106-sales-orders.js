@@ -241,14 +241,14 @@
     const actions = [];
     if (canManage()) {
       if (o.status === 'new') {
-        actions.push(`<button onclick="window._soConfirm('${o.id}')" title="${tg('Підтвердити','Confirm')}" style="padding:4px 8px;border:none;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;background:#dbeafe;color:#2563eb">${tg('Підтвердити','Confirm')}</button>`);
+        actions.push(`<button onclick="window._soConfirm('${o.id}')" title="${tg(window.t('підтвердити1'),'Confirm')}" style="padding:4px 8px;border:none;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;background:#dbeafe;color:#2563eb">${tg(window.t('підтвердити1'),'Confirm')}</button>`);
       }
       if (o.status === 'new' || o.status === 'confirmed') {
-        actions.push(`<button onclick="window._soCreateRealization('${o.id}')" title="${tg('Реалізація','Realization')}" style="padding:4px 8px;border:none;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;background:#d1fae5;color:#059669">${tg('Реалізація','Realize')}</button>`);
+        actions.push(`<button onclick="window._soCreateRealization('${o.id}')" title="${tg(window.t('реалізація'),'Realization')}" style="padding:4px 8px;border:none;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;background:#d1fae5;color:#059669">${tg(window.t('реалізація'),'Realize')}</button>`);
       }
-      actions.push(`<button onclick="window.openSalesOrderModal('${o.id}')" title="${tg('Редагувати','Edit')}" style="padding:4px 6px;border:1px solid #e5e7eb;border-radius:5px;cursor:pointer;background:#fff;color:#6b7280"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>`);
+      actions.push(`<button onclick="window.openSalesOrderModal('${o.id}')" title="${tg(window.t('редагувати'),'Edit')}" style="padding:4px 6px;border:1px solid #e5e7eb;border-radius:5px;cursor:pointer;background:#fff;color:#6b7280"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>`);
       if (o.status === 'new') {
-        actions.push(`<button onclick="window._soCancel('${o.id}')" title="${tg('Скасувати','Cancel')}" style="padding:4px 6px;border:1px solid #fecaca;border-radius:5px;cursor:pointer;background:#fff;color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`);
+        actions.push(`<button onclick="window._soCancel('${o.id}')" title="${tg(window.t('скасувати1'),'Cancel')}" style="padding:4px 6px;border:1px solid #fecaca;border-radius:5px;cursor:pointer;background:#fff;color:#dc2626"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`);
       }
     }
 
@@ -321,11 +321,11 @@
       <input id="soSearchInput" class="so-inp" placeholder="${tg('Пошук за номером або клієнтом...','Search by number or client...')}"
         value="${esc(S.filter.search)}" oninput="window._soFilter('search',this.value)" style="width:240px;max-width:100%">
       <select class="so-inp" onchange="window._soFilter('status',this.value)" style="width:150px">
-        <option value="all">${tg('Всі статуси','All statuses')}</option>
+        <option value="all">${tg(window.t('всіСтатуси'),'All statuses')}</option>
         ${statusOptions}
       </select>
       <select class="so-inp" onchange="window._soFilter('assignee',this.value)" style="width:160px">
-        <option value="">${tg('Всі менеджери','All managers')}</option>
+        <option value="">${tg(window.t('всіМенеджери'),'All managers')}</option>
         ${staffOptions}
       </select>
       <button onclick="window._soResetFilters()" style="padding:7px 14px;border:1px solid #e5e7eb;border-radius:6px;cursor:pointer;background:#fff;font-size:.8rem;color:#6b7280">
@@ -401,7 +401,7 @@
           <!-- Modal Header -->
           <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid #f1f5f9;">
             <div>
-              <div style="font-size:1rem;font-weight:700;color:#111">${isEdit ? tg('Редагувати замовлення','Edit order') : tg('Нове замовлення','New order')}</div>
+              <div style="font-size:1rem;font-weight:700;color:#111">${isEdit ? tg('${window.t('редагувати')} замовлення','Edit order') : tg('Нове замовлення','New order')}</div>
               ${isEdit ? `<div style="font-size:.78rem;color:#9ca3af;margin-top:2px">${esc(o.number||'')}</div>` : ''}
             </div>
             <button onclick="window.closeSalesOrderModal()" style="border:none;background:none;cursor:pointer;color:#9ca3af;padding:4px">
@@ -417,14 +417,14 @@
               <div>
                 <label style="display:block;font-size:.75rem;font-weight:600;color:#374151;margin-bottom:4px">${tg('Клієнт *','Client *')}</label>
                 <select id="soFldClient" class="so-inp" style="width:100%" onchange="window._soClientChange(this)">
-                  <option value="">${tg('— оберіть клієнта —','— select client —')}</option>
+                  <option value="">${tg(window.t('оберітьКлієнта'),'— select client —')}</option>
                   ${clientOptions}
                 </select>
               </div>
               <div>
                 <label style="display:block;font-size:.75rem;font-weight:600;color:#374151;margin-bottom:4px">${tg('Менеджер','Manager')}</label>
                 <select id="soFldAssignee" class="so-inp" style="width:100%">
-                  <option value="">${tg('— оберіть —','— select —')}</option>
+                  <option value="">${tg(window.t('оберіть'),'— select —')}</option>
                   ${staffOptions}
                 </select>
               </div>
@@ -435,7 +435,7 @@
               <div>
                 <label style="display:block;font-size:.75rem;font-weight:600;color:#374151;margin-bottom:4px">${tg('Прайс-лист','Price list')}</label>
                 <select id="soFldPriceList" class="so-inp" style="width:100%" onchange="window._soPriceListChange(this)">
-                  <option value="">${tg('— базові ціни товарів —','— base item prices —')}</option>
+                  <option value="">${tg(window.t('базовіЦіниТоварів'),'— base item prices —')}</option>
                   ${priceListOptions}
                 </select>
               </div>
@@ -497,7 +497,7 @@
                   <span id="soTotalGross" style="font-weight:600">0.00</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:.84rem">
-                  <span style="color:#6b7280">${tg('Знижка:','Discount:')}</span>
+                  <span style="color:#6b7280">${tg('${window.t('знижка1')}:','Discount:')}</span>
                   <span id="soTotalDiscount" style="color:#ef4444">-0.00</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:1rem;font-weight:700">
@@ -518,10 +518,10 @@
           <!-- Modal Footer -->
           <div style="display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid #f1f5f9;">
             <button onclick="window.closeSalesOrderModal()" style="padding:9px 20px;border:1px solid #e5e7eb;border-radius:7px;cursor:pointer;background:#fff;font-size:.85rem;font-weight:600;color:#374151">
-              ${tg('Скасувати','Cancel')}
+              ${tg(window.t('скасувати1'),'Cancel')}
             </button>
             <button onclick="window._soSave()" id="soSaveBtn" style="padding:9px 24px;background:#6366f1;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">
-              ${tg('Зберегти','Save')}
+              ${tg(window.t('зберегти'),'Save')}
             </button>
           </div>
         </div>
@@ -548,7 +548,7 @@
       return `<tr class="so-item-row" style="border-bottom:1px solid #f1f5f9" data-idx="${idx}">
         <td style="padding:6px 10px">
           <select class="so-inp" style="width:100%;font-size:.8rem" onchange="window._soItemWarehouse(${idx},this)">
-            <option value="">${tg('— або введіть вручну —','— or enter manually —')}</option>
+            <option value="">${tg(window.t('абоВведітьВручну'),'— or enter manually —')}</option>
             ${warehouseOptions}
           </select>
           <input class="so-inp" style="width:100%;margin-top:4px;font-size:.8rem" placeholder="${tg('Назва позиції','Item name')}" value="${esc(item.name||'')}" oninput="window._soItemField(${idx},'name',this.value)">
@@ -599,10 +599,10 @@
     if (hint) {
       if (autoDisc > 0 && discount === 0) {
         hint.style.display = 'block';
-        hint.textContent = `💡 ${tg('Автознижка','Auto discount')} ${autoDisc}% ${tg('доступна при поточній сумі','available at current amount')} — ${tg('застосуйте до позицій','apply to items')}`;
+        hint.textContent = `💡 ${tg(window.t('автознижка'),'Auto discount')} ${autoDisc}% ${tg(window.t('доступнаПриПоточнійСумі'),'available at current amount')} — ${tg(window.t('застосуйтеДоПозицій'),'apply to items')}`;
       } else if (autoDisc > 0) {
         hint.style.display = 'block';
-        hint.textContent = `✅ ${tg('Знижка','Discount')} ${autoDisc}% ${tg('застосована','applied')}`;
+        hint.textContent = `✅ ${tg(window.t('знижка1'),'Discount')} ${autoDisc}% ${tg(window.t(window.t('застосована')),'applied')}`;
         hint.style.color = '#059669';
       } else {
         hint.style.display = 'none';
@@ -828,7 +828,7 @@
 
     S.saving = true;
     const btn = el('soSaveBtn');
-    if (btn) { btn.disabled = true; btn.textContent = tg('Збереження...','Saving...'); }
+    if (btn) { btn.disabled = true; btn.textContent = tg(window.t('збереження'),'Saving...'); }
 
     try {
       if (S.editing) {
@@ -862,7 +862,7 @@
       showToast(tg('Помилка збереження: ','Save error: ') + e.message, 'error');
     } finally {
       S.saving = false;
-      if (btn) { btn.disabled = false; btn.textContent = tg('Зберегти','Save'); }
+      if (btn) { btn.disabled = false; btn.textContent = tg(window.t('зберегти'),'Save'); }
     }
   };
 

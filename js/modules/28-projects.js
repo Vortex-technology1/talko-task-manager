@@ -32,7 +32,7 @@
                 const selectedIds = project?.functionIds || [];
                 funcContainer.innerHTML = activeFuncs.length
                     ? activeFuncs.map(f => `<label class="assignee-checkbox"><input type="checkbox" value="${esc(f.id)}" ${selectedIds.includes(f.id) ? 'checked' : ''}> ${esc(f.name)}</label>`).join('')
-                    : `<span style="color:#9ca3af;font-size:0.82rem;">Нет функций — сначала создайте функции</span>`;
+                    : `${window.t('spanStylecolor9ca3affontsize082remнетФун')}`;
             }
             
             const color = project?.color || '#22c55e';
@@ -565,7 +565,7 @@
                         ${colTasks.map(t => {
                             const assignee = t.assigneeName || '';
                             const clickHandler = isViewer
-                                ? `if(window.showToast) showToast('Спостерігач — тільки читання', 'info')`
+                                ? `${window.t('ifwindowshowtoastShowtoastспостерігачТіл')}`
                                 : `openTaskModal('${escId(t.id)}')`;
                             return `
                             <div class="project-task-card priority-${t.priority || 'medium'}" onclick="${clickHandler}" style="${isViewer ? 'opacity:0.85;cursor:default;' : ''}">
@@ -1647,7 +1647,7 @@ function _renderProjectEstimateTab(projectId) {
             style="background:white;border:1px solid #e5e7eb;border-radius:10px;padding:1rem 1.25rem;cursor:pointer;margin-bottom:0.6rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;"
             onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
             <div style="flex:1;min-width:160px;">
-                <div style="font-weight:600;font-size:0.92rem;color:#111827;">${e.title||'Без названия'}</div>
+                <div style="font-weight:600;font-size:0.92rem;color:#111827;">${e.title||window.t('безНазвания')}</div>
                 <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.15rem;">${e.sections?.length||0} ${window.t('estWorkTypes')||'типів робіт'}</div>
             </div>
             <span style="padding:0.2rem 0.6rem;border-radius:20px;font-size:0.73rem;font-weight:600;background:${color}18;color:${color};">${status}</span>
@@ -2111,7 +2111,7 @@ window.openProjectMembers = async function(projectId) {
         </div>`).join('') : '<div style="font-size:0.8rem;color:#9ca3af;padding:0.5rem;">Учасників ще немає</div>';
 
     const usersOptions = compUsers.map(u => `<option value="${u.id}">${u.name||u.email}</option>`).join('');
-    const roleOptions = `<option value="member">Учасник — бачить всі задачі</option><option value="assignee">Виконавець — тільки свої задачі</option><option value="viewer">Спостерігач — тільки читання</option>`;
+    const roleOptions = `${window.t('optionValuememberучасникБачитьВсі')}`;
 
     const overlay = document.createElement('div');
     overlay.id = 'projectMembersOverlay';
@@ -2144,7 +2144,7 @@ window.openProjectMembers = async function(projectId) {
         <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #f1f5f9;">
             <div style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">Запросити підрядника</div>
             <div style="display:grid;gap:0.4rem;">
-                <input id="pmGuestEmail" type="email" placeholder="Email підрядника" style="padding:0.4rem 0.55rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
+                <input id="pmGuestEmail" type="email" placeholder=window.t('emailПідрядника') style="padding:0.4rem 0.55rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
                 <input id="pmGuestName" type="text" placeholder="Ім'я підрядника" style="padding:0.4rem 0.55rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
                 <select id="pmGuestRole" style="padding:0.4rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">${roleOptions}</select>
                 <button onclick="inviteGuestToProject('${projectId}')" style="padding:0.45rem;background:#3b82f6;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.82rem;font-weight:600;">Надіслати запрошення</button>

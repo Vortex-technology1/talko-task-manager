@@ -471,7 +471,7 @@
                         // Показуємо toast власнику функції
                         _showFuncOwnerToast(
                             `Нова задача у вашій функції «${task.function}»`,
-                            task.title || '(без назви)',
+                            task.title || window.t('безНазви'),
                             '#8b5cf6'
                         );
                         playNotificationSound();

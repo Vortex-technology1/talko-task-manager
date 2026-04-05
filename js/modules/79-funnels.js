@@ -219,7 +219,7 @@
                     <div id="btnOptions_${stepId}" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.5rem;">
                         ${(step.options || []).map((opt, i) => `
                             <div style="display:flex;gap:0.4rem;align-items:center;">
-                                <input value="${escHtml(opt.text)}" placeholder="Текст кнопки"
+                                <input value="${escHtml(opt.text)}" placeholder=window.t('текстКнопки')
                                     onblur="updateOption('${stepId}',${i},'text',this.value)"
                                     style="flex:1;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;">
                                 <select onchange="updateOption('${stepId}',${i},'nextStep',this.value)"

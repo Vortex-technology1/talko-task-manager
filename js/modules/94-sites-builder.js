@@ -73,7 +73,7 @@ function _renderBuilderShell() {
                     background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:8px;
                     padding:0.25rem 0.25rem 0.25rem 0.6rem;max-width:220px;">
                     <span style="font-size:0.7rem;color:#7c3aed;white-space:nowrap;font-weight:600;">/s/</span>
-                    <input id="sbSlugInput" placeholder="slug" title="Коротке посилання"
+                    <input id="sbSlugInput" placeholder="slug" title=window.t('короткеПосилання')
                         style="width:80px;border:none;background:transparent;font-size:0.75rem;
                         color:#4c1d95;font-weight:600;outline:none;font-family:monospace;padding:2px 0;"
                         oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"
@@ -332,7 +332,7 @@ function _renderBlockEditor(idx) {
                 HTML код блоку
             </label>
             <textarea rows="12" style="width:100%;padding:0.45rem;border:1.5px solid #8b5cf6;border-radius:7px;font-size:0.72rem;font-family:monospace;box-sizing:border-box;line-height:1.5;resize:vertical;background:#faf5ff;"
-                placeholder="<!-- Вставте будь-який HTML сюди -->&#10;<section>&#10;  <h2>Заголовок</h2>&#10;  <p>Текст</p>&#10;</section>"
+                placeholder=window.t('вставтеБудьякийHtmlСюди')
                 oninput="sbUpdateBlock(${idx},'rawHtml',this.value)">${_esc(block.rawHtml||'')}</textarea>
             <div style="font-size:0.68rem;color:#9ca3af;margin-top:4px;line-height:1.4;">
                 Вставляється прямо між блоками сторінки.
@@ -917,7 +917,7 @@ function _renderSeoPanel() {
         <div>
             <label style="${lbl}">Довільний код в &lt;head&gt;</label>
             <textarea id="seo_headcode" rows="4"
-                placeholder="<!-- Вставте будь-який скрипт, тег або код -->" style="${ta}font-family:monospace;font-size:0.72rem;">${_esc(s.analyticsHeadCode||'')}</textarea>
+                placeholder=window.t('вставтеБудьякийСкриптТег') style="${ta}font-family:monospace;font-size:0.72rem;">${_esc(s.analyticsHeadCode||'')}</textarea>
             <div style="font-size:0.65rem;color:#9ca3af;margin-top:2px;">
                 Підтримка: Hotjar, Clarity, LiveChat, Intercom, будь-який інший pixel
             </div>

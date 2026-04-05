@@ -68,7 +68,7 @@
                 w = document.createElement('div');
                 w.id = 'gcalTokenWarning';
                 w.style.cssText = 'margin-top:.5rem;padding:.5rem .75rem;background:#fef3c7;border-radius:8px;font-size:.82rem;color:#92400e;';
-                w.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Токен Google протух. <a href="#" onclick="connectGoogleCalendar();return false;" style="color:#92400e;font-weight:600;">Оновити підключення</a>';
+                w.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17window.t('svgТокенGoogleПротух')#" onclick="connectGoogleCalendar();return false;" style="color:#92400e;font-weight:600;">Оновити підключення</a>';
                 const connected = document.getElementById('gcalConnected');
                 if (connected) connected.appendChild(w);
             }

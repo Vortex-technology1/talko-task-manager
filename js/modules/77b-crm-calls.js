@@ -224,7 +224,7 @@ window.crmSaveCallLog = async function () {
     };
 
     const saveBtn = document.querySelector('#crmCallLogModal button:last-child');
-    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Збереження...'; }
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = window.t('збереження'); }
 
     try {
         const compRef = window.companyRef();
@@ -238,7 +238,7 @@ window.crmSaveCallLog = async function () {
         try {
             fileData = await _crmUploadCallFile(dealId);
             if (fileData && saveBtn) {
-                saveBtn.textContent = 'Збереження запису...';
+                saveBtn.textContent = window.t('збереженняЗапису');
             }
         } catch (fileErr) {
             if (window.showToast) showToast('⚠️ Файл не завантажено: ' + fileErr.message, 'warning');

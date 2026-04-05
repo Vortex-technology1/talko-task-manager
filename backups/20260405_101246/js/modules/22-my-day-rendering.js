@@ -1,0 +1,577 @@
+// =====================
+        // MY DAY RENDERING
+        // =====================
+'use strict';
+        if (typeof window.getAiHelpButton !== 'function') {
+            window.getAiHelpButton = function() { return ''; };
+        }
+        if (typeof window.getTimerButtonHtml !== 'function') {
+            window.getTimerButtonHtml = function() { return ''; };
+        }
+        if (typeof window.updateOverdueBadge !== 'function') {
+            window.updateOverdueBadge = function() {};
+        }
+        if (typeof window.renderMyAnalytics !== 'function') {
+            window.renderMyAnalytics = function() {};
+        }
+        window.renderMyDay = function renderMyDay() {
+        if (!currentUser) return; // auth guard — avoid crash before auth completes
+
+            _visibleTaskIds = null; // Invalidate visibility cache
+            const container = document.getElementById('mydayContent');
+            if (!container) return;
+            
+            const today = new Date();
+            const todayStr = getLocalDateStr(today);
+            const todayDay = today.getDay();
+            
+            // Форматуємо дату
+            const dayNames = getDayNames();
+            const monthNames = [
+                window.t('janGen'), window.t('febGen'), window.t('marGen'), window.t('aprilGen'),
+                window.t('mayGen'), window.t('junGen'), window.t('julGen'), window.t('augGen'),
+                window.t('sepGen'), window.t('octGen'), window.t('novGen'), window.t('decGen')
+            ];
+            
+            const dateText = `${dayNames[todayDay]}, ${today.getDate()} ${monthNames[today.getMonth()]}`;
+            document.getElementById('mydayDateText').textContent = dateText;
+            
+            // Збираємо всі завдання на сьогодні для поточного користувача
+            const myTasks = [];
+            
+            // PRE-BUILD: lookup maps для O(1) пошуку (замість O(n) find кожного разу)
+            const myTaskIds = new Set();
+            const funcByName = {};
+            functions.forEach(f => { funcByName[f.name] = f; });
+            
+            // Index для швидкого пошуку згенерованих regular tasks
+            const generatedTaskIndex = {};
+            tasks.forEach(t => {
+                if (t.regularTaskId && t.deadlineDate === todayStr && t.assigneeId === currentUser?.uid) {
+                    // Зберігаємо перший знайдений (масив desc по createdAt → перший = найновіший)
+                    if (!generatedTaskIndex[t.regularTaskId]) {
+                        generatedTaskIndex[t.regularTaskId] = t;
+                    }
+                }
+            });
+            
+            // 1. Разові завдання з дедлайном сьогодні або прострочені
+            tasks.filter(t => {
+                const uid = currentUser.uid;
+                // BUG-O FIX: include coExecutor tasks, not only assignee
+                const isParticipant = t.assigneeId === uid || (t.coExecutorIds && t.coExecutorIds.includes(uid));
+                if (!isParticipant) return false;
+                if (t.deadlineDate === todayStr && t.status !== 'review') return true;
+                if (t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review') return true;
+                return false;
+            }).forEach(t => {
+                myTaskIds.add(t.id);
+                myTasks.push({
+                    id: t.id,
+                    title: t.title,
+                    time: t.deadlineTime || '',
+                    function: t.function || '',
+                    type: 'task',
+                    done: t.status === 'done',
+                    review: t.status === 'review',
+                    overdue: t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review',
+                    priority: t.priority || 'medium',
+                    originalTask: t
+                });
+            });
+            
+            // 1.5. Завдання на перевірці де поточний юзер — постановник (не виконавець)
+            tasks.filter(t => {
+                if (t.status !== 'review') return false;
+                if (t.creatorId !== currentUser.uid) return false;
+                if (t.assigneeId === currentUser.uid) return false; // вже покриті вище
+                // Не дублюємо якщо вже є в myTasks (O(1) Set lookup)
+                return !myTaskIds.has(t.id);
+            }).forEach(t => {
+                myTasks.push({
+                    id: t.id,
+                    title: t.title,
+                    time: t.deadlineTime || '',
+                    function: t.function || '',
+                    type: 'task',
+                    done: false,
+                    review: true,
+                    overdue: false,
+                    priority: t.priority || 'medium',
+                    originalTask: t
+                });
+            });
+            
+            // 2. Регулярні завдання на сьогодні
+            regularTasks.forEach(rt => {
+                // Перевіряємо чи поточний користувач є виконавцем:
+                // 1) прямий виконавець (rt.assigneeId) АБО
+                // 2) виконавець через функцію (func.assigneeIds)
+                const isDirectAssignee = rt.assigneeId && rt.assigneeId === currentUser.uid;
+                const func = funcByName[rt.function];
+                const isFuncAssignee = !rt.assigneeId && func && func.assigneeIds?.includes(currentUser.uid);
+                if (!isDirectAssignee && !isFuncAssignee) return;
+                
+                // Перевіряємо чи сьогодні день цього завдання
+                let isToday = false;
+                
+                // BUG-W FIX: use isRegularTaskDay for consistent period logic (was duplicating logic with bugs)
+                // Old quarterly was limited to quarterStartMonth only — missed tasks on day X of month 2/3 of quarter
+                if (typeof isRegularTaskDay === 'function') {
+                    isToday = isRegularTaskDay(rt, today);
+                } else {
+                // Fallback inline (same as isRegularTaskDay)
+                if (rt.period === 'daily') {
+                    isToday = true;
+                } else if (rt.period === 'weekly') {
+                    if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                        isToday = rt.daysOfWeek.includes(todayDay.toString());
+                    } else if (rt.dayOfWeek) {
+                        isToday = rt.dayOfWeek === todayDay.toString();
+                    }
+                } else if (rt.period === 'monthly') {
+                    const todayDate = today.getDate();
+                    if (rt.dayOfMonth === 'last') {
+                        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                        isToday = todayDate === lastDay;
+                    } else {
+                        isToday = todayDate === parseInt(rt.dayOfMonth);
+                    }
+                } else if (rt.period === 'quarterly') {
+                    const quarterStartMonth = Math.floor(today.getMonth() / 3) * 3;
+                    if (today.getMonth() === quarterStartMonth) {
+                        const todayDate = today.getDate();
+                        if (rt.dayOfMonth === 'last') {
+                            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                            isToday = todayDate === lastDay;
+                        } else {
+                            isToday = todayDate === parseInt(rt.dayOfMonth);
+                        }
+                    }
+                }
+                }
+                
+                if (!isToday) return;
+                
+                // Перевіряємо чи виконано (O(1) index lookup замість O(n) find)
+                const generatedTask = generatedTaskIndex[rt.id] || null;
+                
+                myTasks.push({
+                    id: rt.id,
+                    title: rt.title,
+                    time: rt.timeStart || rt.time || '',
+                    function: rt.functionName || rt.function || '',
+                    done: generatedTask?.status === 'done',
+                    review: generatedTask?.status === 'review',
+                    overdue: false,
+                    generatedTaskId: generatedTask?.id,
+                    originalTask: generatedTask || rt
+                });
+            });
+            
+            // Сортуємо: спочатку не виконані, потім review, потім по часу
+            myTasks.sort((a, b) => {
+                // done внизу
+                if (a.done !== b.done) return a.done ? 1 : -1;
+                // review після pending
+                if (a.review !== b.review) return a.review ? 1 : -1;
+                if (a.overdue !== b.overdue) return a.overdue ? -1 : 1;
+                return (a.time || '99:99').localeCompare(b.time || '99:99');
+            });
+            
+            // Статистика
+            const total = myTasks.length;
+            const done = myTasks.filter(t => t.done).length;
+            const progressPercent = total > 0 ? Math.round((done / total) * 100) : 0;
+            
+            document.getElementById('mydayProgressFill').style.width = progressPercent + '%';
+            document.getElementById('mydayProgressFill').style.background = progressPercent >= 80 ? 'var(--success)' : progressPercent >= 40 ? '#f59e0b' : '#ef4444';
+            document.getElementById('mydayProgressText').textContent = `${done}/${total} (${progressPercent}%)`;
+            
+            // Рендеримо
+            if (myTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="myday-empty">
+                        <div class="myday-empty-icon"><i data-lucide="clipboard-list" class="icon icon-xl" style="width:48px;height:48px;color:var(--gray);"></i></div>
+                        <h3>${window.t('noTasksForToday')}</h3>
+                        <p style="color:var(--gray);margin-top:0.5rem;">${window.t('timeToRest')}</p>
+                    </div>`;
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
+                return;
+            }
+            
+            // Всі виконані?
+            if (done === total && total > 0) {
+                container.innerHTML = `
+                    <div class="myday-all-done">
+                        <div class="myday-all-done-icon"><i data-lucide="party-popper" class="icon" style="width:48px;height:48px;color:var(--success);"></i></div>
+                        <h3>${window.t('allTasksDone')}</h3>
+                        <p style="color:var(--gray);">${window.t('greatJob')}</p>
+                    </div>
+                    <div class="myday-section" style="margin-top:1rem;">
+                        <div class="myday-section-title">
+                            <i data-lucide="check-circle" class="icon icon-sm" style="color:var(--success);"></i>
+                            ${window.t('doneToday')} (${done})
+                        </div>
+                        ${myTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
+                return;
+            }
+            
+            // Розділяємо на категорії
+            const overdueTasks = myTasks.filter(t => t.overdue && !t.done && !t.review);
+            const pendingTasks = myTasks.filter(t => !t.done && !t.overdue && !t.review);
+            const reviewTasks = myTasks.filter(t => t.review);
+            const doneTasks = myTasks.filter(t => t.done);
+            
+            let html = '';
+            
+            // Прострочені
+            if (overdueTasks.length > 0) {
+                html += `
+                    <div class="myday-section">
+                        <div class="myday-section-title" style="color:var(--danger);">
+                            <i data-lucide="alert-circle" class="icon icon-sm"></i>
+                            ${window.t('overdueStatus')} (${overdueTasks.length})
+                        </div>
+                        ${overdueTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+            }
+            
+            // Очікують виконання
+            if (pendingTasks.length > 0) {
+                html += `
+                    <div class="myday-section">
+                        <div class="myday-section-title">
+                            <i data-lucide="circle" class="icon icon-sm"></i>
+                            ${window.t('toDo')} (${pendingTasks.length})
+                        </div>
+                        ${pendingTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+            }
+            
+            // На перевірці
+            if (reviewTasks.length > 0) {
+                html += `
+                    <div class="myday-section">
+                        <div class="myday-section-title" style="color:#8b5cf6;">
+                            <i data-lucide="eye" class="icon icon-sm"></i>
+                            ${window.t('onReview')} (${reviewTasks.length})
+                        </div>
+                        ${reviewTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+            }
+            
+            // Виконані
+            if (doneTasks.length > 0) {
+                html += `
+                    <div class="myday-section">
+                        <div class="myday-section-title" style="color:var(--success);">
+                            <i data-lucide="check-circle" class="icon icon-sm"></i>
+                            ${window.t('completedStatus')} (${doneTasks.length})
+                        </div>
+                        ${doneTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+            }
+            
+            container.innerHTML = html;
+            if (typeof window.refreshIcons === 'function') window.refreshIcons();
+            updateOverdueBadge();
+            renderMyAnalytics();
+        }
+        
+        function renderMyDayItem(task) {
+            const checkClass = task.done ? 'checked' : (task.review ? 'checked' : '');
+            const itemClass = task.done ? 'done' : (task.review ? 'review' : (task.overdue ? 'overdue' : ''));
+            const tagClass = task.type === 'regular' ? 'regular' : '';
+            const tagText = task.type === 'regular' 
+                ? (window.t('regularType'))
+                : (window.t('oneTimeType'));
+            
+            // Визначаємо чи поточний юзер — постановник цього завдання
+            const isCreator = task.originalTask?.creatorId === currentUser?.uid;
+            const showReviewActions = task.review && isCreator && task.originalTask?.assigneeId !== currentUser?.uid;
+            
+            let reviewActionsHtml = '';
+            if (showReviewActions) {
+                const taskId = task.type === 'regular' ? (task.generatedTaskId || task.id) : task.id;
+                reviewActionsHtml = `
+                    <div style="display:flex;gap:0.4rem;margin-top:0.5rem;" onclick="event.stopPropagation();">
+                        <button onclick="acceptReviewTask('${escId(taskId)}')" 
+                                style="flex:1;padding:0.4rem 0.6rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;font-size:0.8rem;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${window.t('acceptTask')}
+                        </button>
+                        <button onclick="rejectReviewTask('${escId(taskId)}')" 
+                                style="flex:1;padding:0.4rem 0.6rem;border:none;border-radius:8px;background:#f59e0b;color:white;font-weight:600;cursor:pointer;font-size:0.8rem;">
+                            <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${window.t('rejectTask')}
+                        </button>
+                    </div>`;
+            }
+            
+            let reviewBadge = '';
+            if (task.review) {
+                reviewBadge = `<span style="font-size:0.7rem;padding:2px 6px;border-radius:4px;background:#f3e8ff;color:#7c3aed;font-weight:500;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${window.t('reviewLabel')}</span>`;
+            }
+            
+            // Project/stage context
+            let projectBadge = '';
+            const ot = task.originalTask || {};
+            if (ot.projectId) {
+                const proj = projects.find(p => p.id === ot.projectId);
+                if (proj) {
+                    let badge = esc(proj.name);
+                    if (ot.stageId && typeof window.projectStages !== 'undefined') {
+                        const st = window.projectStages.find(s => s.id === ot.stageId);
+                        if (st) badge += ' → ' + esc(st.name);
+                    }
+                    projectBadge = `<span style="font-size:0.65rem;padding:1px 5px;border-radius:4px;background:#eff6ff;color:#3b82f6;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${badge}</span>`;
+                }
+            }
+
+            // CRM бейдж — якщо задача прив'язана до угоди
+            let crmBadge = '';
+            const crmDealId = ot.crmDealId || ot.dealId;
+            if (crmDealId) {
+                const crmClient = ot.clientName || ot.crmClientName || 'CRM';
+                crmBadge = `<span onclick="event.stopPropagation();if(typeof window.crmOpenDeal==='function')window.crmOpenDeal('${escId(crmDealId)}')"
+                    style="font-size:0.65rem;padding:1px 6px;border-radius:4px;background:#f0fdf4;color:#16a34a;
+                    cursor:pointer;display:inline-flex;align-items:center;gap:2px;max-width:130px;
+                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid #bbf7d0;"
+                    title="Відкрити угоду в CRM">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.52 2 2 0 0 1 3.58 1.34h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l1.27-.78a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    ${esc(crmClient)}
+                </span>`;
+            }
+
+            return `
+                <div class="myday-item ${itemClass}" onclick="openMyDayTask('${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}')">
+                    <div class="myday-checkbox ${checkClass}"
+                        ${!task.review
+                            ? `onclick="event.stopPropagation(); toggleMyDayTask(event, '${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}', ${task.done || task.review})"`
+                            : 'onclick="event.stopPropagation();"'}
+                        ${task.review ? `style="background:#8b5cf6;border-color:#8b5cf6;cursor:not-allowed;" title="${window.t('inReviewAwait')}"` : ''}>
+                        ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
+                        ${task.review ? '<i data-lucide="eye" class="icon icon-sm" style="color:white;"></i>' : ''}
+                    </div>
+                    <div class="myday-item-content" style="flex:1;min-width:0;">
+                        <div class="myday-item-title">${esc(task.title)}</div>
+                        <div class="myday-item-meta">
+                            ${task.time ? `<span class="myday-item-time">${esc(task.time)}</span>` : ''}
+                            ${task.function ? `<span>${esc(task.function)}</span>` : ''}
+                            <span class="myday-item-tag ${tagClass}">${tagText}</span>
+                            ${reviewBadge}
+                            ${projectBadge}
+                            ${crmBadge}
+                            ${!task.done ? getAiHelpButton(task.title, task.originalTask?.description || task.originalTask?.instruction || '', task.function, 'small') : ''}
+                        </div>
+                        ${reviewActionsHtml}
+                    </div>
+                    ${task.overdue ? '<i data-lucide="alert-triangle" class="icon" style="color:var(--danger);flex-shrink:0;"></i>' : ''}
+                    ${!task.done && !task.review ? `<div onclick="event.stopPropagation();" style="flex-shrink:0;">${getTimerButtonHtml(task.id)}</div>` : ''}
+                </div>`;
+        }
+        
+        async function toggleMyDayTask(e, id, type, generatedTaskId, currentDone) {
+            
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(currentDone ? 10 : [10, 50, 10]);
+            
+            // Visual feedback - знаходимо елемент і анімуємо
+            const checkbox = e?.target?.closest('.myday-checkbox');
+            const item = checkbox?.closest('.myday-item');
+            
+            if (checkbox && !currentDone) {
+                checkbox.classList.add('checked');
+                checkbox.innerHTML = '<i data-lucide="check" class="icon icon-sm"></i>';
+                if (typeof window.refreshIcons === 'function') window.refreshIcons();
+            }
+            if (item && !currentDone) {
+                item.style.transform = 'scale(0.98)';
+                item.style.opacity = '0.7';
+            }
+            
+            try {
+                if (type === 'regular') {
+                    // Для регулярних - змінюємо статус згенерованого завдання
+                    const todayStr = getLocalDateStr();
+                    
+                    
+                    // Спочатку шукаємо завдання для ПОТОЧНОГО користувача
+                    let taskToUpdate = null;
+                    
+                    if (generatedTaskId) {
+                        // Перевіряємо чи це завдання дійсно належить поточному користувачу
+                        taskToUpdate = tasks.find(t => t.id === generatedTaskId && t.assigneeId === currentUser.uid);
+                    }
+                    
+                    // Якщо не знайшли по generatedTaskId - шукаємо по regularTaskId
+                    if (!taskToUpdate) {
+                        taskToUpdate = tasks.find(t => 
+                            t.regularTaskId === id && 
+                            t.deadlineDate === todayStr &&
+                            t.assigneeId === currentUser.uid
+                        );
+                    }
+                    
+                    
+                    if (taskToUpdate) {
+                        // Оновлюємо існуюче завдання
+                        const newStatus = currentDone ? 'progress' : 'done'; // BUG-J FIX: was 'new' → broke status flow
+                        await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).set({
+                            status: newStatus,
+                            completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                            completedDate: newStatus === 'done' ? ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]) : null,
+                        }, { merge: true });
+                        // AUDIT LOG
+                        logTaskChange(taskToUpdate.id, newStatus === 'done' ? 'complete' : 'reopen', { status: newStatus }, { status: currentDone ? 'done' : 'new' });
+                    } else if (!currentDone) {
+                        // Завдання не існує в локальному масиві - перевіряємо Firestore напряму
+                        const todayStr2 = getLocalDateStr();
+                        const existCheck = await db.collection('companies').doc(currentCompany)
+                            .collection('tasks')
+                            .where('regularTaskId', '==', id)
+                            .where('deadlineDate', '==', todayStr2)
+                            .where('assigneeId', '==', currentUser.uid)
+                            .limit(1).get();
+                        
+                        if (!existCheck.empty) {
+                            // Вже існує в Firestore — оновлюємо замість створення
+                            const existingDoc = existCheck.docs[0];
+                            await existingDoc.ref.update({
+                                status: 'done',
+                                completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                completedDate: ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]),  // P0 FIX
+                            });
+                        } else {
+                        // Створюємо нове
+                        const rt = regularTasks.find(r => r.id === id);
+                        if (rt) {
+                            const newTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                                title: rt.title,
+                                function: rt.functionName || rt.function || '',
+                                functionName: rt.functionName || rt.function || '',
+                                functionId: rt.functionId || '',
+                                assigneeId: currentUser.uid,
+                                assigneeName: currentUserData?.name || currentUser.email,
+                                deadlineDate: todayStr2,
+                                deadlineTime: rt.timeStart || rt.time || '18:00',
+                                deadline: firebase.firestore.Timestamp.fromDate(new Date(todayStr2 + 'T' + (rt.timeStart || rt.time || '18:00') + ':00')),
+                                expectedResult: rt.expectedResult || '',
+                                reportFormat: rt.reportFormat || '',
+                                description: rt.instruction || '',
+                                status: 'done',
+                                priority: 'medium',
+                                pinned: false,
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                createdDate: todayStr2,
+                                creatorId: currentUser.uid,
+                                creatorName: currentUserData?.name || currentUser?.email || '',
+                                regularTaskId: id,
+                                autoGenerated: true,
+                                completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                completedDate: ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]),
+                            });
+                        } else {
+                            console.error('Could not find regular task template:', id);
+                            throw new Error(window.t('regularTaskNotFound'));
+                        }
+                        } // close existCheck else
+                    } else {
+                        // BUG-N FIX: graceful fail — local tasks[] may be stale, re-render to sync UI
+                        console.warn('Cannot uncheck - task not found for user, re-rendering');
+                        renderMyDay();
+                        return;
+                    }
+                } else {
+                    // Для разових - перевіряємо чи потрібна перевірка
+                    const taskObj = tasks.find(t => t.id === id);
+                    const needsReview = !currentDone && shouldSendForReview(taskObj);
+                    const newStatus = currentDone ? 'progress' : (needsReview ? 'review' : 'done'); // BUG-J FIX: was 'new'
+                    
+                    const _cd = ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]);
+                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).set({
+                        status: newStatus,
+                        completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                        completedDate: newStatus === 'done' ? _cd : null,
+                        ...(needsReview ? { sentForReviewAt: firebase.firestore.FieldValue.serverTimestamp() } : {})
+                    }, { merge: true });
+                    // AUDIT LOG
+                    logTaskChange(id, newStatus === 'done' || newStatus === 'review' ? 'complete' : 'reopen', { status: newStatus }, { status: currentDone ? 'done' : 'new' });
+                    
+                    if (needsReview) {
+                        showToast(window.t('taskSentForReview'), 'info');
+                    }
+                }
+                
+                // Локальне оновлення замість loadAllData
+                if (type === 'regular') {
+                    const todayStr = getLocalDateStr();
+                    let taskToUpdate = tasks.find(t => 
+                        t.regularTaskId === id && 
+                        t.deadlineDate === todayStr && 
+                        t.assigneeId === currentUser.uid
+                    );
+                    if (taskToUpdate) {
+                        taskToUpdate.status = currentDone ? 'progress' : 'done'; // BUG-J FIX: was 'new'
+                        taskToUpdate.completedAt = currentDone ? null : new Date().toISOString();
+                        if (taskToUpdate.projectId) autoUpdateProjectStatus(taskToUpdate.projectId);
+                    }
+                } else {
+                    const task = tasks.find(t => t.id === id);
+                    if (task) {
+                        const needsReview = !currentDone && shouldSendForReview(task);
+                        task.status = currentDone ? 'progress' : (needsReview ? 'review' : 'done'); // BUG-J FIX: was 'new'
+                        task.completedAt = currentDone ? null : new Date().toISOString();
+                        // Автопросування процесу
+                        if (!needsReview && !currentDone) {
+                            advanceProcessIfLinked(task.id);
+                        }
+                        // Автостатус проєкту
+                        if (task.projectId) autoUpdateProjectStatus(task.projectId);
+                    }
+                }
+                
+                renderMyDay();
+            } catch (error) {
+                console.error('Error toggling task:', error);
+                showAlertModal(window.t('error') + ': ' + error.message);
+                // Відновлюємо UI при помилці
+                if (checkbox && !currentDone) {
+                    checkbox.classList.remove('checked');
+                    checkbox.innerHTML = '';
+                }
+                if (item) {
+                    item.style.transform = '';
+                    item.style.opacity = '';
+                }
+            }
+        }
+        
+        function openMyDayTask(id, type, generatedTaskId) {
+            if (type === 'regular' && generatedTaskId) {
+                openTaskModal(generatedTaskId);
+            } else if (type === 'task') {
+                openTaskModal(id);
+            } else if (type === 'regular') {
+                // Регулярне без згенерованої задачі — генеруємо/відкриваємо разову задачу
+                openTodayRegularTask(id);
+            }
+        }
+        
+        async function refreshMyDay() {
+            const btn = document.querySelector('.myday-refresh-btn');
+            if (btn) {
+                btn.classList.add('spinning');
+            }
+            if (navigator.vibrate) navigator.vibrate(10);
+            
+            try {
+                await loadAllData();
+                renderMyDay();
+            } finally {
+                setTimeout(() => {
+                    if (btn) btn.classList.remove('spinning');
+                }, 500);
+            }
+        }

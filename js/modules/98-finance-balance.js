@@ -347,10 +347,10 @@ window._showBalanceSettings = function() {
 
   const listHtml = (items, prefix) => items.map((it,i)=>`
     <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
-      <input type="text" value="${_esc(it.name||'')}" placeholder="${_t('Назва','Название')}"
+      <input type="text" value="${_esc(it.name||'')}" placeholder="${window.t('назва')}"
         id="${prefix}_name_${i}"
         style="flex:2;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.8rem;">
-      <input type="number" value="${it.value||''}" placeholder="${_t('Сума','Сумма')}" min="0"
+      <input type="number" value="${it.value||''}" placeholder="${window.t('сума')}" min="0"
         id="${prefix}_val_${i}"
         style="flex:1;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.8rem;">
       <button onclick="this.closest('div').remove()" style="padding:4px 8px;border:none;background:#fef2f2;color:#ef4444;border-radius:5px;cursor:pointer;font-size:0.75rem;">×</button>
@@ -402,7 +402,7 @@ window._showBalanceSettings = function() {
           <button onclick="document.getElementById('balanceSettingsModal')?.remove()"
             style="flex:1;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:0.83rem;color:#6b7280;">${_t('Скасувати','Отменить')}</button>
           <button onclick="window._bsSave()" id="bsSaveBtn"
-            style="flex:2;padding:0.55rem;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.83rem;font-weight:700;">${_t('Зберегти','Сохранить')}</button>
+            style="flex:2;padding:0.55rem;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.83rem;font-weight:700;">${window.t('зберегти')}</button>
         </div>
       </div>
     </div>`;
@@ -418,9 +418,9 @@ window._bsAddRow = function(prefix) {
   const div = document.createElement('div');
   div.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:6px;';
   div.innerHTML = `
-    <input type="text" placeholder="${_t('Назва','Название')}" id="${prefix}_name_${i}"
+    <input type="text" placeholder="${window.t('назва')}" id="${prefix}_name_${i}"
       style="flex:2;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.8rem;">
-    <input type="number" placeholder="${_t('Сума','Сумма')}" min="0" id="${prefix}_val_${i}"
+    <input type="number" placeholder="${window.t('сума')}" min="0" id="${prefix}_val_${i}"
       style="flex:1;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.8rem;">
     <button onclick="this.closest('div').remove()" style="padding:4px 8px;border:none;background:#fef2f2;color:#ef4444;border-radius:5px;cursor:pointer;font-size:0.75rem;">×</button>`;
   list.appendChild(div);
@@ -428,7 +428,7 @@ window._bsAddRow = function(prefix) {
 
 window._bsSave = async function() {
   const btn = document.getElementById('bsSaveBtn');
-  if (btn) { btn.disabled=true; btn.textContent='Збереження...'; }
+  if (btn) { btn.disabled=true; btn.textContent=window.t('збереження'); }
 
   const _readList = (prefix) => {
     const list = document.getElementById(`bs_${prefix}_list`);

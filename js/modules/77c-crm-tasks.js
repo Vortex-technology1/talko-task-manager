@@ -116,20 +116,20 @@ function _crmRenderTasksList(container, tasks, dealId) {
                     ${dl?`<span style="font-size:0.68rem;color:${overdue?'#ef4444':'#9ca3af'};display:flex;align-items:center;gap:2px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${dl}</span>`:''}
                     ${assignee?`<span style="font-size:0.68rem;color:#6b7280;display:flex;align-items:center;gap:2px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${_esc(assignee.name||assignee.email||'')}</span>`:''}
                     ${t.priority?`<span style="font-size:0.62rem;background:${pc}18;color:${pc};padding:1px 5px;border-radius:3px;font-weight:600;">${t.priority==='high'?'Висок.':t.priority==='low'?'Низьк.':'Середн.'}</span>`:''}
-                    ${t.autoCreated?`<span style="font-size:0.62rem;background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:3px;">авто</span>`:''}
-                    ${t.status==='review'?`<span style="font-size:0.62rem;background:#eef2ff;color:#6366f1;padding:1px 5px;border-radius:3px;">перевірка</span>`:''}
+                    ${t.autoCreated?`${window.t('spanStylefontsize062rembackgroundf0fdf4c')}`:''}
+                    ${t.status==='review'?`${window.t('spanStylefontsize062rembackgroundeef2ffc')}`:''}
                 </div>
             </div>
             <div style="display:flex;gap:3px;flex-shrink:0;">
                 <button onclick="crmOpenDealTask('${t.id}')" title="Відкрити повну задачу" style="background:none;border:1px solid #e5e7eb;cursor:pointer;color:#6b7280;padding:3px 6px;border-radius:5px;display:flex;align-items:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button>
-                <button onclick="crmDeleteDealTask('${dealId}','${t.id}')" style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:3px;" title="Видалити"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                <button onclick="crmDeleteDealTask('${dealId}','${t.id}')" style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:3px;" title=window.t('видалити')><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             </div>
         </div>`;
     };
 
     container.innerHTML = `
     <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.6rem;margin-bottom:0.75rem;">
-        <input id="crmNewTaskInput_${dealId}" placeholder="Назва завдання..." onkeydown="if(event.key===\'Enter\')crmAddDealTask(\'${dealId}\')"
+        <input id="crmNewTaskInput_${dealId}" placeholder=window.t('назваЗавдання') onkeydown="if(event.key===\'Enter\')crmAddDealTask(\'${dealId}\')"
             style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.8rem;outline:none;box-sizing:border-box;margin-bottom:0.4rem;">
         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
             <input type="date" id="crmNewTaskDue_${dealId}" value="${today}" style="flex:1;min-width:100px;padding:0.35rem 0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.75rem;">
@@ -302,7 +302,7 @@ function _taskTemplateRow(t, i, stages) {
             <button onclick="crmRemoveTemplateFile(${i})" style="background:none;border:none;cursor:pointer;
                 color:#fca5a5;padding:0;font-size:0.75rem;" title="Видалити файл">×</button>
           </span>`
-        : `<label title="Прикріпити PDF/DOC до автозадачі" style="cursor:pointer;
+        : `<label title="${window.t('прикріпитиPdfdocДоАвтозадачі')}" style="cursor:pointer;
             font-size:0.68rem;color:#6b7280;background:#f8fafc;border:1px solid #e8eaed;
             border-radius:4px;padding:2px 6px;display:flex;align-items:center;gap:3px;white-space:nowrap;">
             <input type="file" accept=".pdf,.doc,.docx,.xlsx,.xls"
@@ -399,8 +399,8 @@ window.crmConvertDealToProject = async function(dealId) {
     }
 
     const confirmed = typeof showConfirmModal === 'function'
-        ? await showConfirmModal(`Створити проєкт для «${deal.clientName || deal.title || 'угоди'}»?`)
-        : confirm(`Створити проєкт для «${deal.clientName || deal.title || 'угоди'}»?`);
+        ? await showConfirmModal(`Створити проєкт для «${deal.clientName || deal.title || window.t('угоди1')}»?`)
+        : confirm(`Створити проєкт для «${deal.clientName || deal.title || window.t('угоди1')}»?`);
     if (!confirmed) return;
 
     try {
@@ -409,7 +409,7 @@ window.crmConvertDealToProject = async function(dealId) {
         const today = new Date().toISOString().split('T')[0];
 
         const projectData = {
-            name:        deal.clientName || deal.title || 'Новий проєкт',
+            name:        deal.clientName || deal.title || window.t('новийПроєкт'),
             status:      'active',
             color:       '#22c55e',
             dealId:      dealId,
@@ -504,7 +504,7 @@ function _crmRenderFilesUI(container, files, dealId) {
                 <div style="font-size:0.65rem;color:#9ca3af;">${f.sizeTxt || ''} ${f.uploadedByName ? '· ' + f.uploadedByName : ''}</div>
             </div>
             <a href="${f.url}" target="_blank" rel="noopener"
-                style="color:#6b7280;padding:3px;display:flex;align-items:center;" title="Завантажити">
+                style="color:#6b7280;padding:3px;display:flex;align-items:center;" title=window.t('завантажити')>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             </a>
             <button onclick="crmDeleteDealFile('${dealId}','${f.id}','${(f.storagePath||'').replace(/'/g,"\\'")}')"
@@ -536,7 +536,7 @@ function _crmRenderFilesUI(container, files, dealId) {
 window.crmUploadDealFiles = async function(dealId, fileList) {
     if (!fileList || !fileList.length) return;
     const progressEl = document.getElementById(`crmFileUploadProgress_${dealId}`);
-    if (progressEl) { progressEl.style.display = ''; progressEl.textContent = window.currentLang==='ru'?'Загрузка...':'Завантаження...'; }
+    if (progressEl) { progressEl.style.display = ''; progressEl.textContent = window.currentLang==='ru'?window.t('загрузка'):window.t('завантаження'); }
 
     const compRef = window.companyRef();
     const uid = window.currentUser?.uid || '';
@@ -622,7 +622,7 @@ window.crmUploadTemplateFile = async function(idx, file) {
         return;
     }
     if (file.size > MAX) {
-        if (window.showToast) showToast(`Файл більше 10MB`, 'warning');
+        if (window.showToast) showToast(`${window.t('файлБільше10mb')}`, 'warning');
         return;
     }
 

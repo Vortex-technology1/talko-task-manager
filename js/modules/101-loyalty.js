@@ -114,7 +114,7 @@ window.renderLoyaltyWidget = function(client) {
             <div style="background:${info.color};height:100%;width:${progressPct}%;transition:width .4s;border-radius:4px;"></div>
         </div>
         <div style="font-size:.72rem;color:#525252;">До ${nextInfo.label}: ще ${toNext} балів</div>` : 
-        `<div style="font-size:.72rem;color:#7c3aed;font-weight:600;">✦ Максимальний статус</div>`}
+        `${window.t('divStylefontsize72remcolor7c3aedfontweig')}`}
     </div>`;
 };
 

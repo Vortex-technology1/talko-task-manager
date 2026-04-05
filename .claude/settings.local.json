@@ -13,7 +13,11 @@
       "Bash(python translations.py:*)",
       "Bash(timeout 120 python:*)",
       "Bash(python add-polish.py:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(git stash:*)",
+      "Bash(cat:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)"
     ],
     "deny": [],
     "ask": []

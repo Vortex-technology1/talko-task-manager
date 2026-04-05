@@ -10,10 +10,10 @@
     const learningCourseData = [
             {
                 id: 0,
-                title: "МАРШРУТ ПРОГРАМИ",
-                title_ru: "МАРШРУТ ПРОГРАММЫ",
-                subtitle: "Покрокова карта переходу від хаотичного управління до системного бізнесу",
-                subtitle_ru: "Пошаговая карта перехода от хаотичного управления к системному бизнесу",
+                title: window.t('маршрутПрограми'),
+                title_ru: window.t('маршрутПрограммы'),
+                subtitle: window.t('покроковаКартаПереходуВід'),
+                subtitle_ru: window.t('пошаговаяКартаПереходаОт'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -147,8 +147,8 @@
     <strong>Результат.</strong> После ознакомления с маршрутом вы будете понимать: какие этапы проходит систематизация, что именно нужно сделать на каждом этапе и как двигаться по программе дальше.
 </div>`,
 
-                homework: `<ol><li>Відкрийте маршрут програми</li><li>Ознайомтесь із фазами систематизації</li><li>Поверніться до цього уроку</li></ol>`,
-                homework_ru: `<ol><li>Откройте маршрут программы</li><li>Ознакомьтесь с фазами систематизации</li><li>Вернитесь к этому уроку</li></ol>`,
+                homework: `${window.t('olliвідкрийтеМаршрутПрограмиliliознайомт')}`,
+                homework_ru: `${window.t('olliоткройтеМаршрутПрограммыliliознакомь')}`,
 
                 homeworkLink: null,
                 homeworkLinkName: null,
@@ -157,10 +157,10 @@
             },
             {
                 id: 1,
-                title: "ЯК ПРАЦЮВАТИ З GOOGLE ДИСКОМ",
-                title_ru: "КАК РАБОТАТЬ С GOOGLE ДИСКОМ",
-                subtitle: (getLearningLang()==='ru'?'Подготовка рабочей среды программы':'Підготовка робочого середовища програми'),
-                subtitle_ru: "Подготовка рабочей среды программы",
+                title: window.t('якПрацюватиЗGoogle'),
+                title_ru: window.t('какРаботатьСGoogle'),
+                subtitle: (getLearningLang()==='ru'?window.t('подготовкаРабочейСредыПрограммы'):window.t('підготовкаРобочогоСередовищаПрограми')),
+                subtitle_ru: window.t('подготовкаРабочейСредыПрограммы'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -434,8 +434,8 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Створіть папку <strong>Систематизація TALKO — Ваше Ім'я</strong></li><li>Створіть у ній 2 Google Документи та 1 Google Таблицю</li><li>Налаштуйте доступ: <em>Усі, хто має посилання — можуть коментувати</em></li><li>Вставте посилання на папку у поле нижче</li></ol>`,
-                homework_ru: `<ol><li>Создайте папку <strong>Систематизация TALKO — Ваше Имя</strong></li><li>Создайте в ней 2 Google Документа и 1 Google Таблицу</li><li>Настройте доступ: <em>Все, у кого есть ссылка — могут комментировать</em></li><li>Вставьте ссылку на папку в поле ниже</li></ol>`,
+                homework: `${window.t('olliстворітьПапкуStrongсистематизаціяTal')}`,
+                homework_ru: `${window.t('olliсоздайтеПапкуStrongсистематизацияTal')}`,
 
                 homeworkLink: null,
                 homeworkLinkName: null,
@@ -444,10 +444,10 @@
             },
             {
                 id: 2,
-                title: "СЛОВНИК ТЕРМІНІВ + ЕФЕКТИВНЕ НАВЧАННЯ",
-                title_ru: "СЛОВАРЬ ТЕРМИНОВ + ЭФФЕКТИВНОЕ ОБУЧЕНИЕ",
-                subtitle: "Технологія навчання + прояснення 13 термінів",
-                subtitle_ru: "Технология обучения + прояснение 13 терминов",
+                title: window.t('словникТермінівЕфективнеНавчання'),
+                title_ru: window.t('словарьТерминовЭффективноеОбучение'),
+                subtitle: window.t('технологіяНавчанняПрояснення13'),
+                subtitle_ru: window.t('технологияОбученияПрояснение13'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -745,8 +745,8 @@
     </a>
 </div>`,
 
-                homework: `<ol><li>Відкрийте асистента термінів</li><li>Пройдіть перші 13 термінів</li><li>Подумайте, як вони застосовуються у вашому бізнесі</li></ol>`,
-                homework_ru: `<ol><li>Откройте ассистента терминов</li><li>Пройдите первые 13 терминов</li><li>Подумайте, как они применяются в вашем бизнесе</li></ol>`,
+                homework: `${window.t('olliвідкрийтеАсистентаТермінівliliпройді')}`,
+                homework_ru: `${window.t('olliоткройтеАссистентаТерминовliliпройди')}`,
 
                 homeworkLink: null,
                 homeworkLinkName: null,
@@ -755,10 +755,10 @@
             },
             {
                 id: 3,
-                title: "НАЛАШТУВАННЯ ДОСТУПУ ДО AI",
-                title_ru: "НАСТРОЙКА ДОСТУПА К AI",
-                subtitle: "ChatGPT та Claude AI — ваші робочі інструменти",
-                subtitle_ru: "ChatGPT и Claude AI — ваши рабочие инструменты",
+                title: window.t('налаштуванняДоступуДоAi'),
+                title_ru: window.t('настройкаДоступаКAi'),
+                subtitle: window.t('chatgptТаClaudeAi'),
+                subtitle_ru: window.t('chatgptИClaudeAi'),
                 
                 videoLink: null,
                 materialsLink: null,
@@ -926,7 +926,7 @@
                 <span style="font-weight: 700; color: #166534; font-size: 15px;">НАПИШІТЬ «ГОТОВО»</span>
                 
             </div>
-            <textarea placeholder="Готово" style="width: 100%; min-height: 50px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
+            <textarea placeholder=window.t('готово') style="width: 100%; min-height: 50px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
         </div>
     </div>
 </div>
@@ -961,7 +961,7 @@
                 <span style="font-weight: 700; color: #166534; font-size: 15px;">НАПИШИТЕ «ГОТОВО»</span>
                 
             </div>
-            <textarea placeholder="Готово" style="width: 100%; min-height: 50px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
+            <textarea placeholder=window.t('готово') style="width: 100%; min-height: 50px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
         </div>
     </div>
 </div>
@@ -974,10 +974,10 @@
             },
             {
                 id: 4,
-                title: "СИСТЕМА РОЗПОРЯДЖЕНЬ",
-                title_ru: "СИСТЕМА РАСПОРЯЖЕНИЙ",
-                subtitle: (getLearningLang()==='ru'?'Как ставить задачи так, чтобы их выполняли':'Як ставити завдання так, щоб їх виконували'),
-                subtitle_ru: "Как ставить задачи так, чтобы их выполняли",
+                title: window.t('системаРозпоряджень'),
+                title_ru: window.t('системаРаспоряжений'),
+                subtitle: (getLearningLang()==='ru'?window.t('какСтавитьЗадачиТак'):window.t('якСтавитиЗавданняТак')),
+                subtitle_ru: window.t('какСтавитьЗадачиТак'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -1303,8 +1303,8 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Складіть одне реальне розпорядження для співробітника</li><li>Перевірте, чи є всі 7 елементів</li><li>Відправте його реальному співробітнику</li><li>Напишіть, кому і яке розпорядження ви відправили</li></ol>`,
-                homework_ru: `<ol><li>Составьте одно реальное распоряжение для сотрудника</li><li>Проверьте, есть ли все 7 элементов</li><li>Отправьте его реальному сотруднику</li><li>Напишите, кому и какое распоряжение вы отправили</li></ol>`,
+                homework: `${window.t('olliскладітьОднеРеальнеРозпорядження')}`,
+                homework_ru: `${window.t('olliсоставьтеОдноРеальноеРаспоряжение')}`,
 
                 homeworkLink: null,
                 homeworkLinkName: null,
@@ -1314,10 +1314,10 @@
             },
             {
                 id: 5,
-                title: "СИСТЕМА РАДАР",
-                title_ru: "СИСТЕМА РАДАР",
-                subtitle: (getLearningLang()==='ru'?'Как перестать быть «пожарником» для своей команды':'Як перестати бути «пожежником» для власної команди'),
-                subtitle_ru: "Как перестать быть «пожарным» для собственной команды",
+                title: window.t('системаРадар'),
+                title_ru: window.t('системаРадар'),
+                subtitle: (getLearningLang()==='ru'?window.t('какПерестатьБытьПожарником'):window.t('якПерестатиБутиПожежником')),
+                subtitle_ru: window.t('какПерестатьБытьПожарным'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -1832,8 +1832,8 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Протестуйте AI-асистента на 3–5 реальних ситуаціях з вашого бізнесу</li><li>Оберіть 1 підлеглого і дайте йому інструмент у роботу</li><li>Попросіть перед наступним питанням пройти через AI</li><li>Напишіть у полі відповіді: для якої ролі впровадили і в яких ситуаціях будете використовувати</li></ol>`,
-                homework_ru: `<ol><li>Протестируйте AI-ассистента на 3–5 реальных ситуациях из вашего бизнеса</li><li>Выберите 1 подчинённого и дайте ему инструмент в работу</li><li>Попросите перед следующим вопросом пройти через AI</li><li>Напишите в поле ответа: для какой роли внедрили и в каких ситуациях будете использовать</li></ol>`,
+                homework: `${window.t('olliпротестуйтеAiасистентаНа35')}`,
+                homework_ru: `${window.t('olliпротестируйтеAiассистентаНа35')}`,
 
                 homeworkLink: "https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko",
                 homeworkLinkName: "→ AI-асистент ЗРС",
@@ -1843,10 +1843,10 @@
             },
             {
                 id: 6,
-                title: "ТЕХНІЧНИЙ ПРОВІДНИК",
-                title_ru: "ТЕХНИЧЕСКИЙ ПРОВОДНИК",
-                subtitle: "AI-інструмент для покрокового налаштування технічних рішень",
-                subtitle_ru: "AI-инструмент для пошагового внедрения технических решений",
+                title: window.t('технічнийПровідник'),
+                title_ru: window.t('техническийПроводник'),
+                subtitle: window.t('aiінструментДляПокроковогоНалаштування'),
+                subtitle_ru: window.t('aiинструментДляПошаговогоВнедрения'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -2188,8 +2188,8 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Оберіть одну реальну технічну задачу і пройдіть її через Технічного провідника до готового результату</li><li>Напишіть у полі відповіді: яку задачу обрали, що вдалося налаштувати, який результат отримали</li></ol>`,
-                homework_ru: `<ol><li>Выберите одну реальную техническую задачу и пройдите её через Технического проводника до готового результата</li><li>Напишите в поле ответа: какую задачу выбрали, что удалось настроить, какой результат получили</li></ol>`,
+                homework: `${window.t('olliоберітьОднуРеальнуТехнічну')}`,
+                homework_ru: `${window.t('olliвыберитеОднуРеальнуюТехническую')}`,
 
                 homeworkLink: "https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-tekhnichnii-providnik",
                 homeworkLinkName: "→ Технічний провідник",
@@ -2198,10 +2198,10 @@
             },
             {
                 id: 7,
-                title: "ПІДГОТОВКА КОМАНДИ ДО ЗМІН",
-                title_ru: "ПОДГОТОВКА КОМАНДЫ К ИЗМЕНЕНИЯМ",
-                subtitle: (getLearningLang()==='ru'?'Как познакомить сотрудников с проектом систематизации':'Як познайомити співробітників з проектом систематизації'),
-                subtitle_ru: "Как познакомить сотрудников с проектом систематизации",
+                title: window.t('підготовкаКомандиДоЗмін'),
+                title_ru: window.t('подготовкаКомандыКИзменениям'),
+                subtitle: (getLearningLang()==='ru'?window.t('какПознакомитьСотрудниковС'):window.t('якПознайомитиСпівробітниківЗ')),
+                subtitle_ru: window.t('какПознакомитьСотрудниковС'),
                 
                 videoLink: null,
                 materialsLink: null,
@@ -2935,10 +2935,10 @@
             },
             {
                 id: 8,
-                title: "АНАЛІЗ ВУЗЬКОГО МІСЦЯ БІЗНЕСУ",
-                title_ru: "АНАЛИЗ УЗКОГО МЕСТА БИЗНЕСА",
-                subtitle: "5 шарів, де насправді ховається проблема",
-                subtitle_ru: "5 слоёв, где на самом деле скрывается проблема",
+                title: window.t('аналізВузькогоМісцяБізнесу'),
+                title_ru: window.t('анализУзкогоМестаБизнеса'),
+                subtitle: window.t('5ШарівДеНасправді'),
+                subtitle_ru: window.t('5СлоёвГдеНа'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -3326,8 +3326,8 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Пройдіть аналіз в AI-асистенті</li><li>Напишіть у полі відповіді:<br>— в якому шарі зараз ваше вузьке місце<br>— чому ви так вважаєте<br>— яку проблему це створює у вашому бізнесі</li></ol>`,
-                homework_ru: `<ol><li>Пройдите анализ в AI-ассистенте</li><li>Напишите в поле ответа:<br>— в каком слое сейчас ваше узкое место<br>— почему вы так считаете<br>— какую проблему это создаёт в вашем бизнесе</li></ol>`,
+                homework: `${window.t('olliпройдітьАналізВAiасистентіliliнапиші')}`,
+                homework_ru: `${window.t('olliпройдитеАнализВAiассистентеliliнапиш')}`,
 
                 homeworkLink: "https://chatgpt.com/g/g-6856d5ef91608191918552480e1018eb-pie-analysis-methodology-5-layers-of-business",
                 homeworkLinkName: "→ AI Аналіз 5 шарів",
@@ -3336,10 +3336,10 @@
             },
             {
                 id: 9,
-                title: "ЦІЛЬ, ЗАДУМ, ПРОДУКТ ОРГАНІЗАЦІЇ. ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
-                title_ru: "ЦЕЛЬ, ЗАМЫСЕЛ, ПРОДУКТ ОРГАНИЗАЦИИ. ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
-                subtitle: (getLearningLang()==='ru'?'Фундамент системного бизнеса':'Фундамент системного бізнесу'),
-                subtitle_ru: "Фундамент системного бизнеса",
+                title: window.t('цільЗадумПродуктОрганізації'),
+                title_ru: window.t('цельЗамыселПродуктОрганизации'),
+                subtitle: (getLearningLang()==='ru'?window.t('фундаментСистемногоБизнеса'):window.t('фундаментСистемногоБізнесу')),
+                subtitle_ru: window.t('фундаментСистемногоБизнеса'),
                 
                 videoLink: null,
                 materialsLink: null,
@@ -3981,10 +3981,10 @@
             },
             {
                 id: 10,
-                title: "ЦІЛЬ І ЗАДУМ",
-                title_ru: "ЦЕЛЬ И ЗАМЫСЕЛ",
-                subtitle: "Фундамент, на якому тримається управління, мотивація і розвиток бізнесу",
-                subtitle_ru: "Фундамент, на котором держится управление, мотивация и развитие бизнеса",
+                title: window.t('цільІЗадум'),
+                title_ru: window.t('цельИЗамысел'),
+                subtitle: window.t('фундаментНаЯкомуТримається'),
+                subtitle_ru: window.t('фундаментНаКоторомДержится'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -4558,8 +4558,8 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Пройдіть діалог з AI-коучем цілей</li><li>Створіть документ «Політика цілей і задуму компанії» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — розкажіть мету і задум, запишіть на відео</li><li>Напишіть у полі відповіді: яку мету ви сформулювали і яка була найскладніша частина діалогу з AI</li></ol>`,
-                homework_ru: `<ol><li>Пройдите диалог с AI-коучем целей</li><li>Создайте документ «Политика целей и замысла компании» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — расскажите цель и замысел, запишите на видео</li><li>Напишите в поле ответа: какую цель вы сформулировали и что было сложнее всего в диалоге с AI</li></ol>`,
+                homework: `${window.t('olliпройдітьДіалогЗAiкоучем')}`,
+                homework_ru: `${window.t('olliпройдитеДиалогСAiкоучем')}`,
 
                 homeworkLink: "https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b",
                 homeworkLinkName: "→ AI-коуч цілей",
@@ -4568,10 +4568,10 @@
             },
             {
                 id: 11,
-                title: "ПРОДУКТ ОРГАНІЗАЦІЇ",
-                title_ru: "ПРОДУКТ ОРГАНИЗАЦИИ",
-                subtitle: "Що насправді виробляє ваш бізнес — і як це зробити зрозумілим для команди",
-                subtitle_ru: "Что на самом деле производит ваш бизнес — и как сделать это понятным для команды",
+                title: window.t('продуктОрганізації'),
+                title_ru: window.t('продуктОрганизации'),
+                subtitle: window.t('щоНасправдіВиробляєВаш'),
+                subtitle_ru: window.t('чтоНаСамомДеле'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -4995,8 +4995,8 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Пройдіть діалог з AI-коучем продукту</li><li>Створіть документ «Політика продукту організації» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — поясніть продукт ролі кожному</li><li>Напишіть у полі відповіді: який головний продукт вашої компанії і продукт якої ролі виявився найскладнішим для формулювання</li></ol>`,
-                homework_ru: `<ol><li>Пройдите диалог с AI-коучем продукта</li><li>Создайте документ «Политика продукта организации» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — объясните продукт роли каждому</li><li>Напишите в поле ответа: какой главный продукт вашей компании и продукт какой роли оказался сложнее всего сформулировать</li></ol>`,
+                homework: `${window.t('olliпройдітьДіалогЗAiкоучем1')}`,
+                homework_ru: `${window.t('olliпройдитеДиалогСAiкоучем1')}`,
 
                 homeworkLink: "https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp",
                 homeworkLinkName: "→ AI-коуч продукту",
@@ -5005,10 +5005,10 @@
             },
             {
                 id: 12,
-                title: "ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
-                title_ru: "ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
-                subtitle: "Як організувати роботу так, щоб бізнес працював без вас",
-                subtitle_ru: "Как организовать работу так, чтобы бизнес работал без вас",
+                title: window.t('функціональнаСтруктураТаРолі'),
+                title_ru: window.t('функциональнаяСтруктураИРоли'),
+                subtitle: window.t('якОрганізуватиРоботуТак'),
+                subtitle_ru: window.t('какОрганизоватьРаботуТак'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -5645,8 +5645,8 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Пройдіть діалог з AI-коучем функціональної структури</li><li>Створіть «Функціональну карту бізнесу» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — покажіть кожному його функцію і зону відповідальності</li><li>Напишіть у полі відповіді: яку «діру» ви знайшли — функцію, за яку зараз ніхто не відповідає</li></ol>`,
-                homework_ru: `<ol><li>Пройдите диалог с AI-коучем функциональной структуры</li><li>Создайте «Функциональную карту бизнеса» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — покажите каждому его функцию</li><li>Напишите в поле ответа: какую «дыру» вы нашли — функцию, за которую сейчас никто не отвечает</li></ol>`,
+                homework: `${window.t('olliпройдітьДіалогЗAiкоучем2')}`,
+                homework_ru: `${window.t('olliпройдитеДиалогСAiкоучем2')}`,
 
                 homeworkLink: "https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura",
                 homeworkLinkName: "→ AI-коуч структури",
@@ -5655,10 +5655,10 @@
             },
             {
                 id: 13,
-                title: "СИСТЕМА СТАТИСТИК",
-                title_ru: "СИСТЕМА СТАТИСТИК",
-                subtitle: "Як бачити бізнес у цифрах — і чому тиждень важливіший за місяць",
-                subtitle_ru: "Как видеть бизнес в цифрах — и почему неделя важнее месяца",
+                title: window.t('системаСтатистик'),
+                title_ru: window.t('системаСтатистик'),
+                subtitle: window.t('якБачитиБізнесУ'),
+                subtitle_ru: window.t('какВидетьБизнесВ'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -5907,8 +5907,8 @@
     </div>
 </div>`,
 
-                homework: `<ol><li>Пройдіть діалог з AI-асистентом статистик</li><li>Для кожної функції визначте ЦКП і відповідну статистику</li><li>Напишіть у полі відповіді: яка головна статистика вашої компанії і чому саме вона</li></ol>`,
-                homework_ru: `<ol><li>Пройдите диалог с AI-ассистентом статистик</li><li>Для каждой функции определите ЦКП и соответствующую статистику</li><li>Напишите в поле ответа: какая главная статистика вашей компании и почему именно она</li></ol>`,
+                homework: `${window.t('olliпройдітьДіалогЗAiасистентом')}`,
+                homework_ru: `${window.t('olliпройдитеДиалогСAiассистентом')}`,
 
                 homeworkLink: "https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics",
                 homeworkLinkName: "→ AI-асистент статистик",
@@ -5917,10 +5917,10 @@
             },
             {
                 id: 14,
-                title: "ВПРОВАДЖЕННЯ НА ПЛАТФОРМІ",
-                title_ru: "ВНЕДРЕНИЕ НА ПЛАТФОРМЕ",
-                subtitle: "Запитайте AI-асистента — він пояснить що і як робити",
-                subtitle_ru: "Спросите AI-ассистента — он объяснит что и как делать",
+                title: window.t('впровадженняНаПлатформі'),
+                title_ru: window.t('внедрениеНаПлатформе'),
+                subtitle: window.t('запитайтеAiасистентаВінПояснить'),
+                subtitle_ru: window.t('спроситеAiассистентаОнОбъяснит'),
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -5986,8 +5986,8 @@
     </a>
 </div>`,
 
-                homework: `<ol><li>Запитайте AI-асистента і розпочніть роботу на платформі</li></ol>`,
-                homework_ru: `<ol><li>Спросите AI-ассистента и начните работу на платформе</li></ol>`,
+                homework: `${window.t('olliзапитайтеAiасистентаІРозпочніть')}`,
+                homework_ru: `${window.t('olliспроситеAiассистентаИНачните')}`,
 
                 homeworkLink: "https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support",
                 homeworkLinkName: "→ TALKO Support",
@@ -11041,7 +11041,7 @@
         window.learningCourseData = learningCourseData;
 
 window._openAIAssistant = function(moduleTitle, homeworkText) {
-        const prompt = `У мене завдання з програми навчання TALKO:\n\nМодуль: ${moduleTitle}\n${homeworkText ? 'Домашнє завдання: ' + homeworkText + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
+        const prompt = `У мене завдання з програми навчання TALKO:\n\nМодуль: ${moduleTitle}\n${homeworkText ? window.t('домашнєЗавдання') + homeworkText + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
         navigator.clipboard.writeText(prompt).catch(() => {});
         window.open(AI_ASSISTANT_URL, '_blank');
     };
@@ -11055,7 +11055,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         liMatches.forEach(li => hwItems.push(li.replace(/<[^>]*>/g, '').trim()));
         const hw = hwItems.length ? hwItems.join('; ') : hwRaw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
         const prompt = isRu
-            ? `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`
+            ? `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? window.t('домашнееЗадание') + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`
             : `У мене завдання з програми навчання TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнє завдання: ' + hw + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
         const btnText = isRu ? 'Спросить AI ассистента' : 'Запитати AI асистента';
         const descText = isRu

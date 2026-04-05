@@ -97,7 +97,7 @@ async function _showFinanceConfirmModal(deal) {
           <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Рахунок</label>
           <select id="cfbAccount"
             style="width:100%;padding:0.5rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            ${accOptions || `<option value="">${_t('— рахунки не налаштовані —','— счета не настроены —')}</option>`}
+            ${accOptions || `<option value="">${window.t('рахункиНеНалаштовані')}</option>`}
           </select>
         </div>
 
@@ -106,7 +106,7 @@ async function _showFinanceConfirmModal(deal) {
           <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_t('Категорія доходу','Категория дохода')}егорія доходу</label>
           <select id="cfbCategory"
             style="width:100%;padding:0.5rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            <option value="">${_t('— оберіть категорію —','— выберите категорию —')}</option>
+            <option value="">${window.t('оберітьКатегорію')}</option>
             ${catOptions}
           </select>
         </div>
@@ -157,7 +157,7 @@ window._cfbSave = async function(dealId) {
   }
 
   const btn = document.getElementById('cfbSaveBtn');
-  if (btn) { btn.disabled = true; btn.textContent = _t(_t('Збереження...','Сохранение...'),'Сохранение...'); }
+  if (btn) { btn.disabled = true; btn.textContent = _t(window.t('збереження'),'Сохранение...'); }
 
   try {
     const db = window.db || (window.firebase && firebase.firestore());
