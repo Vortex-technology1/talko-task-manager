@@ -125,7 +125,7 @@ function _siteCard(site) {
 
         <!-- Назва + мета -->
         <div style="flex:1;min-width:0;">
-            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.15rem;">
                 <span style="font-weight:700;font-size:0.88rem;color:#111827;
                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px;"
                     title="${_esc(site.name)}">${_esc(site.name || window.t('botsNoTitle'))}</span>
@@ -134,6 +134,16 @@ function _siteCard(site) {
                     color:${isPublished ? '#16a34a' : '#9ca3af'};">
                     ${isPublished ? '● ' + window.t('sitesPublishedBadge') : window.t('sitesDraftBadge')}
                 </span>
+            </div>
+            <!-- Опис сайту — інлайн редагування -->
+            <div style="margin-bottom:0.2rem;" onclick="event.stopPropagation()">
+                ${site.description
+                    ? `<span onclick="sitesEditDescription('${site.id}',this)"
+                        style="font-size:0.75rem;color:#6b7280;cursor:text;border-bottom:1px dashed #e5e7eb;"
+                        title="Клікніть щоб змінити">${_esc(site.description)}</span>`
+                    : `<span onclick="sitesEditDescription('${site.id}',this)"
+                        style="font-size:0.72rem;color:#d1d5db;cursor:pointer;font-style:italic;">+ про що цей сайт...</span>`
+                }
             </div>
             <div style="display:flex;align-items:center;gap:1rem;font-size:0.72rem;color:#9ca3af;flex-wrap:wrap;">
                 <span style="display:flex;align-items:center;gap:3px;">
@@ -162,6 +172,14 @@ function _siteCard(site) {
 
         <!-- Кнопки дій -->
         <div style="display:flex;align-items:center;gap:0.3rem;flex-shrink:0;">
+            ${!isPublished ? `
+            <button onclick="sitesTogglePublish('${site.id}','${site.status}');event.stopPropagation()"
+                style="padding:0.38rem 0.8rem;background:#22c55e;color:white;border:none;
+                border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:700;white-space:nowrap;
+                display:flex;align-items:center;gap:4px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
+                Опублікувати
+            </button>` : ''}
             ${site.mode === 'html' ? `
             <button onclick="sitesEditHtml('${site.id}')" title="Редагувати HTML"
                 style="padding:0.38rem 0.65rem;background:#8b5cf6;color:white;border:none;
@@ -1323,6 +1341,32 @@ function _showPublicUrlModal(url, siteId) {
     </div>`;
     document.body.appendChild(m);
 }
+
+window.sitesEditDescription = function(siteId, el) {
+    const current = el.textContent.trim();
+    const isPlaceholder = el.style.fontStyle === 'italic';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = isPlaceholder ? '' : current;
+    input.placeholder = 'Про що цей сайт...';
+    input.style.cssText = 'font-size:0.75rem;color:#374151;border:none;border-bottom:2px solid #22c55e;outline:none;background:transparent;width:200px;font-family:inherit;padding:0 2px;';
+    el.replaceWith(input);
+    input.focus();
+
+    async function save() {
+        const val = input.value.trim();
+        try {
+            await window.companyRef().collection(window.DB_COLS?.SITES || 'sites').doc(siteId).update({
+                description: val,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            if (typeof window.sitesLoadList === 'function') window.sitesLoadList();
+        } catch(e) { console.warn('[Sites] description save:', e.message); }
+    }
+
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } if (e.key === 'Escape') { input.blur(); } });
+};
 
 window.sitesTogglePublish = async function (siteId, currentStatus) {
     const newStatus = currentStatus === 'published' ? 'draft' : 'published';
