@@ -122,7 +122,7 @@
                 <div style="text-align:center;padding:3rem;background:white;border-radius:12px;box-shadow:var(--shadow);">
                     <div style="font-size:2.5rem;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span></div>
                     <div style="font-weight:600;margin-bottom:0.4rem;">''</div>
-                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">''автоматичні сценарії</div>
+                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">автоматичні сценарії</div>
                     <button onclick="openCreateFlowModal()" style="padding:0.6rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">+ Створити бота</button>
                 </div>` : `
                 <div style="display:flex;flex-direction:column;gap:0.75rem;">
@@ -535,7 +535,7 @@
                 field('Дні') +
                 input(node.days||0, `updateNode('${nodeId}','days',parseInt(this.value)||0)`, '0', 'number') +
                 field('Повідомлення під час очікування (опційно)') +
-                input(node.waitMessage||'', `updateNode('${nodeId}','waitMessage',this.value)`, ''яжемось з вами...');
+                input(node.waitMessage||'', `updateNode('${nodeId}','waitMessage',this.value)`, 'Звʼяжемось з вами...');
         }
 
         if (node.type === 'photo' || node.type === 'receive_photo') {

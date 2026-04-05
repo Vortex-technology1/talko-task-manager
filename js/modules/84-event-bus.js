@@ -350,7 +350,7 @@ const _defaultAutomationRules = [
                 const endDt   = new Date(startDt.getTime() + 60 * 60 * 1000); // +1 год
                 const calEvent = {
                     summary:     `'': ${clientName || ''}`,
-                    description: `'' ID: ${dealId}\n'': ${window.location.origin}`,
+                    description: `ID: ${dealId}\n: ${window.location.origin}`,
                     location:    objectAddress || '',
                     start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
                     end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },
@@ -394,7 +394,7 @@ const _defaultAutomationRules = [
                 const endDt   = new Date(startDt.getTime() + 2 * 60 * 60 * 1000); // +2 год
                 const calEvent = {
                     summary:     `Монтаж: ${clientName || ''}`,
-                    description: `'' ID: ${dealId}\n'': ${window.location.origin}`,
+                    description: `ID: ${dealId}\n: ${window.location.origin}`,
                     location:    objectAddress || '',
                     start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
                     end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },

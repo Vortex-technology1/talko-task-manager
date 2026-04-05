@@ -169,7 +169,7 @@
         </div>
         <div style="margin-bottom:20px">
           <label style="display:block;font-size:.75rem;font-weight:600;color:#374151;margin-bottom:5px">${tg('Коментар','Note')}</label>
-          <input id="sdPayNote" type="text" placeholder="${tg(''язково','Optional')}" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:8px 12px;font-size:.84rem;outline:none;box-sizing:border-box">
+          <input id="sdPayNote" type="text" placeholder="${tg('Необовʼязково','Optional')}" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:8px 12px;font-size:.84rem;outline:none;box-sizing:border-box">
         </div>
         <div style="display:flex;justify-content:flex-end;gap:10px">
           <button onclick="document.getElementById('sdPayModalOverlay').remove()" style="padding:9px 20px;border:1px solid #e5e7eb;border-radius:7px;cursor:pointer;background:#fff;font-size:.85rem;font-weight:600;color:#374151">${tg('Скасувати','Cancel')}</button>

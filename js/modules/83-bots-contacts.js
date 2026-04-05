@@ -372,7 +372,7 @@ function renderFlowsTab() {
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg>
             </div>
             <div style="font-weight:600;margin-bottom:0.3rem;">''</div>
-            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">''стувачем</div>
+            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">стувачем</div>
             <button onclick="openCreateFlowModal()"
                 style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:9px;cursor:pointer;font-weight:600;">
                 ''
@@ -1374,7 +1374,7 @@ window.ctsOpenCard = async function(contactId) {
             const dealId = dealSnap.docs[0].id;
             const crmBtn = document.createElement('div');
             crmBtn.style.cssText = 'margin:0.75rem 1rem 0;padding:0.5rem 0.75rem;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:0.5rem;';
-            crmBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><div style="flex:1"><div style="font-size:0.78rem;font-weight:700;color:#16a34a;''font-size:0.7rem;color:#374151;">' + (deal.title || deal.clientName || '—') + ' · ' + (deal.stage || '—') + '</div></div>';
+            crmBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><div style="flex:1"><div style="font-size:0.78rem;font-weight:700;color:#16a34a;font-size:0.7rem;color:#374151;">' + (deal.title || deal.clientName || '—') + ' · ' + (deal.stage || '—') + '</div></div>';
             crmBtn.onclick = function() { if (typeof switchTab === 'function') switchTab('crm'); };
             const panelEl = document.getElementById('ctsDetailPanel');
             if (panelEl) panelEl.appendChild(crmBtn);
