@@ -5784,4 +5784,30 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         });
     }
 
+    // ── Глобальні helper функції для уроків (замість <script> в innerHTML) ──
+    // Ці функції визначаємо тут щоб вони завжди були на window
+    // незалежно від того чи виконались <script> теги з lessonContent
+
+    function _makeCopyBtn(btnId, contentId) {
+        var btn = document.getElementById(btnId);
+        if (!btn) return;
+        var el = document.getElementById(contentId);
+        var text = el ? el.innerText || el.textContent : '';
+        navigator.clipboard && navigator.clipboard.writeText(text).then(function() {
+            var orig = btn.innerHTML;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg> Скопійовано!';
+            btn.classList.add('copied');
+            setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2500);
+        });
+    }
+
+    // Урок 9 (l109)
+    window.l109CopyPrompt = function() { _makeCopyBtn('l109-copy-btn', 'l109-prompt-content'); };
+
+    // Урок 10 (l110)
+    window.l110CopyPrompt = function() { _makeCopyBtn('l110-copy-btn', 'l110-prompt-content'); };
+
+    // Універсальна — для нових уроків: window.lCopyPrompt('btn-id','content-id')
+    window.lCopyPrompt = _makeCopyBtn;
+
 })(); // END 80-learning-engine
