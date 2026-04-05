@@ -130,7 +130,7 @@
                     let deadlineHtml = '';
                     if (tk.deadlineDate) {
                         const d = new Date(tk.deadlineDate + 'T12:00:00');
-                        const dayMonth = d.toLocaleDateString(getLocale(), {day:'numeric', month:'short'});
+                        const dayMonth = d.toLocaleDateString(window.getLocale(), {day:'numeric', month:'short'});
                         const color = isOverdue ? '#ef4444' : isToday ? '#f59e0b' : '#6b7280';
                         deadlineHtml = `<span style="color:${color}">${dayMonth}</span>`;
                     }

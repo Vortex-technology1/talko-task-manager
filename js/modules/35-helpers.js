@@ -70,7 +70,7 @@
 
         function formatDate(s) {
             const d = new Date(s);
-            return d.toLocaleDateString(getLocale(), { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            return d.toLocaleDateString(window.getLocale(), { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
         // More tabs dropdown
