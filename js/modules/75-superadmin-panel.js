@@ -82,7 +82,6 @@ window.deleteEmptyCompanies = async function() {
 
 window.openSuperadminPanel = async function() {
     if (!window.isSuperAdmin) return;
-    // Відкриваємо модальне вікно напряму (openModal — локальна в statistics.js)
     const modal = document.getElementById('superadminModal');
     if (modal) {
         modal.style.display = 'flex';
@@ -90,6 +89,26 @@ window.openSuperadminPanel = async function() {
     }
     await loadSuperadminData();
 };
+
+// Перевіряємо кількість pending заявок і показуємо бейдж
+async function checkPendingBadge() {
+    try {
+        const snap = await firebase.firestore().collection('registration_requests')
+            .where('status', '==', 'pending').get();
+        const badge = document.getElementById('superadminPendingBadge');
+        if (badge) {
+            if (snap.size > 0) {
+                badge.textContent = snap.size;
+                badge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    } catch(e) { /* silent */ }
+}
+window.checkPendingBadge = checkPendingBadge;
+
+
 
 // ── НОВА loadSuperadminData — збирає дані для всіх табів ──────────────────
 // ══════════════════════════════════════════════════════════

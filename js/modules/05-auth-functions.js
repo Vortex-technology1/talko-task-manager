@@ -120,6 +120,59 @@
                 
             } catch (error) {
                 console.error('Self registration error:', error);
+                
+                // Якщо Auth вже створив юзера але Firestore не вийшов — пробуємо ще раз
+                if (error.code !== 'auth/email-already-in-use') {
+                    try {
+                        console.warn('[Reg] Firestore error, retrying...');
+                        const user = auth.currentUser;
+                        if (user) {
+                            // Повторна спроба записати дані
+                            const companyId2 = companyName.toLowerCase().replace(/[^a-zа-яіїєґ0-9]/g, '_').substring(0, 30) + '_' + Date.now().toString(36);
+                            const trialEnd2 = new Date();
+                            trialEnd2.setDate(trialEnd2.getDate() + 14);
+                            const batch2 = db.batch();
+                            batch2.set(db.collection('companies').doc(companyId2), {
+                                name: companyName, ownerName, ownerEmail: user.email.toLowerCase(),
+                                ownerId: user.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                disabled: true, pendingApproval: true,
+                                subscriptionPlan: 'trial', subscriptionStatus: 'pending',
+                                subscriptionEnd: firebase.firestore.Timestamp.fromDate(trialEnd2),
+                            });
+                            batch2.set(db.collection('companies').doc(companyId2).collection('users').doc(user.uid), {
+                                name: ownerName, email: user.email.toLowerCase(), role: 'owner',
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            });
+                            batch2.set(db.collection('users').doc(user.uid), {
+                                email: user.email.toLowerCase(), companyId: companyId2, role: 'owner',
+                            });
+                            batch2.set(db.collection('registration_requests').doc(companyId2), {
+                                companyId: companyId2, companyName, ownerName,
+                                ownerEmail: user.email.toLowerCase(), ownerId: user.uid,
+                                status: 'pending', createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            });
+                            await batch2.commit();
+                            console.log('[Reg] Retry success!');
+                            if (btn) btn.disabled = false;
+                            const authBox2 = document.querySelector('.auth-box') || document.getElementById('registerForm');
+                            if (authBox2) authBox2.innerHTML = `<div style="text-align:center;padding:2rem 1rem;">
+                                <div style="font-size:2.5rem;margin-bottom:1rem;">⏳</div>
+                                <div style="font-size:1.1rem;font-weight:700;color:#111827;margin-bottom:0.75rem;">${window.t('requestSent') || 'Заявку надіслано!'}</div>
+                                <div style="font-size:0.88rem;color:#6b7280;line-height:1.6;margin-bottom:1.5rem;">
+                                    ${window.t('companyRegistered') || 'Ваша компанія'} <strong>${companyName}</strong>.<br>
+                                    ${window.t('adminWillApprove') || 'Адміністратор перевірить заявку і надасть доступ.'}
+                                </div>
+                                <button onclick="auth.signOut().then(()=>location.reload())"
+                                    style="padding:0.6rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">
+                                    ${window.t('understood') || 'Зрозуміло'}
+                                </button></div>`;
+                            return;
+                        }
+                    } catch(retryErr) {
+                        console.error('[Reg] Retry also failed:', retryErr.message);
+                    }
+                }
+                
                 showAlertModal(window.t('createError') + ': ' + error.message);
                 if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="rocket" class="icon"></i> Створити компанію'; }
             }
@@ -290,7 +343,21 @@
                 console.error('[Register] Error:', e.code, e.message);
                 let msg = window.t('registerError');
                 if (e.code === 'auth/email-already-in-use') {
-                    msg = window.t('emailAlreadyRegistered');
+                    // Перевіряємо чи є юзер вже в системі
+                    showAuthMessage(window.t('emailAlreadyRegistered'), 'error');
+                    // Показуємо кнопку "Увійти" під повідомленням
+                    const authMsg = document.getElementById('authMessage');
+                    if (authMsg) {
+                        authMsg.innerHTML = `
+                            ${window.t('emailAlreadyRegistered')}<br>
+                            <button onclick="showLoginForm()" style="margin-top:0.5rem;padding:0.4rem 1rem;
+                                background:#22c55e;color:white;border:none;border-radius:8px;
+                                cursor:pointer;font-weight:600;font-size:0.85rem;">
+                                → ${window.t('signIn')}
+                            </button>`;
+                        authMsg.style.display = 'block';
+                    }
+                    return;
                 }
                 if (e.code === 'auth/invalid-email') {
                     msg = window.t('invalidEmail');

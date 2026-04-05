@@ -610,7 +610,7 @@ document.addEventListener('mousedown', function(e) {
                 <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;"><i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span></button>
                 <button class="header-btn" onclick="if(typeof window.startTour==='function'){window.startTour();}else{lazyLoad('demo',function(){window.startTour();});}" id="tourBtnDesktop" style="display:none;background:rgba(34,197,94,0.25);"><i data-lucide="play-circle" class="icon"></i> <span data-i18n="tourBtn">Тур</span></button>
                 <button class="header-btn" onclick="if(typeof openDemoDataModal==='function'){openDemoDataModal();}else{lazyLoad('demo',function(){openDemoDataModal();});}" id="demoDataBtnDesktop" style="display:none;background:rgba(239,68,68,0.3);"><i data-lucide="database" class="icon"></i> Демо</button>
-                <button class="header-btn" onclick="openSuperadminPanel()" id="superadminBtn" style="display:none;background:rgba(139,92,246,0.3);"><i data-lucide="shield" class="icon"></i> Адмін</button>
+                <button class="header-btn" onclick="openSuperadminPanel()" id="superadminBtn" style="display:none;background:rgba(139,92,246,0.3);"><i data-lucide="shield" class="icon"></i> Адмін <span id="superadminPendingBadge" style="display:none;background:#ef4444;color:white;border-radius:9px;padding:0 5px;font-size:0.65rem;font-weight:700;margin-left:3px;"></span></button>
                 <button class="mobile-logout-btn" onclick="logout()"><i data-lucide="log-out" class="icon" style="width:18px;height:18px;"></i></button>
             </div>
         </div>
@@ -3006,8 +3006,8 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/00-module-links.js?v=20260327v1" defer></script>
     <script src="js/modules/03-app-state.js?v=20260330v1" defer></script>
     <script src="js/modules/04-google-calendar-config.js?v=20260316v2" defer></script>
-    <script src="js/modules/05-auth-functions.js?v=20260403v1" defer></script>
-    <script src="js/modules/06-auth-state-listener.js?v=20260403v6" defer></script>
+    <script src="js/modules/05-auth-functions.js?v=20260406v2" defer></script>
+    <script src="js/modules/06-auth-state-listener.js?v=20260406v2" defer></script>
     <script src="js/modules/07-data-loading.js?v=20260403v1" defer></script>
     <script src="js/modules/08-notifications-sound-badge-title.js?v=20260318v1" defer></script>
     <script src="js/modules/09-auto-generate-regular-tasks.js?v=20260311s" defer></script>
@@ -3075,7 +3075,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/72-global-search.js?v=20260329v1" defer></script>
     <script src="js/modules/73-subtasks.js?v=20260316v12" defer></script>
     <script src="js/modules/74-bulk-duplicate.js?v=20260324vG" defer></script>
-    <script src="js/modules/75-superadmin-panel.js?v=20260406v4" defer></script>
+    <script src="js/modules/75-superadmin-panel.js?v=20260406v5" defer></script>
     <script src="js/modules/85-ai-proxy-helper.js?v=20260316v9" defer></script>
     <script src="js/modules/86-ai-chat-modal.js?v=20260406v3" defer></script>
     <script src="js/modules/60-manual-incidents-journal.js?v=20260316v11" defer></script>

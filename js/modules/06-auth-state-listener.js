@@ -21,6 +21,14 @@
                     if (superBtn) superBtn.style.display = '';
                     const adminBtn = document.getElementById('adminTabBtn');
                     if (adminBtn) adminBtn.style.display = 'block';
+                    // Перевіряємо pending заявки і показуємо бейдж
+                    setTimeout(() => {
+                        if (typeof window.checkPendingBadge === 'function') window.checkPendingBadge();
+                        // Оновлюємо кожні 2 хвилини
+                        setInterval(() => {
+                            if (typeof window.checkPendingBadge === 'function') window.checkPendingBadge();
+                        }, 120000);
+                    }, 2000);
                 }
                 
                 let companyId = await findUserCompany(user.uid, user.email);
