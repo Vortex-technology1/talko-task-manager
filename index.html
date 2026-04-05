@@ -403,6 +403,18 @@ document.addEventListener('mousedown', function(e) {
                     else el.textContent = val;
                 }
             });
+            // FIX: обробка data-i18n-content для <option> і інших елементів
+            document.querySelectorAll('[data-i18n-content]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n-content');
+                var val = window.translations[lang][key] || window.translations['ua']?.[key];
+                if (val) el.textContent = val;
+            });
+            // FIX: обробка data-i18n-placeholder
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n-placeholder');
+                var val = window.translations[lang][key] || window.translations['ua']?.[key];
+                if (val) el.placeholder = val;
+            });
         }
     };
     // updatePageTranslations — викликається з setLanguage в 01-translations-v2.js
@@ -2228,22 +2240,22 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                         <div id="taskAdvancedPanel" style="display:none;grid-column:1/-1;display:none;grid-template-columns:1fr 1fr;gap:0.9rem;">
                         
-                        <div class="form-group"><label class="form-label" >Конец / Длительность</label>
+                        <div class="form-group"><label class="form-label" data-i18n="endDuration">Кінець / Тривалість</label>
                             <div style="display:flex;gap:8px;align-items:center;">
                                 <select id="taskTimeMode" class="form-select" style="width:auto;" onchange="toggleTaskTimeMode()">
                                     <option value="end">Время окончания</option>
-                                    <option value="duration">Длительность</option>
+                                    <option value="duration" data-i18n-content="duration">Тривалість</option>
                                 </select>
                                 <input type="time" id="taskTimeEnd" class="form-input" value="19:00" style="flex:1;">
-                                <select id="taskEstimatedTime" class="form-select" style="flex:1;display:none;"><option value="15">15 мин</option><option value="30">30 мин</option><option value="45">45 мин</option><option value="60" selected>1 час</option><option value="90">1.5 часа</option><option value="120">2 часа</option><option value="180">3 часа</option><option value="240">4 часа</option><option value="480">8 часов</option></select>
+                                <select id="taskEstimatedTime" class="form-select" style="flex:1;display:none;"><option value="15" data-i18n-content="min15">15 хв</option><option value="30" data-i18n-content="min30">30 хв</option><option value="45" data-i18n-content="min45">45 хв</option><option value="60" selected data-i18n-content="hour1">1 год</option><option value="90" data-i18n-content="hour1_5">1.5 год</option><option value="120" data-i18n-content="hour2">2 год</option><option value="180" data-i18n-content="hour3">3 год</option><option value="240" data-i18n-content="hour4">4 год</option><option value="480" data-i18n-content="hour8">8 год</option></select>
                             </div>
                         </div>
                         
                         <!-- FEAT-003: Дата початку -->
                         <div class="form-group"><label class="form-label" >Дата начала</label><input type="date" id="taskStartDate" class="form-input" placeholder="Необязательно" data-i18n-placeholder="optional"></div>
                         
-                        <div class="form-group"><label class="form-label" >Приоритет</label><select id="taskPriority" class="form-select"><option value="low">Низкий</option><option value="medium" selected>Средний</option><option value="high" data-i18n-content="priorityHigh">Високий</option></select></div>
-                        <div class="form-group"><label class="form-label" >Статус</label><select id="taskStatus" class="form-select"><option value="new">Новая</option><option value="progress">В работе</option><option value="review">На проверке</option><option value="done">Готово</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low" data-i18n-content="low">Низький</option><option value="medium" selected data-i18n-content="normal">Звичайний</option><option value="high" data-i18n-content="priorityHigh">Високий</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="status">Статус</label><select id="taskStatus" class="form-select"><option value="new" data-i18n-content="statusNew">Нове</option><option value="progress" data-i18n-content="statusProgress">В роботі</option><option value="review" data-i18n-content="statusReview">Перевірка</option><option value="done" data-i18n-content="statusDone">Готово</option></select></div>
                         
                         <!-- FEAT-001: Співвиконавці -->
                         <div class="form-group full-width">
@@ -2279,7 +2291,7 @@ document.addEventListener('mousedown', function(e) {
                         <div class="form-group full-width" id="taskAiHelpRow" style="display:none;">
                             <a id="taskAiHelpLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.85rem;color:#16a34a;text-decoration:none;font-weight:500;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                <span >Непонятно? Спроси AI-помощника</span>
+                                <span  data-i18n="askAiHelper">Незрозуміло? Запитай AI-помічника</span>
                             </a>
                         </div>
                         
@@ -2329,7 +2341,7 @@ document.addEventListener('mousedown', function(e) {
                                 </label>
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder30" value="30" style="width:16px;height:16px;accent-color:var(--primary);">
-                                    <span style="font-size:0.85rem;" >За 30 мин</span>
+                                    <span style="font-size:0.85rem;"  data-i18n="reminder30min">За 30 хв</span>
                                 </label>
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder15" value="15" checked style="width:16px;height:16px;accent-color:var(--primary);">
@@ -2351,10 +2363,10 @@ document.addEventListener('mousedown', function(e) {
                                 </label>
                                 <span style="font-size:0.85rem;color:#92400e;" >через</span>
                                 <select id="taskEscalationMinutes" style="padding:0.4rem;border-radius:6px;border:1px solid #d1d5db;font-size:0.85rem;">
-                                    <option value="15">15 мин</option>
-                                    <option value="30">30 мин</option>
-                                    <option value="60" selected>1 час</option>
-                                    <option value="120">2 часа</option>
+                                    <option value="15" data-i18n-content="min15">15 хв</option>
+                                    <option value="30" data-i18n-content="min30">30 хв</option>
+                                    <option value="60" selected data-i18n-content="hour1">1 год</option>
+                                    <option value="120" data-i18n-content="hour2">2 год</option>
                                 </select>
                             </div>
                         </div>
@@ -2396,7 +2408,7 @@ document.addEventListener('mousedown', function(e) {
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
                             <label class="form-label" style="margin:0;display:flex;align-items:center;gap:0.4rem;">
                                 <i data-lucide="git-branch" class="icon icon-sm" style="color:#22c55e;"></i>
-                                <span>Подзадачи</span>
+                                <span data-i18n="subtasks">Підзадачі</span>
                                 <span id="subtasksBadge" style="display:none;background:#22c55e;color:white;border-radius:10px;font-size:0.68rem;padding:1px 6px;font-weight:700;"></span>
                             </label>
                             <button type="button" onclick="addSubtaskRow()" style="background:#22c55e;color:white;border:none;border-radius:8px;padding:0.3rem 0.7rem;font-size:0.78rem;cursor:pointer;display:flex;align-items:center;gap:0.3rem;">
@@ -2716,22 +2728,22 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                         <div class="form-group" id="dayOfMonthGroup" style="display:none;"><label class="form-label" data-i18n="dayOfMonth">День місяця *</label><select id="regularTaskDayOfMonth" class="form-select"><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="last" data-i18n="lastDay">Останній день</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="startRequired">Початок *</label><input type="time" id="regularTaskTimeStart" class="form-input" value="10:00" required aria-required="true"></div>
-                        <div class="form-group"><label class="form-label" >Конец / Длительность</label>
+                        <div class="form-group"><label class="form-label" data-i18n="endDuration">Кінець / Тривалість</label>
                             <div style="display:flex;gap:8px;align-items:center;">
                                 <select id="regularTaskTimeMode" class="form-select" style="width:auto;" onchange="toggleRegularTimeMode()">
                                     <option value="end">Время окончания</option>
-                                    <option value="duration">Длительность</option>
+                                    <option value="duration" data-i18n-content="duration">Тривалість</option>
                                 </select>
                                 <input type="time" id="regularTaskTimeEnd" class="form-input" value="11:00" style="flex:1;">
                                 <select id="regularTaskDuration" class="form-select" style="flex:1;display:none;">
-                                    <option value="15">15 мин</option>
-                                    <option value="30">30 мин</option>
-                                    <option value="45">45 мин</option>
-                                    <option value="60" selected>1 час</option>
-                                    <option value="90">1.5 часа</option>
-                                    <option value="120">2 часа</option>
-                                    <option value="180">3 часа</option>
-                                    <option value="240">4 часа</option>
+                                    <option value="15" data-i18n-content="min15">15 хв</option>
+                                    <option value="30" data-i18n-content="min30">30 хв</option>
+                                    <option value="45" data-i18n-content="min45">45 хв</option>
+                                    <option value="60" selected data-i18n-content="hour1">1 год</option>
+                                    <option value="90" data-i18n-content="hour1_5">1.5 год</option>
+                                    <option value="120" data-i18n-content="hour2">2 год</option>
+                                    <option value="180" data-i18n-content="hour3">3 год</option>
+                                    <option value="240" data-i18n-content="hour4">4 год</option>
                                 </select>
                             </div>
                         </div>
@@ -2989,7 +3001,7 @@ document.addEventListener('mousedown', function(e) {
 
 
     <!-- Scripts (modular) -->
-    <script src="js/modules/01-translations-v2.js?v=20260406v2" defer></script>
+    <script src="js/modules/01-translations-v2.js?v=20260406v3" defer></script>
     <script src="js/modules/02-firebase-config.js?v=20260326v1" defer></script>
     <script src="js/modules/00-module-links.js?v=20260327v1" defer></script>
     <script src="js/modules/03-app-state.js?v=20260330v1" defer></script>
