@@ -95,7 +95,7 @@
                 listEl.innerHTML = `
                     <div class="comments-empty">
                         <div class="comments-empty-icon"><i data-lucide="message-circle" class="icon icon-xl"></i></div>
-                        <span>Ещё нет комментариев</span>
+                        <span>${window.t('noComments')}</span>
                     </div>
                 `;
                 return;

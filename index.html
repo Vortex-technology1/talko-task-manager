@@ -2222,7 +2222,7 @@ document.addEventListener('mousedown', function(e) {
                         <!-- ACCORDION: Розширені налаштування -->
                         <div class="form-group full-width" style="margin-bottom:0;">
                             <button type="button" id="taskAdvancedToggle" onclick="toggleTaskAdvanced()" style="display:flex;align-items:center;gap:0.5rem;background:#f9fafb;border:1px dashed #d1d5db;border-radius:10px;padding:0.5rem 1rem;cursor:pointer;font-size:0.85rem;color:#6b7280;width:100%;justify-content:space-between;">
-                                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> <span>Расширенные настройки</span></span>
+                                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> <span data-i18n="advancedSettings">Розширені налаштування</span></span>
                                 <span id="taskAdvancedArrow" style="font-size:0.7rem;transition:transform 0.2s;">▼</span>
                             </button>
                         </div>
@@ -2261,7 +2261,7 @@ document.addEventListener('mousedown', function(e) {
                         <div class="form-group full-width" style="display:flex;gap:2rem;flex-wrap:wrap;">
                             <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;background:#f0fdf4;border-radius:8px;">
                                 <input type="checkbox" id="taskRequireReview" style="width:18px;height:18px;accent-color:var(--primary);" checked>
-                                <span style="font-size:0.85rem;font-weight:500;" >Проверка после выполнения (Telegram)</span>
+                                <span style="font-size:0.85rem;font-weight:500;" data-i18n="requireReview">Перевірка після виконання (Telegram)</span>
                             </label>
                             <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;background:#fef3c7;border-radius:8px;">
                                 <input type="checkbox" id="taskAllowDeadlineChange" style="width:18px;height:18px;accent-color:#f59e0b;">
@@ -2269,12 +2269,12 @@ document.addEventListener('mousedown', function(e) {
                             </label>
                             <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;background:#ede9fe;border-radius:8px;">
                                 <input type="checkbox" id="taskRequireReport" style="width:18px;height:18px;accent-color:#8b5cf6;">
-                                <span style="font-size:0.85rem;font-weight:500;" >Отчёт в Telegram при завершении</span>
+                                <span style="font-size:0.85rem;font-weight:500;" data-i18n="telegramOnComplete">Звіт в Telegram при завершенні</span>
                             </label>
                         </div>
                         
-                        <div class="form-group full-width"><label class="form-label" >Ожидаемый результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" >Формат отчёта</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" >Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width" id="taskAiHelpRow" style="display:none;">
                             <a id="taskAiHelpLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.85rem;color:#16a34a;text-decoration:none;font-weight:500;">
@@ -2294,7 +2294,7 @@ document.addEventListener('mousedown', function(e) {
                         
                         <!-- FEAT-006: Time Tracking -->
                         <div class="form-group full-width" id="timeTrackingSection" style="display:none;">
-                            <label class="form-label"><i data-lucide="timer" class="icon icon-sm"></i> <span >Учёт времени</span></label>
+                            <label class="form-label"><i data-lucide="timer" class="icon icon-sm"></i> <span data-i18n="timeTracking">Облік часу</span></label>
                             <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-top:0.5rem;padding:0.75rem;background:#f0f9ff;border-radius:8px;">
                                 <div style="text-align:center;">
                                     <div style="font-size:0.75rem;color:#6b7280;" >Запланировано</div>
@@ -2342,7 +2342,7 @@ document.addEventListener('mousedown', function(e) {
                         <div class="form-group full-width">
                             <label class="form-label">
                                 <i data-lucide="alert-triangle" class="icon icon-sm"></i> 
-                                <span >Эскалация при просрочке</span>
+                                <span data-i18n="escalation">Ескалація при простроченні</span>
                             </label>
                             <div style="display:flex;align-items:center;gap:1rem;margin-top:0.5rem;padding:0.75rem;background:#fef3c7;border-radius:8px;">
                                 <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
@@ -2451,7 +2451,7 @@ document.addEventListener('mousedown', function(e) {
                     <div id="commentsList" class="comments-list">
                         <div class="comments-empty">
                             <div class="comments-empty-icon"><i data-lucide="message-circle" class="icon icon-xl"></i></div>
-                            <span data-i18n="noComments">Ещё нет комментариев</span>
+                            <span data-i18n="noComments">Ще немає коментарів</span>
                         </div>
                     </div>
                     <div class="comment-input-wrapper">
@@ -2737,8 +2737,8 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                         <div class="form-group"><label class="form-label" >Приоритет</label><select id="regularTaskPriority" class="form-select"><option value="medium" data-i18n="normal">Звичайний</option><option value="high" data-i18n="high">Високий </option><option value="low" data-i18n="low">Низький</option></select></div>
                         <div class="form-group"><label class="form-label" style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="regularTaskRequireReview" style="accent-color:var(--primary);width:18px;height:18px;"> <span data-i18n="requireReview">Потрібна перевірка</span></label></div>
-                        <div class="form-group full-width"><label class="form-label" >Ожидаемый результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" >Формат отчёта</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="file-text" class="icon icon-sm"></i> <span data-i18n="instruction">Інструкція (необов'язково)</span></label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..." data-i18n-placeholder="instructionPlaceholder"></textarea></div>
                         
                         <!-- Чеклист для регулярных -->
@@ -2989,7 +2989,7 @@ document.addEventListener('mousedown', function(e) {
 
 
     <!-- Scripts (modular) -->
-    <script src="js/modules/01-translations-v2.js?v=20260403v1" defer></script>
+    <script src="js/modules/01-translations-v2.js?v=20260406v1" defer></script>
     <script src="js/modules/02-firebase-config.js?v=20260326v1" defer></script>
     <script src="js/modules/00-module-links.js?v=20260327v1" defer></script>
     <script src="js/modules/03-app-state.js?v=20260330v1" defer></script>
@@ -3034,7 +3034,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/43b-swipe-between-tabs.js?v=20260403v1" defer></script>
     <script src="js/modules/43-pull-to-refresh-mobile.js?v=20260324v2" defer></script>
     <script src="js/modules/44-offline-support.js?v=20260324v2" defer></script>
-    <script src="js/modules/45-comments-system.js?v=20260324vG" defer></script>
+    <script src="js/modules/45-comments-system.js?v=20260406v1" defer></script>
     <script src="js/modules/46-audit-log.js?v=20260314v1" defer></script>
     <script src="js/modules/47b-activity-registry.js?v=20260316v12" defer></script>
     <script src="js/modules/47-cascading-escalation.js?v=20260324v2" defer></script>
