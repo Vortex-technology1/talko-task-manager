@@ -314,7 +314,7 @@ function renderCalendarForm(cal) {
     <div class="bk-section-title">${t('basicWord')||'Основне'}</div>
     <div class="bk-field">
       <label>${t('calNameLabel')||'Назва'} *</label>
-      <input type="text" id="bk-f-name" placeholder=${window.t('bookingEx2')||'напр: Консультація'}
+      <input type="text" id="bk-f-name" placeholder="${window.t('bookingEx2')}"
              value="${esc(d.name||'')}" maxlength="80">
     </div>
     <div class="bk-field-row">
