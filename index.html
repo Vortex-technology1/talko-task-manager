@@ -2252,7 +2252,7 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                         
                         <!-- FEAT-003: Дата початку -->
-                        <div class="form-group"><label class="form-label" >Дата начала</label><input type="date" id="taskStartDate" class="form-input" placeholder="Необязательно" data-i18n-placeholder="optional"></div>
+                        <div class="form-group"><label class="form-label" data-i18n="startDate">Дата початку</label><input type="date" id="taskStartDate" class="form-input" placeholder="Необязательно" data-i18n-placeholder="optional"></div>
                         
                         <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low" data-i18n-content="low">Низький</option><option value="medium" selected data-i18n-content="normal">Звичайний</option><option value="high" data-i18n-content="priorityHigh">Високий</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="status">Статус</label><select id="taskStatus" class="form-select"><option value="new" data-i18n-content="statusNew">Нове</option><option value="progress" data-i18n-content="statusProgress">В роботі</option><option value="review" data-i18n-content="statusReview">Перевірка</option><option value="done" data-i18n-content="statusDone">Готово</option></select></div>
@@ -2309,16 +2309,16 @@ document.addEventListener('mousedown', function(e) {
                             <label class="form-label"><i data-lucide="timer" class="icon icon-sm"></i> <span data-i18n="timeTracking">Облік часу</span></label>
                             <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-top:0.5rem;padding:0.75rem;background:#f0f9ff;border-radius:8px;">
                                 <div style="text-align:center;">
-                                    <div style="font-size:0.75rem;color:#6b7280;" >Запланировано</div>
+                                    <div style="font-size:0.75rem;color:#6b7280;" data-i18n="plannedWord">Заплановано</div>
                                     <div id="timeTrackPlanned" style="font-size:1.2rem;font-weight:600;color:#3b82f6;">—</div>
                                 </div>
                                 <div style="text-align:center;">
-                                    <div style="font-size:0.75rem;color:#6b7280;" >Фактически</div>
+                                    <div style="font-size:0.75rem;color:#6b7280;" data-i18n="actualTime">Фактично</div>
                                     <div id="timeTrackActual" style="font-size:1.2rem;font-weight:600;color:#22c55e;">00:00</div>
                                 </div>
                                 <div style="flex:1;display:flex;gap:0.5rem;justify-content:flex-end;align-items:center;">
                                     <button type="button" id="timeTrackBtn" onclick="toggleTimeTracker()" style="padding:0.5rem 1rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;">
-                                        <i data-lucide="play" class="icon icon-sm"></i> <span >Старт</span>
+                                        <i data-lucide="play" class="icon icon-sm"></i> <span data-i18n="startTimer">Старт</span>
                                     </button>
                                     <button type="button" onclick="addManualTime()" style="padding:0.5rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;" title="Добавить время вручную" aria-label="Додати час вручну" data-i18n-title="addTimeManually">
                                         <i data-lucide="plus" class="icon icon-sm"></i>
@@ -2337,7 +2337,7 @@ document.addEventListener('mousedown', function(e) {
                             <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;">
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder60" value="60" style="width:16px;height:16px;accent-color:var(--primary);">
-                                    <span style="font-size:0.85rem;" >За 1 час</span>
+                                    <span style="font-size:0.85rem;" data-i18n="reminder1hour">За 1 год</span>
                                 </label>
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder30" value="30" style="width:16px;height:16px;accent-color:var(--primary);">
@@ -2345,7 +2345,7 @@ document.addEventListener('mousedown', function(e) {
                                 </label>
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder15" value="15" checked style="width:16px;height:16px;accent-color:var(--primary);">
-                                    <span style="font-size:0.85rem;" >За 15 мин</span>
+                                    <span style="font-size:0.85rem;" data-i18n="reminder15min">За 15 хв</span>
                                 </label>
                             </div>
                         </div>
@@ -2359,9 +2359,9 @@ document.addEventListener('mousedown', function(e) {
                             <div style="display:flex;align-items:center;gap:1rem;margin-top:0.5rem;padding:0.75rem;background:#fef3c7;border-radius:8px;">
                                 <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
                                     <input type="checkbox" id="taskEscalationEnabled" style="width:18px;height:18px;accent-color:#f59e0b;">
-                                    <span style="font-size:0.9rem;font-weight:500;" >Создать повторную задачу</span>
+                                    <span style="font-size:0.9rem;font-weight:500;" data-i18n="createRepeatTask">Створити повторну задачу</span>
                                 </label>
-                                <span style="font-size:0.85rem;color:#92400e;" >через</span>
+                                <span style="font-size:0.85rem;color:#92400e;" data-i18n="afterTime">через</span>
                                 <select id="taskEscalationMinutes" style="padding:0.4rem;border-radius:6px;border:1px solid #d1d5db;font-size:0.85rem;">
                                     <option value="15" data-i18n-content="min15">15 хв</option>
                                     <option value="30" data-i18n-content="min30">30 хв</option>
