@@ -833,7 +833,7 @@ window.sitesOpenCreate = function () {
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                             <span style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:#78350f;">
                                 <span style="background:#f59e0b;color:white;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;flex-shrink:0;">3</span>
-                                Напишіть: <i>"Адаптуй під мій бізнес: [офер, ніша, місто]"</i>
+                                Напишіть: <i>"Адаптуй під мій продаючий текст який я надам"</i> → вставте продаючий текст з уроків <b>Системи маркетингу та продажів</b>
                             </span>
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                             <span style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:#78350f;">
