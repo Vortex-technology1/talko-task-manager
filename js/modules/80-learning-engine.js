@@ -5539,13 +5539,18 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
         // Execute <script> tags from lessonContent (innerHTML does not run them)
         setTimeout(function() {
-            var _lc = document.querySelector(".l-lesson-content");
+            // Шукаємо в кількох контейнерах — урок може відкриватися різними шляхами
+            var _lc = document.querySelector(".l-lesson-content") ||
+                      document.querySelector(".l-overlay-body") ||
+                      document.querySelector("#learningTab");
             if (_lc) {
                 _lc.querySelectorAll("script").forEach(function(s) {
-                    var ns = document.createElement("script");
-                    ns.textContent = s.textContent;
-                    document.head.appendChild(ns);
-                    document.head.removeChild(ns);
+                    try {
+                        var ns = document.createElement("script");
+                        ns.textContent = s.textContent;
+                        document.head.appendChild(ns);
+                        document.head.removeChild(ns);
+                    } catch(e) { console.warn('[Learning] script exec:', e.message); }
                 });
             }
 
@@ -5729,7 +5734,32 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 });
             })();
 
-        }, 100);
+        }, 300);
+
+        // Другий прохід через 800ms — для великих уроків де скрипти можуть не встигнути
+        setTimeout(function() {
+            var _lc2 = document.querySelector(".l-lesson-content");
+            if (_lc2) {
+                _lc2.querySelectorAll("script").forEach(function(s) {
+                    // Перевіряємо чи функція вже визначена (уникаємо подвійного виконання)
+                    var matches = s.textContent.match(/window\.(\w+)\s*=/g);
+                    if (matches) {
+                        var needsExec = matches.some(function(m) {
+                            var fn = m.replace('window.', '').replace(/\s*=/, '').trim();
+                            return typeof window[fn] === 'undefined';
+                        });
+                        if (needsExec) {
+                            try {
+                                var ns2 = document.createElement("script");
+                                ns2.textContent = s.textContent;
+                                document.head.appendChild(ns2);
+                                document.head.removeChild(ns2);
+                            } catch(e) {}
+                        }
+                    }
+                });
+            }
+        }, 800);
     };
 
     // ── Back ──────────────────────────────────────────────────
