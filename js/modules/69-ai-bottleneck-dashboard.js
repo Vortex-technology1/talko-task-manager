@@ -205,16 +205,16 @@
             if (s.blockedReason === 'materials' && undelivered.length > 0) {
                 cause = `Не доставлено ${undelivered.length} матеріалів: ${undelivered.map(m => m.name).join(', ')}`;
                 solutions = [
-                    { action: 'Связаться с поставщиком для ускорения', risk: 'Низкий', speed: 'Быстро' },
+                    { action: 'Связаться с поставщиком для ускорения', risk: 'Низкий', speed: window.t('quickWord') },
                     { action: 'Найти альтернативного поставщика', risk: 'Средний', speed: '1-2 дня' },
-                    { action: 'Переключить бригаду на другой этап', risk: 'Низкий', speed: 'Сразу' },
+                    { action: window.t('switchTeamToStage'), risk: 'Низкий', speed: 'Сразу' },
                 ];
             } else if (s.blockedReason === 'rework' || stageQCs.length > 0) {
                 cause = `QC отклонено. Требуется доработка.`;
                 solutions = [
                     { action: 'Назначить опытного мастера на доработку', risk: 'Низкий', speed: '1-2 дня' },
-                    { action: 'Пересмотреть стандарт — возможно слишком жёсткие требования', risk: 'Средний', speed: 'Быстро' },
-                    { action: 'Провести обучение для бригады', risk: 'Низкий', speed: '3-5 дней' },
+                    { action: 'Пересмотреть стандарт — возможно слишком жёсткие требования', risk: 'Средний', speed: window.t('quickWord') },
+                    { action: window.t('conductTeamTraining'), risk: 'Низкий', speed: '3-5 дней' },
                 ];
             }
 
@@ -246,9 +246,9 @@
                     cause: `${arr.length} просроченных задач в функции "${funcName}". Возможно: перегрузка, некомпетентность, или нереалистичные дедлайны.`,
                     solutions: [
                         { action: 'Перераспределить задачи на других исполнителей', risk: 'Низкий', speed: 'Сразу' },
-                        { action: 'Пересмотреть дедлайны — установить реалистичные', risk: 'Низкий', speed: 'Быстро' },
+                        { action: 'Пересмотреть дедлайны — установить реалистичные', risk: 'Низкий', speed: window.t('quickWord') },
                         { action: 'Добавить человека в функцию (временно)', risk: 'Средний', speed: '1-3 дня' },
-                        { action: 'Провести разговор с ответственным для выяснения причин', risk: 'Низкий', speed: 'Быстро' },
+                        { action: 'Провести разговор с ответственным для выяснения причин', risk: 'Низкий', speed: window.t('quickWord') },
                     ],
                 });
             }
@@ -270,8 +270,8 @@
                     projectName: project?.name || '',
                     cause: `Етап в роботі ${activeDays} днів, но прогресс лишь ${progress}%. ${stageTasks.length === 0 ? 'Нет задач — этап без конкретных шагов.' : `${stageTasks.filter(t=>t.status==='done').length}/${stageTasks.length} задач выполнено.`}`,
                     solutions: [
-                        { action: 'Декомпозировать этап на конкретные задачи', risk: 'Низкий', speed: 'Быстро' },
-                        { action: 'Выяснить реальную причину с ответственным', risk: 'Низкий', speed: 'Сразу' },
+                        { action: window.t('decomposeStageToTasks'), risk: 'Низкий', speed: window.t('quickWord') },
+                        { action: window.t('findRealCauseWithResponsible'), risk: 'Низкий', speed: 'Сразу' },
                         { action: 'Сменить ответственного', risk: 'Средний', speed: '1 день' },
                     ],
                 });
@@ -284,7 +284,7 @@
             m.status !== 'delivered' && m.status !== 'used' &&
             m.plannedDeliveryDate && m.plannedDeliveryDate < today
         ).forEach(m => {
-            const sup = m.supplierName || 'Неизвестный';
+            const sup = m.supplierName || window.t('unknownWord');
             if (!lateMatsBySupplier[sup]) lateMatsBySupplier[sup] = [];
             lateMatsBySupplier[sup].push(m);
         });

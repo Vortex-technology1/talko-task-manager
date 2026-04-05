@@ -638,7 +638,7 @@ function _kanbanFilterBar() {
                 oninput="crmApplyFilters()"
                 style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
         </div>
-        <button onclick="crmExportCSV()" title="Экспорт в CSV"
+        <button onclick="crmExportCSV()" title=window.t('exportToCsv')
             style="padding:0.25rem 0.6rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;font-size:0.73rem;cursor:pointer;font-weight:600;margin-left:auto;">
             ↓ CSV
         </button>
@@ -1950,7 +1950,7 @@ window.crmOpenDeal = function(dealId) {
 
             <!-- Sub-tabs -->
             <div style="display:flex;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
-                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['calls', window.currentLang==='ru' ? 'Звонки' : 'Дзвінки'],['tasks', window.currentLang==='ru' ? 'Задания' : 'Завдання'],['files', window.currentLang==='ru' ? 'Файлы' : 'Файли'],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','Beauty']]:
+                ${([['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['calls', window.currentLang==='ru' ? 'Звонки' : 'Дзвінки'],['tasks', window.currentLang==='ru' ? 'Задания' : 'Завдання'],['files', window.currentLang==='ru' ? window.t('attachments') : 'Файли'],['ai','AI'],...(window.currentCompanyData?.niche==='beauty_salon'?[['beauty','Beauty']]:
                         (window.currentCompanyData?.niche==='autoservice'?[['vehicles','🔧 Авто/Наряди']]:
                         (window.currentCompanyData?.niche==='horeca'?[['pos_history','🧾 Чеки']]:
                         (window.currentCompanyData?.niche==='logistics'?[['routes_history','🚛 Рейси']]:
@@ -1974,7 +1974,7 @@ window.crmOpenDeal = function(dealId) {
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title="Конвертувати угоду в проєкт">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                    ${deal.linkedProjectId ? _tg('Відкрити проєкт →','Открыть проект →') : _tg('В проєкт','В проект')}
+                    ${deal.linkedProjectId ? _tg('Відкрити проєкт →',window.t('openProject')) : _tg('В проєкт','В проект')}
                 </button>
                 <button onclick="crmDealLaunchProcess('${deal.id}')"
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
@@ -1993,7 +1993,7 @@ window.crmOpenDeal = function(dealId) {
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title="Виставити рахунок для угоди">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${_tg('Рахунок','Счёт')}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${_tg('Рахунок',window.t('invoiceLabel'))}
                 </button>` : ''}
                 <!-- Кнопка замовлення покупця (77m) -->
                 ${window._userHasTabAccess('sales')
@@ -2199,11 +2199,11 @@ function _renderDealDetails(deal) {
     </div>` : ''}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
         <div>
-            <label style="${lbl}">${_tg('Дата закриття','Дата закрытия')}</label>
+            <label style="${lbl}">${_tg('Дата закриття',window.t('closeDate'))}</label>
             <input id="dd_close" type="date" value="${deal.expectedClose||''}" style="${inp}">
         </div>
         <div>
-            <label style="${lbl}">${_tg('Ймовірність закриття, %','Вероятность закрытия, %')}</label>
+            <label style="${lbl}">${_tg('Ймовірність закриття, %',window.t('closeProbPct2'))}</label>
             <input id="dd_probability" type="number" min="0" max="100" value="${deal.probability ?? ''}" placeholder="10" style="${inp}">
         </div>
         <div>
@@ -2215,7 +2215,7 @@ function _renderDealDetails(deal) {
         </div>
     </div>
     <div style="${row}">
-        <label style="${lbl}">${_tg('Відповідальний','Ответственный')}</label>
+        <label style="${lbl}">${_tg('Відповідальний',window.t('responsibleLabel'))}</label>
         <select id="dd_assignee" style="${inp}background:white;cursor:pointer;">
             <option value="">${_tg('— не призначено —','— не назначен —')}</option>
             ${(typeof users !== 'undefined' ? users : []).map(u => '<option value="' + u.id + '" ' + (deal.assigneeId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>').join('')}
@@ -2244,10 +2244,10 @@ function _renderDealDetails(deal) {
                 </div>
             </div>
             <div>
-                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">${_tg('Статус оплати','Статус оплаты')}</label>
+                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">${_tg('Статус оплати',window.t('paymentStatus'))}</label>
                 <select id="dd_payStatus" style="${inp}background:white;cursor:pointer;font-size:0.78rem;">
                     <option value="" ${!deal.payStatus?'selected':''}>${_tg('— не встановлено —','— не установлен —')}</option>
-                    <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>${_tg('⏳ Очікує оплати','⏳ Ожидает оплаты')}</option>
+                    <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>${_tg('⏳ Очікує оплати',window.t('awaitingPayment'))}</option>
                     <option value="paid"     ${deal.payStatus==='paid'    ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${_tg('✅ Оплачено','✅ Оплачено')}</option>
                     <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none"><polygon points="12,2 22,12 12,22 2,12"/></svg>${_tg('🔶 Частково','🔶 Частично')}</option>
                     <option value="refunded" ${deal.payStatus==='refunded'?'selected':''}>${_tg('↩️ Повернено','↩️ Возвращено')}</option>
@@ -2257,7 +2257,7 @@ function _renderDealDetails(deal) {
         ${deal.amount ? `
         <button onclick="crmMonoPayLink(${deal.amount||0},'${_esc(deal.title||deal.clientName||'')}','${deal.id}')"
             style="padding:0.3rem 0.75rem;background:#1f3950;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> ${_tg('Monobank — посилання на оплату','Monobank — ссылка на оплату')} ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> ${_tg('Monobank — посилання на оплату',window.t('monobankPayLink'))} ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
         </button>` : ''}
     </div>
 
@@ -2282,7 +2282,7 @@ function _renderDealDetails(deal) {
                 </select>
             </div>
             <div>
-                <label style="${lbl}">${_tg('Адреса об\'єкту','Адрес объекта')}</label>
+                <label style="${lbl}">${_tg('Адреса об\'єкту',window.t('objectAddress'))}</label>
                 <input id="dd_objectAddress" value="${_esc(deal.objectAddress||'')}" placeholder="вул. Náměstí Míru 12, Praha 2" style="${inp}">
             </div>
         </div>
@@ -2350,7 +2350,7 @@ function _renderDealDetails(deal) {
 
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
     <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;margin-bottom:0.9rem;">
-        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">${_tg('Дані з бота','Данные из бота')}</div>
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">${_tg('Дані з бота',window.t('botData'))}</div>
         ${[[window.t('crmRole'),'role'],[window.t('crmProblem'),'mainProblem'],[window.t('crmGoal'),'mainGoal']].map(([l,k]) =>
             deal.leadData[k] ? `<div style="font-size:0.78rem;margin-bottom:0.25rem;"><span style="color:#9ca3af;">${l}: </span>${_esc(deal.leadData[k])}</div>` : ''
         ).join('')}
@@ -2368,7 +2368,7 @@ function _renderDealDetails(deal) {
             </span>`).join('')}
         </div>
         <div style="display:flex;gap:0.3rem;">
-            <input id="dd_tagInput" placeholder="${_tg('Новий тег...','Новый тег...')}" onkeydown="if(event.key==='Enter'){event.preventDefault();crmAddTag('${deal.id}')}"
+            <input id="dd_tagInput" placeholder="${_tg('Новий тег...',window.t('botsNewTag'))}" onkeydown="if(event.key==='Enter'){event.preventDefault();crmAddTag('${deal.id}')}"
                 style="${inp}flex:1;">
             <button onclick="crmAddTag('${deal.id}')"
                 style="padding:0.45rem 0.7rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;">${_tg('+ Тег','+ Тег')}</button>
@@ -2378,7 +2378,7 @@ function _renderDealDetails(deal) {
     <!-- Товари зі складу -->
     ${typeof window.whGetItems === 'function' && window.whGetItems().length > 0 ? `
     <div style="margin-bottom:0.9rem;">
-        <label style="${lbl}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>${_tg('Товари зі складу','Товары со склада')}</label>
+        <label style="${lbl}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>${_tg('Товари зі складу',window.t('warehouseGoods'))}</label>
         <div id="dealWhItems" style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.4rem;">
             ${(deal.warehouseItems||[]).map((wi,idx) => {
                 const it = window.whGetItems().find(i=>i.id===wi.itemId);
@@ -2555,9 +2555,9 @@ window.crmToggleDealChat = async function (dealId) {
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
                     height:100%;text-align:center;padding:2rem;color:#9ca3af;">
                     <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                    <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">${_tg('Чат не підключено','Чат не подключён')}</div>
+                    <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">${_tg('Чат не підключено',window.t('chatNotConnected'))}</div>
                     <div style="font-size:0.75rem;line-height:1.5;">
-                        ${_tg('Клієнт ще не писав через бота.','Клиент ещё не писал через бота.')}<br>
+                        ${_tg('Клієнт ще не писав через бота.',window.t('clientNotWrittenViaBot'))}<br>
                         ${_tg('Коли напише — переписка зʼявиться тут автоматично.','Когда напишет — переписка появится здесь автоматически.')}
                     </div>
                     ${deal.phone ? `
@@ -3815,7 +3815,7 @@ window.crmOpenClient = function(clientId) {
 
         <!-- Контакти -->
         <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;margin-bottom:0.75rem;">
-            <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">${_tg('Контакти','Контакты')}</div>
+            <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">${_tg('Контакти',window.t('botsContacts'))}</div>
             ${cl.phone ? `<div style="font-size:0.82rem;color:#374151;margin-bottom:0.25rem;">
                 <span style="color:#9ca3af;">${_tg('Тел:','Тел:')}</span> ${_esc(cl.phone)}</div>` : ''}
             ${cl.email ? `<div style="font-size:0.82rem;color:#374151;margin-bottom:0.25rem;">
@@ -3889,7 +3889,7 @@ window.crmOpenClient = function(clientId) {
             <button id="crmClientProjectBtn_${cl.id}" onclick="crmClientToProject('${cl.id}')"
                 style="flex:1;padding:0.42rem;background:${cl.linkedProjectId ? '#f0fdf4' : '#f8fafc'};color:${cl.linkedProjectId ? '#16a34a' : '#374151'};border:1px solid ${cl.linkedProjectId ? '#bbf7d0' : '#e8eaed'};border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:3px;">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                ${cl.linkedProjectId ? _tg('Відкрити проєкт →','Открыть проект →') : _tg('В проєкт','В проект')}
+                ${cl.linkedProjectId ? _tg('Відкрити проєкт →',window.t('openProject')) : _tg('В проєкт','В проект')}
             </button>
             <button onclick="crmClientLaunchProcess('${cl.id}')"
                 style="flex:1;padding:0.42rem;background:#f8fafc;color:#374151;border:1px solid #e8eaed;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:3px;">
@@ -4023,10 +4023,10 @@ window.crmEditClient = function(clientId) {
                 </div>
                 <!-- Фінансові налаштування клієнта -->
                 <div style="border-top:1px solid #f1f5f9;padding-top:0.75rem;margin-top:0.25rem;">
-                    <div style="font-size:0.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:0.6rem;">${_tg('Фінансові умови','Финансовые условия')}</div>
+                    <div style="font-size:0.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:0.6rem;">${_tg('Фінансові умови',window.t('financialTerms'))}</div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
                         <div>
-                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Умова оплати','Условие оплаты')}</label>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Умова оплати',window.t('paymentCondition'))}</label>
                             <select id="eci_paymentCondition" style="${inp}">
                                 <option value="prepay" ${(cl.paymentCondition||'prepay')==='prepay'?'selected':''}>${_tg('Передоплата','Предоплата')}</option>
                                 <option value="postpay" ${cl.paymentCondition==='postpay'?'selected':''}>${_tg('Відстрочка','Отсрочка')}</option>
@@ -4040,7 +4040,7 @@ window.crmEditClient = function(clientId) {
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.6rem;">
                         <div>
-                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Кредитний ліміт','Кредитный лимит')}</label>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${_tg('Кредитний ліміт',window.t('creditLimit'))}</label>
                             <input id="eci_creditLimit" type="number" min="0" step="100" style="${inp}" value="${cl.creditLimit||0}" placeholder="0 = без ліміту">
                         </div>
                         <div>
@@ -4115,7 +4115,7 @@ window.crmSaveClientEdit = async function(clientId) {
         if (idx >= 0) Object.assign(crm.clients[idx], updates);
 
         document.getElementById('crmEditClientOverlay')?.remove();
-        if (window.showToast) showToast(_tg('Контакт оновлено', 'Контакт обновлён'), 'success');
+        if (window.showToast) showToast(_tg('Контакт оновлено', window.t('crmContUpd')), 'success');
 
         // Оновлюємо карточку клієнта
         if (typeof window.crmOpenClient === 'function') {
@@ -4226,7 +4226,7 @@ window.crmClientToProject = async function(clientId) {
         // Оновлюємо кнопку
         const btn = document.getElementById('crmClientProjectBtn_' + clientId);
         if (btn) {
-            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> ' + _tg('Відкрити проєкт →','Открыть проект →');
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> ' + _tg('Відкрити проєкт →',window.t('openProject'));
             btn.style.background = '#f0fdf4';
             btn.style.color = '#16a34a';
             btn.style.borderColor = '#bbf7d0';
@@ -5114,7 +5114,7 @@ function _renderAnalytics() {
                     const funnelStages = (crm.pipeline?.stages || [])
                         .filter(s => !['lost'].includes(s.id))
                         .sort((a,b) => a.order - b.order);
-                    if (!funnelStages.length) return '<div style="color:#9ca3af;font-size:0.8rem;">' + _tg('Немає даних','Нет данных') + '</div>';
+                    if (!funnelStages.length) return '<div style="color:#9ca3af;font-size:0.8rem;">' + _tg('Немає даних',window.t('crmNoPipelineData')) + '</div>';
 
                     // Будуємо індекс стадій для O(1) lookup
                     const stageIdx = {};
@@ -5225,7 +5225,7 @@ function _renderAnalytics() {
                 <div style="text-align:right;flex-shrink:0;">
                     <div style="font-size:0.78rem;font-weight:700;color:#22c55e;">${_fmt(u.amount)}</div>
                 </div>
-            </div>`).join('') : '<div style="color:#9ca3af;font-size:0.8rem;">' + _tg('Ще немає угод з відповідальними','Ещё нет сделок с ответственными') + '</div>'}
+            </div>`).join('') : '<div style="color:#9ca3af;font-size:0.8rem;">' + _tg('Ще немає угод з відповідальними',window.t('noDealsWithResponsible')) + '</div>'}
         </div>
 
         <!-- ── Звіт по лідах ── -->
@@ -5233,7 +5233,7 @@ function _renderAnalytics() {
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.85rem;">
                 <div style="font-weight:700;font-size:0.85rem;color:#111827;display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    ${_tg('Ліди: джерело і ніша','Лиды: источник и ниша')}
+                    ${_tg('Ліди: джерело і ніша',window.t('leadsSourceNiche'))}
                     <span style="background:#f3f4f6;color:#6b7280;border-radius:20px;padding:2px 8px;font-size:0.72rem;font-weight:600;">${_leadsFiltered.length}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;">
@@ -5245,14 +5245,14 @@ function _renderAnalytics() {
                 <span style="color:#9ca3af;">—</span>
                 <input type="date" value="${_leadsReportTo}" onchange="crm._leadsReportTo=this.value;_renderAnalytics();" style="border:1px solid #e5e7eb;border-radius:6px;padding:0.25rem 0.5rem;font-size:0.78rem;">
             </div>` : ''}
-            ${_srcNicheRows.length === 0 ? `<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1.5rem 0;">${_tg('Немає лідів за вибраний період','Нет лидов за выбранный период')}</div>` : `
+            ${_srcNicheRows.length === 0 ? `<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1.5rem 0;">${_tg('Немає лідів за вибраний період',window.t('noLeadsForPeriod'))}</div>` : `
             <div style="overflow-x:auto;">
             <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
                 <thead><tr style="border-bottom:2px solid #f3f4f6;">
                     <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Джерело','Источник')}</th>
                     <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Ніша','Ниша')}</th>
                     <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Лідів','Лидов')}</th>
-                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Виграно','Выиграно')}</th>
+                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Виграно',window.t('wonLabel'))}</th>
                     <th style="text-align:right;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${_tg('Дохід','Доход')}</th>
                 </tr></thead>
                 <tbody>${_srcNicheRows.map((r,i) => `
@@ -5424,8 +5424,8 @@ function _renderCrmNicheMatrix() {
     });
 
     const groupByLabel  = st.groupBy === 'niche' ? window.t('crmGroupBy') : window.t('crmSourcesBy');
-    const periodLabel   = st.period  === 'week'  ? _tg('Тижні','Недели')  : _tg('Місяці','Месяцы');
-    const metricLabels  = { leads: _tg('Ліди','Лиды'), won: _tg('Виграно','Выиграно'), revenue: 'Revenue', conv: _tg('Конверсія','Конверсия') };
+    const periodLabel   = st.period  === 'week'  ? _tg('Тижні','Недели')  : _tg('Місяці',window.t('monthsLabel'));
+    const metricLabels  = { leads: _tg('Ліди',window.t('leadsLabel')), won: _tg('Виграно',window.t('wonLabel')), revenue: 'Revenue', conv: _tg('Конверсія','Конверсия') };
 
     // ── render ─────────────────────────────────────────────
     c.innerHTML = `
@@ -5457,7 +5457,7 @@ function _renderCrmNicheMatrix() {
       <span style="font-size:.75rem;color:#6b7280;font-weight:600;">${window.t('crmPeriodLabel')}</span>
       ${['week','month'].map(v => `
         <button onclick="window._nmState.period='${v}';_renderCrmNicheMatrix()" style="padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;border:1.5px solid ${st.period===v?'#6366f1':'#e5e7eb'};background:${st.period===v?'#eef2ff':'white'};color:${st.period===v?'#4f46e5':'#374151'};">
-          ${v==='week'?_tg('Тижні','Недели'):_tg('Місяці','Месяцы')}
+          ${v==='week'?_tg('Тижні','Недели'):_tg('Місяці',window.t('monthsLabel'))}
         </button>`).join('')}
     </div>
 
@@ -5660,7 +5660,7 @@ function _renderCRMSettings() {
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
                 <div>
                     <div style="${sectionTitle}margin-bottom:0;">${_tg('Стадії:','Стадии:')} ${_esc(pipeline?.name || '')}</div>
-                    <div style="font-size:0.7rem;color:#9ca3af;">${_tg('Перетягуй щоб змінити порядок','Перетащи чтобы изменить порядок')}</div>
+                    <div style="font-size:0.7rem;color:#9ca3af;">${_tg('Перетягуй щоб змінити порядок',window.t('dragToReorder'))}</div>
                 </div>
                 <button onclick="crmAddStage()"
                     style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;
@@ -6141,7 +6141,7 @@ async function _checkRequiredFields(deal, newStage) {
 
     overlay.innerHTML = `
     <div style="background:white;border-radius:12px;padding:1.25rem;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.3rem;">${_tg("Обов'язкові поля",'Обязательные поля')}</div>
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.3rem;">${_tg("Обов'язкові поля",window.t('crmRequiredFields'))}</div>
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;">Для переходу в <b style="color:#374151;">${_esc(stageName)}</b> заповніть:</div>
         <div id="crmReqFieldsList" style="display:flex;flex-direction:column;gap:0.65rem;">
             ${missing.map(f => `
@@ -6957,18 +6957,18 @@ function _renderCRMHowto() {
         heroDesc:    isRU ? 'CRM решает одну главную проблему: <b>лиды и клиенты существуют в голове менеджера, в Excel и в мессенджерах — владелец не видит что происходит.</b> Менеджер уволился — база ушла с ним. Клиент написал — забыли перезвонить. Сделка есть — но где она и на каком этапе — никто не знает. CRM собирает всё в одно место: от первого касания до оплаты. Владелец видит воронку в реальном времени. Менеджер не забывает. База остаётся в компании.'
                          : 'CRM вирішує одну головну проблему: <b>ліди і клієнти існують в голові менеджера, в Excel і в месенджерах — власник не бачить що відбувається.</b> Менеджер звільнився — база пішла з ним. Клієнт написав — забули передзвонити. Угода є — але де вона і на якому етапі — ніхто не знає. CRM збирає все в одне місце: від першого дотику до оплати. Власник бачить воронку в реальному часі. Менеджер не забуває. База залишається в компанії.',
 
-        problemsTitle: isRU ? 'Какие проблемы решает'        : 'Які проблеми вирішує',
+        problemsTitle: isRU ? window.t('whatProblemsSolves')        : 'Які проблеми вирішує',
         probLabel:     isRU ? 'ПРОБЛЕМА'                      : 'ПРОБЛЕМА',
         consLabel:     isRU ? 'ПОСЛЕДСТВИЕ'                   : 'НАСЛІДОК',
         solLabel:      isRU ? 'РЕШЕНИЕ В CRM'                 : 'РІШЕННЯ В CRM',
 
         problems: isRU ? [
             ['Лиды в голове или в блокноте менеджера',        'Менеджер уволился — база клиентов ушла с ним',            'Все лиды и клиенты хранятся в системе, независимо от менеджера'],
-            ['Клиент написал — забыли перезвонить',           'Потерянный лид, клиент ушёл к конкуренту',               'Система напоминает о просроченных контактах каждые 30 минут + Browser Push'],
+            [window.t('clientWroteForgotCall'),           'Потерянный лид, клиент ушёл к конкуренту',               'Система напоминает о просроченных контактах каждые 30 минут + Browser Push'],
             ['Владелец не знает что происходит в продажах',   'Нельзя планировать доход, не знаешь где проблема',        'Аналитика в реальном времени: конверсия, velocity, прогноз, источники'],
             ['Сделка есть но никто не знает на каком этапе',  'Клиент ждёт, менеджер «разбирается», все путаются',       'Kanban воронка — каждая сделка на своей стадии, видно всем'],
             ['Счёт в Excel, задача в мессенджере, сделка в таблице', 'Информация разбросана, ничего не связано',         'Всё в одном месте: сделка → задача → счёт → смета'],
-            ['Не знают откуда приходят клиенты',              'Вкладывают деньги в маркетинг который не работает',       'Аналитика по источникам: конверсия и revenue по каждому каналу'],
+            [window.t('dontKnowClientSource'),              window.t('investInNotWorkingMarketing'),       'Аналитика по источникам: конверсия и revenue по каждому каналу'],
         ] : [
             ['Ліди в голові або в блокноті менеджера',        'Менеджер звільнився — база клієнтів пішла з ним',         'Всі ліди і клієнти зберігаються в системі, незалежно від менеджера'],
             ['Клієнт написав — забули передзвонити',           'Втрачений лід, клієнт пішов до конкурента',              'Система нагадує про прострочені контакти кожні 30 хвилин + Browser Push'],
@@ -6978,11 +6978,11 @@ function _renderCRMHowto() {
             ['Не знають звідки приходять клієнти',            'Вкладають гроші в маркетинг який не працює',              'Аналітика по джерелах: конверсія і revenue по кожному каналу'],
         ],
 
-        tabsTitle: isRU ? 'Разделы CRM — что где находится' : 'Розділи CRM — що де знаходиться',
+        tabsTitle: isRU ? window.t('crmSectionsGuide') : 'Розділи CRM — що де знаходиться',
         tabs: isRU ? [
             ['#8b5cf6', 'Todo — Список дел',   'Открываешь утром и сразу видишь кому надо позвонить сегодня. Все сделки где просроченный или сегодняшний контакт — в одном месте. Не нужно листать всю воронку чтобы найти «горячих» клиентов.'],
             ['#22c55e', 'Воронка (Kanban)',    'Главный рабочий экран менеджера. Сделки двигаются по стадиям слева направо перетаскиванием или кликом. Видно сумму каждой сделки, дату контакта, ответственного, теги. Два режима: Kanban (карточки) и Список (таблица).'],
-            ['#8b5cf6', 'Клиенты',             'База всех клиентов независимо от сделок. В карточке клиента: все контакты, все сделки, вся активность, смета. Можно сразу создать новую сделку из карточки клиента — данные заполняются автоматически.'],
+            ['#8b5cf6', window.t('clientsWord'),             'База всех клиентов независимо от сделок. В карточке клиента: все контакты, все сделки, вся активность, смета. Можно сразу создать новую сделку из карточки клиента — данные заполняются автоматически.'],
             ['#f59e0b', 'Активности',          'Хронологический журнал всех действий по всем сделкам: звонки, встречи, письма, заметки, задачи, изменения стадий. Фильтр по типу активности.'],
             ['#3b82f6', 'Аналитика',           'Метрики, графики за 6 месяцев, анализ по источникам и стадиям. Конверсия, revenue, средний чек, velocity, прогноз дохода. Отвечает на вопрос: откуда клиенты, где теряем, сколько заработаем.'],
             ['#6b7280', 'Настройки',           'Управление воронками и стадиями: создание, переименование, изменение цветов, изменение порядка. Каждую воронку — для отдельного продукта или направления.'],
@@ -7010,14 +7010,14 @@ function _renderCRMHowto() {
 
         fieldsTitle: isRU ? 'Поля сделки — что заполнять и зачем' : 'Поля угоди — що заповнювати і навіщо',
         fields: isRU ? [
-            ['Название сделки + Стадия + Сумма',  'Основные параметры сделки'],
+            ['Название сделки + Стадия + Сумма',  window.t('dealMainParams')],
             ['Клиент + Ниша',                      'Кто клиент и в какой отрасли'],
             ['Омниканал',                           'Кнопки: Звонок / WhatsApp / Viber / Telegram / Instagram / Email — одним кликом без поиска в телефоне'],
-            ['Телефон / Email / Telegram / Instagram', 'Контактные данные клиента'],
+            ['Телефон / Email / Telegram / Instagram', window.t('clientContactData')],
             ['Источник лида',                      'Откуда пришёл: Instagram, сайт, рекомендация, холодный звонок, бот и т.д.'],
             ['Следующий контакт (дата)',            'Система напоминает об этой дате — показывает предупреждение и Browser Push уведомление'],
-            ['Ответственный менеджер',             'Кто ведёт сделку'],
-            ['Вероятность закрытия (%)',           'Используется для расчёта прогноза дохода в Аналитике'],
+            [window.t('crmResponsibleMgr'),             window.t('dealOwner')],
+            [window.t('closeProbPct'),           'Используется для расчёта прогноза дохода в Аналитике'],
             ['Теги',                               'Произвольные метки для группировки сделок'],
         ] : [
             ['Назва угоди + Стадія + Сума',       'Основні параметри угоди'],
@@ -7067,10 +7067,10 @@ function _renderCRMHowto() {
             ['KPI менеджерів',            'Скільки угод веде, скільки виграв, середній чек — по кожному менеджеру'],
         ],
 
-        quickStartTitle: isRU ? 'Быстрый старт — первые 3 шага' : 'Швидкий старт — перші 3 кроки',
+        quickStartTitle: isRU ? window.t('quickStart3Steps') : 'Швидкий старт — перші 3 кроки',
         quickSteps: isRU ? [
             ['Настройте воронку под ваш процесс продаж', 'Настройки → Стадии. Переименуйте стандартные стадии под реальные этапы вашего бизнеса. Добавьте цвета.'],
-            ['Создайте первые 5–10 сделок',              'Кнопка «+ Добавить сделку». Заполните: клиент, сумма, источник, ответственный, дата следующего контакта.'],
+            [window.t('createFirst5Deals'),              'Кнопка «+ Добавить сделку». Заполните: клиент, сумма, источник, ответственный, дата следующего контакта.'],
             ['Работайте с Todo каждое утро',             'Todo → список дел на сегодня. 10 минут утром = ни один клиент не потеряется.'],
         ] : [
             ['Налаштуйте воронку під ваш процес продажів', 'Налаштування → Стадії. Перейменуйте стандартні стадії під реальні етапи вашого бізнесу. Додайте кольори.'],

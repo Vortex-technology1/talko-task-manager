@@ -825,7 +825,7 @@
                         : `<p style="font-size:0.85rem;color:#6b7280;">Коммуникационные линии не настроены. Просмотрите схему в Структуре.</p>`
                 },
                 {
-                    num: 6, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>', title: 'Регулярные задачи',
+                    num: 6, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>', title: window.t('fnHowtoReplace2t'),
                     content: funcRegularTasks.length
                         ? `<div style="display:flex;flex-direction:column;gap:0.3rem;">${funcRegularTasks.slice(0,5).map(rt => {
                             const time = (rt.timeStart || rt.time || '') + (rt.timeEnd ? '–'+rt.timeEnd : '');
@@ -836,7 +836,7 @@
                         : `<p style="font-size:0.85rem;color:#6b7280;">Регулярных задач пока нет.</p>`
                 },
                 {
-                    num: 7, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>', title: 'Первые задачи',
+                    num: 7, icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>', title: window.t('firstTasks'),
                     content: funcTasks.length
                         ? `<div style="display:flex;flex-direction:column;gap:0.3rem;">${funcTasks.map(t => `<div style="padding:0.4rem 0.6rem;background:#f9fafb;border-radius:6px;font-size:0.82rem;display:flex;justify-content:space-between;">
                             <span>${esc(t.title)}</span>

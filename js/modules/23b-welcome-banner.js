@@ -129,7 +129,7 @@ function renderBanner() {
             myday_title: 'Мой день — твой рабочий центр',
             myday_desc: 'Здесь собраны все задачи на сегодня. Отмечай выполненные, переносите дедлайны, запускай таймер.',
             myday_btn: 'Понятно',
-            close: 'Закрыть',
+            close: window.t('closeAction'),
             step: 'Шаг',
         },
         de: {
