@@ -132,7 +132,7 @@ function _t(ua, ru) {
         ` : ''}
         ${_currentView === 'operations' ? `
           <button onclick="window.whOpenOpForm('IN')" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;margin-right:0.4rem;white-space:nowrap;">
-            <i data-lucide="arrow-down-circle" style="width:15px;height:15px;"></i> ${_t('Прихід','Приход')}
+            <i data-lucide="arrow-down-circle" style="width:15px;height:15px;"></i> ${_t('Прихід',window.t('приход'))}
           </button>
           <button onclick="window.whOpenOpForm('OUT')" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;margin-right:0.4rem;white-space:nowrap;">
             <i data-lucide="arrow-up-circle" style="width:15px;height:15px;"></i> Видача
@@ -366,7 +366,7 @@ function _t(ua, ru) {
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
           <div style="position:relative;flex:1;min-width:180px;">
             <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#9ca3af;pointer-events:none;"></i>
-            <input type="text" placeholder="${_t('Пошук...','Поиск...')}" value="${_searchQuery}"
+            <input type="text" placeholder="${window.t('пошук')}" value="${_searchQuery}"
               oninput="window._whSearchCatalog(this.value)"
               style="width:100%;box-sizing:border-box;padding:0.45rem 0.5rem 0.45rem 2rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;">
           </div>
@@ -524,13 +524,13 @@ function _t(ua, ru) {
         <div style="padding:0.75rem 1rem;display:flex;gap:0.75rem;align-items:center;border-bottom:1px solid #f3f4f6;flex-wrap:wrap;">
           <input
             type="text"
-            placeholder="${_t('Пошук товару...','Поиск товара...')}"
+            placeholder="${window.t('пошукТовару')}"
             value="${_whEscHtml(_searchQuery)}"
             oninput="window._whByLocSearch(this.value)"
             style="padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;width:200px;outline:none;">
           <select onchange="window._whByLocFilter(this.value)"
             style="padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;color:#374151;">
-            <option value="">${_t('Всі локації','Все локации')}</option>
+            <option value="">${window.t('всіЛокації')}</option>
             ${locations.map(l => `<option value="${l.id}" ${_locFilterId===l.id?'selected':''}>${_whEscHtml(l.name)}</option>`).join('')}
           </select>
           <span style="font-size:0.8rem;color:#6b7280;margin-left:auto;">${visItems.length} ${_t('товарів','товаров')} · ${visLocs.length} локацій</span>
@@ -571,7 +571,7 @@ function _t(ua, ru) {
     const locMap = {};
     locations.forEach(l => { locMap[l.id] = l.name; });
 
-    const typeLabel = { IN:`↓ ${_t('Прихід','Приход')}`, OUT:`↑ ${_t('Видача','Выдача')}`, WRITE_OFF:`✕ ${_t('Списання','Списание')}`, TRANSFER:`⇄ ${_t('Переміщення','Перемещение')}`, ADJUST:'≡ Коригування' };
+    const typeLabel = { IN:`↓ ${_t('Прихід','Приход')}`, OUT:`↑ ${_t('Видача',window.t('выдача'))}`, WRITE_OFF:`✕ ${_t('Списання',window.t('списание'))}`, TRANSFER:`⇄ ${_t('Переміщення','Перемещение')}`, ADJUST:'≡ Коригування' };
 
     const rows = ops.length === 0
       ? `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#6b7280;">${window.t('whNoTransfers')}</td></tr>`
@@ -733,7 +733,7 @@ function _t(ua, ru) {
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
           <div style="position:relative;flex:1;min-width:180px;">
             <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#9ca3af;pointer-events:none;"></i>
-            <input type="text" placeholder="${_t('Пошук...','Поиск...')}" value="${_searchQuery}"
+            <input type="text" placeholder="${window.t('пошук')}" value="${_searchQuery}"
               oninput="window._whOpSearch(this.value)"
               style="width:100%;box-sizing:border-box;padding:0.45rem 0.5rem 0.45rem 2rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;">
           </div>
@@ -746,9 +746,9 @@ function _t(ua, ru) {
           </select>
           <select onchange="window._whOpDateFilter(this.value)"
             style="padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
-            <option value="">${_t('Весь час','Всё время')}</option>
+            <option value="">${window.t('весьЧас')}</option>
             <option value="today" ${_opDateFilter==='today'?'selected':''}>${window.t('whToday')}</option>
-            <option value="week" ${_opDateFilter==='week'?'selected':''}>${_t('Тиждень','Неделя')}</option>
+            <option value="week" ${_opDateFilter==='week'?'selected':''}>${_t('Тиждень',window.t('неделя'))}</option>
             <option value="month" ${_opDateFilter==='month'?'selected':''}>${window.t('whMonth')}</option>
           </select>
         </div>
@@ -835,7 +835,7 @@ function _t(ua, ru) {
   function _renderLocations() {
     const locs = window.whGetLocations ? window.whGetLocations() : [];
     const typeIcons = { warehouse: 'warehouse', room: 'home', car: 'truck', object: 'map-pin' };
-    const typeLabels = { warehouse: 'Склад', room: window.t('roomWord'), car: 'Авто', object: window.t('objectWord') };
+    const typeLabels = { warehouse: window.t('склад'), room: window.t('roomWord'), car: window.t('авто'), object: window.t('objectWord') };
     return `
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
         <div style="display:flex;justify-content:flex-end;">
@@ -851,7 +851,7 @@ function _t(ua, ru) {
                 <div style="font-weight:500;font-size:0.88rem;">${_whEscHtml(l.name)}</div>
                 <div style="font-size:0.75rem;color:#9ca3af;">${typeLabels[l.type] || l.type}</div>
               </div>
-              ${l.isDefault ? `<span style="font-size:0.7rem;background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;">за замовч.</span>` : ''}
+              ${l.isDefault ? `${window.t('spanStylefontsize07rembackgroundede9feco')}` : ''}
               <div style="display:flex;gap:0.3rem;flex-shrink:0;">
                 <button onclick="window.whOpenLocationForm('${l.id}')" style="padding:4px;border:none;background:#f3f4f6;border-radius:6px;cursor:pointer;">
                   <i data-lucide="pencil" style="width:13px;height:13px;color:#6b7280;display:block;"></i>
@@ -886,7 +886,7 @@ function _t(ua, ru) {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">${_t('Назва *','Название *')}</label>
-              <input id="wh_name" value="${item.name || ''}" style="${_inp()}" placeholder="${_t('Назва товару','Название товара')}">
+              <input id="wh_name" value="${item.name || ''}" style="${_inp()}" placeholder="${window.t('назваТовару')}">
             </div>
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">${_t('SKU / Артикул','SKU / Артикул')}</label>
@@ -941,7 +941,7 @@ function _t(ua, ru) {
           </div>
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">${_t('Опис','Описание')}</label>
-            <textarea id="wh_desc" style="${_inp()}height:56px;resize:none;" placeholder="${_t('Додатковий опис...','Дополнительное описание...')}">${_whEscHtml(item.description || '')}</textarea>
+            <textarea id="wh_desc" style="${_inp()}height:56px;resize:none;" placeholder="${window.t('додатковийОпис')}">${_whEscHtml(item.description || '')}</textarea>
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
@@ -1067,7 +1067,7 @@ function _t(ua, ru) {
     const info = document.getElementById('wh_op_stock_info');
     if (info) {
       info.style.display = 'block';
-      info.innerHTML = `${_t('Поточний залишок:','Текущий остаток:')} <b>${s.qty}</b> ${item?.unit || 'шт'} | ${_t('Доступно:','Доступно:')} <b>${s.available}</b>`;
+      info.innerHTML = `${window.t('поточнийЗалишок')} <b>${s.qty}</b> ${item?.unit || 'шт'} | ${_t(window.t('доступно'),'Доступно:')} <b>${s.available}</b>`;
     }
     const priceInput = document.getElementById('wh_op_price');
     if (priceInput && item && type === 'IN' && item.costPrice) priceInput.value = item.costPrice;
@@ -1119,7 +1119,7 @@ function _t(ua, ru) {
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">${_t('Назва *','Название *')}</label>
-            <input id="wh_sup_name" value="${s.name || ''}" style="${_inp()}" placeholder="${_t('ТОВ «Постачальник»','ООО «Поставщик»')}">
+            <input id="wh_sup_name" value="${s.name || ''}" style="${_inp()}" placeholder="${window.t('товПостачальник')}">
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
@@ -1187,7 +1187,7 @@ function _t(ua, ru) {
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">${_t('Назва *','Название *')}</label>
-            <input id="wh_loc_name" value="${l.name || ''}" style="${_inp()}" placeholder="${_t('Головний склад','Главный склад')}">
+            <input id="wh_loc_name" value="${l.name || ''}" style="${_inp()}" placeholder="${window.t('головнийСклад')}">
           </div>
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">${_t('Тип','Тип')}</label>
@@ -1766,11 +1766,11 @@ function _t(ua, ru) {
         </div>
         <div style="display:flex;gap:0.5rem;margin-left:auto;flex-wrap:wrap;align-items:center;">
           <select onchange="window._whRepSetLoc(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;">
-            <option value="">${_t('Всі локації','Все локации')}</option>
+            <option value="">${window.t('всіЛокації')}</option>
             ${locations.map(l=>`<option value="${l.id}" ${_repLocId===l.id?'selected':''}>${_whEscHtml(l.name)}</option>`).join('')}
           </select>
           <select onchange="window._whRepSetItem(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;max-width:180px;">
-            <option value="">${_t('Всі товари','Все товары')}</option>
+            <option value="">${window.t('всіТовари')}</option>
             ${items.map(i=>`<option value="${i.id}" ${_repItemId===i.id?'selected':''}>${_whEscHtml(i.name)}</option>`).join('')}
           </select>
           <select onchange="window._whRepSetYear(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;">

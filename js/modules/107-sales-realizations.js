@@ -96,7 +96,7 @@
   function renderList(){
     const wrap=el('srListWrap'); if(!wrap) return;
     if(!S.realizations.length){
-      wrap.innerHTML=`<div style="text-align:center;padding:3rem;color:#9ca3af"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40" style="margin-bottom:12px;opacity:.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div style="font-size:.9rem">${tg('Реалізацій немає','No realizations yet')}</div>${canManage()?`<button onclick="window.openSalesRealizationModal()" style="margin-top:12px;padding:8px 18px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:600">+ ${tg('Нова реалізація','New realization')}</button>`:''}</div>`;
+      wrap.innerHTML=`<div style="text-align:center;padding:3rem;color:#9ca3af"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40" style="margin-bottom:12px;opacity:.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div style="font-size:.9rem">${tg(window.t('реалізаційНемає'),'No realizations yet')}</div>${canManage()?`<button onclick="window.openSalesRealizationModal()" style="margin-top:12px;padding:8px 18px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:600">+ ${tg(window.t('новаРеалізація1'),'New realization')}</button>`:''}</div>`;
       return;
     }
     const today=todayISO();
@@ -122,7 +122,7 @@
         const acts=[];
         if(canManage()){
           if(r.status==='draft'){
-            acts.push(`<button onclick="window._srPost('${r.id}')" style="padding:4px 8px;border:none;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;background:#d1fae5;color:#059669">${tg('Провести','Post')}</button>`);
+            acts.push(`<button onclick="window._srPost('${r.id}')" style="padding:4px 8px;border:none;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;background:#d1fae5;color:#059669">${tg(window.t('провести'),'Post')}</button>`);
             acts.push(`<button onclick="window.openSalesRealizationModal('${r.id}')" style="padding:4px 6px;border:1px solid #e5e7eb;border-radius:5px;cursor:pointer;background:#fff;color:#6b7280"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>`);
           }
           if(r.status==='posted') {
@@ -155,7 +155,7 @@
       </style>
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;padding:1rem 1rem 0">
         <h3 style="margin:0;font-size:1rem;font-weight:700">${tg('Реалізації','Realizations')}</h3>
-        ${canManage()?`<button onclick="window.openSalesRealizationModal()" style="padding:8px 16px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.84rem;font-weight:600;display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>${tg('Нова реалізація','New realization')}</button>`:''}
+        ${canManage()?`<button onclick="window.openSalesRealizationModal()" style="padding:8px 16px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.84rem;font-weight:600;display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>${tg(window.t('новаРеалізація1'),'New realization')}</button>`:''}
       </div>
       <div id="srStatsWrap" style="display:flex;gap:.75rem;flex-wrap:wrap;padding:.75rem 1rem"></div>
       <div id="srListWrap" style="padding:0 1rem 1rem"></div>`;
@@ -228,7 +228,7 @@
         <div style="display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid #f1f5f9">
           <button onclick="window.closeSalesRealizationModal()" style="padding:9px 20px;border:1px solid #e5e7eb;border-radius:7px;cursor:pointer;background:#fff;font-size:.85rem;font-weight:600;color:#374151">${tg('Скасувати','Cancel')}</button>
           ${currentStatus!=='posted'?`<button onclick="window._srSave(false)" id="srSaveBtn" style="padding:9px 20px;border:1px solid #059669;border-radius:7px;cursor:pointer;background:#fff;color:#059669;font-size:.85rem;font-weight:600">${tg('Зберегти чернетку','Save draft')}</button>`:''}
-          <button onclick="window._srSave(true)" id="srPostBtn" ${currentStatus==='posted'?'disabled style="opacity:.5;cursor:not-allowed;"':''} style="padding:9px 24px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">${currentStatus==='posted'?tg('Проведено ✓','Posted ✓'):tg('Провести','Post')}</button>
+          <button onclick="window._srSave(true)" id="srPostBtn" ${currentStatus==='posted'?'disabled style="opacity:.5;cursor:not-allowed;"':''} style="padding:9px 24px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">${currentStatus==='posted'?tg('Проведено ✓','Posted ✓'):tg(window.t('провести'),'Post')}</button>
         </div>
       </div>
     </div>`;
@@ -315,7 +315,7 @@
     const payload={clientId,clientName,type:deriveType(items),items,totalAmount:total,currency:el('srFldCurrency')?.value||'UAH',realizationDate:el('srFldDate')?.value||todayISO(),paymentDueDate:el('srFldDueDate')?.value||'',note:el('srFldNote')?.value||'',orderId:S.sourceOrder?.id||null,dealId:S.sourceOrder?.dealId||null,status:newStatus,updatedAt:serverTs()};
     S.saving=true;
     const sBtn=el('srSaveBtn'),pBtn=el('srPostBtn');
-    if(sBtn)sBtn.disabled=true; if(pBtn){pBtn.disabled=true;pBtn.textContent=tg('Проводимо...','Posting...');}
+    if(sBtn)sBtn.disabled=true; if(pBtn){pBtn.disabled=true;pBtn.textContent=tg(window.t('проводимо'),'Posting...');}
     try{
       let rid=S.editingId;
       if(rid){

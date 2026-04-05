@@ -1,5 +1,5 @@
 // ============================================================
-// 78-crm-todo.js — CRM "Що робити зараз"
+// 78-crm-todo.js — CRM window.t('щоРобитиЗараз')
 // Показує всіх активних лідів відсортованих за пріоритетом:
 //   0. Прострочені (nextContactDate < сьогодні) — червоні
 //   1. На сьогодні — помаранчеві
@@ -162,7 +162,7 @@ window.renderCrmTodo = function() {
     // i18n змінні — обчислюємо ДО innerHTML щоб уникнути проблем з вкладеними тернарниками
     const _lang = window.currentLang || 'uk';
     const _i18n = {
-        title:       _lang==='ru'?'Что делать сейчас':_lang==='en'?'What to do now':'Що робити зараз',
+        title:       _lang==='ru'?window.t('чтоДелатьСейчас'):_lang==='en'?'What to do now':'Що робити зараз',
         newLeads:    _lang==='ru'?'новых':_lang==='en'?'new':'нових',
         forgotten:   _lang==='ru'?'забытых лидов':_lang==='en'?'forgotten leads':'забутих лідів',
         search:      _lang==='ru'?'Поиск по имени, телефону, email...':_lang==='en'?'Search by name, phone, email...':'Пошук за іменем, телефоном...',
@@ -313,7 +313,7 @@ function _renderRow(d, i) {
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                 ✏️</button>
                <button onclick="event.stopPropagation();_crmTodoCancelConsultation('${d.id}')"
-                title="Скасувати консультацію"
+                title=window.t('скасуватиКонсультацію')
                 style="display:inline-flex;align-items:center;justify-content:center;padding:4px 7px;border-radius:6px;
                 background:#fef2f2;border:1px solid #fecaca;color:#dc2626;font-size:0.75rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                 ×</button>`
@@ -326,7 +326,7 @@ function _renderRow(d, i) {
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                 ✏️</button>
                <button onclick="event.stopPropagation();_crmTodoCancelConsultation('${d.id}')"
-                title="Скасувати консультацію"
+                title=window.t('скасуватиКонсультацію')
                 style="display:inline-flex;align-items:center;justify-content:center;padding:4px 7px;border-radius:6px;
                 background:#fef2f2;border:1px solid #fecaca;color:#dc2626;font-size:0.75rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                 ×</button>`
@@ -525,7 +525,7 @@ window.crmTodoOpenCard = async function(dealId) {
             </div>
             <div>
               <label style="${lbl}">Коментар</label>
-              <input id="crmTodoNextNote" placeholder="що зробити..." style="${inp}" value="${_esc(deal.note||'')}">
+              <input id="crmTodoNextNote" placeholder=window.t('щоЗробити') style="${inp}" value="${_esc(deal.note||'')}">
             </div>
           </div>
         </div>
@@ -704,7 +704,7 @@ window._crmTodoSave = async function(dealId) {
     if (todoEl) window._crmTodoScrollPos = todoEl.scrollTop;
 
     const btn = document.getElementById('crmTodoSaveBtn');
-    if (btn) { btn.disabled=true; btn.textContent='Збереження...'; }
+    if (btn) { btn.disabled=true; btn.textContent=window.t('збереження'); }
 
     try {
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
@@ -739,7 +739,7 @@ window._crmTodoSave = async function(dealId) {
                 if (missedDeal) {
                     const nextTime2 = (document.getElementById('crmTodoNextTime')?.value) || null;
                     const tData = {
-                        title: 'Передзвонити: ' + (missedDeal.clientName || missedDeal.title || ''),
+                        title: window.t('передзвонити') + (missedDeal.clientName || missedDeal.title || ''),
                         note: 'Не взяв трубку ' + _todayStr(),
                         status: 'new',
                         deadlineDate: nextDate,
@@ -811,7 +811,7 @@ window._crmTodoSave = async function(dealId) {
         }
 
     } catch(e) {
-        if(btn){btn.disabled=false;btn.textContent='Зберегти';}
+        if(btn){btn.disabled=false;btn.textContent=window.t('зберегти');}
         if(window.showToast)showToast(window.t('errPfx2')+e.message,'error');
     }
 };
@@ -877,7 +877,7 @@ window._crmTodoScheduleConsultation = function(dealId) {
           </div>
           <div>
             <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Примітка</label>
-            <input id="consultNote" type="text" placeholder="Тема консультації..."
+            <input id="consultNote" type="text" placeholder=window.t('темаКонсультації')
               style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;">
           </div>
         </div>
@@ -899,7 +899,7 @@ window._crmTodoSaveConsultation = async function(dealId) {
 
     // Захист від подвійного кліку
     const saveBtn = document.querySelector('#crmConsultModal button[onclick*="SaveConsultation"]');
-    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Зберігаю...'; }
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = window.t('зберігаю'); }
 
     try {
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
@@ -929,7 +929,7 @@ window._crmTodoSaveConsultation = async function(dealId) {
             const deal2 = window.crm?.deals?.find(x => x.id === dealId);
             if (deal2) {
                 const taskData = {
-                    title: 'Консультація: ' + (deal2.clientName || deal2.title || ''),
+                    title: window.t('консультація') + (deal2.clientName || deal2.title || ''),
                     note: note || '',
                     status: 'new',
                     deadlineDate: date,
@@ -958,7 +958,7 @@ window._crmTodoSaveConsultation = async function(dealId) {
         if (window.showToast) showToast('Консультацію призначено ✓ Завдання створено', 'success');
         if (typeof renderCrmTodo === 'function') renderCrmTodo();
     } catch(e) {
-        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Призначити'; }
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = window.t('призначити'); }
         if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
 };
@@ -1105,7 +1105,7 @@ window._getCrmTodoForMyDay = function() {
             const fmt = _fmtDate(d.nextContactDate);
             return {
                 id:'crm_'+d.id, dealId:d.id, type:'crm_action',
-                title:d.note||d.notes||'(без нотатки)',
+                title:d.note||d.notes||window.t('безНотатки'),
                 client:d.clientName||d.title||'',
                 phone:d.phone||'', telegram:d.telegram||'',
                 date:d.nextContactDate||null,

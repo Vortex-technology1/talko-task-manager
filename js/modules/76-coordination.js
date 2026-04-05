@@ -96,40 +96,40 @@
             howStep7:'Завершити → протокол PDF автоматично',
         },
         ru: {
-            title:'Координации', newCoord:'Новая координация', emptyText:window.t('coordKoordynaShcheNemaye'),
+            title:window.t('координации'), newCoord:window.t('новаяКоординация'), emptyText:window.t('координацийЕщёНет'),
             addFirst:'+ Добавить первую', modalTitle:'Новая координация', modalEdit:'Редактировать',
-            labelName:'Название координации', placeholderName:window.t('coordShchodennaKoordynaKomandy'),
+            labelName:window.t('названиеКоординации'), placeholderName:window.t('ежедневнаяКоординацияКоманды'),
             labelType:window.t('flowTyp2'), labelStatus:'Статус', statusActive:'Активная', statusPaused:'Приостановлена',
-            labelChairman:'Руководитель координации', selectChairman:window.t('coordOberitVidpovid'),
+            labelChairman:'Руководитель координации', selectChairman:'— Выберите ответственного —',
             labelParticipants:'Участники', labelDay:'День недели', anyDay:'— Любой —',
             labelTime:'Время начала', labelFilter:'Фильтр задач',
             filterFunctions:'По функциям', filterProjects:'По проектам',
-            filterAssignees:'По исполнителям', filterOverdue:window.t('coordProstroch'), filterReview:'На проверке',
-            filterProjectsLabel:window.t('projectsMulti'), filterProcessesLabel:window.t('processesMulti'),
+            filterAssignees:'По исполнителям', filterOverdue:'Просроченные', filterReview:'На проверке',
+            filterProjectsLabel:'Проекты (мультивыбор)', filterProcessesLabel:'Процессы (мультивыбор)',
             filterCrmStageLabel:'CRM стадия',
-            labelEscal:window.t('coordEskalatsiDo'), escalAuto:'— Авто по типу —',
+            labelEscal:'Эскалация до', escalAuto:'— Авто по типу —',
             escalHint:'Нерешённые вопросы автоматически попадут выше по цепочке',
             labelTelegram:'Telegram Chat ID', telegramHint:'Протокол отправляется автоматически после завершения',
             btnCancel:'Отмена', btnSave:'Сохранить',
-            agendaTitle:'Повестка дня', agendaHint:window.t('coordUchasnykyDodayutPytannya'),
+            agendaTitle:'Повестка дня', agendaHint:'Участники добавляют вопросы до начала координации',
             btnFinish:'Завершить', agendaSection:'Повестка дня', participantsLbl:'Участники',
-            decisionsLbl:'Решения', escalLbl:window.t('coordEskalatsiNevyrishePytannya'),
-            protocolTitle:'Протокол координации', protocolsTitle:window.t('protocolsLabel'), noProtocols:window.t('coordProtokolShcheNemaye'),
-            aiTitle:'AI Рекомендации', escalated:window.t('escalatedLabel'),
-            statsLbl:'Статистики участников', execLbl:window.t('coordVykonannPoperednZavdan'),
-            reportsLbl:window.t('coordZvityUchasnyki'), questionsLbl:window.t('coordPytannyaVidUchasnyki'),
-            decisionsAgLbl:'Решения', tasksAgLbl:window.t('coordNoviZavdannya'),
+            decisionsLbl:'Решения', escalLbl:'Эскалация (нерешённые вопросы)',
+            protocolTitle:'Протокол координации', protocolsTitle:'Протоколы', noProtocols:'Протоколов ещё нет',
+            aiTitle:'AI Рекомендации', escalated:'Эскалировано',
+            statsLbl:'Статистики участников', execLbl:'Выполнение предыдущих задач',
+            reportsLbl:'Отчёты участников', questionsLbl:'Вопросы от участников',
+            decisionsAgLbl:'Решения', tasksAgLbl:'Новые задачи',
             typeDaily:'Ежедневная', typeWeekly:'Еженедельная', typeMonthly:'Ежемесячная',
-            typeCouncilRec:window.t('coordRekomendRada'), typeCouncilDir:'Совет директора',
-            typeCouncilExe:window.t('executiveBoard'), typeCouncilOwn:'Совет основателей', typeOneoff:'Разовая',
+            typeCouncilRec:'Рекомендательный совет', typeCouncilDir:'Совет директора',
+            typeCouncilExe:'Исполнительный совет', typeCouncilOwn:'Совет основателей', typeOneoff:'Разовая',
             analyticsTitle:'Аналитика',
             statsSummary:'Координаций: {total} · Решений: {decisions} · Эскалировано: {unresolved} · Средняя длительность: {avg}мин',
-            howItWorks:window.t('howItWorksBtn'), howClose:window.t('closeAction'),
+            howItWorks:'Как это работает', howClose:'Закрыть',
             createTaskBtn:'\u2192 Создать задачу', taskCreatedBadge:'\u2705 Задача создана',
             taskTitleLbl:'Заголовок задачи', taskAssigneeLbl:'Исполнитель', taskDeadlineLbl:'Дедлайн',
             taskLinkProject:'Привязать к проекту', taskLinkProcess:'Привязать к процессу',
             taskLinkCrm:'Привязать к CRM сделке',
-            taskCreateBtn:'Создать задачу', taskCancelBtn:'Отмена', selectNone:window.t('notSelectedDash'),
+            taskCreateBtn:'Создать задачу', taskCancelBtn:'Отмена', selectNone:'— Не выбрано —',
             howBlock1:'Какую проблему решают координации',
             howNoBefore:'Без координаций: решения потерялись в мессенджере, через неделю ничего не сделано',
             howWithAfter:'С координациями: каждое решение → задача → исполнитель → дедлайн → протокол',
@@ -137,16 +137,16 @@
             howBlock3:'Повестка дня (6 разделов)',
             howBlock4:'Взаимосвязи с другими модулями',
             howBlock5:'Пошаговый гайд: как провести координацию',
-            howBlock6:window.t('typicalErrors'),
-            howBlock7:window.t('resultsInMonth'),
+            howBlock6:'Типичные ошибки',
+            howBlock7:'Результаты через месяц',
             howErr1:'Совещание без протокола → через неделю никто ничего не помнит',
             howErr2:'Решение без исполнителя → никто не ответственен',
             howErr3:'Эскалация без адресата → вопрос подвисает',
             howStep1:'Открыть координацию → нажать Запустить',
             howStep2:'Статистики: участники озвучивают свои показатели',
             howStep3:'Выполнение: проверяем задачи с прошлой недели',
-            howStep4:window.t('coordReports2min'),
-            howStep5:window.t('coordQuestionsAgenda'),
+            howStep4:'Отчёты: каждый участник 2 мин',
+            howStep5:'Вопросы: разбираем повестку дня',
             howStep6:'Решения: фиксируем каждое → кнопка Создать задачу',
             howStep7:'Завершить → протокол PDF автоматически',
         },
@@ -621,7 +621,7 @@
   <div style="background:linear-gradient(135deg,#16a34a,#22c55e);border-radius:14px;padding:1rem;">
     <div style="font-weight:700;font-size:.88rem;color:#fff;margin-bottom:.55rem;display:flex;align-items:center;gap:.4rem;"><i data-lucide="trending-up" style="width:15px;height:15px;color:#fff;"></i>${ct('howBlock7')}</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.45rem;">
-      ${[['95%',window.t('decisionsExecuted')],['-40%','времени на отслеживание'],['×2','скорость реакции'],['100%',window.t('decisionsFixed')]].map(([v,l]) => `<div style="background:rgba(255,255,255,.15);border-radius:10px;padding:.5rem;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#fff;">${v}</div><div style="font-size:.7rem;color:rgba(255,255,255,.85);">${l}</div></div>`).join('')}
+      ${[['95%','решений выполняются'],['-40%','времени на отслеживание'],['×2','скорость реакции'],['100%','решений зафиксированы']].map(([v,l]) => `<div style="background:rgba(255,255,255,.15);border-radius:10px;padding:.5rem;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#fff;">${v}</div><div style="font-size:.7rem;color:rgba(255,255,255,.85);">${l}</div></div>`).join('')}
     </div>
   </div>
   <!-- AI Assistant CTA -->
@@ -749,7 +749,7 @@
             <button onclick="openDynAgenda('${c.id}')" style="display:flex;align-items:center;justify-content:center;padding:.45rem .65rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;transition:all .15s;" onmouseenter="this.style.borderColor='#22c55e';this.style.color='#16a34a'" onmouseleave="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'" title="Повестка дня">
               <i data-lucide="list" style="width:14px;height:14px;"></i>
             </button>
-            <button onclick="viewCoordHistory('${c.id}')" style="display:flex;align-items:center;justify-content:center;padding:.45rem .65rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;transition:all .15s;" onmouseenter="this.style.borderColor='#6366f1';this.style.color='#6366f1'" onmouseleave="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'" title=window.t('protocolsLabel')>
+            <button onclick="viewCoordHistory('${c.id}')" style="display:flex;align-items:center;justify-content:center;padding:.45rem .65rem;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;color:#6b7280;transition:all .15s;" onmouseenter="this.style.borderColor='#6366f1';this.style.color='#6366f1'" onmouseleave="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'" title="Протоколы">
               ${si('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>')}
             </button>
           </div>
@@ -1259,7 +1259,7 @@
         if (btn) { btn.disabled = true; btn.textContent = '...'; }
         const idx=parseInt(document.getElementById('coordTaskDecisionIdx').value,10);
         const title=document.getElementById('coordTaskTitle').value.trim();
-        if(!title){ toast('Введіть заголовок задачі','error'); _submitTaskLock=false; if(btn){btn.disabled=false;btn.innerHTML=`<i data-lucide="check" style="width:12px;height:12px;margin-right:3px;"></i>${ct('taskCreateBtn')}`;} return; }
+        if(!title){ toast(window.t('введітьЗаголовокЗадачі'),'error'); _submitTaskLock=false; if(btn){btn.disabled=false;btn.innerHTML=`<i data-lucide="check" style="width:12px;height:12px;margin-right:3px;"></i>${ct('taskCreateBtn')}`;} return; }
         const assigneeId=document.getElementById('coordTaskAssignee').value||null;
         const deadline=document.getElementById('coordTaskDeadline').value||null;
         const projectId=document.getElementById('coordTaskProject')?.value||null;
@@ -1418,7 +1418,7 @@
     window.closeCoordAnalysis = () => { document.getElementById('coordAnalysisModal').style.display='none'; };
     window.runCoordAI = async function() {
         const el=document.getElementById('coordAnalysisContent'); if(!el) return;
-        el.innerHTML=`<div style="text-align:center;padding:2rem;color:#9ca3af;">Аналізую...</div>`;
+        el.innerHTML=`${window.t('divStyletextaligncenterpadding2remcolor9')}`;
         try {
             const snap=await col('coordination_sessions').orderBy('createdAt','desc').limit(30).get();
             const sessions=snap.docs.map(d=>({id:d.id,...d.data()}));

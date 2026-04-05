@@ -106,7 +106,7 @@
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
                 <div>
                     <div style="font-weight:700;font-size:1rem;">Чат-боти</div>
-                    <div style="font-size:0.78rem;color:#6b7280;">${botsFlows.length} ${_tg('ботів','ботов')}</div>
+                    <div style="font-size:0.78rem;color:#6b7280;">${botsFlows.length} ${window.t('ботів')}</div>
                 </div>
                 <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
                     <button onclick="openFlowTemplatesModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#ede9fe;color:#7c3aed;border:1px solid #c4b5fd;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
@@ -121,8 +121,8 @@
             ${botsFlows.length === 0 ? `
                 <div style="text-align:center;padding:3rem;background:white;border-radius:12px;box-shadow:var(--shadow);">
                     <div style="font-size:2.5rem;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span></div>
-                    <div style="font-weight:600;margin-bottom:0.4rem;">${_tg('Ботів поки немає','Ботов пока нет')}</div>
-                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">${_tg('Створіть першого бота і налаштуйте сценарії роботи','Создайте первого бота и настройте сценарии работы')}автоматичні сценарії</div>
+                    <div style="font-weight:600;margin-bottom:0.4rem;">${window.t('ботівПокиНемає')}</div>
+                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">${window.t('створітьПершогоБотаІ')}автоматичні сценарії</div>
                     <button onclick="openCreateFlowModal()" style="padding:0.6rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">+ Створити бота</button>
                 </div>` : `
                 <div style="display:flex;flex-direction:column;gap:0.75rem;">
@@ -349,7 +349,7 @@
                     <div style="padding:1rem 1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
                         <div>
                             <div style="font-weight:700;font-size:1rem;">${escH(flowData.name)} <span style="font-size:0.75rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:2px 8px;color:#6b7280;font-weight:500;">${flowData.channel}</span></div>
-                            <div style="font-size:0.78rem;color:#6b7280;margin-top:1px;">${botsFlowNodes.length} ${_tg('вузлів · тригер','узлов · триггер')}: <code style="background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:4px;">${escH(flowData.triggerKeyword || '/start')}</code></div>
+                            <div style="font-size:0.78rem;color:#6b7280;margin-top:1px;">${botsFlowNodes.length} ${window.t('вузлівТригер')}: <code style="background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:4px;">${escH(flowData.triggerKeyword || '/start')}</code></div>
                         </div>
                         <div style="display:flex;gap:0.5rem;">
                             <button onclick="saveFlowNodes()" style="padding:0.45rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Зберегти</button>
@@ -383,7 +383,7 @@
                         <div style="flex:1;overflow-y:auto;padding:1rem;" id="botsNodeEditor">
                             <div style="text-align:center;padding:3rem 1rem;color:#9ca3af;">
                                 <div style="margin-bottom:0.5rem;color:#9ca3af;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
-                                <div>${_tg('Виберіть вузол або додайте новий','Выберите узел или добавьте новый')}</div>
+                                <div>${window.t('виберітьВузолАбоДодайте')}</div>
                             </div>
                         </div>
                     </div>
@@ -482,7 +482,7 @@
                 <div id="nodeOpts_${nodeId}" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.4rem;">
                     ${(node.options||[]).map((o,i) => `
                         <div style="display:flex;gap:0.4rem;align-items:center;">
-                            <input value="${escH(o.text)}" placeholder="Текст" onblur="updateNodeOpt('${nodeId}',${i},'text',this.value)"
+                            <input value="${escH(o.text)}" placeholder=window.t('текст') onblur="updateNodeOpt('${nodeId}',${i},'text',this.value)"
                                 style="flex:1;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;">
                             <select onchange="updateNodeOpt('${nodeId}',${i},'nextNode',this.value)"
                                 style="flex:1;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.75rem;background:white;">
@@ -508,7 +508,7 @@
                             <option value="">→ авто</option>${nextOpts}
                         </select>
                     </div>
-                    <div><label style="${lbl()}">${_tg('ЯКЩО НІ →','ЕСЛИ НЕТ →')}</label>
+                    <div><label style="${lbl()}">${window.t('якщоНі')}</label>
                         <select onchange="updateNode('${nodeId}','nextNodeFalse',this.value||null)" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.8rem;background:white;">
                             <option value="">→ авто</option>${nextOpts}
                         </select>
@@ -535,12 +535,12 @@
                 field('Дні') +
                 input(node.days||0, `updateNode('${nodeId}','days',parseInt(this.value)||0)`, '0', 'number') +
                 field('Повідомлення під час очікування (опційно)') +
-                input(node.waitMessage||'', `updateNode('${nodeId}','waitMessage',this.value)`, 'Незабаром зв\'яжемось з вами...');
+                input(node.waitMessage||'', `updateNode('${nodeId}','waitMessage',this.value)`, window.t('незабаромЗв')яжемось з вами...');
         }
 
         if (node.type === 'photo' || node.type === 'receive_photo') {
             specific = field('Текст-запит (надіслати клієнту)') +
-                input(node.text||'', `updateNode('${nodeId}','text',this.value)`, 'Будь ласка, надішліть фото 📷') +
+                input(node.text||'', `updateNode('${nodeId}','text',this.value)`, window.t('будьЛаскаНадішлітьФото')) +
                 field('Зберегти як змінну') +
                 input(node.varName||'photo_url', `updateNode('${nodeId}','varName',this.value)`, 'photo_url');
         }
@@ -558,14 +558,14 @@
                 field('Додаткові вимоги') +
                 input(node.extra||'', `updateNode('${nodeId}','extra',this.value)`, '{{extra}}') +
                 field('Підпис до фото (підтримує {{var}})') +
-                input(node.caption||'✅ Ось ваш концепт дизайну!', `updateNode('${nodeId}','caption',this.value)`, '✅ Концепт готовий') +
+                input(node.caption||window.t('осьВашКонцептДизайну'), `updateNode('${nodeId}','caption',this.value)`, window.t('концептГотовий')) +
                 field('Зберегти URL як змінну') +
                 input(node.saveAs||'generated_image_url', `updateNode('${nodeId}','saveAs',this.value)`, 'generated_image_url');
         }
 
         if (node.type === 'crm_update' || node.type === 'update_deal') {
             specific = field('Поле угоди') +
-                input(node.fieldName||'', `updateNode('${nodeId}','fieldName',this.value)`, 'stage або amount або note') +
+                input(node.fieldName||'', `updateNode('${nodeId}','fieldName',this.value)`, window.t('stageАбоAmountАбо')) +
                 field('Значення (підтримує {{var}})') +
                 input(node.fieldValue||'', `updateNode('${nodeId}','fieldValue',this.value)`, '{{answer}}');
         }
@@ -706,7 +706,7 @@
             const sessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
             container.innerHTML = `
-                <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">${_tg('Активні сесії','Активные сессии')} (${sessions.length})</div>
+                <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">${window.t('активніСесії')} (${sessions.length})</div>
                 ${sessions.length === 0 ? '<div style="text-align:center;padding:2rem;color:#9ca3af;background:white;border-radius:12px;box-shadow:var(--shadow);">Сесій поки немає</div>' :
                 `<div style="display:flex;flex-direction:column;gap:0.5rem;">
                     ${sessions.map(s => {
@@ -1000,7 +1000,7 @@
         const _tooShort = key.length < 20;
         if (_isEmail || _isUrl || _isDomain || _tooShort) {
             const _hint = _isEmail ? 'Це email' : _isUrl ? 'Це URL' : _isDomain ? 'Це домен' : 'Занадто короткий';
-            if (typeof showToast === 'function') showToast('❌ ' + _tg('Невалідний API ключ: ','Невалидный API ключ: ') + _hint + _tg('. Очікується sk-...','. Ожидается sk-...'), 'error');
+            if (typeof showToast === 'function') showToast('❌ ' + window.t('неваліднийApiКлюч') + _hint + window.t('очікуєтьсяSk'), 'error');
             return;
         }
 
@@ -1300,7 +1300,7 @@ window.installFlowTemplate = async function(templateKey) {
     if (!cid) { if (typeof showToast === 'function') showToast('Компанія не визначена', 'error'); return; }
 
     const btn = document.querySelector(`button[onclick="installFlowTemplate('${templateKey}')"]`);
-    if (btn) { btn.disabled = true; btn.textContent = '⏳ Встановлення...'; }
+    if (btn) { btn.disabled = true; btn.textContent = window.t('встановлення'); }
 
     try {
         const db = window.db ? window.db() : firebase.firestore();
@@ -1340,6 +1340,6 @@ window.installFlowTemplate = async function(templateKey) {
 
     } catch (e) {
         if (typeof showToast === 'function') showToast('Помилка встановлення: ' + e.message, 'error');
-        if (btn) { btn.disabled = false; btn.textContent = '⚡ Встановити'; }
+        if (btn) { btn.disabled = false; btn.textContent = window.t('встановити'); }
     }
 };

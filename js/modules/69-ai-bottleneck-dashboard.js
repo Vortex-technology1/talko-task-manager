@@ -210,7 +210,7 @@
                     { action: window.t('switchTeamToStage'), risk: 'Низкий', speed: 'Сразу' },
                 ];
             } else if (s.blockedReason === 'rework' || stageQCs.length > 0) {
-                cause = `QC отклонено. Требуется доработка.`;
+                cause = `${window.t('qcОтклоненоТребуетсяДоработка')}`;
                 solutions = [
                     { action: 'Назначить опытного мастера на доработку', risk: 'Низкий', speed: '1-2 дня' },
                     { action: 'Пересмотреть стандарт — возможно слишком жёсткие требования', risk: 'Средний', speed: window.t('quickWord') },

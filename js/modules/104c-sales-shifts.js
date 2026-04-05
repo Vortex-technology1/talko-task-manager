@@ -165,8 +165,8 @@
         </div>
         <div style="display:flex;gap:.5rem">
           ${isOpen
-            ? `<button onclick="window._salesCloseShift()" style="background:#ef4444;color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-weight:600;font-size:.85rem">Закрити зміну</button>`
-            : `<button onclick="window._salesOpenShift()" style="background:#10b981;color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-weight:600;font-size:.85rem">Відкрити зміну</button>`
+            ? `${window.t('buttonOnclickwindow_salescloseshiftStyle')}`
+            : `${window.t('buttonOnclickwindow_salesopenshiftStyleb')}`
           }
         </div>
       </div>
@@ -184,7 +184,7 @@
             <th style="padding:8px;text-align:center;color:#6b7280;font-weight:600">Статус</th>
           </tr></thead>
           <tbody>
-            ${!_shifts.length ? `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#9ca3af">Немає змін</td></tr>` :
+            ${!_shifts.length ? `${window.t('trtdColspan6Styletextaligncenterpadding2')}` :
               _shifts.map(s => `
                 <tr style="border-bottom:1px solid #f3f4f6;cursor:pointer" onclick="window._salesShiftDetail('${s.id}')">
                   <td style="padding:8px">${s.openedAt?.toDate ? s.openedAt.toDate().toLocaleDateString('uk-UA') : '—'}</td>

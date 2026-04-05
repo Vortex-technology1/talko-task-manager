@@ -1,0 +1,5 @@
+# Requirements for add-translations.py
+
+# Translation library (optional but recommended)
+# Install with: pip install -r requirements.txt
+deep-translator>=1.11.4

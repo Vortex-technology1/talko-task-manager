@@ -1,0 +1,2641 @@
+[
+  {
+    "file": "js\\modules\\100-booking.js",
+    "line": 819,
+    "original": "Завершено",
+    "key": "завершено",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\100-booking.js",
+    "line": 818,
+    "original": "Скасовано",
+    "key": "скасовано",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\100-booking.js",
+    "line": 817,
+    "original": "Підтверджено",
+    "key": "підтверджено",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\100-booking.js",
+    "line": 816,
+    "original": "Очікує",
+    "key": "очікує",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\100-booking.js",
+    "line": 567,
+    "original": "обрано",
+    "key": "обрано",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\100-booking.js",
+    "line": 210,
+    "original": "Видалити",
+    "key": "видалити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\100b-booking-bridge.js",
+    "line": 218,
+    "original": "Сохранение...",
+    "key": "сохранение",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\104e-sales-routes.js",
+    "line": 170,
+    "original": "Чернетка",
+    "key": "чернетка",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\104e-sales-routes.js",
+    "line": 170,
+    "original": "Підтверджено",
+    "key": "підтверджено",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\104e-sales-routes.js",
+    "line": 170,
+    "original": "Рейс закрито",
+    "key": "рейсЗакрито",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\106-sales-orders.js",
+    "line": 865,
+    "original": "Зберегти",
+    "key": "зберегти",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\106-sales-orders.js",
+    "line": 605,
+    "original": "Знижка",
+    "key": "знижка1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\106-sales-orders.js",
+    "line": 605,
+    "original": "застосована",
+    "key": "застосована",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\106-sales-orders.js",
+    "line": 251,
+    "original": "Скасувати",
+    "key": "скасувати1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\106-sales-orders.js",
+    "line": 249,
+    "original": "Редагувати",
+    "key": "редагувати",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\106-sales-orders.js",
+    "line": 247,
+    "original": "Реалізація",
+    "key": "реалізація",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\106-sales-orders.js",
+    "line": 244,
+    "original": "Підтвердити",
+    "key": "підтвердити1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\107-sales-realizations.js",
+    "line": 336,
+    "original": "Провести",
+    "key": "провести",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\107-sales-realizations.js",
+    "line": 99,
+    "original": "Нова реалізація",
+    "key": "новаРеалізація1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\108-sales-debtors.js",
+    "line": 212,
+    "original": "Зберегти",
+    "key": "зберегти",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\109-price-lists.js",
+    "line": 300,
+    "original": "Зберегти",
+    "key": "зберегти",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\109-price-lists.js",
+    "line": 177,
+    "original": "Немає правил — знижки застосовуються вручну",
+    "key": "немаєПравилЗнижкиЗастосовуються",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\28-projects.js",
+    "line": 2147,
+    "original": "Email підрядника",
+    "key": "emailПідрядника",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\28-projects.js",
+    "line": 2114,
+    "original": "<option value=\"member\">Учасник — бачить всі задачі</option><option value=\"assignee\">Виконавець — тільки свої задачі</option><option value=\"viewer\">Спостерігач — тільки читання</option>",
+    "key": "optionValuememberучасникБачитьВсі",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\28-projects.js",
+    "line": 1650,
+    "original": "Без названия",
+    "key": "безНазвания",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\28-projects.js",
+    "line": 568,
+    "original": "if(window.showToast) showToast('Спостерігач — тільки читання', 'info')",
+    "key": "ifwindowshowtoastShowtoastспостерігачТіл",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\28-projects.js",
+    "line": 35,
+    "original": "<span style=\"color:#9ca3af;font-size:0.82rem;\">Нет функций — сначала создайте функции</span>",
+    "key": "spanStylecolor9ca3affontsize082remнетФун",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\32-users-invites.js",
+    "line": 841,
+    "original": "Выбери функции выше, щоб налаштувати ролі",
+    "key": "выбериФункцииВышеЩоб",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\32-users-invites.js",
+    "line": 834,
+    "original": "<option value=\"\">— не вибрано —</option>",
+    "key": "optionValueНеВибрано",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\33-control-dashboard.js",
+    "line": 517,
+    "original": ", text: `Повернуто: ${tk.title}`, person: tk.assigneeName || ",
+    "key": "textПовернутоTktitlePerson",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\33-control-dashboard.js",
+    "line": 514,
+    "original": ", text: `Прострочено ${d}д: ${tk.title}`, person: tk.assigneeName || ",
+    "key": "textПростроченоDдTktitle",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\33-control-dashboard.js",
+    "line": 430,
+    "original": " / план: ",
+    "key": "план",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\33-control-dashboard.js",
+    "line": 406,
+    "original": "% выполненных без возврата",
+    "key": "выполненныхБезВозврата",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\35-helpers.js",
+    "line": 533,
+    "original": "Виконано: ${done}",
+    "key": "виконаноDone",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\35-helpers.js",
+    "line": 532,
+    "original": "Створено: ${created}",
+    "key": "створеноCreated",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\38-google-calendar-integration.js",
+    "line": 71,
+    "original": "/></svg> Токен Google протух. <a href=",
+    "key": "svgТокенGoogleПротух",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\47b-activity-registry.js",
+    "line": 276,
+    "original": "Виконано задач",
+    "key": "виконаноЗадач",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\60-manual-incidents-journal.js",
+    "line": 475,
+    "original": "Чому це сталося",
+    "key": "чомуЦеСталося",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\60-manual-incidents-journal.js",
+    "line": 469,
+    "original": "Який процес або задача не спрацювали",
+    "key": "якийПроцесАбоЗадача",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\60-manual-incidents-journal.js",
+    "line": 402,
+    "original": "<option value=\"\">— не вказано —</option>",
+    "key": "optionValueНеВказано",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\60-manual-incidents-journal.js",
+    "line": 332,
+    "original": "Збій",
+    "key": "збій",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\60-manual-incidents-journal.js",
+    "line": 281,
+    "original": "Назва збою",
+    "key": "назваЗбою",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\60-manual-incidents-journal.js",
+    "line": 151,
+    "original": "Що сталося...",
+    "key": "щоСталося",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\66-statistics.js",
+    "line": 1546,
+    "original": "Значення в дужках — % виконання цілі",
+    "key": "значенняВДужкахВиконання",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\66-statistics.js",
+    "line": 1545,
+    "original": "Легенда трендів: ↑ зростання >5%, ↓ падіння >5%, → стабільно\\n",
+    "key": "легендаТрендівЗростання5",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\67-project-stages.js",
+    "line": 688,
+    "original": ">кг</option><option value=",
+    "key": "кгoptionoptionValue",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\67-project-stages.js",
+    "line": 688,
+    "original": ">л</option><option value=",
+    "key": "лoptionoptionValue",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\67-project-stages.js",
+    "line": 687,
+    "original": ">шт</option><option value=",
+    "key": "штoptionoptionValue",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\67-project-stages.js",
+    "line": 687,
+    "original": ">м²</option><option value=",
+    "key": "м²optionoptionValue",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\68-project-templates-qc.js",
+    "line": 344,
+    "original": "Переробка: ",
+    "key": "переробка",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\68-project-templates-qc.js",
+    "line": 149,
+    "original": "Видалити стандарт",
+    "key": "видалитиСтандарт",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\68-project-templates-qc.js",
+    "line": 137,
+    "original": "Опишіть як виконувати цей стандарт, на що звертати увагу...",
+    "key": "опишітьЯкВиконуватиЦей",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\68-project-templates-qc.js",
+    "line": 125,
+    "original": "Акт підписаний клієнтом&#10;Фото збережені в системі&#10;Дефекти відсутні або зафіксовані",
+    "key": "актПідписанийКлієнтом10фотоЗбережені",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\68-project-templates-qc.js",
+    "line": 111,
+    "original": "Перевірити відповідність кресленню&#10;Сфотографувати результат&#10;Підписати акт у клієнта",
+    "key": "перевіритиВідповідністьКресленню10сфотог",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\68-project-templates-qc.js",
+    "line": 72,
+    "original": "<div style=\"font-size:0.75rem;color:#9ca3af;\">Змінення зберігаються одразу</div>",
+    "key": "divStylefontsize075remcolor9ca3afзміненн",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\69-ai-bottleneck-dashboard.js",
+    "line": 213,
+    "original": "QC отклонено. Требуется доработка.",
+    "key": "qcОтклоненоТребуетсяДоработка",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 569,
+    "original": "Відкрити вкладку",
+    "key": "відкритиВкладку",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 499,
+    "original": "(без назви)",
+    "key": "безНазви",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 475,
+    "original": "(без назви)",
+    "key": "безНазви",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 449,
+    "original": "Залишок",
+    "key": "залишок",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 400,
+    "original": "(без опису)",
+    "key": "безОпису",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 345,
+    "original": "(без назви)",
+    "key": "безНазви",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 322,
+    "original": "Одиниця: ",
+    "key": "одиниця1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 301,
+    "original": "(без назви)",
+    "key": "безНазви",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 285,
+    "original": "(без назви)",
+    "key": "безНазви",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 223,
+    "original": "активних завдань",
+    "key": "активнихЗавдань",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 148,
+    "original": "активних",
+    "key": "активних",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\72-global-search.js",
+    "line": 127,
+    "original": "(без назви)",
+    "key": "безНазви",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 2282,
+    "original": "<span style=\"background:#fee2e2;color:#dc2626;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;\">✗ прострочена</span>",
+    "key": "spanStylebackgroundfee2e2colordc2626padd",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 2279,
+    "original": "<span style=\"background:#dcfce7;color:#16a34a;padding:2px 7px;border-radius:10px;font-size:0.71rem;font-weight:700;\">✓ активна</span>",
+    "key": "spanStylebackgrounddcfce7color16a34apadd",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 2273,
+    "original": "<span style=\"background:#f3f4f6;color:#6b7280;padding:2px 7px;border-radius:10px;font-size:0.71rem;\">без підписки</span>",
+    "key": "spanStylebackgroundf3f4f6color6b7280padd",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 2169,
+    "original": "Порожньо = використовується вбудований дефолт з коду...",
+    "key": "порожньоВикористовуєтьсяВбудованийДефолт",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 1850,
+    "original": "Збереження...",
+    "key": "збереження",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 1736,
+    "original": "<button onclick=\"clearAnthropicKey()\" style=\"padding:0.45rem 0.7rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;\">✕ Очистити</button>",
+    "key": "buttonOnclickclearanthropickeyStylepaddi",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 1717,
+    "original": "<button onclick=\"clearPlatformKey()\" style=\"padding:0.45rem 0.7rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;\">✕ Очистити</button>",
+    "key": "buttonOnclickclearplatformkeyStylepaddin",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 1644,
+    "original": "Назва",
+    "key": "назва",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 1318,
+    "original": "Повідомлення для всіх власників з TG...",
+    "key": "повідомленняДляВсіхВласників",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 1260,
+    "original": "Нотатка для компанії",
+    "key": "нотаткаДляКомпанії",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 509,
+    "original": "Пошук по назві...",
+    "key": "пошукПоНазві",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 474,
+    "original": "Очікує підтвердження",
+    "key": "очікуєПідтвердження",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 474,
+    "original": "Заблоковано",
+    "key": "заблоковано",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\75-superadmin-panel.js",
+    "line": 317,
+    "original": "Оновити",
+    "key": "оновити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\76-coordination.js",
+    "line": 1421,
+    "original": "<div style=\"text-align:center;padding:2rem;color:#9ca3af;\">Аналізую...</div>",
+    "key": "divStyletextaligncenterpadding2remcolor9",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\76-coordination.js",
+    "line": 1262,
+    "original": "Введіть заголовок задачі",
+    "key": "введітьЗаголовокЗадачі",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\76-coordination.js",
+    "line": 101,
+    "original": "Название координации",
+    "key": "названиеКоординации",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\76-coordination.js",
+    "line": 101,
+    "original": "Ежедневная координация команды",
+    "key": "ежедневнаяКоординацияКоманды",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\76-coordination.js",
+    "line": 99,
+    "original": "Координации",
+    "key": "координации",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\76-coordination.js",
+    "line": 99,
+    "original": "Новая координация",
+    "key": "новаяКоординация",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\76-coordination.js",
+    "line": 99,
+    "original": "Координаций ещё нет",
+    "key": "координацийЕщёНет",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 5748,
+    "original": "напр. 500000",
+    "key": "напр500000",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 5689,
+    "original": "Відповідальний при переході на цю стадію",
+    "key": "відповідальнийПриПереходіНа",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 5031,
+    "original": "Програно: ${m.lostDeals}",
+    "key": "програноMlostdeals",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 5030,
+    "original": "Виграно: ${m.wonDeals}",
+    "key": "виграноMwondeals",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 5029,
+    "original": "Нових: ${m.newDeals}",
+    "key": "новихMnewdeals",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 4985,
+    "original": ":_afPeriod+' дн'}",
+    "key": "_afperiodДн",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 4450,
+    "original": "Крок 1",
+    "key": "крок1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 4334,
+    "original": "Крок 1",
+    "key": "крок1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 4263,
+    "original": "угода",
+    "key": "угода3",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 4173,
+    "original": "Конвертувати угоду в проєкт?",
+    "key": "конвертуватиУгодуВПроєкт1",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 1995,
+    "original": "Виставити рахунок для угоди",
+    "key": "виставитиРахунокДляУгоди",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 1989,
+    "original": "Створити задачу в таск-менеджері",
+    "key": "створитиЗадачуВТаскменеджері",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 1982,
+    "original": "Запустити бізнес-процес для угоди",
+    "key": "запуститиБізнеспроцесДляУгоди",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 1975,
+    "original": "Конвертувати угоду в проєкт",
+    "key": "конвертуватиУгодуВПроєкт",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 1126,
+    "original": " вибрано",
+    "key": "вибрано",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77-crm.js",
+    "line": 641,
+    "original": "Экспорт в CSV",
+    "key": "экспортВCsv",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77b-crm-calls.js",
+    "line": 241,
+    "original": "Збереження запису...",
+    "key": "збереженняЗапису",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77b-crm-calls.js",
+    "line": 227,
+    "original": "Збереження...",
+    "key": "збереження",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 625,
+    "original": "Файл більше 10MB",
+    "key": "файлБільше10mb",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 539,
+    "original": "Загрузка...",
+    "key": "загрузка",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 539,
+    "original": "Завантаження...",
+    "key": "завантаження",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 511,
+    "original": "Видалити",
+    "key": "видалити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 507,
+    "original": "Завантажити",
+    "key": "завантажити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 412,
+    "original": "Новий проєкт",
+    "key": "новийПроєкт",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 403,
+    "original": "угоди",
+    "key": "угоди1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 402,
+    "original": "угоди",
+    "key": "угоди1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 305,
+    "original": "Прикріпити PDF/DOC до автозадачі",
+    "key": "прикріпитиPdfdocДоАвтозадачі",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 132,
+    "original": "Назва завдання...",
+    "key": "назваЗавдання",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 120,
+    "original": "<span style=\"font-size:0.62rem;background:#eef2ff;color:#6366f1;padding:1px 5px;border-radius:3px;\">перевірка</span>",
+    "key": "spanStylefontsize062rembackgroundeef2ffc",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\77c-crm-tasks.js",
+    "line": 119,
+    "original": "<span style=\"font-size:0.62rem;background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:3px;\">авто</span>",
+    "key": "spanStylefontsize062rembackgroundf0fdf4c",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\77g-crm-forms.js",
+    "line": 233,
+    "original": "Створити форму",
+    "key": "створитиФорму",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77g-crm-forms.js",
+    "line": 211,
+    "original": "Збереження...",
+    "key": "збереження",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77j-crm-finance-bridge.js",
+    "line": 160,
+    "original": "Збереження...",
+    "key": "збереження",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77j-crm-finance-bridge.js",
+    "line": 160,
+    "original": "Сохранение...",
+    "key": "сохранение",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77j-crm-finance-bridge.js",
+    "line": 109,
+    "original": "— оберіть категорію —",
+    "key": "оберітьКатегорію",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77j-crm-finance-bridge.js",
+    "line": 109,
+    "original": "— выберите категорию —",
+    "key": "выберитеКатегорию",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77j-crm-finance-bridge.js",
+    "line": 100,
+    "original": "— рахунки не налаштовані —",
+    "key": "рахункиНеНалаштовані",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77j-crm-finance-bridge.js",
+    "line": 100,
+    "original": "— счета не настроены —",
+    "key": "счетаНеНастроены",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77k-crm-tasks-bridge.js",
+    "line": 20,
+    "original": "клиентом",
+    "key": "клиентом",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77k-crm-tasks-bridge.js",
+    "line": 19,
+    "original": "клієнтом",
+    "key": "клієнтом",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77l-crm-triggers.js",
+    "line": 482,
+    "original": "Задача",
+    "key": "задача",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77l-crm-triggers.js",
+    "line": 332,
+    "original": "Значення",
+    "key": "значення",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77l-crm-triggers.js",
+    "line": 297,
+    "original": "Назва тегу",
+    "key": "назваТегу",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77l-crm-triggers.js",
+    "line": 293,
+    "original": "Текст повідомлення",
+    "key": "текстПовідомлення1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77l-crm-triggers.js",
+    "line": 287,
+    "original": "Дедлайн (днів)",
+    "key": "дедлайнДнів",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77l-crm-triggers.js",
+    "line": 286,
+    "original": "Назва задачі",
+    "key": "назваЗадачі",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\77m-crm-orders-bridge.js",
+    "line": 263,
+    "original": "Замовлення →",
+    "key": "замовлення1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 1107,
+    "original": "(без нотатки)",
+    "key": "безНотатки",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 960,
+    "original": "Призначити",
+    "key": "призначити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 931,
+    "original": "Консультація: ",
+    "key": "консультація",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 901,
+    "original": "Зберігаю...",
+    "key": "зберігаю",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 879,
+    "original": "Тема консультації...",
+    "key": "темаКонсультації",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 813,
+    "original": "Зберегти",
+    "key": "зберегти",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 741,
+    "original": "Передзвонити: ",
+    "key": "передзвонити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 706,
+    "original": "Збереження...",
+    "key": "збереження",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 527,
+    "original": "що зробити...",
+    "key": "щоЗробити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 328,
+    "original": "Скасувати консультацію",
+    "key": "скасуватиКонсультацію",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 315,
+    "original": "Скасувати консультацію",
+    "key": "скасуватиКонсультацію",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 165,
+    "original": "Что делать сейчас",
+    "key": "чтоДелатьСейчас",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-crm-todo.js",
+    "line": 165,
+    "original": "Що робити зараз",
+    "key": "щоРобитиЗараз",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-landing-pages.js",
+    "line": 612,
+    "original": "Створити",
+    "key": "створити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-landing-pages.js",
+    "line": 424,
+    "original": "Проект",
+    "key": "проект",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-landing-pages.js",
+    "line": 424,
+    "original": "проект",
+    "key": "проект1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-landing-pages.js",
+    "line": 419,
+    "original": "Процес",
+    "key": "процес",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-landing-pages.js",
+    "line": 419,
+    "original": "шаблон процесу",
+    "key": "шаблонПроцесу",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\78-landing-pages.js",
+    "line": 419,
+    "original": "запущено",
+    "key": "запущено",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\79-funnels.js",
+    "line": 222,
+    "original": "Текст кнопки",
+    "key": "текстКнопки",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5568,
+    "original": "[ваша мета]",
+    "key": "вашаМета",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5500,
+    "original": "Провести с командой после изучения урока",
+    "key": "провестиСКомандойПосле",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5500,
+    "original": "Провести із командою після вивчення уроку",
+    "key": "провестиІзКомандоюПісля",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5448,
+    "original": "Опишите как выглядит ваш бизнес через 3-5 лет в деталях...",
+    "key": "опишитеКакВыглядитВаш",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5448,
+    "original": "Опишіть як виглядає ваш бізнес через 3-5 років у деталях...",
+    "key": "опишітьЯкВиглядаєВаш",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5442,
+    "original": "Почему вы создали этот бизнес? Какова ваша миссия?",
+    "key": "почемуВыСоздалиЭтот",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5442,
+    "original": "Чому ви створили цей бізнес? Яка ваша місія?",
+    "key": "чомуВиСтворилиЦей",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5435,
+    "original": "напр. Стать лидером рынка медицинских услуг в регионе к 2027 году",
+    "key": "напрСтатьЛидеромРынка",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5435,
+    "original": "напр. Стати лідером ринку медичних послуг у регіоні до 2027 року",
+    "key": "напрСтатиЛідеромРинку",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5326,
+    "original": "Домашнє завдання: ",
+    "key": "домашнєЗавдання",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning-engine.js",
+    "line": 5321,
+    "original": "Домашнее задание: ",
+    "key": "домашнееЗадание",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 11059,
+    "original": "Домашнє завдання: ",
+    "key": "домашнєЗавдання",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 11058,
+    "original": "Домашнее задание: ",
+    "key": "домашнееЗадание",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5990,
+    "original": "<ol><li>Спросите AI-ассистента и начните работу на платформе</li></ol>",
+    "key": "olliспроситеAiассистентаИНачните",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5989,
+    "original": "<ol><li>Запитайте AI-асистента і розпочніть роботу на платформі</li></ol>",
+    "key": "olliзапитайтеAiасистентаІРозпочніть",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5923,
+    "original": "Спросите AI-ассистента — он объяснит что и как делать",
+    "key": "спроситеAiассистентаОнОбъяснит",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5922,
+    "original": "Запитайте AI-асистента — він пояснить що і як робити",
+    "key": "запитайтеAiасистентаВінПояснить",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5921,
+    "original": "ВНЕДРЕНИЕ НА ПЛАТФОРМЕ",
+    "key": "внедрениеНаПлатформе",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5920,
+    "original": "ВПРОВАДЖЕННЯ НА ПЛАТФОРМІ",
+    "key": "впровадженняНаПлатформі",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5911,
+    "original": "<ol><li>Пройдите диалог с AI-ассистентом статистик</li><li>Для каждой функции определите ЦКП и соответствующую статистику</li><li>Напишите в поле ответа: какая главная статистика вашей компании и почему именно она</li></ol>",
+    "key": "olliпройдитеДиалогСAiассистентом",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5910,
+    "original": "<ol><li>Пройдіть діалог з AI-асистентом статистик</li><li>Для кожної функції визначте ЦКП і відповідну статистику</li><li>Напишіть у полі відповіді: яка головна статистика вашої компанії і чому саме вона</li></ol>",
+    "key": "olliпройдітьДіалогЗAiасистентом",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5661,
+    "original": "Как видеть бизнес в цифрах — и почему неделя важнее месяца",
+    "key": "какВидетьБизнесВ",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5660,
+    "original": "Як бачити бізнес у цифрах — і чому тиждень важливіший за місяць",
+    "key": "якБачитиБізнесУ",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5659,
+    "original": "СИСТЕМА СТАТИСТИК",
+    "key": "системаСтатистик",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5658,
+    "original": "СИСТЕМА СТАТИСТИК",
+    "key": "системаСтатистик",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5649,
+    "original": "<ol><li>Пройдите диалог с AI-коучем функциональной структуры</li><li>Создайте «Функциональную карту бизнеса» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — покажите каждому его функцию</li><li>Напишите в поле ответа: какую «дыру» вы нашли — функцию, за которую сейчас никто не отвечает</li></ol>",
+    "key": "olliпройдитеДиалогСAiкоучем2",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5648,
+    "original": "<ol><li>Пройдіть діалог з AI-коучем функціональної структури</li><li>Створіть «Функціональну карту бізнесу» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — покажіть кожному його функцію і зону відповідальності</li><li>Напишіть у полі відповіді: яку «діру» ви знайшли — функцію, за яку зараз ніхто не відповідає</li></ol>",
+    "key": "olliпройдітьДіалогЗAiкоучем2",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5011,
+    "original": "Как организовать работу так, чтобы бизнес работал без вас",
+    "key": "какОрганизоватьРаботуТак",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5010,
+    "original": "Як організувати роботу так, щоб бізнес працював без вас",
+    "key": "якОрганізуватиРоботуТак",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5009,
+    "original": "ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
+    "key": "функциональнаяСтруктураИРоли",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 5008,
+    "original": "ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
+    "key": "функціональнаСтруктураТаРолі",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 4999,
+    "original": "<ol><li>Пройдите диалог с AI-коучем продукта</li><li>Создайте документ «Политика продукта организации» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — объясните продукт роли каждому</li><li>Напишите в поле ответа: какой главный продукт вашей компании и продукт какой роли оказался сложнее всего сформулировать</li></ol>",
+    "key": "olliпройдитеДиалогСAiкоучем1",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 4998,
+    "original": "<ol><li>Пройдіть діалог з AI-коучем продукту</li><li>Створіть документ «Політика продукту організації» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — поясніть продукт ролі кожному</li><li>Напишіть у полі відповіді: який головний продукт вашої компанії і продукт якої ролі виявився найскладнішим для формулювання</li></ol>",
+    "key": "olliпройдітьДіалогЗAiкоучем1",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 4574,
+    "original": "Что на самом деле производит ваш бизнес — и как сделать это понятным для команды",
+    "key": "чтоНаСамомДеле",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 4573,
+    "original": "Що насправді виробляє ваш бізнес — і як це зробити зрозумілим для команди",
+    "key": "щоНасправдіВиробляєВаш",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 4572,
+    "original": "ПРОДУКТ ОРГАНИЗАЦИИ",
+    "key": "продуктОрганизации",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 4571,
+    "original": "ПРОДУКТ ОРГАНІЗАЦІЇ",
+    "key": "продуктОрганізації",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 4562,
+    "original": "<ol><li>Пройдите диалог с AI-коучем целей</li><li>Создайте документ «Политика целей и замысла компании» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — расскажите цель и замысел, запишите на видео</li><li>Напишите в поле ответа: какую цель вы сформулировали и что было сложнее всего в диалоге с AI</li></ol>",
+    "key": "olliпройдитеДиалогСAiкоучем",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 4561,
+    "original": "<ol><li>Пройдіть діалог з AI-коучем цілей</li><li>Створіть документ «Політика цілей і задуму компанії» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — розкажіть мету і задум, запишіть на відео</li><li>Напишіть у полі відповіді: яку мету ви сформулювали і яка була найскладніша частина діалогу з AI</li></ol>",
+    "key": "olliпройдітьДіалогЗAiкоучем",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3987,
+    "original": "Фундамент, на котором держится управление, мотивация и развитие бизнеса",
+    "key": "фундаментНаКоторомДержится",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3986,
+    "original": "Фундамент, на якому тримається управління, мотивація і розвиток бізнесу",
+    "key": "фундаментНаЯкомуТримається",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3985,
+    "original": "ЦЕЛЬ И ЗАМЫСЕЛ",
+    "key": "цельИЗамысел",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3984,
+    "original": "ЦІЛЬ І ЗАДУМ",
+    "key": "цільІЗадум",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3342,
+    "original": "Фундамент системного бизнеса",
+    "key": "фундаментСистемногоБизнеса",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3341,
+    "original": "Фундамент системного бизнеса",
+    "key": "фундаментСистемногоБизнеса",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3341,
+    "original": "Фундамент системного бізнесу",
+    "key": "фундаментСистемногоБізнесу",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3340,
+    "original": "ЦЕЛЬ, ЗАМЫСЕЛ, ПРОДУКТ ОРГАНИЗАЦИИ. ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
+    "key": "цельЗамыселПродуктОрганизации",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3339,
+    "original": "ЦІЛЬ, ЗАДУМ, ПРОДУКТ ОРГАНІЗАЦІЇ. ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
+    "key": "цільЗадумПродуктОрганізації",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3330,
+    "original": "<ol><li>Пройдите анализ в AI-ассистенте</li><li>Напишите в поле ответа:<br>— в каком слое сейчас ваше узкое место<br>— почему вы так считаете<br>— какую проблему это создаёт в вашем бизнесе</li></ol>",
+    "key": "olliпройдитеАнализВAiассистентеliliнапиш",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 3329,
+    "original": "<ol><li>Пройдіть аналіз в AI-асистенті</li><li>Напишіть у полі відповіді:<br>— в якому шарі зараз ваше вузьке місце<br>— чому ви так вважаєте<br>— яку проблему це створює у вашому бізнесі</li></ol>",
+    "key": "olliпройдітьАналізВAiасистентіliliнапиші",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2941,
+    "original": "5 слоёв, где на самом деле скрывается проблема",
+    "key": "5СлоёвГдеНа",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2940,
+    "original": "5 шарів, де насправді ховається проблема",
+    "key": "5ШарівДеНасправді",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2939,
+    "original": "АНАЛИЗ УЗКОГО МЕСТА БИЗНЕСА",
+    "key": "анализУзкогоМестаБизнеса",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2938,
+    "original": "АНАЛІЗ ВУЗЬКОГО МІСЦЯ БІЗНЕСУ",
+    "key": "аналізВузькогоМісцяБізнесу",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2204,
+    "original": "Как познакомить сотрудников с проектом систематизации",
+    "key": "какПознакомитьСотрудниковС",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2203,
+    "original": "Как познакомить сотрудников с проектом систематизации",
+    "key": "какПознакомитьСотрудниковС",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2203,
+    "original": "Як познайомити співробітників з проектом систематизації",
+    "key": "якПознайомитиСпівробітниківЗ",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2202,
+    "original": "ПОДГОТОВКА КОМАНДЫ К ИЗМЕНЕНИЯМ",
+    "key": "подготовкаКомандыКИзменениям",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2201,
+    "original": "ПІДГОТОВКА КОМАНДИ ДО ЗМІН",
+    "key": "підготовкаКомандиДоЗмін",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2192,
+    "original": "<ol><li>Выберите одну реальную техническую задачу и пройдите её через Технического проводника до готового результата</li><li>Напишите в поле ответа: какую задачу выбрали, что удалось настроить, какой результат получили</li></ol>",
+    "key": "olliвыберитеОднуРеальнуюТехническую",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 2191,
+    "original": "<ol><li>Оберіть одну реальну технічну задачу і пройдіть її через Технічного провідника до готового результату</li><li>Напишіть у полі відповіді: яку задачу обрали, що вдалося налаштувати, який результат отримали</li></ol>",
+    "key": "olliоберітьОднуРеальнуТехнічну",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1849,
+    "original": "AI-инструмент для пошагового внедрения технических решений",
+    "key": "aiинструментДляПошаговогоВнедрения",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1848,
+    "original": "AI-інструмент для покрокового налаштування технічних рішень",
+    "key": "aiінструментДляПокроковогоНалаштування",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1847,
+    "original": "ТЕХНИЧЕСКИЙ ПРОВОДНИК",
+    "key": "техническийПроводник",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1846,
+    "original": "ТЕХНІЧНИЙ ПРОВІДНИК",
+    "key": "технічнийПровідник",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1836,
+    "original": "<ol><li>Протестируйте AI-ассистента на 3–5 реальных ситуациях из вашего бизнеса</li><li>Выберите 1 подчинённого и дайте ему инструмент в работу</li><li>Попросите перед следующим вопросом пройти через AI</li><li>Напишите в поле ответа: для какой роли внедрили и в каких ситуациях будете использовать</li></ol>",
+    "key": "olliпротестируйтеAiассистентаНа35",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1835,
+    "original": "<ol><li>Протестуйте AI-асистента на 3–5 реальних ситуаціях з вашого бізнесу</li><li>Оберіть 1 підлеглого і дайте йому інструмент у роботу</li><li>Попросіть перед наступним питанням пройти через AI</li><li>Напишіть у полі відповіді: для якої ролі впровадили і в яких ситуаціях будете використовувати</li></ol>",
+    "key": "olliпротестуйтеAiасистентаНа35",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1320,
+    "original": "Как перестать быть «пожарным» для собственной команды",
+    "key": "какПерестатьБытьПожарным",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1319,
+    "original": "Как перестать быть «пожарником» для своей команды",
+    "key": "какПерестатьБытьПожарником",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1319,
+    "original": "Як перестати бути «пожежником» для власної команди",
+    "key": "якПерестатиБутиПожежником",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1318,
+    "original": "СИСТЕМА РАДАР",
+    "key": "системаРадар",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1317,
+    "original": "СИСТЕМА РАДАР",
+    "key": "системаРадар",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1307,
+    "original": "<ol><li>Составьте одно реальное распоряжение для сотрудника</li><li>Проверьте, есть ли все 7 элементов</li><li>Отправьте его реальному сотруднику</li><li>Напишите, кому и какое распоряжение вы отправили</li></ol>",
+    "key": "olliсоставьтеОдноРеальноеРаспоряжение",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 1306,
+    "original": "<ol><li>Складіть одне реальне розпорядження для співробітника</li><li>Перевірте, чи є всі 7 елементів</li><li>Відправте його реальному співробітнику</li><li>Напишіть, кому і яке розпорядження ви відправили</li></ol>",
+    "key": "olliскладітьОднеРеальнеРозпорядження",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 980,
+    "original": "Как ставить задачи так, чтобы их выполняли",
+    "key": "какСтавитьЗадачиТак",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 979,
+    "original": "Как ставить задачи так, чтобы их выполняли",
+    "key": "какСтавитьЗадачиТак",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 979,
+    "original": "Як ставити завдання так, щоб їх виконували",
+    "key": "якСтавитиЗавданняТак",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 978,
+    "original": "СИСТЕМА РАСПОРЯЖЕНИЙ",
+    "key": "системаРаспоряжений",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 977,
+    "original": "СИСТЕМА РОЗПОРЯДЖЕНЬ",
+    "key": "системаРозпоряджень",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 964,
+    "original": "Готово",
+    "key": "готово",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 929,
+    "original": "Готово",
+    "key": "готово",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 761,
+    "original": "ChatGPT и Claude AI — ваши рабочие инструменты",
+    "key": "chatgptИClaudeAi",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 760,
+    "original": "ChatGPT та Claude AI — ваші робочі інструменти",
+    "key": "chatgptТаClaudeAi",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 759,
+    "original": "НАСТРОЙКА ДОСТУПА К AI",
+    "key": "настройкаДоступаКAi",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 758,
+    "original": "НАЛАШТУВАННЯ ДОСТУПУ ДО AI",
+    "key": "налаштуванняДоступуДоAi",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 749,
+    "original": "<ol><li>Откройте ассистента терминов</li><li>Пройдите первые 13 терминов</li><li>Подумайте, как они применяются в вашем бизнесе</li></ol>",
+    "key": "olliоткройтеАссистентаТерминовliliпройди",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 748,
+    "original": "<ol><li>Відкрийте асистента термінів</li><li>Пройдіть перші 13 термінів</li><li>Подумайте, як вони застосовуються у вашому бізнесі</li></ol>",
+    "key": "olliвідкрийтеАсистентаТермінівliliпройді",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 450,
+    "original": "Технология обучения + прояснение 13 терминов",
+    "key": "технологияОбученияПрояснение13",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 449,
+    "original": "Технологія навчання + прояснення 13 термінів",
+    "key": "технологіяНавчанняПрояснення13",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 448,
+    "original": "СЛОВАРЬ ТЕРМИНОВ + ЭФФЕКТИВНОЕ ОБУЧЕНИЕ",
+    "key": "словарьТерминовЭффективноеОбучение",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 447,
+    "original": "СЛОВНИК ТЕРМІНІВ + ЕФЕКТИВНЕ НАВЧАННЯ",
+    "key": "словникТермінівЕфективнеНавчання",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 438,
+    "original": "<ol><li>Создайте папку <strong>Систематизация TALKO — Ваше Имя</strong></li><li>Создайте в ней 2 Google Документа и 1 Google Таблицу</li><li>Настройте доступ: <em>Все, у кого есть ссылка — могут комментировать</em></li><li>Вставьте ссылку на папку в поле ниже</li></ol>",
+    "key": "olliсоздайтеПапкуStrongсистематизацияTal",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 437,
+    "original": "<ol><li>Створіть папку <strong>Систематизація TALKO — Ваше Ім'я</strong></li><li>Створіть у ній 2 Google Документи та 1 Google Таблицю</li><li>Налаштуйте доступ: <em>Усі, хто має посилання — можуть коментувати</em></li><li>Вставте посилання на папку у поле нижче</li></ol>",
+    "key": "olliстворітьПапкуStrongсистематизаціяTal",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 163,
+    "original": "Подготовка рабочей среды программы",
+    "key": "подготовкаРабочейСредыПрограммы",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 162,
+    "original": "Подготовка рабочей среды программы",
+    "key": "подготовкаРабочейСредыПрограммы",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 162,
+    "original": "Підготовка робочого середовища програми",
+    "key": "підготовкаРобочогоСередовищаПрограми",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 161,
+    "original": "КАК РАБОТАТЬ С GOOGLE ДИСКОМ",
+    "key": "какРаботатьСGoogle",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 160,
+    "original": "ЯК ПРАЦЮВАТИ З GOOGLE ДИСКОМ",
+    "key": "якПрацюватиЗGoogle",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 151,
+    "original": "<ol><li>Откройте маршрут программы</li><li>Ознакомьтесь с фазами систематизации</li><li>Вернитесь к этому уроку</li></ol>",
+    "key": "olliоткройтеМаршрутПрограммыliliознакомь",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 150,
+    "original": "<ol><li>Відкрийте маршрут програми</li><li>Ознайомтесь із фазами систематизації</li><li>Поверніться до цього уроку</li></ol>",
+    "key": "olliвідкрийтеМаршрутПрограмиliliознайомт",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 16,
+    "original": "Пошаговая карта перехода от хаотичного управления к системному бизнесу",
+    "key": "пошаговаяКартаПереходаОт",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 15,
+    "original": "Покрокова карта переходу від хаотичного управління до системного бізнесу",
+    "key": "покроковаКартаПереходуВід",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 14,
+    "original": "МАРШРУТ ПРОГРАММЫ",
+    "key": "маршрутПрограммы",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\80-learning.js",
+    "line": 13,
+    "original": "МАРШРУТ ПРОГРАМИ",
+    "key": "маршрутПрограми",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\81-bots-flows.js",
+    "line": 1343,
+    "original": "⚡ Встановити",
+    "key": "встановити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\81-bots-flows.js",
+    "line": 1303,
+    "original": "⏳ Встановлення...",
+    "key": "встановлення",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\81-bots-flows.js",
+    "line": 568,
+    "original": "stage або amount або note",
+    "key": "stageАбоAmountАбо",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\81-bots-flows.js",
+    "line": 561,
+    "original": "✅ Ось ваш концепт дизайну!",
+    "key": "осьВашКонцептДизайну",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\81-bots-flows.js",
+    "line": 561,
+    "original": "✅ Концепт готовий",
+    "key": "концептГотовий",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\81-bots-flows.js",
+    "line": 543,
+    "original": "Будь ласка, надішліть фото 📷",
+    "key": "будьЛаскаНадішлітьФото",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\81-bots-flows.js",
+    "line": 538,
+    "original": "Незабаром зв\\",
+    "key": "незабаромЗв",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\81-bots-flows.js",
+    "line": 485,
+    "original": "Текст",
+    "key": "текст",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 1982,
+    "original": "Привіт! 👋 Я AI-асистент. Чим можу допомогти?",
+    "key": "привітЯAiасистентЧим",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 1901,
+    "original": "🔄 Оновити список",
+    "key": "оновитиСписок",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 1868,
+    "original": "⏳ Завантаження...",
+    "key": "завантаження1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 1737,
+    "original": "Параметри (JSON)",
+    "key": "параметриJson",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 1667,
+    "original": "Наприклад: Продовжити",
+    "key": "наприкладПродовжити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 1502,
+    "original": "⏳ Запит...",
+    "key": "запит",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 1320,
+    "original": "Наприклад: Стоматологічна клініка в Києві, 3 лікарі. Ціль — записати людину на безкоштовну консультацію через Telegram бот. Аудиторія — люди 25-45 років.",
+    "key": "наприкладСтоматологічнаКлінікаВ",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 719,
+    "original": "Копіювати вузол (Ctrl+D)",
+    "key": "копіюватиВузолCtrld",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 491,
+    "original": "AI Асистент воронки",
+    "key": "aiАсистентВоронки",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 428,
+    "original": "Без назви",
+    "key": "безНазви1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 306,
+    "original": "Закрити",
+    "key": "закрити",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\82-flow-canvas.js",
+    "line": 227,
+    "original": "Без назви",
+    "key": "безНазви1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\83-bots-contacts.js",
+    "line": 3429,
+    "original": "<span style=\"color:#22c55e;font-weight:600;\"><span style=\"display:inline-flex;align-items:center;vertical-align:middle;line-height:1;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#22c55e\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg></span> Збережено</span>",
+    "key": "spanStylecolor22c55efontweight600spanSty",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\83-bots-contacts.js",
+    "line": 3404,
+    "original": "<span style=\"color:#22c55e;font-weight:600;\"><span style=\"display:inline-flex;align-items:center;vertical-align:middle;line-height:1;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#22c55e\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg></span> Збережено</span>",
+    "key": "spanStylecolor22c55efontweight600spanSty",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\83-bots-contacts.js",
+    "line": 3325,
+    "original": "<div style=\"color:#22c55e;font-weight:600;\"><span style=\"display:inline-flex;align-items:center;vertical-align:middle;line-height:1;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#22c55e\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg></span> Webhook встановлено</div>",
+    "key": "divStylecolor22c55efontweight600spanStyl",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\83-bots-contacts.js",
+    "line": 1377,
+    "original": ">CRM угода</div><div style=",
+    "key": "crmУгодаdivdivStyle",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\85-estimate.js",
+    "line": 1393,
+    "original": "Без назви",
+    "key": "безНазви1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\85-estimate.js",
+    "line": 1379,
+    "original": "Без назви",
+    "key": "безНазви1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\85-estimate.js",
+    "line": 661,
+    "original": "<div style=\"text-align:center;padding:1rem;color:#9ca3af;font-size:0.83rem;\">Додайте матеріали кнопкою вище</div>",
+    "key": "divStyletextaligncenterpadding1remcolor9",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\85-estimate.js",
+    "line": 637,
+    "original": "Товщина (м)",
+    "key": "товщинаМ",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\85-estimate.js",
+    "line": 449,
+    "original": "Без назви",
+    "key": "безНазви1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\86-ai-chat-modal.js",
+    "line": 525,
+    "original": "Ваш коментар...",
+    "key": "вашКоментар",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\86-ai-chat-modal.js",
+    "line": 347,
+    "original": "назва",
+    "key": "назва2",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\86-ai-chat-modal.js",
+    "line": 254,
+    "original": "Додайте свої думки або натисніть продовжити...",
+    "key": "додайтеСвоїДумкиАбо",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\87-ai-diagnostic-agent.js",
+    "line": 548,
+    "original": "Оновити діагностику",
+    "key": "оновитиДіагностику",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\90-sales-assistant.js",
+    "line": 142,
+    "original": "Аналізую дзвінок...",
+    "key": "аналізуюДзвінок",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\94-sites-builder.js",
+    "line": 920,
+    "original": "<!-- Вставте будь-який скрипт, тег або код -->",
+    "key": "вставтеБудьякийСкриптТег",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\94-sites-builder.js",
+    "line": 335,
+    "original": "<!-- Вставте будь-який HTML сюди -->&#10;<section>&#10;  <h2>Заголовок</h2>&#10;  <p>Текст</p>&#10;</section>",
+    "key": "вставтеБудьякийHtmlСюди",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\94-sites-builder.js",
+    "line": 76,
+    "original": "Коротке посилання",
+    "key": "короткеПосилання",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 969,
+    "original": "<span style=\"color:#ef4444;\">ТТН не знайдено або помилка API</span>",
+    "key": "spanStylecoloref4444ттнНеЗнайдено",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 669,
+    "original": "(завантаження... відкрийте вкладку повторно)",
+    "key": "завантаженняВідкрийтеВкладкуПовторно",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 660,
+    "original": "API ключ або пароль",
+    "key": "apiКлючАбоПароль",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 615,
+    "original": "(завантаження... відкрийте вкладку повторно)",
+    "key": "завантаженняВідкрийтеВкладкуПовторно",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 562,
+    "original": "(завантаження... відкрийте вкладку повторно)",
+    "key": "завантаженняВідкрийтеВкладкуПовторно",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 201,
+    "original": ">\\n                Отримати token: <a href=\\",
+    "key": "nОтриматиTokenA",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 201,
+    "original": ">ID чату менеджера (для сповіщень)</label>\\n            <input id=\\",
+    "key": "idЧатуМенеджераДля",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 201,
+    "original": ">\\n                Отримати ID: напишіть боту будь-що — він відповість з вашим Viber ID\\n            </div>\\n        </div>\\n        <div style=\\",
+    "key": "nОтриматиIdНапишіть",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 201,
+    "original": ">Webhook URL (встановіть у Viber)</label>\\n            <div style=\\",
+    "key": "webhookUrlВстановітьУ",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 201,
+    "original": ">\\n                ${I.save} Зберегти\\n            </button>\\n            <button onclick=\\",
+    "key": "nIsaveЗберегтиnButtonn",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\96-integrations.js",
+    "line": 201,
+    "original": ">\\n                ${I.test} Тест\\n            </button>\\n            <button onclick=\\",
+    "key": "nItestТестnButtonn",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 464,
+    "original": "Зберегти",
+    "key": "зберегти",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 464,
+    "original": "Сохранить",
+    "key": "сохранить",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 431,
+    "original": "Збереження...",
+    "key": "збереження",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 423,
+    "original": "Сума",
+    "key": "сума",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 423,
+    "original": "Сумма",
+    "key": "сумма",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 421,
+    "original": "Назва",
+    "key": "назва",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 421,
+    "original": "Название",
+    "key": "название",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 353,
+    "original": "Сума",
+    "key": "сума",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 353,
+    "original": "Сумма",
+    "key": "сумма",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 350,
+    "original": "Назва",
+    "key": "назва",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-balance.js",
+    "line": 350,
+    "original": "Название",
+    "key": "название",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 722,
+    "original": "напр. Сезонний бонус, Велика закупівля",
+    "key": "напрСезоннийБонусВелика",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 722,
+    "original": "напр. Сезонный бонус, Крупная закупка",
+    "key": "напрСезонныйБонусКрупная",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 517,
+    "original": "Зберегти план",
+    "key": "зберегтиПлан",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 517,
+    "original": "Сохранить план",
+    "key": "сохранитьПлан",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 496,
+    "original": "Збереження...",
+    "key": "збереження",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 496,
+    "original": "Сохранение...",
+    "key": "сохранение",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 242,
+    "original": "Залишок",
+    "key": "залишок",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 242,
+    "original": "Остаток",
+    "key": "остаток",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 233,
+    "original": "Витрати факт",
+    "key": "витратиФакт",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 233,
+    "original": "Расходы факт",
+    "key": "расходыФакт",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 227,
+    "original": "Витрати план",
+    "key": "витратиПлан",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 227,
+    "original": "Расходы план",
+    "key": "расходыПлан",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 222,
+    "original": "Дохід факт",
+    "key": "дохідФакт",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 222,
+    "original": "Доход факт",
+    "key": "доходФакт",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 216,
+    "original": "Дохід план",
+    "key": "дохідПлан",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 216,
+    "original": "Доход план",
+    "key": "доходПлан",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 119,
+    "original": "8 месяцев (32 недели)",
+    "key": "8Месяцев32Недели",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 118,
+    "original": "6 месяцев (26 недель)",
+    "key": "6Месяцев26Недель",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance-weekly-plan.js",
+    "line": 117,
+    "original": "5 месяцев (20 недель)",
+    "key": "5Месяцев20Недель",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance.js",
+    "line": 5051,
+    "original": "Наприклад: кровля, бетон, фасад, монтаж...",
+    "key": "наприкладКровляБетонФасад",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance.js",
+    "line": 4862,
+    "original": "\\nСТРАТЕГІЧНИЙ ПРОФІЛЬ КОМПАНІЇ:\\n",
+    "key": "nстратегічнийПрофільКомпаніїn",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\98-finance.js",
+    "line": 4630,
+    "original": "<div style=\"width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pulse 1s infinite;\"></div> AI аналізує дані...",
+    "key": "divStylewidth8pxheight8pxbackground22c55",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\98-finance.js",
+    "line": 3862,
+    "original": "Проект ",
+    "key": "проект",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance.js",
+    "line": 3617,
+    "original": "Експорт P&L в PDF",
+    "key": "експортPlВPdf",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\98-finance.js",
+    "line": 3611,
+    "original": "Експорт P&L в Excel",
+    "key": "експортPlВExcel",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-core.js",
+    "line": 426,
+    "original": "Угода: ",
+    "key": "угода1",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1773,
+    "original": "Всі товари",
+    "key": "всіТовари",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1773,
+    "original": "Все товары",
+    "key": "всеТовары",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1769,
+    "original": "Всі локації",
+    "key": "всіЛокації",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1769,
+    "original": "Все локации",
+    "key": "всеЛокации",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1197,
+    "original": "Авто",
+    "key": "авто",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1195,
+    "original": "Склад",
+    "key": "склад",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1190,
+    "original": "Головний склад",
+    "key": "головнийСклад",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1190,
+    "original": "Главный склад",
+    "key": "главныйСклад",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1122,
+    "original": "ТОВ «Постачальник»",
+    "key": "товПостачальник",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1122,
+    "original": "ООО «Поставщик»",
+    "key": "оооПоставщик",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1070,
+    "original": "Поточний залишок:",
+    "key": "поточнийЗалишок",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1070,
+    "original": "Текущий остаток:",
+    "key": "текущийОстаток",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 1070,
+    "original": "Доступно:",
+    "key": "доступно",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 944,
+    "original": "Додатковий опис...",
+    "key": "додатковийОпис",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 944,
+    "original": "Дополнительное описание...",
+    "key": "дополнительноеОписание",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 889,
+    "original": "Назва товару",
+    "key": "назваТовару",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 889,
+    "original": "Название товара",
+    "key": "названиеТовара",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 854,
+    "original": "<span style=\"font-size:0.7rem;background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;\">за замовч.</span>",
+    "key": "spanStylefontsize07rembackgroundede9feco",
+    "context": "template_literal"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 751,
+    "original": "Неделя",
+    "key": "неделя",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 749,
+    "original": "Весь час",
+    "key": "весьЧас",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 749,
+    "original": "Всё время",
+    "key": "всёВремя",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 745,
+    "original": "Списание",
+    "key": "списание",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 744,
+    "original": "Выдача",
+    "key": "выдача",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 743,
+    "original": "Приход",
+    "key": "приход",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 736,
+    "original": "Пошук...",
+    "key": "пошук",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 736,
+    "original": "Поиск...",
+    "key": "поиск",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 533,
+    "original": "Всі локації",
+    "key": "всіЛокації",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 533,
+    "original": "Все локации",
+    "key": "всеЛокации",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 527,
+    "original": "Пошук товару...",
+    "key": "пошукТовару",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 527,
+    "original": "Поиск товара...",
+    "key": "поискТовара",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 369,
+    "original": "Пошук...",
+    "key": "пошук",
+    "context": "ui_property"
+  },
+  {
+    "file": "js\\modules\\99-warehouse-ui.js",
+    "line": 369,
+    "original": "Поиск...",
+    "key": "поиск",
+    "context": "ui_property"
+  }
+]

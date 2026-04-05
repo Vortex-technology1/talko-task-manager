@@ -529,8 +529,8 @@
                 
                 return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
                     <div style="display:flex;gap:2px;align-items:flex-end;height:80px;">
-                        <div style="width:14px;background:#dbeafe;border-radius:3px 3px 0 0;height:${Math.max(2, (created/maxVal)*70)}px;" title="Створено: ${created}"></div>
-                        <div style="width:14px;background:#22c55e;border-radius:3px 3px 0 0;height:${Math.max(2, (done/maxVal)*70)}px;" title="Виконано: ${done}"></div>
+                        <div style="width:14px;background:#dbeafe;border-radius:3px 3px 0 0;height:${Math.max(2, (created/maxVal)*70)}px;" title=window.t('створеноCreated')></div>
+                        <div style="width:14px;background:#22c55e;border-radius:3px 3px 0 0;height:${Math.max(2, (done/maxVal)*70)}px;" title=window.t('виконаноDone')></div>
                     </div>
                     <div style="font-size:0.65rem;color:${isToday ? '#22c55e' : '#9ca3af'};font-weight:${isToday ? '700' : '400'};">${label}</div>
                     <div style="font-size:0.7rem;color:${isToday ? '#22c55e' : '#6b7280'};font-weight:${isToday ? '700' : '500'};">${dateNum}</div>

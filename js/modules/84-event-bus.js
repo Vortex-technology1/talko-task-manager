@@ -269,7 +269,7 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[ТЗ] Пошив: ${e.payload.clientName || e.payload.dealTitle || ''}`,
-            description: `${_tg('Замовлення підтверджено. Деталізація по кімнатах і вікнах — у вкладці КП картки угоди CRM.','Заказ подтверждён. Детализация по комнатам и окнам — во вкладке КП карточки сделки CRM.')}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `${window.t('замовленняПідтвердженоДеталізаціяПо')}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+3d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId || null,
@@ -287,14 +287,14 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[Закупка]: ${e.payload.clientName || e.payload.dealTitle || ''}`,
-            description: `${_tg('Перевір позиції КП у картці угоди CRM і сформуй список матеріалів для закупівлі.','Проверь позиции КП в карточке сделки CRM и сформируй список материалов для закупки.')}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `${window.t('перевірПозиціїКпУ')}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+2d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId || null,
             assigneeId: e.payload.assignedToId || null,
             priority: 'high',
         }),
-        description: _tg('КП погоджено → задача закупнику на матеріали','КП согласовано → задача закупщику на материалы'),
+        description: window.t('кпПогодженоЗадачаЗакупнику'),
     },
 
     // КП ПОГОДЖЕНО → задача логісту (планування монтажу)
@@ -305,14 +305,14 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[Монтаж]: ${e.payload.clientName || e.payload.dealTitle || ''}`,
-            description: `${_tg('Запланувати виїзд монтажників.','Запланировать выезд монтажников.')}\nАдреса: ${e.payload.objectAddress || _tg('уточни в CRM','уточни в CRM')}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `${window.t('заплануватиВиїздМонтажників')}\nАдреса: ${e.payload.objectAddress || window.t('уточниВCrm')}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+5d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId || null,
             assigneeId: e.payload.assignedToId || null,
             priority: 'normal',
         }),
-        description: _tg('КП погоджено → задача логісту на планування монтажу','КП согласовано → задача логисту на планирование монтажа'),
+        description: window.t('кпПогодженоЗадачаЛогісту'),
     },
 
     // ПЕРЕДОПЛАТА → старт виробництва
@@ -323,12 +323,12 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[Старт] Виробництво: ${e.payload.clientName || ''}`,
-            description: `${_tg('Передоплата','Предоплата')} ${e.payload.prepayment || ''}€ ${_tg('отримана. Починаємо пошив.','получена. Начинаем пошив.')}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `${window.t('передоплата1')} ${e.payload.prepayment || ''}€ ${window.t('отриманаПочинаємоПошив')}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+0d',
             dealId: e.payload.dealId,
             priority: 'high',
         }),
-        description: _tg('Передоплата зафіксована → задача старт виробництва','Предоплата зафиксирована → задача старт производства'),
+        description: window.t('передоплатаЗафіксованаЗадачаСтарт'),
     },
 
     // ЗАМІР ПРИЗНАЧЕНО → Google Calendar (якщо підключено)
@@ -349,8 +349,8 @@ const _defaultAutomationRules = [
                 const startDt = new Date(measurementDate);
                 const endDt   = new Date(startDt.getTime() + 60 * 60 * 1000); // +1 год
                 const calEvent = {
-                    summary:     `${_tg('Замір','Замер')}: ${clientName || ''}`,
-                    description: `${_tg('Замовлення','Заказ')} ID: ${dealId}\n${_tg('Відкрити CRM','Открыть CRM')}: ${window.location.origin}`,
+                    summary:     `${window.t('замір')}: ${clientName || ''}`,
+                    description: `${window.t('замовлення')} ID: ${dealId}\n${window.t('відкритиCrm')}: ${window.location.origin}`,
                     location:    objectAddress || '',
                     start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
                     end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },
@@ -374,7 +374,7 @@ const _defaultAutomationRules = [
                 console.error('[Calendar] measurement_calendar_event error:', e.message);
             }
         },
-        description: _tg('Замір призначено → подія в Google Calendar замірника','Замер назначен → событие в Google Calendar замерщика'),
+        description: window.t('замірПризначеноПодіяВ'),
     },
 
     // МОНТАЖ ПРИЗНАЧЕНО → Google Calendar (якщо підключено)
@@ -394,7 +394,7 @@ const _defaultAutomationRules = [
                 const endDt   = new Date(startDt.getTime() + 2 * 60 * 60 * 1000); // +2 год
                 const calEvent = {
                     summary:     `Монтаж: ${clientName || ''}`,
-                    description: `${_tg('Замовлення','Заказ')} ID: ${dealId}\n${_tg('Відкрити CRM','Открыть CRM')}: ${window.location.origin}`,
+                    description: `${window.t('замовлення')} ID: ${dealId}\n${window.t('відкритиCrm')}: ${window.location.origin}`,
                     location:    objectAddress || '',
                     start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
                     end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },
@@ -417,7 +417,7 @@ const _defaultAutomationRules = [
                 console.error('[Calendar] installation_calendar_event error:', e.message);
             }
         },
-        description: _tg('Монтаж призначено → подія в Google Calendar монтажника','Монтаж назначен → событие в Google Calendar монтажника'),
+        description: window.t('монтажПризначеноПодіяВ'),
     },
 ];
 
@@ -956,7 +956,7 @@ onTalkoEvent(TALKO_EVENTS.MEASUREMENT_ASSIGNED, async (event) => {
     if (!clientPhone) return;
     try {
         // Отримуємо ім'я замірника
-        let measurerName = _tg('наш спеціаліст','наш специалист');
+        let measurerName = window.t('нашСпеціаліст');
         if (measurerId && window.companyRef) {
             const uDoc = await window.companyRef().collection('users').doc(measurerId).get();
             if (uDoc.exists) measurerName = uDoc.data()?.name || uDoc.data()?.email || measurerName;

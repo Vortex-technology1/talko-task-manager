@@ -16,8 +16,8 @@ function _t(ua, ru) {
 const DEFAULT_WON_TASKS = [
   {
     title:    (deal) => _t(
-      `Підписати договір з ${deal.clientName || deal.title || 'клієнтом'}`,
-      `Подписать договор с ${deal.clientName || deal.title || 'клиентом'}`
+      `Підписати договір з ${deal.clientName || deal.title || window.t('клієнтом')}`,
+      `Подписать договор с ${deal.clientName || deal.title || window.t('клиентом')}`
     ),
     priority: 'high',
     daysOffset: 1,

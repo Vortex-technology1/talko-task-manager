@@ -1,0 +1,83 @@
+{
+  "execution_date": "2026-04-05T10:13:55.592322",
+  "script_name": "replace-cyrillic-strings.py",
+  "statistics": {
+    "files_processed": 60,
+    "files_modified": 48,
+    "backups_created": 48,
+    "strings_replaced": 377,
+    "strings_skipped": 142,
+    "new_keys_needed": 0
+  },
+  "skip_reasons": {
+    "no_translation": 74,
+    "css_class_id": 66,
+    "firestore_field": 2
+  },
+  "replacements_by_context": {
+    "ui_property": 325,
+    "template_literal": 52
+  },
+  "top_modified_files": [
+    {
+      "file": "js\\modules\\80-learning.js",
+      "replacements": 93
+    },
+    {
+      "file": "js\\modules\\99-warehouse-ui.js",
+      "replacements": 32
+    },
+    {
+      "file": "js\\modules\\98-finance-weekly-plan.js",
+      "replacements": 19
+    },
+    {
+      "file": "js\\modules\\77-crm.js",
+      "replacements": 16
+    },
+    {
+      "file": "js\\modules\\75-superadmin-panel.js",
+      "replacements": 14
+    },
+    {
+      "file": "js\\modules\\78-crm-todo.js",
+      "replacements": 13
+    },
+    {
+      "file": "js\\modules\\72-global-search.js",
+      "replacements": 12
+    },
+    {
+      "file": "js\\modules\\77c-crm-tasks.js",
+      "replacements": 12
+    },
+    {
+      "file": "js\\modules\\82-flow-canvas.js",
+      "replacements": 12
+    },
+    {
+      "file": "js\\modules\\80-learning-engine.js",
+      "replacements": 11
+    },
+    {
+      "file": "js\\modules\\96-integrations.js",
+      "replacements": 11
+    },
+    {
+      "file": "js\\modules\\98-finance-balance.js",
+      "replacements": 11
+    },
+    {
+      "file": "js\\modules\\81-bots-flows.js",
+      "replacements": 8
+    },
+    {
+      "file": "js\\modules\\106-sales-orders.js",
+      "replacements": 7
+    },
+    {
+      "file": "js\\modules\\76-coordination.js",
+      "replacements": 7
+    }
+  ]
+}

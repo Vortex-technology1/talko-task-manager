@@ -40,7 +40,7 @@
             { id:'bot',     icon:()=>I.bot,     label:(window.t ? window.t('botWord') : 'Бот'),        color:'#8b5cf6', bg:'#f5f3ff', hint:'Telegram бот для обробки ліда' },
             { id:'ai',      icon:()=>I.ai,      label:(window.t ? window.t('aiChain') : 'AI Ланцюг'), color:'#06b6d4', bg:'#ecfeff', hint:'Кроки: питання, AI відповідь, збір даних' },
             { id:'crm',     icon:()=>I.crm,     label:'CRM',       color:'#22c55e', bg:'#f0fdf4', hint:'Автоматичне створення угоди' },
-            { id:'process', icon:()=>I.process, label:(window.t ? window.t('processProject') : 'Процес'), color:'#f59e0b', bg:'#fffbeb', hint:'Процес або проект після воронки' },
+            { id:'process', icon:()=>I.process, label:(window.t ? window.t('processProject') : window.t('процес')), color:'#f59e0b', bg:'#fffbeb', hint:'Процес або проект після воронки' },
         ];
     }
     // Keep COLS as a getter-proxy for backward compat
@@ -416,12 +416,12 @@
             if (f.processTemplateId) {
                 const t = _templates.find(t=>t.id===f.processTemplateId);
                 if (!t) return _mt();
-                return { title:t.name||'Процес', subtitle:'шаблон процесу', stat:f.processLaunched||null, statLabel:'запущено' };
+                return { title:t.name||'Процес', subtitle:window.t('шаблонПроцесу'), stat:f.processLaunched||null, statLabel:window.t('запущено') };
             }
             if (f.linkedProjectId) {
                 const p = (window.projects||[]).find(p=>p.id===f.linkedProjectId);
                 if (!p) return _mt();
-                return { title:p.name||'Проект', subtitle:'проект', stat:null, statLabel:'' };
+                return { title:p.name||window.t(window.t('проект1')), subtitle:'проект', stat:null, statLabel:'' };
             }
             return _mt();
         }
@@ -609,7 +609,7 @@
             document.getElementById('mktNewFunnelOv')?.remove();
             if(window.showToast) showToast('Воронку створено ✓','success');
         } catch(e) {
-            if (btn) { btn.disabled=false; btn.textContent='Створити'; }
+            if (btn) { btn.disabled=false; btn.textContent=window.t('створити'); }
             if(window.showToast) showToast(window.t('errPfx2')+e.message,'error');
         }
     };

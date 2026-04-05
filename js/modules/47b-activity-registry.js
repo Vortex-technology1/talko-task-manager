@@ -273,7 +273,7 @@ function renderAREntries(entries, content) {
                         <th style="text-align:left;padding:0.25rem 0.5rem;font-weight:600;">Людина</th>
                         <th style="text-align:center;padding:0.25rem 0.5rem;font-weight:600;">Дій</th>
                         <th style="text-align:center;padding:0.25rem 0.5rem;font-weight:600;">
-                            <span style="display:inline-flex;align-items:center;gap:2px;" title="Виконано задач">
+                            <span style="display:inline-flex;align-items:center;gap:2px;" title=window.t('виконаноЗадач')>
                                 <span style="width:12px;height:12px;color:#16a34a;">${AR_ICONS.task_done}</span>
                             </span>
                         </th>

@@ -1542,8 +1542,8 @@
         const contextText =
             `ПОТОЧНИЙ СТАН (${formatPeriodLabel ? formatPeriodLabel(currentPk) : currentPk}):\n${currentSummary}\n\n` +
             `ДИНАМІКА ЗА ВСІМА ПЕРІОДАМИ:\n${contextParts.join('\n')}\n\n` +
-            `Легенда трендів: ↑ зростання >5%, ↓ падіння >5%, → стабільно\n` +
-            `Значення в дужках — % виконання цілі`;
+            `${window.t('легендаТрендівЗростання5')}` +
+            `${window.t('значенняВДужкахВиконання')}`;
 
         const initialMessage =
             'Проведи повний аналіз всіх метрик за всіма доступними періодами. ' +

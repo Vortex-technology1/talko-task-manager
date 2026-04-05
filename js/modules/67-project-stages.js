@@ -684,8 +684,8 @@
                 <div>
                     <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Одиниця</label>
                     <select id="mqUnit" class="form-select" style="border-radius:12px;">
-                        <option value="шт">шт</option><option value="м2">м²</option><option value="м">м</option>
-                        <option value="кг">кг</option><option value="л">л</option><option value="уп">уп</option>
+                        <option value="штwindow.t('штoptionoptionValue')м2window.t('м²optionoptionValue')м">м</option>
+                        <option value="кгwindow.t('кгoptionoptionValue')лwindow.t('лoptionoptionValue')уп">уп</option>
                     </select>
                 </div>
             </div>
