@@ -2300,7 +2300,7 @@ document.addEventListener('mousedown', function(e) {
                             <label class="form-label"><i data-lucide="list-checks" class="icon icon-sm"></i> <span >Чеклист</span></label>
                             <div id="taskChecklist" style="margin-top:0.5rem;"></div>
                             <button type="button" onclick="addChecklistItem()" style="margin-top:0.5rem;padding:0.4rem 0.75rem;background:#f9fafb;border:1px dashed #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;color:#6b7280;display:flex;align-items:center;gap:0.4rem;">
-                                <i data-lucide="plus" class="icon icon-sm"></i> <span >Додати пункт</span>
+                                <i data-lucide="plus" class="icon icon-sm"></i> <span data-i18n="addChecklistItem">Додати пункт</span>
                             </button>
                         </div>
                         
@@ -4033,10 +4033,10 @@ document.addEventListener('mousedown', function(e) {
             <!-- Description -->
             <div>
                 <label style="font-size:0.8rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.4rem;">
-                    Описание
-                    <span style="font-weight:400;color:#9ca3af;margin-left:4px;">— отображается при наведении на название в таблице</span>
+                    <span data-i18n="description">Опис</span>
+                    <span style="font-weight:400;color:#9ca3af;margin-left:4px;" data-i18n="metricDescriptionHint">— відображається при наведенні на назву в таблиці</span>
                 </label>
-                <textarea id="metricDescription" placeholder="Что измеряет эта метрика? Как рассчитать? Какой результат считается хорошим?" rows="2"
+                <textarea id="metricDescription" placeholder="Що вимірює ця метрика? Як розрахувати? Який результат вважається хорошим?" data-i18n-placeholder="metricDescPh" rows="2"
                     style="width:100%;box-sizing:border-box;padding:0.65rem 1rem;border:1.5px solid #e5e7eb;border-radius:14px;font-size:0.85rem;outline:none;background:#fff;resize:vertical;font-family:inherit;"
                     onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
             </div>
