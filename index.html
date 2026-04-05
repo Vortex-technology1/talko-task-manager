@@ -2168,7 +2168,7 @@ document.addEventListener('mousedown', function(e) {
                             <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#06b6d4" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#06b6d4;border:3px solid transparent;"></span></label>
                         </div>
                     </div>
-                    <div class="form-group"><label class="form-label" >Опис</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту" data-i18n-placeholder="projectDescPh"></textarea></div>
+                    <div class="form-group"><label class="form-label" data-i18n="description">Опис</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту" data-i18n-placeholder="projectDescPh"></textarea></div>
                     <!-- Функції проекту -->
                     <div class="form-group">
                         <label class="form-label"><i data-lucide="settings" class="icon icon-sm"></i> <span data-i18n="projectFunctionsLabel">Функції задіяні в проекті</span></label>
@@ -2287,7 +2287,7 @@ document.addEventListener('mousedown', function(e) {
                         
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" >Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width" id="taskAiHelpRow" style="display:none;">
                             <a id="taskAiHelpLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.85rem;color:#16a34a;text-decoration:none;font-weight:500;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -2297,7 +2297,7 @@ document.addEventListener('mousedown', function(e) {
                         
                         <!-- FEAT-001: Чеклист -->
                         <div class="form-group full-width">
-                            <label class="form-label"><i data-lucide="list-checks" class="icon icon-sm"></i> <span >Чеклист</span></label>
+                            <label class="form-label"><i data-lucide="list-checks" class="icon icon-sm"></i> <span data-i18n="checklist">Чеклист</span></label>
                             <div id="taskChecklist" style="margin-top:0.5rem;"></div>
                             <button type="button" onclick="addChecklistItem()" style="margin-top:0.5rem;padding:0.4rem 0.75rem;background:#f9fafb;border:1px dashed #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;color:#6b7280;display:flex;align-items:center;gap:0.4rem;">
                                 <i data-lucide="plus" class="icon icon-sm"></i> <span data-i18n="addChecklistItem">Додати пункт</span>
@@ -2498,7 +2498,7 @@ document.addEventListener('mousedown', function(e) {
                     <div class="form-grid">
                         <div class="form-group"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="functionName" class="form-input" required aria-required="true"></div>
                         <div class="form-group"><label class="form-label"><i data-lucide="crown" class="icon icon-sm"></i> <span data-i18n="head">Головний *</span></label><select id="functionHead" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
-                        <div class="form-group full-width"><label class="form-label" >Опис</label><textarea id="functionDescription" class="form-textarea"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="functionDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="target" class="icon icon-sm"></i> <span data-i18n="fnCkpLabel">ЦКП — Цінний кінцевий продукт *</span></label><textarea id="functionResult" class="form-textarea" rows="2" data-i18n-placeholder="fnCkpPlaceholder" placeholder="Що є результатом роботи цієї функції? (1-2 речення)" required></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="users" class="icon icon-sm"></i> <span data-i18n="members">Учасники</span></label><div id="functionAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;"></div></div>
                         <div class="form-group"><label class="form-label"><i data-lucide="message-circle" class="icon icon-sm"></i> <span data-i18n="fnContacts">Контакти</span></label><input type="text" id="functionContacts" class="form-input" data-i18n-placeholder="fnContactsPlaceholder" placeholder="Telegram, телефон..."></div>
@@ -2755,7 +2755,7 @@ document.addEventListener('mousedown', function(e) {
                         
                         <!-- Чеклист для регулярных -->
                         <div class="form-group full-width">
-                            <label class="form-label"><i data-lucide="check-square" class="icon icon-sm"></i> Чеклист</label>
+                            <label class="form-label"><i data-lucide="check-square" class="icon icon-sm"></i> <span data-i18n="checklist">Чеклист</span></label>
                             <div id="regularTaskChecklist" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.5rem;"></div>
                             <div style="display:flex;gap:0.5rem;">
                                 <input type="text" id="regularChecklistInput" class="form-input" placeholder="Новий пункт..." data-i18n-placeholder="newChecklistItem" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addRegularChecklistItem();}">
