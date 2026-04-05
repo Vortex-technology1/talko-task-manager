@@ -2210,8 +2210,8 @@ document.addEventListener('mousedown', function(e) {
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="taskModalTitle" data-i18n="newTask">Нове завдання</h2>
-                <button id="duplicateTaskBtn" onclick="if(window.currentEditingId||editingId){duplicateTask(window.currentEditingId||editingId);}" title="Копировать задачу" style="display:none;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:0.3rem 0.65rem;cursor:pointer;font-size:0.78rem;color:rgba(255,255,255,0.85);align-items:center;gap:0.3rem;flex-shrink:0;transition:background 0.15s;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копировать
+                <button id="duplicateTaskBtn" onclick="if(window.currentEditingId||editingId){duplicateTask(window.currentEditingId||editingId);}" title="Копіювати завдання" style="display:none;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:0.3rem 0.65rem;cursor:pointer;font-size:0.78rem;color:rgba(255,255,255,0.85);align-items:center;gap:0.3rem;flex-shrink:0;transition:background 0.15s;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> <span data-i18n="copy">Копіювати</span>
                 </button>
                 <button class="close" onclick="closeModal('taskModal')" aria-label="Закрити діалог">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -2221,11 +2221,11 @@ document.addEventListener('mousedown', function(e) {
                 <form id="taskForm" onsubmit="saveTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="taskTitle" class="form-input" required aria-required="true"></div>
-                        <div class="form-group"><label class="form-label">Функция</label><select id="taskFunction" class="form-select" onchange="triggerSmartAssign(); filterTaskAssigneesByFunction()"><option value="">Без функції</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="function">Функція</label><select id="taskFunction" class="form-select" onchange="triggerSmartAssign(); filterTaskAssigneesByFunction()"><option value="">Без функції</option></select></div>
                         <div id="smartAssignHint" style="display:none;margin-top:-0.5rem;margin-bottom:0.25rem;">
                           <div id="smartAssignResult"></div>
                         </div>
-                        <div class="form-group"><label class="form-label">Проект</label><select id="taskProject" class="form-select" onchange="onTaskProjectChange()"><option value="">Без проекта</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="project">Проект</label><select id="taskProject" class="form-select" onchange="onTaskProjectChange()"><option value="" data-i18n-content="noProject">Без проекту</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="stageLabel">Етап</label><select id="taskStage" class="form-select"><option value="" data-i18n-content="noStage">Без етапу</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець *</label><select id="taskAssignee" class="form-select" required onchange="autoFillFunctionFromAssignee()"><option value="" data-i18n="select">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="deadlineDate">Дедлайн (дата) *</label><input type="date" id="taskDeadlineDate" class="form-input" required aria-required="true"></div>
@@ -2686,7 +2686,7 @@ document.addEventListener('mousedown', function(e) {
                 <form id="regularTaskForm" onsubmit="saveRegularTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required aria-required="true"></div>
-                        <div class="form-group"><label class="form-label" >Функция *</label><select id="regularTaskFunction" class="form-select" required><option value="">Оберіть</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="functionRequired">Функція *</label><select id="regularTaskFunction" class="form-select" required><option value="">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label">Исполнитель</label><select id="regularTaskAssignee" class="form-select"><option value="">Из функции (авто)</option></select></div>
                         <div class="form-group"><label class="form-label" >Периодичность *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="daily">Ежедневно</option><option value="weekly">Еженедельно</option><option value="monthly">Ежемесячно</option><option value="quarterly">Ежеквартально</option></select></div>
                         <div class="form-group" id="skipWeekendsGroup" style="display:none;">
