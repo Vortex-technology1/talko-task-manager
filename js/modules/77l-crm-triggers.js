@@ -1,21 +1,3 @@
-
-// Helper: crm trigger notify з auth токеном (обов'язковий)
-async function _sendTriggerNotify(payload) {
-    try {
-        const user = firebase.auth().currentUser;
-        if (!user) { console.warn('[_sendTriggerNotify] not authenticated'); return; }
-        const _tok = await user.getIdToken().catch(() => null);
-        if (!_tok) { console.warn('[_sendTriggerNotify] getIdToken failed'); return; }
-        return fetch('/api/crm-trigger-notify', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + _tok,
-            },
-            body: JSON.stringify(payload),
-        }).catch(() => {});
-    } catch(_e) { console.warn('[_sendTriggerNotify]', _e.message); }
-}
 // ============================================================
 // js/modules/77l-crm-triggers.js — CRM Тригери
 // "ЯКЩО подія + умови → ТО дії"
@@ -24,19 +6,12 @@ async function _sendTriggerNotify(payload) {
 (function () {
 
     const EVENT_LABELS = {
-        stage_changed:        { uk: 'Угода перейшла в стадію',       ru: 'Сделка перешла в стадию' },
-        deal_created:         { uk: 'Нова угода створена',            ru: 'Новая сделка создана' },
-        deal_won:             { uk: 'Угода виграна',                  ru: 'Сделка выиграна' },
-        deal_lost:            { uk: 'Угода програна',                 ru: 'Сделка проиграна' },
-        deal_stale:           { uk: 'Угода не рухалась N днів',       ru: 'Сделка не двигалась N дней' },
-        amount_threshold:     { uk: 'Сума перевищила поріг',          ru: 'Сумма превысила порог' },
-        bot_flow_completed:   { uk: 'Клієнт пройшов флоу бота',       ru: 'Клиент прошёл флоу бота' },
-        deal_field_updated:   { uk: 'Поле угоди змінилось',           ru: 'Поле сделки изменилось' },
-        task_completed:       { uk: 'Задача по угоді виконана',       ru: 'Задача по сделке выполнена' },
-        invoice_paid:         { uk: 'Рахунок оплачено',               ru: 'Счёт оплачен' },
-        call_received:        { uk: 'Отримано дзвінок',               ru: 'Получен звонок' },
-        call_missed:          { uk: 'Пропущений дзвінок',             ru: 'Пропущенный звонок' },
-        form_submitted:       { uk: 'Заявка з сайту / форми',         ru: 'Заявка с сайта / формы' },
+        stage_changed:    { uk: 'Угода перейшла в стадію', ru: 'Сделка перешла в стадию' },
+        deal_created:     { uk: 'Нова угода створена',      ru: 'Новая сделка создана' },
+        deal_won:         { uk: 'Угода виграна',             ru: 'Сделка выиграна' },
+        deal_lost:        { uk: 'Угода програна',            ru: 'Сделка проиграна' },
+        deal_stale:       { uk: 'Угода не рухалась N днів',  ru: 'Сделка не двигалась N дней' },
+        amount_threshold: { uk: 'Сума перевищила поріг',     ru: 'Сумма превысила порог' },
     };
 
     const FIELD_LABELS = {
@@ -55,16 +30,11 @@ async function _sendTriggerNotify(payload) {
     };
 
     const ACTION_LABELS = {
-        create_task:         { uk: 'Створити задачу',              ru: 'Создать задачу' },
-        send_telegram:       { uk: 'Telegram-повідомлення',        ru: 'Telegram-уведомление' },
-        change_assignee:     { uk: 'Змінити відповідального',      ru: 'Изменить ответственного' },
-        add_tag:             { uk: 'Додати тег',                   ru: 'Добавить тег' },
-        move_stage:          { uk: 'Перемістити в стадію',         ru: 'Переместить в стадию' },
-        send_bot_message:    { uk: 'Надіслати повідомлення клієнту', ru: 'Отправить сообщение клиенту' },
-        create_order:        { uk: 'Створити замовлення',           ru: 'Создать заказ' },
-        update_deal_field:   { uk: 'Оновити поле угоди',           ru: 'Обновить поле сделки' },
-        call_webhook:        { uk: 'Викликати Webhook',             ru: 'Вызвать Webhook' },
-        send_viber:          { uk: 'Viber-повідомлення',            ru: 'Viber-уведомление' },
+        create_task:     { uk: 'Створити задачу',          ru: 'Создать задачу' },
+        send_telegram:   { uk: 'Telegram-повідомлення',    ru: 'Telegram-уведомление' },
+        change_assignee: { uk: 'Змінити відповідального',  ru: 'Изменить ответственного' },
+        add_tag:         { uk: 'Додати тег',               ru: 'Добавить тег' },
+        move_stage:      { uk: 'Перемістити в стадію',     ru: 'Переместить в стадию' },
     };
 
     function _tl(obj) {
@@ -473,42 +443,18 @@ async function _sendTriggerNotify(payload) {
                 if (action.type === 'create_task') {
                     const dl = new Date();
                     dl.setDate(dl.getDate() + (action.dueDays || 1));
-                    const deadlineDate = dl.toISOString().split('T')[0];
-                    const today = new Date().toISOString().split('T')[0];
-                    const assigneeId = deal.assigneeId || uid;
-                    const users = window.companyUsers || window.users || [];
-                    const assigneeUser = users.find(u => u.id === assigneeId);
-                    await window.companyRef().collection(window.DB_COLS?.TASKS || 'tasks').add({
-                        title:        (action.title || 'Задача') + (deal.clientName ? ' — ' + deal.clientName : ''),
-                        status:       'new',
-                        priority:     action.priority || 'medium',
-                        assigneeId,
-                        assigneeName: assigneeUser ? (assigneeUser.name || assigneeUser.email || '') : (deal.assigneeName || ''),
-                        creatorId:    uid,
-                        creatorName:  window.currentUserData?.name || window.currentUser?.email || '',
-                        deadlineDate,
-                        deadlineTime: '18:00',
-                        deadline:     deadlineDate + 'T18:00',
-                        createdDate:  today,
-                        description:  action.description || '',
-                        function:     '',
-                        projectId:    '',
-                        stageId:      '',
-                        pinned:       false,
-                        requireReview:    false,
-                        coExecutorIds:    [],
-                        observerIds:      [],
-                        notifyOnComplete: [],
-                        checklist:        [],
-                        autoCreated:  true,
-                        source:       'crm_trigger',
-                        triggerName:  trigger.name || '',
-                        // CRM-зв'язок
-                        crmDealId:    deal.id,
-                        dealId:       deal.id,
-                        clientName:   deal.clientName || '',
-                        createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
-                        updatedAt:    firebase.firestore.FieldValue.serverTimestamp(),
+                    await window.companyRef().collection('tasks').add({
+                        title: (action.title || 'Задача') + (deal.clientName ? ' — ' + deal.clientName : ''),
+                        dealId: deal.id,
+                        clientName: deal.clientName || '',
+                        assigneeId: deal.assigneeId || uid,
+                        assigneeName: deal.assigneeName || '',
+                        status: 'new',
+                        priority: 'medium',
+                        deadlineDate: dl.toISOString().split('T')[0],
+                        triggerName: trigger.name,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        creatorId: uid,
                     });
                 } else if (action.type === 'change_assignee' && action.userId) {
                     const users = window.companyUsers || window.users || [];
@@ -535,54 +481,13 @@ async function _sendTriggerNotify(payload) {
                             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                         });
                 } else if (action.type === 'send_telegram') {
+                    // Telegram через _worker.js / firebase functions
                     const msg = (action.message || trigger.name) + '\n' +
                         (deal.clientName ? '👤 ' + deal.clientName : '') +
                         (deal.amount ? '\n💰 ' + Number(deal.amount).toLocaleString() + ' грн' : '');
                     if (typeof window._sendTriggerTelegram === 'function') {
                         window._sendTriggerTelegram(action.to, msg, deal);
                     }
-                } else if (action.type === 'send_bot_message' && deal.botChatId) {
-                    // Надіслати повідомлення клієнту через бота (Telegram або Viber)
-                    const msgText = _interpolateTrigger(action.message || trigger.name, deal);
-                    await _sendTriggerNotify({
-                            cid:     window.currentCompanyId,
-                            chatId:  deal.botChatId,
-                            channel: deal.botChannel || 'telegram',
-                            message: msgText,
-                        });
-                } else if (action.type === 'create_order') {
-                    // Створити замовлення з угоди
-                    if (typeof window._crmCreateOrderFromDeal === 'function') {
-                        await window._crmCreateOrderFromDeal(deal.id).catch(() => {});
-                    }
-                } else if (action.type === 'update_deal_field' && action.field) {
-                    // Оновити конкретне поле угоди
-                    const updateObj = {};
-                    updateObj[action.field] = action.value || '';
-                    updateObj.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(deal.id).update(updateObj);
-                } else if (action.type === 'call_webhook' && action.webhookUrl) {
-                    // Викликати зовнішній webhook
-                    const payload = {
-                        event:      trigger.name,
-                        deal:       { id: deal.id, title: deal.title, clientName: deal.clientName, amount: deal.amount, stage: deal.stage },
-                        companyId:  window.currentCompanyId,
-                        triggeredAt: new Date().toISOString(),
-                    };
-                    await fetch(action.webhookUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload),
-                    }).catch(() => {});
-                } else if (action.type === 'send_viber' && deal.botChatId) {
-                    // Надіслати через Viber
-                    const vMsg = _interpolateTrigger(action.message || trigger.name, deal);
-                    await _sendTriggerNotify({
-                            cid:     window.currentCompanyId,
-                            chatId:  deal.botChatId,
-                            channel: 'viber',
-                            message: vMsg,
-                        });
                 }
             } catch(actErr) {
                 console.warn('[crmRunTriggers] action failed:', action.type, actErr.message);
@@ -599,114 +504,26 @@ async function _sendTriggerNotify(payload) {
         if (newStage === 'lost') await window.crmRunTriggers(deal, 'deal_lost');
     });
 
-    // ── Інтерполяція змінних {{field}} в повідомленнях тригерів ──
-    function _interpolateTrigger(text, deal) {
-        if (!text || !deal) return text || '';
-        return text.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-            return deal[key] !== undefined ? String(deal[key]) : match;
-        });
-    }
-
     // ── Telegram-повідомлення з тригерів ───────────────────
+    // to: 'owner' | 'responsible' | конкретний chatId
     window._sendTriggerTelegram = async function(to, message, deal) {
         try {
             const cid = window.currentCompanyId;
             if (!cid) return;
-            await _sendTriggerNotify({
+            await fetch('/api/crm-trigger-notify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     companyId: cid,
                     to: to || 'owner',
                     message,
                     dealId:    deal?.id    || null,
                     dealTitle: deal?.title || deal?.clientName || null,
-                });
+                }),
+            });
         } catch(e) {
             console.warn('[_sendTriggerTelegram]', e.message);
         }
     };
-
-    // ══════════════════════════════════════════════════════
-    // З'ЄДНАННЯ EVENT BUS → CRM ТРИГЕРИ
-    // Коли будь-яка подія в системі — автоматично перевіряємо тригери
-    // ══════════════════════════════════════════════════════
-    function _waitAndBindEventBus() {
-        if (typeof window.onTalkoEvent !== 'function') {
-            setTimeout(_waitAndBindEventBus, 500);
-            return;
-        }
-
-        // bot_flow_completed → тригери
-        window.onTalkoEvent('bot.flow_completed', async (event) => {
-            if (!event.dealId) return;
-            try {
-                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
-                if (snap.exists) {
-                    await window.crmRunTriggers({ id: snap.id, ...snap.data() }, 'bot_flow_completed', event);
-                }
-            } catch(e) { console.warn('[trigger:bot_flow_completed]', e.message); }
-        });
-
-        // invoice.paid → тригери + deal_won
-        window.onTalkoEvent('invoice.paid', async (event) => {
-            if (!event.dealId) return;
-            try {
-                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
-                if (snap.exists) {
-                    const deal = { id: snap.id, ...snap.data() };
-                    await window.crmRunTriggers(deal, 'invoice_paid', event);
-                    // Переводимо в won через публічний API — щоб спрацювали всі хуки:
-                    // history, crmAutoTasksOnStageChange, whDealWon, crmTriggerHooks
-                    if (deal.stage !== 'won') {
-                        if (typeof window.crmMoveToStage === 'function') {
-                            await window.crmMoveToStage(deal.id, 'won');
-                        } else {
-                            // Fallback — прямий update якщо функція не доступна
-                            await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId)
-                                .update({ stage: 'won', wonAt: firebase.firestore.FieldValue.serverTimestamp(),
-                                          updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-                            await window.crmRunTriggers({ ...deal, stage: 'won' }, 'deal_won', event);
-                        }
-                    }
-                }
-            } catch(e) { console.warn('[trigger:invoice_paid]', e.message); }
-        });
-
-        // form.submitted → тригери deal_created
-        window.onTalkoEvent('form.submitted', async (event) => {
-            if (!event.dealId) return;
-            try {
-                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
-                if (snap.exists) {
-                    await window.crmRunTriggers({ id: snap.id, ...snap.data() }, 'form_submitted', event);
-                }
-            } catch(e) { console.warn('[trigger:form_submitted]', e.message); }
-        });
-
-        // task.completed → тригери по пов'язаній угоді
-        window.onTalkoEvent('task.completed', async (event) => {
-            if (!event.dealId) return;
-            try {
-                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
-                if (snap.exists) {
-                    await window.crmRunTriggers({ id: snap.id, ...snap.data() }, 'task_completed', event);
-                }
-            } catch(e) { console.warn('[trigger:task_completed]', e.message); }
-        });
-
-        // deal.created → тригери
-        window.onTalkoEvent('deal.created', async (event) => {
-            if (!event.dealId) return;
-            try {
-                const snap = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(event.dealId).get();
-                if (snap.exists) {
-                    await window.crmRunTriggers({ id: snap.id, ...snap.data() }, 'deal_created', event);
-                }
-            } catch(e) { console.warn('[trigger:deal_created]', e.message); }
-        });
-
-        console.log('[CRM Triggers] Event Bus підключено ✓');
-    }
-
-    // Запускаємо прив'язку після ініціалізації
-    setTimeout(_waitAndBindEventBus, 1000);
 
 })();

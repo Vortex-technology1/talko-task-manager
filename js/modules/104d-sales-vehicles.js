@@ -201,7 +201,7 @@
             <button onclick="window._salesWOPickVehicle()" class="sl-btn-sm" style="background:#eef2ff;color:#6366f1">Змінити авто</button>
           </div>
           <div id="slWOVehicleInfo">
-            ${vehicle ? renderVehicleInfo(vehicle, order?.vehicleInfo) : `''`}
+            ${vehicle ? renderVehicleInfo(vehicle, order?.vehicleInfo) : `<div style="color:#9ca3af;font-size:.85rem">Авто не вибрано — <button onclick="window._salesWOPickVehicle()" style="background:none;border:none;color:#6366f1;cursor:pointer;text-decoration:underline;font-size:.85rem">вибрати</button> або <button onclick="window._salesOpenVehicleCard(null)" style="background:none;border:none;color:#6366f1;cursor:pointer;text-decoration:underline;font-size:.85rem">додати нове</button></div>`}
           </div>
           <input type="hidden" id="slWOVehicleId" value="${esc(vId)}">
           <div style="margin-top:.75rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
@@ -280,13 +280,13 @@
           <div>
             <label class="sl-label">Статус</label>
             <select id="slWOStatus" class="sl-inp">
-              ${[['draft',''],['sent',''],['paid',''],['closed','']].map(([v,l])=>`<option value="${v}" ${(order?.status||'draft')===v?'selected':''}>${l}</option>`).join('')}
+              ${[['draft','Чернетка'],['sent','Відправлено клієнту'],['paid','Оплачено'],['closed','Закрито']].map(([v,l])=>`<option value="${v}" ${(order?.status||'draft')===v?'selected':''}>${l}</option>`).join('')}
             </select>
           </div>
           <div>
             <label class="sl-label">Спосіб оплати</label>
             <select id="slWOPayMethod" class="sl-inp">
-              ${[['cash',''],['terminal',''],['transfer','']].map(([v,l])=>`<option value="${v}" ${(order?.paymentMethod||'cash')===v?'selected':''}>${l}</option>`).join('')}
+              ${[['cash','💵 Готівка'],['terminal','💳 Термінал'],['transfer','📱 Переказ']].map(([v,l])=>`<option value="${v}" ${(order?.paymentMethod||'cash')===v?'selected':''}>${l}</option>`).join('')}
             </select>
           </div>
         </div>
@@ -469,7 +469,7 @@
     const cont = document.getElementById(containerId);
     if (!cont) return;
     if (!items.length) {
-      cont.innerHTML = `${window.t('divStylecolor9ca3affontsize8rempadding6p')}`;
+      cont.innerHTML = `<div style="color:#9ca3af;font-size:.8rem;padding:6px 0">Немає позицій</div>`;
       return;
     }
     cont.innerHTML = items.map((item, idx) => `
@@ -480,7 +480,7 @@
         <div style="text-align:right;font-size:.8rem;font-weight:600;color:#374151">${fmt(item.total)} ₴</div>
         <button onclick="window._salesWORemoveItem('${type}',${idx})" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:1.1rem;padding:0">×</button>
       </div>
-      ${item.warehouseItemId ? `${window.t('divStylefontsize7remcolorf59e0bmargin2px')}` : ''}
+      ${item.warehouseItemId ? `<div style="font-size:.7rem;color:#f59e0b;margin:-2px 0 4px;padding-left:2px">⚠ Буде списано зі складу</div>` : ''}
     `).join('');
   }
 

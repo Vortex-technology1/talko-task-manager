@@ -25,7 +25,7 @@ function _statusColor(s) {
     return {draft:'#9ca3af',sent:'#3b82f6',paid:'#10b981',partial:'#f59e0b',cancelled:'#ef4444',closed:'#6366f1'}[s]||'#9ca3af';
 }
 function _statusLabel(s) {
-    return {draft:'',sent:'',paid:'',partial:'',cancelled:'',closed:''}[s]||s;
+    return {draft:_tg('Чернетка','Черновик'),sent:_tg('Відправлено','Отправлено'),paid:_tg('Оплачено','Оплачено'),partial:_tg('Частково','Частично'),cancelled:_tg('Скасовано','Отменено'),closed:_tg('Закрито','Закрыто')}[s]||s;
 }
 
 // ── AUTOSERVICE: Авто + Наряди клієнта ────────────────────────────────────
@@ -42,11 +42,11 @@ window._renderVehiclesTab = async function(deal) {
         let vehicles = [];
         if (clientId) {
             const snap = await _col('sales_vehicles').where('clientId','==',clientId).get();
-            vehicles = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
+            vehicles = snap.docs.map(d => ({id:d.id,...d.data()}));
         }
         if (!vehicles.length && phone) {
             const snap = await _col('sales_vehicles').where('clientPhone','==',phone).get();
-            vehicles = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
+            vehicles = snap.docs.map(d => ({id:d.id,...d.data()}));
         }
 
         // Load work orders
@@ -55,15 +55,15 @@ window._renderVehiclesTab = async function(deal) {
             const snap = await _col('sales_orders')
                 .where('type','==','work_order')
                 .where('clientId','==',clientId)
-                .limit(20).get();
-            orders = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
+                .orderBy('createdAt','desc').limit(20).get();
+            orders = snap.docs.map(d => ({id:d.id,...d.data()}));
         }
         if (!orders.length && phone) {
             const snap = await _col('sales_orders')
                 .where('type','==','work_order')
                 .where('clientPhone','==',phone)
-                .limit(20).get();
-            orders = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
+                .orderBy('createdAt','desc').limit(20).get();
+            orders = snap.docs.map(d => ({id:d.id,...d.data()}));
         }
 
         const totalSpent = orders.filter(o=>o.status==='paid'||o.status==='closed').reduce((s,o)=>s+(o.total||0),0);
@@ -94,7 +94,7 @@ window._renderVehiclesTab = async function(deal) {
                     <button onclick="window._salesOpenVehicleCard && window._salesOpenVehicleCard(null)" style="background:#fff7ed;border:1px solid #fed7aa;color:#c2410c;padding:3px 10px;border-radius:5px;cursor:pointer;font-size:.72rem;font-weight:600">+ Авто</button>
                 </div>
                 ${!vehicles.length
-                    ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">''</div>`
+                    ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">${_tg('Авто не додані','Авто не добавлены')}</div>`
                     : vehicles.map(v => `
                         <div style="border:1px solid #e5e7eb;border-radius:8px;padding:.6rem .75rem;margin-bottom:.35rem;display:flex;justify-content:space-between;align-items:center">
                             <div>
@@ -110,7 +110,7 @@ window._renderVehiclesTab = async function(deal) {
             <div>
                 <b style="font-size:.8rem;color:#374151;display:block;margin-bottom:.5rem">📋 Наряди</b>
                 ${!orders.length
-                    ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">''</div>`
+                    ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">${_tg('Нарядів немає','Нарядов нет')}</div>`
                     : orders.map(o => `
                         <div onclick="window._salesEditOrder && window._salesEditOrder('${o.id}')" style="border:1px solid #e5e7eb;border-radius:8px;padding:.6rem .75rem;margin-bottom:.35rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
                             <div>
@@ -147,8 +147,8 @@ window._renderPosHistoryTab = async function(deal) {
             const snap = await _col('sales_orders')
                 .where('type','==','receipt')
                 .where('clientName','==',clientName)
-                .limit(30).get();
-            orders = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
+                .orderBy('createdAt','desc').limit(30).get();
+            orders = snap.docs.map(d => ({id:d.id,...d.data()}));
         }
 
         const totalSpent = orders.reduce((s,o) => s+(o.total||0), 0);
@@ -179,7 +179,7 @@ window._renderPosHistoryTab = async function(deal) {
                 <b style="font-size:.8rem;color:#374151;display:block;margin-bottom:.5rem">🧾 Чеки</b>
                 ${!orders.length
                     ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">
-                        ''${clientName ? ` для «${_esc(clientName)}»` : ''}.
+                        ${_tg('Чеків не знайдено','Чеков не найдено')}${clientName ? ` для «${_esc(clientName)}»` : ''}.
                         <br><span style="font-size:.72rem">Чеки прив'язуються до клієнта при проведенні через Реалізацію → Каса</span>
                        </div>`
                     : orders.map(o => {
@@ -222,15 +222,15 @@ window._renderRoutesHistoryTab = async function(deal) {
             const snap = await _col('sales_orders')
                 .where('type','==','route')
                 .where('clientId','==',clientId)
-                .limit(20).get();
-            routes = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
+                .orderBy('createdAt','desc').limit(20).get();
+            routes = snap.docs.map(d => ({id:d.id,...d.data()}));
         }
         if (!routes.length && clientName) {
             const snap = await _col('sales_orders')
                 .where('type','==','route')
                 .where('clientName','==',clientName)
-                .limit(20).get();
-            routes = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()??0; const tb=b.createdAt?.toMillis?.()??0; return tb-ta; });
+                .orderBy('createdAt','desc').limit(20).get();
+            routes = snap.docs.map(d => ({id:d.id,...d.data()}));
         }
 
         const totalRev = routes.reduce((s,r) => s+(r.total||0), 0);
@@ -243,7 +243,7 @@ window._renderRoutesHistoryTab = async function(deal) {
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;">
                 <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:.6rem .75rem;text-align:center">
                     <div style="font-size:1.2rem;font-weight:700;color:#0369a1">${routes.length}</div>
-                    <div style="font-size:.7rem;color:#9ca3af">''</div>
+                    <div style="font-size:.7rem;color:#9ca3af">${_tg('Рейсів','Рейсов')}</div>
                 </div>
                 <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.6rem .75rem;text-align:center">
                     <div style="font-size:1rem;font-weight:700;color:#16a34a">${_fmt(totalRev)} ₴</div>
@@ -260,7 +260,7 @@ window._renderRoutesHistoryTab = async function(deal) {
                 <b style="font-size:.8rem;color:#374151;display:block;margin-bottom:.5rem">🚛 Рейси</b>
                 ${!routes.length
                     ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">
-                        ''
+                        ${_tg('Рейсів не знайдено для цього клієнта.','Рейсов не найдено для этого клиента.')}
                         <br><span style="font-size:.72rem">Рейси додаються в Реалізація → Рейси</span>
                        </div>`
                     : routes.map(r => {
@@ -287,7 +287,7 @@ window._renderRoutesHistoryTab = async function(deal) {
 
             <!-- New route button -->
             <button onclick="window._salesOpenRouteForm && window._salesOpenRouteForm(null)" style="background:#0369a1;color:white;border:none;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600;width:100%">
-                ''
+                ${_tg('🚛 Новий рейс для клієнта','🚛 Новый рейс для клиента')}
             </button>
         </div>`;
 

@@ -106,23 +106,18 @@
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
                 <div>
                     <div style="font-weight:700;font-size:1rem;">Чат-боти</div>
-                    <div style="font-size:0.78rem;color:#6b7280;">${botsFlows.length} ''</div>
+                    <div style="font-size:0.78rem;color:#6b7280;">${botsFlows.length} ${_tg('ботів','ботов')}</div>
                 </div>
-                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-                    <button onclick="openFlowTemplatesModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#ede9fe;color:#7c3aed;border:1px solid #c4b5fd;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                        📋 Шаблони
-                    </button>
-                    <button onclick="openCreateFlowModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                        + Новий бот
-                    </button>
-                </div>
+                <button onclick="openCreateFlowModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
+                    + Новий бот
+                </button>
             </div>
 
             ${botsFlows.length === 0 ? `
                 <div style="text-align:center;padding:3rem;background:white;border-radius:12px;box-shadow:var(--shadow);">
                     <div style="font-size:2.5rem;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span></div>
-                    <div style="font-weight:600;margin-bottom:0.4rem;">''</div>
-                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">автоматичні сценарії</div>
+                    <div style="font-weight:600;margin-bottom:0.4rem;">${_tg('Ботів поки немає','Ботов пока нет')}</div>
+                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">${_tg('Створіть першого бота і налаштуйте сценарії роботи','Создайте первого бота и настройте сценарии работы')}автоматичні сценарії</div>
                     <button onclick="openCreateFlowModal()" style="padding:0.6rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">+ Створити бота</button>
                 </div>` : `
                 <div style="display:flex;flex-direction:column;gap:0.75rem;">
@@ -328,10 +323,6 @@
             ['buttons',window.t('botsNodeButtons'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="5" r="2" fill="currentColor"/></svg></span>'],
             ['condition',window.t('botsNodeCondition'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>'],
             ['ai',window.t('botsNodeAI'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>'],
-            ['photo','📷 Отримати фото','📷'],
-            ['image_generate','🎨 AI Генерація','🎨'],
-            ['crm_update','📋 Оновити угоду','📋'],
-            ['http_request','🌐 HTTP запит','🌐'],
             ['delay',window.t('botsNodeDelay'),'⏳'],
             ['talko_task',window.t('botsNodeTask'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>'],
             ['talko_deal',window.t('botsNodeCRM'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>'],
@@ -349,7 +340,7 @@
                     <div style="padding:1rem 1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
                         <div>
                             <div style="font-weight:700;font-size:1rem;">${escH(flowData.name)} <span style="font-size:0.75rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:2px 8px;color:#6b7280;font-weight:500;">${flowData.channel}</span></div>
-                            <div style="font-size:0.78rem;color:#6b7280;margin-top:1px;">${botsFlowNodes.length} '': <code style="background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:4px;">${escH(flowData.triggerKeyword || '/start')}</code></div>
+                            <div style="font-size:0.78rem;color:#6b7280;margin-top:1px;">${botsFlowNodes.length} ${_tg('вузлів · тригер','узлов · триггер')}: <code style="background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:4px;">${escH(flowData.triggerKeyword || '/start')}</code></div>
                         </div>
                         <div style="display:flex;gap:0.5rem;">
                             <button onclick="saveFlowNodes()" style="padding:0.45rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Зберегти</button>
@@ -383,7 +374,7 @@
                         <div style="flex:1;overflow-y:auto;padding:1rem;" id="botsNodeEditor">
                             <div style="text-align:center;padding:3rem 1rem;color:#9ca3af;">
                                 <div style="margin-bottom:0.5rem;color:#9ca3af;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
-                                <div>''</div>
+                                <div>${_tg('Виберіть вузол або додайте новий','Выберите узел или добавьте новый')}</div>
                             </div>
                         </div>
                     </div>
@@ -482,7 +473,7 @@
                 <div id="nodeOpts_${nodeId}" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.4rem;">
                     ${(node.options||[]).map((o,i) => `
                         <div style="display:flex;gap:0.4rem;align-items:center;">
-                            <input value="${escH(o.text)}" placeholder='' onblur="updateNodeOpt('${nodeId}',${i},'text',this.value)"
+                            <input value="${escH(o.text)}" placeholder="Текст" onblur="updateNodeOpt('${nodeId}',${i},'text',this.value)"
                                 style="flex:1;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;">
                             <select onchange="updateNodeOpt('${nodeId}',${i},'nextNode',this.value)"
                                 style="flex:1;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.75rem;background:white;">
@@ -508,7 +499,7 @@
                             <option value="">→ авто</option>${nextOpts}
                         </select>
                     </div>
-                    <div><label style="${lbl()}">''</label>
+                    <div><label style="${lbl()}">${_tg('ЯКЩО НІ →','ЕСЛИ НЕТ →')}</label>
                         <select onchange="updateNode('${nodeId}','nextNodeFalse',this.value||null)" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.8rem;background:white;">
                             <option value="">→ авто</option>${nextOpts}
                         </select>
@@ -525,63 +516,7 @@
         }
 
         if (node.type === 'delay') {
-            specific =
-                field('Затримка (секунди)') +
-                input(node.delay||0, `updateNode('${nodeId}','delay',parseInt(this.value)||0)`, '0', 'number') +
-                field('Хвилини') +
-                input(node.minutes||0, `updateNode('${nodeId}','minutes',parseInt(this.value)||0)`, '0', 'number') +
-                field('Години') +
-                input(node.hours||0, `updateNode('${nodeId}','hours',parseInt(this.value)||0)`, '0', 'number') +
-                field('Дні') +
-                input(node.days||0, `updateNode('${nodeId}','days',parseInt(this.value)||0)`, '0', 'number') +
-                field('Повідомлення під час очікування (опційно)') +
-                input(node.waitMessage||'', `updateNode('${nodeId}','waitMessage',this.value)`, 'Звʼяжемось з вами...');
-        }
-
-        if (node.type === 'photo' || node.type === 'receive_photo') {
-            specific = field('Текст-запит (надіслати клієнту)') +
-                input(node.text||'', `updateNode('${nodeId}','text',this.value)`, '') +
-                field('Зберегти як змінну') +
-                input(node.varName||'photo_url', `updateNode('${nodeId}','varName',this.value)`, 'photo_url');
-        }
-
-        if (node.type === 'image_generate' || node.type === 'dalle') {
-            specific =
-                field('Стиль (modern/classic/scandinavian/loft)') +
-                input(node.style||'modern', `updateNode('${nodeId}','style',this.value)`, 'modern') +
-                field('Тип приміщення (kitchen/living/bedroom)') +
-                input(node.roomType||'kitchen', `updateNode('${nodeId}','roomType',this.value)`, 'kitchen') +
-                field('Кольори (з collectedData: {{colors}})') +
-                input(node.colors||'{{colors}}', `updateNode('${nodeId}','colors',this.value)`, '{{colors}}') +
-                field('Розміри ({{dimensions}})') +
-                input(node.dimensions||'{{dimensions}}', `updateNode('${nodeId}','dimensions',this.value)`, '{{dimensions}}') +
-                field('Додаткові вимоги') +
-                input(node.extra||'', `updateNode('${nodeId}','extra',this.value)`, '{{extra}}') +
-                field('Підпис до фото (підтримує {{var}})') +
-                input(node.caption||'', `updateNode('${nodeId}','caption',this.value)`, '') +
-                field('Зберегти URL як змінну') +
-                input(node.saveAs||'generated_image_url', `updateNode('${nodeId}','saveAs',this.value)`, 'generated_image_url');
-        }
-
-        if (node.type === 'crm_update' || node.type === 'update_deal') {
-            specific = field('Поле угоди') +
-                input(node.fieldName||'', `updateNode('${nodeId}','fieldName',this.value)`, '') +
-                field('Значення (підтримує {{var}})') +
-                input(node.fieldValue||'', `updateNode('${nodeId}','fieldValue',this.value)`, '{{answer}}');
-        }
-
-        if (node.type === 'http_request' || node.type === 'api_call') {
-            specific = field('URL (підтримує {{var}})') +
-                input(node.url||'', `updateNode('${nodeId}','url',this.value)`, 'https://api.example.com/endpoint') +
-                field('Метод') +
-                `<select onchange="updateNode('${nodeId}','method',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
-                    <option value="POST" ${node.method==='POST'?'selected':''}>POST</option>
-                    <option value="GET" ${node.method==='GET'?'selected':''}>GET</option>
-                </select>` +
-                field('Body JSON (підтримує {{var}})') +
-                `<textarea onchange="updateNode('${nodeId}','body',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;font-family:monospace;min-height:80px;box-sizing:border-box;margin-bottom:0.75rem;" placeholder='{"name":"{{name}}","phone":"{{phone}}"}'>${node.body||''}</textarea>` +
-                field('Зберегти результат як змінну') +
-                input(node.saveAs||'api_result', `updateNode('${nodeId}','saveAs',this.value)`, 'api_result');
+            specific = field(window.t('botsFieldDelay')) + input(node.delay||0, `updateNode('${nodeId}','delay',parseInt(this.value)||0)`, '60', 'number');
         }
 
         if (node.type === 'talko_task') {
@@ -706,7 +641,7 @@
             const sessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
             container.innerHTML = `
-                <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">'' (${sessions.length})</div>
+                <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">${_tg('Активні сесії','Активные сессии')} (${sessions.length})</div>
                 ${sessions.length === 0 ? '<div style="text-align:center;padding:2rem;color:#9ca3af;background:white;border-radius:12px;box-shadow:var(--shadow);">Сесій поки немає</div>' :
                 `<div style="display:flex;flex-direction:column;gap:0.5rem;">
                     ${sessions.map(s => {
@@ -883,7 +818,39 @@
                     </div>
                 </div>
 
-                <!-- AI KEYS — прибрано, використовується ключ superadmin -->
+                <!-- AI KEYS -->
+                <div style="background:white;border-radius:12px;padding:1.25rem;box-shadow:var(--shadow);">
+                    <h3 style="font-weight:700;font-size:0.9rem;margin-bottom:0.75rem;color:#374151;">AI Ключі (для AI вузлів у флоу)</h3>
+                    <div style="display:flex;flex-direction:column;gap:0.6rem;">
+                        <div>
+                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">OpenAI API Key</label>
+                            <div style="display:flex;gap:0.5rem;">
+                                <input type="password" id="botsOpenAIKey" value="${compData.openaiApiKey ? '••••••••' + compData.openaiApiKey.slice(-4) : ''}"
+                                    placeholder="sk-..." style="flex:1;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                                <button onclick="saveBotApiKey('openai')" style="padding:0.55rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">Зберегти</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">Anthropic API Key</label>
+                            <div style="display:flex;gap:0.5rem;">
+                                <input type="password" id="botsAnthropicKey" value="${compData.anthropicApiKey ? '••••••••' + compData.anthropicApiKey.slice(-4) : ''}"
+                                    placeholder="sk-ant-..." style="flex:1;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                                <button onclick="saveBotApiKey('anthropic')" style="padding:0.55rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">Зберегти</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">Google Gemini API Key</label>
+                            <div style="display:flex;gap:0.5rem;">
+                                <input type="password" id="botsGoogleKey" value="${compData.googleApiKey ? '••••••••' + compData.googleApiKey.slice(-4) : ''}"
+                                    placeholder="AIza..." style="flex:1;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                                <button onclick="saveBotApiKey('google')" style="padding:0.55rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">Зберегти</button>
+                            </div>
+                            <div style="font-size:0.72rem;color:#9ca3af;margin-top:3px;">
+                                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#3b82f6;">Отримати ключ →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>`;
         } catch (e) {
             console.error('[renderBotsSettingsView]', e);
@@ -1000,7 +967,7 @@
         const _tooShort = key.length < 20;
         if (_isEmail || _isUrl || _isDomain || _tooShort) {
             const _hint = _isEmail ? 'Це email' : _isUrl ? 'Це URL' : _isDomain ? 'Це домен' : 'Занадто короткий';
-            if (typeof showToast === 'function') showToast('❌ ' + '' + _hint + '', 'error');
+            if (typeof showToast === 'function') showToast('❌ ' + _tg('Невалідний API ключ: ','Невалидный API ключ: ') + _hint + _tg('. Очікується sk-...','. Ожидается sk-...'), 'error');
             return;
         }
 
@@ -1042,304 +1009,3 @@ async function _tgFetch(url, opts = {}) {
         return await fetch(url, { ...opts, signal: ctrl.signal });
     } finally { clearTimeout(timer); }
 }
-
-// ════════════════════════════════════════════════════════════
-// ШАБЛОНИ ФЛОУ — готові воронки під ніші
-// ════════════════════════════════════════════════════════════
-
-const FLOW_TEMPLATES = {
-    furniture: {
-        name:        'Меблі / Кухні',
-        icon:        '🪑',
-        description: 'Збирає розміри, стиль, фото кімнати → генерує дизайн DALL-E → записує на замір',
-        tags:        ['Меблі', 'Кухні', 'Дизайн', 'AI'],
-        color:       '#f0fdf4',
-        border:      '#bbf7d0',
-        nodes: [
-            { id: 'start',   type: 'start',    data: {} },
-            { id: 'greet',   type: 'message',  data: { text: 'Привіт, {{name}}! 👋\n\nЯ допоможу підібрати кухню вашої мрії. Це займе 2 хвилини 🎨' } },
-            { id: 'q_style', type: 'question', data: { text: '🎨 Який стиль вам до вподоби?', varName: 'style', buttons: [
-                { text: 'Сучасний', label: 'Сучасний' },
-                { text: 'Класика', label: 'Класика' },
-                { text: 'Скандинавський', label: 'Скандинавський' },
-                { text: 'Loft', label: 'Loft' },
-            ]}},
-            { id: 'q_size',  type: 'question', data: { text: '📐 Вкажіть розміри кухні (наприклад: 3×4 м або просто площу)', varName: 'dimensions' } },
-            { id: 'q_color', type: 'question', data: { text: '🎨 Які кольори фасадів вам подобаються? (наприклад: білий, сірий, дерево)', varName: 'colors' } },
-            { id: 'photo',   type: 'photo',    data: { text: '📷 Надішліть фото вашої кімнати (щоб дизайн підходив до простору)', varName: 'room_photo' } },
-            { id: 'gen',     type: 'image_generate', data: {
-                style:      '{{style}}',
-                roomType:   'kitchen',
-                colors:     '{{colors}}',
-                dimensions: '{{dimensions}}',
-                caption:    '✨ Ось концепт вашої кухні!\n\n⚠️ Це орієнтовна візуалізація. Фінальний дизайн уточнюється на заміру.\n\nЦіна залежить від розмірів і матеріалів.',
-                saveAs:     'design_url',
-            }},
-            { id: 'q_like',  type: 'question', data: { text: '❤️ Як вам концепт?', varName: 'reaction', buttons: [
-                { text: '👍 Подобається, хочу дізнатись ціну', label: 'like' },
-                { text: '🔄 Хочу інший варіант', label: 'retry' },
-                { text: '📞 Хочу поговорити з менеджером', label: 'manager' },
-            ]}},
-            { id: 'cond',    type: 'condition', data: { variable: 'reaction', operator: 'contains', value: 'like' } },
-            { id: 'price',   type: 'message',  data: { text: '💰 Орієнтовна вартість кухні {{dimensions}} м: від 45 000 грн\n\nФінальна ціна — після безкоштовного заміру у вас вдома.\n\n📅 Записати замірника?' } },
-            { id: 'q_name',  type: 'question', data: { text: "👤 Як вас звати?", varName: 'client_name' } },
-            { id: 'q_phone', type: 'question', data: { text: '📱 Ваш номер телефону?', varName: 'phone' } },
-            { id: 'crm',     type: 'crm_update', data: { fields: { clientName: '{{client_name}}', phone: '{{phone}}', note: 'Стиль: {{style}}, Розміри: {{dimensions}}, Кольори: {{colors}}' } } },
-            { id: 'confirm', type: 'message',  data: { text: '✅ Відмінно, {{client_name}}!\n\nМенеджер зателефонує вам найближчим часом для погодження зручного часу заміру.\n\nДякуємо! 🙏' } },
-            { id: 'manager_msg', type: 'message', data: { text: '👍 Зрозуміло! Залиште свій номер — менеджер зв\'яжеться і відповість на всі питання.' } },
-            { id: 'end',     type: 'end',      data: {} },
-        ],
-        edges: [
-            { id: 'e1',  source: 'start',   target: 'greet' },
-            { id: 'e2',  source: 'greet',   target: 'q_style' },
-            { id: 'e3',  source: 'q_style', target: 'q_size' },
-            { id: 'e4',  source: 'q_size',  target: 'q_color' },
-            { id: 'e5',  source: 'q_color', target: 'photo' },
-            { id: 'e6',  source: 'photo',   target: 'gen' },
-            { id: 'e7',  source: 'gen',     target: 'q_like' },
-            { id: 'e8',  source: 'q_like',  target: 'cond' },
-            { id: 'e9',  source: 'cond',    target: 'price',       sourceHandle: 'yes' },
-            { id: 'e10', source: 'cond',    target: 'manager_msg', sourceHandle: 'no' },
-            { id: 'e11', source: 'price',   target: 'q_name' },
-            { id: 'e12', source: 'q_name',  target: 'q_phone' },
-            { id: 'e13', source: 'q_phone', target: 'crm' },
-            { id: 'e14', source: 'crm',     target: 'confirm' },
-            { id: 'e15', source: 'confirm', target: 'end' },
-            { id: 'e16', source: 'manager_msg', target: 'q_phone' },
-        ],
-    },
-
-    medical: {
-        name:        'Медицина / Анамнез',
-        icon:        '🏥',
-        description: 'Збирає скарги, симптоми, тривалість → структурований анамнез лікарю → запис на консультацію',
-        tags:        ['Медицина', 'Стоматологія', 'Анамнез', 'Запис'],
-        color:       '#eff6ff',
-        border:      '#bfdbfe',
-        nodes: [
-            { id: 'start',    type: 'start',    data: {} },
-            { id: 'greet',    type: 'message',  data: { text: 'Вітаємо в нашій клініці! 👨‍⚕️\n\nЩоб лікар міг краще підготуватись до прийому, дайте відповідь на кілька запитань.\n\n⚠️ Ця анкета не замінює консультацію лікаря.' } },
-            { id: 'consent',  type: 'question', data: { text: '✅ Ви погоджуєтесь на обробку медичних даних для підготовки до консультації?', varName: 'consent', buttons: [
-                { text: '✅ Так, погоджуюсь', label: 'yes' },
-                { text: '❌ Ні', label: 'no' },
-            ]}},
-            { id: 'cond_consent', type: 'condition', data: { variable: 'consent', operator: 'contains', value: 'yes' } },
-            { id: 'no_consent', type: 'message', data: { text: 'Зрозуміло. Ви можете записатись на консультацію за телефоном. Дякуємо!' } },
-            { id: 'q_name',   type: 'question', data: { text: "👤 Ваше ім'я та прізвище?", varName: 'client_name' } },
-            { id: 'q_age',    type: 'question', data: { text: '🎂 Ваш вік?', varName: 'age' } },
-            { id: 'q_complaint', type: 'question', data: { text: '💬 Що вас турбує? Опишіть основну скаргу (наприклад: біль у зубі, кровоточивість ясен, чутливість)', varName: 'complaint' } },
-            { id: 'q_duration', type: 'question', data: { text: '⏱ Як давно турбує ця проблема?', varName: 'duration', buttons: [
-                { text: 'Менше тижня', label: 'less_week' },
-                { text: '1-4 тижні', label: 'weeks' },
-                { text: '1-6 місяців', label: 'months' },
-                { text: 'Більше 6 місяців', label: 'long' },
-            ]}},
-            { id: 'q_prev',   type: 'question', data: { text: '📋 Чи зверталися раніше з цією проблемою? Якщо так — коротко опишіть', varName: 'prev_treatment' } },
-            { id: 'q_allergy', type: 'question', data: { text: '⚠️ Чи є алергія на ліки? (якщо так — напишіть на які, якщо ні — "немає")', varName: 'allergy' } },
-            { id: 'crm',      type: 'crm_update', data: { fields: {
-                clientName: '{{client_name}}',
-                note: 'АНАМНЕЗ:\nСкарга: {{complaint}}\nТривалість: {{duration}}\nПопереднє лікування: {{prev_treatment}}\nАлергія: {{allergy}}\nВік: {{age}}',
-                source: 'bot_medical',
-            }}},
-            { id: 'summary',  type: 'message',  data: { text: '✅ Дякуємо, {{client_name}}!\n\nДані передано лікарю. Хочете записатись на консультацію?' } },
-            { id: 'q_book',   type: 'question', data: { text: '📅 Записатись на консультацію?', varName: 'wants_booking', buttons: [
-                { text: '✅ Так, записатись', label: 'yes' },
-                { text: 'Пізніше зателефоную', label: 'later' },
-            ]}},
-            { id: 'cond_book', type: 'condition', data: { variable: 'wants_booking', operator: 'contains', value: 'yes' } },
-            { id: 'q_phone',  type: 'question', data: { text: '📱 Ваш номер телефону для підтвердження запису?', varName: 'phone' } },
-            { id: 'crm2',     type: 'crm_update', data: { fields: { phone: '{{phone}}', stage: 'consultation' } } },
-            { id: 'booked',   type: 'message',  data: { text: '✅ Чудово! Адміністратор зателефонує вам найближчим часом для підтвердження зручного часу.\n\nДо зустрічі! 😊' } },
-            { id: 'later_msg', type: 'message', data: { text: 'Добре! Телефонуйте нам коли будете готові. До зустрічі! 😊' } },
-            { id: 'end',      type: 'end',      data: {} },
-        ],
-        edges: [
-            { id: 'e1',  source: 'start',       target: 'greet' },
-            { id: 'e2',  source: 'greet',       target: 'consent' },
-            { id: 'e3',  source: 'consent',     target: 'cond_consent' },
-            { id: 'e4',  source: 'cond_consent', target: 'q_name',     sourceHandle: 'yes' },
-            { id: 'e5',  source: 'cond_consent', target: 'no_consent', sourceHandle: 'no' },
-            { id: 'e6',  source: 'no_consent',  target: 'end' },
-            { id: 'e7',  source: 'q_name',      target: 'q_age' },
-            { id: 'e8',  source: 'q_age',       target: 'q_complaint' },
-            { id: 'e9',  source: 'q_complaint', target: 'q_duration' },
-            { id: 'e10', source: 'q_duration',  target: 'q_prev' },
-            { id: 'e11', source: 'q_prev',      target: 'q_allergy' },
-            { id: 'e12', source: 'q_allergy',   target: 'crm' },
-            { id: 'e13', source: 'crm',         target: 'summary' },
-            { id: 'e14', source: 'summary',     target: 'q_book' },
-            { id: 'e15', source: 'q_book',      target: 'cond_book' },
-            { id: 'e16', source: 'cond_book',   target: 'q_phone',   sourceHandle: 'yes' },
-            { id: 'e17', source: 'cond_book',   target: 'later_msg', sourceHandle: 'no' },
-            { id: 'e18', source: 'q_phone',     target: 'crm2' },
-            { id: 'e19', source: 'crm2',        target: 'booked' },
-            { id: 'e20', source: 'booked',      target: 'end' },
-            { id: 'e21', source: 'later_msg',   target: 'end' },
-        ],
-    },
-
-    construction: {
-        name:        'Будівництво / Кошторис',
-        icon:        '🏗️',
-        description: 'Визначає тип об\'єкту → збирає параметри кнопками → автоматичний кошторис → менеджер підтверджує',
-        tags:        ['Будівництво', 'Ремонт', 'Кошторис', 'Замір'],
-        color:       '#fefce8',
-        border:      '#fef08a',
-        nodes: [
-            { id: 'start',    type: 'start',    data: {} },
-            { id: 'greet',    type: 'message',  data: { text: 'Вітаємо! 🏗️\n\nПодготуємо для вас попередній кошторис за 2 хвилини.\n\n⚠️ Кошторис орієнтовний. Точна вартість після виїзду фахівця.' } },
-            { id: 'q_type',   type: 'question', data: { text: '🏠 Тип об\'єкту?', varName: 'object_type', buttons: [
-                { text: '🏠 Квартира', label: 'apartment' },
-                { text: '🏡 Будинок', label: 'house' },
-                { text: '🏢 Комерційне приміщення', label: 'commercial' },
-                { text: '🔨 Окремі роботи', label: 'partial' },
-            ]}},
-            { id: 'q_area',   type: 'question', data: { text: '📐 Загальна площа (м²)?', varName: 'area' } },
-            { id: 'q_works',  type: 'question', data: { text: '🔧 Які роботи потрібні?', varName: 'work_type', buttons: [
-                { text: '🔨 Капітальний ремонт', label: 'capital' },
-                { text: '🖌️ Косметичний ремонт', label: 'cosmetic' },
-                { text: '🏗️ Будівництво під ключ', label: 'turnkey' },
-                { text: '⚡ Тільки електрика/сантехніка', label: 'engineering' },
-            ]}},
-            { id: 'q_deadline', type: 'question', data: { text: '📅 Бажаний термін здачі?', varName: 'deadline', buttons: [
-                { text: '⚡ До 1 місяця', label: 'urgent' },
-                { text: '📅 1-3 місяці', label: 'normal' },
-                { text: '🗓️ 3-6 місяців', label: 'standard' },
-                { text: '📆 Більше 6 місяців', label: 'long' },
-            ]}},
-            { id: 'q_budget', type: 'question', data: { text: '💰 Орієнтовний бюджет?', varName: 'budget', buttons: [
-                { text: 'До 100 000 грн', label: 'small' },
-                { text: '100 000 - 300 000 грн', label: 'medium' },
-                { text: '300 000 - 700 000 грн', label: 'large' },
-                { text: 'Більше 700 000 грн', label: 'premium' },
-            ]}},
-            { id: 'q_name',   type: 'question', data: { text: "👤 Ваше ім'я?", varName: 'client_name' } },
-            { id: 'q_phone',  type: 'question', data: { text: '📱 Номер телефону для зв\'язку?', varName: 'phone' } },
-            { id: 'crm',      type: 'crm_update', data: { fields: {
-                clientName: '{{client_name}}',
-                phone:      '{{phone}}',
-                note:       'КОШТОРИС-ЗАПИТ:\nТип: {{object_type}}\nПлоща: {{area}} м²\nРоботи: {{work_type}}\nТермін: {{deadline}}\nБюджет: {{budget}}',
-                source:     'bot_construction',
-                amount:     '0',
-            }}},
-            { id: 'confirm',  type: 'message',  data: { text: '✅ Дякуємо, {{client_name}}!\n\nВаш запит прийнято:\n📍 Об\'єкт: {{object_type}}\n📐 Площа: {{area}} м²\n🔧 Роботи: {{work_type}}\n💰 Бюджет: {{budget}}\n\nКошторисник зателефонує вам протягом 2 годин для уточнення деталей і погодження безкоштовного виїзду.' } },
-            { id: 'end',      type: 'end',      data: {} },
-        ],
-        edges: [
-            { id: 'e1',  source: 'start',      target: 'greet' },
-            { id: 'e2',  source: 'greet',      target: 'q_type' },
-            { id: 'e3',  source: 'q_type',     target: 'q_area' },
-            { id: 'e4',  source: 'q_area',     target: 'q_works' },
-            { id: 'e5',  source: 'q_works',    target: 'q_deadline' },
-            { id: 'e6',  source: 'q_deadline', target: 'q_budget' },
-            { id: 'e7',  source: 'q_budget',   target: 'q_name' },
-            { id: 'e8',  source: 'q_name',     target: 'q_phone' },
-            { id: 'e9',  source: 'q_phone',    target: 'crm' },
-            { id: 'e10', source: 'crm',        target: 'confirm' },
-            { id: 'e11', source: 'confirm',    target: 'end' },
-        ],
-    },
-};
-
-// ── Модалка вибору шаблону ──────────────────────────────────
-window.openFlowTemplatesModal = function() {
-    document.getElementById('flowTemplatesModal')?.remove();
-    const modal = document.createElement('div');
-    modal.id = 'flowTemplatesModal';
-    modal.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;`;
-
-    modal.innerHTML = `
-        <div style="background:white;border-radius:16px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-            <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1;">
-                <div>
-                    <div style="font-weight:700;font-size:1.05rem;">📋 Шаблони флоу</div>
-                    <div style="font-size:0.78rem;color:#6b7280;margin-top:2px;">Готові воронки під вашу нішу. Встановіть за 1 клік.</div>
-                </div>
-                <button onclick="document.getElementById('flowTemplatesModal').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;">✕</button>
-            </div>
-            <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
-                ${Object.entries(FLOW_TEMPLATES).map(([key, tpl]) => `
-                    <div style="border:2px solid ${tpl.border};border-radius:14px;padding:1.1rem 1.25rem;background:${tpl.color};transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
-                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
-                            <div style="flex:1;min-width:200px;">
-                                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
-                                    <span style="font-size:1.4rem;">${tpl.icon}</span>
-                                    <span style="font-weight:700;font-size:1rem;">${tpl.name}</span>
-                                </div>
-                                <div style="font-size:0.82rem;color:#374151;margin-bottom:0.6rem;">${tpl.description}</div>
-                                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
-                                    ${tpl.tags.map(tag => `<span style="background:white;border:1px solid #e5e7eb;border-radius:20px;padding:2px 8px;font-size:0.72rem;color:#6b7280;">${tag}</span>`).join('')}
-                                </div>
-                                <div style="margin-top:0.6rem;font-size:0.75rem;color:#6b7280;">
-                                    📊 ${tpl.nodes.length} нод · ${tpl.edges.length} переходів
-                                </div>
-                            </div>
-                            <button onclick="installFlowTemplate('${key}')" style="padding:0.6rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;flex-shrink:0;">
-                                ⚡ Встановити
-                            </button>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-            <div style="padding:0.75rem 1.5rem;border-top:1px solid #f3f4f6;font-size:0.75rem;color:#9ca3af;text-align:center;">
-                Після встановлення шаблон з'явиться в списку ботів. Налаштуйте тексти і підключіть до Telegram/Viber.
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(modal);
-    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
-};
-
-// ── Встановлення шаблону ────────────────────────────────────
-window.installFlowTemplate = async function(templateKey) {
-    const tpl = FLOW_TEMPLATES[templateKey];
-    if (!tpl) return;
-
-    const cid = window.currentCompanyId;
-    if (!cid) { if (typeof showToast === 'function') showToast('Компанія не визначена', 'error'); return; }
-
-    const btn = document.querySelector(`button[onclick="installFlowTemplate('${templateKey}')"]`);
-    if (btn) { btn.disabled = true; btn.textContent = ''; }
-
-    try {
-        const db = window.db ? window.db() : firebase.firestore();
-        const compRef = db.collection('companies').doc(cid);
-
-        // Створюємо бота
-        const botRef = await compRef.collection('bots').add({
-            name:      tpl.name,
-            icon:      tpl.icon,
-            channel:   'telegram',
-            status:    'draft',
-            template:  templateKey,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-
-        // Створюємо флоу
-        const flowRef = await compRef.collection('bots').doc(botRef.id).collection('flows').add({
-            name:      tpl.name,
-            botId:     botRef.id,
-            status:    'active',
-            nodes:     tpl.nodes,
-            edges:     tpl.edges,
-            template:  templateKey,
-            crmEnabled: true,
-            crmTrigger: 'flow_end',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-
-        document.getElementById('flowTemplatesModal')?.remove();
-        if (typeof showToast === 'function') showToast(`✅ Шаблон "${tpl.name}" встановлено! Налаштуйте тексти і підключіть до месенджера.`, 'success');
-
-        // Оновлюємо список ботів
-        if (typeof window._renderBotsList === 'function') window._renderBotsList();
-        else if (typeof window._renderBotsTab === 'function') window._renderBotsTab();
-
-    } catch (e) {
-        if (typeof showToast === 'function') showToast('Помилка встановлення: ' + e.message, 'error');
-        if (btn) { btn.disabled = false; btn.textContent = ''; }
-    }
-};

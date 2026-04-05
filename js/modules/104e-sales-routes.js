@@ -167,13 +167,13 @@
           <div>
             <label class="sl-label">Статус</label>
             <select id="slRteStatus" class="sl-inp">
-              ${[['draft',''],['sent',''],['paid',''],['closed','']].map(([v,l])=>`<option value="${v}" ${(order?.status||'draft')===v?'selected':''}>${l}</option>`).join('')}
+              ${[['draft','Чернетка'],['sent','Підтверджено'],['paid','Оплачено клієнтом'],['closed','Рейс закрито']].map(([v,l])=>`<option value="${v}" ${(order?.status||'draft')===v?'selected':''}>${l}</option>`).join('')}
             </select>
           </div>
           <div>
             <label class="sl-label">Оплата</label>
             <select id="slRtePayMethod" class="sl-inp">
-              ${[['transfer',''],['cash',''],['terminal','']].map(([v,l])=>`<option value="${v}" ${(order?.paymentMethod||'transfer')===v?'selected':''}>${l}</option>`).join('')}
+              ${[['transfer','📱 Безготівка'],['cash','💵 Готівка'],['terminal','💳 Термінал']].map(([v,l])=>`<option value="${v}" ${(order?.paymentMethod||'transfer')===v?'selected':''}>${l}</option>`).join('')}
             </select>
           </div>
         </div>
@@ -331,7 +331,7 @@
         } catch(e) { console.warn('route finance:', e); }
       }
 
-      toast(markClosed ? '' : 'Рейс збережено');
+      toast(markClosed ? 'Рейс закрито' : 'Рейс збережено');
       document.getElementById('salesRouteOverlay')?.remove();
       if (typeof window._salesLoadOrdersExternal === 'function') window._salesLoadOrdersExternal();
     } catch(e) { toast('Помилка: '+e.message,'error'); }
@@ -346,7 +346,7 @@
       const routes = snap.docs.map(d=>({id:d.id,...d.data()}));
 
       const statusColors = { draft:'#9ca3af', sent:'#3b82f6', paid:'#10b981', closed:'#6366f1', cancelled:'#ef4444' };
-      const statusLabels = { draft:'', sent:'', paid:'Оплачено', closed:'Закрито', cancelled:'Скасовано' };
+      const statusLabels = { draft:'Чернетка', sent:'Підтверджено', paid:'Оплачено', closed:'Закрито', cancelled:'Скасовано' };
 
       cont.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">

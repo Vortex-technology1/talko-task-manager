@@ -75,7 +75,7 @@ function _renderAll() {
 
     <!-- AI / Anthropic API -->
     <div style="${card}">
-        <div style="${sTitle}">${I.key} '' ${badge(!!s.anthropicApiKey)}</div>
+        <div style="${sTitle}">${I.key} ${_tg('Anthropic API (AI функції)','Anthropic API (AI функции)')} ${badge(!!s.anthropicApiKey)}</div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">API Key</label>
             <div style="display:flex;gap:0.4rem;">
@@ -91,7 +91,7 @@ function _renderAll() {
         </div>
         <button onclick="intgSave('anthropicApiKey','intg_anthropic')"
             style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            ${I.save} ''
+            ${I.save} ${_tg('Зберегти','Сохранить')}
         </button>
     </div>
 
@@ -108,21 +108,21 @@ function _renderAll() {
             </div>
         </div>
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">''</label>
+            <label style="${lbl}">${_tg('Chat ID менеджера (для сповіщень)','Chat ID менеджера (для уведомлений)')}</label>
             <input id="intg_tgchat" type="text" value="${s.managerChatId||''}"
                 placeholder="-1001234567890" style="${inp}font-family:monospace;">
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                ''
+                ${_tg('Отримати Chat ID: напиши боту @userinfobot','Получить Chat ID: напиши боту @userinfobot')}
             </div>
         </div>
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveTelegram()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ''
+                ${I.save} ${_tg('Зберегти','Сохранить')}
             </button>
             <button onclick="intgTestTelegram()"
                 style="padding:0.4rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.test} ''
+                ${I.test} ${_tg('Тест','Тест')}
             </button>
         </div>
     </div>
@@ -149,48 +149,33 @@ function _renderAll() {
             </div>
         </div>
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">''</label>
+            <label style="${lbl}">${_tg('Номер WhatsApp Business','Номер WhatsApp Business')}</label>
             <input id="intg_waphone" type="text" value="${s.whatsappPhone||''}"
                 placeholder="+420123456789" style="${inp}">
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                ''
+                ${_tg('Номер який підключено у 360dialog (з кодом країни)','Номер подключённый в 360dialog (с кодом страны)')}
             </div>
         </div>
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">''</label>
+            <label style="${lbl}">${_tg('Автосповіщення клієнтам','Авто-уведомления клиентам')}</label>
             <div style="font-size:0.72rem;color:#6b7280;background:#f8fafc;border-radius:6px;padding:0.5rem 0.65rem;border:1px solid #e8eaed;">
-                ''<br>
+                ${_tg('✓ Підтвердження заміру → клієнт отримує дату і імʼя замірника','✓ Подтверждение замера → клиент получает дату и имя замерщика')}<br>
                 ✓ КП погоджено → рахунок на передоплату<br>
-                ''<br>
-                ''<br>
-                ''<br>
-                ''
+                ${_tg('✓ Передоплата отримана → старт виробництва','✓ Предоплата получена → старт производства')}<br>
+                ${_tg('✓ Монтаж призначено → дата і імʼя майстра','✓ Монтаж назначен → дата и имя мастера')}<br>
+                ${_tg('✓ Монтаж завершено → залишок до оплати','✓ Монтаж завершён → остаток к оплате')}<br>
+                ${_tg('✓ +180 днів → нагадування про чищення штор','✓ +180 дней → напоминание о чистке штор')}
             </div>
         </div>
         <div style="display:flex;gap:0.4rem;">
-            <div style="margin-bottom:0.75rem;">
-                <label style="${lbl}">Webhook URL (встановіть у 360dialog)</label>
-                <div style="display:flex;gap:0.4rem;">
-                    <input type="text" readonly
-                        value="https://apptalko.com/api/whatsapp-webhook?cid=${window.currentCompanyId||''}"
-                        style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
-                    <button onclick="intgCopy('https://apptalko.com/api/whatsapp-webhook?cid=${window.currentCompanyId||''}')"
-                        style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
-                </div>
-                <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                    360dialog кабінет → Налаштування → Webhooks → вставте цей URL
-                </div>
-            </div>
-            <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveWhatsApp()"
                 style="padding:0.4rem 1rem;background:#25d366;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ''
+                ${I.save} ${_tg('Зберегти','Сохранить')}
             </button>
             <button onclick="intgTestWhatsApp()"
                 style="padding:0.4rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.test} ''
+                ${I.test} ${_tg('Тест','Тест')}
             </button>
-            </div>
         </div>
     </div>
 
@@ -198,25 +183,25 @@ function _renderAll() {
     <div style="${card}">
         <div style="${sTitle}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Viber Bot ${badge(!!s.viberBotToken)}\n        </div>\n        <div style=\"margin-bottom:0.6rem;\">\n            <label style=\"${lbl}\">Bot Token</label>\n            <div style=\"display:flex;gap:0.4rem;\">\n                <input id=\"intg_vibertoken\" type=\"password\" value=\"${s.viberBotToken||''}\"\n                    placeholder=\"xxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx-xxxxxxxx\" style=\"${inp}flex:1;font-family:monospace;\">\n                <button onclick=\"intgToggleVisibility('intg_vibertoken')\"\n                    style=\"padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;\">${I.eye}</button>\n            </div>\n            <div style=\"font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;\''https://partners.viber.com\" target=\"_blank\" style=\"color:#7c3aed;\">partners.viber.com</a> → Create bot\n            </div>\n        </div>\n        <div style=\"margin-bottom:0.75rem;\">\n            <label style=\"${lbl}\''intg_viberchat\" type=\"text\" value=\"${s.viberManagerId||''}\"\n                placeholder=\"+380XXXXXXXXX або user_id\" style=\"${inp}\">\n            <div style=\"font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;\''margin-bottom:0.75rem;\">\n            <label style=\"${lbl}\''display:flex;gap:0.4rem;\">\n                <input type=\"text\" readonly\n                    value=\"https://apptalko.com/api/webhook?channel=viber&cid=${window.currentCompanyId||''}\"\n                    style=\"${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;\">\n                <button onclick=\"intgCopy('https://apptalko.com/api/webhook?channel=viber&cid=${window.currentCompanyId||''}')\"  \n                    style=\"padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;\">${I.copy}</button>\n            </div>\n        </div>\n        <div style=\"display:flex;gap:0.4rem;\">\n            <button onclick=\"intgSaveViber()\"\n                style=\"padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\''intgTestViber()\"\n                style=\"padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\''intgSetViberWebhook()\"\n                style=\"padding:0.4rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\">\n                ${I.webhook} Підключити webhook\n            </button>\n        </div>\n    </div>\n\n    <!-- Webhook / Ліди з лендингів -->
+            Viber Bot ${badge(!!s.viberBotToken)}\n        </div>\n        <div style=\"margin-bottom:0.6rem;\">\n            <label style=\"${lbl}\">Bot Token</label>\n            <div style=\"display:flex;gap:0.4rem;\">\n                <input id=\"intg_vibertoken\" type=\"password\" value=\"${s.viberBotToken||''}\"\n                    placeholder=\"xxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx-xxxxxxxx\" style=\"${inp}flex:1;font-family:monospace;\">\n                <button onclick=\"intgToggleVisibility('intg_vibertoken')\"\n                    style=\"padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;\">${I.eye}</button>\n            </div>\n            <div style=\"font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;\">\n                Отримати token: <a href=\"https://partners.viber.com\" target=\"_blank\" style=\"color:#7c3aed;\">partners.viber.com</a> → Create bot\n            </div>\n        </div>\n        <div style=\"margin-bottom:0.75rem;\">\n            <label style=\"${lbl}\">ID чату менеджера (для сповіщень)</label>\n            <input id=\"intg_viberchat\" type=\"text\" value=\"${s.viberManagerId||''}\"\n                placeholder=\"+380XXXXXXXXX або user_id\" style=\"${inp}\">\n            <div style=\"font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;\">\n                Отримати ID: напишіть боту будь-що — він відповість з вашим Viber ID\n            </div>\n        </div>\n        <div style=\"margin-bottom:0.75rem;\">\n            <label style=\"${lbl}\">Webhook URL (встановіть у Viber)</label>\n            <div style=\"display:flex;gap:0.4rem;\">\n                <input type=\"text\" readonly\n                    value=\"https://apptalko.com/api/webhook?channel=viber&cid=${window.currentCompanyId||''}\"\n                    style=\"${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;\">\n                <button onclick=\"intgCopy('https://apptalko.com/api/webhook?channel=viber&cid=${window.currentCompanyId||''}')\"  \n                    style=\"padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;\">${I.copy}</button>\n            </div>\n        </div>\n        <div style=\"display:flex;gap:0.4rem;\">\n            <button onclick=\"intgSaveViber()\"\n                style=\"padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\">\n                ${I.save} Зберегти\n            </button>\n            <button onclick=\"intgTestViber()\"\n                style=\"padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\">\n                ${I.test} Тест\n            </button>\n            <button onclick=\"intgSetViberWebhook()\"\n                style=\"padding:0.4rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\">\n                ${I.webhook} Підключити webhook\n            </button>\n        </div>\n    </div>\n\n    <!-- Webhook / Ліди з лендингів -->
     <div style="${card}">
-        <div style="${sTitle}">${I.webhook} '' ${badge(!!(s.webhookApiKey))}</div>
+        <div style="${sTitle}">${I.webhook} ${_tg('Ліди з лендингів → CRM','Лиды с лендингов → CRM')} ${badge(!!(s.webhookApiKey))}</div>
 
         <!-- API Key -->
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">''</label>
+            <label style="${lbl}">${_tg('API Key (для підключення форм)','API Key (для подключения форм)')}</label>
             <div style="display:flex;gap:0.4rem;">
                 <input id="intg_apikey" type="password" value="${s.webhookApiKey||''}"
-                    placeholder="''" style="${inp}flex:1;font-family:monospace;">
+                    placeholder="${_tg('Згенеруйте ключ →','Сгенерируйте ключ →')}" style="${inp}flex:1;font-family:monospace;">
                 <button onclick="intgToggleVisibility('intg_apikey')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
                 <button onclick="intgGenerateApiKey()"
                     style="padding:0.45rem 0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;color:#16a34a;font-size:0.72rem;font-weight:600;white-space:nowrap;">
-                    ''
+                    ${_tg('Згенерувати','Сгенерировать')}
                 </button>
             </div>
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                ''
+                ${_tg('Цей ключ вставляється у форму на лендингу. Зберігайте в таємниці.','Этот ключ вставляется в форму на лендинге. Храните в тайне.')}
             </div>
         </div>
 
@@ -236,19 +221,19 @@ function _renderAll() {
         <!-- Зберегти ключ -->
         <button onclick="intgSave('webhookApiKey','intg_apikey')"
             style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;margin-bottom:1rem;">
-            ${I.save} ''
+            ${I.save} ${_tg('Зберегти ключ','Сохранить ключ')}
         </button>
 
         <!-- Готовий код форми -->
         <div style="border-top:1px solid #f1f5f9;padding-top:0.85rem;">
-            <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:0.5rem;">''</div>
+            <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:0.5rem;">${_tg('Готовий код для лендингу','Готовый код для лендинга')}</div>
             <div style="position:relative;">
                 <pre id="intg_form_code" style="background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:0.85rem 1rem;font-size:0.68rem;overflow-x:auto;margin:0;line-height:1.6;">&lt;form id="talko-lead-form"&gt;
   &lt;input name="name" placeholder=${window.t('yourNamePh')} required&gt;
   &lt;input name="phone" placeholder=${window.t('crmColPhone')} required&gt;
   &lt;input name="email" placeholder="Email"&gt;
   &lt;textarea name="message" placeholder=${window.t('crmMessage')}&gt;&lt;/textarea&gt;
-  &lt;button type="submit"&gt;''&lt;/button&gt;
+  &lt;button type="submit"&gt;${_tg('Відправити','Отправить')}&lt;/button&gt;
 &lt;/form&gt;
 
 &lt;script&gt;
@@ -261,7 +246,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
     body: JSON.stringify({
       companyId: '${window.currentCompanyId||"YOUR_COMPANY_ID"}',
       apiKey:    '${s.webhookApiKey||"YOUR_API_KEY"}',
-      source:    '',
+      source:    _tg('Сайт','Сайт'),
       ...data
     })
   });
@@ -273,11 +258,11 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
                     style="position:absolute;top:0.5rem;right:0.5rem;padding:0.3rem 0.6rem;
                     background:#313244;border:1px solid #45475a;border-radius:5px;
                     cursor:pointer;color:#cdd6f4;font-size:0.68rem;display:flex;align-items:center;gap:4px;">
-                    ${I.copy} ''
+                    ${I.copy} ${_tg('Копіювати','Копировать')}
                 </button>
             </div>
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.5rem;line-height:1.5;">
-                ''
+                ${_tg('Вставте на лендинг. Ліди автоматично потраплять в CRM і створиться завдання для менеджера.','Вставьте на лендинг. Лиды автоматически попадут в CRM и создастся задание для менеджера.')}
             </div>
         </div>
     </div>
@@ -286,7 +271,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
     <div style="${card}">
         <div style="${sTitle}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            '' ${badge(!!s.novaPoshtaApiKey)}
+            ${_tg('Нова Пошта','Новая Почта')} ${badge(!!s.novaPoshtaApiKey)}
         </div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">API ключ</label>
@@ -303,11 +288,11 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
             <button onclick="intgSaveNP()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ''
+                ${I.save} ${_tg('Зберегти','Сохранить')}
             </button>
             <button onclick="intgTestNP()"
                 style="padding:0.4rem 0.9rem;background:#fef2f2;color:#e30613;border:1px solid #fecaca;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.test} ''
+                ${I.test} ${_tg('Тест','Тест')}
             </button>
         </div>
         ${s.novaPoshtaApiKey ? `
@@ -318,7 +303,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
                     style="${inp}flex:1;font-family:monospace;">
                 <button onclick="intgTrackNP()"
                     style="padding:0.35rem 0.75rem;background:#e30613;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;white-space:nowrap;">
-                    ''
+                    ${_tg('Відстежити','Отследить')}
                 </button>
             </div>
             <div id="intg_np_result" style="margin-top:0.5rem;display:none;font-size:0.78rem;line-height:1.5;"></div>
@@ -329,7 +314,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
     <div style="${card}">
         <div style="${sTitle}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-            '' ${badge(!!(s.monobankToken || s.liqpayPublicKey))}
+            ${_tg('Оплата (Monobank / LiqPay)','Оплата (Monobank / LiqPay)')} ${badge(!!(s.monobankToken || s.liqpayPublicKey))}
         </div>
 
         <!-- Monobank -->
@@ -373,15 +358,15 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
 
         <button onclick="intgSavePayments()"
             style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            ${I.save} ''
+            ${I.save} ${_tg('Зберегти','Сохранить')}
         </button>
     </div>
 
     <!-- Zapier / Make -->
     <div style="${card}">
-        <div style="${sTitle}">${I.zapier} ''</div>
+        <div style="${sTitle}">${I.zapier} ${_tg('Zapier / Make (автоматизації)','Zapier / Make (автоматизации)')}</div>
         <div style="font-size:0.8rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ''
+            ${_tg('Підключи TALKO до 5000+ сервісів через Webhook тригери.','Подключи TALKO к 5000+ сервисам через Webhook триггеры.')}
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
             ${[
@@ -408,7 +393,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Facebook Lead Ads ${badge(!!(s.fbPageAccessToken && s.fbPageId))}
         </div>
         <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ''
+            ${_tg('Нові ліди з Facebook форм автоматично потрапляють у CRM як угоди.','Новые лиды из Facebook форм автоматически попадают в CRM как сделки.')}
         </div>
 
         <div style="margin-bottom:0.6rem;">
@@ -441,63 +426,10 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveFacebook()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ''
+                ${I.save} ${_tg('Зберегти','Сохранить')}
             </button>
             <button onclick="intgCopy('https://apptalko.com/api/webhook?channel=facebook&cid=${window.currentCompanyId||''}')"
                 style="padding:0.4rem 0.9rem;background:#f0f9ff;color:#0369a1;border:1px solid #bae6fd;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.copy} Webhook URL
-            </button>
-        </div>
-    </div>
-
-    <!-- Instagram Direct -->
-    <div style="${card}">
-        <div style="${sTitle}">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
-            Instagram Direct ${badge(!!(s.instagramToken && s.instagramPageId))}
-        </div>
-        <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.6rem;">
-            Клієнти пишуть в Instagram DM → бот відповідає → угода в CRM. Той самий флоу що Telegram/Viber.
-        </div>
-        <div style="margin-bottom:0.6rem;">
-            <label style="${lbl}">Instagram Page Access Token</label>
-            <div style="display:flex;gap:0.4rem;">
-                <input id="intg_ig_token" type="password" value="${s.instagramToken||''}"
-                    placeholder="EAAxxxxx..." style="${inp}flex:1;font-family:monospace;">
-                <button onclick="intgToggleVisibility('intg_ig_token')"
-                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
-            </div>
-            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                Meta for Developers → Instagram Basic Display або Messenger API for Instagram
-            </div>
-        </div>
-        <div style="margin-bottom:0.6rem;">
-            <label style="${lbl}">Instagram Business Account ID</label>
-            <input id="intg_ig_pageid" type="text" value="${s.instagramPageId||''}"
-                placeholder="123456789012345" style="${inp}font-family:monospace;">
-            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                Instagram → Профіль → Про акаунт → ID акаунту
-            </div>
-        </div>
-        <div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.75rem;font-size:0.75rem;color:#6b21a8;line-height:1.6;">
-            <strong>Як підключити:</strong><br>
-            1. Meta for Developers → Додаток → Messenger → Instagram → Налаштування<br>
-            2. Підключи Instagram Business акаунт<br>
-            3. Отримай Page Access Token з правами <code>instagram_manage_messages</code><br>
-            4. Webhook URL: <code style="background:#f3e8ff;padding:1px 4px;border-radius:3px;">https://apptalko.com/api/webhook?channel=instagram&cid=${window.currentCompanyId||''}</code><br>
-            5. Підпишись на події: <code>messages, messaging_postbacks</code>
-        </div>
-        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-            <button onclick="intgSaveInstagram()"
-                style="padding:0.4rem 1rem;background:#c026d3;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ''
-            </button>
-            <button onclick="intgTestInstagram()"
-                style="padding:0.4rem 0.9rem;background:#fdf4ff;color:#c026d3;border:1px solid #e9d5ff;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.test} Тест
-            </button>
-            <button onclick="intgCopy('https://apptalko.com/api/webhook?channel=instagram&cid=${window.currentCompanyId||''}')"
-                style="padding:0.4rem 0.9rem;background:#fdf4ff;color:#c026d3;border:1px solid #e9d5ff;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
                 ${I.copy} Webhook URL
             </button>
         </div>
@@ -510,21 +442,21 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Google Sheets ${badge(!!s.googleSheetsUrl)}
         </div>
         <div style="margin-bottom:0.6rem;">
-            <label style="${lbl}">''</label>
+            <label style="${lbl}">${_tg('URL таблиці (Apps Script endpoint)','URL таблицы (Apps Script endpoint)')}</label>
             <input id="intg_sheets" type="text" value="${s.googleSheetsUrl||''}"
                 placeholder="https://script.google.com/macros/s/..." style="${inp}">
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                ''
+                ${_tg('Нові ліди автоматично додаються в таблицю','Новые лиды автоматически добавляются в таблицу')}
             </div>
         </div>
         <button onclick="intgSave('googleSheetsUrl','intg_sheets',false)"
             style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            ${I.save} ''
+            ${I.save} ${_tg('Зберегти','Сохранить')}
         </button>
     </div>
 
     <!-- ══════════════════════════════════════════════════
-         ''
+         ${_tg('ТЕЛЕФОНІЯ','ТЕЛЕФОНИЯ')}
     ══════════════════════════════════════════════════ -->
 
     <!-- Binotel -->
@@ -534,7 +466,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Binotel ${badge(!!(s.binotelKey && s.binotelSecret))}
         </div>
         <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ''
+            ${_tg('Вхідні/вихідні дзвінки → автоматичний контакт + угода в CRM. Лог в активностях.','Входящие/исходящие звонки → автоматический контакт + сделка в CRM. Лог в активностях.')}
         </div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">API Key</label>
@@ -556,10 +488,10 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             </div>
         </div>
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">''</label>
+            <label style="${lbl}">${_tg('Webhook URL — вставте в Binotel кабінет','Webhook URL — вставьте в кабинет Binotel')}</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="text" readonly
-                    value="${window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=binotel&cid=' + window.currentCompanyId : ''}"
+                    value="${window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=binotel&cid=' + window.currentCompanyId : '(завантаження... відкрийте вкладку повторно)'}"
                     style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
                 <button onclick="intgCopy(window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=binotel&cid=' + window.currentCompanyId : '')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
@@ -575,7 +507,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveBinotel()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ''
+                ${I.save} ${_tg('Зберегти','Сохранить')}
             </button>
             <button onclick="intgTestBinotel()"
                 style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
@@ -591,7 +523,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Ringostat ${badge(!!s.ringostatApiKey)}
         </div>
         <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ''
+            ${_tg('Вхідні дзвінки → автоматичний контакт + угода в CRM. Аналітика дзвінків в активностях.','Входящие звонки → автоматический контакт + сделка в CRM. Аналитика звонков в активностях.')}
         </div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">API Token</label>
@@ -612,7 +544,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             <label style="${lbl}">Webhook URL — вставте в Ringostat</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="text" readonly
-                    value="${window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=ringostat&cid=' + window.currentCompanyId : ''}"
+                    value="${window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=ringostat&cid=' + window.currentCompanyId : '(завантаження... відкрийте вкладку повторно)'}"
                     style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
                 <button onclick="intgCopy(window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=ringostat&cid=' + window.currentCompanyId : '')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
@@ -629,7 +561,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveRingostat()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ''
+                ${I.save} ${_tg('Зберегти','Сохранить')}
             </button>
             <button onclick="intgTestRingostat()"
                 style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
@@ -645,7 +577,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Stream Telecom ${badge(!!(s.streamTelecomLogin && s.streamTelecomPassword))}
         </div>
         <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ''
+            ${_tg('IP-телефонія Stream Telecom → автоматичний лог дзвінків + контакти в CRM.','IP-телефония Stream Telecom → автоматический лог звонков + контакты в CRM.')}
         </div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">Login (email)</label>
@@ -657,7 +589,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             <label style="${lbl}">Password / API ключ</label>
             <div style="display:flex;gap:0.4rem;">
                 <input id="intg_stream_pass" type="password" value="${s.streamTelecomPassword||''}"
-                    placeholder='' style="${inp}flex:1;font-family:monospace;">
+                    placeholder="API ключ або пароль" style="${inp}flex:1;font-family:monospace;">
                 <button onclick="intgToggleVisibility('intg_stream_pass')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
             </div>
@@ -666,7 +598,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             <label style="${lbl}">Webhook URL — вставте в Stream Telecom</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="text" readonly
-                    value="${window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=stream_telecom&cid=' + window.currentCompanyId : ''}"
+                    value="${window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=stream_telecom&cid=' + window.currentCompanyId : '(завантаження... відкрийте вкладку повторно)'}"
                     style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
                 <button onclick="intgCopy(window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=stream_telecom&cid=' + window.currentCompanyId : '')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
@@ -682,7 +614,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveStreamTelecom()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ''
+                ${I.save} ${_tg('Зберегти','Сохранить')}
             </button>
             <button onclick="intgTestStreamTelecom()"
                 style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
@@ -755,7 +687,7 @@ window.intgSaveStripe = async function() {
     const key    = (keyEl?.value || '').trim();
     const wh     = (whEl?.value || '').trim();
     if (!key && !wh) {
-        if (typeof showToast === 'function') showToast('', 'warning');
+        if (typeof showToast === 'function') showToast(_tg('Введіть ключ Stripe', 'Введите ключ Stripe'), 'warning');
         return;
     }
     try {
@@ -779,7 +711,7 @@ window.intgTestStripe = async function() {
         if (typeof showToast === 'function') showToast(window.t('stripeSecretKey')||'Введіть Secret Key', 'warning');
         return;
     }
-    if (typeof showToast === 'function') showToast('', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Перевірка Stripe...', 'Проверка Stripe...'), 'info');
     try {
         const res = await fetch('/api/stripe?action=create-session', {
             method: 'POST',
@@ -836,7 +768,7 @@ window.intgGenerateApiKey = async function() {
         inp.type = 'text';
         setTimeout(() => { if (inp) inp.type = 'password'; }, 3000);
     }
-    if (typeof showToast === 'function') showToast('', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Ключ згенеровано — натисніть «Зберегти»', 'Ключ сгенерирован — нажмите «Сохранить»'), 'info');
 };
 
 
@@ -872,7 +804,7 @@ window.intgSaveFacebook = async function() {
     const pageId  = document.getElementById('intg_fb_pageid')?.value.trim();
     const verify  = document.getElementById('intg_fb_verify')?.value.trim();
     if (!token || !pageId) {
-        if (typeof showToast === 'function') showToast('', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Page Access Token і Page ID', 'Заполните Page Access Token и Page ID'), 'error'); return;
     }
     try {
         await window.companyRef().update({
@@ -884,7 +816,7 @@ window.intgSaveFacebook = async function() {
         intg.settings.fbPageAccessToken = token;
         intg.settings.fbPageId          = pageId;
         intg.settings.fbVerifyToken     = verify;
-        if (typeof showToast === 'function') showToast('', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Facebook Lead Ads збережено', 'Facebook Lead Ads сохранены'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -893,14 +825,14 @@ window.intgSaveFacebook = async function() {
 
 window.intgSaveNP = async function() {
     const key = document.getElementById('intg_np_key')?.value.trim();
-    if (!key) { if (typeof showToast === 'function') showToast('', 'error'); return; }
+    if (!key) { if (typeof showToast === 'function') showToast(_tg('Введіть API ключ Нової Пошти', 'Введите API ключ Новой Почты'), 'error'); return; }
     try {
         await window.companyRef().update({
             novaPoshtaApiKey: key,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
         intg.settings.novaPoshtaApiKey = key;
-        if (typeof showToast === 'function') showToast('', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Nova Poshta API збережено', 'Nova Poshta API сохранено'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -909,7 +841,7 @@ window.intgSaveNP = async function() {
 
 window.intgTestNP = async function() {
     const key = document.getElementById('intg_np_key')?.value.trim() || intg.settings?.novaPoshtaApiKey;
-    if (!key) { if (typeof showToast === 'function') showToast('', 'error'); return; }
+    if (!key) { if (typeof showToast === 'function') showToast(_tg('Введіть API ключ', 'Введите API ключ'), 'error'); return; }
     try {
         const _npCtrl = new AbortController();
         setTimeout(() => _npCtrl.abort(), 10000); // 10s timeout
@@ -926,7 +858,7 @@ window.intgTestNP = async function() {
         });
         const data = await res.json();
         if (data.success) {
-            if (typeof showToast === 'function') showToast('', 'success');
+            if (typeof showToast === 'function') showToast(_tg('Nova Poshta API працює', 'Nova Poshta API работает'), 'success');
         } else {
             if (typeof showToast === 'function') showToast(window.t('errPfx2') + (data.errors?.[0] || 'невірний ключ'), 'error');
         }
@@ -939,8 +871,8 @@ window.intgTrackNP = async function() {
     const key = intg.settings?.novaPoshtaApiKey;
     const ttn = document.getElementById('intg_np_ttn')?.value.trim();
     const resultEl = document.getElementById('intg_np_result');
-    if (!ttn) { if (typeof showToast === 'function') showToast('', 'warning'); return; }
-    if (resultEl) { resultEl.style.display = 'block'; resultEl.innerHTML = ''; }
+    if (!ttn) { if (typeof showToast === 'function') showToast(_tg('Введіть номер ТТН', 'Введите номер ТТН'), 'warning'); return; }
+    if (resultEl) { resultEl.style.display = 'block'; resultEl.innerHTML = _tg('Завантаження...', 'Загрузка...'); }
     try {
         const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
             method: 'POST',
@@ -960,13 +892,13 @@ window.intgTrackNP = async function() {
                 <div style="background:white;border:1px solid #e8eaed;border-radius:6px;padding:0.5rem 0.65rem;">
                     <div style="font-weight:700;color:${statusColor};margin-bottom:0.25rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>${d.Status || '—'}</div>
                     <div style="color:#374151;">ТТН: <b>${ttn}</b></div>
-                    ${d.RecipientFullName ? `<div style="color:#6b7280;">'' ${d.RecipientFullName}</div>` : ''}
+                    ${d.RecipientFullName ? `<div style="color:#6b7280;">${_tg('Отримувач:','Получатель:')} ${d.RecipientFullName}</div>` : ''}
                     ${d.CityRecipient ? `<div style="color:#6b7280;">${window.t('cityLabel').replace('{V}', d.CityRecipient)}</div>` : ''}
-                    ${d.ScheduledDeliveryDate ? `<div style="color:#6b7280;">'' ${d.ScheduledDeliveryDate}</div>` : ''}
+                    ${d.ScheduledDeliveryDate ? `<div style="color:#6b7280;">${_tg('Дата доставки:','Дата доставки:')} ${d.ScheduledDeliveryDate}</div>` : ''}
                     ${d.WarehouseRecipient ? `<div style="color:#6b7280;font-size:0.72rem;">${d.WarehouseRecipient}</div>` : ''}
                 </div>`;
         } else {
-            if (resultEl) resultEl.innerHTML = `''`;
+            if (resultEl) resultEl.innerHTML = `<span style="color:#ef4444;">ТТН не знайдено або помилка API</span>`;
         }
     } catch(e) {
         if (resultEl) resultEl.innerHTML = `<span style="color:#ef4444;">${e.message}</span>`;
@@ -977,7 +909,7 @@ window.intgTrackNP = async function() {
 window.crmTrackNP = async function(ttn) {
     if (!ttn) return;
     const key = (await window.companyRef().get().then(d => d.data()?.novaPoshtaApiKey));
-    if (!key) { if (typeof showToast === 'function') showToast('', 'warning'); return; }
+    if (!key) { if (typeof showToast === 'function') showToast(_tg('Nova Poshta API ключ не налаштовано', 'Nova Poshta API ключ не настроен'), 'warning'); return; }
     try {
         const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
             method: 'POST',
@@ -1007,7 +939,7 @@ window.intgSavePayments = async function() {
     const liqPub  = document.getElementById('intg_liqpay_pub')?.value.trim();
     const liqPriv = document.getElementById('intg_liqpay_priv')?.value.trim();
     if (!mono && !liqPub) {
-        if (typeof showToast === 'function') showToast('', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть хоча б один ключ', 'Введите хотя бы один ключ'), 'warning'); return;
     }
     try {
         const upd = { updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
@@ -1015,7 +947,7 @@ window.intgSavePayments = async function() {
         if (liqPub)  { upd.liqpayPublicKey   = liqPub;  intg.settings.liqpayPublicKey  = liqPub; }
         if (liqPriv) { upd.liqpayPrivateKey  = liqPriv; intg.settings.liqpayPrivateKey = liqPriv; }
         await window.companyRef().update(upd);
-        if (typeof showToast === 'function') showToast('', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Платіжні ключі збережено', 'Платёжные ключи сохранены'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -1025,7 +957,7 @@ window.intgSavePayments = async function() {
 // ── Генерація Monobank посилання на оплату ─────────────────
 window.crmMonoPayLink = async function(amount, description, dealId) {
     const token = intg.settings?.monobankToken;
-    if (!token) { if (typeof showToast === 'function') showToast('', 'warning'); return null; }
+    if (!token) { if (typeof showToast === 'function') showToast(_tg('Monobank не налаштовано — Інтеграції → Оплата', 'Monobank не настроен — Интеграции → Оплата'), 'warning'); return null; }
     try {
         const res = await fetch('https://api.monobank.ua/api/merchant/invoice/create', {
             method: 'POST',
@@ -1033,7 +965,7 @@ window.crmMonoPayLink = async function(amount, description, dealId) {
             body: JSON.stringify({
                 amount: Math.round(amount * 100), // копійки
                 ccy: 980, // UAH
-                merchantPaymInfo: { reference: dealId || '', destination: description || '' },
+                merchantPaymInfo: { reference: dealId || '', destination: description || _tg('Оплата','Оплата') },
                 redirectUrl: window.location.origin,
                 webHookUrl: `https://apptalko.com/api/webhook?channel=monobank&cid=${window.currentCompanyId}`,
             }),
@@ -1041,7 +973,7 @@ window.crmMonoPayLink = async function(amount, description, dealId) {
         const data = await res.json();
         if (data.pageUrl) {
             navigator.clipboard?.writeText(data.pageUrl);
-            if (typeof showToast === 'function') showToast('', 'success');
+            if (typeof showToast === 'function') showToast(_tg('Посилання скопійовано', 'Ссылка скопирована'), 'success');
             return data.pageUrl;
         } else {
             if (typeof showToast === 'function') showToast(window.t('errPfx2') + (data.errText || JSON.stringify(data)), 'error');
@@ -1056,7 +988,7 @@ window.crmMonoPayLink = async function(amount, description, dealId) {
 window.intgSaveViber = async function() {
     const token   = document.getElementById('intg_vibertoken')?.value.trim();
     const manager = document.getElementById('intg_viberchat')?.value.trim();
-    if (!token) { if (typeof showToast === 'function') showToast('', 'error'); return; }
+    if (!token) { if (typeof showToast === 'function') showToast(_tg('Введіть Viber Bot Token', 'Введите Viber Bot Token'), 'error'); return; }
     try {
         await window.companyRef().update({
             viberBotToken:  token,
@@ -1065,7 +997,7 @@ window.intgSaveViber = async function() {
         });
         intg.settings.viberBotToken  = token;
         intg.settings.viberManagerId = manager;
-        if (typeof showToast === 'function') showToast('', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Viber Bot збережено', 'Viber Bot сохранён'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -1076,7 +1008,7 @@ window.intgTestViber = async function() {
     const token   = document.getElementById('intg_vibertoken')?.value.trim() || intg.settings?.viberBotToken;
     const manager = document.getElementById('intg_viberchat')?.value.trim()  || intg.settings?.viberManagerId;
     if (!token || !manager) {
-        if (typeof showToast === 'function') showToast('', 'error');
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Token і ID менеджера', 'Заполните Token и ID менеджера'), 'error');
         return;
     }
     try {
@@ -1093,7 +1025,7 @@ window.intgTestViber = async function() {
         });
         const data = await res.json();
         if (data.status === 0) {
-            if (typeof showToast === 'function') showToast('', 'success');
+            if (typeof showToast === 'function') showToast(_tg('Повідомлення відправлено у Viber', 'Сообщение отправлено в Viber'), 'success');
         } else {
             if (typeof showToast === 'function') showToast('Viber помилка: ' + (data.status_message || data.status), 'error');
         }
@@ -1104,7 +1036,7 @@ window.intgTestViber = async function() {
 
 window.intgSetViberWebhook = async function() {
     const token = document.getElementById('intg_vibertoken')?.value.trim() || intg.settings?.viberBotToken;
-    if (!token) { if (typeof showToast === 'function') showToast('', 'error'); return; }
+    if (!token) { if (typeof showToast === 'function') showToast(_tg('Спочатку введіть Token', 'Сначала введите Token'), 'error'); return; }
     const webhookUrl = `https://apptalko.com/api/webhook?channel=viber&cid=${window.currentCompanyId||''}`;
     try {
         const res = await fetch('https://chatapi.viber.com/pa/set_webhook', {
@@ -1118,9 +1050,9 @@ window.intgSetViberWebhook = async function() {
         });
         const data = await res.json();
         if (data.status === 0) {
-            if (typeof showToast === 'function') showToast('', 'success');
+            if (typeof showToast === 'function') showToast(_tg('Webhook підключено — Viber бот активний', 'Webhook подключён — Viber бот активен'), 'success');
         } else {
-            if (typeof showToast === 'function') showToast('' + (data.status_message || data.status), 'error');
+            if (typeof showToast === 'function') showToast(_tg('Помилка webhook: ','Ошибка webhook: ') + (data.status_message || data.status), 'error');
         }
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -1176,7 +1108,7 @@ window.intgSaveBinotel = async function() {
     const key    = document.getElementById('intg_binotel_key')?.value.trim();
     const secret = document.getElementById('intg_binotel_secret')?.value.trim();
     if (!key || !secret) {
-        if (typeof showToast === 'function') showToast('', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть API Key і Secret', 'Введите API Key и Secret'), 'error'); return;
     }
     try {
         await window.companyRef().update({
@@ -1186,7 +1118,7 @@ window.intgSaveBinotel = async function() {
         });
         intg.settings.binotelKey    = key;
         intg.settings.binotelSecret = secret;
-        if (typeof showToast === 'function') showToast('', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Binotel збережено', 'Binotel сохранён'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
@@ -1199,14 +1131,14 @@ window.intgTestBinotel = async function() {
     const key    = document.getElementById('intg_binotel_key')?.value.trim()    || intg.settings?.binotelKey;
     const secret = document.getElementById('intg_binotel_secret')?.value.trim() || intg.settings?.binotelSecret;
     if (!key || !secret) {
-        if (typeof showToast === 'function') showToast('', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Key і Secret', 'Заполните Key и Secret'), 'error'); return;
     }
     // Перевіряємо формат ключів (UUID-подібний)
     const uuidRe = /^[0-9a-f\-]{32,40}$/i;
     if (!uuidRe.test(key)) {
-        if (typeof showToast === 'function') showToast('', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('API Key виглядає невірно — перевірте Binotel кабінет', 'API Key выглядит неверным — проверьте кабинет Binotel'), 'warning'); return;
     }
-    if (typeof showToast === 'function') showToast('', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Ключі виглядають коректно. Перевірка відбудеться при першому дзвінку', 'Ключи выглядят корректно. Проверка произойдёт при первом звонке'), 'info');
 };
 
 // ── Ringostat ──────────────────────────────────────────────
@@ -1214,7 +1146,7 @@ window.intgSaveRingostat = async function() {
     const key     = document.getElementById('intg_ringostat_key')?.value.trim();
     const project = document.getElementById('intg_ringostat_project')?.value.trim();
     if (!key) {
-        if (typeof showToast === 'function') showToast('', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть API Token', 'Введите API Token'), 'error'); return;
     }
     try {
         await window.companyRef().update({
@@ -1224,7 +1156,7 @@ window.intgSaveRingostat = async function() {
         });
         intg.settings.ringostatApiKey    = key;
         intg.settings.ringostatProjectId = project;
-        if (typeof showToast === 'function') showToast('', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Ringostat збережено', 'Ringostat сохранён'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
@@ -1235,13 +1167,13 @@ window.intgTestRingostat = async function() {
     // Ringostat API не підтримує CORS — пряма перевірка з браузера неможлива.
     const key = document.getElementById('intg_ringostat_key')?.value.trim() || intg.settings?.ringostatApiKey;
     if (!key) {
-        if (typeof showToast === 'function') showToast('', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть API Token', 'Введите API Token'), 'error'); return;
     }
     // Мінімальна валідація: токен має бути рядком >= 16 символів
     if (key.length < 16) {
-        if (typeof showToast === 'function') showToast('', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('Токен виглядає занадто коротким — перевірте Ringostat кабінет', 'Токен выглядит слишком коротким — проверьте кабинет Ringostat'), 'warning'); return;
     }
-    if (typeof showToast === 'function') showToast('', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Токен збережено. Перевірка відбудеться при першому дзвінку', 'Токен сохранён. Проверка произойдёт при первом звонке'), 'info');
 };
 
 // ── Stream Telecom ─────────────────────────────────────────
@@ -1249,7 +1181,7 @@ window.intgSaveStreamTelecom = async function() {
     const login = document.getElementById('intg_stream_login')?.value.trim();
     const pass  = document.getElementById('intg_stream_pass')?.value.trim();
     if (!login || !pass) {
-        if (typeof showToast === 'function') showToast('', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Введіть Login і Password', 'Введите Login и Password'), 'error'); return;
     }
     try {
         await window.companyRef().update({
@@ -1259,7 +1191,7 @@ window.intgSaveStreamTelecom = async function() {
         });
         intg.settings.streamTelecomLogin    = login;
         intg.settings.streamTelecomPassword = pass;
-        if (typeof showToast === 'function') showToast('', 'success');
+        if (typeof showToast === 'function') showToast(_tg('Stream Telecom збережено', 'Stream Telecom сохранён'), 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
@@ -1270,16 +1202,16 @@ window.intgTestStreamTelecom = async function() {
     const login = document.getElementById('intg_stream_login')?.value.trim()  || intg.settings?.streamTelecomLogin;
     const pass  = document.getElementById('intg_stream_pass')?.value.trim()   || intg.settings?.streamTelecomPassword;
     if (!login || !pass) {
-        if (typeof showToast === 'function') showToast('', 'error'); return;
+        if (typeof showToast === 'function') showToast(_tg('Заповніть Login і Password', 'Заполните Login и Password'), 'error'); return;
     }
     // Базова валідація email
     if (!login.includes('@')) {
-        if (typeof showToast === 'function') showToast('', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('Login має бути email адресою', 'Login должен быть email адресом'), 'warning'); return;
     }
     if (pass.length < 6) {
-        if (typeof showToast === 'function') showToast('', 'warning'); return;
+        if (typeof showToast === 'function') showToast(_tg('Пароль/ключ занадто короткий', 'Пароль/ключ слишком короткий'), 'warning'); return;
     }
-    if (typeof showToast === 'function') showToast('', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Дані виглядають коректно. Перевірка відбудеться при першому дзвінку', 'Данные выглядят корректно. Проверка произойдёт при первом звонке'), 'info');
 };
 
 // ── Tab hook ───────────────────────────────────────────────
@@ -1315,7 +1247,7 @@ _registerTab('integrations', function() { window.initIntegrationsModule(); });
         const apiKey = document.getElementById('intg_wapikey')?.value.trim();
         const phone  = document.getElementById('intg_waphone')?.value.trim();
         if (!apiKey) {
-            if (typeof showToast === 'function') showToast('', 'error');
+            if (typeof showToast === 'function') showToast(_tg('Введіть 360dialog API Key', 'Введите 360dialog API Key'), 'error');
             return;
         }
         try {
@@ -1328,7 +1260,7 @@ _registerTab('integrations', function() { window.initIntegrationsModule(); });
                 intg.settings.whatsappApiKey = apiKey;
                 intg.settings.whatsappPhone  = phone || null;
             }
-            if (typeof showToast === 'function') showToast('', 'success');
+            if (typeof showToast === 'function') showToast(_tg('WhatsApp Business збережено ✓', 'WhatsApp Business сохранён ✓'), 'success');
         } catch(e) {
             if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
         }
@@ -1338,15 +1270,15 @@ _registerTab('integrations', function() { window.initIntegrationsModule(); });
         const apiKey = document.getElementById('intg_wapikey')?.value.trim() || intg.settings?.whatsappApiKey;
         const phone  = document.getElementById('intg_waphone')?.value.trim() || intg.settings?.whatsappPhone;
         if (!apiKey || !phone) {
-            if (typeof showToast === 'function') showToast('', 'error');
+            if (typeof showToast === 'function') showToast(_tg('Заповніть API Key і номер WhatsApp', 'Заполните API Key и номер WhatsApp'), 'error');
             return;
         }
         try {
-            const result = await window.waSend(phone, '', apiKey);
+            const result = await window.waSend(phone, _tg('✅ Тестове повідомлення з платформи Талько. WhatsApp підключено успішно!','✅ Тестовое сообщение с платформы Талько. WhatsApp подключён успешно!'), apiKey);
             if (result.ok) {
-                if (typeof showToast === 'function') showToast('', 'success');
+                if (typeof showToast === 'function') showToast(_tg('Тест успішний — перевірте WhatsApp', 'Тест успешен — проверьте WhatsApp'), 'success');
             } else {
-                if (typeof showToast === 'function') showToast('' + (result.error || ''), 'error');
+                if (typeof showToast === 'function') showToast(_tg('Помилка відправки: ', 'Ошибка отправки: ') + (result.error || _tg('невідома', 'неизвестна')), 'error');
             }
         } catch(e) {
             if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
@@ -1354,45 +1286,3 @@ _registerTab('integrations', function() { window.initIntegrationsModule(); });
     };
 
 })();
-
-window.intgSaveInstagram = async function() {
-    const token  = document.getElementById('intg_ig_token')?.value.trim();
-    const pageId = document.getElementById('intg_ig_pageid')?.value.trim();
-    if (!token || !pageId) {
-        if (typeof showToast === 'function') showToast('', 'error');
-        return;
-    }
-    try {
-        await window.companyRef().update({
-            instagramToken:  token,
-            instagramPageId: pageId,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        if (intg.settings) { intg.settings.instagramToken = token; intg.settings.instagramPageId = pageId; }
-        if (typeof showToast === 'function') showToast('', 'success');
-        _renderAll();
-    } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
-    }
-};
-
-window.intgTestInstagram = async function() {
-    const token  = document.getElementById('intg_ig_token')?.value.trim() || intg.settings?.instagramToken;
-    const pageId = document.getElementById('intg_ig_pageid')?.value.trim() || intg.settings?.instagramPageId;
-    if (!token || !pageId) {
-        if (typeof showToast === 'function') showToast('', 'error');
-        return;
-    }
-    try {
-        // Перевіряємо токен через Graph API
-        const res = await fetch(`https://graph.facebook.com/v18.0/${pageId}?fields=name&access_token=${token}`);
-        const data = await res.json();
-        if (data.name) {
-            if (typeof showToast === 'function') showToast(`✅ Підключено: ${data.name}`, 'success');
-        } else {
-            if (typeof showToast === 'function') showToast('Помилка: ' + (data.error?.message || 'Невірний токен'), 'error');
-        }
-    } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
-    }
-};

@@ -70,7 +70,6 @@ window.destroyBotsModule = function() {
     chat.lastContactDoc     = null;
     chat.hasMoreContacts    = false;
     chat.search             = '';
-    chat.filter             = 'all';
     chat.sendingBotToken    = null;
     // cleanup всіх multi-instance listeners (crm, тощо)
     Object.keys(chat.instances || {}).forEach(id => {
@@ -164,7 +163,7 @@ function renderTabBar(visibleTabs) {
     bar.innerHTML = visible.map(([id, icon, label]) => {
         const active = isActive(id);
         // Скорочуємо лейбли для компактного режиму
-        const shortLabels = { bots:'', flows:'', contacts:'', chat:'Чат', broadcast:'', settings:'⚙️' };
+        const shortLabels = { bots:_tg('Боти','Боты'), flows:_tg('Ланц.','Цеп.'), contacts:_tg('Конт.','Конт.'), chat:'Чат', broadcast:_tg('Розс.','Рассл.'), settings:'⚙️' };
         const displayLabel = compact ? shortLabels[id] || label : label;
         return `
         <button id="bpTab_${id}" onclick="bpSwitch('${id}')"
@@ -280,7 +279,7 @@ function renderBotsTab() {
                             style="padding:0.35rem 0.6rem;background:#22c55e;color:white;
                             border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;
                             display:flex;align-items:center;gap:3px;white-space:nowrap;">
-                            ''
+                            ${_tg('Відкрити','Открыть')}
                         </button>
                         <button onclick="openBotSettings('${bot.id}')"
                             title=${window.t('flowSettings')}
@@ -298,8 +297,6 @@ function renderBotsTab() {
                 </div>`;
             }).join('')}
         </div>`}`;
-    lcIcons(c);
-    lcIcons(c);
 }
 
 // ── Відкрити бота <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> показати його ланцюги ─────────────────
@@ -344,7 +341,7 @@ function renderFlowsTab() {
             <button onclick="bpSwitch('bots')"
                 style="background:none;border:none;cursor:pointer;color:#6b7280;font-size:0.82rem;padding:0;display:flex;align-items:center;gap:4px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                ''
+                ${_tg('Всі боти','Все боты')}
             </button>
             <span style="color:#9ca3af;">›</span>
             <span style="font-weight:700;font-size:0.85rem;color:#374151;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;">${escH(bot?.name||window.t('botsBot'))}</span>
@@ -356,13 +353,13 @@ function renderFlowsTab() {
         </div>
 
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
-            <div style="font-weight:700;font-size:0.95rem;">''</div>
+            <div style="font-weight:700;font-size:0.95rem;">${_tg('Ланцюги бота','Цепочки бота')}</div>
             <button onclick="openCreateFlowModal()"
                 style="padding:0.42rem 0.85rem;background:#22c55e;color:white;border:none;
                 border-radius:9px;cursor:pointer;font-weight:600;font-size:0.8rem;
                 display:flex;align-items:center;gap:5px;box-shadow:0 1px 4px #22c55e44;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-                ''
+                ${_tg('Новий ланцюг','Новая цепочка')}
             </button>
         </div>
 
@@ -371,11 +368,11 @@ function renderFlowsTab() {
             <div style="margin-bottom:0.6rem;color:#9ca3af;">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg>
             </div>
-            <div style="font-weight:600;margin-bottom:0.3rem;">''</div>
-            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">стувачем</div>
+            <div style="font-weight:600;margin-bottom:0.3rem;">${_tg('Ланцюгів поки немає','Цепочек пока нет')}</div>
+            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">${_tg('Ланцюг — це сценарій діалогу з користувачем','Цепочка — это сценарий диалога с пользователем')}стувачем</div>
             <button onclick="openCreateFlowModal()"
                 style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:9px;cursor:pointer;font-weight:600;">
-                ''
+                ${_tg('+ Створити ланцюг','+ Создать цепочку')}
             </button>
         </div>` : `
         <div style="display:flex;flex-direction:column;gap:0.5rem;">
@@ -411,25 +408,26 @@ function renderFlowsTab() {
                                     </span>
                                     <span style="font-size:0.73rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
                                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
-                                        ${nodeCount} ''${_tg(nodeCount===1?'':nodeCount<5?'и':'ів', nodeCount===1?'':nodeCount<5?'а':'ов')}
+                                        ${nodeCount} ${_tg('вузл','узл')}${_tg(nodeCount===1?'':nodeCount<5?'и':'ів', nodeCount===1?'':nodeCount<5?'а':'ов')}
                                     </span>
                                     <span style="font-size:0.73rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
                                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                                        ${flow.sessionCount||0} ''
+                                        ${flow.sessionCount||0} ${_tg('сесій','сессий')}
                                     </span>
                                 </div>
-                                <div style="margin-top:0.4rem;display:flex;align-items:center;gap:0.3rem;">
-                                    <code style="background:#f8fafc;color:#6b7280;padding:3px 8px;border-radius:6px;
-                                        font-size:0.68rem;border:1px solid #e5e7eb;flex:1;
-                                        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-                                        display:block;max-width:300px;" title="${deepLink}">
-                                        ${deepLink.replace('https://t.me/','t.me/').slice(0, 45)}${deepLink.length > 45 ? '…' : ''}
-                                    </code>
+                                <div style="margin-top:0.5rem;display:flex;align-items:center;gap:0.3rem;">
+                                    <div style="font-size:0.69rem;color:#9ca3af;flex:1;overflow:hidden;
+                                        text-overflow:ellipsis;white-space:nowrap;background:#f8fafc;
+                                        border:1px solid #e5e7eb;border-radius:6px;padding:3px 8px;
+                                        display:flex;align-items:center;gap:4px;">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                        ${deepLink}
+                                    </div>
                                     <button onclick="copyLink('${deepLink}')"
                                         style="padding:3px 8px;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;
                                         border-radius:5px;cursor:pointer;font-size:0.68rem;white-space:nowrap;flex-shrink:0;font-weight:600;"
                                         onmouseenter="this.style.background='#dbeafe'" onmouseleave="this.style.background='#eff6ff'">
-                                        ''
+                                        ${_tg('Копіювати','Копировать')}
                                     </button>
                                     <button onclick="showQR('${encodeURIComponent(deepLink)}')"
                                         style="padding:3px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
@@ -447,17 +445,7 @@ function renderFlowsTab() {
                                     box-shadow:0 1px 4px #22c55e44;transition:background 0.15s;"
                                     onmouseenter="this.style.background='#16a34a'" onmouseleave="this.style.background='#22c55e'">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                    ''
-                                </button>
-                                <!-- CRM автоматизація -->
-                                <button onclick="openFlowCrmSettings('${flow.id}','${escH(flow.name||'')}')"
-                                    style="padding:0.42rem 0.75rem;border:none;border-radius:8px;cursor:pointer;font-size:0.76rem;font-weight:700;
-                                    display:flex;align-items:center;justify-content:center;gap:5px;transition:all 0.15s;
-                                    ${flow.crmPipelineId ? 'background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;box-shadow:0 2px 8px rgba(245,158,11,0.4);' : 'background:#fff7ed;color:#f59e0b;border:2px dashed #fcd34d;'}"
-                                    title="''"
-                                    onmouseenter="this.style.filter='brightness(1.1)'" onmouseleave="this.style.filter=''">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                                    ${flow.crmPipelineId ? '🔥 CRM' : window.t('crm')}
+                                    ${_tg('Редагувати','Редактировать')}
                                 </button>
                                 <div style="display:flex;gap:0.25rem;">
                                     <button onclick="toggleFlowStatus('${flow.id}','${flow.status}')"
@@ -501,7 +489,7 @@ window.openCreateBotModal = function() {
             display:flex;align-items:center;justify-content:center;padding:1rem;">
             <div style="background:white;border-radius:16px;width:100%;max-width:440px;">
                 <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
-                    <div style="font-weight:700;font-size:1rem;">''</div>
+                    <div style="font-weight:700;font-size:1rem;">${_tg('Підключити нового бота','Подключить нового бота')}</div>
                     <button onclick="document.getElementById('bpCreateBot').remove()"
                         style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><i data-lucide="x" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i></button>
                 </div>
@@ -532,7 +520,7 @@ window.openCreateBotModal = function() {
                 </div>
                 <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
                     <button onclick="document.getElementById('bpCreateBot').remove()"
-                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">''</button>
+                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">${_tg('Скасувати','Отмена')}</button>
                     <button onclick="createAndConnectBot()"
                         style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">
                         <i data-lucide="check" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> Підключити
@@ -551,7 +539,7 @@ window.updateBotTokenHint = function(channel) {
         if (hint) hint.textContent = window.t('botFatherInstr');
     } else if (channel === 'instagram') {
         if (label) label.textContent = 'PAGE ACCESS TOKEN';
-        if (hint) hint.textContent = '';
+        if (hint) hint.textContent = _tg('Отримай в Meta Developer Console → Instagram → Page Access Token','Получи в Meta Developer Console → Instagram → Page Access Token');
     }
 };
 
@@ -648,7 +636,7 @@ window.openCreateFlowModal = function() {
             display:flex;align-items:center;justify-content:center;padding:1rem;">
             <div style="background:white;border-radius:16px;width:100%;max-width:400px;">
                 <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;">
-                    <div style="font-weight:700;">''</div>
+                    <div style="font-weight:700;">${_tg('Новий ланцюг','Новая цепочка')}</div>
                     <button onclick="document.getElementById('bpCreateFlow').remove()"
                         style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><i data-lucide="x" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i></button>
                 </div>
@@ -666,7 +654,7 @@ window.openCreateFlowModal = function() {
                 </div>
                 <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
                     <button onclick="document.getElementById('bpCreateFlow').remove()"
-                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">''</button>
+                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">${_tg('Скасувати','Отмена')}</button>
                     <button onclick="saveNewFlow()"
                         style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;"><i data-lucide="check" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> Створити</button>
                 </div>
@@ -705,167 +693,6 @@ window.saveNewFlow = async function() {
     } catch(e) {
         if (saveBtn) { saveBtn.disabled = false; }
         if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message);
-    }
-};
-
-// ═══════════════════════════════════════
-// CRM АВТОМАТИЗАЦІЯ ДЛЯ FLOW
-// ═══════════════════════════════════════
-window.openFlowCrmSettings = async function(flowId, flowName) {
-    // Закриваємо попередній модал якщо є
-    document.getElementById('flowCrmModal')?.remove();
-
-    // Завантажуємо воронки і поточні налаштування паралельно
-    let pipelines = [], currentSettings = {};
-    try {
-        // Пріоритет: window.crm.pipelines (вже в пам'яті якщо CRM відкривався)
-        if (window.crm?.pipelines?.length) {
-            pipelines = window.crm.pipelines;
-        } else {
-            const pipSnap = await window.companyRef().collection(window.DB_COLS?.CRM_PIPELINE || 'crm_pipeline').get();
-            pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        }
-        const flowSnap = await window.companyRef().collection('bots').doc(bp.activeBotId).collection('flows').doc(flowId).get();
-        currentSettings = flowSnap.data() || {};
-    } catch(e) { console.error('[openFlowCrmSettings]', e); }
-
-    const selPipeId = currentSettings.crmPipelineId || '';
-    const selStageId = currentSettings.crmStageId || '';
-    const selTrigger = currentSettings.crmTrigger || 'done_tag';
-
-    const pipOpts = pipelines.map(p => `<option value="${p.id}" ${p.id===selPipeId?'selected':''}>${escH(p.name||p.id)}</option>`).join('');
-
-    // Стадії першої воронки або обраної
-    const getStageOpts = (pipeId, selStId) => {
-        const pip = pipelines.find(p => p.id === pipeId) || pipelines[0];
-        const stages = (pip?.stages || pip?.steps || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-        return stages.map(s => `<option value="${s.id}" ${s.id===selStId?'selected':''}>${escH(s.label||s.name||s.id)}</option>`).join('');
-    };
-
-    const modal = `
-    <div id="flowCrmModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10050;display:flex;align-items:center;justify-content:center;padding:16px;">
-        <div style="background:white;border-radius:16px;width:100%;max-width:480px;box-shadow:0 8px 40px rgba(0,0,0,0.18);overflow:hidden;">
-            <!-- Header -->
-            <div style="padding:18px 20px 14px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:10px;">
-                <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                </div>
-                <div>
-                    <div style="font-weight:700;font-size:0.95rem;color:#111827;">CRM Автоматизація</div>
-                    <div style="font-size:0.74rem;color:#6b7280;">${escH(flowName)}</div>
-                </div>
-                <button onclick="document.getElementById('flowCrmModal').remove()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                </button>
-            </div>
-
-            <!-- Body -->
-            <div style="padding:18px 20px;">
-                <!-- Увімкнути -->
-                <label style="display:flex;align-items:center;gap:10px;margin-bottom:16px;cursor:pointer;padding:12px 14px;background:#f9fafb;border-radius:10px;border:1.5px solid ${selPipeId?'#f59e0b':'#e5e7eb'};">
-                    <input type="checkbox" id="fcrmEnabled" ${selPipeId?'checked':''} onchange="document.getElementById('fcrmPipeWrap').style.display=this.checked?'':'none'"
-                        style="width:18px;height:18px;cursor:pointer;accent-color:#f59e0b;">
-                    <div>
-                        <div style="font-weight:700;font-size:0.85rem;color:#111827;">''</div>
-                        <div style="font-size:0.74rem;color:#6b7280;">''</div>
-                    </div>
-                </label>
-
-                <div id="fcrmPipeWrap" style="display:${(selPipeId||pipelines.length)?'':'none'};">
-                    <!-- Коли спрацьовує -->
-                    <div style="margin-bottom:12px;">
-                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">''</label>
-                        <select id="fcrmTrigger" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
-                            onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
-                            <option value="done_tag" ${selTrigger==='done_tag'?'selected':''}>${_tg('При тегу [DONE] в відповіді AI','При теге [DONE] в ответе AI')}</option>
-                            <option value="flow_start" ${selTrigger==='flow_start'?'selected':''}>''</option>
-                            <option value="flow_end" ${selTrigger==='flow_end'?'selected':''}>''</option>
-                        </select>
-                    </div>
-
-                    <!-- Воронка -->
-                    <div style="margin-bottom:12px;">
-                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">''</label>
-                        <!-- DEBUG: pipelines.length = ${pipelines.length} -->
-        ${pipelines.length ? `
-                        <select id="fcrmPipeline" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
-                            onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'"
-                            onchange="fcrmUpdateStages(this.value,'${selStageId}')">
-                            <option value="">''</option>
-                            ${pipOpts}
-                        </select>` : `<div style="padding:8px;background:#fef3c7;border-radius:8px;font-size:0.78rem;color:#92400e;">
-                            ''
-                        </div>`}
-                    </div>
-
-                    <!-- Стадія -->
-                    <div style="margin-bottom:16px;">
-                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">''</label>
-                        <select id="fcrmStage" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
-                            onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
-                            <option value="">''</option>
-                            ${getStageOpts(selPipeId, selStageId)}
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div style="padding:14px 20px;border-top:1px solid #f3f4f6;display:flex;gap:8px;justify-content:flex-end;">
-                <button onclick="document.getElementById('flowCrmModal').remove()"
-                    style="padding:9px 18px;border:1.5px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;font-size:0.84rem;font-weight:600;color:#6b7280;">
-                    ''
-                </button>
-                <button onclick="saveFlowCrmSettings('${flowId}')"
-                    style="padding:9px 22px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.84rem;font-weight:700;box-shadow:0 2px 8px rgba(245,158,11,0.35);">
-                    🔥 ''
-                </button>
-            </div>
-        </div>
-    </div>`;
-
-    document.body.insertAdjacentHTML('beforeend', modal);
-
-    // Оновлення стадій при зміні воронки
-    window.fcrmUpdateStages = function(pipeId, selStId = '') {
-        const sel = document.getElementById('fcrmStage');
-        if (!sel) return;
-        const pip = pipelines.find(p => p.id === pipeId);
-        const stages = (pip?.stages || pip?.steps || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-        sel.innerHTML = `<option value="">''</option>` +
-            stages.map(s => `<option value="${s.id}" ${s.id===selStId?'selected':''}>${escH(s.label||s.name||s.id)}</option>`).join('');
-    };
-};
-
-window.saveFlowCrmSettings = async function(flowId) {
-    const enabled = document.getElementById('fcrmEnabled')?.checked;
-    const pipelineId = document.getElementById('fcrmPipeline')?.value || '';
-    const stageId = document.getElementById('fcrmStage')?.value || '';
-    const trigger = document.getElementById('fcrmTrigger')?.value || 'done_tag';
-
-    try {
-        const btn = document.querySelector('#flowCrmModal button[onclick*="saveFlowCrm"]');
-        if (btn) { btn.disabled = true; btn.textContent = '...'; }
-
-        await window.companyRef().collection('bots').doc(bp.activeBotId).collection('flows').doc(flowId).update({
-            crmEnabled:    enabled && !!pipelineId,
-            crmPipelineId: enabled ? pipelineId : '',
-            crmStageId:    enabled ? stageId : '',
-            crmTrigger:    enabled ? trigger : '',
-            updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
-        });
-
-        document.getElementById('flowCrmModal')?.remove();
-        if (typeof showToast === 'function') showToast(
-            enabled && pipelineId
-                ? '🔥 ' + ''
-                : '',
-            'success'
-        );
-        // Перерендеримо список flows щоб кнопка оновилась
-        if (bp.subTab === 'flows') renderFlowsTab();
-    } catch(e) {
-        if (typeof showToast === 'function') showToast('' + e.message, 'error');
     }
 };
 
@@ -908,7 +735,7 @@ window.deleteFlow = async function(flowId) {
         await batch.commit();
         if (typeof showToast === 'function') showToast(window.t('crmDeleted'), 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(_tg('Помилка видалення: ','Ошибка удаления: ') + e.message, 'error');
         console.error('[deleteFlow]', e.message);
     }
 };
@@ -1017,7 +844,7 @@ async function renderContactsTab() {
                 <button onclick="ctsLoadMore()"
                     style="width:100%;padding:0.55rem;background:white;border:1.5px solid #e5e7eb;
                     border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:600;color:#374151;">
-                    ''
+                    ${_tg('Завантажити ще','Загрузить ещё')}
                 </button>
             </div>
         </div>
@@ -1083,7 +910,7 @@ async function ctsLoad(reset = false) {
 
     } catch(e) {
         const list = document.getElementById('ctsList');
-        if (list) list.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:0.82rem;">'' ${escH(e.message)}</div>`;
+        if (list) list.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:0.82rem;">${_tg('Помилка:','Ошибка:')} ${escH(e.message)}</div>`;
     }
 
     cts.loading = false;
@@ -1110,8 +937,8 @@ function _ctsRenderList() {
         list.innerHTML = `
             <div style="text-align:center;padding:3rem 1rem;background:white;border-radius:12px;">
                 <svg style="color:#d1d5db;margin-bottom:0.75rem;" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <div style="font-weight:600;color:#374151;margin-bottom:0.3rem;">''</div>
-                <div style="font-size:0.78rem;color:#9ca3af;">''/div>
+                <div style="font-weight:600;color:#374151;margin-bottom:0.3rem;">${_tg('Контактів не знайдено','Контактов не найдено')}</div>
+                <div style="font-size:0.78rem;color:#9ca3af;">${_tg('Спробуйте змінити фільтри або дочекайтесь нових лідів','Попробуйте изменить фильтры или дождитесь новых лидов')}/div>
             </div>`;
         if (loadMore) loadMore.style.display = 'none';
         return;
@@ -1259,7 +1086,7 @@ window.ctsOpenCard = async function(contactId) {
 
             <!-- Хедер картки -->
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-                <div style="font-weight:700;font-size:0.85rem;color:#374151;">''</div>
+                <div style="font-weight:700;font-size:0.85rem;color:#374151;">${_tg('Картка контакту','Карточка контакта')}</div>
                 <button onclick="ctsCloseCard()"
                     style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:2px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -1321,7 +1148,7 @@ window.ctsOpenCard = async function(contactId) {
 
             <!-- Теги -->
             <div style="margin-bottom:0.75rem;">
-                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">''</div>
+                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">${_tg('Теги','Теги')}</div>
                 <div id="ctsTagsContainer" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;">
                     ${(ct.tags||[]).map((tag,i) => `
                     <span style="background:#f0fdf4;color:#16a34a;font-size:0.72rem;padding:2px 8px;
@@ -1343,7 +1170,7 @@ window.ctsOpenCard = async function(contactId) {
 
             <!-- Примітка -->
             <div style="margin-bottom:1rem;">
-                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">''<ера</div>
+                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">${_tg('Примітка менеджера','Примечание менеджера')}<ера</div>
                 <textarea id="ctsNote" rows="3" placeholder=${window.t('botsNotePh2')}
                     style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;
                     font-size:0.78rem;resize:vertical;box-sizing:border-box;font-family:inherit;"
@@ -1351,7 +1178,7 @@ window.ctsOpenCard = async function(contactId) {
                 <button onclick="ctsSaveNote('${ct.id}')"
                     style="margin-top:4px;width:100%;padding:0.4rem;background:#f0fdf4;color:#16a34a;
                     border:1.5px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.76rem;font-weight:600;">
-                    ''
+                    ${_tg('Зберегти примітку','Сохранить примечание')}
                 </button>
             </div>
 
@@ -1359,7 +1186,7 @@ window.ctsOpenCard = async function(contactId) {
             <button onclick="ctsDeleteContact('${ct.id}')"
                 style="width:100%;padding:0.45rem;background:#fff5f5;color:#ef4444;
                 border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;font-size:0.76rem;font-weight:600;">
-                ''
+                ${_tg('Видалити контакт','Удалить контакт')}
             </button>
         </div>`
 
@@ -1374,7 +1201,7 @@ window.ctsOpenCard = async function(contactId) {
             const dealId = dealSnap.docs[0].id;
             const crmBtn = document.createElement('div');
             crmBtn.style.cssText = 'margin:0.75rem 1rem 0;padding:0.5rem 0.75rem;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:0.5rem;';
-            crmBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><div style="flex:1"><div style="font-size:0.78rem;font-weight:700;color:#16a34a;font-size:0.7rem;color:#374151;">' + (deal.title || deal.clientName || '—') + ' · ' + (deal.stage || '—') + '</div></div>';
+            crmBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><div style="flex:1"><div style="font-size:0.78rem;font-weight:700;color:#16a34a;">CRM угода</div><div style="font-size:0.7rem;color:#374151;">' + (deal.title || deal.clientName || '—') + ' · ' + (deal.stage || '—') + '</div></div>';
             crmBtn.onclick = function() { if (typeof switchTab === 'function') switchTab('crm'); };
             const panelEl = document.getElementById('ctsDetailPanel');
             if (panelEl) panelEl.appendChild(crmBtn);
@@ -1572,7 +1399,7 @@ function _ctsShowRefreshBanner() {
         ` <button class="cts-refresh-btn" onclick="ctsLoad(true)"
             style="background:#22c55e;color:white;border:none;padding:2px 8px;
             border-radius:6px;font-size:0.7rem;cursor:pointer;font-weight:600;">
-            ''
+            ${_tg('↻ Нові ліди','↻ Новые лиды')}
         </button>`
     );
 }
@@ -1629,7 +1456,6 @@ let chat = {
     msgsUnsub: null,     // onSnapshot на messages (main instance)
     contactsUnsub: null, // onSnapshot на unreadCount
     search: '',
-    filter: 'all',       // all | unread | lead
     sendingBotToken: null, // токен бота поточного контакту (main instance)
 
     // ── Multi-instance: кожен контекст (main, crm, тощо) має свій стейт ──
@@ -1656,180 +1482,99 @@ async function renderChatTab() {
     const c = document.getElementById('bpViewChat');
     if (!c) return;
 
+    // FIX mobile: адаптивний чат — на мобільному список і переписка перемикаються
     c.innerHTML = `
     <style>
-        /* ── Chat layout ── */
-        #chatWrap { display:flex;height:calc(100dvh - 172px);min-height:500px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08); }
-
-        /* LEFT: contacts */
-        #chatLeft { width:280px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #e9ecef;background:#fff; }
-        #chatLeftHead { padding:12px 14px 10px;border-bottom:1px solid #e9ecef;flex-shrink:0; }
-        #chatLeftFilters { display:flex;gap:4px;padding:6px 10px;border-bottom:1px solid #e9ecef;flex-shrink:0;overflow-x:auto; }
-        #chatLeftFilters::-webkit-scrollbar { display:none; }
-        .chat-filter-btn { padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;border:1px solid #dee2e6;cursor:pointer;white-space:nowrap;transition:all .15s;background:#fff;color:#6b7280; }
-        .chat-filter-btn.active { background:#22c55e;color:#fff;border-color:#22c55e; }
-        #chatContactsList { flex:1;overflow-y:auto; }
-        #chatContactsList::-webkit-scrollbar { width:4px; }
-        #chatContactsList::-webkit-scrollbar-thumb { background:#e5e7eb;border-radius:2px; }
-        .chat-contact-item { display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid #f3f4f6;transition:background .12s; }
-        .chat-contact-item:hover { background:#f9fafb; }
-        .chat-contact-item.active { background:#f0fdf4; }
-        .chat-contact-avatar { width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.9rem;flex-shrink:0;position:relative; }
-        .chat-contact-avatar .unread-badge { position:absolute;top:-3px;right:-3px;width:17px;height:17px;border-radius:50%;background:#ef4444;font-size:0.58rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid #fff; }
-        .chat-contact-name { font-weight:600;font-size:0.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#111827; }
-        .chat-contact-sub { font-size:0.72rem;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px; }
-        .chat-contact-sub.unread { color:#374151;font-weight:600; }
-        .chat-contact-time { font-size:0.65rem;color:#9ca3af;flex-shrink:0;text-align:right; }
-
-        /* CENTER: messages */
-        #chatCenter { flex:1;display:flex;flex-direction:column;min-width:0;border-right:1px solid #e9ecef; }
-        #chatCenterHead { padding:10px 16px;border-bottom:1px solid #e9ecef;display:flex;align-items:center;gap:10px;min-height:54px;flex-shrink:0;background:#fff; }
-        #chatMsgs { flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:6px;background:#f8f9fa; }
-        #chatMsgs::-webkit-scrollbar { width:4px; }
-        #chatMsgs::-webkit-scrollbar-thumb { background:#dee2e6;border-radius:2px; }
-        #chatInputArea { flex-shrink:0;background:#fff;border-top:1px solid #e9ecef; }
-        #chatInputTabs { display:flex;gap:0;border-bottom:1px solid #e9ecef;padding:0 16px; }
-        .chat-input-tab { padding:7px 14px;font-size:0.78rem;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px; }
-        .chat-input-tab.active { color:#22c55e;border-bottom-color:#22c55e; }
-        #chatInputBox { padding:10px 14px;display:flex;align-items:flex-end;gap:8px; }
-        #chatInput { flex:1;padding:8px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;resize:none;font-family:inherit;max-height:120px;outline:none;line-height:1.45;transition:border-color .15s; }
-        #chatInput:focus { border-color:#22c55e; }
-        #chatSendBtn { padding:8px 18px;background:#22c55e;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;flex-shrink:0;transition:background .15s; }
-        #chatSendBtn:hover { background:#16a34a; }
-
-        /* RIGHT: contact info panel */
-        #chatRight { width:260px;flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto;background:#fff; }
-        #chatRight::-webkit-scrollbar { width:4px; }
-        #chatRight::-webkit-scrollbar-thumb { background:#e5e7eb;border-radius:2px; }
-        #chatRight.hidden { display:none; }
-        .chat-info-section { padding:14px 16px;border-bottom:1px solid #f3f4f6; }
-        .chat-info-label { font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px; }
-        .chat-info-row { display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:0.78rem; }
-        .chat-info-row .key { color:#6b7280; }
-        .chat-info-row .val { color:#111827;font-weight:500;text-align:right;max-width:60%; }
-        .chat-info-badge { display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:0.72rem;font-weight:600; }
-        .chat-crm-btn { display:flex;align-items:center;gap:6px;width:100%;padding:7px 12px;border:1.5px dashed #d1fae5;background:#f0fdf4;border-radius:8px;color:#16a34a;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all .15s;margin-bottom:6px; }
-        .chat-crm-btn:hover { background:#dcfce7;border-color:#86efac; }
-        .chat-tmpl-btn { display:flex;align-items:center;justify-content:space-between;width:100%;padding:6px 10px;border:1px solid #e5e7eb;background:#fff;border-radius:7px;color:#374151;font-size:0.76rem;cursor:pointer;transition:all .15s;margin-bottom:4px; }
-        .chat-tmpl-btn:hover { background:#f9fafb;border-color:#22c55e; }
-
-        /* Mobile */
-        @media (max-width:900px) {
-            #chatRight { display:none; }
-        }
-        @media (max-width:700px) {
-            #chatWrap { height:calc(100dvh - 155px);border-radius:0;box-shadow:none; }
-            #chatLeft { position:absolute;width:100%;height:100%;z-index:10;background:#fff;border-right:none;transition:transform .25s ease; }
-            #chatLeft.chat-hidden { transform:translateX(-100%);pointer-events:none; }
-            #chatCenter { width:100%; }
+        #chatWrapper { display:flex;height:calc(100dvh - 175px);min-height:400px;background:white;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden; }
+        #chatLeftCol { width:260px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #f1f5f9;transition:transform 0.2s; }
+        #chatRightCol { flex:1;display:flex;flex-direction:column;min-width:0; }
+        @media (max-width:600px) {
+            #chatWrapper { height:calc(100dvh - 160px);border-radius:0; }
+            #chatLeftCol { position:absolute;width:100%;height:100%;z-index:10;background:white;border-right:none; }
+            #chatLeftCol.chat-hidden { transform:translateX(-100%);pointer-events:none; }
+            #chatRightCol { width:100%; }
             #chatBackBtn { display:flex!important; }
         }
     </style>
+    <div id="chatWrapper">
 
-    <div id="chatWrap">
+        <!-- ЛІВА КОЛОНКА: список контактів -->
+        <div id="chatLeftCol" style="flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #f1f5f9;">
 
-        <!-- ═══ ЛІВА: СПИСОК ═══ -->
-        <div id="chatLeft">
-            <!-- Хедер -->
-            <div id="chatLeftHead">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                    <span style="font-weight:700;font-size:0.9rem;color:#111827;">''</span>
+            <!-- Хедер + пошук -->
+            <div style="padding:0.75rem;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
+                <div style="font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.5rem;">
+                    ${_tg('Повідомлення','Сообщения')}
                 </div>
                 <div style="position:relative;">
-                    <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                    <input id="chatSearch" type="text" placeholder="''"
+                    <svg style="position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;"
+                        width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input id="chatSearch" type="text" placeholder=${window.t('botsSearch')}
                         value="${escH(chat.search)}"
                         oninput="chatOnSearch(this.value)"
-                        style="width:100%;padding:6px 10px 6px 30px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.78rem;box-sizing:border-box;outline:none;"
+                        style="width:100%;padding:0.38rem 0.5rem 0.38rem 1.8rem;border:1.5px solid #e5e7eb;
+                        border-radius:8px;font-size:0.78rem;box-sizing:border-box;outline:none;"
                         onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
             </div>
-            <!-- Фільтри -->
-            <div id="chatLeftFilters">
-                <button class="chat-filter-btn active" onclick="chatSetFilter('all',this)">''</button>
-                <button class="chat-filter-btn" onclick="chatSetFilter('unread',this)">''</button>
-                <button class="chat-filter-btn" onclick="chatSetFilter('lead',this)">''</button>
-            </div>
+
             <!-- Список -->
-            <div id="chatContactsList"></div>
+            <div id="chatContactsList" style="flex:1;overflow-y:auto;"></div>
         </div>
 
-        <!-- ═══ ЦЕНТР: ПЕРЕПИСКА ═══ -->
-        <div id="chatCenter">
-            <!-- Хедер -->
-            <div id="chatCenterHead">
-                <button id="chatBackBtn" onclick="chatShowContacts()" style="display:none;background:none;border:none;cursor:pointer;padding:4px;color:#6b7280;">
+        <!-- ПРАВА КОЛОНКА: переписка -->
+        <div id="chatRightCol" style="flex:1;display:flex;flex-direction:column;min-width:0;">
+
+            <!-- Хедер контакту -->
+            <div id="chatMsgHeader"
+                style="padding:0.55rem 0.75rem;border-bottom:1px solid #f1f5f9;
+                flex-shrink:0;display:flex;align-items:center;gap:0.5rem;min-height:50px;">
+                <!-- Кнопка назад (тільки мобільний) -->
+                <button id="chatBackBtn" onclick="chatShowContacts()" style="display:none;
+                    background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;color:#6b7280;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                 </button>
-                <div id="chatMsgHeader" style="flex:1;display:flex;align-items:center;gap:10px;">
-                    <div style="color:#9ca3af;font-size:0.82rem;">''</div>
-                </div>
-                <button id="chatInfoToggleBtn" onclick="chatToggleInfo()" title="''"
-                    style="display:none;padding:5px 8px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;cursor:pointer;flex-shrink:0;">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                </button>
+                <div style="color:#9ca3af;font-size:0.82rem;">${_tg('Оберіть контакт зліва','Выберите контакт слева')}</div>
             </div>
 
             <!-- Повідомлення -->
-            <div id="chatMsgs">
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#9ca3af;gap:8px;">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.35;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    <span style="font-size:.82rem;">''</span>
-                </div>
+            <div id="chatMsgs"
+                style="flex:1;overflow-y:auto;padding:1rem;
+                display:flex;flex-direction:column;gap:0.5rem;background:#f8fafc;">
             </div>
 
             <!-- Поле вводу -->
-            <div id="chatInputArea" style="display:none;">
-                <div id="chatInputTabs">
-                    <span class="chat-input-tab active">''</span>
-                </div>
-                <div id="chatInputBox">
-                    <textarea id="chatInput" rows="1"
-                        placeholder="''"
+            <div id="chatInputArea"
+                style="padding:0.6rem;border-top:1px solid #f1f5f9;flex-shrink:0;display:none;">
+                <div style="display:flex;gap:0.4rem;align-items:flex-end;">
+                    <textarea id="chatInput" rows="1" placeholder=${window.t('botsChatPh')}
+                        style="flex:1;padding:0.5rem 0.65rem;border:1.5px solid #e5e7eb;
+                        border-radius:10px;font-size:0.83rem;resize:none;font-family:inherit;
+                        max-height:100px;overflow-y:auto;outline:none;line-height:1.4;"
+                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"
                         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend();}"
-                        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'">
+                        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'">
                     </textarea>
-                    <button onclick="chatSend()" ontouchend="event.preventDefault();chatSend()" id="chatSendBtn">
-                        ''
+                    <button onclick="chatSend()" id="chatSendBtn"
+                        style="padding:0.5rem 0.75rem;background:#22c55e;color:white;border:none;
+                        border-radius:10px;cursor:pointer;flex-shrink:0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- ═══ ПРАВА: ІНФО ═══ -->
-        <div id="chatRight">
-            <div id="chatInfoPanel" style="color:#9ca3af;font-size:.8rem;padding:20px;text-align:center;">''</div>
-        </div>
-
     </div>`;
 
     await chatLoadContacts();
 
-    // Мобільні функції
-    window.chatShowMessages = function() {
-        const left = document.getElementById('chatLeft');
-        if (left) left.classList.add('chat-hidden');
-        const backBtn = document.getElementById('chatBackBtn');
-        if (backBtn) backBtn.style.display = 'flex';
-    };
-    window.chatShowContacts = function() {
-        const left = document.getElementById('chatLeft');
-        if (left) left.classList.remove('chat-hidden');
-        const backBtn = document.getElementById('chatBackBtn');
-        if (backBtn) backBtn.style.display = 'none';
-    };
-    window.chatToggleInfo = function() {
-        const panel = document.getElementById('chatRight');
-        if (panel) panel.classList.toggle('hidden');
-    };
-    window.chatSetFilter = function(filter, btn) {
-        chat.filter = filter;
-        document.querySelectorAll('.chat-filter-btn').forEach(b => b.classList.remove('active'));
-        if (btn) btn.classList.add('active');
-        chatLoadContacts(true);
-    };
-
+    // Real-time: оновлення unreadCount в лівій колонці
     _chatStartUnreadListener();
+
+    // Якщо є активний контакт — відкриваємо
     if (chat.activeId) bpOpenChat(chat.activeId);
 }
 
@@ -1845,9 +1590,6 @@ async function chatLoadContacts(reset = true) {
     try {
         let q = window.companyCol('contacts')
             .orderBy('lastMessageAt', 'desc');
-
-        if (chat.filter === 'unread') q = q.where('unreadCount', '>', 0);
-        else if (chat.filter === 'lead') q = q.where('status', '==', 'lead');
 
         if (chat.lastContactDoc) q = q.startAfter(chat.lastContactDoc);
         q = q.limit(31);
@@ -1882,43 +1624,66 @@ function _chatRenderContactsList() {
 
     if (!chat.contacts.length) {
         list.innerHTML = `<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.78rem;">
-            ''
+            ${_tg('Контактів немає.<br>Очікуйте нових лідів.','Контактов нет.<br>Ожидайте новых лидов.')}
         </div>`;
         return;
     }
 
     list.innerHTML = chat.contacts.map(ct => {
+        // FIX 2: якщо немає імені — показуємо @username, якщо є обидва — додаємо @username під іменем
         const rawName = ct.senderName || ct.name || '';
         const name = rawName || (ct.username ? '@'+ct.username : window.t('botsAnon'));
+        const displaySub = rawName && ct.username ? '@'+ct.username : '';
         const initial = (name.charAt(0) === '@' ? (ct.username||'?').charAt(0) : name.charAt(0)).toUpperCase();
         const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
         const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
         const isActive = ct.id === chat.activeId;
         const unread = ct.unreadCount || 0;
-        const lastMsg = ct.lastMessage || window.t('botsNoMessages2') || '';
+        const lastMsg = ct.lastMessage || '';
         const lastTime = ct.lastMessageAt?.toDate ? relTime(ct.lastMessageAt.toDate()) : '';
-        const statusDot = ct.status === 'lead' ? '#f59e0b' : ct.status === 'client' ? '#22c55e' : '#d1d5db';
 
         return `
         <div onclick="bpOpenChat('${ct.id}')" data-chatid="${ct.id}"
-            class="chat-contact-item${isActive ? ' active' : ''}">
-            <div class="chat-contact-avatar" style="background:${avatarColor};">
-                ${initial}
-                ${unread > 0 ? `<div class="unread-badge">${unread > 9 ? '9+' : unread}</div>` : ''}
-            </div>
-            <div style="flex:1;min-width:0;">
-                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px;">
-                    <span class="chat-contact-name">${escH(name)}</span>
-                    <span class="chat-contact-time">${lastTime}</span>
+            style="padding:0.65rem 0.75rem;cursor:pointer;border-bottom:1px solid #f9fafb;
+            background:${isActive ? '#f0fdf4' : 'transparent'};
+            transition:background 0.15s;"
+            onmouseenter="if('${ct.id}'!=='${chat.activeId}')this.style.background='#f8fafc'"
+            onmouseleave="this.style.background='${isActive ? '#f0fdf4' : 'transparent'}'">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+                <div style="position:relative;flex-shrink:0;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:${avatarColor};
+                        display:flex;align-items:center;justify-content:center;
+                        font-weight:700;color:white;font-size:0.88rem;">
+                        ${initial}
+                    </div>
+                    ${unread > 0 ? `
+                    <div style="position:absolute;top:-2px;right:-2px;
+                        width:16px;height:16px;border-radius:50%;background:#ef4444;
+                        display:flex;align-items:center;justify-content:center;
+                        font-size:0.6rem;font-weight:700;color:white;border:2px solid white;">
+                        ${unread > 9 ? '9+' : unread}
+                    </div>` : ''}
                 </div>
-                <div class="chat-contact-sub ${unread>0?'unread':''}">${escH(lastMsg.slice(0,45))}</div>
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1px;">
+                        <span style="font-weight:${unread>0?'700':'600'};font-size:0.82rem;
+                            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px;">
+                            ${escH(name)}
+                        </span>
+                        <span style="font-size:0.65rem;color:#9ca3af;flex-shrink:0;margin-left:4px;">${lastTime}</span>
+                    </div>
+                    <div style="font-size:0.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+                        font-weight:${unread>0?'600':'400'};color:${unread>0?'#374151':'#9ca3af'};">
+                        ${displaySub ? '<span style="color:#3b82f6;font-size:0.68rem;">'+escH(displaySub)+'</span> · ' : ''}${escH(lastMsg.slice(0, 40) || window.t('botsNoMessages2'))}
+                    </div>
+                </div>
             </div>
         </div>`;
     }).join('') + (chat.hasMoreContacts ? `
         <div style="padding:0.5rem;text-align:center;">
             <button onclick="chatLoadContacts(false)"
                 style="font-size:0.74rem;color:#6b7280;background:none;border:none;cursor:pointer;">
-                ''
+                ${_tg('Завантажити ще','Загрузить ещё')}
             </button>
         </div>` : '');
 }
@@ -1960,7 +1725,7 @@ window.bpOpenChat = async function(contactId, instanceId = 'main') {
     _chatRenderHeader(ct, headerContainerId);
     const inputAreaId = instanceId === 'main' ? 'chatInputArea' : `chatInputArea_${instanceId}`;
     const inputArea = document.getElementById(inputAreaId);
-    if (inputArea) inputArea.style.display = 'block';
+    if (inputArea) inputArea.style.display = '';
 
     // Зупиняємо попередній listener
     if (typeof inst.msgsUnsub === 'function') { inst.msgsUnsub(); }
@@ -1998,98 +1763,39 @@ function _chatRenderHeader(ct, containerId = 'chatMsgHeader') {
     const header = document.getElementById(containerId);
     if (!header || !ct) return;
     const name = ct.senderName || ct.name || window.t('botsAnon');
-    const initial = (name.charAt(0) === '@' ? (ct.username||'?').charAt(0) : name.charAt(0)).toUpperCase();
+    const initial = name.charAt(0).toUpperCase();
     const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
     const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
-    const isBlocked = ct.botStatus === 'blocked';
 
     header.innerHTML = `
-        <div style="width:38px;height:38px;border-radius:50%;background:${avatarColor};
+        <div style="width:36px;height:36px;border-radius:50%;background:${avatarColor};
             display:flex;align-items:center;justify-content:center;
             font-weight:700;color:white;font-size:0.9rem;flex-shrink:0;">
             ${initial}
         </div>
         <div style="flex:1;min-width:0;">
-            <div style="font-weight:700;font-size:0.88rem;color:#111827;">${escH(name)}</div>
-            <div style="font-size:0.7rem;color:#6b7280;display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:1px;">
+            <div style="font-weight:700;font-size:0.88rem;">${escH(name)}</div>
+            <div style="font-size:0.7rem;color:#6b7280;display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
                 ${ct.username ? '<span style="color:#3b82f6;font-weight:600;">@'+escH(ct.username)+'</span>' : ''}
-                ${ct.senderId ? '<span>ID: '+escH(String(ct.senderId))+'</span>' : ''}
-                ${isBlocked ? '<span style="color:#ef4444;font-weight:600;">● '+''+'</span>' : '<span style="color:#22c55e;font-weight:600;">● '+''+'</span>'}
-            </div>
-        </div>`;
-
-    // Права панель інфо
-    _chatRenderInfoPanel(ct);
-
-    // Показуємо кнопку інфо на планшеті
-    const infoBtn = document.getElementById('chatInfoToggleBtn');
-    if (infoBtn) infoBtn.style.display = '';
-}
-
-function _chatRenderInfoPanel(ct) {
-    const panel = document.getElementById('chatInfoPanel');
-    if (!panel || !ct) return;
-    const name = ct.senderName || ct.name || window.t('botsAnon');
-    const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
-    const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
-    const initial = (name.charAt(0) === '@' ? (ct.username||'?').charAt(0) : name.charAt(0)).toUpperCase();
-
-    const addedAt = ct.createdAt ? new Date(ct.createdAt).toLocaleDateString('uk-UA', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
-    const lastAt = ct.lastMessageAt?.toDate ? ct.lastMessageAt.toDate().toLocaleDateString('uk-UA', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
-
-    panel.innerHTML = `
-        <!-- Аватар і ім'я -->
-        <div style="padding:20px 16px 14px;text-align:center;border-bottom:1px solid #f3f4f6;">
-            <div style="width:56px;height:56px;border-radius:50%;background:${avatarColor};
-                display:flex;align-items:center;justify-content:center;
-                font-weight:700;color:white;font-size:1.2rem;margin:0 auto 8px;">
-                ${initial}
-            </div>
-            <div style="font-weight:700;font-size:0.9rem;color:#111827;">${escH(name)}</div>
-            ${ct.username ? '<div style="font-size:0.75rem;color:#3b82f6;margin-top:2px;">@'+escH(ct.username)+'</div>' : ''}
-            <div style="margin-top:8px;">
-                <span class="chat-info-badge" style="background:${ct.status==='lead'?'#fef3c7':'#f0fdf4'};color:${ct.status==='lead'?'#92400e':'#166534'};">
-                    ${ct.status === 'lead' ? '🎯 ' + '' : ct.status === 'client' ? '✅ ' + '' : '📨 ' + ''}
-                </span>
+                ${ct.senderId ? '<span>ID: '+escH(ct.senderId)+'</span>' : ''}
+                ${ct.phone ? '<span>· '+escH(ct.phone)+'</span>' : ''}
+                ${ct.business_type ? '<span>· '+escH(ct.business_type)+'</span>' : ''}
             </div>
         </div>
-
-        <!-- Деталі -->
-        <div class="chat-info-section">
-            <div class="chat-info-label">''</div>
-            ${ct.phone ? `<div class="chat-info-row"><span class="key">''</span><span class="val">${escH(ct.phone)}</span></div>` : ''}
-            <div class="chat-info-row"><span class="key">ID</span><span class="val">${escH(String(ct.senderId||ct.chatId||''))}</span></div>
-            <div class="chat-info-row"><span class="key">''</span><span class="val">${addedAt}</span></div>
-            <div class="chat-info-row"><span class="key">''</span><span class="val">${lastAt}</span></div>
-            ${ct.source ? `<div class="chat-info-row"><span class="key">''</span><span class="val">${escH(ct.source)}</span></div>` : ''}
-            ${ct.language ? `<div class="chat-info-row"><span class="key">''</span><span class="val">${escH(ct.language)}</span></div>` : ''}
-        </div>
-
-        <!-- CRM -->
-        <div class="chat-info-section">
-            <div class="chat-info-label">CRM</div>
-            <button class="chat-crm-btn" onclick="chatCreateCrmDeal('${ct.id}')">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                ''
-            </button>
-            <button class="chat-crm-btn" onclick="chatCreateCrmContact('${ct.id}')">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                ''
-            </button>
-        </div>
-
-        <!-- Шаблони -->
-        <div class="chat-info-section">
-            <div class="chat-info-label">''</div>
-            <button class="chat-tmpl-btn" onclick="chatInsertTemplate('${_tg('Дякуємо за відповідь! Наш менеджер зв\'яжеться з вами найближчим часом.','Спасибо за ответ! Наш менеджер свяжется с вами в ближайшее время.')}')">
-                <span>''</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
-            <button class="chat-tmpl-btn" onclick="chatInsertTemplate('''')">
-                <span>''</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
-        </div>`;
+        ${ct.botStatus === 'blocked' ? `
+        <span style="font-size:0.7rem;color:#ef4444;background:#fee2e2;
+            padding:2px 8px;border-radius:6px;font-weight:600;flex-shrink:0;">
+            <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></span> Заблокував
+        </span>` : ''}
+        <button onclick="ctsOpenCard('${ct.id}')"
+            title=${window.t('botsContactCard')}
+            style="padding:0.35rem 0.5rem;background:#f9fafb;border:1px solid #e5e7eb;
+            border-radius:8px;cursor:pointer;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+        </button>`;
 }
 
 function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
@@ -2102,18 +1808,16 @@ function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
                 <svg style="margin-bottom:0.5rem;opacity:0.4;" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
-                <div>''</div>
-                <div style="font-size:0.74rem;margin-top:4px;">''</div>
+                <div>${_tg('Повідомлень поки немає','Сообщений пока нет')}</div>
+                <div style="font-size:0.74rem;margin-top:4px;">${_tg('Напишіть першим або дочекайтесь відповіді','Напишите первым или дождитесь ответа')}</div>
             </div>`;
         return;
     }
 
     const wasAtBottom = div.scrollHeight - div.scrollTop - div.clientHeight < 50;
 
-    // Фільтруємо службові повідомлення (callback, /start)
-    msgs = msgs.filter(m => m.text && m.text !== 'btn_0' && m.text !== 'btn_1' && m.text !== 'btn_2' && !m.text.startsWith('/start') && !m.isCallback);
     div.innerHTML = msgs.map(m => {
-        const isBot = m.from === 'bot' || m.direction === 'out' || m.role === 'bot';
+        const isBot = m.from === 'bot' || m.direction === 'out';
         const time = m.timestamp?.toDate ? m.timestamp.toDate().toLocaleTimeString('uk-UA', {hour:'2-digit',minute:'2-digit'}) : '';
 
         // Відображаємо кнопки якщо є (збережені ботом)
@@ -2123,7 +1827,7 @@ function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
             </div>` : '');
         // Оператор vs бот автовідповідь
         const senderLabel = isBot
-            ? (m.sentBy === 'operator' ? ('<span style="font-size:0.62rem;color:#86efac;font-weight:600;">' + '' + ' · </span>') : '')
+            ? (m.sentBy === 'operator' ? ('<span style="font-size:0.62rem;color:#86efac;font-weight:600;">' + _tg('Оператор','Оператор') + ' · </span>') : '')
             : '';
         return `
         <div style="display:flex;justify-content:${isBot ? 'flex-end' : 'flex-start'};margin-bottom:2px;">
@@ -2169,7 +1873,7 @@ window.chatSend = window.bpSendMsg = async function(instanceId = 'main') {
         // Раніше писали тільки pendingOutMessage в Firestore і чекали Cloud Functions
         // яких немає → повідомлення ніколи не доходили до клієнта в Telegram
         const idToken = await firebase.auth().currentUser?.getIdToken().catch(() => null);
-        if (!idToken) throw new Error('');
+        if (!idToken) throw new Error(_tg('Не авторизований','Не авторизован'));
 
         const _sendAbort = new AbortController();
         const _sendTimer = setTimeout(() => _sendAbort.abort(), 10000);
@@ -2192,11 +1896,11 @@ window.chatSend = window.bpSendMsg = async function(instanceId = 'main') {
             const data = await resp.json();
             apiOk = data?.ok === true;
             if (!resp.ok || !apiOk) {
-                throw new Error(data?.error || '' + resp.status);
+                throw new Error(data?.error || _tg('Помилка API: ','Ошибка API: ') + resp.status);
             }
             // Показуємо статус доставки
             if (data.telegramOk === false) {
-                if (typeof showToast === 'function') showToast('⚠️ ' + '' + '(клієнт міг заблокувати бота)', 'warning');
+                if (typeof showToast === 'function') showToast('⚠️ ' + _tg('Повідомлення збережено, але Telegram не відповів','Сообщение сохранено, но Telegram не ответил') + '(клієнт міг заблокувати бота)', 'warning');
             }
         } finally {
             clearTimeout(_sendTimer);
@@ -2211,7 +1915,7 @@ window.chatSend = window.bpSendMsg = async function(instanceId = 'main') {
         // Відновлюємо текст в полі щоб юзер міг повторити
         if (input) input.value = text;
         console.error('[chat] send:', e);
-        if (typeof showToast === 'function') showToast('' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(_tg('Помилка відправки: ','Ошибка отправки: ') + e.message, 'error');
     } finally {
         if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
     }
@@ -2250,241 +1954,6 @@ async function _chatGetBotToken(ct) {
         return doc.data()?.token || null;
     } catch { return null; }
 }
-
-// ─────────────────────────────────────────
-// ШАБЛОНИ / CRM
-// ─────────────────────────────────────────
-window.chatInsertTemplate = function(text) {
-    const input = document.getElementById('chatInput');
-    if (input) { input.value = text; input.focus(); input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight,120)+'px'; }
-};
-
-window.chatCreateCrmDeal = async function(contactId) {
-    const ct = chat.contacts.find(c => c.id === contactId);
-    if (!ct) return;
-
-    // Прибираємо попередній модал
-    document.getElementById('chatCrmDealModal')?.remove();
-
-    // Завантажуємо воронки з правильної колекції
-    let pipelines = [];
-    try {
-        // CRM зберігає воронки в 'crm_pipeline' (DB_COLS.CRM_PIPELINE)
-        const pipSnap = await window.companyRef().collection('crm_pipeline').get();
-        pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        // Fallback: crm_pipelines (нова колекція якщо є)
-        if (!pipelines.length) {
-            const newPip = await window.companyRef().collection('crm_pipelines').get();
-            pipelines = newPip.docs.map(d => ({ id: d.id, ...d.data() }));
-        }
-        // Також використовуємо вже завантажені дані якщо CRM відкритий
-        if (!pipelines.length && window.crm?.pipelines?.length) {
-            pipelines = window.crm.pipelines;
-        }
-    } catch(e) { console.error('[chatCreateCrmDeal]', e); }
-
-    const name = ct.senderName || ct.name || 'Telegram ' + contactId;
-    const pipOpts = pipelines.map(p => `<option value="${p.id}">${escH(p.name||p.id)}</option>`).join('');
-
-    const getStageOpts = (pipeId) => {
-        const pip = pipelines.find(p => p.id === pipeId) || pipelines[0];
-        const stages = pip?.stages || pip?.steps || [];
-        return stages.map(s => `<option value="${s.id}">${escH(s.name||s.id)}</option>`).join('');
-    };
-
-    // Зберігаємо pipelines для оновлення стадій
-    window._chatCrmPipelines = pipelines;
-    // Якщо є воронки — одразу завантажуємо стадії першої
-    setTimeout(() => {
-        const pipeEl = document.getElementById('chatCrmDealPipeline');
-        if (pipeEl && pipeEl.value) {
-            window.chatCrmUpdateStages(pipeEl.value);
-        } else if (pipeEl && pipelines.length) {
-            pipeEl.value = pipelines[0].id;
-            window.chatCrmUpdateStages(pipelines[0].id);
-        }
-    }, 50);
-
-    document.body.insertAdjacentHTML('beforeend', `
-    <div id="chatCrmDealModal" onclick="if(event.target===this)document.getElementById('chatCrmDealModal').remove()"
-        style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10060;display:flex;align-items:center;justify-content:center;padding:16px;">
-        <div style="background:white;border-radius:14px;width:100%;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
-            <!-- Header -->
-            <div style="padding:16px 18px 12px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:10px;">
-                <div style="width:38px;height:38px;border-radius:9px;background:#22c55e;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                </div>
-                <div>
-                    <div style="font-weight:700;font-size:0.9rem;color:#111827;">''</div>
-                    <div style="font-size:0.72rem;color:#6b7280;">${escH(name)}</div>
-                </div>
-                <button onclick="document.getElementById('chatCrmDealModal').remove()"
-                    style="margin-left:auto;background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                </button>
-            </div>
-            <!-- Body -->
-            <div style="padding:16px 18px;">
-                <!-- Назва угоди -->
-                <div style="margin-bottom:12px;">
-                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">''</label>
-                    <input id="chatCrmDealTitle" type="text" value="${escH(name)}"
-                        style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;box-sizing:border-box;outline:none;"
-                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
-                </div>
-                <!-- Телефон -->
-                <div style="margin-bottom:12px;">
-                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">''</label>
-                    <input id="chatCrmDealPhone" type="text" value="${escH(ct.phone||'')}"
-                        placeholder="+380..."
-                        style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;box-sizing:border-box;outline:none;"
-                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
-                </div>
-                ${pipelines.length ? `
-                <!-- Воронка -->
-                <div style="margin-bottom:12px;">
-                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">''</label>
-                    <select id="chatCrmDealPipeline"
-                        style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;background:white;outline:none;"
-                        onchange="chatCrmUpdateStages(this.value)"
-                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
-                        <option value="">''</option>
-                        ${pipOpts}
-                    </select>
-                </div>
-                <!-- Стадія -->
-                <div style="margin-bottom:16px;">
-                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">''</label>
-                    <select id="chatCrmDealStage"
-                        style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;background:white;outline:none;"
-                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
-                        <option value="">''</option>
-                    </select>
-                </div>` : `
-                <div style="padding:10px;background:#fef3c7;border-radius:8px;font-size:0.78rem;color:#92400e;margin-bottom:12px;">
-                    ''
-                </div>`}
-            </div>
-            <!-- Footer -->
-            <div style="padding:12px 18px;border-top:1px solid #f3f4f6;display:flex;gap:8px;justify-content:flex-end;">
-                <button onclick="document.getElementById('chatCrmDealModal').remove()"
-                    style="padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:7px;background:white;cursor:pointer;font-size:0.82rem;font-weight:600;color:#6b7280;">
-                    ''
-                </button>
-                <button onclick="chatSaveCrmDeal('${contactId}')"
-                    style="padding:8px 20px;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.82rem;font-weight:700;">
-                    ''
-                </button>
-            </div>
-        </div>
-    </div>`);
-};
-
-window.chatCrmUpdateStages = function(pipeId) {
-    const sel = document.getElementById('chatCrmDealStage');
-    if (!sel) return;
-    const pip = (window._chatCrmPipelines||[]).find(p => p.id === pipeId);
-    const stages = (pip?.stages || pip?.steps || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-    sel.innerHTML = `<option value="">''</option>` +
-        stages.map(s => `<option value="${s.id}">${escH(s.label||s.name||s.id)}</option>`).join('');
-};
-
-window.chatSaveCrmDeal = async function(contactId) {
-    const ct = chat.contacts.find(c => c.id === contactId);
-    if (!ct) return;
-
-    const title = document.getElementById('chatCrmDealTitle')?.value?.trim() || ct.name || contactId;
-    const phone = document.getElementById('chatCrmDealPhone')?.value?.trim() || '';
-    const pipelineId = document.getElementById('chatCrmDealPipeline')?.value || '';
-    const stageId = document.getElementById('chatCrmDealStage')?.value || '';
-
-    const btn = document.querySelector('#chatCrmDealModal button[onclick*="chatSaveCrmDeal"]');
-    if (btn) { btn.disabled = true; btn.textContent = '...'; }
-
-    try {
-        const now = firebase.firestore.FieldValue.serverTimestamp();
-        const dealId = `chat_deal_${contactId}_${Date.now()}`;
-        const clientId = `tg_${contactId}`;
-
-        // Створюємо/оновлюємо клієнта
-        await window.companyRef().collection('crm_clients').doc(clientId).set({
-            id: clientId,
-            name: title,
-            phone,
-            telegramChatId: contactId,
-            telegramUsername: ct.username || '',
-            senderId: contactId,
-            channel: 'telegram',
-            source: 'chat',
-            botContactId: contactId,
-            contactId: contactId,
-            createdAt: now,
-            updatedAt: now,
-        }, { merge: true });
-
-        // Створюємо угоду
-        await window.companyRef().collection('crm_deals').doc(dealId).set({
-            id: dealId,
-            title,
-            clientName: title,
-            clientId,
-            phone,
-            stage: stageId || 'new',
-            pipelineId: pipelineId || '',
-            source: 'telegram_chat',
-            telegramChatId: contactId,
-            contactId: contactId,
-            botContactId: contactId,
-            status: 'active',
-            amount: 0,
-            createdAt: now,
-            updatedAt: now,
-        });
-
-        // Оновлюємо статус контакту
-        await window.companyRef().collection('contacts').doc(contactId).update({
-            status: 'lead',
-            dealId,
-            updatedAt: now,
-        });
-
-        // Оновлюємо локальний стан
-        if (ct) { ct.status = 'lead'; ct.dealId = dealId; }
-
-        document.getElementById('chatCrmDealModal')?.remove();
-        if (typeof showToast === 'function') showToast('✅ ' + '', 'success');
-
-        // Оновлюємо праву панель
-        _chatRenderInfoPanel(ct);
-
-    } catch(e) {
-        if (btn) { btn.disabled = false; btn.textContent = ''; }
-        if (typeof showToast === 'function') showToast('' + e.message, 'error');
-    }
-};
-
-window.chatCreateCrmContact = async function(contactId) {
-    const ct = chat.contacts.find(c => c.id === contactId);
-    if (!ct) return;
-    try {
-        const clientId = 'tg_' + contactId;
-        await window.companyRef().collection('crm_clients').doc(clientId).set({
-            id: clientId,
-            name: ct.senderName || ct.name || 'Telegram ' + contactId,
-            phone: ct.phone || '',
-            telegramChatId: contactId,
-            telegramUsername: ct.username || '',
-            channel: 'telegram',
-            source: ct.source || 'telegram',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
-        if (typeof showToast === 'function') showToast('', 'success');
-        _chatRenderInfoPanel(ct);
-    } catch(e) {
-        if (typeof showToast === 'function') showToast('' + e.message, 'error');
-    }
-};
 
 // ─────────────────────────────────────────
 // REAL-TIME: лічильник непрочитаних
@@ -2577,15 +2046,15 @@ async function renderBroadcastTab() {
             <div style="${sectionStyle}">
                 <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.85rem;display:flex;align-items:center;gap:0.5rem;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    ''
+                    ${_tg('Нова розсилка','Новая рассылка')}
                 </div>
 
                 <!-- Аудиторія -->
                 <div style="margin-bottom:0.65rem;">
-                    <label style="${labelStyle}">''</label>
+                    <label style="${labelStyle}">${_tg('СЕГМЕНТ АУДИТОРІЇ','СЕГМЕНТ АУДИТОРИИ')}</label>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;">
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">''</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${_tg('Канал','Канал')}</div>
                             <select id="bcastChannel" onchange="bcastPreview()" style="${selectStyle}">
                                 <option value="">${window.t('allChannels')}</option>
                                 <option value="telegram">Telegram</option>
@@ -2593,21 +2062,21 @@ async function renderBroadcastTab() {
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">''</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${_tg('Воронка','Воронка')}</div>
                             <select id="bcastFlow" onchange="bcastPreview()" style="${selectStyle}">
                                 <option value="">${window.t('allFunnels')}</option>
                                 ${bp.flows.map(f => `<option value="${f.id}">${escH(f.name)}</option>`).join('')}
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">''</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${_tg('Ніша','Ниша')}</div>
                             <select id="bcastNiche" onchange="bcastPreview()" style="${selectStyle}">
                                 <option value="">${window.t('allNiches')}</option>
                                 ${allNiches.map(n => `<option value="${escH(n)}">${escH(n)}</option>`).join('')}
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">''</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${_tg('Тег','Тег')}</div>
                             <select id="bcastTag" onchange="bcastPreview()" style="${selectStyle}">
                                 <option value="">${window.t('allTags')}</option>
                                 ${allTags.map(t => `<option value="${escH(t)}">${escH(t)}</option>`).join('')}
@@ -2624,9 +2093,9 @@ async function renderBroadcastTab() {
 
                 <!-- Повідомлення -->
                 <div style="margin-bottom:0.65rem;">
-                    <label style="${labelStyle}">''</label>
+                    <label style="${labelStyle}">${_tg('ТЕКСТ ПОВІДОМЛЕННЯ','ТЕКСТ СООБЩЕНИЯ')}</label>
                     <textarea id="bcastText" rows="4"
-                        placeholder="''"
+                        placeholder="${_tg('Текст розсилки...','Текст рассылки...')}"
                         oninput="bcastCountChars(this.value)"
                         style="${inputStyle}resize:vertical;"></textarea>
                     <div style="display:flex;justify-content:space-between;margin-top:3px;">
@@ -2641,19 +2110,19 @@ async function renderBroadcastTab() {
                 <div style="margin-bottom:0.85rem;">
                     <label style="${labelStyle}">АБО ЗАПУСТИТИ ЛАНЦЮГ</label>
                     <select id="bcastFlowSend" style="${selectStyle}">
-                        <option value="">''</option>
+                        <option value="">${_tg('— Тільки текст —','— Только текст —')}</option>
                         ${bp.flows.map(f => `<option value="${f.id}">${escH(f.name)}</option>`).join('')}
                     </select>
                     <div style="font-size:0.71rem;color:#9ca3af;margin-top:3px;">
-                        ''
+                        ${_tg('Якщо обрано ланцюг — текст ігнорується. Бот запустить ланцюг для кожного.','Если выбрана цепочка — текст игнорируется. Бот запустит цепочку для каждого.')}
                     </div>
                 </div>
 
                 <!-- Rate limiting попередження -->
                 <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:9px;
                     padding:0.55rem 0.7rem;margin-bottom:0.75rem;font-size:0.76rem;color:#92400e;">
-                    ''
-                    ''
+                    ${_tg('⚠️ Telegram дозволяє <b>30 повідомлень/сек</b>. Ми відправляємо по <b>25/сек</b> з паузою 40мс між кожним.','⚠️ Telegram позволяет <b>30 сообщений/сек</b>. Мы отправляем по <b>25/сек</b> с паузой 40мс между каждым.')}
+                    ${_tg('При великій базі (500+) розсилка може зайняти кілька хвилин.','При большой базе (500+) рассылка может занять несколько минут.')}
                 </div>
 
                 <!-- Кнопка відправки -->
@@ -2662,7 +2131,7 @@ async function renderBroadcastTab() {
                     border-radius:10px;cursor:pointer;font-weight:700;font-size:0.88rem;
                     display:flex;align-items:center;justify-content:center;gap:6px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    ''
+                    ${_tg('Надіслати розсилку','Отправить рассылку')}
                 </button>
             </div>
 
@@ -2683,21 +2152,21 @@ async function renderBroadcastTab() {
                 <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
                     <div id="bcastStatSent" style="flex:1;text-align:center;padding:0.4rem;background:#f0fdf4;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#22c55e;" id="bcastStatSentNum">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">''</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">${_tg('Надіслано','Отправлено')}</div>
                     </div>
                     <div id="bcastStatFailed" style="flex:1;text-align:center;padding:0.4rem;background:#fff5f5;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#ef4444;" id="bcastStatFailedNum">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">''</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">${_tg('Помилок','Ошибок')}</div>
                     </div>
                     <div style="flex:1;text-align:center;padding:0.4rem;background:#f8fafc;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#374151;" id="bcastStatTotal">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">''</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">${_tg('Всього','Всего')}</div>
                     </div>
                 </div>
                 <button onclick="bcastCancel()"
                     style="margin-top:0.6rem;width:100%;padding:0.45rem;background:#fee2e2;color:#ef4444;
                     border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                    ''
+                    ${_tg('✕ Зупинити розсилку','✕ Остановить рассылку')}
                 </button>
             </div>
         </div>
@@ -2705,11 +2174,11 @@ async function renderBroadcastTab() {
         <!-- ПРАВА ЧАСТИНА: історія -->
         <div style="width:280px;flex-shrink:0;display:flex;flex-direction:column;gap:0.5rem;">
             <div style="font-weight:700;font-size:0.85rem;color:#374151;padding:0 0.1rem;">
-                ''
+                ${_tg('Історія розсилок','История рассылок')}
             </div>
             ${history.length === 0
                 ? `<div style="text-align:center;padding:2rem;background:white;border-radius:12px;color:#9ca3af;font-size:0.78rem;">
-                    ''
+                    ${_tg('Розсилок ще не було','Рассылок ещё не было')}
                    </div>`
                 : history.map(b => {
                     const rate = b.total > 0 ? Math.round(b.sent / b.total * 100) : 0;
@@ -2736,7 +2205,7 @@ async function renderBroadcastTab() {
                             <span style="color:#6b7280;">${b.total || 0} всього</span>
                             <span style="color:${statusColor};font-weight:600;">${rate}%</span>
                         </div>
-                        ${b.status === 'cancelled' ? ('<div style="font-size:0.68rem;color:#f97316;margin-top:3px;">⏹ ' + '' + '</div>') : ''}
+                        ${b.status === 'cancelled' ? ('<div style="font-size:0.68rem;color:#f97316;margin-top:3px;">⏹ ' + _tg('Зупинено вручну','Остановлено вручную') + '</div>') : ''}
                     </div>`;
                 }).join('')}
         </div>
@@ -2790,7 +2259,7 @@ window.bcastPreview = async function() {
         box.innerHTML = `
             <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> <b>${count}</b> контактів отримають розсилку
             ${parts.length ? `· <span style="font-weight:400;color:#16a34a;">${parts.join(' · ')}</span>` : ''}
-            ${count === 1000 ? ('<span style="color:#f97316;"> (' + '' + ')</span>') : ''}`;
+            ${count === 1000 ? ('<span style="color:#f97316;"> (' + _tg('показано перші 1000','показано первые 1000') + ')</span>') : ''}`;
     } catch(e) {
         box.style.display = '';
         box.innerHTML = `<span style="color:#9ca3af;">${window.t('cantCountAudience')}</span>`;
@@ -2835,7 +2304,7 @@ window.bpSendBroadcast = async function() {
 
         const snap = await q.get();
         if (snap.size >= BCAST_LIMIT) {
-            if (window.showToast) showToast(`⚠️ '' ${BCAST_LIMIT} '' для звуження аудиторії.`, 'warning');
+            if (window.showToast) showToast(`⚠️ ${_tg('Показано перші','Показаны первые')} ${BCAST_LIMIT} ${_tg('контактів. Використовуйте фільтри.','контактов. Используйте фильтры.')} для звуження аудиторії.`, 'warning');
         }
 
         let targets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -3025,14 +2494,14 @@ window.bpSendBroadcast = async function() {
                     ${bcast.cancelled ? window.t('botsStopped') : window.t('botsBroadcastDone')}
                 </div>
                 <div style="font-size:0.8rem;color:#6b7280;margin-top:4px;">
-                    '' <b style="color:#22c55e;">${bcast.sent}</b>
-                    · '' <b style="color:#ef4444;">${bcast.failed}</b>
-                    · '' ${bcast.total}
+                    ${_tg('Надіслано:','Отправлено:')} <b style="color:#22c55e;">${bcast.sent}</b>
+                    · ${_tg('Помилок:','Ошибок:')} <b style="color:#ef4444;">${bcast.failed}</b>
+                    · ${_tg('Всього:','Всего:')} ${bcast.total}
                 </div>
                 <button onclick="renderBroadcastTab()"
                     style="margin-top:0.75rem;padding:0.45rem 1.25rem;background:#22c55e;color:white;
                     border:none;border-radius:9px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                    ''
+                    ${_tg('Нова розсилка','Новая рассылка')}
                 </button>
             </div>`;
     }
@@ -3045,9 +2514,9 @@ window.bpSendBroadcast = async function() {
         console.error('[83-bots-contacts] bpSendBroadcast error:', e);
         bcast.running = false;
         if (typeof showToast === 'function') {
-            showToast('' + e.message, 'error');
+            showToast(_tg('Помилка розсилки: ','Ошибка рассылки: ') + e.message, 'error');
         } else {
-            alert('' + e.message);
+            alert(_tg('Помилка розсилки: ','Ошибка рассылки: ') + e.message);
         }
         // Повертаємо UI в початковий стан
         const sendBtn = document.getElementById('bcastSendBtn');
@@ -3080,11 +2549,11 @@ async function renderSettingsTab() {
     if (!bot) {
         c.innerHTML = `
             <div style="text-align:center;padding:3rem;background:white;border-radius:14px;">
-                <div style="color:#9ca3af;font-size:0.85rem;">''</div>
+                <div style="color:#9ca3af;font-size:0.85rem;">${_tg('Оберіть бота щоб відкрити налаштування','Выберите бота чтобы открыть настройки')}</div>
                 <button onclick="bpSwitch('bots')"
                     style="margin-top:1rem;padding:0.5rem 1.25rem;background:#22c55e;color:white;
                     border:none;border-radius:9px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                    ''
+                    ${_tg('← До списку ботів','← К списку ботов')}
                 </button>
             </div>`;
         return;
@@ -3127,7 +2596,7 @@ async function renderSettingsTab() {
                 </div>
                 <button onclick="bpCheckBotStatus('${bot.id}')" id="btnCheckStatus"
                     style="${btnGrayStyle}margin-left:auto;">
-                    ''
+                    ${_tg('Перевірити','Проверить')}
                 </button>
             </div>
             <div id="settingsStatusResult"></div>
@@ -3144,16 +2613,16 @@ async function renderSettingsTab() {
                     style="${inputStyle}background:#f9fafb;color:#374151;font-size:0.74rem;cursor:text;"
                     onclick="this.select()">
                 <button onclick="copyLink('${escH(webhookUrl)}')" style="${btnGrayStyle}">
-                    ''
+                    ${_tg('Копіювати','Копировать')}
                 </button>
             </div>
             <div style="font-size:0.72rem;color:#6b7280;">
-                ''
+                ${_tg('Цей URL вже встановлений автоматично при підключенні бота.','Этот URL уже установлен автоматически при подключении бота.')}
                 Якщо webhook перестав працювати — натисніть window.t('botsReinstall').
             </div>
             <button onclick="bpReinstallWebhook('${bot.id}')" id="btnReinstall"
                 style="margin-top:0.6rem;${btnGreenStyle}">
-                ''
+                ${_tg('↺ Перевстановити webhook','↺ Переустановить webhook')}
             </button>
             <div id="webhookResult" style="margin-top:0.5rem;font-size:0.76rem;"></div>
         </div>
@@ -3170,21 +2639,47 @@ async function renderSettingsTab() {
                     ${bot.token ? '•••••••••' + bot.token.slice(-8) : window.t('botsNotSet')}
                 </div>
             </div>
-            <label style="${labelStyle}">''</label>
+            <label style="${labelStyle}">${_tg('ЗАМІНИТИ ТОКЕН','ЗАМЕНИТЬ ТОКЕН')}</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="password" id="bpSettingsToken"
                     placeholder=${window.t('botsNewTokenPh')}
                     style="${inputStyle}flex:1;">
                 <button onclick="bpReconnectBot('${bot.id}')" style="${btnGreenStyle}">
-                    ''
+                    ${_tg('Замінити','Заменить')}
                 </button>
             </div>
             <div style="font-size:0.71rem;color:#9ca3af;margin-top:0.35rem;">
-                ''
+                ${_tg('Токен не починається з бота — він потрібен тільки серверу. Нікому не передавай.','Токен не передаётся боту — он нужен только серверу. Никому не передавай.')}
             </div>
         </div>
 
-        <!-- Секція 4: AI ключ — прихована, використовується ключ superadmin -->
+        <!-- Секція 4: AI ключ -->
+        <div style="${sectionStyle}">
+            <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span> OpenAI / Claude API ключ
+            </div>
+            <label style="${labelStyle}">OPENAI (GPT-4o-mini, GPT-4o)</label>
+            <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
+                <input type="password" id="settingsOpenAIKey"
+                    value="${compData.openaiApiKey ? '•••••' + compData.openaiApiKey.slice(-4) : ''}"
+                    placeholder="sk-..."
+                    style="${inputStyle}flex:1;">
+                <button onclick="settingsSaveApiKey('openai')" style="${btnGreenStyle}">
+                    ${_tg('Зберегти','Сохранить')}
+                </button>
+            </div>
+            <label style="${labelStyle}">ANTHROPIC CLAUDE (claude-3-5-haiku)</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input type="password" id="settingsAnthropicKey"
+                    value="${compData.anthropicApiKey ? '•••••' + compData.anthropicApiKey.slice(-4) : ''}"
+                    placeholder="sk-ant-..."
+                    style="${inputStyle}flex:1;">
+                <button onclick="settingsSaveApiKey('anthropic')" style="${btnGreenStyle}">
+                    ${_tg('Зберегти','Сохранить')}
+                </button>
+            </div>
+            <div id="apiKeyResult" style="margin-top:0.4rem;font-size:0.76rem;"></div>
+        </div>
 
         <!-- Секція 5: Сповіщення менеджеру -->
         <div style="${sectionStyle}">
@@ -3193,8 +2688,8 @@ async function renderSettingsTab() {
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
                 <div>
-                    <div style="font-size:0.82rem;font-weight:600;">''</div>
-                    <div style="font-size:0.72rem;color:#6b7280;">''</div>
+                    <div style="font-size:0.82rem;font-weight:600;">${_tg('Telegram сповіщення','Telegram уведомления')}</div>
+                    <div style="font-size:0.72rem;color:#6b7280;">${_tg('Отримувати сповіщення при новому ліді','Получать уведомления при новом лиде')}</div>
                 </div>
                 <label style="position:relative;display:inline-block;width:42px;height:24px;cursor:pointer;">
                     <input type="checkbox" id="settingsNotifyEnabled"
@@ -3215,11 +2710,11 @@ async function renderSettingsTab() {
                     placeholder=${window.t('botsExampleChatId')}
                     style="${inputStyle}flex:1;">
                 <button onclick="settingsSaveNotify()" style="${btnGreenStyle}">
-                    ''
+                    ${_tg('Зберегти','Сохранить')}
                 </button>
             </div>
             <div style="font-size:0.71rem;color:#6b7280;">
-                ''
+                ${_tg('Щоб дізнатись свій Telegram ID — напиши боту @userinfobot','Чтобы узнать свой Telegram ID — напиши боту @userinfobot')}
             </div>
             <div id="notifyResult" style="margin-top:0.4rem;font-size:0.76rem;"></div>
         </div>
@@ -3227,16 +2722,16 @@ async function renderSettingsTab() {
         <!-- Секція 6: Небезпечна зона -->
         <div style="${sectionStyle}border:1.5px solid #fee2e2;">
             <div style="font-weight:700;font-size:0.85rem;color:#ef4444;margin-bottom:0.6rem;">
-                ''
+                ${_tg('⚠️ Небезпечна зона','⚠️ Опасная зона')}
             </div>
             <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.75rem;">
-                ''
+                ${_tg('Видалення бота видалить також усі його ланцюги. Контакти і переписка збережуться.','Удаление бота удалит все его цепочки. Контакты и переписка сохранятся.')}
             </div>
             <button onclick="confirmDeleteBot('${bot.id}')"
                 style="padding:0.5rem 1rem;background:#fee2e2;color:#ef4444;
                 border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;
                 font-size:0.82rem;font-weight:600;">
-                ''
+                ${_tg('Видалити бота і ланцюги','Удалить бота и цепочки')}
             </button>
         </div>
 
@@ -3253,7 +2748,7 @@ window.bpCheckBotStatus = async function(botId) {
 
     const bot = bp.bots.find(b => b.id === botId);
     if (!bot?.token) {
-        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">''</div>`;
+        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">${_tg('Токен не встановлений','Токен не установлен')}</div>`;
         if (btn) { btn.textContent = window.t('botsCheck'); btn.disabled = false; }
         return;
     }
@@ -3275,8 +2770,8 @@ window.bpCheckBotStatus = async function(botId) {
                     <div style="color:${whInfo.url ? '#16a34a' : '#ef4444'};">
                         ${whInfo.url ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>'} Webhook: ${whInfo.url ? window.t('botsIsSet') : window.t('botsNotSetShort')}
                     </div>
-                    ${whInfo.last_error_message ? `<div style="color:#ef4444;">⚠️ '' ${escH(whInfo.last_error_message)}</div>` : ''}
-                    <div style="color:#6b7280;">'' ${whInfo.pending_update_count || 0}</div>
+                    ${whInfo.last_error_message ? `<div style="color:#ef4444;">⚠️ ${_tg('Остання помилка:','Последняя ошибка:')} ${escH(whInfo.last_error_message)}</div>` : ''}
+                    <div style="color:#6b7280;">${_tg('Очікуваних оновлень:','Ожидаемых обновлений:')} ${whInfo.pending_update_count || 0}</div>
                 </div>
             </div>`;
 
@@ -3288,7 +2783,7 @@ window.bpCheckBotStatus = async function(botId) {
         }
 
     } catch(e) {
-        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">'' ${escH(e.message)}</div>`;
+        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">${_tg('Помилка:','Ошибка:')} ${escH(e.message)}</div>`;
     }
 
     if (btn) { btn.textContent = window.t('botsCheck'); btn.disabled = false; }
@@ -3322,7 +2817,7 @@ window.bpReinstallWebhook = async function(botId) {
             await firebase.firestore()
                 .collection('companies').doc(window.currentCompanyId).collection('bots').doc(botId)
                 .update({ connected: true, webhookUrl, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            if (result) result.innerHTML = `${window.t('divStylecolor22c55efontweight600spanStyl')}`;
+            if (result) result.innerHTML = `<div style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Webhook встановлено</div>`;
             if (typeof showToast === 'function') showToast(window.t('botsWebhookSet'), 'success');
         } else {
             throw new Error(data.description);
@@ -3390,8 +2885,8 @@ window.settingsSaveApiKey = window.saveBotApiKey = async function(type) {
     const _isDomain = /^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/.test(key);
     const _tooShort = key.length < 20;
     if (_isEmail || _isUrl || _isDomain || _tooShort) {
-        const _hint = _isEmail ? '' : _isUrl ? '' : _isDomain ? '' : '';
-        if(window.showToast)showToast('❌ ' + '' + _hint + '', 'error');
+        const _hint = _isEmail ? _tg('Це email, не API ключ','Это email, не API ключ') : _isUrl ? _tg('Це URL, не API ключ','Это URL, не API ключ') : _isDomain ? _tg('Це домен, не API ключ','Это домен, не API ключ') : _tg('Занадто короткий ключ','Слишком короткий ключ');
+        if(window.showToast)showToast('❌ ' + _tg('Невалідний API ключ: ','Невалидный API ключ: ') + _hint + _tg('. Очікується sk-...','. Ожидается sk-...'), 'error');
         return;
     }
 
@@ -3401,7 +2896,7 @@ window.settingsSaveApiKey = window.saveBotApiKey = async function(type) {
         await             window.companyRef()
             .update({ [field]: key, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         if (keyEl) keyEl.value = '•••••' + key.slice(-4);
-        if (result) result.innerHTML = `${window.t('spanStylecolor22c55efontweight600spanSty')}`;
+        if (result) result.innerHTML = `<span style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Збережено</span>`;
         setTimeout(() => { if (result) result.innerHTML = ''; }, 3000);
     } catch(e) {
         if (result) result.innerHTML = `<span style="color:#ef4444;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> ${escH(e.message)}</span>`;
@@ -3426,7 +2921,7 @@ window.settingsSaveNotify = async function() {
     try {
         await             window.companyRef()
             .update({ notifyTelegramId: tgId, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (result) result.innerHTML = `${window.t('spanStylecolor22c55efontweight600spanSty')}`;
+        if (result) result.innerHTML = `<span style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Збережено</span>`;
         setTimeout(() => { if (result) result.innerHTML = ''; }, 3000);
     } catch(e) {
         if (result) result.innerHTML = `<span style="color:#ef4444;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> ${escH(e.message)}</span>`;
@@ -3449,7 +2944,7 @@ window.showQR = function(encodedLink) {
                 <div style="font-size:0.7rem;color:#6b7280;margin-top:0.6rem;word-break:break-all;">${link}</div>
                 <button onclick="this.closest('[style*=fixed]').remove()"
                     style="margin-top:0.75rem;padding:0.45rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-weight:600;">
-                    ''
+                    ${_tg('Закрити','Закрыть')}
                 </button>
             </div>
         </div>`);

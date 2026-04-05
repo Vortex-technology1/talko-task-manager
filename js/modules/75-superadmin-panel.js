@@ -276,7 +276,6 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
 
     const TABS = [
         {id:'overview',   label:'Огляд',      icon:'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'},
-        {id:'requests',   label:'🆕 Заявки',   icon:'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z'},
         {id:'companies',  label:'Компанії',   icon:'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'},
         {id:'users',      label:'Юзери',      icon:'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'},
         {id:'activity',   label:'Активність', icon:'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'},
@@ -322,10 +321,6 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
 
 <!-- Tab Contents -->
 <div id="saTabContent_overview">${_saRenderOverview(pc, planCounts)}</div>
-<div id="saTabContent_requests" style="display:none;">
-    <div style="margin-bottom:0.75rem;font-weight:700;font-size:0.95rem;">🆕 Нові заявки на реєстрацію</div>
-    <div id="saPendingRegs"><div style="color:#9ca3af;font-size:0.82rem;">Завантаження...</div></div>
-</div>
 <div id="saTabContent_companies" style="display:none;">${_saRenderCompanies(pc)}</div>
 <div id="saTabContent_users"     style="display:none;">${_saRenderUsers(pc)}</div>
 <div id="saTabContent_activity"  style="display:none;">${_saRenderActivity(pc)}</div>
@@ -339,7 +334,7 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
 }
 
 window.saSwitchTab = function(tab) {
-    const tabs = ['overview','requests','companies','users','activity','ai','health','alerts','system','firestore','subscriptions'];
+    const tabs = ['overview','companies','users','activity','ai','health','alerts','system','firestore','subscriptions'];
     tabs.forEach(t => {
         const btn   = document.getElementById(`saTab_${t}`);
         const panel = document.getElementById(`saTabContent_${t}`);
@@ -351,7 +346,6 @@ window.saSwitchTab = function(tab) {
         }
         if (panel) panel.style.display = active ? '' : 'none';
     });
-    if (tab === 'requests') renderPendingRegistrations();
 };
 
 // ── TAB 1: OVERVIEW ─────────────────────────────────────────
@@ -466,13 +460,9 @@ function _saRenderCompanies(pc) {
             ? `<span style="background:#fef9c3;color:#92400e;padding:1px 5px;border-radius:4px;font-size:0.65rem;">${c.daysSinceActivity}д</span>`
             : `<span style="background:#dcfce7;color:#16a34a;padding:1px 5px;border-radius:4px;font-size:0.65rem;">today</span>`;
 
-        return `<tr data-name="${(d.name||c.id).toLowerCase()}"
-            style="border-bottom:1px solid #f3f4f6;cursor:pointer;${d.disabled && !d.pendingApproval ? 'background:#fff5f5;' : d.pendingApproval ? 'background:#fffbeb;' : ''}"
-            onmouseenter="this.style.background='${d.disabled && !d.pendingApproval ? '#fee2e2' : d.pendingApproval ? '#fef3c7' : '#fafafa'}'"
-            onmouseleave="this.style.background='${d.disabled && !d.pendingApproval ? '#fff5f5' : d.pendingApproval ? '#fffbeb' : ''}'">
-            <td style="padding:0.4rem 0.5rem;font-weight:600;font-size:0.8rem;cursor:pointer;" onclick="saOpenCompanyDetail('${c.id}')">
-                ${d.pendingApproval ? '<span title="Очікує підтвердження" style="color:#f59e0b;">⏳ </span>' : d.disabled ? '<span title="Заблоковано" style="color:#ef4444;">🔒 </span>' : ''}${_saEsc(d.name||c.id)}
-            </td>
+        return `<tr data-name="${(d.name||c.id).toLowerCase()}" style="border-bottom:1px solid #f3f4f6;cursor:pointer;"
+            onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background=''">
+            <td style="padding:0.4rem 0.5rem;font-weight:600;font-size:0.8rem;cursor:pointer;" onclick="saOpenCompanyDetail('${c.id}')">${_saEsc(d.name||c.id)}</td>
             <td style="padding:0.4rem 0.5rem;">${planBadge}</td>
             <td style="padding:0.4rem 0.5rem;font-size:0.78rem;">${c.users.length}</td>
             <td style="padding:0.4rem 0.5rem;font-size:0.78rem;">${c.activeTasks}</td>
@@ -496,9 +486,6 @@ function _saRenderCompanies(pc) {
                     <button onclick="toggleCompanyAI('${safeId}',${d.aiEnabled!==false?'false':'true'})"
                         style="padding:2px 5px;background:${d.aiEnabled!==false?'#fef2f2':'#f0fdf4'};color:${d.aiEnabled!==false?'#ef4444':'#16a34a'};border:1px solid ${d.aiEnabled!==false?'#fecaca':'#bbf7d0'};border-radius:5px;cursor:pointer;font-size:0.7rem;">
                         AI ${d.aiEnabled!==false?'вимк':'увімк'}</button>
-                    <button onclick="toggleCompanyBlock('${safeId}','${safeName}',${!!d.disabled})"
-                        style="padding:2px 5px;background:${d.disabled?'#f0fdf4':'#fef2f2'};color:${d.disabled?'#16a34a':'#dc2626'};border:1px solid ${d.disabled?'#bbf7d0':'#fecaca'};border-radius:5px;cursor:pointer;font-size:0.7rem;font-weight:700;">
-                        ${d.disabled?'🔓':'🔒'}</button>
                 </div>
             </td>
         </tr>`;
@@ -1381,111 +1368,6 @@ window.toggleCompanyAI = async function(companyId, enabled) {
     } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
 };
 
-// ── Блокування/розблокування компанії ────────────────────────
-window.toggleCompanyBlock = async function(companyId, companyName, isBlocked) {
-    const action = isBlocked ? 'розблокувати' : 'заблокувати';
-    const confirmed = typeof showConfirmModal === 'function'
-        ? await showConfirmModal(`${isBlocked?'Розблокувати':'Заблокувати'} компанію "${companyName}"?`, { danger: !isBlocked })
-        : confirm(`${action} компанію "${companyName}"?`);
-    if (!confirmed) return;
-    try {
-        await firebase.firestore().collection('companies').doc(companyId).update({
-            disabled: !isBlocked,
-            disabledAt: !isBlocked ? firebase.firestore.FieldValue.serverTimestamp() : null,
-        });
-        showToast && showToast(`Компанію ${isBlocked ? '🔓 розблоковано' : '🔒 заблоковано'} ✓`, 'success');
-        await loadSuperadminData();
-    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
-};
-
-// ── Підтвердження/відхилення реєстрації ──────────────────────
-window.approveRegistration = async function(companyId, companyName) {
-    const confirmed = typeof showConfirmModal === 'function'
-        ? await showConfirmModal(`Надати доступ компанії "${companyName}"?`)
-        : confirm(`Надати доступ "${companyName}"?`);
-    if (!confirmed) return;
-    try {
-        const batch = firebase.firestore().batch();
-        batch.update(firebase.firestore().collection('companies').doc(companyId), {
-            disabled: false,
-            pendingApproval: false,
-            subscriptionStatus: 'active',
-            approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        batch.update(firebase.firestore().collection('registration_requests').doc(companyId), {
-            status: 'approved',
-            approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        await batch.commit();
-        showToast && showToast(`✅ Компанію "${companyName}" підтверджено`, 'success');
-        await loadSuperadminData();
-        renderPendingRegistrations();
-    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
-};
-
-window.rejectRegistration = async function(companyId, companyName) {
-    const confirmed = typeof showConfirmModal === 'function'
-        ? await showConfirmModal(`Відхилити реєстрацію "${companyName}"?`, { danger: true })
-        : confirm(`Відхилити "${companyName}"?`);
-    if (!confirmed) return;
-    try {
-        await firebase.firestore().collection('registration_requests').doc(companyId).update({
-            status: 'rejected',
-            rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        await firebase.firestore().collection('companies').doc(companyId).update({ disabled: true, pendingApproval: false });
-        showToast && showToast(`❌ Реєстрацію "${companyName}" відхилено`, 'info');
-        renderPendingRegistrations();
-    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
-};
-
-// ── Рендер панелі нових реєстрацій ───────────────────────────
-async function renderPendingRegistrations() {
-    const wrap = document.getElementById('saPendingRegs');
-    if (!wrap) return;
-    try {
-        let snap;
-        try {
-            snap = await firebase.firestore().collection('registration_requests')
-                .where('status', '==', 'pending').orderBy('createdAt', 'desc').limit(50).get();
-        } catch(indexErr) {
-            // Fallback без orderBy якщо індекс не створений
-            snap = await firebase.firestore().collection('registration_requests')
-                .where('status', '==', 'pending').limit(50).get();
-        }
-        if (snap.empty) {
-            wrap.innerHTML = '<div style="color:#9ca3af;font-size:0.82rem;padding:0.5rem 0;">Нових заявок немає ✓</div>';
-            return;
-        }
-        // Клієнтське сортування
-        const docs = snap.docs.sort((a, b) => {
-            const ta = a.data().createdAt?.toMillis?.() || 0;
-            const tb = b.data().createdAt?.toMillis?.() || 0;
-            return tb - ta;
-        });
-        wrap.innerHTML = docs.map(doc => {
-            const r = doc.data();
-            const date = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleDateString('uk-UA') : '—';
-            return `
-            <div style="background:white;border:1px solid #fde68a;border-radius:10px;padding:0.75rem 1rem;
-                display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.4rem;">
-                <div style="flex:1;min-width:0;">
-                    <div style="font-weight:700;font-size:0.88rem;color:#111827;">${r.companyName}</div>
-                    <div style="font-size:0.75rem;color:#6b7280;">${r.ownerName} · ${r.ownerEmail} · ${date}</div>
-                </div>
-                <button onclick="approveRegistration('${doc.id}','${(r.companyName||'').replace(/'/g,"\\'")}')"
-                    style="padding:0.35rem 0.85rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:700;">
-                    ✅ Підтвердити
-                </button>
-                <button onclick="rejectRegistration('${doc.id}','${(r.companyName||'').replace(/'/g,"\\'")}')"
-                    style="padding:0.35rem 0.85rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-                    ❌ Відхилити
-                </button>
-            </div>`;
-        }).join('');
-    } catch(e) { wrap.innerHTML = '<div style="color:#ef4444;font-size:0.8rem;">Помилка завантаження</div>'; }
-}
-
 window.updateAILimit = async function(companyId, field, value) {
     const num = value === '' ? 0 : Math.max(0, parseInt(value) || 0);
     try {
@@ -1574,7 +1456,6 @@ window.openGlobalAISettings = async function() {
         const s = aiDoc.exists ? aiDoc.data() : {};
         const saSettings = saDoc.exists ? saDoc.data() : {};
         const platformKeyStored = !!saSettings.openaiApiKey;
-        const anthropicKeyStored = !!saSettings.anthropicApiKey;
 
         // Дефолтні моделі — реальні назви API (не маркетингові)
         const defaultModels = {
@@ -1701,41 +1582,20 @@ window.openGlobalAISettings = async function() {
                 <!-- TAB: GENERAL -->
                 <div id="aiTab_general">
                     <!-- Платформний OpenAI ключ -->
-                    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:0.75rem;margin-bottom:0.6rem;">
-                        <div style="font-size:0.78rem;font-weight:700;color:#1d4ed8;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-                            Платформний OpenAI API Key
+                    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:0.75rem;margin-bottom:1rem;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#1d4ed8;margin-bottom:6px;">
+                            🔑 Платформний OpenAI API Key
                         </div>
                         <div style="font-size:0.72rem;color:#1e40af;margin-bottom:8px;">
-                            Використовується всіма агентами (статистика, збої, фінанси, координація, адаптація сайтів).
-                            Компанія може перевизначити власним ключем.
-                            ${platformKeyStored ? '<span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px;">✓ Збережено</span>' : '<span style="background:#fef2f2;color:#dc2626;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px;">⚠ Не встановлено</span>'}
+                            Діє на всі компанії платформи. Компанія може перевизначити власним ключем.
+                            ${platformKeyStored ? '<span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;font-weight:600;">✓ Ключ збережено</span>' : '<span style="background:#fef2f2;color:#dc2626;padding:2px 6px;border-radius:4px;font-weight:600;">⚠ Не встановлено</span>'}
                         </div>
                         <div style="display:flex;gap:6px;">
                             <input type="password" id="platformOpenAiKey" placeholder="${platformKeyStored ? '••••••••••••••••' : 'sk-...'}"
                                 style="flex:1;padding:0.45rem 0.6rem;border:1px solid #bfdbfe;border-radius:8px;font-size:0.85rem;font-family:monospace;box-sizing:border-box;">
                             ${platformKeyStored ? `<button onclick="clearPlatformKey()" style="padding:0.45rem 0.7rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">✕ Очистити</button>` : ''}
                         </div>
-                        <div style="font-size:0.7rem;color:#6b7280;margin-top:4px;">Залиш порожнім щоб не змінювати поточний ключ. Отримати ключ: <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#1d4ed8;">platform.openai.com/api-keys</a></div>
-                    </div>
-
-                    <!-- Платформний Anthropic ключ -->
-                    <div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:10px;padding:0.75rem;margin-bottom:1rem;">
-                        <div style="font-size:0.78rem;font-weight:700;color:#7e22ce;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-                            Платформний Anthropic API Key
-                            <span style="font-size:0.65rem;background:#f3e8ff;color:#7e22ce;padding:1px 6px;border-radius:4px;border:1px solid #e9d5ff;">Необов'язково</span>
-                        </div>
-                        <div style="font-size:0.72rem;color:#6b21a8;margin-bottom:8px;">
-                            Якщо встановлено — має пріоритет над OpenAI ключем для всіх агентів. Залиш порожнім — буде використовуватись OpenAI.
-                            ${anthropicKeyStored ? '<span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px;">✓ Збережено</span>' : '<span style="background:#f3f4f6;color:#9ca3af;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px;">Не встановлено</span>'}
-                        </div>
-                        <div style="display:flex;gap:6px;">
-                            <input type="password" id="platformAnthropicKey" placeholder="${anthropicKeyStored ? '••••••••••••••••' : 'sk-ant-...'}"
-                                style="flex:1;padding:0.45rem 0.6rem;border:1px solid #e9d5ff;border-radius:8px;font-size:0.85rem;font-family:monospace;box-sizing:border-box;">
-                            ${anthropicKeyStored ? `<button onclick="clearAnthropicKey()" style="padding:0.45rem 0.7rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">✕ Очистити</button>` : ''}
-                        </div>
-                        <div style="font-size:0.7rem;color:#6b7280;margin-top:4px;">Отримати ключ: <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:#7e22ce;">console.anthropic.com</a> → це <b>окремий</b> від підписки Claude.ai акаунт</div>
+                        <div style="font-size:0.7rem;color:#6b7280;margin-top:4px;">Залиш порожнім щоб не змінювати поточний ключ</div>
                     </div>
 
                     <label style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;cursor:pointer;">
@@ -1751,34 +1611,6 @@ window.openGlobalAISettings = async function() {
                         <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Ліміт/місяць по замовчуванню (токени)</label>
                         <input type="number" id="globalMonthlyLimit" value="${s.defaultMonthlyLimit || ''}" placeholder="Без ліміту" min="0" step="10000"
                             style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
-                    </div>
-
-                    <!-- Налаштування ботів -->
-                    <div style="border-top:1px solid #f3f4f6;padding-top:1rem;margin-top:0.5rem;">
-                        <div style="font-size:0.78rem;font-weight:700;color:#374151;margin-bottom:0.75rem;">🤖 Глобальні налаштування ботів</div>
-                        <div style="margin-bottom:0.75rem;">
-                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Модель AI для ботів</label>
-                            <select id="botModelSelect" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
-                                ${[['gpt-4o-mini','GPT-4o mini — рекомендовано'],['gpt-4o','GPT-4o'],['gpt-4.1-mini','GPT-4.1 mini'],['gpt-4.1','GPT-4.1'],['gpt-4.1-nano','GPT-4.1 nano — найдешевший']].map(([v,n]) =>
-                                    `<option value="${v}" ${(saSettings.botModel||'gpt-4o-mini')===v?'selected':''}>${n}</option>`
-                                ).join('')}
-                            </select>
-                        </div>
-                        <div style="margin-bottom:0.75rem;">
-                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Точність відповіді (0.0 — точно, 1.0 — творчо)</label>
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                <input type="range" id="botTempRange" min="0" max="1" step="0.05"
-                                    value="${saSettings.botTemperature ?? 0.7}"
-                                    oninput="document.getElementById('botTempVal').textContent=parseFloat(this.value).toFixed(2);"
-                                    style="flex:1;accent-color:#22c55e;">
-                                <span id="botTempVal" style="font-size:0.88rem;font-weight:700;color:#22c55e;min-width:32px;">${(saSettings.botTemperature ?? 0.7).toFixed(2)}</span>
-                            </div>
-                        </div>
-                        <div style="margin-bottom:0.75rem;">
-                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Макс. токени відповіді</label>
-                            <input type="number" id="botMaxTokens" value="${saSettings.botMaxTokens || 1500}" min="100" max="8000" step="100"
-                                style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
-                        </div>
                     </div>
                 </div>
 
@@ -1813,11 +1645,7 @@ window.saveGlobalAISettings = async function() {
     const enabled  = document.getElementById('globalAiEnabled')?.checked ?? true;
     const daily    = parseInt(document.getElementById('globalDailyLimit')?.value) || 0;
     const monthly  = parseInt(document.getElementById('globalMonthlyLimit')?.value) || 0;
-    const newKey          = document.getElementById('platformOpenAiKey')?.value?.trim() || '';
-    const newAnthropicKey = document.getElementById('platformAnthropicKey')?.value?.trim() || '';
-    const botModel = document.getElementById('botModelSelect')?.value || 'gpt-4o-mini';
-    const botTemperature = parseFloat(document.getElementById('botTempRange')?.value) || 0.7;
-    const botMaxTokens = parseInt(document.getElementById('botMaxTokens')?.value) || 1500;
+    const newKey   = document.getElementById('platformOpenAiKey')?.value?.trim() || '';
 
     // Збираємо агентів
     const agents = {};
@@ -1857,14 +1685,10 @@ window.saveGlobalAISettings = async function() {
             { globalAiEnabled: enabled, defaultDailyLimit: daily, defaultMonthlyLimit: monthly },
             { merge: true }
         );
-        // Платформний ключ + агенти → settings/platform
-        const saUpdate = { agents, botModel, botTemperature, botMaxTokens, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+        // Платформний ключ + агенти → superadmin/settings
+        const saUpdate = { agents, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
         if (newKey) {
             saUpdate.openaiApiKey = newKey;
-            saUpdate.keyUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
-        }
-        if (newAnthropicKey) {
-            saUpdate.anthropicApiKey = newAnthropicKey;
             saUpdate.keyUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
         }
         batch.set(
@@ -1897,6 +1721,7 @@ window.saveGlobalAISettings = async function() {
             ? 'Немає прав для збереження. Переконайся що залогінений як SuperAdmin (management.talco@gmail.com)'
             : 'Помилка: ' + e.message;
         showToast && showToast(msg, 'error');
+        if (typeof showToast==='function') showToast(msg, 'success'); else console.log(msg);
     }
 };
 
@@ -2046,93 +1871,17 @@ const DEFAULT_AGENTS = {
 
 МОВА: Відповідай ЗАВЖДИ мовою користувача. Якщо пише українською — українською. Англійською — англійською. Російською — російською. Будь-якою іншою — тією ж мовою. Не перемикайся на іншу мову навіть якщо промпт написаний інакше.`,
     },
-    siteAdapter: {
-        label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Адаптація сайтів</span>',
-        where:       'Сайти → Бібліотека → кнопка AI Адаптація',
-        info:        'Отримує плейсхолдери з HTML шаблону + дані бізнесу від користувача. Повертає JSON з адаптованими текстами. JS підставляє тексти в шаблон і публікує готовий лендінг. Використовує той самий OpenAI ключ що і всі інші агенти. Вартість ≈ $0.01–0.02 за одну адаптацію (GPT-4o-mini).',
-        defaultPrompt: `Ти експерт з маркетингу і копірайтингу для малого бізнесу. Отримуєш плейсхолдери лендінгу і дані конкретного бізнесу. Адаптуєш тексти під цей бізнес.
-
-ПРАВИЛА:
-- Відповідай ТІЛЬКИ валідним JSON без коментарів, без markdown, без пояснень
-- Зберігай HTML теги всередині текстів якщо вони є (наприклад <strong>, <span>)
-- Зберігай спеціальні символи як є: &mdash; &ndash; &bull; &laquo; &raquo; тощо
-- Тексти адаптуй під конкретну нішу і місто — без загальних фраз
-- Болі клієнтів мають відповідати реальним проблемам саме цієї ніші
-- CTA посилання заміни на контакт що вказав користувач
-- Мову визнач по даних бізнесу і місту — не переключайся на мову шаблону
-- Не вигадуй контакти — тільки те що надав користувач
-- Якщо поле author_name не вказано — залиш як є в плейсхолдері
-
-ФОРМАТ: Тільки JSON з тими самими ключами що в запиті. Нічого більше.`,
-    },
-    crm: {
-        label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="2"/></svg> CRM — Аналіз угод</span>',
-        where:       'CRM → Угода → кнопка AI Аналіз',
-        defaultPrompt: `Ти досвідчений менеджер з продажів для МСБ. Аналізуєш угоду і даєш власнику конкретний план дій.
-
-КОНТЕКСТ: Ти бачиш дані угоди — назву, статус, суму, клієнта, примітки. Аналізуй реалістично.
-
-СТРУКТУРА:
-
-СТАН УГОДИ (1 речення)
-Де угода зараз і яка ймовірність закриття.
-
-РИЗИКИ (топ-2)
-Що може зупинити угоду. Конкретно, не загально.
-
-НАСТУПНИЙ КРОК (один, чіткий)
-Що зробити СЬОГОДНІ щоб угода просунулась. З дедлайном.
-
-ПРОГНОЗ
-Ймовірність закриття у % та очікуваний час.
-
-Відповідай мовою даних угоди. Максимум 3 речення на блок. Без вступів.
-
-МОВА: Відповідай ЗАВЖДИ мовою користувача. Якщо пише українською — українською. Англійською — англійською. Не перемикайся.`,
-    },
-    diagnostic_agent: {
-        label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Діагностика</span>',
-        where:       'Авто-аналіз метрик → AI інсайти на дашборді',
-        defaultPrompt: `Ти операційний аналітик бізнесу. Твоя задача — видати короткі, конкретні, практичні рекомендації власнику малого бізнесу.
-Відповідай ТІЛЬКИ у форматі JSON масиву. Жодного тексту поза JSON.
-Формат кожного елементу: {"id":"...", "insight":"..."}
-де insight — одне речення: що конкретно треба зробити СЬОГОДНІ. Без вступів, без "варто розглянути".
-
-МОВА: Відповідай ЗАВЖДИ мовою користувача. Якщо пише українською — українською. Англійською — англійською. Не перемикайся.`,
-    }
 };
 
 // ── Рендер вкладки Агенти ───────────────────────────────
 window._renderAgentsTab = function(savedAgents) {
     const cards = Object.entries(DEFAULT_AGENTS).map(([key, agent]) => {
-        const saved     = savedAgents[key] || {};
-        const prompt    = saved.systemPrompt || '';
-        const model     = saved.model || 'gpt-4o-mini';
+        const saved  = savedAgents[key] || {};
+        const prompt = saved.systemPrompt || '';
+        const model  = saved.model || 'gpt-4o-mini';
         const hasPrompt = !!prompt;
-        const isFull    = key === 'siteAdapter'; // full-width картка
-
-        const infoHtml = agent.info ? `
-            <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:10px 13px;">
-                <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <span style="font-size:0.7rem;font-weight:700;color:#92400e;">Як це працює</span>
-                </div>
-                <p style="font-size:0.71rem;color:#78350f;line-height:1.55;margin:0 0 8px;">${agent.info}</p>
-                <div style="border-top:1px solid #fde68a;padding-top:7px;display:flex;gap:16px;flex-wrap:wrap;">
-                    <span style="font-size:0.7rem;color:#92400e;">
-                        <b>API ключ:</b> використовує платформний OpenAI ключ (вкладка Загальні)
-                    </span>
-                    <span style="font-size:0.7rem;color:#92400e;">
-                        <b>Вартість:</b> ≈ $0.01–0.02 за адаптацію (GPT-4o-mini)
-                    </span>
-                </div>
-            </div>` : '';
-
         return `
-        <div style="border:1px solid ${isFull ? '#fde68a' : '#e5e7eb'};border-radius:12px;padding:1rem;
-            display:flex;flex-direction:column;gap:0.6rem;
-            background:${hasPrompt ? 'white' : '#fafafa'};
-            ${isFull ? 'grid-column:1/-1;' : ''}">
+        <div style="border:1px solid #e5e7eb;border-radius:12px;padding:1rem;display:flex;flex-direction:column;gap:0.5rem;background:${hasPrompt?'white':'#fafafa'};">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
                 <div>
                     <div style="font-weight:700;font-size:0.88rem;margin-bottom:2px;">${agent.label}</div>
@@ -2142,13 +1891,12 @@ window._renderAgentsTab = function(savedAgents) {
                     </div>
                 </div>
                 <span style="font-size:0.68rem;padding:2px 8px;border-radius:20px;white-space:nowrap;
-                    background:${hasPrompt ? '#f0fdf4' : '#f3f4f6'};
-                    color:${hasPrompt ? '#16a34a' : '#9ca3af'};
-                    border:1px solid ${hasPrompt ? '#bbf7d0' : '#e5e7eb'};">
-                    ${hasPrompt ? '✓ Налаштовано' : 'Дефолт з коду'}
+                    background:${hasPrompt?'#f0fdf4':'#f3f4f6'};
+                    color:${hasPrompt?'#16a34a':'#9ca3af'};
+                    border:1px solid ${hasPrompt?'#bbf7d0':'#e5e7eb'};">
+                    ${hasPrompt?'✓ Налаштовано':'Дефолт з коду'}
                 </span>
             </div>
-            ${infoHtml}
             <div style="display:flex;gap:6px;align-items:center;">
                 <label style="font-size:0.72rem;font-weight:600;color:#374151;white-space:nowrap;">Модель:</label>
                 <input id="agent_model_${key}" value="${model}" placeholder="gpt-4o-mini"
@@ -2158,16 +1906,16 @@ window._renderAgentsTab = function(savedAgents) {
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
                     <label style="font-size:0.72rem;font-weight:600;color:#374151;">Системний промпт:</label>
                     <div style="display:flex;gap:6px;align-items:center;">
-                        ${hasPrompt ? `<button onclick="document.getElementById('agent_prompt_${key}').value='';window._saveModuleInline&&window._saveModuleInline()" style="font-size:0.68rem;color:#ef4444;background:none;border:none;cursor:pointer;">✕ Очистити</button>` : ''}
+                        ${hasPrompt ? `<button onclick="document.getElementById('agent_prompt_${key}').value='';window._saveModuleInline && window._saveModuleInline()" style="font-size:0.68rem;color:#ef4444;background:none;border:none;cursor:pointer;">✕ Очистити</button>` : ''}
                         <button onclick="window._resetAgentPrompt('${key}')"
                             style="font-size:0.68rem;color:#6366f1;background:#f0f0ff;border:1px solid #e0e0ff;border-radius:5px;padding:2px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;">
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Дефолт
                         </button>
                     </div>
                 </div>
-                <textarea id="agent_prompt_${key}" rows="${isFull ? 8 : 12}"
+                <textarea id="agent_prompt_${key}" rows="12"
                     placeholder="Порожньо = використовується вбудований дефолт з коду..."
-                    style="width:100%;padding:8px 10px;border:1px solid ${hasPrompt ? '#6366f1' : '#e5e7eb'};border-radius:8px;font-size:0.78rem;line-height:1.55;resize:vertical;box-sizing:border-box;font-family:inherit;transition:border-color .2s;"
+                    style="width:100%;padding:8px 10px;border:1px solid ${hasPrompt?'#6366f1':'#e5e7eb'};border-radius:8px;font-size:0.78rem;line-height:1.55;resize:vertical;box-sizing:border-box;font-family:inherit;transition:border-color .2s;"
                     onfocus="this.style.borderColor='#6366f1'"
                     onblur="this.style.borderColor=this.value?'#6366f1':'#e5e7eb'"
                     >${prompt}</textarea>
@@ -2215,21 +1963,7 @@ window.clearPlatformKey = async function() {
         await firebase.firestore().collection('settings').doc('platform').update({
             openaiApiKey: firebase.firestore.FieldValue.delete(),
         });
-        showToast && showToast('OpenAI ключ видалено', 'success');
-        document.getElementById('globalAIOverlay')?.remove();
-    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
-};
-
-window.clearAnthropicKey = async function() {
-    const _delOk = window.showConfirmModal
-        ? await showConfirmModal('Видалити Anthropic API ключ?\nАгенти повернуться до OpenAI ключа.',{danger:true})
-        : confirm('Видалити Anthropic API ключ?');
-    if (!_delOk) return;
-    try {
-        await firebase.firestore().collection('settings').doc('platform').update({
-            anthropicApiKey: firebase.firestore.FieldValue.delete(),
-        });
-        showToast && showToast('Anthropic ключ видалено', 'success');
+        showToast && showToast('Ключ видалено', 'success');
         document.getElementById('globalAIOverlay')?.remove();
     } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
 };

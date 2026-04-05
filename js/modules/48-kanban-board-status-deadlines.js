@@ -130,7 +130,7 @@
                     let deadlineHtml = '';
                     if (tk.deadlineDate) {
                         const d = new Date(tk.deadlineDate + 'T12:00:00');
-                        const dayMonth = d.toLocaleDateString(window.getLocale(), {day:'numeric', month:'short'});
+                        const dayMonth = d.toLocaleDateString(getLocale(), {day:'numeric', month:'short'});
                         const color = isOverdue ? '#ef4444' : isToday ? '#f59e0b' : '#6b7280';
                         deadlineHtml = `<span style="color:${color}">${dayMonth}</span>`;
                     }
@@ -191,7 +191,7 @@
             const board = container.querySelector('.kanban-board');
             if (board) {
                 board.addEventListener('touchstart', kanbanTouchStart, { passive: true });
-                board.addEventListener('touchmove', kanbanTouchMove, { passive: true });
+                board.addEventListener('touchmove', kanbanTouchMove, { passive: false });
                 board.addEventListener('touchend', kanbanTouchEnd, { passive: true });
             }
         }
@@ -231,103 +231,51 @@
         // Mobile touch drag & drop
         let kanbanTouchCard = null;
         let kanbanTouchClone = null;
-        let kanbanTouchStartX = 0;
         let kanbanTouchStartY = 0;
         let kanbanTouchMoved = false;
-        let kanbanLongPressTimer = null;
-        let kanbanDragReady = false; // true тільки після long press
-
+        
         function kanbanTouchStart(e) {
             const card = e.target.closest('.kanban-card');
             if (!card) return;
             kanbanTouchCard = card;
-            kanbanTouchStartX = e.touches[0].clientX;
             kanbanTouchStartY = e.touches[0].clientY;
             kanbanTouchMoved = false;
-            kanbanDragReady = false;
             kanbanDraggedId = card.dataset.taskId;
-
-            // Long press 500мс — достатньо довго щоб відрізнити від scroll
-            kanbanLongPressTimer = setTimeout(() => {
-                kanbanDragReady = true;
-                card.style.transform = 'scale(1.04)';
-                card.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)';
-                card.style.transition = 'transform 0.15s, box-shadow 0.15s';
-                if (navigator.vibrate) navigator.vibrate(50);
-            }, 500);
         }
-
+        
         function kanbanTouchMove(e) {
             if (!kanbanTouchCard) return;
-            const dx = Math.abs(e.touches[0].clientX - kanbanTouchStartX);
             const dy = Math.abs(e.touches[0].clientY - kanbanTouchStartY);
-            const moved = dx > 6 || dy > 6;
-
-            // Будь-який рух до long press — скасовуємо drag, дозволяємо scroll
-            if (moved && kanbanLongPressTimer) {
-                clearTimeout(kanbanLongPressTimer);
-                kanbanLongPressTimer = null;
-                // Скидаємо стиль картки якщо long press не встиг спрацювати
-                if (kanbanTouchCard && !kanbanDragReady) {
-                    kanbanTouchCard.style.transform = '';
-                    kanbanTouchCard.style.boxShadow = '';
-                    kanbanTouchCard.style.transition = '';
-                }
-            }
-
-            // Якщо drag не активований (long press не відбувся) — не перехоплюємо
-            if (!kanbanDragReady) return;
-
-            // Drag активний — вертикальний рух скасовує drag
-            if (!kanbanTouchMoved && dy > dx * 1.2) {
-                kanbanDragReady = false;
-                if (kanbanTouchCard) {
-                    kanbanTouchCard.style.transform = '';
-                    kanbanTouchCard.style.boxShadow = '';
-                }
-                return;
-            }
-
+            if (dy < 10 && !kanbanTouchMoved) return; // threshold
             kanbanTouchMoved = true;
-            // Не викликаємо preventDefault — passive:true, native scroll вільний
-
+            e.preventDefault();
+            
             if (!kanbanTouchClone) {
                 kanbanTouchClone = kanbanTouchCard.cloneNode(true);
-                kanbanTouchClone.style.cssText = 'position:fixed;z-index:9999;opacity:0.85;pointer-events:none;width:250px;transform:rotate(2deg) scale(1.03);box-shadow:0 12px 32px rgba(0,0,0,0.22);border-radius:12px;transition:none;';
+                kanbanTouchClone.style.cssText = 'position:fixed;z-index:9999;opacity:0.8;pointer-events:none;width:250px;transform:rotate(2deg);';
                 document.body.appendChild(kanbanTouchClone);
                 kanbanTouchCard.classList.add('dragging');
-                kanbanTouchCard.style.transform = '';
-                kanbanTouchCard.style.boxShadow = '';
             }
             kanbanTouchClone.style.left = (e.touches[0].clientX - 125) + 'px';
-            kanbanTouchClone.style.top  = (e.touches[0].clientY - 30) + 'px';
-
+            kanbanTouchClone.style.top = (e.touches[0].clientY - 30) + 'px';
+            
+            // Highlight column under touch
             document.querySelectorAll('.kanban-column-body').forEach(b => b.classList.remove('drag-over'));
             const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
             const colBody = el?.closest('.kanban-column-body');
             if (colBody) colBody.classList.add('drag-over');
         }
-
+        
         function kanbanTouchEnd(e) {
-            if (kanbanLongPressTimer) {
-                clearTimeout(kanbanLongPressTimer);
-                kanbanLongPressTimer = null;
-            }
             if (!kanbanTouchCard) return;
-
-            // Скидаємо стиль
-            kanbanTouchCard.style.transform = '';
-            kanbanTouchCard.style.boxShadow = '';
-            kanbanTouchCard.style.transition = '';
-
             if (kanbanTouchClone) {
                 kanbanTouchClone.remove();
                 kanbanTouchClone = null;
             }
             kanbanTouchCard.classList.remove('dragging');
             document.querySelectorAll('.kanban-column-body').forEach(b => b.classList.remove('drag-over'));
-
-            if (kanbanTouchMoved && kanbanDraggedId && kanbanDragReady) {
+            
+            if (kanbanTouchMoved && kanbanDraggedId) {
                 const touch = e.changedTouches[0];
                 const el = document.elementFromPoint(touch.clientX, touch.clientY);
                 const colBody = el?.closest('.kanban-column-body');
@@ -336,8 +284,8 @@
                     kanbanDrop({ preventDefault(){}, currentTarget: colBody }, mode);
                 }
             }
-            kanbanDragReady = false;
             kanbanTouchCard = null;
+            // FIX D: delay reset so click event (300ms after touchend on iOS) is still blocked
             const _wasMoved = kanbanTouchMoved;
             if (_wasMoved) {
                 setTimeout(() => { kanbanTouchMoved = false; }, 350);

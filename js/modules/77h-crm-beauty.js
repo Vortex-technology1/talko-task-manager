@@ -14,7 +14,7 @@ var _tg = _tg || function(ua, ru) {
 window._renderBeautyTab = async function(deal) {
     const content = document.getElementById('crmDealContent');
     if (!content) return;
-    content.innerHTML = `<div style="padding:2rem;text-align:center;color:#9ca3af;font-size:.82rem;">'' beauty профілю...</div>`;
+    content.innerHTML = `<div style="padding:2rem;text-align:center;color:#9ca3af;font-size:.82rem;">${_tg('Завантаження...','Загрузка...')} beauty профілю...</div>`;
 
     // Знаходимо клієнта по clientId або phone
     let client = null;
@@ -71,7 +71,7 @@ window._renderBeautyTab = async function(deal) {
             ${master ? `<span style="color:#8b5cf6;font-size:.72rem;">${esc(master)}</span>` : ''}
             ${amount ? `<span style="font-weight:600;color:#1a1a1a;">${esc(amount)}</span>` : ''}
         </div>`;
-    }).join('') : `<div style="font-size:.78rem;color:#9ca3af;padding:.5rem 0;">''</div>`;
+    }).join('') : `<div style="font-size:.78rem;color:#9ca3af;padding:.5rem 0;">${_tg('Записів ще немає','Записей ещё нет')}</div>`;
 
     content.innerHTML = `
     <div style="padding:0 .25rem;">
@@ -80,7 +80,7 @@ window._renderBeautyTab = async function(deal) {
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1rem;">
             <div style="background:#f0fdf4;border-radius:10px;padding:.6rem;text-align:center;">
                 <div style="font-size:1.3rem;font-weight:700;color:#16a34a;">${client.totalVisits||0}</div>
-                <div style="font-size:.68rem;color:#525252;">''</div>
+                <div style="font-size:.68rem;color:#525252;">${_tg('Візитів','Визитов')}</div>
             </div>
             <div style="background:#eff6ff;border-radius:10px;padding:.6rem;text-align:center;">
                 <div style="font-size:1.1rem;font-weight:700;color:#2563eb;">${((client.totalSpent||0)/1000).toFixed(1)}к</div>
@@ -88,7 +88,7 @@ window._renderBeautyTab = async function(deal) {
             </div>
             <div style="background:#faf5ff;border-radius:10px;padding:.6rem;text-align:center;">
                 <div style="font-size:1.1rem;font-weight:700;color:#7c3aed;">${client.loyaltyPoints||0}</div>
-                <div style="font-size:.68rem;color:#525252;">''</div>
+                <div style="font-size:.68rem;color:#525252;">${_tg('Балів','Баллов')}</div>
             </div>
         </div>
 
@@ -98,7 +98,7 @@ window._renderBeautyTab = async function(deal) {
         <!-- Beauty профіль форма -->
         <div style="margin-bottom:1rem;">
             <div style="font-weight:700;font-size:.82rem;color:#374151;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem;">
-                <span>💅</span> ''
+                <span>💅</span> ${_tg('Beauty профіль','Beauty профиль')}
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;">
                 <div>
@@ -106,24 +106,24 @@ window._renderBeautyTab = async function(deal) {
                     <input id="bp-birthDate" type="date" value="${esc(client.birthDate||'')}" style="${inp}">
                 </div>
                 <div>
-                    <label style="${lbl}">''</label>
+                    <label style="${lbl}">${_tg('Нагадувати через (днів)','Напомнить через (дней)')}</label>
                     <input id="bp-reminder" type="number" value="${client.nextVisitReminder||21}" min="1" max="90" style="${inp}">
                 </div>
             </div>
             <div style="margin-bottom:.5rem;">
-                <label style="${lbl}">''</label>
+                <label style="${lbl}">${_tg('Алергії / протипоказання','Аллергии / противопоказания')}</label>
                 <input id="bp-allergies" type="text" value="${esc(client.allergies||'')}" 
-                    placeholder="''" style="${inp}">
+                    placeholder="${_tg('напр: нікель, акрил','напр: никель, акрил')}" style="${inp}">
             </div>
             <div style="margin-bottom:.5rem;">
                 <label style="${lbl}">Нотатки майстра</label>
-                <textarea id="bp-notes" rows="2" placeholder="''"
+                <textarea id="bp-notes" rows="2" placeholder="${_tg('Уподобання, побажання, особливості...','Предпочтения, пожелания, особенности...')}"
                     style="${inp}resize:none;">${esc(client.notes||'')}</textarea>
             </div>
             <div style="margin-bottom:.75rem;">
-                <label style="${lbl}">''</label>
+                <label style="${lbl}">${_tg('Улюблені послуги','Любимые услуги')}</label>
                 <input id="bp-services" type="text" value="${esc((client.preferredServices||[]).join(', '))}" 
-                    placeholder="''" style="${inp}">
+                    placeholder="${_tg('Манікюр, Педикюр, ...','Маникюр, Педикюр, ...')}" style="${inp}">
             </div>
             <button onclick="window._saveBeautyProfile('${client.id}')"
                 style="width:100%;padding:.5rem;background:#ec4899;color:white;border:none;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;">
@@ -134,7 +134,7 @@ window._renderBeautyTab = async function(deal) {
         <!-- Остання інформація -->
         ${client.lastVisitDate ? `
         <div style="background:#f8fafc;border-radius:8px;padding:.55rem .75rem;margin-bottom:1rem;font-size:.78rem;color:#525252;">
-            <span style="font-weight:600;">''</span> ${esc(client.lastVisitDate)}
+            <span style="font-weight:600;">${_tg('Останній візит:','Последний визит:')}</span> ${esc(client.lastVisitDate)}
         </div>` : ''}
 
         <!-- Абонементи -->
@@ -145,7 +145,7 @@ window._renderBeautyTab = async function(deal) {
 
         <!-- Історія візитів -->
         <div style="margin-bottom:.5rem;">
-            <div style="font-weight:700;font-size:.82rem;color:#374151;margin-bottom:.5rem;">📋 ''</div>
+            <div style="font-weight:700;font-size:.82rem;color:#374151;margin-bottom:.5rem;">📋 ${_tg('Історія візитів','История визитов')}</div>
             <div style="border:1px solid #e2e8f0;border-radius:8px;padding:.5rem .75rem;background:white;">
                 ${historyHtml}
             </div>
@@ -164,7 +164,7 @@ window._loadClientSubsWidget = async function(clientId) {
     const subs = await window.getClientSubscriptions?.(clientId) || [];
     if (!subs.length) {
         el.innerHTML = `<div style="font-weight:700;font-size:.82rem;color:#374151;margin-bottom:.5rem;">🎟 Абонементи</div>
-            <div style="font-size:.75rem;color:#9ca3af;padding:.5rem 0;">''</div>`;
+            <div style="font-size:.75rem;color:#9ca3af;padding:.5rem 0;">${_tg('Активних абонементів немає','Активных абонементов нет')}</div>`;
         return;
     }
     const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -205,7 +205,7 @@ window._saveBeautyProfile = async function(clientId) {
             preferredServices: services,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        window.showToast?.('', 'success');
+        window.showToast?.(_tg('Beauty профіль збережено ✓','Beauty профиль сохранён ✓'), 'success');
     } catch(e) {
         window.showToast?.('Помилка збереження', 'error');
     }
@@ -234,7 +234,7 @@ window._createBeautyClientProfile = async function(dealId) {
             clientId: ref.id,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        window.showToast?.('', 'success');
+        window.showToast?.(_tg('Beauty профіль створено ✓','Beauty профиль создан ✓'), 'success');
         window._renderBeautyTab(deal);
     } catch(e) {
         window.showToast?.('Помилка', 'error');

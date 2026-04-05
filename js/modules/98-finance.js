@@ -363,7 +363,7 @@ function renderFinanceContainer() {
           font-size:0.78rem;font-weight:500;flex-shrink:0;margin-right:4px;
         ">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          ''
+          ${_tg('З чого почати','С чего начать')}
         </button>
 
         ${isOwnerOrManager() ? `
@@ -418,7 +418,7 @@ function renderSubTab(tab) {
     case 'functions': renderFinanceFunctions(inner); break;
     case 'planning':   renderPlanning(inner); break;
     case 'analytics':  renderAnalytics(inner); break;
-    case 'balance':    if (typeof window.renderBalanceSheet === 'function') window.renderBalanceSheet(inner); else inner.innerHTML = ('<div style="padding:2rem;text-align:center;color:#9ca3af;">' + '' + '</div>'); break;
+    case 'balance':    if (typeof window.renderBalanceSheet === 'function') window.renderBalanceSheet(inner); else inner.innerHTML = ('<div style="padding:2rem;text-align:center;color:#9ca3af;">' + _tg('Завантаження...','Загрузка...') + '</div>'); break;
     case 'ai':         renderAI(inner); break;
     case 'settings':  renderSettings(inner); break;
     default:          renderDashboard(inner);
@@ -1011,7 +1011,7 @@ function renderTransactions(el, type) {
         </select>
         <select id="txFilterSubCat" onchange="window._txFilterChange('subcategoryId',this.value,'${type}')"
           style="display:none;padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">''</option>
+          <option value="">${_tg('Всі підкатегорії','Все подкатегории')}</option>
         </select>
         <select id="txFilterAcc" onchange="window._txFilterChange('accountId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
@@ -1164,7 +1164,7 @@ async function loadAndRenderTxList(type) {
 
   } catch(e) {
     console.error('[Finance] loadTxList error:', e);
-    listEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.85rem;">'' ${escHtml(e.message)}</div>`;
+    listEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.85rem;">${_tg('Помилка завантаження:','Ошибка загрузки:')} ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -1259,17 +1259,17 @@ async function _getTxForExport(type) {
     const tx = d.data();
     const dt = tx.date?.toDate ? tx.date.toDate() : new Date((tx.date?.seconds || 0) * 1000);
     return {
-      ['']:             dt.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA'),
+      [_tg('Дата','Дата')]:             dt.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA'),
       Тип:              tx.type === 'income' ? window.t('finTransactionIncome') : window.t('finTransactionExpense'),
-      ['']:             tx.amount || 0,
-      ['']:           tx.currency || _state.currency || 'EUR',
-      ['']:  tx.amountBase != null ? tx.amountBase : (tx.amount || 0),
-      ['']:    _state.currency || 'EUR',
+      [_tg('Сума','Сумма')]:             tx.amount || 0,
+      [_tg('Валюта','Валюта')]:           tx.currency || _state.currency || 'EUR',
+      [_tg('Сума (базова)','Сумма (базовая)')]:  tx.amountBase != null ? tx.amountBase : (tx.amount || 0),
+      [_tg('Баз. валюта','Баз. валюта')]:    _state.currency || 'EUR',
       [ window.t('finCategoryLbl') ]: catMap[tx.categoryId] || tx.categoryName || '',
-      ['']:          accMap[tx.accountId] || '',
+      [_tg('Рахунок','Счет')]:          accMap[tx.accountId] || '',
       [ window.t('finCounterpartyLbl') ]: tx.counterparty || '',
-      ['']:             tx.description || '',
-      ['']:           tx.projectId || '',
+      [_tg('Опис','Описание')]:             tx.description || '',
+      [_tg('Проект','Проект')]:           tx.projectId || '',
       [ window.t('finFunctionLbl') ]: tx.functionId || '',
     };
   });
@@ -1403,19 +1403,19 @@ window._financeTransfer = function() {
           </select>
         </div>
         <div>
-          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">''</label>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${_tg('Куди','Куда')}</label>
           <select id="trTo" style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
             ${accOpts}
           </select>
         </div>
         <div>
-          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">''</label>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${_tg('Сума','Сумма')}</label>
           <input id="trAmount" type="number" min="0.01" step="0.01" placeholder="0.00"
             style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
         </div>
         <div>
           <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${window.t('transferNote')}</label>
-          <input id="trNote" type="text" placeholder="''"
+          <input id="trNote" type="text" placeholder="${_tg('напр. Поповнення каси','напр. Пополнение кассы')}"
             style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
         </div>
       </div>
@@ -1423,11 +1423,11 @@ window._financeTransfer = function() {
       <div style="display:flex;gap:0.5rem;margin-top:1.25rem;">
         <button onclick="document.getElementById('transferModal')?.remove()"
           style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#374151;cursor:pointer;font-size:0.85rem;">
-          ''
+          ${_tg('Скасувати','Отмена')}
         </button>
         <button onclick="window._doTransfer()"
           style="flex:1;padding:10px;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.85rem;font-weight:600;">
-          ''
+          ${_tg('Переказати','Перевести')}
         </button>
       </div>
     </div>`;
@@ -1456,7 +1456,7 @@ window._doTransfer = async function() {
   }
 
   const btn = document.querySelector('#transferModal button[onclick="window._doTransfer()"]');
-  if (btn) { btn.disabled = true; btn.textContent = ''; }
+  if (btn) { btn.disabled = true; btn.textContent = _tg('Збереження...','Сохранение...'); }
 
   try {
     const db = getDb();
@@ -1505,8 +1505,8 @@ window._doTransfer = async function() {
 
     if (typeof showToast === 'function') showToast(`${window.t('finTransferDone').replace('{sum}', fmt(amount))}`, 'success');
   } catch(e) {
-    if (btn) { btn.disabled = false; btn.textContent = ''; }
-    if (typeof showToast === 'function') showToast('' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = _tg('Переказати','Перевести'); }
+    if (typeof showToast === 'function') showToast(_tg('Помилка переказу: ','Ошибка перевода: ') + e.message, 'error');
   }
 };
 
@@ -1776,7 +1776,7 @@ window._invoicePayOnline = async function(invoiceId) {
         invoiceId:   invoiceId,
         amount:      inv.total || inv.amount || 0,
         currency:    inv.currency || _state.currency || 'EUR',
-        description: `${inv.number || ''} — ${inv.clientName || ''}`.trim(),
+        description: `${inv.number || _tg('Рахунок','Счет')} — ${inv.clientName || ''}`.trim(),
         clientEmail: inv.clientEmail || '',
         clientName:  inv.clientName  || '',
         successUrl:  window.location.origin + '/?stripe=success&invoiceId=' + invoiceId,
@@ -1926,7 +1926,7 @@ window._invoicePdf = async function(id) {
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 100, 100);
   doc.text(`No: ${inv.number || '—'}`, margin, y);
-  doc.text(`'' ${inv.date || '—'}`, pageW - margin - 60, y);
+  doc.text(`${_tg('Дата:','Дата:')} ${inv.date || '—'}`, pageW - margin - 60, y);
 
   // Клієнт
   y += 12;
@@ -1951,7 +1951,7 @@ window._invoicePdf = async function(id) {
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
-  doc.text('', margin + 3, y + 5.5);
+  doc.text(_tg('Опис','Описание'), margin + 3, y + 5.5);
   doc.text(window.t('qtyShort'), pageW - margin - 55, y + 5.5);
   doc.text(window.t('priceWord'), pageW - margin - 38, y + 5.5);
   doc.text(window.t('crmColAmount'), pageW - margin - 16, y + 5.5);
@@ -2741,7 +2741,7 @@ function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {
         <div style="display:flex;gap:6px;">
           <button onclick="window._planMode&&window._planMode('budget');window._financeTab&&window._financeTab('planning');document.getElementById('finBudgetWarningBanner')?.remove();"
             style="flex:1;padding:5px 8px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;">
-            ''
+            ${_tg('Переглянути бюджет','Просмотреть бюджет')}
           </button>
           <button onclick="document.getElementById('finBudgetWarningBanner')?.remove();"
             style="padding:5px 10px;background:#fff;border:1px solid #fecaca;border-radius:6px;font-size:0.72rem;cursor:pointer;color:#6b7280;">
@@ -2805,12 +2805,12 @@ function renderPlanning(el) {
         <button onclick="window._planMode('weekly')" id="planModeBtn_weekly"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          ''
+          ${_tg('Тижневий план 6M','Недельный план 6M')}
         </button>
         <button onclick="window._planMode('fp1')" id="planModeBtn_fp1"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
-          ''
+          ${_tg('ФП №1 Тижневий','ФП №1 Еженедельный')}
         </button>
       </div>
 
@@ -2874,13 +2874,13 @@ function renderPlanning(el) {
       <!-- Тижневий план 6M -->
       <div id="planModeView_weekly" style="display:none;">
         <div id="weeklyPlanRoot">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">''</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">${_tg('Завантаження...','Загрузка...')}</div>
         </div>
       </div>
       <!-- ФП №1 Тижневий дашборд -->
       <div id="planModeView_fp1" style="display:none;">
         <div id="fp1WeeklyRoot">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">''</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">${_tg('Завантаження...','Загрузка...')}</div>
         </div>
       </div>
 
@@ -2939,7 +2939,7 @@ window._savePlanBudget = async function() {
     const btn = document.querySelector('[onclick="window._savePlanBudget()"]');
     if (btn) { btn.textContent = window.t('finSaved'); setTimeout(()=>{ btn.textContent = window.t('finSave'); }, 1500); }
   } catch(e) {
-    if (typeof showToast === 'function') showToast('' + e.message, 'error');
+    if (typeof showToast === 'function') showToast(_tg('Помилка збереження: ','Ошибка сохранения: ') + e.message, 'error');
   }
 };
 
@@ -3062,7 +3062,7 @@ async function loadPlanningData(monthVal) {
       const pct = Math.min(Math.max(Math.round(profit / budgetData['goal'] * 100), 0), 100);
       goalEl.innerHTML = `
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.3rem;">
-          '' <strong>${fmt(profit)}</strong> '' <strong>${fmt(budgetData['goal'])}</strong>
+          ${_tg('Факт:','Факт:')} <strong>${fmt(profit)}</strong> ${_tg('з','из')} <strong>${fmt(budgetData['goal'])}</strong>
         </div>
         <div style="height:8px;background:#f3f4f6;border-radius:4px;">
           <div style="height:8px;background:${pct>=100?'#22c55e':pct>=50?'#f59e0b':'#ef4444'};
@@ -3076,7 +3076,7 @@ async function loadPlanningData(monthVal) {
   } catch(e) {
     console.error('[Finance] loadPlanningData:', e);
     const bodyEl = document.getElementById('planBudgetBody');
-    if (bodyEl) bodyEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">'' ${escHtml(e.message)}</div>`;
+    if (bodyEl) bodyEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">${_tg('Помилка:','Ошибка:')} ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -3113,9 +3113,9 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
       _budgetToastShown.add(toastKey);
       const warnSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
       if (level === 'red') {
-        showToast(`${warnSvg} '' «${cat.name}» '' ${fmt(fact, currency)} '' ${fmt(budget, currency)}`, 'error');
+        showToast(`${warnSvg} ${_tg('Бюджет','Бюджет')} «${cat.name}» ${_tg('перевищено! Витрачено','превышен! Потрачено')} ${fmt(fact, currency)} ${_tg('з','из')} ${fmt(budget, currency)}`, 'error');
       } else {
-        showToast(`${warnSvg} '' «${cat.name}» '' ${usedPct}% — '' ${fmt(remaining, currency)}`, 'warning');
+        showToast(`${warnSvg} ${_tg('Бюджет','Бюджет')} «${cat.name}» ${_tg('використано на','использован на')} ${usedPct}% — ${_tg('залишилось','осталось')} ${fmt(remaining, currency)}`, 'warning');
       }
     }
   });
@@ -3138,7 +3138,7 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
             </div>
             <div style="font-size:0.72rem;color:${a.level==='red'?'#dc2626':'#d97706'};margin-top:1px;">
               ${a.level==='red'
-                ? `'' ${fmt(a.fact,currency)} '' ${fmt(a.budget,currency)} (${a.usedPct}%)`
+                ? `${_tg('Перевищено: витрачено','Превышено: потрачено')} ${fmt(a.fact,currency)} ${_tg('з','из')} ${fmt(a.budget,currency)} (${a.usedPct}%)`
                 : _tg(`Використано ${a.usedPct}% бюджету — залишилось ${fmt(a.remaining,currency)}`,`Использовано ${a.usedPct}% бюджета — осталось ${fmt(a.remaining,currency)}`)
               }
             </div>
@@ -3157,20 +3157,20 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
 // ── Бюджет по функціях ────────────────────────────────────
 // ── ФП №1 Тижневий дашборд ────────────────────────────────
 const _FP1_BENCHMARKS = {
-  management: { label: () => '', pctMin: 8,  pctMax: 10, color: '#3b82f6', icon: '🔵' },
-  hr:         { label: () => window.t('hr'),                  pctMin: 4,  pctMax: 6,  color: '#8b5cf6', icon: '🟣' },
-  commercial: { label: () => '',     pctMin: 15, pctMax: 18, color: '#f97316', icon: '🟠' },
-  finance:    { label: () => '',        pctMin: 4,  pctMax: 6,  color: '#22c55e', icon: '🟢' },
-  medical:    { label: () => '',      pctMin: 38, pctMax: 42, color: '#ef4444', icon: '🔴' },
-  admin:      { label: () => '',               pctMin: 8,  pctMax: 10, color: '#6b7280', icon: '⚫' },
-  reserve:    { label: () => '',         pctMin: 12, pctMax: 15, color: '#f59e0b', icon: '🟡' },
-  dividends:  { label: () => '',   pctMin: 5,  pctMax: 8,  color: '#a855f7', icon: '🟤' },
+  management: { label: () => _tg('Управління','Управление'), pctMin: 8,  pctMax: 10, color: '#3b82f6', icon: '🔵' },
+  hr:         { label: () => _tg('HR','HR'),                  pctMin: 4,  pctMax: 6,  color: '#8b5cf6', icon: '🟣' },
+  commercial: { label: () => _tg('Комерція','Коммерция'),     pctMin: 15, pctMax: 18, color: '#f97316', icon: '🟠' },
+  finance:    { label: () => _tg('Фінанси','Финансы'),        pctMin: 4,  pctMax: 6,  color: '#22c55e', icon: '🟢' },
+  medical:    { label: () => _tg('Медицина','Медицина'),      pctMin: 38, pctMax: 42, color: '#ef4444', icon: '🔴' },
+  admin:      { label: () => _tg('АХВ','АХЧ'),               pctMin: 8,  pctMax: 10, color: '#6b7280', icon: '⚫' },
+  reserve:    { label: () => _tg('Резерв','Резерв'),         pctMin: 12, pctMax: 15, color: '#f59e0b', icon: '🟡' },
+  dividends:  { label: () => _tg('Дивіденди','Дивиденды'),   pctMin: 5,  pctMax: 8,  color: '#a855f7', icon: '🟤' },
 };
 
 async function _renderFP1Weekly() {
   const el = document.getElementById('fp1WeeklyRoot');
   if (!el) return;
-  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">''</div>`;
+  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${_tg('Завантаження...','Загрузка...')}</div>`;
 
   try {
     const currency = _state.currency || 'UAH';
@@ -3258,31 +3258,31 @@ async function _renderFP1Weekly() {
       <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:.9rem 1rem;">
         <div style="font-size:.75rem;font-weight:700;color:#dc2626;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;">
           <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          '' (${anomalies.length})
+          ${_tg('Аномалії поточного тижня','Аномалии текущей недели')} (${anomalies.length})
         </div>
         ${anomalies.map(a => `
           <div style="font-size:.8rem;color:#374151;padding:.2rem 0;">
-            ${a.type === 'over' ? `⚠️ <b>${escHtml(a.func)}</b>: '' ${a.fact}% ('': ${a.max}%)` : ''}
-            ${a.type === 'zero' ? `🔴 <b>${escHtml(a.func)}</b>: ''` : ''}
-            ${a.type === 'under' ? `🟡 <b>${escHtml(a.func)}</b>: '' ${a.fact}% ('': ${a.min}%)` : ''}
+            ${a.type === 'over' ? `⚠️ <b>${escHtml(a.func)}</b>: ${_tg('перевитрата','перерасход')} ${a.fact}% (${_tg('норма','норма')}: ${a.max}%)` : ''}
+            ${a.type === 'zero' ? `🔴 <b>${escHtml(a.func)}</b>: ${_tg('не відраховано (0%)','не отчислено (0%)')}` : ''}
+            ${a.type === 'under' ? `🟡 <b>${escHtml(a.func)}</b>: ${_tg('недовитрата','недорасход')} ${a.fact}% (${_tg('норма','норма')}: ${a.min}%)` : ''}
           </div>
         `).join('')}
       </div>` : `
       <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.75rem 1rem;font-size:.82rem;color:#166534;display:flex;align-items:center;gap:.5rem;">
         <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        ''
+        ${_tg('Аномалій не виявлено — всі функції в межах бенчмарків','Аномалий не обнаружено — все функции в пределах бенчмарков')}
       </div>`}
 
       <!-- 4 тижні: прихід / витрати / різниця -->
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
         <div style="background:#1e293b;color:#fff;padding:.65rem 1rem;font-size:.75rem;font-weight:700;display:grid;grid-template-columns:120px repeat(4,1fr);">
-          <div>''</div>
+          <div>${_tg('Показник','Показатель')}</div>
           ${weekData.map(w => `<div style="text-align:right;">${w.label}</div>`).join('')}
         </div>
         ${[
-          { label: '', key: 'income', color: '#22c55e' },
-          { label: '', key: 'expenses', color: '#ef4444' },
-          { label: '', key: 'diff', isDiff: true },
+          { label: _tg('Прихід','Приход'), key: 'income', color: '#22c55e' },
+          { label: _tg('Витрати','Расходы'), key: 'expenses', color: '#ef4444' },
+          { label: _tg('Різниця','Разница'), key: 'diff', isDiff: true },
         ].map((row, ri) => `
         <div style="display:grid;grid-template-columns:120px repeat(4,1fr);padding:.5rem 1rem;border-bottom:1px solid #f1f5f9;font-size:.8rem;background:${ri%2===0?'#fff':'#fafafa'};">
           <div style="font-weight:600;color:#374151;">${row.label}</div>
@@ -3298,16 +3298,16 @@ async function _renderFP1Weekly() {
       ${funcs.length > 0 ? `
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
         <div style="background:#1e293b;color:#fff;padding:.65rem 1rem;font-size:.75rem;font-weight:700;">
-          ''
-          <span style="font-size:.7rem;opacity:.6;margin-left:.5rem;">'': ${fmt(cur.income, currency)}</span>
+          ${_tg('Витрати по функціях (поточний тиждень)','Расходы по функциям (текущая неделя)')}
+          <span style="font-size:.7rem;opacity:.6;margin-left:.5rem;">${_tg('від приходу','от прихода')}: ${fmt(cur.income, currency)}</span>
         </div>
         <!-- Header -->
         <div style="display:grid;grid-template-columns:1fr 90px 90px 70px 90px;padding:.5rem 1rem;background:#f8fafc;font-size:.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;">
-          <div>''</div>
-          <div style="text-align:right;">''</div>
-          <div style="text-align:right;">''</div>
-          <div style="text-align:right;">''</div>
-          <div style="text-align:right;">''</div>
+          <div>${_tg('Функція','Функция')}</div>
+          <div style="text-align:right;">${_tg('Бенчмарк','Бенчмарк')}</div>
+          <div style="text-align:right;">${_tg('Факт грн','Факт грн')}</div>
+          <div style="text-align:right;">${_tg('Факт %','Факт %')}</div>
+          <div style="text-align:right;">${_tg('Статус','Статус')}</div>
         </div>
         ${funcs.map((f, i) => {
           const bKey = fp1Config['func_benchmark_' + f.id] || f.benchmarkKey;
@@ -3340,7 +3340,7 @@ async function _renderFP1Weekly() {
         }).join('')}
         <!-- Підсумок -->
         <div style="display:grid;grid-template-columns:1fr 90px 90px 70px 90px;padding:.55rem 1rem;background:#f0fdf4;font-size:.8rem;font-weight:700;border-top:2px solid #bbf7d0;">
-          <div style="color:#166534;">''</div>
+          <div style="color:#166534;">${_tg('РАЗОМ витрати','ИТОГО расходы')}</div>
           <div style="text-align:right;color:#9ca3af;">100%</div>
           <div style="text-align:right;color:#374151;">${fmt(cur.expenses, currency)}</div>
           <div style="text-align:right;color:${cur.income > 0 ? (Math.round(cur.expenses/cur.income*100) <= 92 ? '#22c55e' : '#ef4444') : '#9ca3af'};">
@@ -3352,25 +3352,25 @@ async function _renderFP1Weekly() {
         </div>
       </div>` : `
       <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:1.5rem;text-align:center;color:#9ca3af;font-size:.85rem;">
-        ''
+        ${_tg('Функції не налаштовані. Перейдіть в Система → Структура → Функції і створіть 8 функцій.','Функции не настроены. Перейдите в Система → Структура → Функции и создайте 8 функций.')}
       </div>`}
 
       <!-- Налаштування бенчмарків -->
       <details style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
         <summary style="padding:.75rem 1rem;font-size:.82rem;font-weight:600;color:#374151;cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between;">
-          <span>⚙️ ''</span>
+          <span>⚙️ ${_tg('Налаштування бенчмарків по функціях','Настройка бенчмарков по функциям')}</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
         </summary>
         <div style="padding:1rem;border-top:1px solid #f1f5f9;">
           <div style="font-size:.78rem;color:#6b7280;margin-bottom:.75rem;">
-            ''
+            ${_tg('Привяжіть кожну функцію до бенчмарку відповідно до структури вашого бізнесу','Привяжите каждую функцию к бенчмарку согласно структуре вашего бизнеса')}
           </div>
           ${funcs.map(f => `
           <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;font-size:.8rem;">
             <div style="flex:1;font-weight:500;color:#374151;">${escHtml(f.name)}</div>
             <select onchange="window._fp1SaveBenchmark('${f.id}', this.value)"
               style="padding:.3rem .6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:.78rem;color:#374151;">
-              <option value="">— '' —</option>
+              <option value="">— ${_tg('не вказано','не указано')} —</option>
               ${Object.entries(_FP1_BENCHMARKS).map(([key, b]) =>
                 `<option value="${key}" ${(fp1Config['func_benchmark_' + f.id] || f.benchmarkKey) === key ? 'selected' : ''}>${b.label()} (${b.pctMin}–${b.pctMax}%)</option>`
               ).join('')}
@@ -3382,7 +3382,7 @@ async function _renderFP1Weekly() {
     </div>`;
   } catch(err) {
     console.error('[FP1Weekly]', err);
-    el.innerHTML = `<div style="text-align:center;color:#ef4444;padding:2rem;font-size:.85rem;">'': ${escHtml(err.message)}</div>`;
+    el.innerHTML = `<div style="text-align:center;color:#ef4444;padding:2rem;font-size:.85rem;">${_tg('Помилка завантаження','Ошибка загрузки')}: ${escHtml(err.message)}</div>`;
   }
 }
 
@@ -3393,9 +3393,9 @@ window._fp1SaveBenchmark = async function(funcId, benchKey) {
     await db.collection('companies').doc(window.currentCompanyId)
       .collection('finance_settings').doc('fp1_config')
       .set({ ['func_benchmark_' + funcId]: benchKey }, { merge: true });
-    if (typeof showToast === 'function') showToast('', 'success');
+    if (typeof showToast === 'function') showToast(_tg('Бенчмарк збережено','Бенчмарк сохранён'), 'success');
   } catch(e) {
-    if (typeof showToast === 'function') showToast('', 'error');
+    if (typeof showToast === 'function') showToast(_tg('Помилка збереження','Ошибка сохранения'), 'error');
   }
 };
 
@@ -3441,9 +3441,9 @@ async function _renderFunctionsBudget(monthVal) {
         <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
           padding:0.65rem 1rem;display:grid;grid-template-columns:1fr 80px 110px 80px 90px;">
           <div>${window.t('functionHeader')}</div>
-          <div style="text-align:right;">''</div>
-          <div style="text-align:right;">''</div>
-          <div style="text-align:right;">''</div>
+          <div style="text-align:right;">${_tg('Норма %','Норма %')}</div>
+          <div style="text-align:right;">${_tg('Факт сума','Факт сумма')}</div>
+          <div style="text-align:right;">${_tg('Факт %','Факт %')}</div>
           <div style="text-align:right;">${window.t('finVariance')}</div>
         </div>
         ${funcs.map((f, i) => {
@@ -3488,7 +3488,7 @@ async function _renderFunctionsBudget(monthVal) {
         </button>
       </div>`;
   } catch(e) {
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">'' ${escHtml(e.message)}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">${_tg('Помилка:','Ошибка:')} ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -3506,7 +3506,7 @@ window._saveFuncNorms = async function() {
 async function _renderCashflowForecast() {
   const el = document.getElementById('planCashflowForecast');
   if (!el) return;
-  el.innerHTML = ('<div style="text-align:center;color:#9ca3af;padding:2rem;">' + '' + '</div>');
+  el.innerHTML = ('<div style="text-align:center;color:#9ca3af;padding:2rem;">' + _tg('Розраховую прогноз...','Рассчитываю прогноз...') + '</div>');
 
   try {
     const currency = _state.currency || 'EUR';
@@ -3570,9 +3570,9 @@ async function _renderCashflowForecast() {
       </div>
 
       <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;">
-        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:12px;">''</div>
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:12px;">${_tg('Поточний стан','Текущее состояние')}</div>
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
-          <span style="color:#6b7280;">''</span>
+          <span style="color:#6b7280;">${_tg('Залишок на рахунках','Остаток на счетах')}</span>
           <span style="font-weight:700;color:#22c55e;">${fmt(totalBalance, currency)}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
@@ -3586,7 +3586,7 @@ async function _renderCashflowForecast() {
         </div>
       </div>`;
   } catch(e) {
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">'' ${escHtml(e.message)}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">${_tg('Помилка:','Ошибка:')} ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -3608,13 +3608,13 @@ function renderAnalytics(el) {
             <option value="year">${window.t('thisYear')}</option>
           </select>
           <button onclick="window._exportPnlXlsx()"
-            title=''
+            title="Експорт P&L в Excel"
             style="padding:5px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.78rem;background:#fff;cursor:pointer;display:flex;align-items:center;gap:4px;color:#374151;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Excel
           </button>
           <button onclick="window._exportPnlPdf()"
-            title=''
+            title="Експорт P&L в PDF"
             style="padding:5px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.78rem;background:#fff;cursor:pointer;display:flex;align-items:center;gap:4px;color:#374151;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             PDF
@@ -3682,7 +3682,7 @@ async function _loadAnalytics(mode, period) {
       if (typeof window.renderBalanceSheet === 'function') {
         window.renderBalanceSheet(el);
       } else {
-        el.innerHTML = ('<div style="padding:2rem;text-align:center;color:#9ca3af;">' + '' + '</div>');
+        el.innerHTML = ('<div style="padding:2rem;text-align:center;color:#9ca3af;">' + _tg('Модуль балансу не завантажено','Модуль баланса не загружен') + '</div>');
       }
       return;
     }
@@ -3714,7 +3714,7 @@ async function _loadAnalytics(mode, period) {
     if (mode === 'trends')    _renderTrends(el, txs, currency, from, to, period);
 
   } catch(e) {
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">'' ${escHtml(e.message)}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">${_tg('Помилка:','Ошибка:')} ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -3859,7 +3859,7 @@ async function _renderProjectsMargin(el, txs, currency) {
 
   const rows = Object.entries(byProject).map(([pid, d]) => {
     const proj = projects.find(p => p.id === pid);
-    const name = proj?.name || proj?.title || '' + pid.slice(0,6);
+    const name = proj?.name || proj?.title || 'Проект ' + pid.slice(0,6);
     const profit = d.income - d.expense;
     const margin = d.income > 0 ? Math.round(profit / d.income * 100) : 0;
     return { name, ...d, profit, margin };
@@ -4030,7 +4030,7 @@ function _renderTrends(el, txs, currency, from, to, period) {
 // ── Налаштування ─────────────────────────────────────────
 function renderSettings(el) {
   if (!isOwnerOrManager()) {
-    el.innerHTML = ('<div style="text-align:center;color:#9ca3af;padding:2rem;">' + '' + '</div>');
+    el.innerHTML = ('<div style="text-align:center;color:#9ca3af;padding:2rem;">' + _tg('Доступ лише для Owner та Manager','Доступ только для Owner и Manager') + '</div>');
     return;
   }
 
@@ -4071,9 +4071,9 @@ function renderSettings(el) {
                   <div style="flex:1;font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(cat.name)}</div>
                   ${costBadge}
                   <button onclick="window._financeAddCategory('${type}','${cat.id}')"
-                    title="''"
+                    title="${_tg('Додати підкатегорію','Добавить подкатегорию')}"
                     style="display:flex;align-items:center;gap:3px;padding:2px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:5px;cursor:pointer;font-size:0.72rem;font-weight:600;">
-                    + ''
+                    + ${_tg('Підкат.','Подкат.')}
                   </button>
                   ${!cat.system ? `
                     <button onclick="window._financeDeleteCategory('${cat.id}','${type}')"
@@ -4261,9 +4261,9 @@ window._saveRates = async function() {
   try {
     await colRef('finance_settings').doc('main').set({ rates }, { merge: true });
     const st = document.getElementById('ratesStatus');
-    if (st) st.textContent = '' + ' ' + new Date().toLocaleTimeString(window.getLocale ? window.getLocale() : 'uk-UA');
+    if (st) st.textContent = _tg('Збережено','Сохранено') + ' ' + new Date().toLocaleTimeString(window.getLocale ? window.getLocale() : 'uk-UA');
     if (typeof showToast === 'function') showToast(window.t('finRateSaved'), 'success');
-  } catch(e) { if (typeof showToast === 'function') showToast('' + e.message, 'error'); }
+  } catch(e) { if (typeof showToast === 'function') showToast(_tg('Помилка збереження: ','Ошибка сохранения: ') + e.message, 'error'); }
 };
 
 window._fetchRates = async function() {
@@ -4331,16 +4331,16 @@ window._financeAddCategory = function(type, parentId) {
         <!-- Батьківська категорія (опційно) -->
         <div>
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">
-            ''
+            ${_tg('Батьківська категорія','Родительская категория')}
           </label>
           <select id="finCatParent"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            <option value="">''</option>
+            <option value="">${_tg('— Верхній рівень (основна категорія)','— Верхний уровень (основная категория)')}</option>
             ${topLevelCats.map(c => `<option value="${c.id}" ${c.id === parentId ? 'selected' : ''}>${c.name}</option>`).join('')}
           </select>
         </div>
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">''</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_tg('Назва *','Название *')}</label>
           <input id="finCatName" type="text" placeholder="${isExpense ? window.t('catPlaceholderExpense') : window.t('catPlaceholderIncome')}"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;"
             onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
@@ -4451,11 +4451,11 @@ window._financeAddAccount = function() {
 
   modal.innerHTML = `
     <div style="background:#fff;border-radius:16px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.2);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
-      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">''</div>
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${_tg('Новий рахунок','Новый счёт')}</div>
 
       <div>
-        <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">'' *</label>
-        <input id="faaName" type="text" placeholder="''"
+        <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_tg('Назва рахунку','Название счёта')} *</label>
+        <input id="faaName" type="text" placeholder="${_tg('Напр: Monobank, Готівка USD','Напр: Monobank, Наличные USD')}"
           style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;"
           onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
       </div>
@@ -4468,11 +4468,11 @@ window._financeAddAccount = function() {
           </select>
         </div>
         <div style="flex:1;">
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">''</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_tg('Тип','Тип')}</label>
           <select id="faaType" style="width:100%;padding:0.55rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            <option value="bank">''</option>
-            <option value="cash">''</option>
-            <option value="card">''</option>
+            <option value="bank">${_tg('Банк','Банк')}</option>
+            <option value="cash">${_tg('Готівка','Наличные')}</option>
+            <option value="card">${_tg('Картка','Карта')}</option>
           </select>
         </div>
       </div>
@@ -4532,7 +4532,7 @@ let _aiFinHistory = []; // локальна історія чату
 
 function renderAI(el) {
   if (!isOwnerOrManager()) {
-    el.innerHTML = ('<div style="text-align:center;color:#9ca3af;padding:2rem;">' + '' + '</div>');
+    el.innerHTML = ('<div style="text-align:center;color:#9ca3af;padding:2rem;">' + _tg('Доступ лише для Owner та Manager','Доступ только для Owner и Manager') + '</div>');
     return;
   }
 
@@ -4596,7 +4596,7 @@ function renderAI(el) {
 window._aiFinClear = function() {
   _aiFinHistory = [];
   const chat = document.getElementById('aiFinChat');
-  if (chat) chat.innerHTML = '<div style="text-align:center;color:#9ca3af;font-size:0.82rem;margin:auto;">' + '' + '</div>';
+  if (chat) chat.innerHTML = '<div style="text-align:center;color:#9ca3af;font-size:0.82rem;margin:auto;">' + _tg('Чат очищено','Чат очищен') + '</div>';
 };
 
 window._aiFinAsk = function(question) {
@@ -4627,7 +4627,7 @@ window._aiFinSend = async function() {
   const loadEl = document.createElement('div');
   loadEl.id = 'aiFinLoading';
   loadEl.style.cssText = 'display:flex;align-items:center;gap:0.5rem;color:#9ca3af;font-size:0.82rem;';
-  loadEl.innerHTML = `${window.t('divStylewidth8pxheight8pxbackground22c55')}`;
+  loadEl.innerHTML = `<div style="width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pulse 1s infinite;"></div> AI аналізує дані...`;
   chat.appendChild(loadEl);
   chat.scrollTop = chat.scrollHeight;
 
@@ -4644,7 +4644,7 @@ window._aiFinSend = async function() {
       furniture:     { marginMin:15, marginMax:35, labourPct:30, adminPct:8,  name:window.t('nicheFurn3') },
       retail:        { marginMin:10, marginMax:25, labourPct:20, adminPct:7,  name:window.t('nicheRetail') },
       it:            { marginMin:30, marginMax:60, labourPct:55, adminPct:10, name:'IT / Послуги' },
-      manufacturing: { marginMin:12, marginMax:28, labourPct:32, adminPct:8,  name:'' },
+      manufacturing: { marginMin:12, marginMax:28, labourPct:32, adminPct:8,  name:_tg('Виробництво','Производство') },
     };
     const niche = _state.niche || 'general';
     const bench = BENCHMARKS[niche] || { marginMin:15, marginMax:35, labourPct:35, adminPct:10, name:window.t('nicheBusinessWord') };
@@ -4684,20 +4684,39 @@ ${context}
 - Формат: емодзі-маркери для кожного блоку (📊 Діагноз, 🔍 Причина, <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Наслідок, <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Дія)
 - Максимум 4-5 речень на блок`;
 
-    // systemPrompt=null → воркер бере промпт з адмінки (агент 'finance')
-    // Контекст фінансових даних передаємо як частину messages
-    const _finMsgs = systemPrompt && _aiFinHistory.length > 0
-      ? [{ role: 'user', content: '[КОНТЕКСТ ФІНАНСІВ]\n' + systemPrompt + '\n\n[ПИТАННЯ]\n' + (_aiFinHistory[_aiFinHistory.length-1]?.content||'') },
-         ..._aiFinHistory.slice(0,-1)]
-      : _aiFinHistory;
+    // Читаємо OpenAI ключ з settings/ai
+    const sSnap = await getDb().collection('settings').doc('ai').get();
+    const apiKey = sSnap.data()?.openaiApiKey || sSnap.data()?.apiKey || '';
 
-    const aiText = await window.aiProxy({
-      messages:     _finMsgs,
-      systemPrompt: null,   // з адмінки (агент 'finance')
-      model:        null,   // з адмінки
-      maxTokens:    1000,
-      module:       'finance',
-    });
+    let aiText;
+    try {
+      aiText = await window.aiProxy({
+        messages:     _aiFinHistory,
+        systemPrompt: systemPrompt,
+        model:        'gpt-4o-mini',
+        maxTokens:    1000,
+        module:       'finance',
+      });
+    } catch(proxyErr) {
+      // fallback — пряме звернення якщо є ключ компанії
+      if (!apiKey) throw proxyErr;
+      const _oaiCtrl = new AbortController();
+      const _oaiTimer = setTimeout(() => _oaiCtrl.abort(), 30000); // 30s для LLM
+      let response;
+      try {
+        response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini', max_tokens: 1000,
+            messages: [{ role: 'system', content: systemPrompt }, ..._aiFinHistory]
+          }),
+          signal: _oaiCtrl.signal,
+        });
+      } finally { clearTimeout(_oaiTimer); }
+      const data = await response.json();
+      aiText = data.choices?.[0]?.message?.content || data.error?.message || window.t('failedGetResponse');
+    }
 
     // Видаляємо індикатор
     const loadElDone = document.getElementById('aiFinLoading');
@@ -4859,7 +4878,7 @@ ${d.month}: дохід=${d.income}, витрати=${d.expense}, прибуто�
 
     // Стратегічний профіль компанії
     if (companyProfile.companyGoal || companyProfile.companyConcept || companyProfile.companyIdeal) {
-      ctx += `''`;
+      ctx += `\nСТРАТЕГІЧНИЙ ПРОФІЛЬ КОМПАНІЇ:\n`;
       if (companyProfile.companyGoal)    ctx += `Мета: ${companyProfile.companyGoal}\n`;
       if (companyProfile.companyConcept) ctx += `Задум: ${companyProfile.companyConcept}\n`;
       if (companyProfile.companyCKP)     ctx += `ЦКП: ${companyProfile.companyCKP}\n`;
@@ -5048,7 +5067,7 @@ function addTransaction(forceType) {
           </div>
           <div>
             <label style="font-size:0.72rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.25rem;">Вид робіт</label>
-            <input id="fmWorkType" type="text" placeholder=''
+            <input id="fmWorkType" type="text" placeholder="Наприклад: кровля, бетон, фасад, монтаж..."
               style="width:100%;padding:0.45rem 0.6rem;border:1px solid #ddd6fe;border-radius:7px;font-size:0.82rem;box-sizing:border-box;">
           </div>
         </div>
@@ -5165,7 +5184,7 @@ window._financeSaveTx = async function() {
   if (!dateVal)               { if (typeof showToast === 'function') showToast(window.t('finSelectDate'), 'warning'); return; }
 
   const btn = document.getElementById('fmSaveBtn');
-  if (btn) { btn.disabled = true; btn.textContent = ''; }
+  if (btn) { btn.disabled = true; btn.textContent = _tg('Збереження...','Сохранение...'); }
 
   try {
     const db = getDb();
@@ -5248,7 +5267,7 @@ window._financeSaveTx = async function() {
 
   } catch(e) {
     console.error('[Finance] saveTx error:', e);
-    if (typeof showToast === 'function') showToast('' + e.message, 'error');
+    if (typeof showToast === 'function') showToast(_tg('Помилка збереження: ','Ошибка сохранения: ') + e.message, 'error');
     if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
   }
 };
@@ -5286,7 +5305,7 @@ window._financeDeleteTx = async function(txId, type) {
 
   } catch(e) {
     console.error('[Finance] deleteTx error:', e);
-    if (typeof showToast === 'function') showToast('' + e.message, 'error');
+    if (typeof showToast === 'function') showToast(_tg('Помилка видалення: ','Ошибка удаления: ') + e.message, 'error');
   }
 };
 
@@ -5487,7 +5506,7 @@ window._txFilterCatChange = function(catId, type) {
     subSel.style.display = 'none';
     subSel.value = '';
   } else {
-    subSel.innerHTML = `<option value="">''</option>` +
+    subSel.innerHTML = `<option value="">${_tg('Всі підкатегорії','Все подкатегории')}</option>` +
       subcats.map(c => `<option value="${c.id}">${escHtml(c.name)}</option>`).join('');
     subSel.style.display = '';
   }
@@ -5572,7 +5591,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
       </div>`;
   } catch(e) {
     console.error('[ProjectFinance]', e);
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;">'' ${escHtml(e.message)}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;">${_tg('Помилка:','Ошибка:')} ${escHtml(e.message)}</div>`;
   }
 };
 
@@ -5633,10 +5652,10 @@ window._addEntityTx = function(entityId, field, type) {
         amount:        parseFloat(p.amount) || 0,
         currency:      p.currency || _state.currency || 'EUR', // deal currency priority
         date:          firebase.firestore.Timestamp.now(),
-        description:   `CRM: ${p.clientName || ''} — ''`,
+        description:   `CRM: ${p.clientName || _tg('Угода','Сделка')} — ${_tg('оплата','оплата')}`,
         counterparty:  p.clientName || '',
         categoryId:    defCat?.id   || null,
-        categoryName:  defCat?.name || '',
+        categoryName:  defCat?.name || _tg('Продаж послуг','Продажа услуг'),
         accountId:     defAcc?.id   || null,
         projectId:     p.projectId  || null,
         crmDealId:     p.dealId     || null,   // для захисту від дублювання
@@ -5808,9 +5827,9 @@ function _buildFinHowPanel() {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
         <div style="font-weight:800;font-size:0.95rem;color:#16a34a;display:flex;align-items:center;gap:6px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          ''
+          ${_tg('Фінанси — з чого почати і як це працює','Финансы — с чего начать и как это работает')}
         </div>
-        <button onclick="window._finHowToggle()" style="padding:3px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:0.75rem;cursor:pointer;color:#6b7280;">''</button>
+        <button onclick="window._finHowToggle()" style="padding:3px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:0.75rem;cursor:pointer;color:#6b7280;">${_tg('Закрити ×','Закрыть ×')}</button>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
@@ -5819,20 +5838,20 @@ function _buildFinHowPanel() {
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            ''
+            ${_tg('Три управлінські звіти','Три управленческих отчёта')}
           </div>
           <div style="display:grid;gap:6px;">
             <div style="background:#eff6ff;border-radius:8px;padding:8px 10px;">
               <div style="font-size:0.75rem;font-weight:700;color:#1e40af;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Cash Flow (Дашборд)</div>
-              <div style="${sub}">''</div>
+              <div style="${sub}">${_tg('Реальний рух грошей по рахунках. Коли гроші прийшли і пішли. Актуально в реальному часі.','Реальное движение денег по счетам. Когда деньги пришли и ушли. Актуально в реальном времени.')}</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;">
               <div style="font-size:0.75rem;font-weight:700;color:#16a34a;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> P&L — Прибутки і збитки (Аналітика)</div>
-              <div style="${sub}">''</div>
+              <div style="${sub}">${_tg('Реальний прибуток: Виручка → Собівартість → Валовий прибуток → OPEX → Чистий прибуток. По даті нарахування послуги.','Реальная прибыль: Выручка → Себестоимость → Валовая прибыль → OPEX → Чистая прибыль. По дате начисления услуги.')}</div>
             </div>
             <div style="background:#fff7ed;border-radius:8px;padding:8px 10px;">
               <div style="font-size:0.75rem;font-weight:700;color:#c2410c;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v19"/><path d="M5 10l7-7 7 7"/><path d="M3 17l4-8 4 8"/><path d="M13 17l4-8 4 8"/><path d="M3 21h18"/></svg> Баланс (Аналітика → кнопка «Баланс»)</div>
-              <div style="${sub}">''</div>
+              <div style="${sub}">${_tg('Активи = Пасиви + Капітал. Що є у бізнесу, за чий рахунок, скільки власний капітал.','Активы = Пассивы + Капитал. Что есть у бизнеса, за чей счёт, сколько собственный капитал.')}</div>
             </div>
           </div>
         </div>
@@ -5841,54 +5860,54 @@ function _buildFinHowPanel() {
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            ''
+            ${_tg('З чого почати — 5 кроків','С чего начать — 5 шагов')}
           </div>
-          ${step(1,'','')}
-          ${step(2,'','')}
-          ${step(3,'','')}
-          ${step(4,'','')}
-          ${step(5,'',_tg('Налаштування → Зв\'язки модулів. CRM→Фінанси: угода «Виграно» = автодохід.','Настройки → Связи модулей. CRM→Финансы: сделка «Выиграно» = автодоход.'),'#3b82f6')}
+          ${step(1,_tg('Налаштувати рахунки','Настроить счета'),_tg('Фінанси → Налаштування → Рахунки. Каса, банк, картка. Вказати початковий залишок.','Финансы → Настройки → Счета. Касса, банк, карта. Указать начальный остаток.'))}
+          ${step(2,_tg('Налаштувати категорії','Настроить категории'),_tg('Доходи: послуги, продажі, абонементи. Витрати: COGS (матеріали, зарплата майстрів) і OPEX (оренда, маркетинг).','Доходы: услуги, продажи, абонементы. Расходы: COGS (материалы, зарплата мастеров) и OPEX (аренда, маркетинг).'))}
+          ${step(3,_tg('Внести перші транзакції','Внести первые транзакции'),_tg('«+ Додати» → тип, сума, категорія, рахунок, дата. Мінімум 5-10 реальних за поточний місяць.','«+ Добавить» → тип, сумма, категория, счёт, дата. Минимум 5-10 реальных за текущий месяц.'))}
+          ${step(4,_tg('Перевірити P&L','Проверить P&L'),_tg('Аналітика → P&L. Побачите Валовий і Чистий прибуток. Якщо COGS = 0 — налаштуйте категорії витрат.','Аналитика → P&L. Увидите Валовую и Чистую прибыль. Если COGS = 0 — настройте категории расходов.'))}
+          ${step(5,_tg('Підключити автоматику','Подключить автоматику'),_tg('Налаштування → Зв\'язки модулів. CRM→Фінанси: угода «Виграно» = автодохід.','Настройки → Связи модулей. CRM→Финансы: сделка «Выиграно» = автодоход.'),'#3b82f6')}
         </div>
 
         <!-- БЛОК 3: Різниця CF vs P&L -->
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            ''
+            ${_tg('Чому Cash Flow ≠ P&L','Почему Cash Flow ≠ P&L')}
           </div>
           <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;margin-bottom:8px;">
-            <div style="font-size:0.72rem;color:#92400e;font-weight:600;margin-bottom:4px;">''</div>
-            <div style="${sub}">''</div>
+            <div style="font-size:0.72rem;color:#92400e;font-weight:600;margin-bottom:4px;">${_tg('Приклад:','Пример:')}</div>
+            <div style="${sub}">${_tg('Клієнт заплатив 10,000 передоплати в березні за послугу в квітні.','Клиент заплатил 10,000 предоплаты в марте за услугу в апреле.')}</div>
             <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
-              ${badge('','#1d4ed8','#eff6ff')}
-              ${badge('','#16a34a','#f0fdf4')}
+              ${badge(_tg('Cash Flow: Березень +10K','Cash Flow: Март +10K'),'#1d4ed8','#eff6ff')}
+              ${badge(_tg('P&L: Квітень +10K','P&L: Апрель +10K'),'#16a34a','#f0fdf4')}
             </div>
           </div>
-          <div style="${sub}">''</div>
-          <div style="margin-top:8px;${sub}">''</div>
+          <div style="${sub}">${_tg('Тому <b>Cash Flow</b> показує ліквідність (чи є гроші зараз), а <b>P&L</b> — реальну прибутковість (чи заробляє бізнес).','Поэтому <b>Cash Flow</b> показывает ликвидность (есть ли деньги сейчас), а <b>P&L</b> — реальную прибыльность (зарабатывает ли бизнес).')}</div>
+          <div style="margin-top:8px;${sub}">${_tg('<b>Дата нарахування</b> у формі транзакції — вкажіть коли надана послуга, якщо вона відрізняється від дати оплати.','<b>Дата начисления</b> в форме транзакции — укажите когда оказана услуга, если она отличается от даты оплаты.')}</div>
         </div>
 
         <!-- БЛОК 4: COGS vs OPEX -->
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            ''
+            ${_tg('COGS vs OPEX — навіщо розділяти','COGS vs OPEX — зачем разделять')}
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
             <div style="background:#fff7ed;border-radius:8px;padding:7px 9px;border:1px solid #fed7aa;">
               <div style="font-size:0.7rem;font-weight:700;color:#c2410c;margin-bottom:3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg> COGS</div>
-              <div style="${sub}">''</div>
+              <div style="${sub}">${_tg('Прямі витрати на послугу. Зростають разом з кількістю клієнтів.<br>Матеріали, зарплата майстрів, підрядники.','Прямые затраты на услугу. Растут вместе с количеством клиентов.<br>Материалы, зарплата мастеров, подрядчики.')}</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:7px 9px;border:1px solid #bbf7d0;">
               <div style="font-size:0.7rem;font-weight:700;color:#16a34a;margin-bottom:3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> OPEX</div>
-              <div style="${sub}">''</div>
+              <div style="${sub}">${_tg('Постійні витрати. Не залежать від кількості клієнтів.<br>Оренда, маркетинг, бухгалтер, програми.','Постоянные расходы. Не зависят от количества клиентов.<br>Аренда, маркетинг, бухгалтер, программы.')}</div>
             </div>
           </div>
           <div style="background:#f9fafb;border-radius:8px;padding:7px 10px;font-size:0.72rem;color:#374151;">
-            <div>'' 100K − COGS 40K = <b style="color:#16a34a;">'' 60K (60%)</b></div>
-            <div style="margin-top:2px;">'' 60K − OPEX 30K = <b style="color:#22c55e;">'' 30K (30%)</b></div>
+            <div>${_tg('Виручка','Выручка')} 100K − COGS 40K = <b style="color:#16a34a;">${_tg('Валовий','Валовый')} 60K (60%)</b></div>
+            <div style="margin-top:2px;">${_tg('Валовий','Валовый')} 60K − OPEX 30K = <b style="color:#22c55e;">${_tg('Чистий','Чистый')} 30K (30%)</b></div>
           </div>
-          <div style="margin-top:7px;${sub}">''</div>
+          <div style="margin-top:7px;${sub}">${_tg('Налаштувати: <b>Налаштування → Категорії витрат → «+ Додати» → обрати COGS або OPEX</b>','Настроить: <b>Настройки → Категории расходов → «+ Добавить» → выбрать COGS или OPEX</b>')}</div>
         </div>
 
         <!-- БЛОК 5: Автоматичні зв'язки -->
@@ -5899,21 +5918,21 @@ function _buildFinHowPanel() {
           </div>
           <div style="display:flex;flex-direction:column;gap:5px;">
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              ${badge('','#1e40af','#eff6ff')}
+              ${badge(_tg('CRM угода «Виграно»','CRM сделка «Выиграно»'),'#1e40af','#eff6ff')}
               ${arrow}
-              ${badge('','#16a34a','#f0fdf4')}
+              ${badge(_tg('Дохід у фінансах','Доход в финансах'),'#16a34a','#f0fdf4')}
             </div>
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              ${badge('','#7c3aed','#f5f3ff')}
+              ${badge(_tg('Booking завершено','Booking завершён'),'#7c3aed','#f5f3ff')}
               ${arrow}
-              ${badge('','#16a34a','#f0fdf4')}
+              ${badge(_tg('Оплата у фінансах','Оплата в финансах'),'#16a34a','#f0fdf4')}
               ${arrow}
-              ${badge('','#1e40af','#eff6ff')}
+              ${badge(_tg('Клієнт у CRM','Клиент в CRM'),'#1e40af','#eff6ff')}
             </div>
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              ${badge('','#92400e','#fff7ed')}
+              ${badge(_tg('Закупівля на склад','Закупка на склад'),'#92400e','#fff7ed')}
               ${arrow}
-              ${badge('','#dc2626','#fef2f2')}
+              ${badge(_tg('Витрата COGS','Расход COGS'),'#dc2626','#fef2f2')}
             </div>
           </div>
           <div style="margin-top:8px;${sub}">${_tg('Увімкнути: <b>Налаштування → Зв\'язки між модулями</b> (toggles)','Включить: <b>Настройки → Связи между модулями</b> (toggles)')}</div>
@@ -5923,20 +5942,20 @@ function _buildFinHowPanel() {
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            ''
+            ${_tg('Планування і прогнозування','Планирование и прогнозирование')}
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;">
             <div style="background:#ecfeff;border-radius:8px;padding:7px 10px;border:1px solid #a5f3fc;">
-              <div style="font-size:0.72rem;font-weight:700;color:#0e7490;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ''</div>
-              <div style="${sub}">''</div>
+              <div style="font-size:0.72rem;font-weight:700;color:#0e7490;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${_tg('Тижневий план 6M (Планування → «Тижневий план 6M»)','Недельный план 6M (Планирование → «Недельный план 6M»)')}</div>
+              <div style="${sub}">${_tg('Планування доходів і витрат по тижнях. Графік + Cashflow лінія. Видно касові розриви заздалегідь.','Планирование доходов и расходов по неделям. График + Cashflow линия. Видны кассовые разрывы заранее.')}</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:7px 10px;border:1px solid #bbf7d0;">
-              <div style="font-size:0.72rem;font-weight:700;color:#166534;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> ''</div>
-              <div style="${sub}">''</div>
+              <div style="font-size:0.72rem;font-weight:700;color:#166534;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> ${_tg('Бюджет місяця (Планування → «Бюджет по категоріях»)','Бюджет месяца (Планирование → «Бюджет по категориям»)')}</div>
+              <div style="${sub}">${_tg('План vs Факт по кожній категорії. Сповіщення при 80% і 100% витраченого бюджету.','План vs Факт по каждой категории. Уведомления при 80% и 100% использованного бюджета.')}</div>
             </div>
           </div>
           <div style="margin-top:7px;${sub}">
-            ''
+            ${_tg('<b>Швидкий старт:</b> Планування → Тижневий план → «Заповнити з середнього 3M» → коригуйте вручну → Зберегти.','<b>Быстрый старт:</b> Планирование → Недельный план → «Заполнить из среднего 3M» → корректируйте вручную → Сохранить.')}
           </div>
         </div>
 
@@ -5944,17 +5963,17 @@ function _buildFinHowPanel() {
 
       <!-- Підсумок: де що знайти -->
       <div style="margin-top:12px;background:#1f2937;border-radius:12px;padding:12px 16px;">
-        <div style="font-size:0.75rem;font-weight:700;color:#fff;margin-bottom:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg> ''</div>
+        <div style="font-size:0.75rem;font-weight:700;color:#fff;margin-bottom:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg> ${_tg('Де що знаходиться:','Где что находится:')}</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
           ${[
-            {tab:'',   desc:''},
-            {tab:'',    desc:''},
-            {tab:'',   desc:''},
-            {tab:'',desc:''},
-            {tab:'',   desc:''},
-            {tab:'',desc:''},
-            {tab:'', desc:''},
-            {tab:'',desc:''},
+            {tab:_tg('Дашборд','Дашборд'),   desc:_tg('Cash Flow, рахунки, баланс рахунків','Cash Flow, счета, баланс счетов')},
+            {tab:_tg('Доходи','Доходы'),    desc:_tg('всі надходження + фільтри','все поступления + фильтры')},
+            {tab:_tg('Витрати','Расходы'),   desc:_tg('всі витрати по категоріях','все расходы по категориям')},
+            {tab:_tg('Повторювані','Регулярные'),desc:_tg('щомісячні автовитрати','ежемесячные авторасходы')},
+            {tab:_tg('Рахунки','Счета'),   desc:_tg('виставлення рахунків клієнтам','выставление счетов клиентам')},
+            {tab:_tg('Планування','Планирование'),desc:_tg('бюджет + тижневий план 6M','бюджет + недельный план 6M')},
+            {tab:_tg('Аналітика','Аналитика'), desc:_tg('P&L, маржа по проектах, Баланс','P&L, маржа по проектам, Баланс')},
+            {tab:_tg('Налаштування','Настройки'),desc:_tg('рахунки, категорії, курси валют','счета, категории, курсы валют')},
           ].map(i=>`
             <div style="background:rgba(255,255,255,0.08);border-radius:7px;padding:4px 10px;">
               <span style="font-size:0.7rem;font-weight:700;color:#22c55e;">${i.tab}</span>
@@ -6052,18 +6071,18 @@ async function _getPnlExportData() {
 // ── XLSX export ───────────────────────────────────────────
 window._exportPnlXlsx = async function() {
   try {
-    if (typeof showToast === 'function') showToast('', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Формування Excel...','Формирование Excel...'), 'info');
     const d = await _getPnlExportData();
     const cur = d.currency;
     const fmt = (n) => Number((n||0).toFixed(2));
 
     // Будуємо рядки
     const rows = [
-      ['' + d.periodLabel, '', '', ''],
+      [_tg('P&L Звіт — ','P&L Отчёт — ') + d.periodLabel, '', '', ''],
       ['', '', '', ''],
-      ['', '' + ' (' + cur + ')', '', ''],
+      [_tg('Показник','Показатель'), _tg('Сума','Сумма') + ' (' + cur + ')', _tg('% від виручки','% от выручки'), ''],
       ['', '', '', ''],
-      ['', fmt(d.totalInc), '100%', ''],
+      [_tg('ВИРУЧКА (Revenue)','ВЫРУЧКА (Revenue)'), fmt(d.totalInc), '100%', ''],
     ];
 
     d.incCats.filter(c=>d.byIncCat[c.id]).forEach(c => {
@@ -6071,22 +6090,22 @@ window._exportPnlXlsx = async function() {
     });
 
     rows.push(['', '', '', '']);
-    rows.push(['', fmt(d.totalCogs), d.pctOf(d.totalCogs)+'%', '']);
+    rows.push([_tg('СОБІВАРТІСТЬ (COGS)','СЕБЕСТОИМОСТЬ (COGS)'), fmt(d.totalCogs), d.pctOf(d.totalCogs)+'%', '']);
     d.expCats.filter(c=>d.byCogsCat[c.id]).forEach(c => {
       rows.push(['  ' + c.name, fmt(d.byCogsCat[c.id]||0), d.pctOf(d.byCogsCat[c.id]||0)+'%', '']);
     });
 
     rows.push(['', '', '', '']);
-    rows.push(['', fmt(d.grossProfit), d.pctOf(d.grossProfit)+'%', '']);
+    rows.push([_tg('ВАЛОВИЙ ПРИБУТОК','ВАЛОВАЯ ПРИБЫЛЬ'), fmt(d.grossProfit), d.pctOf(d.grossProfit)+'%', '']);
 
     rows.push(['', '', '', '']);
-    rows.push(['', fmt(d.totalOpex), d.pctOf(d.totalOpex)+'%', '']);
+    rows.push([_tg('ОПЕРАЦІЙНІ ВИТРАТИ (OPEX)','ОПЕРАЦИОННЫЕ РАСХОДЫ (OPEX)'), fmt(d.totalOpex), d.pctOf(d.totalOpex)+'%', '']);
     d.expCats.filter(c=>d.byOpexCat[c.id]).forEach(c => {
       rows.push(['  ' + c.name, fmt(d.byOpexCat[c.id]||0), d.pctOf(d.byOpexCat[c.id]||0)+'%', '']);
     });
 
     rows.push(['', '', '', '']);
-    rows.push(['', fmt(d.netProfit), d.pctOf(d.netProfit)+'%', '']);
+    rows.push([_tg('ЧИСТИЙ ПРИБУТОК (Net Profit)','ЧИСТАЯ ПРИБЫЛЬ (Net Profit)'), fmt(d.netProfit), d.pctOf(d.netProfit)+'%', '']);
 
     // Генеруємо XML-based XLSX без бібліотек
     const xmlRows = rows.map(row =>
@@ -6116,17 +6135,17 @@ window._exportPnlXlsx = async function() {
     a.download = `PnL_${d.periodLabel.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,10)}.xls`;
     document.body.appendChild(a); a.click();
     setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 1000);
-    if (typeof showToast === 'function') showToast('', 'success');
+    if (typeof showToast === 'function') showToast(_tg('✓ P&L Excel завантажено','✓ P&L Excel загружен'), 'success');
   } catch(e) {
     console.error('[PnL export]', e);
-    if (typeof showToast === 'function') showToast('' + e.message, 'error');
+    if (typeof showToast === 'function') showToast(_tg('Помилка: ','Ошибка: ') + e.message, 'error');
   }
 };
 
 // ── PDF export ────────────────────────────────────────────
 window._exportPnlPdf = async function() {
   try {
-    if (typeof showToast === 'function') showToast('', 'info');
+    if (typeof showToast === 'function') showToast(_tg('Формування PDF...','Формирование PDF...'), 'info');
 
     // Завантажуємо jsPDF якщо ще немає
     if (!window.jspdf) {
@@ -6163,12 +6182,12 @@ window._exportPnlPdf = async function() {
     doc.setTextColor(26,26,26);
     doc.setFont('helvetica','bold');
     doc.setFontSize(16);
-    doc.text('', margin, y);
+    doc.text(_tg('P&L — Звіт про прибутки і збитки','P&L — Отчёт о прибылях и убытках'), margin, y);
     y += 7;
     doc.setFont('helvetica','normal');
     doc.setFontSize(9);
     doc.setTextColor(100,100,100);
-    doc.text(`'': ${d.periodLabel}  |  Валюта: ${cur}  |  Дата: ${new Date().toLocaleDateString('uk-UA')}`, margin, y);
+    doc.text(`${_tg('Період','Период')}: ${d.periodLabel}  |  Валюта: ${cur}  |  Дата: ${new Date().toLocaleDateString('uk-UA')}`, margin, y);
 
     // Функція для рядка таблиці
     const addRow = (label, val, pctStr, bold, bgColor) => {
@@ -6198,32 +6217,32 @@ window._exportPnlPdf = async function() {
     doc.setTextColor(255,255,255);
     doc.setFont('helvetica','bold');
     doc.setFontSize(8.5);
-    doc.text('', margin+2, y);
-    doc.text(`'' (${cur})`, pageW-margin-42, y, {align:'right'});
-    doc.text('', pageW-margin-4, y, {align:'right'});
+    doc.text(_tg('Показник','Показатель'), margin+2, y);
+    doc.text(`${_tg('Сума','Сумма')} (${cur})`, pageW-margin-42, y, {align:'right'});
+    doc.text(_tg('% вир.','% вир.'), pageW-margin-4, y, {align:'right'});
     y += 8;
 
     // Виручка
     doc.setTextColor(26,26,26);
-    addRow('', d.totalInc, '100%', true, [240,253,244]);
+    addRow(_tg('ВИРУЧКА (Revenue)','ВЫРУЧКА (Revenue)'), d.totalInc, '100%', true, [240,253,244]);
     d.incCats.filter(c=>d.byIncCat[c.id]).forEach(c =>
       addRow('  ' + c.name, d.byIncCat[c.id]||0, pct(d.byIncCat[c.id]||0), false)
     );
 
     y += 2; divider([187,247,208]);
     // COGS
-    addRow('', d.totalCogs, pct(d.totalCogs), true, [255,247,237]);
+    addRow(_tg('СОБІВАРТІСТЬ (COGS)','СЕБЕСТОИМОСТЬ (COGS)'), d.totalCogs, pct(d.totalCogs), true, [255,247,237]);
     d.expCats.filter(c=>d.byCogsCat[c.id]).forEach(c =>
       addRow('  ' + c.name, d.byCogsCat[c.id]||0, pct(d.byCogsCat[c.id]||0), false)
     );
 
     y += 2;
-    addRow('', d.grossProfit, pct(d.grossProfit), true,
+    addRow(_tg('ВАЛОВИЙ ПРИБУТОК','ВАЛОВАЯ ПРИБЫЛЬ'), d.grossProfit, pct(d.grossProfit), true,
       d.grossProfit >= 0 ? [240,253,244] : [254,242,242]);
 
     y += 2; divider();
     // OPEX
-    addRow('', d.totalOpex, pct(d.totalOpex), true, [254,242,242]);
+    addRow(_tg('ОПЕРАЦІЙНІ ВИТРАТИ (OPEX)','ОПЕРАЦИОННЫЕ РАСХОДЫ (OPEX)'), d.totalOpex, pct(d.totalOpex), true, [254,242,242]);
     d.expCats.filter(c=>d.byOpexCat[c.id]).forEach(c =>
       addRow('  ' + c.name, d.byOpexCat[c.id]||0, pct(d.byOpexCat[c.id]||0), false)
     );
@@ -6235,7 +6254,7 @@ window._exportPnlPdf = async function() {
     doc.setTextColor(255,255,255);
     doc.setFont('helvetica','bold');
     doc.setFontSize(10);
-    doc.text('', margin+2, y+1);
+    doc.text(_tg('ЧИСТИЙ ПРИБУТОК (Net Profit)','ЧИСТАЯ ПРИБЫЛЬ (Net Profit)'), margin+2, y+1);
     doc.setTextColor(d.netProfit>=0?34:239, d.netProfit>=0?197:68, d.netProfit>=0?94:68);
     doc.text(fmtN(d.netProfit), pageW-margin-42, y+1, {align:'right'});
     doc.setTextColor(200,200,200);
@@ -6246,12 +6265,12 @@ window._exportPnlPdf = async function() {
     doc.setTextColor(150,150,150);
     doc.setFont('helvetica','normal');
     doc.setFontSize(7.5);
-    doc.text('' + new Date().toLocaleString('uk-UA'), margin, 287);
+    doc.text(_tg('Сформовано TALKO Business System · ','Сформировано TALKO Business System · ') + new Date().toLocaleString('uk-UA'), margin, 287);
 
     doc.save(`PnL_${d.periodLabel.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,10)}.pdf`);
-    if (typeof showToast === 'function') showToast('', 'success');
+    if (typeof showToast === 'function') showToast(_tg('✓ P&L PDF завантажено','✓ P&L PDF загружен'), 'success');
   } catch(e) {
     console.error('[PnL PDF]', e);
-    if (typeof showToast === 'function') showToast('' + e.message, 'error');
+    if (typeof showToast === 'function') showToast(_tg('Помилка: ','Ошибка: ') + e.message, 'error');
   }
 };
