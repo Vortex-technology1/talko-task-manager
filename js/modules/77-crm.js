@@ -6386,14 +6386,22 @@ window.crmCreateTaskFromDeal = function(dealId) {
             <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:4px;">Опис</label>
             <textarea id="crmT_note" rows="2" style="${inp}resize:vertical;overflow:hidden;min-height:52px;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';" onfocus="setTimeout(()=>{this.style.height='auto';this.style.height=this.scrollHeight+'px';},0)">${_esc(deal.note||'')}</textarea>
         </div>
-        <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+        <div style="display:flex;gap:0.5rem;justify-content:flex-end;flex-wrap:wrap;">
             <button onclick="document.getElementById('crmTaskModal').remove()"
                 style="padding:0.5rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">
                 ${_tg('Скасувати','Отменить')}
             </button>
+            <button onclick="
+                document.getElementById('crmTaskModal').remove();
+                window._crmTaskContext={dealId:'${deal.id}',dealTitle:'${_esc(deal.title||deal.clientName||'')}',clientName:'${_esc(deal.clientName||'')}'};
+                if(typeof openAddTask==='function')openAddTask();
+                else if(typeof window.openTaskModal==='function')window.openTaskModal(null);"
+                style="padding:0.5rem 1rem;background:white;color:#6b7280;border:1.5px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;">
+                ⚙ ${_tg('Розширені','Подробнее')}
+            </button>
             <button onclick="crmSaveTaskFromDeal('${deal.id}')"
                 style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                Створити задачу
+                ${_tg('Створити задачу','Создать задачу')}
             </button>
         </div>
     </div>`;
