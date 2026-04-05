@@ -251,6 +251,7 @@ async function loadSuperadminData() {
 
         window._saData = { compDocs, perCompany, today, monthKey };
         renderSuperadminPanel(compDocs, {}, perCompany);
+        loadPendingRegistrations();
 
     } catch(e) {
         if (container) container.innerHTML = `<p style="color:red;padding:1rem;">Помилка: ${_saEsc(e.message)}</p>`;
@@ -258,7 +259,98 @@ async function loadSuperadminData() {
 }
 window.loadSuperadminData = loadSuperadminData;
 
-// ── renderSuperadminPanel ────────────────────────────────────
+// ── Нові заявки на реєстрацію ───────────────────────────────
+async function loadPendingRegistrations() {
+    const wrap = document.getElementById('saPendingRegs');
+    if (!wrap) return;
+    try {
+        let snap;
+        try {
+            snap = await firebase.firestore().collection('registration_requests')
+                .where('status', '==', 'pending').orderBy('createdAt', 'desc').limit(20).get();
+        } catch(e) {
+            snap = await firebase.firestore().collection('registration_requests')
+                .where('status', '==', 'pending').limit(20).get();
+        }
+
+        if (snap.empty) {
+            wrap.innerHTML = `<div style="font-size:0.78rem;font-weight:700;color:#166534;margin-bottom:0.25rem;">✅ Нові заявки на реєстрацію</div>
+                <div style="font-size:0.78rem;color:#9ca3af;">Нових заявок немає</div>`;
+            return;
+        }
+
+        const docs = snap.docs.sort((a,b) => (b.data().createdAt?.toMillis?.() || 0) - (a.data().createdAt?.toMillis?.() || 0));
+
+        wrap.innerHTML = `
+        <div style="font-size:0.78rem;font-weight:700;color:#92400e;margin-bottom:0.5rem;">
+            ⏳ Нові заявки на реєстрацію (${docs.length})
+        </div>
+        ${docs.map(doc => {
+            const r = doc.data();
+            const date = r.createdAt?.toDate?.()?.toLocaleString('uk-UA') || '—';
+            return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid #fde68a;flex-wrap:wrap;">
+                <div style="flex:1;min-width:200px;">
+                    <div style="font-size:0.82rem;font-weight:600;">${r.ownerName || '—'}</div>
+                    <div style="font-size:0.75rem;color:#6b7280;">${r.ownerEmail || '—'} · ${r.companyName || '—'}</div>
+                    <div style="font-size:0.7rem;color:#9ca3af;">${date}</div>
+                </div>
+                <button onclick="saApproveReg('${doc.id}','${r.ownerId}','${r.companyId||doc.id}')"
+                    style="padding:0.35rem 0.75rem;background:#22c55e;color:white;border:none;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;">
+                    ✓ Підтвердити
+                </button>
+                <button onclick="saRejectReg('${doc.id}')"
+                    style="padding:0.35rem 0.75rem;background:#ef4444;color:white;border:none;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;">
+                    ✕ Відхилити
+                </button>
+            </div>`;
+        }).join('')}`;
+    } catch(e) {
+        wrap.innerHTML = `<div style="font-size:0.78rem;color:#ef4444;">Помилка: ${e.message}</div>`;
+    }
+}
+
+window.saApproveReg = async function(docId, ownerId, companyId) {
+    if (!confirm('Підтвердити реєстрацію?')) return;
+    try {
+        const db = firebase.firestore();
+        const batch = db.batch();
+        // Оновлюємо статус заявки
+        batch.update(db.collection('registration_requests').doc(docId), {
+            status: 'approved',
+            approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        // Активуємо компанію
+        if (companyId) {
+            batch.update(db.collection('companies').doc(companyId), {
+                status: 'active',
+                approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+        await batch.commit();
+        if (typeof showToast === 'function') showToast('Реєстрацію підтверджено ✓', 'success');
+        loadPendingRegistrations();
+    } catch(e) {
+        alert('Помилка: ' + e.message);
+    }
+};
+
+window.saRejectReg = async function(docId) {
+    if (!confirm('Відхилити заявку?')) return;
+    try {
+        await firebase.firestore().collection('registration_requests').doc(docId).update({
+            status: 'rejected',
+            rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        if (typeof showToast === 'function') showToast('Заявку відхилено', 'info');
+        loadPendingRegistrations();
+    } catch(e) {
+        alert('Помилка: ' + e.message);
+    }
+};
+
+window.loadPendingRegistrations = loadPendingRegistrations;
+
+
 function renderSuperadminPanel(compDocs, usageMap, perCompany) {
     const container = document.getElementById('superadminContent');
     if (!container) return;
@@ -320,7 +412,13 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
 </div>
 
 <!-- Tab Contents -->
-<div id="saTabContent_overview">${_saRenderOverview(pc, planCounts)}</div>
+<div id="saTabContent_overview">
+  <div id="saPendingRegs" style="margin-bottom:1rem;padding:0.75rem 1rem;background:#fefce8;border:1.5px solid #fde68a;border-radius:10px;">
+    <div style="font-size:0.78rem;font-weight:700;color:#92400e;margin-bottom:0.5rem;">⏳ Нові заявки на реєстрацію</div>
+    <div style="font-size:0.78rem;color:#9ca3af;">Завантаження...</div>
+  </div>
+  ${_saRenderOverview(pc, planCounts)}
+</div>
 <div id="saTabContent_companies" style="display:none;">${_saRenderCompanies(pc)}</div>
 <div id="saTabContent_users"     style="display:none;">${_saRenderUsers(pc)}</div>
 <div id="saTabContent_activity"  style="display:none;">${_saRenderActivity(pc)}</div>
