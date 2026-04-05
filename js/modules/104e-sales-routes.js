@@ -167,13 +167,13 @@
           <div>
             <label class="sl-label">Статус</label>
             <select id="slRteStatus" class="sl-inp">
-              ${[['draft',window.t('чернетка')],['sent',window.t('підтверджено')],['paid',window.t('оплаченоКлієнтом')],['closed',window.t('рейсЗакрито')]].map(([v,l])=>`<option value="${v}" ${(order?.status||'draft')===v?'selected':''}>${l}</option>`).join('')}
+              ${[['draft',''],['sent',''],['paid',''],['closed','']].map(([v,l])=>`<option value="${v}" ${(order?.status||'draft')===v?'selected':''}>${l}</option>`).join('')}
             </select>
           </div>
           <div>
             <label class="sl-label">Оплата</label>
             <select id="slRtePayMethod" class="sl-inp">
-              ${[['transfer',window.t('безготівка')],['cash',window.t('готівка1')],['terminal',window.t('термінал1')]].map(([v,l])=>`<option value="${v}" ${(order?.paymentMethod||'transfer')===v?'selected':''}>${l}</option>`).join('')}
+              ${[['transfer',''],['cash',''],['terminal','']].map(([v,l])=>`<option value="${v}" ${(order?.paymentMethod||'transfer')===v?'selected':''}>${l}</option>`).join('')}
             </select>
           </div>
         </div>
@@ -331,7 +331,7 @@
         } catch(e) { console.warn('route finance:', e); }
       }
 
-      toast(markClosed ? window.t('рейсЗакрито') : 'Рейс збережено');
+      toast(markClosed ? '' : 'Рейс збережено');
       document.getElementById('salesRouteOverlay')?.remove();
       if (typeof window._salesLoadOrdersExternal === 'function') window._salesLoadOrdersExternal();
     } catch(e) { toast('Помилка: '+e.message,'error'); }
@@ -346,7 +346,7 @@
       const routes = snap.docs.map(d=>({id:d.id,...d.data()}));
 
       const statusColors = { draft:'#9ca3af', sent:'#3b82f6', paid:'#10b981', closed:'#6366f1', cancelled:'#ef4444' };
-      const statusLabels = { draft:window.t('чернетка'), sent:window.t('підтверджено'), paid:'Оплачено', closed:'Закрито', cancelled:'Скасовано' };
+      const statusLabels = { draft:'', sent:'', paid:'Оплачено', closed:'Закрито', cancelled:'Скасовано' };
 
       cont.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">

@@ -201,7 +201,7 @@
             <button onclick="window._salesWOPickVehicle()" class="sl-btn-sm" style="background:#eef2ff;color:#6366f1">Змінити авто</button>
           </div>
           <div id="slWOVehicleInfo">
-            ${vehicle ? renderVehicleInfo(vehicle, order?.vehicleInfo) : `${window.t('divStylecolor9ca3affontsize85remавтоНеВи')}`}
+            ${vehicle ? renderVehicleInfo(vehicle, order?.vehicleInfo) : `${''}`}
           </div>
           <input type="hidden" id="slWOVehicleId" value="${esc(vId)}">
           <div style="margin-top:.75rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
@@ -280,13 +280,13 @@
           <div>
             <label class="sl-label">Статус</label>
             <select id="slWOStatus" class="sl-inp">
-              ${[['draft',window.t('чернетка')],['sent',window.t('відправленоКлієнту')],['paid',window.t('оплачено')],['closed',window.t('закрито')]].map(([v,l])=>`<option value="${v}" ${(order?.status||'draft')===v?'selected':''}>${l}</option>`).join('')}
+              ${[['draft',''],['sent',''],['paid',''],['closed','']].map(([v,l])=>`<option value="${v}" ${(order?.status||'draft')===v?'selected':''}>${l}</option>`).join('')}
             </select>
           </div>
           <div>
             <label class="sl-label">Спосіб оплати</label>
             <select id="slWOPayMethod" class="sl-inp">
-              ${[['cash',window.t('готівка1')],['terminal',window.t('термінал1')],['transfer',window.t('переказ1')]].map(([v,l])=>`<option value="${v}" ${(order?.paymentMethod||'cash')===v?'selected':''}>${l}</option>`).join('')}
+              ${[['cash',''],['terminal',''],['transfer','']].map(([v,l])=>`<option value="${v}" ${(order?.paymentMethod||'cash')===v?'selected':''}>${l}</option>`).join('')}
             </select>
           </div>
         </div>

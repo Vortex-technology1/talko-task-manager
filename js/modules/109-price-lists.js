@@ -140,7 +140,7 @@
               <button onclick="window._plAddRule()" style="padding:5px 12px;border:1px dashed #6366f1;border-radius:6px;cursor:pointer;background:#f5f3ff;color:#6366f1;font-size:.78rem;font-weight:600">+ ${tg('Додати правило','Add rule')}</button>
             </div>
             <div id="plRulesWrap">
-              <div style="font-size:.8rem;color:#9ca3af;padding:8px 0">${tg(window.t('немаєПравилЗнижкиЗастосовуються'),'No rules — discounts applied manually')}</div>
+              <div style="font-size:.8rem;color:#9ca3af;padding:8px 0">${tg('','No rules — discounts applied manually')}</div>
             </div>
           </div>
 
@@ -165,7 +165,7 @@
         </div>
         <div style="display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid #f1f5f9">
           <button onclick="window.closePriceListModal()" style="padding:9px 20px;border:1px solid #e5e7eb;border-radius:7px;cursor:pointer;background:#fff;font-size:.85rem;font-weight:600;color:#374151">${tg('Скасувати','Cancel')}</button>
-          <button onclick="window._plSave()" id="plSaveBtn" style="padding:9px 24px;background:#6366f1;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">${tg(window.t('зберегти'),'Save')}</button>
+          <button onclick="window._plSave()" id="plSaveBtn" style="padding:9px 24px;background:#6366f1;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">${tg('','Save')}</button>
         </div>
       </div>
     </div>`;
@@ -174,7 +174,7 @@
   function renderModalRules() {
     const wrap = el('plRulesWrap'); if(!wrap) return;
     if(!S.modalRules.length) {
-      wrap.innerHTML=`<div style="font-size:.8rem;color:#9ca3af;padding:8px 0">${tg(window.t('немаєПравилЗнижкиЗастосовуються'),'No rules — discounts applied manually')}</div>`;
+      wrap.innerHTML=`<div style="font-size:.8rem;color:#9ca3af;padding:8px 0">${tg('','No rules — discounts applied manually')}</div>`;
       return;
     }
     wrap.innerHTML=S.modalRules.map((r,i)=>`
@@ -191,7 +191,7 @@
   function renderModalItems() {
     const tbody = el('plItemsTbody'); if(!tbody) return;
     if(!S.modalItems.length) {
-      tbody.innerHTML=`<tr><td colspan="3" style="padding:16px;text-align:center;color:#9ca3af;font-size:.82rem">${tg(window.t('додайтеПозиціїЗіСкладу'),'Add items from warehouse')}</td></tr>`;
+      tbody.innerHTML=`<tr><td colspan="3" style="padding:16px;text-align:center;color:#9ca3af;font-size:.82rem">${tg('','Add items from warehouse')}</td></tr>`;
       return;
     }
     tbody.innerHTML=S.modalItems.map((item,i)=>{
@@ -199,7 +199,7 @@
       return `<tr style="border-bottom:1px solid #f1f5f9">
         <td style="padding:8px 10px">
           <select class="pl-inp" style="width:100%;font-size:.8rem" onchange="window._plItemWh(${i},this)">
-            <option value="">${tg(window.t('оберітьТовар'),'— select item —')}</option>
+            <option value="">${tg('','— select item —')}</option>
             ${S.warehouseItems.map(w=>`<option value="${w.id}" ${item.warehouseItemId===w.id?'selected':''}>${esc(w.name||w.title)}</option>`).join('')}
           </select>
         </td>
@@ -267,7 +267,7 @@
 
     S.saving = true;
     const btn = el('plSaveBtn');
-    if(btn) { btn.disabled=true; btn.textContent=tg(window.t('збереження'),'Saving...'); }
+    if(btn) { btn.disabled=true; btn.textContent=tg('','Saving...'); }
 
     try {
       if(S.editingId) {
@@ -297,7 +297,7 @@
       toast(tg('Помилка: ','Error: ')+e.message,'error');
     } finally {
       S.saving=false;
-      if(btn) { btn.disabled=false; btn.textContent=tg(window.t('зберегти'),'Save'); }
+      if(btn) { btn.disabled=false; btn.textContent=tg('','Save'); }
     }
   };
 

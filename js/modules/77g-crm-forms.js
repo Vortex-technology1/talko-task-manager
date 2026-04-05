@@ -208,7 +208,7 @@ window.crmSaveNewForm = async function () {
     if (!name) { if (window.showToast) showToast(window.t('enterFormName')||'Вкажіть назву форми', 'error'); return; }
 
     const saveBtn = document.querySelector('#crmFormCreateModal button:last-child');
-    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = window.t('збереження'); }
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Збереження...'; }
 
     try {
         await window.companyRef().collection('crm_forms').add({
@@ -230,7 +230,7 @@ window.crmSaveNewForm = async function () {
         window.crmRenderFormsSettings();
     } catch (e) {
         if (window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
-        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = window.t('створитиФорму'); }
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Створити форму'; }
     }
 };
 

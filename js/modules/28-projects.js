@@ -32,7 +32,7 @@
                 const selectedIds = project?.functionIds || [];
                 funcContainer.innerHTML = activeFuncs.length
                     ? activeFuncs.map(f => `<label class="assignee-checkbox"><input type="checkbox" value="${esc(f.id)}" ${selectedIds.includes(f.id) ? 'checked' : ''}> ${esc(f.name)}</label>`).join('')
-                    : `${window.t('spanStylecolor9ca3affontsize082remнетФун')}`;
+                    : `<span style="color:#9ca3af;font-size:0.82rem;">Нет функций — сначала создайте функции</span>`;
             }
             
             const color = project?.color || '#22c55e';
@@ -320,7 +320,7 @@
                 if (projects.length > 0 && statusFilter) {
                     emptyState.innerHTML = `<div style="text-align:center;padding:2rem;">
                         <div style="margin-bottom:0.5rem;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-                        <div style="font-weight:600;">Нет проектов со статусом "${statusFilter === 'active' ? window.t('activeLabel') : statusFilter === 'completed' ? window.t('completedLabel') : 'Пауза'}"</div>
+                        <div style="font-weight:600;">Нет проектов со статусом "${statusFilter === 'active' ? 'Активный' : statusFilter === 'completed' ? 'Завершённый' : 'Пауза'}"</div>
                         <div style="color:#9ca3af;font-size:0.85rem;margin:0.5rem 0;">Всего проектов: ${projects.length}</div>
                         <button class="btn btn-small" onclick="document.getElementById('projectStatusFilter').value='';renderProjects();" style="margin-top:0.5rem;">Показать все</button>
                     </div>`;
@@ -347,30 +347,31 @@
             container.innerHTML = `<div class="projects-grid">${filtered.map(p => {
                 const s = getProjectStats(p.id);
                 const isOverdue = p.deadline && p.deadline < todayStr && p.status === 'active';
-                const statusColor = p.status === 'active' ? '#34c759' : p.status === 'completed' ? '#007aff' : '#ff9500';
-                const statusLabel = p.status === 'active' ? window.t('projectActive') : p.status === 'completed' ? window.t('projectCompleted') : window.t('projectPaused');
-                const lockSvg = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
                 return `
                 <div class="project-card" style="--pc:${safeColor(p.color)};" onclick="openProjectDetail('${escId(p.id)}')">
-                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${safeColor(p.color)};border-radius:12px 12px 0 0;"></div>
-                    <div class="project-card-header" style="margin-bottom:0.25rem;">
-                        <div class="project-card-title" style="font-size:0.88rem;font-weight:600;color:#1c1c1e;line-height:1.3;">${p.isPrivate ? lockSvg + ' ' : ''}${esc(p.name)}</div>
-                        <span style="font-size:0.62rem;font-weight:600;color:${statusColor};background:${statusColor}18;padding:2px 6px;border-radius:8px;flex-shrink:0;">${statusLabel}</span>
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${safeColor(p.color)};border-radius:12px 12px 0 0;"></div>
+                    <div class="project-card-header">
+                        <div class="project-card-title">${p.isPrivate ? '🔒 ' : ''}${esc(p.name)}</div>
+                        <span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? window.t('projectActive') : p.status === 'completed' ? window.t('projectCompleted') : window.t('projectPaused')}</span>
                     </div>
-                    ${p.description ? `<div style="font-size:0.72rem;color:#8e8e93;margin-bottom:0.35rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${esc(p.description)}</div>` : ''}
-                    <div style="display:flex;gap:0.6rem;margin-bottom:0.4rem;flex-wrap:wrap;">
-                        <span style="font-size:0.7rem;color:#8e8e93;display:flex;align-items:center;gap:2px;"><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total}</span>
-                        <span style="font-size:0.7rem;color:#34c759;display:flex;align-items:center;gap:2px;"><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done}</span>
-                        ${s.overdue > 0 ? `<span style="font-size:0.7rem;color:#ff3b30;font-weight:600;display:flex;align-items:center;gap:2px;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue}</span>` : ''}
+                    ${p.description ? `<div class="project-card-desc">${esc(p.description)}</div>` : ''}
+                    ${p.functionIds?.length ? `<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.4rem;">${p.functionIds.slice(0,3).map(fId => {
+                        const f = (typeof functions !== 'undefined') ? functions.find(fn => fn.id === fId) : null;
+                        return f ? `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 6px;border-radius:4px;">⚙ ${esc(f.name)}</span>` : '';
+                    }).filter(Boolean).join('')}${p.functionIds.length > 3 ? `<span style="font-size:0.65rem;color:#9ca3af;">+${p.functionIds.length - 3}</span>` : ''}</div>` : ''}
+                    <div class="project-card-stats">
+                        <span><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total} ${window.t('tasksWord')}</span>
+                        <span><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done} ${window.t('doneWord')}</span>
+                        ${s.overdue > 0 ? `<span style="color:var(--danger);font-weight:600;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue} ${window.t('overdueWord')}</span>` : ''}
+                        ${s.deadlineConflicts.length > 0 ? `<span style="color:#ea580c;font-weight:600;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${s.deadlineConflicts.length} ${window.t('pastDeadline')}</span>` : ''}
                     </div>
-                    <div style="height:3px;border-radius:2px;background:#f2f2f7;margin-bottom:0.2rem;"><div style="width:${s.percent}%;height:100%;background:${safeColor(p.color)};border-radius:2px;transition:width 0.3s;"></div></div>
-                    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:#8e8e93;">
-                        <span>${s.done}/${s.total}</span>
-                        ${p.deadline ? `<span style="color:${isOverdue ? '#ff3b30' : '#8e8e93'};">${formatDateShort(p.deadline)}</span>` : `<span>${s.percent}%</span>`}
-                    </div>
+                    <div class="project-progress-bar"><div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(p.color)};"></div></div>
+                    <div class="project-progress-label"><span>${s.done}/${s.total}</span><span>${s.percent}%</span></div>
+                    ${p.deadline ? `<div class="project-card-deadline ${isOverdue ? 'overdue' : ''}"><i data-lucide="calendar" class="icon icon-sm"></i> ${formatDateShort(p.deadline)}</div>` : ''}
                 </div>`;
             }).join('')}</div>`;
         }
+        
         function renderProjectsList(container, filtered) {
             const todayStr = getLocalDateStr();
             container.innerHTML = `<table class="projects-list-table"><thead><tr>
@@ -564,7 +565,7 @@
                         ${colTasks.map(t => {
                             const assignee = t.assigneeName || '';
                             const clickHandler = isViewer
-                                ? `${window.t('ifwindowshowtoastShowtoastспостерігачТіл')}`
+                                ? `if(window.showToast) showToast('Спостерігач — тільки читання', 'info')`
                                 : `openTaskModal('${escId(t.id)}')`;
                             return `
                             <div class="project-task-card priority-${t.priority || 'medium'}" onclick="${clickHandler}" style="${isViewer ? 'opacity:0.85;cursor:default;' : ''}">
@@ -676,7 +677,7 @@
                     </button>
                     <button class="calendar-view-btn" onclick="switchProjectView('gantt', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="4" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
-                        ${window.t('gantt') || 'Gantt'}
+                        Gantt
                     </button>
                     <button class="calendar-view-btn" onclick="switchProjectView('standards', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -1646,7 +1647,7 @@ function _renderProjectEstimateTab(projectId) {
             style="background:white;border:1px solid #e5e7eb;border-radius:10px;padding:1rem 1.25rem;cursor:pointer;margin-bottom:0.6rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;"
             onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
             <div style="flex:1;min-width:160px;">
-                <div style="font-weight:600;font-size:0.92rem;color:#111827;">${e.title||window.t('безНазвания')}</div>
+                <div style="font-weight:600;font-size:0.92rem;color:#111827;">${e.title||'Без названия'}</div>
                 <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.15rem;">${e.sections?.length||0} ${window.t('estWorkTypes')||'типів робіт'}</div>
             </div>
             <span style="padding:0.2rem 0.6rem;border-radius:20px;font-size:0.73rem;font-weight:600;background:${color}18;color:${color};">${status}</span>
@@ -1663,7 +1664,7 @@ function _renderProjectEstimateTab(projectId) {
     container.innerHTML = `
     <div style="padding:1.5rem;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-            <div style="font-weight:600;font-size:0.95rem;color:#374151;display:flex;align-items:center;gap:0.4rem;">${icoClipboard} ${window.t('projectEstimates')} (${estimates.length})</div>
+            <div style="font-weight:600;font-size:0.95rem;color:#374151;display:flex;align-items:center;gap:0.4rem;">${icoClipboard} Сметы проекта (${estimates.length})</div>
             <button onclick="window._openEstimateForProject('${projectId}')"
                 style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;background:#3b82f6;color:white;border:none;border-radius:7px;font-size:0.82rem;font-weight:600;cursor:pointer;">
                 ${icoPlus} ${window.t('newEstimate')||'Новий кошторис'}
@@ -1755,11 +1756,11 @@ function _buildProcessHowto() {
         <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:1rem;">Какие проблемы решает</div>
         <div style="display:flex;flex-direction:column;gap:0.5rem;">
           ${[
-            [window.t('explainFromScratch'), 'Время владельца тратится на объяснения вместо развития', 'Шаблон процесса описывает каждый шаг один раз — дальше система сама распределяет задачи'],
+            ['Каждый раз объясняешь «с нуля»', 'Время владельца тратится на объяснения вместо развития', 'Шаблон процесса описывает каждый шаг один раз — дальше система сама распределяет задачи'],
             ['Менеджер что-то забыл или перепутал порядок', 'Клиент получил неполную услугу, ошибка в процессе', 'Система не даёт перейти на следующий шаг пока предыдущий не выполнен'],
             ['Не знают кто сейчас что делает по каждому клиенту', 'Владелец спрашивает всех по очереди — теряет время', 'Dashboard процессов — видишь статус каждого клиента на одном экране'],
             ['Регулярные процессы выполняются по-разному разными людьми', 'Качество непредсказуемо, клиент получает разный сервис', 'Один шаблон для всех — одинаковый результат независимо от исполнителя'],
-            ['Не знают сколько времени занимает каждый шаг', window.t('cantPlanTeamLoad'), 'SLA на каждый шаг — система считает дедлайны автоматически'],
+            ['Не знают сколько времени занимает каждый шаг', 'Нельзя планировать загрузку команды', 'SLA на каждый шаг — система считает дедлайны автоматически'],
             ['При увольнении сотрудника процессы «исчезают»', 'Новый не знает как правильно — начинаем с нуля', 'Шаблон остаётся в системе — новый берёт и выполняет по инструкции'],
           ].map(([pain, impact, fix]) => `
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid #f3f4f6;border-radius:10px;overflow:hidden;font-size:0.8rem;">
@@ -1805,16 +1806,16 @@ function _buildProcessHowto() {
       <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
         <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Шаблон процесса — что можно настроить</div>
         <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
-          ${path(window.t('processesNewTemplate'))}
+          ${path('Процессы → Шаблоны → Новый шаблон')}
         </div>
         <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Каждый шаг шаблона содержит:</div>
         <div style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;">
           ${[
             ['Функция','Кто выполняет этот шаг — выбираешь из функциональной структуры компании (Менеджер, Юрист, Бухгалтер и т.д.). Система сама знает кто закреплён за этой функцией'],
             ['Название шага','Что конкретно нужно сделать: «Подписать договор», «Выставить счёт», «Настроить доступ»'],
-            [window.t('slaTime'),'30 мин / 1 час / 2 часа / 4 часа / 8 часов / 1 день / 2 дня / 3 дня. Система автоматически считает дедлайн каждого шага'],
-            [window.t('expectedResultTitle'),'Что должно быть сделано по факту: «Договор подписан и отсканирован», «Счёт выставлен в 1С». Исполнитель видит это в задаче'],
-            [window.t('controlQuestion'),'Вопрос для самопроверки исполнителя перед закрытием шага: «Подтвердил ли клиент получение?»'],
+            ['SLA (время на выполнение)','30 мин / 1 час / 2 часа / 4 часа / 8 часов / 1 день / 2 дня / 3 дня. Система автоматически считает дедлайн каждого шага'],
+            ['Ожидаемый результат','Что должно быть сделано по факту: «Договор подписан и отсканирован», «Счёт выставлен в 1С». Исполнитель видит это в задаче'],
+            ['Контрольный вопрос','Вопрос для самопроверки исполнителя перед закрытием шага: «Подтвердил ли клиент получение?»'],
             ['Инструкция','Подробное описание как выполнить шаг. Новый человек может выполнить без дополнительных объяснений'],
             ['Checkpoint (контрольная точка)','Если включено — задача сначала идёт на проверку руководителю и только после его подтверждения переходит дальше'],
             ['Smart Assign','Если в функции несколько исполнителей — система автоматически выбирает наименее загруженного. Считает активные задачи + просроченные × 2'],
@@ -1828,10 +1829,10 @@ function _buildProcessHowto() {
         <div style="font-size:0.82rem;font-weight:700;color:#6b7280;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Примеры шаблонов:</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
           ${[
-            [window.t('newClientProcess'),'Звонок → Договор → Счёт → Доступ → Приветствие'],
+            ['Приём нового клиента','Звонок → Договор → Счёт → Доступ → Приветствие'],
             ['Обработка заказа','Приём → Подтверждение → Производство → Контроль → Доставка'],
             ['Onboarding сотрудника','Документы → Оборудование → Доступы → Обучение → Первая неделя'],
-            [window.t('monthClose'),'Отчёт продаж → Отчёт расходов → Сверка → Начисление → Выплата'],
+            ['Закрытие месяца','Отчёт продаж → Отчёт расходов → Сверка → Начисление → Выплата'],
             ['Рекламная кампания','Бриф → Дизайн → Согласование → Запуск → Отчёт'],
             ['Претензия клиента','Регистрация → Расследование → Решение → Ответ клиенту → Закрытие'],
           ].map(([name, steps]) => `
@@ -1846,13 +1847,13 @@ function _buildProcessHowto() {
       <div style="background:white;border:1px solid #e5e7eb;border-radius:14px;padding:1.25rem;">
         <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.75rem;">Запуск процесса — что происходит</div>
         <div style="font-size:0.82rem;color:#374151;line-height:1.7;margin-bottom:0.75rem;">
-          ${path(window.t('processesRunLabel'))} → выбираешь шаблон → вводишь название (например «Клиент Иваненко») → объект (адрес, артикул и т.д.) → дедлайн процесса.
+          ${path('Процессы → Запустить')} → выбираешь шаблон → вводишь название (например «Клиент Иваненко») → объект (адрес, артикул и т.д.) → дедлайн процесса.
         </div>
         <div style="display:flex;flex-direction:column;gap:0.4rem;">
           ${[
             ['Автоматически создаётся задача для первого шага','Исполнитель первого шага получает задачу в Моём Дне и уведомление в Telegram'],
             ['Smart Deadline','Если указал конечный дедлайн — система считает дедлайн каждого шага от конца: конец − SLA последнего − SLA предпоследнего − ... Каждый получает реалистичный дедлайн'],
-            [window.t('objectContext'),'Если указал «объект» (например «Кв. Шевченко 15, кв 24») — он будет отображаться в каждой задаче и в dashboard процессов'],
+            ['Контекст объекта','Если указал «объект» (например «Кв. Шевченко 15, кв 24») — он будет отображаться в каждой задаче и в dashboard процессов'],
             ['Исполнитель выбирается автоматически','Smart Assign выбирает наименее загруженного из функции. Никто не перегружен'],
             ['Процесс появляется в Dashboard','Горизонтальная шкала прогресса — видно на каком шаге каждый процесс прямо сейчас'],
           ].map(([title, desc]) => `
@@ -2019,7 +2020,7 @@ function _buildProcessHowto() {
             ['2','#3b82f6','Визнач процес для автоматизації','',
               'Обери один повторюваний процес який виконується найчастіше або де найбільше помилок. Наприклад: "Обробка замовлення" або "Прийом нового клієнта". Починай з одного — не намагайся автоматизувати все одразу.',
               'Критерії вибору: виконується мінімум 2-3 рази на тиждень, має чіткі кроки, страждає від помилок або забування.'],
-            ['3','#8b5cf6','Створи шаблон',`${path(window.t('processesNewTemplate'))}`,
+            ['3','#8b5cf6','Створи шаблон',`${path('Процессы → Шаблоны → Новый шаблон')}`,
               'Назви шаблон. Додай мінімум 2 кроки (система вимагає від 2). Для кожного кроку: вибери функцію, напиши назву кроку, встанови SLA, додай інструкцію і очікуваний результат. Для критичних кроків увімкни Checkpoint.',
               'Починай просто — 3-5 кроків. Потім розширюй. Краще запустити простий шаблон сьогодні ніж ідеальний через місяць.'],
             ['4','#10b981','Запусти перший процес',`${path('Процеси → Запустити')}`,
@@ -2110,7 +2111,7 @@ window.openProjectMembers = async function(projectId) {
         </div>`).join('') : '<div style="font-size:0.8rem;color:#9ca3af;padding:0.5rem;">Учасників ще немає</div>';
 
     const usersOptions = compUsers.map(u => `<option value="${u.id}">${u.name||u.email}</option>`).join('');
-    const roleOptions = `${window.t('optionValuememberучасникБачитьВсі')}`;
+    const roleOptions = `<option value="member">Учасник — бачить всі задачі</option><option value="assignee">Виконавець — тільки свої задачі</option><option value="viewer">Спостерігач — тільки читання</option>`;
 
     const overlay = document.createElement('div');
     overlay.id = 'projectMembersOverlay';
@@ -2143,7 +2144,7 @@ window.openProjectMembers = async function(projectId) {
         <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #f1f5f9;">
             <div style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">Запросити підрядника</div>
             <div style="display:grid;gap:0.4rem;">
-                <input id="pmGuestEmail" type="email" placeholder=window.t('emailПідрядника') style="padding:0.4rem 0.55rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
+                <input id="pmGuestEmail" type="email" placeholder="Email підрядника" style="padding:0.4rem 0.55rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
                 <input id="pmGuestName" type="text" placeholder="Ім'я підрядника" style="padding:0.4rem 0.55rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">
                 <select id="pmGuestRole" style="padding:0.4rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;">${roleOptions}</select>
                 <button onclick="inviteGuestToProject('${projectId}')" style="padding:0.45rem;background:#3b82f6;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.82rem;font-weight:600;">Надіслати запрошення</button>

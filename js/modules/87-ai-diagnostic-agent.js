@@ -545,7 +545,7 @@ function _renderSignals(container, signals, ctx) {
                     <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.1rem;">Оновлено о ${lastRun} · rule-based аналіз на основі 150+ кейсів</div>
                 </div>
             </div>
-            <button onclick="runAIDiagnostic(true)" title=window.t('оновитиДіагностику') style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:0.25rem 0.5rem;cursor:pointer;font-size:0.75rem;color:#6b7280;">↻ Оновити</button>
+            <button onclick="runAIDiagnostic(true)" title='' style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:0.25rem 0.5rem;cursor:pointer;font-size:0.75rem;color:#6b7280;">↻ Оновити</button>
         </div>
         <div style="padding:0.75rem;display:flex;flex-direction:column;gap:0.5rem;">
             ${rows}

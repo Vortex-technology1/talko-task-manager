@@ -244,9 +244,9 @@
                     <tbody>
                         ${[
                             ['Не знают реальную нагрузку','Кто-то перегружен, кто-то пустует','Система считает час/нед и активные задачи по каждому'],
-                            [window.t('cantSeeWorkQuality'),'Кто-то «выполняет» но постоянно возвращают','Индекс автономности: % задач без возврата'],
-                            ['Не знают кому делегировать',window.t('ownerHoldsAll'),'Дашборд нагрузки — видно кто свободен прямо сейчас'],
-                            [window.t('personDontKnowPriorities'),window.t('doesSecondaryPostponesImportant'),'Мой день: все задачи отсортированы по приоритету'],
+                            ['Не видно качество работы человека','Кто-то «выполняет» но постоянно возвращают','Индекс автономности: % задач без возврата'],
+                            ['Не знают кому делегировать','Владелец всё держит у себя','Дашборд нагрузки — видно кто свободен прямо сейчас'],
+                            ['Человек не знает свои приоритеты','Делает второстепенное, важное откладывает','Мой день: все задачи отсортированы по приоритету'],
                             ['При найме не знают сколько времени есть','Берут человека без понимания нагрузки','Система показывает свободные часы/неделю до перегрузки'],
                         ].map(([p,n,r]) => `<tr style="border-bottom:1px solid #f3f4f6;">
                             <td style="padding:0.5rem;color:#374151;">${p}</td>
@@ -318,7 +318,7 @@
                     ['2','Система → Сотрудники → Пригласить','Отправь приглашение на email'],
                     ['3','После принятия → карточка человека','Открой → редактируй → выбери функции'],
                     ['4','Система → Функции','Для каждой функции добавь регулярные задачи (кнопка repeat+ на карточке)'],
-                    ['5','Вкладка «Нагрузка»',window.t('allShouldBeNormal')],
+                    ['5','Вкладка «Нагрузка»','У всех должен быть статус «Норма»'],
                     ['6','Система → Интеграции → Telegram','Скопируй код → отправь боту /connect КОД'],
                 ].map(([n,title,desc]) => `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #f9fafb;align-items:flex-start;">
                     <div style="min-width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">${n}</div>
@@ -808,7 +808,7 @@
                 document.getElementById('userForm').reset();
                 document.getElementById('userModalTitle').textContent = window.t('addEmployee');
                 _refreshPrimaryFunctionSelect([], '');
-                document.getElementById('userFunctionRoles').textContent = window.t('выбериФункцииВышеЩоб');
+                document.getElementById('userFunctionRoles').textContent = 'Выбери функции выше, щоб налаштувати ролі';
                 if (tabsGroup) tabsGroup.style.display = 'none';
             }
 
@@ -831,7 +831,7 @@
                 if (!f) return '';
                 return `<option value="${esc(f.id)}" ${currentPrimary === f.id ? 'selected' : ''}>${esc(f.name)}</option>`;
             }).join('');
-            sel.innerHTML = `${window.t('optionValueНеВибрано')}` + opts;
+            sel.innerHTML = `<option value="">— не вибрано —</option>` + opts;
         }
 
         function _refreshFunctionRolesUI(selectedFuncIds, existingRoles) {

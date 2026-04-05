@@ -148,7 +148,7 @@ function _openAiMode() {
       </div>
       <div class="incident-ai-input-row">
         <textarea id="incidentAiInput" class="incident-ai-textarea" 
-          placeholder=window.t('щоСталося') rows="3"
+          placeholder="Що сталося..." rows="3"
           onkeydown="if(event.ctrlKey && event.key==='Enter') _sendAiMessage()"></textarea>
         <button class="incident-ai-send-btn" onclick="_sendAiMessage()">
           ➤ Надіслати<br><small>Ctrl+Enter</small>
@@ -278,7 +278,7 @@ function _showAiPreview(data) {
     <div class="incident-preview-card">
       <div class="incident-preview-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Попередній перегляд — відредагуйте при потребі</div>
       <div class="incident-preview-grid">
-        ${_previewField(window.t('назваЗбою'), 'prev_title', data.title || '', 'input')}
+        ${_previewField('Назва збою', 'prev_title', data.title || '', 'input')}
         ${_previewField(window.t('categoryWord'), 'prev_category', data.category || 'other', 'select-category')}
         ${_previewField(window.t('severityWord'), 'prev_severity', data.severity || 2, 'select-severity')}
         ${_previewField('Статус', 'prev_status', data.status || 'new', 'select-status')}
@@ -329,7 +329,7 @@ window._saveIncidentFromAi = async function () {
   const participants = (get('prev_participants')?.value || '').split(',').map(s => s.trim()).filter(Boolean);
 
   const incident = {
-    title:         get('prev_title')?.value?.trim() || window.t('збій'),
+    title:         get('prev_title')?.value?.trim() || 'Збій',
     category:      get('prev_category')?.value || 'other',
     severity:      parseInt(get('prev_severity')?.value || '2'),
     status:        get('prev_status')?.value || 'new',
@@ -399,7 +399,7 @@ async function _openManualForm(incidentId) {
     `<option value="${_esc(u.name || u.email)}">${_esc(u.name || u.email)}</option>`
   ).join('');
 
-  const fnOpts = `${window.t('optionValueНеВказано')}` +
+  const fnOpts = `<option value="">— не вказано —</option>` +
     functions.map(f => `<option value="${_esc(f.id)}" data-fname="${_esc(f.name)}" ${e.functionId === f.id ? 'selected' : ''}>${_esc(f.name)}</option>`).join('');
 
   const participantsVal = Array.isArray(e.participants) ? e.participants.join(', ') : '';
@@ -466,13 +466,13 @@ async function _openManualForm(incidentId) {
         <div class="incident-fg incident-fg-full">
           <label>Процес / задача що зламались</label>
           <textarea id="if_failedProcess" class="incident-input" rows="2"
-            placeholder=window.t('якийПроцесАбоЗадача')>${_esc(e.failedProcess || '')}</textarea>
+            placeholder="Який процес або задача не спрацювали">${_esc(e.failedProcess || '')}</textarea>
         </div>
 
         <div class="incident-fg incident-fg-full">
           <label>Причина збою</label>
           <textarea id="if_cause" class="incident-input" rows="2"
-            placeholder=window.t('чомуЦеСталося')>${_esc(e.cause || '')}</textarea>
+            placeholder="Чому це сталося">${_esc(e.cause || '')}</textarea>
         </div>
 
         <div class="incident-fg incident-fg-full">

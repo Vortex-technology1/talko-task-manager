@@ -260,7 +260,7 @@
       footer.style.background = '#ede9fe';
       footer.style.color = '#6366f1';
       footer.style.borderColor = '#c4b5fd';
-      footer.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> ${tg(window.t('замовлення1'),'Order →')}`;
+      footer.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> ${tg('Замовлення →','Order →')}`;
       footer.setAttribute('onclick', `window._crmGoToOrder('${orderId}')`);
       return;
     }

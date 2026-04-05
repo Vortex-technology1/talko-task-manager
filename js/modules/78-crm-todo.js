@@ -1,5 +1,5 @@
 // ============================================================
-// 78-crm-todo.js — CRM window.t('щоРобитиЗараз')
+// 78-crm-todo.js — CRM "Що робити зараз"
 // Показує всіх активних лідів відсортованих за пріоритетом:
 //   0. Прострочені (nextContactDate < сьогодні) — червоні
 //   1. На сьогодні — помаранчеві
@@ -162,7 +162,7 @@ window.renderCrmTodo = function() {
     // i18n змінні — обчислюємо ДО innerHTML щоб уникнути проблем з вкладеними тернарниками
     const _lang = window.currentLang || 'uk';
     const _i18n = {
-        title:       _lang==='ru'?window.t('чтоДелатьСейчас'):_lang==='en'?'What to do now':'Що робити зараз',
+        title:       _lang==='ru'?'Что делать сейчас':_lang==='en'?'What to do now':'Що робити зараз',
         newLeads:    _lang==='ru'?'новых':_lang==='en'?'new':'нових',
         forgotten:   _lang==='ru'?'забытых лидов':_lang==='en'?'forgotten leads':'забутих лідів',
         search:      _lang==='ru'?'Поиск по имени, телефону, email...':_lang==='en'?'Search by name, phone, email...':'Пошук за іменем, телефоном...',
@@ -176,25 +176,25 @@ window.renderCrmTodo = function() {
     el.innerHTML = `
     <div style="padding:1rem 1.5rem;">
 
-      <!-- Хедер — компактний Apple style -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-        <div style="display:flex;align-items:center;gap:0.5rem;">
-          <span style="font-size:1rem;font-weight:700;color:#1c1c1e;">${_i18n.title}</span>
-          <span style="background:#e5e5ea;color:#3a3a3c;border-radius:10px;padding:1px 8px;font-size:0.72rem;font-weight:700;">${all.length}</span>
+      <!-- Хедер -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <span style="font-size:1rem;font-weight:700;color:#111827;">${_i18n.title}</span>
+          <span style="background:#374151;color:#fff;border-radius:10px;padding:2px 9px;font-size:0.72rem;font-weight:700;">${all.length}</span>
         </div>
-        <div style="display:flex;gap:0.4rem;align-items:center;">
-          <button onclick="renderCrmTodo()" style="background:none;border:none;cursor:pointer;color:#8e8e93;padding:4px;display:flex;align-items:center;">${TI.refresh}</button>
-          ${window.isSuperAdmin ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f2f2f7;color:#3a3a3c;border:none;border-radius:8px;padding:5px 10px;font-size:0.75rem;cursor:pointer;">Тест</button>' : ''}
-          <button onclick="crmOpenCreateDeal()" style="background:#34c759;color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.3rem;">${TI.plus} ${window.t('crmNewLead')||'Новий лід'}</button>
+        <div style="display:flex;gap:0.5rem;">
+          <button onclick="renderCrmTodo()" style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:5px 8px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${TI.refresh}</button>
+          ${window.isSuperAdmin ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v11l3.5 6H5.5L9 14V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg> Тест</button>' : ''}
+          <button onclick="crmOpenCreateDeal()" style="background:#22c55e;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem;">${TI.plus} ${window.t('crmNewLead')||'Новий лід'}</button>
         </div>
       </div>
 
-      <!-- Лічильники — компактний рядок -->
-      <div style="display:flex;gap:0.3rem;margin-bottom:0.65rem;flex-wrap:wrap;">
-        ${overdue.length?`<span style="background:#fff2f2;border-radius:8px;padding:3px 8px;font-size:0.72rem;color:#ff3b30;font-weight:600;">${overdue.length} прострочено</span>`:''}
-        ${todayList.length?`<span style="background:#fff8e6;border-radius:8px;padding:3px 8px;font-size:0.72rem;color:#ff9500;font-weight:600;">${todayList.length} сьогодні</span>`:''}
-        ${noDate.length?`<span style="background:#f2f2f7;border-radius:8px;padding:3px 8px;font-size:0.72rem;color:#8e8e93;">+${noDate.length} ${_i18n.newLeads}</span>`:''}
-        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<span style="background:#f5f0ff;border-radius:8px;padding:3px 8px;font-size:0.72rem;color:#af52de;font-weight:600;">${sla.length} ${_i18n.forgotten}</span>`:''})()}
+      <!-- Лічильники -->
+      <div style="display:flex;gap:0.4rem;margin-bottom:0.85rem;flex-wrap:wrap;">
+        ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} ${window.t('crmOverdue')||'прострочено'}</div>`:''}
+        ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} ${window.t('crmToday')||'на сьогодні'}</div>`:''}
+        ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} ${_i18n.newLeads}</div>`:''}
+        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${sla.length} ${_i18n.forgotten}</div>`:''})()}
       </div>
 
       <!-- Пошук -->
@@ -234,7 +234,7 @@ window.renderCrmTodo = function() {
                 <div style="font-size:2rem;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                 <div style="font-weight:600;color:#374151;">${_i18n.allDone}</div>
                 <div style="font-size:0.82rem;margin-top:0.25rem;">${_i18n.noLeads}</div>
-                <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">${_i18n.totalCrm}${window.crm&&window.crm.deals?window.crm.deals.length:0}</div>
+                <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">${_i18n.totalCrm}${window.crm&&window.crm.deals?window.crm.deals.length:0} лидов</div>
                 <button onclick="crmOpenCreateDeal()" style="margin-top:0.75rem;background:#22c55e;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Додати лід</button>
                 ${['owner','admin'].includes(window.currentUserData?.role) ? '<button onclick="_crmTodoAddTestDeals()" style="margin-top:0.5rem;margin-left:0.5rem;background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:8px 16px;font-size:0.82rem;cursor:pointer;">+ Тестові ліди</button>' : ''}
               </div>`
@@ -261,7 +261,6 @@ function _renderRow(d, i) {
     const _confirmed  = _rl==='ru'?'Подтверждено':_rl==='en'?'Confirmed':'Підтверджено';
     const _confirm    = _rl==='ru'?'Подтвердить':_rl==='en'?'Confirm':'Підтвердити';
     const _consult    = _rl==='ru'?'Консультация':_rl==='en'?'Consultation':'Консультація';
-    const _newDate    = _rl==='ru'?'Новая':_rl==='en'?'New':'Нова';
 
     const p         = _priority(d);
     const fmt       = _fmtDate(d.nextContactDate);
@@ -313,7 +312,7 @@ function _renderRow(d, i) {
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                 ✏️</button>
                <button onclick="event.stopPropagation();_crmTodoCancelConsultation('${d.id}')"
-                title=window.t('скасуватиКонсультацію')
+                title="Скасувати консультацію"
                 style="display:inline-flex;align-items:center;justify-content:center;padding:4px 7px;border-radius:6px;
                 background:#fef2f2;border:1px solid #fecaca;color:#dc2626;font-size:0.75rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                 ×</button>`
@@ -326,7 +325,7 @@ function _renderRow(d, i) {
                 background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;font-size:0.68rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                 ✏️</button>
                <button onclick="event.stopPropagation();_crmTodoCancelConsultation('${d.id}')"
-                title=window.t('скасуватиКонсультацію')
+                title="Скасувати консультацію"
                 style="display:inline-flex;align-items:center;justify-content:center;padding:4px 7px;border-radius:6px;
                 background:#fef2f2;border:1px solid #fecaca;color:#dc2626;font-size:0.75rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                 ×</button>`
@@ -348,7 +347,7 @@ function _renderRow(d, i) {
       <div style="min-width:72px;flex-shrink:0;">
         <div style="background:${dateBg};border-radius:8px;padding:4px 8px;text-align:center;">
           <div style="font-size:0.73rem;font-weight:700;color:${dateClr};white-space:nowrap;line-height:1.2;">
-            ${fmt?fmt.label:_newDate}
+            ${fmt?fmt.label:_i18n.newDate}
           </div>
           ${timeTag}
         </div>
@@ -525,7 +524,7 @@ window.crmTodoOpenCard = async function(dealId) {
             </div>
             <div>
               <label style="${lbl}">Коментар</label>
-              <input id="crmTodoNextNote" placeholder=window.t('щоЗробити') style="${inp}" value="${_esc(deal.note||'')}">
+              <input id="crmTodoNextNote" placeholder="що зробити..." style="${inp}" value="${_esc(deal.note||'')}">
             </div>
           </div>
         </div>
@@ -704,7 +703,7 @@ window._crmTodoSave = async function(dealId) {
     if (todoEl) window._crmTodoScrollPos = todoEl.scrollTop;
 
     const btn = document.getElementById('crmTodoSaveBtn');
-    if (btn) { btn.disabled=true; btn.textContent=window.t('збереження'); }
+    if (btn) { btn.disabled=true; btn.textContent='Збереження...'; }
 
     try {
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
@@ -739,7 +738,7 @@ window._crmTodoSave = async function(dealId) {
                 if (missedDeal) {
                     const nextTime2 = (document.getElementById('crmTodoNextTime')?.value) || null;
                     const tData = {
-                        title: window.t('передзвонити') + (missedDeal.clientName || missedDeal.title || ''),
+                        title: 'Передзвонити: ' + (missedDeal.clientName || missedDeal.title || ''),
                         note: 'Не взяв трубку ' + _todayStr(),
                         status: 'new',
                         deadlineDate: nextDate,
@@ -811,7 +810,7 @@ window._crmTodoSave = async function(dealId) {
         }
 
     } catch(e) {
-        if(btn){btn.disabled=false;btn.textContent=window.t('зберегти');}
+        if(btn){btn.disabled=false;btn.textContent='Зберегти';}
         if(window.showToast)showToast(window.t('errPfx2')+e.message,'error');
     }
 };
@@ -877,7 +876,7 @@ window._crmTodoScheduleConsultation = function(dealId) {
           </div>
           <div>
             <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Примітка</label>
-            <input id="consultNote" type="text" placeholder=window.t('темаКонсультації')
+            <input id="consultNote" type="text" placeholder="Тема консультації..."
               style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;">
           </div>
         </div>
@@ -899,7 +898,7 @@ window._crmTodoSaveConsultation = async function(dealId) {
 
     // Захист від подвійного кліку
     const saveBtn = document.querySelector('#crmConsultModal button[onclick*="SaveConsultation"]');
-    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = window.t('зберігаю'); }
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Зберігаю...'; }
 
     try {
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
@@ -929,7 +928,7 @@ window._crmTodoSaveConsultation = async function(dealId) {
             const deal2 = window.crm?.deals?.find(x => x.id === dealId);
             if (deal2) {
                 const taskData = {
-                    title: window.t('консультація') + (deal2.clientName || deal2.title || ''),
+                    title: 'Консультація: ' + (deal2.clientName || deal2.title || ''),
                     note: note || '',
                     status: 'new',
                     deadlineDate: date,
@@ -958,7 +957,7 @@ window._crmTodoSaveConsultation = async function(dealId) {
         if (window.showToast) showToast('Консультацію призначено ✓ Завдання створено', 'success');
         if (typeof renderCrmTodo === 'function') renderCrmTodo();
     } catch(e) {
-        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = window.t('призначити'); }
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Призначити'; }
         if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
 };
@@ -1105,7 +1104,7 @@ window._getCrmTodoForMyDay = function() {
             const fmt = _fmtDate(d.nextContactDate);
             return {
                 id:'crm_'+d.id, dealId:d.id, type:'crm_action',
-                title:d.note||d.notes||window.t('безНотатки'),
+                title:d.note||d.notes||'(без нотатки)',
                 client:d.clientName||d.title||'',
                 phone:d.phone||'', telegram:d.telegram||'',
                 date:d.nextContactDate||null,

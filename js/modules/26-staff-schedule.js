@@ -259,7 +259,7 @@ window._openAddReviewModal = function(masterId, masterName) {
             </div>
             <div style="margin-bottom:.75rem;">
                 <label style="font-size:.82rem;color:#374151;font-weight:500;">Послуга</label>
-                <input id="rev-service" type="text" placeholder=window.t('наприкладМанікюрГельлак')
+                <input id="rev-service" type="text" placeholder=''
                     style="width:100%;margin-top:.3rem;padding:.5rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;box-sizing:border-box;">
             </div>
             <div style="margin-bottom:1rem;">

@@ -96,9 +96,9 @@
             howStep7:'Завершити → протокол PDF автоматично',
         },
         ru: {
-            title:window.t('координации'), newCoord:window.t('новаяКоординация'), emptyText:window.t('координацийЕщёНет'),
+            title:'Координации', newCoord:'Новая координация', emptyText:'Координаций ещё нет',
             addFirst:'+ Добавить первую', modalTitle:'Новая координация', modalEdit:'Редактировать',
-            labelName:window.t('названиеКоординации'), placeholderName:window.t('ежедневнаяКоординацияКоманды'),
+            labelName:'Название координации', placeholderName:'Ежедневная координация команды',
             labelType:window.t('flowTyp2'), labelStatus:'Статус', statusActive:'Активная', statusPaused:'Приостановлена',
             labelChairman:'Руководитель координации', selectChairman:'— Выберите ответственного —',
             labelParticipants:'Участники', labelDay:'День недели', anyDay:'— Любой —',
@@ -1259,7 +1259,7 @@
         if (btn) { btn.disabled = true; btn.textContent = '...'; }
         const idx=parseInt(document.getElementById('coordTaskDecisionIdx').value,10);
         const title=document.getElementById('coordTaskTitle').value.trim();
-        if(!title){ toast(window.t('введітьЗаголовокЗадачі'),'error'); _submitTaskLock=false; if(btn){btn.disabled=false;btn.innerHTML=`<i data-lucide="check" style="width:12px;height:12px;margin-right:3px;"></i>${ct('taskCreateBtn')}`;} return; }
+        if(!title){ toast('Введіть заголовок задачі','error'); _submitTaskLock=false; if(btn){btn.disabled=false;btn.innerHTML=`<i data-lucide="check" style="width:12px;height:12px;margin-right:3px;"></i>${ct('taskCreateBtn')}`;} return; }
         const assigneeId=document.getElementById('coordTaskAssignee').value||null;
         const deadline=document.getElementById('coordTaskDeadline').value||null;
         const projectId=document.getElementById('coordTaskProject')?.value||null;
@@ -1418,7 +1418,7 @@
     window.closeCoordAnalysis = () => { document.getElementById('coordAnalysisModal').style.display='none'; };
     window.runCoordAI = async function() {
         const el=document.getElementById('coordAnalysisContent'); if(!el) return;
-        el.innerHTML=`${window.t('divStyletextaligncenterpadding2remcolor9')}`;
+        el.innerHTML=`<div style="text-align:center;padding:2rem;color:#9ca3af;">Аналізую...</div>`;
         try {
             const snap=await col('coordination_sessions').orderBy('createdAt','desc').limit(30).get();
             const sessions=snap.docs.map(d=>({id:d.id,...d.data()}));

@@ -69,7 +69,7 @@
                 </div>
                 <div>
                     <div style="font-size:1rem;font-weight:700;color:#111827;">${std ? 'Редагувати стандарт' : 'Новий стандарт'}</div>
-                    ${std ? `${window.t('divStylefontsize075remcolor9ca3afзміненн')}` : ''}
+                    ${std ? `<div style="font-size:0.75rem;color:#9ca3af;">Змінення зберігаються одразу</div>` : ''}
                 </div>
             </div>
             <button onclick="closeModal('standardModal')" style="width:32px;height:32px;border:none;background:#f3f4f6;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;">
@@ -108,7 +108,7 @@
                 </label>
                 <div style="position:relative;">
                     <textarea id="stdChecklist" rows="5"
-                        placeholder=window.t('перевіритиВідповідністьКресленню10сфотог')
+                        placeholder="Перевірити відповідність кресленню&#10;Сфотографувати результат&#10;Підписати акт у клієнта"
                         style="width:100%;padding:0.65rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.85rem;color:#111827;background:#fff;box-sizing:border-box;outline:none;resize:vertical;line-height:1.6;font-family:inherit;"
                         onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">${std?.checklist ? std.checklist.join('\n') : ''}</textarea>
                 </div>
@@ -122,7 +122,7 @@
                     <span style="font-weight:400;color:#9ca3af;margin-left:4px;">— що вважається "зроблено"</span>
                 </label>
                 <textarea id="stdAcceptance" rows="3"
-                    placeholder=window.t('актПідписанийКлієнтом10фотоЗбережені')
+                    placeholder="Акт підписаний клієнтом&#10;Фото збережені в системі&#10;Дефекти відсутні або зафіксовані"
                     style="width:100%;padding:0.65rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.85rem;color:#111827;background:#fff;box-sizing:border-box;outline:none;resize:vertical;line-height:1.6;font-family:inherit;"
                     onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">${std?.acceptanceCriteria ? std.acceptanceCriteria.join('\n') : ''}</textarea>
             </div>
@@ -134,7 +134,7 @@
                     <span style="font-weight:400;color:#9ca3af;margin-left:4px;">— пояснення для виконавця</span>
                 </label>
                 <textarea id="stdInstructions" rows="3"
-                    placeholder=window.t('опишітьЯкВиконуватиЦей')
+                    placeholder="Опишіть як виконувати цей стандарт, на що звертати увагу..."
                     style="width:100%;padding:0.65rem 0.9rem;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.85rem;color:#374151;background:#fff;box-sizing:border-box;outline:none;resize:vertical;line-height:1.6;font-family:inherit;"
                     onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">${std ? esc(std.instructionsHtml || '') : ''}</textarea>
             </div>
@@ -146,7 +146,7 @@
             ${std ? `
             <button onclick="deleteStandardUI('${std.id}')"
                 style="width:40px;height:40px;border:1.5px solid #fecaca;background:#fff;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444;flex-shrink:0;"
-                title=window.t('видалитиСтандарт')>
+                title="Видалити стандарт">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
             </button>` : ''}
             <button onclick="closeModal('standardModal')"
@@ -341,7 +341,7 @@
                 if (qc.projectId && qc.stageId) {
                     const std = qc.standardId ? workStandards.find(s => s.id === qc.standardId) : null;
                     const taskData = {
-                        title: window.t('переробка') + (std?.name || 'QC rejected'),
+                        title: 'Переробка: ' + (std?.name || 'QC rejected'),
                         function: qc.ownerFunctionId || '',
                         projectId: qc.projectId,
                         stageId: qc.stageId,

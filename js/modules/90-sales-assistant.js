@@ -139,7 +139,7 @@
 
     // Показати що аналізуємо
     const hintEl = document.getElementById('saHintText');
-    if (hintEl) hintEl.textContent = window.t('аналізуюДзвінок');
+    if (hintEl) hintEl.textContent = '';
 
     // Зберегти і отримати аналіз
     let analysis = null;

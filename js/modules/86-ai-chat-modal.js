@@ -251,7 +251,7 @@ window.openMetricsStepFlow = function(contextText) {
         <!-- Input area -->
         <div id="sfInputArea" style="border-top:1px solid #e5e7eb;padding:0.75rem 1rem;flex-shrink:0;background:white;">
             <div style="display:flex;gap:0.5rem;align-items:flex-end;">
-                <textarea id="sfInput" placeholder=window.t('додайтеСвоїДумкиАбо') rows="2"
+                <textarea id="sfInput" placeholder='' rows="2"
                     style="flex:1;padding:0.6rem 0.75rem;border:1.5px solid #e5e7eb;border-radius:12px;font-size:0.88rem;font-family:inherit;resize:none;line-height:1.4;outline:none;transition:border-color 0.2s;"
                     onfocus="this.style.borderColor='#8b5cf6'" onblur="this.style.borderColor='#e5e7eb'"
                     onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();window._sfSend();}"></textarea>
@@ -344,7 +344,7 @@ window._sfStep2 = async function(userComment) {
 window._sfStep5 = async function() {
     _sfSetStep(3);
     const msg = `Розбий цей план на задачі. Відповідай тільки JSON масивом без пояснень:
-[{"title":window.t('назва2'),"deadlineDays":7,"priority":"high"}]
+[{"title":'',"deadlineDays":7,"priority":"high"}]
 priority: high/medium/low, deadlineDays: через скільки днів, максимум 8 задач.`;
 
     const typingId = 'sftyping_' + Date.now();
@@ -522,7 +522,7 @@ function _sfShowButtons(buttons) {
                 </button>`).join('')}
         </div>
         ${hasComment ? `<div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
-            <textarea id="sfInput" placeholder=window.t('вашКоментар') rows="2"
+            <textarea id="sfInput" placeholder='' rows="2"
                 style="flex:1;padding:0.5rem 0.75rem;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.85rem;font-family:inherit;resize:none;"
                 onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();window._sfSend();}"></textarea>
             <button onclick="window._sfSend()" style="padding:0.5rem 0.9rem;background:#8b5cf6;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">→</button>

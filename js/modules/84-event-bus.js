@@ -269,7 +269,7 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[ТЗ] Пошив: ${e.payload.clientName || e.payload.dealTitle || ''}`,
-            description: `${window.t('замовленняПідтвердженоДеталізаціяПо')}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `${''}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+3d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId || null,
@@ -287,14 +287,14 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[Закупка]: ${e.payload.clientName || e.payload.dealTitle || ''}`,
-            description: `${window.t('перевірПозиціїКпУ')}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `${''}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+2d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId || null,
             assigneeId: e.payload.assignedToId || null,
             priority: 'high',
         }),
-        description: window.t('кпПогодженоЗадачаЗакупнику'),
+        description: '',
     },
 
     // КП ПОГОДЖЕНО → задача логісту (планування монтажу)
@@ -305,14 +305,14 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[Монтаж]: ${e.payload.clientName || e.payload.dealTitle || ''}`,
-            description: `${window.t('заплануватиВиїздМонтажників')}\nАдреса: ${e.payload.objectAddress || window.t('уточниВCrm')}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `${''}\nАдреса: ${e.payload.objectAddress || ''}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+5d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId || null,
             assigneeId: e.payload.assignedToId || null,
             priority: 'normal',
         }),
-        description: window.t('кпПогодженоЗадачаЛогісту'),
+        description: '',
     },
 
     // ПЕРЕДОПЛАТА → старт виробництва
@@ -323,12 +323,12 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[Старт] Виробництво: ${e.payload.clientName || ''}`,
-            description: `${window.t('передоплата1')} ${e.payload.prepayment || ''}€ ${window.t('отриманаПочинаємоПошив')}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `${''} ${e.payload.prepayment || ''}€ ${''}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+0d',
             dealId: e.payload.dealId,
             priority: 'high',
         }),
-        description: window.t('передоплатаЗафіксованаЗадачаСтарт'),
+        description: '',
     },
 
     // ЗАМІР ПРИЗНАЧЕНО → Google Calendar (якщо підключено)
@@ -349,8 +349,8 @@ const _defaultAutomationRules = [
                 const startDt = new Date(measurementDate);
                 const endDt   = new Date(startDt.getTime() + 60 * 60 * 1000); // +1 год
                 const calEvent = {
-                    summary:     `${window.t('замір')}: ${clientName || ''}`,
-                    description: `${window.t('замовлення')} ID: ${dealId}\n${window.t('відкритиCrm')}: ${window.location.origin}`,
+                    summary:     `${''}: ${clientName || ''}`,
+                    description: `${''} ID: ${dealId}\n${''}: ${window.location.origin}`,
                     location:    objectAddress || '',
                     start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
                     end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },
@@ -374,7 +374,7 @@ const _defaultAutomationRules = [
                 console.error('[Calendar] measurement_calendar_event error:', e.message);
             }
         },
-        description: window.t('замірПризначеноПодіяВ'),
+        description: '',
     },
 
     // МОНТАЖ ПРИЗНАЧЕНО → Google Calendar (якщо підключено)
@@ -394,7 +394,7 @@ const _defaultAutomationRules = [
                 const endDt   = new Date(startDt.getTime() + 2 * 60 * 60 * 1000); // +2 год
                 const calEvent = {
                     summary:     `Монтаж: ${clientName || ''}`,
-                    description: `${window.t('замовлення')} ID: ${dealId}\n${window.t('відкритиCrm')}: ${window.location.origin}`,
+                    description: `${''} ID: ${dealId}\n${''}: ${window.location.origin}`,
                     location:    objectAddress || '',
                     start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
                     end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },
@@ -417,7 +417,7 @@ const _defaultAutomationRules = [
                 console.error('[Calendar] installation_calendar_event error:', e.message);
             }
         },
-        description: window.t('монтажПризначеноПодіяВ'),
+        description: '',
     },
 ];
 
@@ -956,7 +956,7 @@ onTalkoEvent(TALKO_EVENTS.MEASUREMENT_ASSIGNED, async (event) => {
     if (!clientPhone) return;
     try {
         // Отримуємо ім'я замірника
-        let measurerName = window.t('нашСпеціаліст');
+        let measurerName = '';
         if (measurerId && window.companyRef) {
             const uDoc = await window.companyRef().collection('users').doc(measurerId).get();
             if (uDoc.exists) measurerName = uDoc.data()?.name || uDoc.data()?.email || measurerName;

@@ -90,26 +90,26 @@
         <!-- Header fields -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1rem">
           <div style="grid-column:1/3">
-            <label class="fp-label">${window.t('назваСтравиПродукту')}</label>
-            <input id="fpRecipeName" class="fp-inp" value="${esc(recipe?.name||'')}" placeholder="${window.t('борщУкраїнський')}">
+            <label class="fp-label">${''}</label>
+            <input id="fpRecipeName" class="fp-inp" value="${esc(recipe?.name||'')}" placeholder="${''}">
           </div>
           <div>
-            <label class="fp-label">${window.t('категорія')}</label>
-            <input id="fpRecipeCat" class="fp-inp" value="${esc(recipe?.category||'')}" placeholder="${window.t('першіСтрави')}" list="fpCatList">
+            <label class="fp-label">${''}</label>
+            <input id="fpRecipeCat" class="fp-inp" value="${esc(recipe?.category||'')}" placeholder="${''}" list="fpCatList">
             <datalist id="fpCatList">
               ${[...new Set(FP.recipes.map(r=>r.category).filter(Boolean))].map(c=>`<option value="${esc(c)}">`).join('')}
             </datalist>
           </div>
           <div>
-            <label class="fp-label">${window.t('вихідГМлШт')}</label>
+            <label class="fp-label">${''}</label>
             <input id="fpRecipeYield" class="fp-inp" type="number" min="0" value="${recipe?.yield||100}" placeholder="1000">
           </div>
           <div>
-            <label class="fp-label">${window.t('кількістьПорцій')}</label>
+            <label class="fp-label">${''}</label>
             <input id="fpRecipePortions" class="fp-inp" type="number" min="1" value="${recipe?.portions||1}" oninput="window._fpRecalc()">
           </div>
           <div>
-            <label class="fp-label">${window.t('цінаПродажу')}</label>
+            <label class="fp-label">${''}</label>
             <input id="fpRecipeSalePrice" class="fp-inp" type="number" min="0" value="${recipe?.salePrice||''}" placeholder="0.00" oninput="window._fpRecalc()">
           </div>
         </div>
@@ -117,21 +117,21 @@
         <!-- Ingredients table -->
         <div style="margin-bottom:1rem">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
-            <b style="font-size:.85rem">${window.t('інгредієнтиТехнологічнаКарта')}</b>
+            <b style="font-size:.85rem">${''}</b>
             <div style="display:flex;gap:.5rem">
               <button onclick="window._fpAddIngredientFromWarehouse()" class="fp-btn-sm" style="background:#eef2ff;color:#6366f1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Зі складу</button>
-              <button onclick="window._fpAddIngredient()" class="fp-btn-sm" style="background:#f0fdf4;color:#16a34a">${window.t('вручну')}</button>
+              <button onclick="window._fpAddIngredient()" class="fp-btn-sm" style="background:#f0fdf4;color:#16a34a">${''}</button>
             </div>
           </div>
           <div style="overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:.82rem">
               <thead><tr style="background:#f8fafc">
-                <th style="padding:6px 8px;text-align:left;color:#6b7280;font-weight:600">${window.t('інгредієнт')}</th>
-                <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${window.t('брутто')}</th>
-                <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${window.t('нетто')}</th>
-                <th style="width:60px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${window.t('од')}</th>
-                <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${window.t('цінаод')}</th>
-                <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${window.t('вартість')}</th>
+                <th style="padding:6px 8px;text-align:left;color:#6b7280;font-weight:600">${''}</th>
+                <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${''}</th>
+                <th style="width:80px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${''}</th>
+                <th style="width:60px;text-align:center;padding:6px 4px;color:#6b7280;font-weight:600">${''}</th>
+                <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${''}</th>
+                <th style="width:90px;text-align:right;padding:6px 4px;color:#6b7280;font-weight:600">${''}</th>
                 <th style="width:30px"></th>
               </tr></thead>
               <tbody id="fpIngrTbody"></tbody>
@@ -143,31 +143,31 @@
         <div style="display:flex;justify-content:flex-end;margin-bottom:1.25rem">
           <div style="min-width:260px;background:#f8fafc;border-radius:10px;padding:.85rem 1rem">
             <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem">
-              <span style="color:#6b7280">${window.t('собівартістьЗагальна')}</span>
+              <span style="color:#6b7280">${''}</span>
               <span id="fpTotalCost" style="font-weight:600">0.00 ₴</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem">
-              <span style="color:#6b7280">${window.t('собівартістьПорції')}</span>
+              <span style="color:#6b7280">${''}</span>
               <span id="fpCostPerPortion" style="font-weight:600">0.00 ₴</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem">
-              <span style="color:#6b7280">${window.t('цінаПродажу1')}</span>
+              <span style="color:#6b7280">${''}</span>
               <span id="fpSalePriceDisplay" style="font-weight:600">0.00 ₴</span>
             </div>
             <div style="display:flex;justify-content:space-between;padding-top:.5rem;border-top:2px solid #e5e7eb;font-size:.9rem">
-              <span style="font-weight:700">${window.t('маржа')}</span>
+              <span style="font-weight:700">${''}</span>
               <span id="fpMarginDisplay" style="font-weight:700;color:#10b981">— %</span>
             </div>
           </div>
         </div>
 
         <div style="margin-bottom:1rem">
-          <label class="fp-label">${window.t('технологіяПриготування')}</label>
-          <textarea id="fpRecipeTech" class="fp-inp" rows="3" placeholder="${window.t('описПроцесуПриготування')}">${esc(recipe?.technology||'')}</textarea>
+          <label class="fp-label">${''}</label>
+          <textarea id="fpRecipeTech" class="fp-inp" rows="3" placeholder="${''}">${esc(recipe?.technology||'')}</textarea>
         </div>
 
         <div style="display:flex;gap:.75rem;justify-content:flex-end;flex-wrap:wrap">
-          <button onclick="document.getElementById('fpRecipeOverlay').remove()" class="fp-btn" style="background:#f3f4f6;color:#374151">${window.t('скасувати1')}</button>
+          <button onclick="document.getElementById('fpRecipeOverlay').remove()" class="fp-btn" style="background:#f3f4f6;color:#374151">${''}</button>
           ${recipe ? `<button onclick="window._fpPrintOP1('${recipe.id}')" class="fp-btn" style="background:#f59e0b;color:#fff"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>ОП-1</button>` : ''}
           <button onclick="window._fpSaveRecipe('${recipeId||''}')" class="fp-btn" style="background:#6366f1;color:#fff"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Зберегти</button>
         </div>
@@ -183,14 +183,14 @@
     if (!tbody) return;
     const items = FP.editingIngredients;
     if (!items.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:1rem;color:#9ca3af;font-size:.82rem">${window.t('додайтеІнгредієнтиЗіСкладу')}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:1rem;color:#9ca3af;font-size:.82rem">${''}</td></tr>`;
       window._fpRecalc();
       return;
     }
     tbody.innerHTML = items.map((ing, idx) => `
       <tr style="border-bottom:1px solid #f3f4f6">
         <td style="padding:4px 6px">
-          <input class="fp-inp-sm" value="${esc(ing.name)}" onchange="window._fpIngChange(${idx},'name',this.value)" placeholder="${window.t('назва')}" style="min-width:120px">
+          <input class="fp-inp-sm" value="${esc(ing.name)}" onchange="window._fpIngChange(${idx},'name',this.value)" placeholder="${''}" style="min-width:120px">
         </td>
         <td style="padding:4px">
           <input class="fp-inp-sm" type="number" min="0" step="0.001" value="${fmtQty(ing.grossQty)}" onchange="window._fpIngChange(${idx},'grossQty',+this.value)" style="width:100%;text-align:center">
@@ -244,15 +244,15 @@
   };
 
   window._fpAddIngredientFromWarehouse = function() {
-    if (!FP.warehouseItems.length) { toast(window.t('складПорожнійДодайтеТовари'), 'info'); return; }
+    if (!FP.warehouseItems.length) { toast('', 'info'); return; }
     const html = `
       <div id="fpWhPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10051;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:12px;padding:1.25rem;width:min(440px,95vw);max-height:80vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
-            <b>${window.t('вибірЗіСкладу')}</b>
+            <b>${''}</b>
             <button onclick="document.getElementById('fpWhPicker').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem">✕</button>
           </div>
-          <input class="fp-inp" placeholder="${window.t('пошук')}" oninput="window._fpWhSearch(this.value)" style="margin-bottom:.75rem">
+          <input class="fp-inp" placeholder="${''}" oninput="window._fpWhSearch(this.value)" style="margin-bottom:.75rem">
           <div id="fpWhList">
             ${FP.warehouseItems.map(w=>`
               <div onclick="window._fpPickWarehouseItem('${w.id}')" class="fp-wh-row" style="padding:.5rem .75rem;border:1px solid #f3f4f6;border-radius:7px;cursor:pointer;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center">
@@ -326,7 +326,7 @@
   // ─── save recipe ──────────────────────────────────────────────────────────────
   window._fpSaveRecipe = async function(recipeId) {
     const name = el('fpRecipeName')?.value?.trim();
-    if (!name) { toast(window.t('вкажітьНазву'), 'warn'); return; }
+    if (!name) { toast('', 'warn'); return; }
 
     const portions = parseInt(el('fpRecipePortions')?.value) || 1;
     const salePrice = parseFloat(el('fpRecipeSalePrice')?.value) || 0;
@@ -364,7 +364,7 @@
         data.createdBy = window.currentUser?.uid || '';
         await col('fp_recipes').add(data);
       }
-      toast(window.t('рецептуруЗбережено'));
+      toast('');
       document.getElementById('fpRecipeOverlay')?.remove();
       await loadRecipes();
       renderRecipesList();
@@ -380,7 +380,7 @@
         if (d.exists) recipe = { id: d.id, ...d.data() };
       } catch(e) {}
     }
-    if (!recipe) { toast(window.t('рецептуруНеЗнайдено'), 'error'); return; }
+    if (!recipe) { toast('', 'error'); return; }
 
     const company = window.currentCompanyData || {};
     const today = new Date().toLocaleDateString('uk-UA');
@@ -401,19 +401,19 @@
       .sign-block{display:flex;justify-content:space-between;margin-top:20px;font-size:11px}
     </style></head><body>
     <div class="org-line">Організація: <b>${esc(company.name||company.companyName||'')}</b></div>
-    <div class="org-line">${window.t('підрозділ')} ___________________</div>
+    <div class="org-line">${''} ___________________</div>
     <br>
-    <h2>${window.t('калькуляційнаКарта___')}</h2>
-    <h2>${window.t('формаОп1')}</h2>
+    <h2>${''}</h2>
+    <h2>${''}</h2>
     <br>
     <table style="border:none">
       <tr style="border:none">
-        <td style="border:none">${window.t('найменуванняСтрави')} <b>${esc(recipe.name)}</b></td>
-        <td style="border:none;text-align:right">${window.t('датаСкладання')} ${today}</td>
+        <td style="border:none">${''} <b>${esc(recipe.name)}</b></td>
+        <td style="border:none;text-align:right">${''} ${today}</td>
       </tr>
       <tr style="border:none">
         <td style="border:none">Категорія: ${esc(recipe.category||'—')}</td>
-        <td style="border:none;text-align:right">${window.t('вихід')} ${recipe.yield||0} ${window.t('гмлшт')}</td>
+        <td style="border:none;text-align:right">${''} ${recipe.yield||0} ${''}</td>
       </tr>
     </table>
 
@@ -421,12 +421,12 @@
       <thead>
         <tr>
           <th style="width:5%">№</th>
-          <th>${window.t('найменуванняПродуктів')}</th>
-          <th style="width:10%">${window.t('од')}</th>
-          <th style="width:12%">${window.t('брутто')}</th>
-          <th style="width:12%">${window.t('нетто')}</th>
-          <th style="width:12%">${window.t('ціна2')}</th>
-          <th style="width:12%">${window.t('сума1')}</th>
+          <th>${''}</th>
+          <th style="width:10%">${''}</th>
+          <th style="width:12%">${''}</th>
+          <th style="width:12%">${''}</th>
+          <th style="width:12%">${''}</th>
+          <th style="width:12%">${''}</th>
         </tr>
       </thead>
       <tbody>
@@ -446,7 +446,7 @@
           <td class="right bold">${fmt(recipe.totalCost||0)}</td>
         </tr>
         <tr>
-          <td colspan="5" style="text-align:right;font-weight:bold">${window.t('собівартість1Порції')}</td>
+          <td colspan="5" style="text-align:right;font-weight:bold">${''}</td>
           <td></td>
           <td class="right bold">${fmt(recipe.costPerPortion||0)}</td>
         </tr>
@@ -455,20 +455,20 @@
 
     <table style="border:none;margin-top:4px">
       <tr style="border:none">
-        <td style="border:none">${window.t('цінаПродажу1Порції')} <b>${fmt(recipe.salePrice||0)} ₴</b></td>
-        <td style="border:none;text-align:right">${window.t('торговаНадбавка')} <b>${recipe.margin !== null && recipe.margin !== undefined ? recipe.margin + '%' : '—'}</b></td>
+        <td style="border:none">${''} <b>${fmt(recipe.salePrice||0)} ₴</b></td>
+        <td style="border:none;text-align:right">${''} <b>${recipe.margin !== null && recipe.margin !== undefined ? recipe.margin + '%' : '—'}</b></td>
       </tr>
     </table>
 
     ${recipe.technology ? `<div style="margin-top:10px;font-size:11px"><b>Технологія приготування:</b><br>${esc(recipe.technology).replace(/\n/g,'<br>')}</div>` : ''}
 
     <div class="sign-block">
-      <div>${window.t('завідувачВиробництвом')} _______________/______________</div>
-      <div>${window.t('калькулятор')} _______________/______________</div>
+      <div>${''} _______________/______________</div>
+      <div>${''} _______________/______________</div>
     </div>
     <div class="sign-block" style="margin-top:10px">
-      <div>${window.t('керівникЗакладу')} _______________/______________</div>
-      <div>${window.t('датаЗатвердження')} _______________</div>
+      <div>${''} _______________/______________</div>
+      <div>${''} _______________</div>
     </div>
     </body></html>`;
 
@@ -490,10 +490,10 @@
     cont.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
         <div>
-          <b>${window.t('плануванняВиробництва')}</b>
+          <b>${''}</b>
           <span style="font-size:.78rem;color:#9ca3af;margin-left:.5rem">${new Date().toLocaleDateString('uk-UA')}</span>
         </div>
-        <button onclick="window._fpAddToPlan()" class="fp-btn" style="background:#6366f1;color:#fff">${window.t('додатиВПлан')}</button>
+        <button onclick="window._fpAddToPlan()" class="fp-btn" style="background:#6366f1;color:#fff">${''}</button>
       </div>
 
       ${stopList.length ? `
@@ -509,7 +509,7 @@
       ${!FP.productionPlan.length ? `
         <div style="text-align:center;padding:2rem;color:#9ca3af">
           <div style="margin-bottom:.5rem"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-          <div>${window.t('планНаСьогодніПорожній')}</div>
+          <div>${''}</div>
           <div style="font-size:.78rem;margin-top:.25rem">${_tg('Натисніть "+ Додати в план" щоб запланувати виробництво','Нажмите "+ Добавить в план" чтобы запланировать производство')}</div>
         </div>` :
       `<div style="display:flex;flex-direction:column;gap:.5rem">
@@ -517,20 +517,20 @@
           const recipe = FP.recipes.find(r => r.id === p.recipeId);
           const status = p.status || 'planned';
           const statusColors = { planned:'#3b82f6', in_progress:'#f59e0b', done:'#10b981', cancelled:'#ef4444' };
-          const statusLabels = { planned:window.t('заплановано'), in_progress:window.t('виробляється'), done:window.t('готово'), cancelled:window.t('скасовано') };
+          const statusLabels = { planned:'', in_progress:'', done:'', cancelled:'' };
           return `
           <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:.85rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
             <div style="flex:1;min-width:180px">
               <div style="font-weight:700;font-size:.9rem">${esc(p.recipeName||recipe?.name||'—')}</div>
-              <div style="font-size:.75rem;color:#6b7280">${p.portions} порц. · ${window.t('собівартість')} ${fmt((recipe?.costPerPortion||0)*p.portions)} ₴</div>
+              <div style="font-size:.75rem;color:#6b7280">${p.portions} порц. · ${''} ${fmt((recipe?.costPerPortion||0)*p.portions)} ₴</div>
             </div>
             <div style="display:flex;gap:.5rem;align-items:center">
               <span style="color:${statusColors[status]};font-size:.78rem;font-weight:600;background:${statusColors[status]}20;padding:2px 8px;border-radius:12px">${statusLabels[status]}</span>
               ${status === 'planned' ? `
-                <button onclick="window._fpStartProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><polygon points="5 3 19 12 5 21 5 3"/></svg>${window.t('почати')}</button>
-                <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">${window.t('готовоСписати')}</button>` : ''}
+                <button onclick="window._fpStartProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><polygon points="5 3 19 12 5 21 5 3"/></svg>${''}</button>
+                <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">${''}</button>` : ''}
               ${status === 'in_progress' ? `
-                <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#10b981;border:none;color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">${window.t('готовоСписати')}</button>` : ''}
+                <button onclick="window._fpCompleteProduction('${p.id}')" style="background:#10b981;border:none;color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600">${''}</button>` : ''}
             </div>
           </div>`;
         }).join('')}
@@ -563,32 +563,32 @@
 
   window._fpAddToPlan = async function() {
     await loadRecipes();
-    if (!FP.recipes.length) { toast(window.t('немаєРецептурСпочаткуСтворіть'), 'info'); return; }
+    if (!FP.recipes.length) { toast('', 'info'); return; }
 
     const html = `
       <div id="fpPlanPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10052;display:flex;align-items:center;justify-content:center">
         <div style="background:#fff;border-radius:12px;padding:1.25rem;width:min(420px,96vw)">
           <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
-            <b>${window.t('додатиВПланВиробництва')}</b>
+            <b>${''}</b>
             <button onclick="document.getElementById('fpPlanPicker').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem">✕</button>
           </div>
           <div style="margin-bottom:.75rem">
-            <label class="fp-label">${window.t('страваПродукт')}</label>
+            <label class="fp-label">${''}</label>
             <select id="fpPlanRecipe" class="fp-inp" onchange="window._fpUpdatePlanCost()">
-              <option value="">${window.t('оберітьРецептуру')}</option>
+              <option value="">${''}</option>
               ${FP.recipes.map(r=>`<option value="${r.id}" data-cost="${r.costPerPortion||0}" data-portions="${r.portions||1}">${esc(r.name)} (${esc(r.category||'')})</option>`).join('')}
             </select>
           </div>
           <div style="margin-bottom:.75rem">
-            <label class="fp-label">${window.t('кількістьПорційДляВиробництва')}</label>
+            <label class="fp-label">${''}</label>
             <input id="fpPlanPortions" class="fp-inp" type="number" min="1" value="10" oninput="window._fpUpdatePlanCost()">
           </div>
           <div id="fpPlanCostPreview" style="background:#f8fafc;border-radius:8px;padding:.6rem .75rem;font-size:.82rem;margin-bottom:1rem;display:none">
-            ${window.t('собівартість')} <b id="fpPlanTotalCost">—</b>
+            ${''} <b id="fpPlanTotalCost">—</b>
           </div>
           <div style="display:flex;gap:.5rem;justify-content:flex-end">
             <button onclick="document.getElementById('fpPlanPicker').remove()" class="fp-btn" style="background:#f3f4f6;color:#374151">Скасувати</button>
-            <button onclick="window._fpConfirmAddToPlan()" class="fp-btn" style="background:#6366f1;color:#fff">${window.t('додатиВПлан1')}</button>
+            <button onclick="window._fpConfirmAddToPlan()" class="fp-btn" style="background:#6366f1;color:#fff">${''}</button>
           </div>
         </div>
       </div>`;
@@ -613,7 +613,7 @@
   window._fpConfirmAddToPlan = async function() {
     const recipeId = el('fpPlanRecipe')?.value;
     const portions = parseInt(el('fpPlanPortions')?.value) || 1;
-    if (!recipeId) { toast(window.t('оберітьРецептуру1'), 'warn'); return; }
+    if (!recipeId) { toast('', 'warn'); return; }
     const recipe = FP.recipes.find(r => r.id === recipeId);
     try {
       await col('fp_production_plan').add({
@@ -625,7 +625,7 @@
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: window.currentUser?.uid || '',
       });
-      toast(window.t('доданоВПлан'));
+      toast('');
       document.getElementById('fpPlanPicker')?.remove();
       await loadProductionPlan();
       renderProductionPlanTab();
@@ -638,7 +638,7 @@
         status: 'in_progress',
         startedAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
-      toast(window.t('виробництвоРозпочато'));
+      toast('');
       await loadProductionPlan();
       renderProductionPlanTab();
     } catch(e) { toast('Помилка: ' + e.message, 'error'); }
@@ -648,7 +648,7 @@
     const plan = FP.productionPlan.find(p => p.id === planId);
     if (!plan) return;
     const recipe = FP.recipes.find(r => r.id === plan.recipeId);
-    if (!recipe) { toast(window.t('рецептуруНеЗнайдено'), 'error'); return; }
+    if (!recipe) { toast('', 'error'); return; }
 
     // Write off ingredients from warehouse
     const errors = [];
@@ -664,7 +664,7 @@
             itemId: ing.warehouseItemId,
             type: 'out',
             qty,
-            note: `${window.t('виробництво')} ${recipe.name} (${plan.portions} ${window.t('порц')})`,
+            note: `${''} ${recipe.name} (${plan.portions} ${''})`,
           });
         }
       } catch(e) {
@@ -673,7 +673,7 @@
     }
 
     if (errors.length) {
-      toast(window.t('частковоСписаноПомилки') + errors.join('; '), 'warn');
+      toast('' + errors.join('; '), 'warn');
     } else {
       toast(_tg(`✓ Виробництво завершено. Зі складу списано інгредієнти для ${plan.portions} порц.`, `✓ Производство завершено. Со склада списаны ингредиенты для ${plan.portions} порц.`));
     }
@@ -695,7 +695,7 @@
     // Group by category
     const categories = {};
     FP.recipes.forEach(r => {
-      const cat = r.category || window.t('безКатегорії');
+      const cat = r.category || '';
       if (!categories[cat]) categories[cat] = [];
       categories[cat].push(r);
     });
@@ -703,16 +703,16 @@
     cont.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
         <div>
-          <b>${window.t('рецептури')} (${FP.recipes.length})</b>
+          <b>${''} (${FP.recipes.length})</b>
         </div>
-        <button onclick="window._fpOpenRecipe(null)" class="fp-btn" style="background:#6366f1;color:#fff">${window.t('новаРецептура')}</button>
+        <button onclick="window._fpOpenRecipe(null)" class="fp-btn" style="background:#6366f1;color:#fff">${''}</button>
       </div>
 
       ${!FP.recipes.length ?
         `<div style="text-align:center;padding:3rem;color:#9ca3af">
           <div style="margin-bottom:.75rem"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
-          <div style="font-weight:600;margin-bottom:.35rem">${window.t('рецептурЩеНемає')}</div>
-          <div style="font-size:.82rem">${window.t('створітьПершуРецептуруЗ')}</div>
+          <div style="font-weight:600;margin-bottom:.35rem">${''}</div>
+          <div style="font-size:.82rem">${''}</div>
         </div>` :
         Object.entries(categories).map(([cat, recipes]) => `
           <div style="margin-bottom:1.25rem">
@@ -728,16 +728,16 @@
                     ${margin !== null && margin !== undefined ? `<span style="color:${marginColor};font-size:.75rem;font-weight:700;background:${marginColor}15;padding:2px 7px;border-radius:10px;margin-left:.5rem">${margin}%</span>` : ''}
                   </div>
                   <div style="display:flex;gap:1rem;font-size:.75rem;color:#6b7280">
-                    <span>${window.t('вихід1')} ${r.yield||0} г</span>
+                    <span>${''} ${r.yield||0} г</span>
                     <span>🍽️ ${r.portions||1} порц.</span>
                   </div>
                   <div style="display:flex;justify-content:space-between;margin-top:.5rem;font-size:.78rem">
-                    <span style="color:#9ca3af">${window.t('собівартістьпорц')}</span>
+                    <span style="color:#9ca3af">${''}</span>
                     <span style="font-weight:700;color:#6366f1">${fmt(r.costPerPortion||0)} ₴</span>
                   </div>
                   ${r.salePrice ? `
                   <div style="display:flex;justify-content:space-between;font-size:.78rem">
-                    <span style="color:#9ca3af">${window.t('цінаПродажу1')}</span>
+                    <span style="color:#9ca3af">${''}</span>
                     <span style="font-weight:600">${fmt(r.salePrice)} ₴</span>
                   </div>` : ''}
                   <div style="display:flex;gap:.35rem;margin-top:.65rem;flex-wrap:wrap">
@@ -755,10 +755,10 @@
   window._fpOpenRecipe = function(recipeId) { openRecipeForm(recipeId); };
 
   window._fpDeleteRecipe = async function(recipeId) {
-    if (!confirm(window.t('видалитиРецептуру'))) return;
+    if (!confirm('')) return;
     try {
       await col('fp_recipes').doc(recipeId).delete();
-      toast(window.t('рецептуруВидалено'));
+      toast('');
       await loadRecipes();
       renderRecipesList();
     } catch(e) { toast('Помилка: ' + e.message, 'error'); }
@@ -770,7 +770,7 @@
     const portionsStr = prompt(_tg(`Скільки порцій "${recipe.name}" виробити?`, `Сколько порций "${recipe.name}" произвести?`), '10');
     if (!portionsStr) return;
     const portions = parseInt(portionsStr);
-    if (!portions || portions < 1) { toast(window.t('вкажітьКількістьПорцій'), 'warn'); return; }
+    if (!portions || portions < 1) { toast('', 'warn'); return; }
     try {
       await col('fp_production_plan').add({
         recipeId, recipeName: recipe.name, portions,
@@ -804,13 +804,13 @@
 
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem;padding:1rem 1rem 0">
-        <h2 style="margin:0;font-size:1.1rem;font-weight:700"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M6 2v6a6 6 0 0 0 12 0V2"/><line x1="12" y1="14" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>${window.t('виробництвоКухня')}</h2>
+        <h2 style="margin:0;font-size:1.1rem;font-weight:700"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M6 2v6a6 6 0 0 0 12 0V2"/><line x1="12" y1="14" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>${''}</h2>
       </div>
 
       <!-- Subtabs -->
       <div style="display:flex;gap:.35rem;flex-wrap:wrap;padding:0 1rem;margin-bottom:1rem">
-        <button class="fp-subtab active" onclick="window._fpSubTab('recipes',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>${window.t('рецептури')}</button>
-        <button class="fp-subtab" onclick="window._fpSubTab('plan',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/></svg>${window.t('планування')}</button>
+        <button class="fp-subtab active" onclick="window._fpSubTab('recipes',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>${''}</button>
+        <button class="fp-subtab" onclick="window._fpSubTab('plan',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/></svg>${''}</button>
       </div>
 
       <!-- Content -->

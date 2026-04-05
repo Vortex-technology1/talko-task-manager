@@ -423,7 +423,7 @@
           type: 'OUT',
           qty: Number(it.qty) > 0 ? Number(it.qty) : 1,
           price: it.price,
-          note: window.t('угода1') + (deal.title || deal.clientName || deal.id),
+          note: '' + (deal.title || deal.clientName || deal.id),
           dealId: deal.id,
         });
       } catch (e) {

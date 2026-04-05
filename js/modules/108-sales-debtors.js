@@ -76,7 +76,7 @@
     if(S.filter==='open')    items=items.filter(d=>d.status==='open'||d.status==='partial');
     if(S.filter==='overdue') items=items.filter(d=>d.status==='overdue');
     if(S.filter==='paid')    items=items.filter(d=>d.status==='paid');
-    if(!items.length){wrap.innerHTML=`<div style="text-align:center;padding:2.5rem;color:#9ca3af;font-size:.9rem">${S.filter==='overdue'?'✅ '+tg('Прострочених немає','No overdue'):tg(window.t('немаєЗаписів'),'No records')}</div>`;return;}
+    if(!items.length){wrap.innerHTML=`<div style="text-align:center;padding:2.5rem;color:#9ca3af;font-size:.9rem">${S.filter==='overdue'?'✅ '+tg('Прострочених немає','No overdue'):tg('','No records')}</div>`;return;}
     const today=todayISO();
     const sm={open:{label:tg('Відкрита','Open'),color:'#2563eb',bg:'#dbeafe'},partial:{label:tg('Часткова','Partial'),color:'#d97706',bg:'#fef3c7'},paid:{label:tg('Оплачено','Paid'),color:'#059669',bg:'#d1fae5'},overdue:{label:tg('Прострочена','Overdue'),color:'#dc2626',bg:'#fee2e2'}};
     wrap.innerHTML=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.84rem">
@@ -169,11 +169,11 @@
         </div>
         <div style="margin-bottom:20px">
           <label style="display:block;font-size:.75rem;font-weight:600;color:#374151;margin-bottom:5px">${tg('Коментар','Note')}</label>
-          <input id="sdPayNote" type="text" placeholder="${tg(window.t('необов')язково','Optional')}" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:8px 12px;font-size:.84rem;outline:none;box-sizing:border-box">
+          <input id="sdPayNote" type="text" placeholder="${tg(''язково','Optional')}" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:8px 12px;font-size:.84rem;outline:none;box-sizing:border-box">
         </div>
         <div style="display:flex;justify-content:flex-end;gap:10px">
           <button onclick="document.getElementById('sdPayModalOverlay').remove()" style="padding:9px 20px;border:1px solid #e5e7eb;border-radius:7px;cursor:pointer;background:#fff;font-size:.85rem;font-weight:600;color:#374151">${tg('Скасувати','Cancel')}</button>
-          <button onclick="window._sdSavePayment('${debtorId}')" id="sdPaySaveBtn" style="padding:9px 24px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">${tg(window.t('зберегти'),'Save')}</button>
+          <button onclick="window._sdSavePayment('${debtorId}')" id="sdPaySaveBtn" style="padding:9px 24px;background:#059669;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">${tg('','Save')}</button>
         </div>
       </div>
     </div>`;
@@ -192,7 +192,7 @@
     S.savingId=debtorId;
     const modal=document.getElementById('sdPayModalOverlay');
     const btn=modal?.querySelector('#sdPaySaveBtn')||el('sdPaySaveBtn');
-    if(btn){btn.disabled=true;btn.textContent=tg(window.t('збереження'),'Saving...');}
+    if(btn){btn.disabled=true;btn.textContent=tg('','Saving...');}
     try{
       const newPaid=Number(d.paidAmount||0)+amount, isPaid=newPaid>=Number(d.amount||0)-0.01;
       await col('sales_debtors').doc(debtorId).update({paidAmount:newPaid,status:isPaid?'paid':'partial',paidAt:isPaid?serverTs():null,updatedAt:serverTs()});
@@ -209,7 +209,7 @@
       if(isPaid&&typeof window.TALKO?.events?.emit==='function') window.TALKO.events.emit('DEBTOR_PAID',{debtorId,clientId:d.clientId,amount});
       await loadDebtors();
     }catch(e){console.error('_sdSavePayment:',e);toast(tg('Помилка: ','Error: ')+e.message,'error');}
-    finally{S.savingId=null;if(btn){btn.disabled=false;btn.textContent=tg(window.t('зберегти'),'Save');}}
+    finally{S.savingId=null;if(btn){btn.disabled=false;btn.textContent=tg('','Save');}}
   };
 
   window.initSalesDebtors=async function(){

@@ -88,8 +88,8 @@ function _render(root) {
   const kpi = `
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px;">
       ${[
-        {l:_t(window.t('дохідПлан'),'Доход план'),   v:_fmt(tPlanInc,cur), c:'#22c55e', sub:'за горизонт'},
-        {l:_t(window.t('витратиПлан'),'Расходы план'), v:_fmt(tPlanExp,cur), c:'#ef4444', sub:'за горизонт'},
+        {l:_t('','Доход план'),   v:_fmt(tPlanInc,cur), c:'#22c55e', sub:'за горизонт'},
+        {l:_t('','Расходы план'), v:_fmt(tPlanExp,cur), c:'#ef4444', sub:'за горизонт'},
         {l:_t('Плановий прибуток','Плановая прибыль'), v:_fmt(tPlanInc-tPlanExp,cur), c:tPlanInc>=tPlanExp?'#22c55e':'#ef4444', sub:''},
         {l:_t(_t('Факт доходів','Факт доходов'),'Факт доходов'), v:_fmt(tActInc,cur),  c:'#3b82f6', sub:'минулі тижні'},
         {l:_t(_t('Залишок наприкінці','Остаток в конце'),'Остаток в конце'), v:_fmt(cfFinal,cur), c:cfFinal>=0?'#22c55e':'#ef4444',
@@ -110,13 +110,13 @@ function _render(root) {
           font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
           stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        ${window.t('зберегтиПлан')}
+        ${''}
       </button>
       <select id="wpHorizonSel" onchange="window._wpChangeHorizon(this.value)"
         style="padding:0.45rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-        <option value="20" ${WP.horizon===20?'selected':''}>${_t('5 місяців (20 тижнів)',window.t('5Месяцев20Недель'))}</option>
-        <option value="26" ${WP.horizon===26?'selected':''}>${_t('6 місяців (26 тижнів)',window.t('6Месяцев26Недель'))}</option>
-        <option value="32" ${WP.horizon===32?'selected':''}>${_t('8 місяців (32 тижні)',window.t('8Месяцев32Недели'))}</option>
+        <option value="20" ${WP.horizon===20?'selected':''}>${_t('5 місяців (20 тижнів)','')}</option>
+        <option value="26" ${WP.horizon===26?'selected':''}>${_t('6 місяців (26 тижнів)','')}</option>
+        <option value="32" ${WP.horizon===32?'selected':''}>${_t('8 місяців (32 тижні)','')}</option>
       </select>
       <div style="display:flex;align-items:center;gap:5px;">
         <span style="font-size:0.78rem;color:#6b7280;">${_t('Початковий залишок:','Начальный остаток:')}</span>
@@ -219,7 +219,7 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <!-- Дохід факт (накладений) -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:2px;width:${bw}px;height:${Math.max(1,aIncH)}px;
           background:#86efac;border-radius:2px 2px 0 0;border:1.5px solid #22c55e;box-sizing:border-box;"
-          title="${window.t('дохідФакт')}: ${_fmt(w.aInc,currency)}"></div>` : ''}
+          title="${''}: ${_fmt(w.aInc,currency)}"></div>` : ''}
 
         <!-- Витрати план -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:${halfW+2}px;width:${bw}px;height:${Math.max(1,pExpH)}px;
@@ -230,7 +230,7 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <!-- Витрати факт -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:${halfW+2}px;width:${bw}px;height:${Math.max(1,aExpH)}px;
           background:#fca5a5;border-radius:2px 2px 0 0;border:1.5px solid #ef4444;box-sizing:border-box;"
-          title="${window.t('витратиФакт')}: ${_fmt(w.aExp,currency)}"></div>` : ''}
+          title="${''}: ${_fmt(w.aExp,currency)}"></div>` : ''}
 
         <!-- Розділювач між зонами -->
         <div style="position:absolute;bottom:${CF_H+26}px;left:0;right:0;height:2px;background:#f3f4f6;"></div>
@@ -239,7 +239,7 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <div style="position:absolute;bottom:${26 + cfZeroY - cfY - 4}px;left:50%;transform:translateX(-50%);
           width:8px;height:8px;border-radius:50%;background:${w.cfEnd<0?'#ef4444':'#3b82f6'};
           border:2px solid white;box-shadow:0 0 0 1px ${w.cfEnd<0?'#ef4444':'#3b82f6'};z-index:3;"
-          title="${window.t('залишок')}: ${_fmt(w.cfEnd,currency)}"></div>
+          title="${''}: ${_fmt(w.cfEnd,currency)}"></div>
 
         <!-- Нульова лінія CF якщо є мінус -->
         ${minCf < 0 ? `<div style="position:absolute;bottom:${26 + cfZeroY}px;left:0;right:0;height:1px;
@@ -493,7 +493,7 @@ window._wpSave = async function() {
   if (WP.saving) return;
   WP.saving = true;
   const btn = document.getElementById('wpSaveBtn');
-  if (btn) { btn.disabled = true; btn.textContent = _t(window.t('збереження'),'Сохранение...'); }
+  if (btn) { btn.disabled = true; btn.textContent = _t('','Сохранение...'); }
   try {
     const db = window.db || (window.firebase && firebase.firestore());
     if (!db || !window.currentCompanyId) throw new Error('DB не готова');
@@ -719,7 +719,7 @@ window._wpAddEventModal = function() {
         </div>
         <div>
           <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_t('Назва події','Название события')} *</label>
-          <input id="wpEvLabel" type="text" placeholder="${window.t('напрСезоннийБонусВелика')}"
+          <input id="wpEvLabel" type="text" placeholder="${''}"
             style="width:100%;padding:0.5rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;box-sizing:border-box;outline:none;"
             onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
         </div>

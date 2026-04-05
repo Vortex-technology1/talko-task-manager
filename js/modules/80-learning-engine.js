@@ -5303,7 +5303,7 @@
         // window.learningCourseData = learningCourseData; // ВИДАЛЕНО
 
 window._openAIAssistant = function(moduleTitle, homeworkText) {
-        const prompt = `У мене завдання з програми навчання TALKO:\n\nМодуль: ${moduleTitle}\n${homeworkText ? window.t('домашнєЗавдання') + homeworkText + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
+        const prompt = `У мене завдання з програми навчання TALKO:\n\nМодуль: ${moduleTitle}\n${homeworkText ? 'Домашнє завдання: ' + homeworkText + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
         navigator.clipboard.writeText(prompt).catch(() => {});
         window.open(AI_ASSISTANT_URL, '_blank');
     };
@@ -5318,7 +5318,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         liMatches.forEach(li => hwItems.push(li.replace(/<[^>]*>/g, '').trim()));
         const hw = hwItems.length ? hwItems.join('; ') : hwRaw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
         const aiPrompts = {
-            ru: `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? window.t('домашнееЗадание') + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`,
+            ru: `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`,
             en: `I have an assignment from the TALKO training program:\n\nModule: ${title}\n${hw ? 'Homework: ' + hw + '\n' : ''}\nHow do I complete it? Guide me step by step.`,
             pl: `Mam zadanie z programu szkoleniowego TALKO:\n\nModuł: ${title}\n${hw ? 'Zadanie domowe: ' + hw + '\n' : ''}\nJak to wykonać? Przeprowadź mnie krok po kroku.`,
             de: `Ich habe eine Aufgabe aus dem TALKO-Schulungsprogramm:\n\nModul: ${title}\n${hw ? 'Hausaufgabe: ' + hw + '\n' : ''}\nWie soll ich das erledigen? Führe mich Schritt für Schritt.`,
@@ -5432,20 +5432,20 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                             <div>
                                 <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">${isRu ? "Цель компании" : "Ціль компанії"} <span style="color:#ef4444;">*</span></label>
                                 <input id="learningCompanyGoal" type="text"
-                                    placeholder="${isRu ? window.t('напрСтатьЛидеромРынка') : window.t('напрСтатиЛідеромРинку')}"
+                                    placeholder="${isRu ? 'напр. Стать лидером рынка медицинских услуг в регионе к 2027 году' : 'напр. Стати лідером ринку медичних послуг у регіоні до 2027 року'}"
                                     value="${(window._cachedCompanyProfile?.companyGoal||'').replace(/"/g,'&quot;')}"
                                     style="width:100%;padding:0.45rem 0.6rem;border:1px solid #86efac;border-radius:7px;font-size:0.85rem;box-sizing:border-box;background:#fff;">
                             </div>
                             <div>
                                 <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">${isRu ? "Замысел компании" : "Задум компанії"}</label>
                                 <textarea id="learningCompanyConcept" rows="2"
-                                    placeholder="${isRu ? window.t('почемуВыСоздалиЭтот') : window.t('чомуВиСтворилиЦей')}"
+                                    placeholder="${isRu ? 'Почему вы создали этот бизнес? Какова ваша миссия?' : 'Чому ви створили цей бізнес? Яка ваша місія?'}"
                                     style="width:100%;padding:0.45rem 0.6rem;border:1px solid #86efac;border-radius:7px;font-size:0.85rem;box-sizing:border-box;resize:vertical;background:#fff;">${(window._cachedCompanyProfile?.companyConcept||'')}</textarea>
                             </div>
                             <div>
                                 <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">${isRu ? "Идеальная картина компании" : "Ідеальна картина компанії"}</label>
                                 <textarea id="learningCompanyIdeal" rows="2"
-                                    placeholder="${isRu ? window.t('опишитеКакВыглядитВаш') : window.t('опишітьЯкВиглядаєВаш')}"
+                                    placeholder="${isRu ? 'Опишите как выглядит ваш бизнес через 3-5 лет в деталях...' : 'Опишіть як виглядає ваш бізнес через 3-5 років у деталях...'}"
                                     style="width:100%;padding:0.45rem 0.6rem;border:1px solid #86efac;border-radius:7px;font-size:0.85rem;box-sizing:border-box;resize:vertical;background:#fff;">${(window._cachedCompanyProfile?.companyIdeal||'')}</textarea>
                             </div>
                         </div>
@@ -5497,7 +5497,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     var pLabel = pLabels[moduleId] || (_isRu ? 'Презентация' : 'Презентація');
                     var pSlide = pSlides[moduleId] || '';
                     var pFn = pFns[moduleId] || '_l10Launch';
-                    var pSubtitle = _isRu ? window.t('провестиСКомандойПосле') : window.t('провестиІзКомандоюПісля');
+                    var pSubtitle = _isRu ? 'Провести с командой после изучения урока' : 'Провести із командою після вивчення уроку';
                     var pBtn = _isRu ? '▶ Запустить презентацию' : '▶ Запустити презентацію';
                     return '<div style="margin:0 1.25rem 1.25rem"><div style="background:linear-gradient(135deg,#0f1c3f,#1a3a6b);border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 20px rgba(15,28,63,.2)"><div style="color:white"><div style="font-size:.9rem;font-weight:800;margin-bottom:.25rem">' + pLabel + '</div><div style="font-size:.76rem;color:#94a3b8">' + pSlide + ' · ' + pSubtitle + '</div></div><button onclick="window.' + pFn + '()" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(34,197,94,.35)">' + pBtn + '</button></div></div>';
                 })() : ''}
@@ -5539,18 +5539,13 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
         // Execute <script> tags from lessonContent (innerHTML does not run them)
         setTimeout(function() {
-            // Шукаємо в кількох контейнерах — урок може відкриватися різними шляхами
-            var _lc = document.querySelector(".l-lesson-content") ||
-                      document.querySelector(".l-overlay-body") ||
-                      document.querySelector("#learningTab");
+            var _lc = document.querySelector(".l-lesson-content");
             if (_lc) {
                 _lc.querySelectorAll("script").forEach(function(s) {
-                    try {
-                        var ns = document.createElement("script");
-                        ns.textContent = s.textContent;
-                        document.head.appendChild(ns);
-                        document.head.removeChild(ns);
-                    } catch(e) { console.warn('[Learning] script exec:', e.message); }
+                    var ns = document.createElement("script");
+                    ns.textContent = s.textContent;
+                    document.head.appendChild(ns);
+                    document.head.removeChild(ns);
                 });
             }
 
@@ -5570,7 +5565,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                         await window.storage.set(SK, JSON.stringify(d));
                         if (k === 'goal_q') {
                             var q = document.getElementById('l10q27');
-                            if (q) q.textContent = v || window.t('вашаМета');
+                            if (q) q.textContent = v || '[ваша мета]';
                         }
                     } catch(e) {}
                 };
@@ -5734,32 +5729,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 });
             })();
 
-        }, 300);
-
-        // Другий прохід через 800ms — для великих уроків де скрипти можуть не встигнути
-        setTimeout(function() {
-            var _lc2 = document.querySelector(".l-lesson-content");
-            if (_lc2) {
-                _lc2.querySelectorAll("script").forEach(function(s) {
-                    // Перевіряємо чи функція вже визначена (уникаємо подвійного виконання)
-                    var matches = s.textContent.match(/window\.(\w+)\s*=/g);
-                    if (matches) {
-                        var needsExec = matches.some(function(m) {
-                            var fn = m.replace('window.', '').replace(/\s*=/, '').trim();
-                            return typeof window[fn] === 'undefined';
-                        });
-                        if (needsExec) {
-                            try {
-                                var ns2 = document.createElement("script");
-                                ns2.textContent = s.textContent;
-                                document.head.appendChild(ns2);
-                                document.head.removeChild(ns2);
-                            } catch(e) {}
-                        }
-                    }
-                });
-            }
-        }, 800);
+        }, 100);
     };
 
     // ── Back ──────────────────────────────────────────────────
@@ -5783,31 +5753,5 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
             openAlgoritm: window._openAlgoritm,
         });
     }
-
-    // ── Глобальні helper функції для уроків (замість <script> в innerHTML) ──
-    // Ці функції визначаємо тут щоб вони завжди були на window
-    // незалежно від того чи виконались <script> теги з lessonContent
-
-    function _makeCopyBtn(btnId, contentId) {
-        var btn = document.getElementById(btnId);
-        if (!btn) return;
-        var el = document.getElementById(contentId);
-        var text = el ? el.innerText || el.textContent : '';
-        navigator.clipboard && navigator.clipboard.writeText(text).then(function() {
-            var orig = btn.innerHTML;
-            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg> Скопійовано!';
-            btn.classList.add('copied');
-            setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2500);
-        });
-    }
-
-    // Урок 9 (l109)
-    window.l109CopyPrompt = function() { _makeCopyBtn('l109-copy-btn', 'l109-prompt-content'); };
-
-    // Урок 10 (l110)
-    window.l110CopyPrompt = function() { _makeCopyBtn('l110-copy-btn', 'l110-prompt-content'); };
-
-    // Універсальна — для нових уроків: window.lCopyPrompt('btn-id','content-id')
-    window.lCopyPrompt = _makeCopyBtn;
 
 })(); // END 80-learning-engine

@@ -798,7 +798,7 @@
                 if (tpSel && m.targetPeriod) tpSel.value = m.targetPeriod;
             }
         } else {
-            document.getElementById('metricModalTitle').textContent = window.t('newMetric');
+            document.getElementById('metricModalTitle').textContent = 'Новый показатель';
             document.getElementById('metricName').value = '';
             const _descEl = document.getElementById('metricDescription');
             if (_descEl) _descEl.value = '';
@@ -903,9 +903,9 @@
                 <button class="stats-pill" onclick="openQuickInputModal()" style="font-weight:600;">${SVG.edit} Внести данные</button>
                 <button class="stats-pill" onclick="event.stopPropagation();runAIAnalysis()" style="color:#7c3aed;border-color:#e9d5ff;">${SVG.sparkles} AI</button>
                 <button class="stats-pill" onclick="openTrendsChart(window._statsGetFirstMetricId ? window._statsGetFirstMetricId() : '')" style="color:#3b82f6;border-color:#dbeafe;">${SVG.barChart} Тренды</button>
-                <button class="stats-pill" onclick="statsExportCSV()" style="color:#059669;border-color:#a7f3d0;" title=window.t('exportCsv')>⬇ CSV</button>
-                <button class="stats-pill" onclick="statsExportExcel()" style="color:#1d4ed8;border-color:#bfdbfe;" title=window.t('exportExcel')>⬇ Excel</button>
-                <button class="stats-pill" onclick="statsExportPDF()" style="color:#dc2626;border-color:#fecaca;" title=window.t('exportPdf')>⬇ PDF</button>
+                <button class="stats-pill" onclick="statsExportCSV()" style="color:#059669;border-color:#a7f3d0;" title="Экспорт CSV">⬇ CSV</button>
+                <button class="stats-pill" onclick="statsExportExcel()" style="color:#1d4ed8;border-color:#bfdbfe;" title="Экспорт Excel">⬇ Excel</button>
+                <button class="stats-pill" onclick="statsExportPDF()" style="color:#dc2626;border-color:#fecaca;" title="Выгрузить PDF">⬇ PDF</button>
                 ${canEdit ? `<button class="stats-pill" onclick="statsImportCSV()" style="color:#d97706;border-color:#fde68a;" title="Імпорт CSV">${window.t('statsImport')||'⬆ Import'}</button>` : ''}
             </div>
         </div>
@@ -1542,8 +1542,8 @@
         const contextText =
             `ПОТОЧНИЙ СТАН (${formatPeriodLabel ? formatPeriodLabel(currentPk) : currentPk}):\n${currentSummary}\n\n` +
             `ДИНАМІКА ЗА ВСІМА ПЕРІОДАМИ:\n${contextParts.join('\n')}\n\n` +
-            `${window.t('легендаТрендівЗростання5')}` +
-            `${window.t('значенняВДужкахВиконання')}`;
+            `Легенда трендів: ↑ зростання >5%, ↓ падіння >5%, → стабільно\n` +
+            `Значення в дужках — % виконання цілі`;
 
         const initialMessage =
             'Проведи повний аналіз всіх метрик за всіма доступними періодами. ' +
@@ -1557,7 +1557,7 @@
             } else {
                 window.openAiChat({
                     module: 'statistics', title: window.t('aiMetricsAnalysis') || 'AI Аналіз метрик',
-                    contextText: contextText, systemPrompt: null,
+                    contextText: trimmedContext, systemPrompt: null,
                     initialMessage, maxTokens: 1500,
                 });
             }
@@ -2299,10 +2299,10 @@
         auto_tasks_done:       { label: window.t('metricDoneTasks'),   unit: 'шт' },
         auto_tasks_overdue:    { label: window.t('metricOverdueTasks'), unit: 'шт' },
         auto_tasks_review:     { label: window.t('metricInReview'),       unit: 'шт' },
-        auto_completion_rate:  { label: window.t('completionPct'),        unit: '%'  },
+        auto_completion_rate:  { label: '% выполнения',        unit: '%'  },
         finance_income:        { label: window.t('finIncome2'),              unit: '€'  },
-        finance_expense:       { label: window.t('finTabExpense'),            unit: '€'  },
-        finance_profit:        { label: window.t('finProfit'),           unit: '€'  },
+        finance_expense:       { label: 'Расходы',            unit: '€'  },
+        finance_profit:        { label: 'Прибыль',           unit: '€'  },
         finance_margin:        { label: 'Маржа %',            unit: '%'  },
     };
 
