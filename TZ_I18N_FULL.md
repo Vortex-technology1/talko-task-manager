@@ -1,0 +1,134 @@
+# ТЗ: Повна i18n міграція TALKO — всі JS модулі
+
+## Контекст
+Платформа TALKO (apptalko.com) — 6 мов: ua, en, de, cs, ru, pl.
+Репо: https://github.com/Vortex-technology1/talko-task-manager
+Стек: Vanilla JS + Cloudflare Pages
+
+## Система перекладів
+- Файл: `js/modules/01-translations-v2.js`
+- Функція: `window.t('key')` — повертає переклад для поточної мови
+- Fallback: якщо ключ відсутній → повертає UA переклад
+- Структура файлу: `const translations = { ua: {...}, en: {...}, de: {...}, cs: {...}, ru: {...}, pl: {...} }`
+
+## Проблема
+В JS модулях є 2 типи хардкод рядків що не перекладаються:
+
+### Тип 1: `_tg('ua текст', 'ru текст')`
+Функція `_tg` визначена в `77-crm.js` рядок 7:
+```js
+var _tg = function(ua,ru){return window.currentLang==='ru'?ru:ua;};
+```
+Підтримує ТІЛЬКИ ua/ru. EN/DE/CS/PL отримують UA текст.
+**Потрібно:** замінити на `window.t('key')` з ключем в усіх 6 мовах.
+
+### Тип 2: Хардкод рядки в innerHTML/template literals без `t()`
+```js
+innerHTML = `<div>Активностей не знайдено</div>`  // тільки UA
+innerHTML = `<div>Нет активностей</div>`  // тільки RU
+```
+
+## Завдання
+
+### Крок 1: Аналіз
+Просканувати всі файли в `js/modules/` (крім `01-translations-v2.js`) і знайти:
+- Всі `_tg('ua', 'ru')` виклики
+- Всі хардкод кириличні рядки в UI рендері (innerHTML, template literals)
+
+Виключити з аналізу (контент, не UI):
+- `41-demo-data.js`, `42-niche-*.js`, `43-demo-tour.js`
+- `80-learning-data.js`, `80-learning-data-110.js`
+- `97-onboarding-i18n.js`, `97-onboarding.js`
+- `93-sites-list.js` (маркетинговий контент сайтів)
+
+### Крок 2: Генерація ключів і перекладів
+Для кожного унікального UA рядка:
+1. Згенерувати camelCase ключ (наприклад: `noActivities`, `clientName`, тощо)
+2. Перекласти на EN, DE, CS, PL (використовуй свої знання або позначай як `[TODO]`)
+3. RU текст береться з `_tg()` другого аргументу або генерується
+
+### Крок 3: Додати ключі в `01-translations-v2.js`
+Для кожного нового ключа — додати в ВСІ 6 мовних блоків.
+
+**ВАЖЛИВО:** Після наших правок реальні позиції блоків змінились.
+Знаходь блоки через regex, не хардкод позиції:
+```python
+import re
+content = open('js/modules/01-translations-v2.js').read()
+ua_start = re.search(r'^\s+ua\s*:\s*\{', content, re.MULTILINE).start()
+en_start = re.search(r'^\s+en\s*:\s*\{', content, re.MULTILINE).start()
+de_start = re.search(r'^\s+de\s*:\s*\{', content, re.MULTILINE).start()
+cs_start = re.search(r'^\s+cs\s*:\s*\{', content, re.MULTILINE).start()
+ru_start = re.search(r'^\s+ru\s*:\s*\{', content, re.MULTILINE).start()
+pl_start = re.search(r'^\s+pl\s*:\s*\{', content, re.MULTILINE).start()
+```
+
+Вставляй нові ключі після існуючого ключа `noComments` в кожному блоці.
+Перевіряй що ключ ще не існує перед додаванням (уникай дублів).
+
+### Крок 4: Заміна в JS файлах
+
+**Для `_tg()` викликів:**
+```js
+// До:
+_tg('Активностей не знайдено', 'Активностей не найдено')
+// Після:
+window.t('noActivities')
+```
+
+Особливі випадки `_tg()` що НЕ треба замінювати:
+- `_tg()` з template literals що містять `${...}` змінні — залишай як є
+- `_tg()` з масивами (наприклад масив місяців) — залишай як є
+- `_tg()` де другий аргумент вже є `window.t('key')` → замінюй на `window.t('key')`
+
+**Для хардкод рядків в UI:**
+```js
+// До:
+`<div>Активностей не знайдено</div>`
+// Після:
+`<div>${window.t('noActivities')}</div>`
+```
+
+### Крок 5: Перевірка
+Після всіх замін:
+1. Перевірити що `_tg(` майже не залишилось (крім динамічних)
+2. Перевірити що нові ключі є в усіх 6 мовних блоках
+3. Перевірити що JS файли синтаксично коректні (немає незакритих рядків)
+
+### Крок 6: Git commit + push
+```bash
+cd /path/to/repo
+git config user.email "dev@talko.com"
+git config user.name "Talko Dev"
+git remote set-url origin https://GH_TOKEN_HERE@github.com/Vortex-technology1/talko-task-manager.git
+git add -A
+git commit -m "fix(i18n): full migration of _tg() and hardcoded strings to window.t()"
+git push origin main
+```
+
+## Пріоритетні файли (найбільше проблем)
+1. `77b-crm-calls.js` — дзвінки CRM
+2. `77c-crm-tasks.js` — задачі CRM
+3. `77d-crm-import.js` — імпорт CRM
+4. `77f-crm-mobile.js` — мобільний CRM
+5. `77g-crm-forms.js` — форми CRM
+6. `77h-crm-beauty.js` — б'юті CRM
+7. `78-crm-todo.js` — CRM todo
+8. `98-finance.js` — фінанси
+9. `28-projects.js` — проекти
+10. `76-coordination.js` — координація
+11. `32-users-invites.js` — команда
+12. `66-statistics.js` — статистика
+
+## Важливі обмеження
+- НЕ змінювати логіку JS — тільки рядки
+- НЕ чіпати коментарі (`//` і `/* */`)
+- НЕ замінювати рядки в console.log()
+- НЕ замінювати ключі Firestore (назви колекцій/полів)
+- НЕ замінювати CSS класи і id елементів
+- Перевіряй що ключ вже не існує в translations перед додаванням
+
+## Очікуваний результат
+- Зменшення `_tg()` викликів з ~500 до < 20 (тільки динамічні)
+- Зменшення хардкод кириличних рядків в UI з 1000+ до < 50
+- Всі 6 мов отримують правильні переклади
