@@ -228,9 +228,9 @@ ${grpCards}`;
     <div class="bk-page-sub">${t('bookingSubtitle')||'Онлайн-запис для клієнтів'}</div>
   </div>
   <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-    <button class="bk-btn-secondary" onclick="window._bkShowWeekView()" title="${''}">
+    <button class="bk-btn-secondary" onclick="window._bkShowWeekView()" title="''">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/></svg>
-      ${''}
+      ''
     </button>
     <button class="bk-btn-primary" onclick="window._bkNewCalendar()">
       ${I.plus} ${t('newCalService')||'Новий календар'}
@@ -287,10 +287,10 @@ function renderCalendarForm(cal) {
         <input type="text" class="bk-q-label" placeholder="${t('questionText')||'Текст питання'}"
                value="${esc(q.label||'')}" style="padding:.4rem .6rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.85rem">
         <select class="bk-q-type" style="padding:.4rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.82rem">
-          <option value="text"   ${q.type==='text'  ?'selected':''}>${''}</option>
-          <option value="phone"  ${q.type==='phone' ?'selected':''}>${''}</option>
+          <option value="text"   ${q.type==='text'  ?'selected':''}>''</option>
+          <option value="phone"  ${q.type==='phone' ?'selected':''}>''</option>
           <option value="email"  ${q.type==='email' ?'selected':''}>Email</option>
-          <option value="select" ${q.type==='select'?'selected':''}>${''}</option>
+          <option value="select" ${q.type==='select'?'selected':''}>''</option>
         </select>
         <label style="font-size:.8rem;display:flex;align-items:center;gap:.3rem;white-space:nowrap">
           <input type="checkbox" class="bk-q-required" ${q.required?'checked':''}> ${t('requiredShort')||'Обов.'}
@@ -362,7 +362,7 @@ function renderCalendarForm(cal) {
     <div class="bk-field" style="display:flex;gap:1.25rem;flex-wrap:wrap;align-items:center">
       <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
         <input type="checkbox" id="bk-f-phone-show" ${d.phoneShow!==false?'checked':''} onchange="window._bkTogglePhoneRequired(this)">
-        ${''}
+        ''
       </label>
       <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer" id="bk-f-phone-req-wrap" ${d.phoneShow===false?'style=\"opacity:.4;pointer-events:none\"':''}>
         <input type="checkbox" id="bk-f-phone-required" ${d.phoneRequired!==false?'checked':''}>
@@ -582,8 +582,8 @@ async function renderWeekView() {
     root.innerHTML = `
 <div class="bk-header-row">
   <div style="display:flex;align-items:center;gap:.75rem">
-    <button class="bk-btn-back" onclick="window._bkBackToList()">${I.back} ${''}</button>
-    <h2 class="bk-page-title">${I.calendar} ${''}</h2>
+    <button class="bk-btn-back" onclick="window._bkBackToList()">${I.back} ''</button>
+    <h2 class="bk-page-title">${I.calendar} ''</h2>
   </div>
   <div style="display:flex;gap:.5rem;align-items:center">
     <button class="bk-btn-sm" onclick="window._bkWeekNav(-1)">&#8592;</button>
@@ -593,7 +593,7 @@ async function renderWeekView() {
   </div>
 </div>
 <div id="bk-week-grid-wrap" style="overflow-x:auto">
-  <div class="bk-week-loading">${''}</div>
+  <div class="bk-week-loading">''</div>
 </div>`;
 
     _bkWeekOffset = _bkWeekOffset || 0;
@@ -725,7 +725,7 @@ async function _bkLoadWeekGrid() {
 <table style="width:100%;border-collapse:collapse;min-width:400px;">
     <thead>
         <tr style="background:#f8fafc;border-bottom:2px solid #e5e7eb;">
-            <th style="padding:.5rem .6rem;text-align:left;font-size:.72rem;font-weight:700;color:#6b7280;min-width:70px;">${''}</th>
+            <th style="padding:.5rem .6rem;text-align:left;font-size:.72rem;font-weight:700;color:#6b7280;min-width:70px;">''</th>
             ${specHeaders}
         </tr>
     </thead>
@@ -756,20 +756,20 @@ window._bkOpenApptModal = async function(apptId) {
     modal.innerHTML = `
     <div style="background:white;border-radius:16px;padding:1.5rem;width:90%;max-width:380px;box-shadow:0 20px 50px rgba(0,0,0,.3);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-            <div style="font-size:.95rem;font-weight:800;">${''}</div>
+            <div style="font-size:.95rem;font-weight:800;">''</div>
             <button onclick="document.getElementById('bk-appt-modal').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">✕</button>
         </div>
         <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem;">
             <div><span style="color:#6b7280;">${t('bkClientLabel')}</span> <strong>${esc(appt.clientName)}</strong></div>
             <div><span style="color:#6b7280;">Email:</span> ${esc(appt.clientEmail)}</div>
-            ${appt.clientPhone ? `<div><span style="color:#6b7280;">${''}</span> ${esc(appt.clientPhone)}</div>` : ''}
-            <div><span style="color:#6b7280;">${''}</span> ${appt.date} ${''} ${appt.timeSlot}</div>
+            ${appt.clientPhone ? `<div><span style="color:#6b7280;">''</span> ${esc(appt.clientPhone)}</div>` : ''}
+            <div><span style="color:#6b7280;">''</span> ${appt.date} '' ${appt.timeSlot}</div>
             <div><span style="color:#6b7280;">${t('bkSpecialist')}</span> ${esc(cal.name||appt.calendarId)}</div>
-            <div><span style="color:#6b7280;">${''}</span> ${STATUS_LABELS[appt.status]||appt.status}</div>
+            <div><span style="color:#6b7280;">''</span> ${STATUS_LABELS[appt.status]||appt.status}</div>
         </div>
         <div style="display:flex;gap:.5rem;margin-top:1.25rem;flex-wrap:wrap;">
-            ${appt.status==='pending' ? `<button onclick="window._bkConfirmApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#22c55e;color:white;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">${''}</button>` : ''}
-            ${['pending','confirmed'].includes(appt.status) ? `<button onclick="window._bkCancelApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">${''}</button>` : ''}
+            ${appt.status==='pending' ? `<button onclick="window._bkConfirmApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#22c55e;color:white;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">''</button>` : ''}
+            ${['pending','confirmed'].includes(appt.status) ? `<button onclick="window._bkCancelApptDirect('${apptId}');document.getElementById('bk-appt-modal').remove()" style="flex:1;padding:.55rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;">''</button>` : ''}
         </div>
     </div>`;
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
@@ -1133,8 +1133,8 @@ window._bkAddQuestion = function() {
       <input type="text" class="bk-q-label" placeholder="${t('questionText')||'Текст питання'}"
              style="padding:.4rem .6rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.85rem">
       <select class="bk-q-type" style="padding:.4rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.82rem">
-        <option value="text">${''}</option><option value="phone">${''}</option>
-        <option value="email">Email</option><option value="select">${''}</option>
+        <option value="text">''</option><option value="phone">''</option>
+        <option value="email">Email</option><option value="select">''</option>
       </select>
       <label style="font-size:.8rem;display:flex;align-items:center;gap:.3rem;white-space:nowrap">
         <input type="checkbox" class="bk-q-required"> ${t('requiredShort')||'Обов.'}

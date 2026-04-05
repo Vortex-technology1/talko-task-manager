@@ -280,7 +280,7 @@ function renderBotsTab() {
                             style="padding:0.35rem 0.6rem;background:#22c55e;color:white;
                             border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;
                             display:flex;align-items:center;gap:3px;white-space:nowrap;">
-                            ${''}
+                            ''
                         </button>
                         <button onclick="openBotSettings('${bot.id}')"
                             title=${window.t('flowSettings')}
@@ -344,7 +344,7 @@ function renderFlowsTab() {
             <button onclick="bpSwitch('bots')"
                 style="background:none;border:none;cursor:pointer;color:#6b7280;font-size:0.82rem;padding:0;display:flex;align-items:center;gap:4px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                ${''}
+                ''
             </button>
             <span style="color:#9ca3af;">›</span>
             <span style="font-weight:700;font-size:0.85rem;color:#374151;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;">${escH(bot?.name||window.t('botsBot'))}</span>
@@ -356,13 +356,13 @@ function renderFlowsTab() {
         </div>
 
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
-            <div style="font-weight:700;font-size:0.95rem;">${''}</div>
+            <div style="font-weight:700;font-size:0.95rem;">''</div>
             <button onclick="openCreateFlowModal()"
                 style="padding:0.42rem 0.85rem;background:#22c55e;color:white;border:none;
                 border-radius:9px;cursor:pointer;font-weight:600;font-size:0.8rem;
                 display:flex;align-items:center;gap:5px;box-shadow:0 1px 4px #22c55e44;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-                ${''}
+                ''
             </button>
         </div>
 
@@ -371,11 +371,11 @@ function renderFlowsTab() {
             <div style="margin-bottom:0.6rem;color:#9ca3af;">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg>
             </div>
-            <div style="font-weight:600;margin-bottom:0.3rem;">${''}</div>
-            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">${''}стувачем</div>
+            <div style="font-weight:600;margin-bottom:0.3rem;">''</div>
+            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">''стувачем</div>
             <button onclick="openCreateFlowModal()"
                 style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:9px;cursor:pointer;font-weight:600;">
-                ${''}
+                ''
             </button>
         </div>` : `
         <div style="display:flex;flex-direction:column;gap:0.5rem;">
@@ -411,11 +411,11 @@ function renderFlowsTab() {
                                     </span>
                                     <span style="font-size:0.73rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
                                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
-                                        ${nodeCount} ${''}${_tg(nodeCount===1?'':nodeCount<5?'и':'ів', nodeCount===1?'':nodeCount<5?'а':'ов')}
+                                        ${nodeCount} ''${_tg(nodeCount===1?'':nodeCount<5?'и':'ів', nodeCount===1?'':nodeCount<5?'а':'ов')}
                                     </span>
                                     <span style="font-size:0.73rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
                                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                                        ${flow.sessionCount||0} ${''}
+                                        ${flow.sessionCount||0} ''
                                     </span>
                                 </div>
                                 <div style="margin-top:0.4rem;display:flex;align-items:center;gap:0.3rem;">
@@ -429,7 +429,7 @@ function renderFlowsTab() {
                                         style="padding:3px 8px;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;
                                         border-radius:5px;cursor:pointer;font-size:0.68rem;white-space:nowrap;flex-shrink:0;font-weight:600;"
                                         onmouseenter="this.style.background='#dbeafe'" onmouseleave="this.style.background='#eff6ff'">
-                                        ${''}
+                                        ''
                                     </button>
                                     <button onclick="showQR('${encodeURIComponent(deepLink)}')"
                                         style="padding:3px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
@@ -447,14 +447,14 @@ function renderFlowsTab() {
                                     box-shadow:0 1px 4px #22c55e44;transition:background 0.15s;"
                                     onmouseenter="this.style.background='#16a34a'" onmouseleave="this.style.background='#22c55e'">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                    ${''}
+                                    ''
                                 </button>
                                 <!-- CRM автоматизація -->
                                 <button onclick="openFlowCrmSettings('${flow.id}','${escH(flow.name||'')}')"
                                     style="padding:0.42rem 0.75rem;border:none;border-radius:8px;cursor:pointer;font-size:0.76rem;font-weight:700;
                                     display:flex;align-items:center;justify-content:center;gap:5px;transition:all 0.15s;
                                     ${flow.crmPipelineId ? 'background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;box-shadow:0 2px 8px rgba(245,158,11,0.4);' : 'background:#fff7ed;color:#f59e0b;border:2px dashed #fcd34d;'}"
-                                    title="${''}"
+                                    title="''"
                                     onmouseenter="this.style.filter='brightness(1.1)'" onmouseleave="this.style.filter=''">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                                     ${flow.crmPipelineId ? '🔥 CRM' : window.t('crm')}
@@ -501,7 +501,7 @@ window.openCreateBotModal = function() {
             display:flex;align-items:center;justify-content:center;padding:1rem;">
             <div style="background:white;border-radius:16px;width:100%;max-width:440px;">
                 <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
-                    <div style="font-weight:700;font-size:1rem;">${''}</div>
+                    <div style="font-weight:700;font-size:1rem;">''</div>
                     <button onclick="document.getElementById('bpCreateBot').remove()"
                         style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><i data-lucide="x" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i></button>
                 </div>
@@ -532,7 +532,7 @@ window.openCreateBotModal = function() {
                 </div>
                 <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
                     <button onclick="document.getElementById('bpCreateBot').remove()"
-                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">${''}</button>
+                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">''</button>
                     <button onclick="createAndConnectBot()"
                         style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">
                         <i data-lucide="check" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> Підключити
@@ -648,7 +648,7 @@ window.openCreateFlowModal = function() {
             display:flex;align-items:center;justify-content:center;padding:1rem;">
             <div style="background:white;border-radius:16px;width:100%;max-width:400px;">
                 <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;">
-                    <div style="font-weight:700;">${''}</div>
+                    <div style="font-weight:700;">''</div>
                     <button onclick="document.getElementById('bpCreateFlow').remove()"
                         style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><i data-lucide="x" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i></button>
                 </div>
@@ -666,7 +666,7 @@ window.openCreateFlowModal = function() {
                 </div>
                 <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
                     <button onclick="document.getElementById('bpCreateFlow').remove()"
-                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">${''}</button>
+                        style="padding:0.55rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">''</button>
                     <button onclick="saveNewFlow()"
                         style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;"><i data-lucide="check" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> Створити</button>
                 </div>
@@ -766,44 +766,44 @@ window.openFlowCrmSettings = async function(flowId, flowName) {
                     <input type="checkbox" id="fcrmEnabled" ${selPipeId?'checked':''} onchange="document.getElementById('fcrmPipeWrap').style.display=this.checked?'':'none'"
                         style="width:18px;height:18px;cursor:pointer;accent-color:#f59e0b;">
                     <div>
-                        <div style="font-weight:700;font-size:0.85rem;color:#111827;">${''}</div>
-                        <div style="font-size:0.74rem;color:#6b7280;">${''}</div>
+                        <div style="font-weight:700;font-size:0.85rem;color:#111827;">''</div>
+                        <div style="font-size:0.74rem;color:#6b7280;">''</div>
                     </div>
                 </label>
 
                 <div id="fcrmPipeWrap" style="display:${(selPipeId||pipelines.length)?'':'none'};">
                     <!-- Коли спрацьовує -->
                     <div style="margin-bottom:12px;">
-                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">${''}</label>
+                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">''</label>
                         <select id="fcrmTrigger" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
                             onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
                             <option value="done_tag" ${selTrigger==='done_tag'?'selected':''}>${_tg('При тегу [DONE] в відповіді AI','При теге [DONE] в ответе AI')}</option>
-                            <option value="flow_start" ${selTrigger==='flow_start'?'selected':''}>${''}</option>
-                            <option value="flow_end" ${selTrigger==='flow_end'?'selected':''}>${''}</option>
+                            <option value="flow_start" ${selTrigger==='flow_start'?'selected':''}>''</option>
+                            <option value="flow_end" ${selTrigger==='flow_end'?'selected':''}>''</option>
                         </select>
                     </div>
 
                     <!-- Воронка -->
                     <div style="margin-bottom:12px;">
-                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">${''}</label>
+                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">''</label>
                         <!-- DEBUG: pipelines.length = ${pipelines.length} -->
         ${pipelines.length ? `
                         <select id="fcrmPipeline" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
                             onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'"
                             onchange="fcrmUpdateStages(this.value,'${selStageId}')">
-                            <option value="">${''}</option>
+                            <option value="">''</option>
                             ${pipOpts}
                         </select>` : `<div style="padding:8px;background:#fef3c7;border-radius:8px;font-size:0.78rem;color:#92400e;">
-                            ${''}
+                            ''
                         </div>`}
                     </div>
 
                     <!-- Стадія -->
                     <div style="margin-bottom:16px;">
-                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">${''}</label>
+                        <label style="font-size:0.78rem;font-weight:700;color:#374151;display:block;margin-bottom:5px;">''</label>
                         <select id="fcrmStage" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.84rem;background:white;outline:none;"
                             onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
-                            <option value="">${''}</option>
+                            <option value="">''</option>
                             ${getStageOpts(selPipeId, selStageId)}
                         </select>
                     </div>
@@ -814,11 +814,11 @@ window.openFlowCrmSettings = async function(flowId, flowName) {
             <div style="padding:14px 20px;border-top:1px solid #f3f4f6;display:flex;gap:8px;justify-content:flex-end;">
                 <button onclick="document.getElementById('flowCrmModal').remove()"
                     style="padding:9px 18px;border:1.5px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;font-size:0.84rem;font-weight:600;color:#6b7280;">
-                    ${''}
+                    ''
                 </button>
                 <button onclick="saveFlowCrmSettings('${flowId}')"
                     style="padding:9px 22px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.84rem;font-weight:700;box-shadow:0 2px 8px rgba(245,158,11,0.35);">
-                    🔥 ${''}
+                    🔥 ''
                 </button>
             </div>
         </div>
@@ -832,7 +832,7 @@ window.openFlowCrmSettings = async function(flowId, flowName) {
         if (!sel) return;
         const pip = pipelines.find(p => p.id === pipeId);
         const stages = (pip?.stages || pip?.steps || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-        sel.innerHTML = `<option value="">${''}</option>` +
+        sel.innerHTML = `<option value="">''</option>` +
             stages.map(s => `<option value="${s.id}" ${s.id===selStId?'selected':''}>${escH(s.label||s.name||s.id)}</option>`).join('');
     };
 };
@@ -1017,7 +1017,7 @@ async function renderContactsTab() {
                 <button onclick="ctsLoadMore()"
                     style="width:100%;padding:0.55rem;background:white;border:1.5px solid #e5e7eb;
                     border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:600;color:#374151;">
-                    ${''}
+                    ''
                 </button>
             </div>
         </div>
@@ -1083,7 +1083,7 @@ async function ctsLoad(reset = false) {
 
     } catch(e) {
         const list = document.getElementById('ctsList');
-        if (list) list.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:0.82rem;">${''} ${escH(e.message)}</div>`;
+        if (list) list.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:0.82rem;">'' ${escH(e.message)}</div>`;
     }
 
     cts.loading = false;
@@ -1110,8 +1110,8 @@ function _ctsRenderList() {
         list.innerHTML = `
             <div style="text-align:center;padding:3rem 1rem;background:white;border-radius:12px;">
                 <svg style="color:#d1d5db;margin-bottom:0.75rem;" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <div style="font-weight:600;color:#374151;margin-bottom:0.3rem;">${''}</div>
-                <div style="font-size:0.78rem;color:#9ca3af;">${''}/div>
+                <div style="font-weight:600;color:#374151;margin-bottom:0.3rem;">''</div>
+                <div style="font-size:0.78rem;color:#9ca3af;">''/div>
             </div>`;
         if (loadMore) loadMore.style.display = 'none';
         return;
@@ -1259,7 +1259,7 @@ window.ctsOpenCard = async function(contactId) {
 
             <!-- Хедер картки -->
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-                <div style="font-weight:700;font-size:0.85rem;color:#374151;">${''}</div>
+                <div style="font-weight:700;font-size:0.85rem;color:#374151;">''</div>
                 <button onclick="ctsCloseCard()"
                     style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:2px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -1321,7 +1321,7 @@ window.ctsOpenCard = async function(contactId) {
 
             <!-- Теги -->
             <div style="margin-bottom:0.75rem;">
-                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">${''}</div>
+                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">''</div>
                 <div id="ctsTagsContainer" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;">
                     ${(ct.tags||[]).map((tag,i) => `
                     <span style="background:#f0fdf4;color:#16a34a;font-size:0.72rem;padding:2px 8px;
@@ -1343,7 +1343,7 @@ window.ctsOpenCard = async function(contactId) {
 
             <!-- Примітка -->
             <div style="margin-bottom:1rem;">
-                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">${''}<ера</div>
+                <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">''<ера</div>
                 <textarea id="ctsNote" rows="3" placeholder=${window.t('botsNotePh2')}
                     style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;
                     font-size:0.78rem;resize:vertical;box-sizing:border-box;font-family:inherit;"
@@ -1351,7 +1351,7 @@ window.ctsOpenCard = async function(contactId) {
                 <button onclick="ctsSaveNote('${ct.id}')"
                     style="margin-top:4px;width:100%;padding:0.4rem;background:#f0fdf4;color:#16a34a;
                     border:1.5px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.76rem;font-weight:600;">
-                    ${''}
+                    ''
                 </button>
             </div>
 
@@ -1359,7 +1359,7 @@ window.ctsOpenCard = async function(contactId) {
             <button onclick="ctsDeleteContact('${ct.id}')"
                 style="width:100%;padding:0.45rem;background:#fff5f5;color:#ef4444;
                 border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;font-size:0.76rem;font-weight:600;">
-                ${''}
+                ''
             </button>
         </div>`
 
@@ -1572,7 +1572,7 @@ function _ctsShowRefreshBanner() {
         ` <button class="cts-refresh-btn" onclick="ctsLoad(true)"
             style="background:#22c55e;color:white;border:none;padding:2px 8px;
             border-radius:6px;font-size:0.7rem;cursor:pointer;font-weight:600;">
-            ${''}
+            ''
         </button>`
     );
 }
@@ -1733,11 +1733,11 @@ async function renderChatTab() {
             <!-- Хедер -->
             <div id="chatLeftHead">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                    <span style="font-weight:700;font-size:0.9rem;color:#111827;">${''}</span>
+                    <span style="font-weight:700;font-size:0.9rem;color:#111827;">''</span>
                 </div>
                 <div style="position:relative;">
                     <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                    <input id="chatSearch" type="text" placeholder="${''}"
+                    <input id="chatSearch" type="text" placeholder="''"
                         value="${escH(chat.search)}"
                         oninput="chatOnSearch(this.value)"
                         style="width:100%;padding:6px 10px 6px 30px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.78rem;box-sizing:border-box;outline:none;"
@@ -1746,9 +1746,9 @@ async function renderChatTab() {
             </div>
             <!-- Фільтри -->
             <div id="chatLeftFilters">
-                <button class="chat-filter-btn active" onclick="chatSetFilter('all',this)">${''}</button>
-                <button class="chat-filter-btn" onclick="chatSetFilter('unread',this)">${''}</button>
-                <button class="chat-filter-btn" onclick="chatSetFilter('lead',this)">${''}</button>
+                <button class="chat-filter-btn active" onclick="chatSetFilter('all',this)">''</button>
+                <button class="chat-filter-btn" onclick="chatSetFilter('unread',this)">''</button>
+                <button class="chat-filter-btn" onclick="chatSetFilter('lead',this)">''</button>
             </div>
             <!-- Список -->
             <div id="chatContactsList"></div>
@@ -1762,9 +1762,9 @@ async function renderChatTab() {
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                 </button>
                 <div id="chatMsgHeader" style="flex:1;display:flex;align-items:center;gap:10px;">
-                    <div style="color:#9ca3af;font-size:0.82rem;">${''}</div>
+                    <div style="color:#9ca3af;font-size:0.82rem;">''</div>
                 </div>
-                <button id="chatInfoToggleBtn" onclick="chatToggleInfo()" title="${''}"
+                <button id="chatInfoToggleBtn" onclick="chatToggleInfo()" title="''"
                     style="display:none;padding:5px 8px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;cursor:pointer;flex-shrink:0;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 </button>
@@ -1774,23 +1774,23 @@ async function renderChatTab() {
             <div id="chatMsgs">
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#9ca3af;gap:8px;">
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.35;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    <span style="font-size:.82rem;">${''}</span>
+                    <span style="font-size:.82rem;">''</span>
                 </div>
             </div>
 
             <!-- Поле вводу -->
             <div id="chatInputArea" style="display:none;">
                 <div id="chatInputTabs">
-                    <span class="chat-input-tab active">${''}</span>
+                    <span class="chat-input-tab active">''</span>
                 </div>
                 <div id="chatInputBox">
                     <textarea id="chatInput" rows="1"
-                        placeholder="${''}"
+                        placeholder="''"
                         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend();}"
                         oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'">
                     </textarea>
                     <button onclick="chatSend()" ontouchend="event.preventDefault();chatSend()" id="chatSendBtn">
-                        ${''}
+                        ''
                     </button>
                 </div>
             </div>
@@ -1798,7 +1798,7 @@ async function renderChatTab() {
 
         <!-- ═══ ПРАВА: ІНФО ═══ -->
         <div id="chatRight">
-            <div id="chatInfoPanel" style="color:#9ca3af;font-size:.8rem;padding:20px;text-align:center;">${''}</div>
+            <div id="chatInfoPanel" style="color:#9ca3af;font-size:.8rem;padding:20px;text-align:center;">''</div>
         </div>
 
     </div>`;
@@ -1882,7 +1882,7 @@ function _chatRenderContactsList() {
 
     if (!chat.contacts.length) {
         list.innerHTML = `<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.78rem;">
-            ${''}
+            ''
         </div>`;
         return;
     }
@@ -1918,7 +1918,7 @@ function _chatRenderContactsList() {
         <div style="padding:0.5rem;text-align:center;">
             <button onclick="chatLoadContacts(false)"
                 style="font-size:0.74rem;color:#6b7280;background:none;border:none;cursor:pointer;">
-                ${''}
+                ''
             </button>
         </div>` : '');
 }
@@ -2056,13 +2056,13 @@ function _chatRenderInfoPanel(ct) {
 
         <!-- Деталі -->
         <div class="chat-info-section">
-            <div class="chat-info-label">${''}</div>
-            ${ct.phone ? `<div class="chat-info-row"><span class="key">${''}</span><span class="val">${escH(ct.phone)}</span></div>` : ''}
+            <div class="chat-info-label">''</div>
+            ${ct.phone ? `<div class="chat-info-row"><span class="key">''</span><span class="val">${escH(ct.phone)}</span></div>` : ''}
             <div class="chat-info-row"><span class="key">ID</span><span class="val">${escH(String(ct.senderId||ct.chatId||''))}</span></div>
-            <div class="chat-info-row"><span class="key">${''}</span><span class="val">${addedAt}</span></div>
-            <div class="chat-info-row"><span class="key">${''}</span><span class="val">${lastAt}</span></div>
-            ${ct.source ? `<div class="chat-info-row"><span class="key">${''}</span><span class="val">${escH(ct.source)}</span></div>` : ''}
-            ${ct.language ? `<div class="chat-info-row"><span class="key">${''}</span><span class="val">${escH(ct.language)}</span></div>` : ''}
+            <div class="chat-info-row"><span class="key">''</span><span class="val">${addedAt}</span></div>
+            <div class="chat-info-row"><span class="key">''</span><span class="val">${lastAt}</span></div>
+            ${ct.source ? `<div class="chat-info-row"><span class="key">''</span><span class="val">${escH(ct.source)}</span></div>` : ''}
+            ${ct.language ? `<div class="chat-info-row"><span class="key">''</span><span class="val">${escH(ct.language)}</span></div>` : ''}
         </div>
 
         <!-- CRM -->
@@ -2070,23 +2070,23 @@ function _chatRenderInfoPanel(ct) {
             <div class="chat-info-label">CRM</div>
             <button class="chat-crm-btn" onclick="chatCreateCrmDeal('${ct.id}')">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                ${''}
+                ''
             </button>
             <button class="chat-crm-btn" onclick="chatCreateCrmContact('${ct.id}')">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                ${''}
+                ''
             </button>
         </div>
 
         <!-- Шаблони -->
         <div class="chat-info-section">
-            <div class="chat-info-label">${''}</div>
+            <div class="chat-info-label">''</div>
             <button class="chat-tmpl-btn" onclick="chatInsertTemplate('${_tg('Дякуємо за відповідь! Наш менеджер зв\'яжеться з вами найближчим часом.','Спасибо за ответ! Наш менеджер свяжется с вами в ближайшее время.')}')">
-                <span>${''}</span>
+                <span>''</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
-            <button class="chat-tmpl-btn" onclick="chatInsertTemplate('${''}')">
-                <span>${''}</span>
+            <button class="chat-tmpl-btn" onclick="chatInsertTemplate('''')">
+                <span>''</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
         </div>`;
@@ -2102,8 +2102,8 @@ function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
                 <svg style="margin-bottom:0.5rem;opacity:0.4;" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
-                <div>${''}</div>
-                <div style="font-size:0.74rem;margin-top:4px;">${''}</div>
+                <div>''</div>
+                <div style="font-size:0.74rem;margin-top:4px;">''</div>
             </div>`;
         return;
     }
@@ -2315,7 +2315,7 @@ window.chatCreateCrmDeal = async function(contactId) {
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                 </div>
                 <div>
-                    <div style="font-weight:700;font-size:0.9rem;color:#111827;">${''}</div>
+                    <div style="font-weight:700;font-size:0.9rem;color:#111827;">''</div>
                     <div style="font-size:0.72rem;color:#6b7280;">${escH(name)}</div>
                 </div>
                 <button onclick="document.getElementById('chatCrmDealModal').remove()"
@@ -2327,14 +2327,14 @@ window.chatCreateCrmDeal = async function(contactId) {
             <div style="padding:16px 18px;">
                 <!-- Назва угоди -->
                 <div style="margin-bottom:12px;">
-                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">${''}</label>
+                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">''</label>
                     <input id="chatCrmDealTitle" type="text" value="${escH(name)}"
                         style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;box-sizing:border-box;outline:none;"
                         onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
                 <!-- Телефон -->
                 <div style="margin-bottom:12px;">
-                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">${''}</label>
+                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">''</label>
                     <input id="chatCrmDealPhone" type="text" value="${escH(ct.phone||'')}"
                         placeholder="+380..."
                         style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;box-sizing:border-box;outline:none;"
@@ -2343,37 +2343,37 @@ window.chatCreateCrmDeal = async function(contactId) {
                 ${pipelines.length ? `
                 <!-- Воронка -->
                 <div style="margin-bottom:12px;">
-                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">${''}</label>
+                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">''</label>
                     <select id="chatCrmDealPipeline"
                         style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;background:white;outline:none;"
                         onchange="chatCrmUpdateStages(this.value)"
                         onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
-                        <option value="">${''}</option>
+                        <option value="">''</option>
                         ${pipOpts}
                     </select>
                 </div>
                 <!-- Стадія -->
                 <div style="margin-bottom:16px;">
-                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">${''}</label>
+                    <label style="font-size:0.76rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">''</label>
                     <select id="chatCrmDealStage"
                         style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.83rem;background:white;outline:none;"
                         onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
-                        <option value="">${''}</option>
+                        <option value="">''</option>
                     </select>
                 </div>` : `
                 <div style="padding:10px;background:#fef3c7;border-radius:8px;font-size:0.78rem;color:#92400e;margin-bottom:12px;">
-                    ${''}
+                    ''
                 </div>`}
             </div>
             <!-- Footer -->
             <div style="padding:12px 18px;border-top:1px solid #f3f4f6;display:flex;gap:8px;justify-content:flex-end;">
                 <button onclick="document.getElementById('chatCrmDealModal').remove()"
                     style="padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:7px;background:white;cursor:pointer;font-size:0.82rem;font-weight:600;color:#6b7280;">
-                    ${''}
+                    ''
                 </button>
                 <button onclick="chatSaveCrmDeal('${contactId}')"
                     style="padding:8px 20px;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.82rem;font-weight:700;">
-                    ${''}
+                    ''
                 </button>
             </div>
         </div>
@@ -2385,7 +2385,7 @@ window.chatCrmUpdateStages = function(pipeId) {
     if (!sel) return;
     const pip = (window._chatCrmPipelines||[]).find(p => p.id === pipeId);
     const stages = (pip?.stages || pip?.steps || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-    sel.innerHTML = `<option value="">${''}</option>` +
+    sel.innerHTML = `<option value="">''</option>` +
         stages.map(s => `<option value="${s.id}">${escH(s.label||s.name||s.id)}</option>`).join('');
 };
 
@@ -2577,15 +2577,15 @@ async function renderBroadcastTab() {
             <div style="${sectionStyle}">
                 <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.85rem;display:flex;align-items:center;gap:0.5rem;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    ${''}
+                    ''
                 </div>
 
                 <!-- Аудиторія -->
                 <div style="margin-bottom:0.65rem;">
-                    <label style="${labelStyle}">${''}</label>
+                    <label style="${labelStyle}">''</label>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;">
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${''}</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">''</div>
                             <select id="bcastChannel" onchange="bcastPreview()" style="${selectStyle}">
                                 <option value="">${window.t('allChannels')}</option>
                                 <option value="telegram">Telegram</option>
@@ -2593,21 +2593,21 @@ async function renderBroadcastTab() {
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${''}</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">''</div>
                             <select id="bcastFlow" onchange="bcastPreview()" style="${selectStyle}">
                                 <option value="">${window.t('allFunnels')}</option>
                                 ${bp.flows.map(f => `<option value="${f.id}">${escH(f.name)}</option>`).join('')}
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${''}</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">''</div>
                             <select id="bcastNiche" onchange="bcastPreview()" style="${selectStyle}">
                                 <option value="">${window.t('allNiches')}</option>
                                 ${allNiches.map(n => `<option value="${escH(n)}">${escH(n)}</option>`).join('')}
                             </select>
                         </div>
                         <div>
-                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">${''}</div>
+                            <div style="font-size:0.71rem;color:#6b7280;margin-bottom:3px;">''</div>
                             <select id="bcastTag" onchange="bcastPreview()" style="${selectStyle}">
                                 <option value="">${window.t('allTags')}</option>
                                 ${allTags.map(t => `<option value="${escH(t)}">${escH(t)}</option>`).join('')}
@@ -2624,9 +2624,9 @@ async function renderBroadcastTab() {
 
                 <!-- Повідомлення -->
                 <div style="margin-bottom:0.65rem;">
-                    <label style="${labelStyle}">${''}</label>
+                    <label style="${labelStyle}">''</label>
                     <textarea id="bcastText" rows="4"
-                        placeholder="${''}"
+                        placeholder="''"
                         oninput="bcastCountChars(this.value)"
                         style="${inputStyle}resize:vertical;"></textarea>
                     <div style="display:flex;justify-content:space-between;margin-top:3px;">
@@ -2641,19 +2641,19 @@ async function renderBroadcastTab() {
                 <div style="margin-bottom:0.85rem;">
                     <label style="${labelStyle}">АБО ЗАПУСТИТИ ЛАНЦЮГ</label>
                     <select id="bcastFlowSend" style="${selectStyle}">
-                        <option value="">${''}</option>
+                        <option value="">''</option>
                         ${bp.flows.map(f => `<option value="${f.id}">${escH(f.name)}</option>`).join('')}
                     </select>
                     <div style="font-size:0.71rem;color:#9ca3af;margin-top:3px;">
-                        ${''}
+                        ''
                     </div>
                 </div>
 
                 <!-- Rate limiting попередження -->
                 <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:9px;
                     padding:0.55rem 0.7rem;margin-bottom:0.75rem;font-size:0.76rem;color:#92400e;">
-                    ${''}
-                    ${''}
+                    ''
+                    ''
                 </div>
 
                 <!-- Кнопка відправки -->
@@ -2662,7 +2662,7 @@ async function renderBroadcastTab() {
                     border-radius:10px;cursor:pointer;font-weight:700;font-size:0.88rem;
                     display:flex;align-items:center;justify-content:center;gap:6px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    ${''}
+                    ''
                 </button>
             </div>
 
@@ -2683,21 +2683,21 @@ async function renderBroadcastTab() {
                 <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
                     <div id="bcastStatSent" style="flex:1;text-align:center;padding:0.4rem;background:#f0fdf4;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#22c55e;" id="bcastStatSentNum">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">${''}</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">''</div>
                     </div>
                     <div id="bcastStatFailed" style="flex:1;text-align:center;padding:0.4rem;background:#fff5f5;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#ef4444;" id="bcastStatFailedNum">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">${''}</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">''</div>
                     </div>
                     <div style="flex:1;text-align:center;padding:0.4rem;background:#f8fafc;border-radius:8px;">
                         <div style="font-size:1rem;font-weight:700;color:#374151;" id="bcastStatTotal">0</div>
-                        <div style="font-size:0.68rem;color:#6b7280;">${''}</div>
+                        <div style="font-size:0.68rem;color:#6b7280;">''</div>
                     </div>
                 </div>
                 <button onclick="bcastCancel()"
                     style="margin-top:0.6rem;width:100%;padding:0.45rem;background:#fee2e2;color:#ef4444;
                     border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                    ${''}
+                    ''
                 </button>
             </div>
         </div>
@@ -2705,11 +2705,11 @@ async function renderBroadcastTab() {
         <!-- ПРАВА ЧАСТИНА: історія -->
         <div style="width:280px;flex-shrink:0;display:flex;flex-direction:column;gap:0.5rem;">
             <div style="font-weight:700;font-size:0.85rem;color:#374151;padding:0 0.1rem;">
-                ${''}
+                ''
             </div>
             ${history.length === 0
                 ? `<div style="text-align:center;padding:2rem;background:white;border-radius:12px;color:#9ca3af;font-size:0.78rem;">
-                    ${''}
+                    ''
                    </div>`
                 : history.map(b => {
                     const rate = b.total > 0 ? Math.round(b.sent / b.total * 100) : 0;
@@ -2835,7 +2835,7 @@ window.bpSendBroadcast = async function() {
 
         const snap = await q.get();
         if (snap.size >= BCAST_LIMIT) {
-            if (window.showToast) showToast(`⚠️ ${''} ${BCAST_LIMIT} ${''} для звуження аудиторії.`, 'warning');
+            if (window.showToast) showToast(`⚠️ '' ${BCAST_LIMIT} '' для звуження аудиторії.`, 'warning');
         }
 
         let targets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -3025,14 +3025,14 @@ window.bpSendBroadcast = async function() {
                     ${bcast.cancelled ? window.t('botsStopped') : window.t('botsBroadcastDone')}
                 </div>
                 <div style="font-size:0.8rem;color:#6b7280;margin-top:4px;">
-                    ${''} <b style="color:#22c55e;">${bcast.sent}</b>
-                    · ${''} <b style="color:#ef4444;">${bcast.failed}</b>
-                    · ${''} ${bcast.total}
+                    '' <b style="color:#22c55e;">${bcast.sent}</b>
+                    · '' <b style="color:#ef4444;">${bcast.failed}</b>
+                    · '' ${bcast.total}
                 </div>
                 <button onclick="renderBroadcastTab()"
                     style="margin-top:0.75rem;padding:0.45rem 1.25rem;background:#22c55e;color:white;
                     border:none;border-radius:9px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                    ${''}
+                    ''
                 </button>
             </div>`;
     }
@@ -3080,11 +3080,11 @@ async function renderSettingsTab() {
     if (!bot) {
         c.innerHTML = `
             <div style="text-align:center;padding:3rem;background:white;border-radius:14px;">
-                <div style="color:#9ca3af;font-size:0.85rem;">${''}</div>
+                <div style="color:#9ca3af;font-size:0.85rem;">''</div>
                 <button onclick="bpSwitch('bots')"
                     style="margin-top:1rem;padding:0.5rem 1.25rem;background:#22c55e;color:white;
                     border:none;border-radius:9px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                    ${''}
+                    ''
                 </button>
             </div>`;
         return;
@@ -3127,7 +3127,7 @@ async function renderSettingsTab() {
                 </div>
                 <button onclick="bpCheckBotStatus('${bot.id}')" id="btnCheckStatus"
                     style="${btnGrayStyle}margin-left:auto;">
-                    ${''}
+                    ''
                 </button>
             </div>
             <div id="settingsStatusResult"></div>
@@ -3144,16 +3144,16 @@ async function renderSettingsTab() {
                     style="${inputStyle}background:#f9fafb;color:#374151;font-size:0.74rem;cursor:text;"
                     onclick="this.select()">
                 <button onclick="copyLink('${escH(webhookUrl)}')" style="${btnGrayStyle}">
-                    ${''}
+                    ''
                 </button>
             </div>
             <div style="font-size:0.72rem;color:#6b7280;">
-                ${''}
+                ''
                 Якщо webhook перестав працювати — натисніть window.t('botsReinstall').
             </div>
             <button onclick="bpReinstallWebhook('${bot.id}')" id="btnReinstall"
                 style="margin-top:0.6rem;${btnGreenStyle}">
-                ${''}
+                ''
             </button>
             <div id="webhookResult" style="margin-top:0.5rem;font-size:0.76rem;"></div>
         </div>
@@ -3170,17 +3170,17 @@ async function renderSettingsTab() {
                     ${bot.token ? '•••••••••' + bot.token.slice(-8) : window.t('botsNotSet')}
                 </div>
             </div>
-            <label style="${labelStyle}">${''}</label>
+            <label style="${labelStyle}">''</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="password" id="bpSettingsToken"
                     placeholder=${window.t('botsNewTokenPh')}
                     style="${inputStyle}flex:1;">
                 <button onclick="bpReconnectBot('${bot.id}')" style="${btnGreenStyle}">
-                    ${''}
+                    ''
                 </button>
             </div>
             <div style="font-size:0.71rem;color:#9ca3af;margin-top:0.35rem;">
-                ${''}
+                ''
             </div>
         </div>
 
@@ -3193,8 +3193,8 @@ async function renderSettingsTab() {
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
                 <div>
-                    <div style="font-size:0.82rem;font-weight:600;">${''}</div>
-                    <div style="font-size:0.72rem;color:#6b7280;">${''}</div>
+                    <div style="font-size:0.82rem;font-weight:600;">''</div>
+                    <div style="font-size:0.72rem;color:#6b7280;">''</div>
                 </div>
                 <label style="position:relative;display:inline-block;width:42px;height:24px;cursor:pointer;">
                     <input type="checkbox" id="settingsNotifyEnabled"
@@ -3215,11 +3215,11 @@ async function renderSettingsTab() {
                     placeholder=${window.t('botsExampleChatId')}
                     style="${inputStyle}flex:1;">
                 <button onclick="settingsSaveNotify()" style="${btnGreenStyle}">
-                    ${''}
+                    ''
                 </button>
             </div>
             <div style="font-size:0.71rem;color:#6b7280;">
-                ${''}
+                ''
             </div>
             <div id="notifyResult" style="margin-top:0.4rem;font-size:0.76rem;"></div>
         </div>
@@ -3227,16 +3227,16 @@ async function renderSettingsTab() {
         <!-- Секція 6: Небезпечна зона -->
         <div style="${sectionStyle}border:1.5px solid #fee2e2;">
             <div style="font-weight:700;font-size:0.85rem;color:#ef4444;margin-bottom:0.6rem;">
-                ${''}
+                ''
             </div>
             <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.75rem;">
-                ${''}
+                ''
             </div>
             <button onclick="confirmDeleteBot('${bot.id}')"
                 style="padding:0.5rem 1rem;background:#fee2e2;color:#ef4444;
                 border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;
                 font-size:0.82rem;font-weight:600;">
-                ${''}
+                ''
             </button>
         </div>
 
@@ -3253,7 +3253,7 @@ window.bpCheckBotStatus = async function(botId) {
 
     const bot = bp.bots.find(b => b.id === botId);
     if (!bot?.token) {
-        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">${''}</div>`;
+        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">''</div>`;
         if (btn) { btn.textContent = window.t('botsCheck'); btn.disabled = false; }
         return;
     }
@@ -3275,8 +3275,8 @@ window.bpCheckBotStatus = async function(botId) {
                     <div style="color:${whInfo.url ? '#16a34a' : '#ef4444'};">
                         ${whInfo.url ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>'} Webhook: ${whInfo.url ? window.t('botsIsSet') : window.t('botsNotSetShort')}
                     </div>
-                    ${whInfo.last_error_message ? `<div style="color:#ef4444;">⚠️ ${''} ${escH(whInfo.last_error_message)}</div>` : ''}
-                    <div style="color:#6b7280;">${''} ${whInfo.pending_update_count || 0}</div>
+                    ${whInfo.last_error_message ? `<div style="color:#ef4444;">⚠️ '' ${escH(whInfo.last_error_message)}</div>` : ''}
+                    <div style="color:#6b7280;">'' ${whInfo.pending_update_count || 0}</div>
                 </div>
             </div>`;
 
@@ -3288,7 +3288,7 @@ window.bpCheckBotStatus = async function(botId) {
         }
 
     } catch(e) {
-        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">${''} ${escH(e.message)}</div>`;
+        if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">'' ${escH(e.message)}</div>`;
     }
 
     if (btn) { btn.textContent = window.t('botsCheck'); btn.disabled = false; }
@@ -3449,7 +3449,7 @@ window.showQR = function(encodedLink) {
                 <div style="font-size:0.7rem;color:#6b7280;margin-top:0.6rem;word-break:break-all;">${link}</div>
                 <button onclick="this.closest('[style*=fixed]').remove()"
                     style="margin-top:0.75rem;padding:0.45rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-weight:600;">
-                    ${''}
+                    ''
                 </button>
             </div>
         </div>`);

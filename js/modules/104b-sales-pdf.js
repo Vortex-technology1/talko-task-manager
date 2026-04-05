@@ -211,7 +211,7 @@
     doc.setTextColor(...gray);
     doc.setFontSize(7);
     doc.text('Сформовано в TALKO Business Platform', margin, 292);
-    doc.text(`${''}`, pageW - margin, 292, { align: 'right' });
+    doc.text(`''`, pageW - margin, 292, { align: 'right' });
 
     // Save
     const filename = `${order.number || 'invoice'}.pdf`;

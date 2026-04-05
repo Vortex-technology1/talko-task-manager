@@ -363,7 +363,7 @@ function renderFinanceContainer() {
           font-size:0.78rem;font-weight:500;flex-shrink:0;margin-right:4px;
         ">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          ${''}
+          ''
         </button>
 
         ${isOwnerOrManager() ? `
@@ -1011,7 +1011,7 @@ function renderTransactions(el, type) {
         </select>
         <select id="txFilterSubCat" onchange="window._txFilterChange('subcategoryId',this.value,'${type}')"
           style="display:none;padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">${''}</option>
+          <option value="">''</option>
         </select>
         <select id="txFilterAcc" onchange="window._txFilterChange('accountId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
@@ -1164,7 +1164,7 @@ async function loadAndRenderTxList(type) {
 
   } catch(e) {
     console.error('[Finance] loadTxList error:', e);
-    listEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.85rem;">${''} ${escHtml(e.message)}</div>`;
+    listEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.85rem;">'' ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -1403,19 +1403,19 @@ window._financeTransfer = function() {
           </select>
         </div>
         <div>
-          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${''}</label>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">''</label>
           <select id="trTo" style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
             ${accOpts}
           </select>
         </div>
         <div>
-          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${''}</label>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">''</label>
           <input id="trAmount" type="number" min="0.01" step="0.01" placeholder="0.00"
             style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
         </div>
         <div>
           <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${window.t('transferNote')}</label>
-          <input id="trNote" type="text" placeholder="${''}"
+          <input id="trNote" type="text" placeholder="''"
             style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
         </div>
       </div>
@@ -1423,11 +1423,11 @@ window._financeTransfer = function() {
       <div style="display:flex;gap:0.5rem;margin-top:1.25rem;">
         <button onclick="document.getElementById('transferModal')?.remove()"
           style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#374151;cursor:pointer;font-size:0.85rem;">
-          ${''}
+          ''
         </button>
         <button onclick="window._doTransfer()"
           style="flex:1;padding:10px;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.85rem;font-weight:600;">
-          ${''}
+          ''
         </button>
       </div>
     </div>`;
@@ -1926,7 +1926,7 @@ window._invoicePdf = async function(id) {
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 100, 100);
   doc.text(`No: ${inv.number || '—'}`, margin, y);
-  doc.text(`${''} ${inv.date || '—'}`, pageW - margin - 60, y);
+  doc.text(`'' ${inv.date || '—'}`, pageW - margin - 60, y);
 
   // Клієнт
   y += 12;
@@ -2741,7 +2741,7 @@ function _showBudgetWarningBanner(catName, fact, budget, currency, pct) {
         <div style="display:flex;gap:6px;">
           <button onclick="window._planMode&&window._planMode('budget');window._financeTab&&window._financeTab('planning');document.getElementById('finBudgetWarningBanner')?.remove();"
             style="flex:1;padding:5px 8px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;">
-            ${''}
+            ''
           </button>
           <button onclick="document.getElementById('finBudgetWarningBanner')?.remove();"
             style="padding:5px 10px;background:#fff;border:1px solid #fecaca;border-radius:6px;font-size:0.72rem;cursor:pointer;color:#6b7280;">
@@ -2805,12 +2805,12 @@ function renderPlanning(el) {
         <button onclick="window._planMode('weekly')" id="planModeBtn_weekly"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          ${''}
+          ''
         </button>
         <button onclick="window._planMode('fp1')" id="planModeBtn_fp1"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
-          ${''}
+          ''
         </button>
       </div>
 
@@ -2874,13 +2874,13 @@ function renderPlanning(el) {
       <!-- Тижневий план 6M -->
       <div id="planModeView_weekly" style="display:none;">
         <div id="weeklyPlanRoot">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">${''}</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">''</div>
         </div>
       </div>
       <!-- ФП №1 Тижневий дашборд -->
       <div id="planModeView_fp1" style="display:none;">
         <div id="fp1WeeklyRoot">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">${''}</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">''</div>
         </div>
       </div>
 
@@ -3062,7 +3062,7 @@ async function loadPlanningData(monthVal) {
       const pct = Math.min(Math.max(Math.round(profit / budgetData['goal'] * 100), 0), 100);
       goalEl.innerHTML = `
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.3rem;">
-          ${''} <strong>${fmt(profit)}</strong> ${''} <strong>${fmt(budgetData['goal'])}</strong>
+          '' <strong>${fmt(profit)}</strong> '' <strong>${fmt(budgetData['goal'])}</strong>
         </div>
         <div style="height:8px;background:#f3f4f6;border-radius:4px;">
           <div style="height:8px;background:${pct>=100?'#22c55e':pct>=50?'#f59e0b':'#ef4444'};
@@ -3076,7 +3076,7 @@ async function loadPlanningData(monthVal) {
   } catch(e) {
     console.error('[Finance] loadPlanningData:', e);
     const bodyEl = document.getElementById('planBudgetBody');
-    if (bodyEl) bodyEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">${''} ${escHtml(e.message)}</div>`;
+    if (bodyEl) bodyEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">'' ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -3113,9 +3113,9 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
       _budgetToastShown.add(toastKey);
       const warnSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
       if (level === 'red') {
-        showToast(`${warnSvg} ${''} «${cat.name}» ${''} ${fmt(fact, currency)} ${''} ${fmt(budget, currency)}`, 'error');
+        showToast(`${warnSvg} '' «${cat.name}» '' ${fmt(fact, currency)} '' ${fmt(budget, currency)}`, 'error');
       } else {
-        showToast(`${warnSvg} ${''} «${cat.name}» ${''} ${usedPct}% — ${''} ${fmt(remaining, currency)}`, 'warning');
+        showToast(`${warnSvg} '' «${cat.name}» '' ${usedPct}% — '' ${fmt(remaining, currency)}`, 'warning');
       }
     }
   });
@@ -3138,7 +3138,7 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
             </div>
             <div style="font-size:0.72rem;color:${a.level==='red'?'#dc2626':'#d97706'};margin-top:1px;">
               ${a.level==='red'
-                ? `${''} ${fmt(a.fact,currency)} ${''} ${fmt(a.budget,currency)} (${a.usedPct}%)`
+                ? `'' ${fmt(a.fact,currency)} '' ${fmt(a.budget,currency)} (${a.usedPct}%)`
                 : _tg(`Використано ${a.usedPct}% бюджету — залишилось ${fmt(a.remaining,currency)}`,`Использовано ${a.usedPct}% бюджета — осталось ${fmt(a.remaining,currency)}`)
               }
             </div>
@@ -3170,7 +3170,7 @@ const _FP1_BENCHMARKS = {
 async function _renderFP1Weekly() {
   const el = document.getElementById('fp1WeeklyRoot');
   if (!el) return;
-  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${''}</div>`;
+  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">''</div>`;
 
   try {
     const currency = _state.currency || 'UAH';
@@ -3258,25 +3258,25 @@ async function _renderFP1Weekly() {
       <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:.9rem 1rem;">
         <div style="font-size:.75rem;font-weight:700;color:#dc2626;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;">
           <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          ${''} (${anomalies.length})
+          '' (${anomalies.length})
         </div>
         ${anomalies.map(a => `
           <div style="font-size:.8rem;color:#374151;padding:.2rem 0;">
-            ${a.type === 'over' ? `⚠️ <b>${escHtml(a.func)}</b>: ${''} ${a.fact}% (${''}: ${a.max}%)` : ''}
-            ${a.type === 'zero' ? `🔴 <b>${escHtml(a.func)}</b>: ${''}` : ''}
-            ${a.type === 'under' ? `🟡 <b>${escHtml(a.func)}</b>: ${''} ${a.fact}% (${''}: ${a.min}%)` : ''}
+            ${a.type === 'over' ? `⚠️ <b>${escHtml(a.func)}</b>: '' ${a.fact}% ('': ${a.max}%)` : ''}
+            ${a.type === 'zero' ? `🔴 <b>${escHtml(a.func)}</b>: ''` : ''}
+            ${a.type === 'under' ? `🟡 <b>${escHtml(a.func)}</b>: '' ${a.fact}% ('': ${a.min}%)` : ''}
           </div>
         `).join('')}
       </div>` : `
       <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:.75rem 1rem;font-size:.82rem;color:#166534;display:flex;align-items:center;gap:.5rem;">
         <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        ${''}
+        ''
       </div>`}
 
       <!-- 4 тижні: прихід / витрати / різниця -->
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
         <div style="background:#1e293b;color:#fff;padding:.65rem 1rem;font-size:.75rem;font-weight:700;display:grid;grid-template-columns:120px repeat(4,1fr);">
-          <div>${''}</div>
+          <div>''</div>
           ${weekData.map(w => `<div style="text-align:right;">${w.label}</div>`).join('')}
         </div>
         ${[
@@ -3298,16 +3298,16 @@ async function _renderFP1Weekly() {
       ${funcs.length > 0 ? `
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
         <div style="background:#1e293b;color:#fff;padding:.65rem 1rem;font-size:.75rem;font-weight:700;">
-          ${''}
-          <span style="font-size:.7rem;opacity:.6;margin-left:.5rem;">${''}: ${fmt(cur.income, currency)}</span>
+          ''
+          <span style="font-size:.7rem;opacity:.6;margin-left:.5rem;">'': ${fmt(cur.income, currency)}</span>
         </div>
         <!-- Header -->
         <div style="display:grid;grid-template-columns:1fr 90px 90px 70px 90px;padding:.5rem 1rem;background:#f8fafc;font-size:.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;">
-          <div>${''}</div>
-          <div style="text-align:right;">${''}</div>
-          <div style="text-align:right;">${''}</div>
-          <div style="text-align:right;">${''}</div>
-          <div style="text-align:right;">${''}</div>
+          <div>''</div>
+          <div style="text-align:right;">''</div>
+          <div style="text-align:right;">''</div>
+          <div style="text-align:right;">''</div>
+          <div style="text-align:right;">''</div>
         </div>
         ${funcs.map((f, i) => {
           const bKey = fp1Config['func_benchmark_' + f.id] || f.benchmarkKey;
@@ -3340,7 +3340,7 @@ async function _renderFP1Weekly() {
         }).join('')}
         <!-- Підсумок -->
         <div style="display:grid;grid-template-columns:1fr 90px 90px 70px 90px;padding:.55rem 1rem;background:#f0fdf4;font-size:.8rem;font-weight:700;border-top:2px solid #bbf7d0;">
-          <div style="color:#166534;">${''}</div>
+          <div style="color:#166534;">''</div>
           <div style="text-align:right;color:#9ca3af;">100%</div>
           <div style="text-align:right;color:#374151;">${fmt(cur.expenses, currency)}</div>
           <div style="text-align:right;color:${cur.income > 0 ? (Math.round(cur.expenses/cur.income*100) <= 92 ? '#22c55e' : '#ef4444') : '#9ca3af'};">
@@ -3352,25 +3352,25 @@ async function _renderFP1Weekly() {
         </div>
       </div>` : `
       <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:1.5rem;text-align:center;color:#9ca3af;font-size:.85rem;">
-        ${''}
+        ''
       </div>`}
 
       <!-- Налаштування бенчмарків -->
       <details style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
         <summary style="padding:.75rem 1rem;font-size:.82rem;font-weight:600;color:#374151;cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between;">
-          <span>⚙️ ${''}</span>
+          <span>⚙️ ''</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
         </summary>
         <div style="padding:1rem;border-top:1px solid #f1f5f9;">
           <div style="font-size:.78rem;color:#6b7280;margin-bottom:.75rem;">
-            ${''}
+            ''
           </div>
           ${funcs.map(f => `
           <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;font-size:.8rem;">
             <div style="flex:1;font-weight:500;color:#374151;">${escHtml(f.name)}</div>
             <select onchange="window._fp1SaveBenchmark('${f.id}', this.value)"
               style="padding:.3rem .6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:.78rem;color:#374151;">
-              <option value="">— ${''} —</option>
+              <option value="">— '' —</option>
               ${Object.entries(_FP1_BENCHMARKS).map(([key, b]) =>
                 `<option value="${key}" ${(fp1Config['func_benchmark_' + f.id] || f.benchmarkKey) === key ? 'selected' : ''}>${b.label()} (${b.pctMin}–${b.pctMax}%)</option>`
               ).join('')}
@@ -3382,7 +3382,7 @@ async function _renderFP1Weekly() {
     </div>`;
   } catch(err) {
     console.error('[FP1Weekly]', err);
-    el.innerHTML = `<div style="text-align:center;color:#ef4444;padding:2rem;font-size:.85rem;">${''}: ${escHtml(err.message)}</div>`;
+    el.innerHTML = `<div style="text-align:center;color:#ef4444;padding:2rem;font-size:.85rem;">'': ${escHtml(err.message)}</div>`;
   }
 }
 
@@ -3441,9 +3441,9 @@ async function _renderFunctionsBudget(monthVal) {
         <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
           padding:0.65rem 1rem;display:grid;grid-template-columns:1fr 80px 110px 80px 90px;">
           <div>${window.t('functionHeader')}</div>
-          <div style="text-align:right;">${''}</div>
-          <div style="text-align:right;">${''}</div>
-          <div style="text-align:right;">${''}</div>
+          <div style="text-align:right;">''</div>
+          <div style="text-align:right;">''</div>
+          <div style="text-align:right;">''</div>
           <div style="text-align:right;">${window.t('finVariance')}</div>
         </div>
         ${funcs.map((f, i) => {
@@ -3488,7 +3488,7 @@ async function _renderFunctionsBudget(monthVal) {
         </button>
       </div>`;
   } catch(e) {
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">${''} ${escHtml(e.message)}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">'' ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -3570,9 +3570,9 @@ async function _renderCashflowForecast() {
       </div>
 
       <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;">
-        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:12px;">${''}</div>
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:12px;">''</div>
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
-          <span style="color:#6b7280;">${''}</span>
+          <span style="color:#6b7280;">''</span>
           <span style="font-weight:700;color:#22c55e;">${fmt(totalBalance, currency)}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
@@ -3586,7 +3586,7 @@ async function _renderCashflowForecast() {
         </div>
       </div>`;
   } catch(e) {
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">${''} ${escHtml(e.message)}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">'' ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -3714,7 +3714,7 @@ async function _loadAnalytics(mode, period) {
     if (mode === 'trends')    _renderTrends(el, txs, currency, from, to, period);
 
   } catch(e) {
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">${''} ${escHtml(e.message)}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">'' ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -4071,9 +4071,9 @@ function renderSettings(el) {
                   <div style="flex:1;font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(cat.name)}</div>
                   ${costBadge}
                   <button onclick="window._financeAddCategory('${type}','${cat.id}')"
-                    title="${''}"
+                    title="''"
                     style="display:flex;align-items:center;gap:3px;padding:2px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:5px;cursor:pointer;font-size:0.72rem;font-weight:600;">
-                    + ${''}
+                    + ''
                   </button>
                   ${!cat.system ? `
                     <button onclick="window._financeDeleteCategory('${cat.id}','${type}')"
@@ -4331,16 +4331,16 @@ window._financeAddCategory = function(type, parentId) {
         <!-- Батьківська категорія (опційно) -->
         <div>
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">
-            ${''}
+            ''
           </label>
           <select id="finCatParent"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            <option value="">${''}</option>
+            <option value="">''</option>
             ${topLevelCats.map(c => `<option value="${c.id}" ${c.id === parentId ? 'selected' : ''}>${c.name}</option>`).join('')}
           </select>
         </div>
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${''}</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">''</label>
           <input id="finCatName" type="text" placeholder="${isExpense ? window.t('catPlaceholderExpense') : window.t('catPlaceholderIncome')}"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;"
             onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
@@ -4451,11 +4451,11 @@ window._financeAddAccount = function() {
 
   modal.innerHTML = `
     <div style="background:#fff;border-radius:16px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.2);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
-      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${''}</div>
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">''</div>
 
       <div>
-        <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${''} *</label>
-        <input id="faaName" type="text" placeholder="${''}"
+        <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">'' *</label>
+        <input id="faaName" type="text" placeholder="''"
           style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;outline:none;"
           onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
       </div>
@@ -4468,11 +4468,11 @@ window._financeAddAccount = function() {
           </select>
         </div>
         <div style="flex:1;">
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${''}</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">''</label>
           <select id="faaType" style="width:100%;padding:0.55rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            <option value="bank">${''}</option>
-            <option value="cash">${''}</option>
-            <option value="card">${''}</option>
+            <option value="bank">''</option>
+            <option value="cash">''</option>
+            <option value="card">''</option>
           </select>
         </div>
       </div>
@@ -4859,7 +4859,7 @@ ${d.month}: дохід=${d.income}, витрати=${d.expense}, прибуто�
 
     // Стратегічний профіль компанії
     if (companyProfile.companyGoal || companyProfile.companyConcept || companyProfile.companyIdeal) {
-      ctx += `${''}`;
+      ctx += `''`;
       if (companyProfile.companyGoal)    ctx += `Мета: ${companyProfile.companyGoal}\n`;
       if (companyProfile.companyConcept) ctx += `Задум: ${companyProfile.companyConcept}\n`;
       if (companyProfile.companyCKP)     ctx += `ЦКП: ${companyProfile.companyCKP}\n`;
@@ -5487,7 +5487,7 @@ window._txFilterCatChange = function(catId, type) {
     subSel.style.display = 'none';
     subSel.value = '';
   } else {
-    subSel.innerHTML = `<option value="">${''}</option>` +
+    subSel.innerHTML = `<option value="">''</option>` +
       subcats.map(c => `<option value="${c.id}">${escHtml(c.name)}</option>`).join('');
     subSel.style.display = '';
   }
@@ -5572,7 +5572,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
       </div>`;
   } catch(e) {
     console.error('[ProjectFinance]', e);
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;">${''} ${escHtml(e.message)}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;">'' ${escHtml(e.message)}</div>`;
   }
 };
 
@@ -5633,7 +5633,7 @@ window._addEntityTx = function(entityId, field, type) {
         amount:        parseFloat(p.amount) || 0,
         currency:      p.currency || _state.currency || 'EUR', // deal currency priority
         date:          firebase.firestore.Timestamp.now(),
-        description:   `CRM: ${p.clientName || ''} — ${''}`,
+        description:   `CRM: ${p.clientName || ''} — ''`,
         counterparty:  p.clientName || '',
         categoryId:    defCat?.id   || null,
         categoryName:  defCat?.name || '',
@@ -5808,9 +5808,9 @@ function _buildFinHowPanel() {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
         <div style="font-weight:800;font-size:0.95rem;color:#16a34a;display:flex;align-items:center;gap:6px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          ${''}
+          ''
         </div>
-        <button onclick="window._finHowToggle()" style="padding:3px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:0.75rem;cursor:pointer;color:#6b7280;">${''}</button>
+        <button onclick="window._finHowToggle()" style="padding:3px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:0.75rem;cursor:pointer;color:#6b7280;">''</button>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
@@ -5819,20 +5819,20 @@ function _buildFinHowPanel() {
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            ${''}
+            ''
           </div>
           <div style="display:grid;gap:6px;">
             <div style="background:#eff6ff;border-radius:8px;padding:8px 10px;">
               <div style="font-size:0.75rem;font-weight:700;color:#1e40af;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Cash Flow (Дашборд)</div>
-              <div style="${sub}">${''}</div>
+              <div style="${sub}">''</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;">
               <div style="font-size:0.75rem;font-weight:700;color:#16a34a;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> P&L — Прибутки і збитки (Аналітика)</div>
-              <div style="${sub}">${''}</div>
+              <div style="${sub}">''</div>
             </div>
             <div style="background:#fff7ed;border-radius:8px;padding:8px 10px;">
               <div style="font-size:0.75rem;font-weight:700;color:#c2410c;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v19"/><path d="M5 10l7-7 7 7"/><path d="M3 17l4-8 4 8"/><path d="M13 17l4-8 4 8"/><path d="M3 21h18"/></svg> Баланс (Аналітика → кнопка «Баланс»)</div>
-              <div style="${sub}">${''}</div>
+              <div style="${sub}">''</div>
             </div>
           </div>
         </div>
@@ -5841,7 +5841,7 @@ function _buildFinHowPanel() {
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            ${''}
+            ''
           </div>
           ${step(1,'','')}
           ${step(2,'','')}
@@ -5854,41 +5854,41 @@ function _buildFinHowPanel() {
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            ${''}
+            ''
           </div>
           <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;margin-bottom:8px;">
-            <div style="font-size:0.72rem;color:#92400e;font-weight:600;margin-bottom:4px;">${''}</div>
-            <div style="${sub}">${''}</div>
+            <div style="font-size:0.72rem;color:#92400e;font-weight:600;margin-bottom:4px;">''</div>
+            <div style="${sub}">''</div>
             <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
               ${badge('','#1d4ed8','#eff6ff')}
               ${badge('','#16a34a','#f0fdf4')}
             </div>
           </div>
-          <div style="${sub}">${''}</div>
-          <div style="margin-top:8px;${sub}">${''}</div>
+          <div style="${sub}">''</div>
+          <div style="margin-top:8px;${sub}">''</div>
         </div>
 
         <!-- БЛОК 4: COGS vs OPEX -->
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            ${''}
+            ''
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
             <div style="background:#fff7ed;border-radius:8px;padding:7px 9px;border:1px solid #fed7aa;">
               <div style="font-size:0.7rem;font-weight:700;color:#c2410c;margin-bottom:3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg> COGS</div>
-              <div style="${sub}">${''}</div>
+              <div style="${sub}">''</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:7px 9px;border:1px solid #bbf7d0;">
               <div style="font-size:0.7rem;font-weight:700;color:#16a34a;margin-bottom:3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> OPEX</div>
-              <div style="${sub}">${''}</div>
+              <div style="${sub}">''</div>
             </div>
           </div>
           <div style="background:#f9fafb;border-radius:8px;padding:7px 10px;font-size:0.72rem;color:#374151;">
-            <div>${''} 100K − COGS 40K = <b style="color:#16a34a;">${''} 60K (60%)</b></div>
-            <div style="margin-top:2px;">${''} 60K − OPEX 30K = <b style="color:#22c55e;">${''} 30K (30%)</b></div>
+            <div>'' 100K − COGS 40K = <b style="color:#16a34a;">'' 60K (60%)</b></div>
+            <div style="margin-top:2px;">'' 60K − OPEX 30K = <b style="color:#22c55e;">'' 30K (30%)</b></div>
           </div>
-          <div style="margin-top:7px;${sub}">${''}</div>
+          <div style="margin-top:7px;${sub}">''</div>
         </div>
 
         <!-- БЛОК 5: Автоматичні зв'язки -->
@@ -5923,20 +5923,20 @@ function _buildFinHowPanel() {
         <div style="${card}">
           <div style="${title}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            ${''}
+            ''
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;">
             <div style="background:#ecfeff;border-radius:8px;padding:7px 10px;border:1px solid #a5f3fc;">
-              <div style="font-size:0.72rem;font-weight:700;color:#0e7490;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${''}</div>
-              <div style="${sub}">${''}</div>
+              <div style="font-size:0.72rem;font-weight:700;color:#0e7490;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ''</div>
+              <div style="${sub}">''</div>
             </div>
             <div style="background:#f0fdf4;border-radius:8px;padding:7px 10px;border:1px solid #bbf7d0;">
-              <div style="font-size:0.72rem;font-weight:700;color:#166534;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> ${''}</div>
-              <div style="${sub}">${''}</div>
+              <div style="font-size:0.72rem;font-weight:700;color:#166534;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> ''</div>
+              <div style="${sub}">''</div>
             </div>
           </div>
           <div style="margin-top:7px;${sub}">
-            ${''}
+            ''
           </div>
         </div>
 
@@ -5944,7 +5944,7 @@ function _buildFinHowPanel() {
 
       <!-- Підсумок: де що знайти -->
       <div style="margin-top:12px;background:#1f2937;border-radius:12px;padding:12px 16px;">
-        <div style="font-size:0.75rem;font-weight:700;color:#fff;margin-bottom:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg> ${''}</div>
+        <div style="font-size:0.75rem;font-weight:700;color:#fff;margin-bottom:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg> ''</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
           ${[
             {tab:'',   desc:''},
@@ -6168,7 +6168,7 @@ window._exportPnlPdf = async function() {
     doc.setFont('helvetica','normal');
     doc.setFontSize(9);
     doc.setTextColor(100,100,100);
-    doc.text(`${''}: ${d.periodLabel}  |  Валюта: ${cur}  |  Дата: ${new Date().toLocaleDateString('uk-UA')}`, margin, y);
+    doc.text(`'': ${d.periodLabel}  |  Валюта: ${cur}  |  Дата: ${new Date().toLocaleDateString('uk-UA')}`, margin, y);
 
     // Функція для рядка таблиці
     const addRow = (label, val, pctStr, bold, bgColor) => {
@@ -6199,7 +6199,7 @@ window._exportPnlPdf = async function() {
     doc.setFont('helvetica','bold');
     doc.setFontSize(8.5);
     doc.text('', margin+2, y);
-    doc.text(`${''} (${cur})`, pageW-margin-42, y, {align:'right'});
+    doc.text(`'' (${cur})`, pageW-margin-42, y, {align:'right'});
     doc.text('', pageW-margin-4, y, {align:'right'});
     y += 8;
 

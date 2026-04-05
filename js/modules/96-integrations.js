@@ -75,7 +75,7 @@ function _renderAll() {
 
     <!-- AI / Anthropic API -->
     <div style="${card}">
-        <div style="${sTitle}">${I.key} ${''} ${badge(!!s.anthropicApiKey)}</div>
+        <div style="${sTitle}">${I.key} '' ${badge(!!s.anthropicApiKey)}</div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">API Key</label>
             <div style="display:flex;gap:0.4rem;">
@@ -91,7 +91,7 @@ function _renderAll() {
         </div>
         <button onclick="intgSave('anthropicApiKey','intg_anthropic')"
             style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            ${I.save} ${''}
+            ${I.save} ''
         </button>
     </div>
 
@@ -108,21 +108,21 @@ function _renderAll() {
             </div>
         </div>
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">${''}</label>
+            <label style="${lbl}">''</label>
             <input id="intg_tgchat" type="text" value="${s.managerChatId||''}"
                 placeholder="-1001234567890" style="${inp}font-family:monospace;">
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                ${''}
+                ''
             </div>
         </div>
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveTelegram()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ${''}
+                ${I.save} ''
             </button>
             <button onclick="intgTestTelegram()"
                 style="padding:0.4rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.test} ${''}
+                ${I.test} ''
             </button>
         </div>
     </div>
@@ -149,22 +149,22 @@ function _renderAll() {
             </div>
         </div>
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">${''}</label>
+            <label style="${lbl}">''</label>
             <input id="intg_waphone" type="text" value="${s.whatsappPhone||''}"
                 placeholder="+420123456789" style="${inp}">
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                ${''}
+                ''
             </div>
         </div>
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">${''}</label>
+            <label style="${lbl}">''</label>
             <div style="font-size:0.72rem;color:#6b7280;background:#f8fafc;border-radius:6px;padding:0.5rem 0.65rem;border:1px solid #e8eaed;">
-                ${''}<br>
+                ''<br>
                 ✓ КП погоджено → рахунок на передоплату<br>
-                ${''}<br>
-                ${''}<br>
-                ${''}<br>
-                ${''}
+                ''<br>
+                ''<br>
+                ''<br>
+                ''
             </div>
         </div>
         <div style="display:flex;gap:0.4rem;">
@@ -184,11 +184,11 @@ function _renderAll() {
             <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveWhatsApp()"
                 style="padding:0.4rem 1rem;background:#25d366;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ${''}
+                ${I.save} ''
             </button>
             <button onclick="intgTestWhatsApp()"
                 style="padding:0.4rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.test} ${''}
+                ${I.test} ''
             </button>
             </div>
         </div>
@@ -200,23 +200,23 @@ function _renderAll() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             Viber Bot ${badge(!!s.viberBotToken)}\n        </div>\n        <div style=\"margin-bottom:0.6rem;\">\n            <label style=\"${lbl}\">Bot Token</label>\n            <div style=\"display:flex;gap:0.4rem;\">\n                <input id=\"intg_vibertoken\" type=\"password\" value=\"${s.viberBotToken||''}\"\n                    placeholder=\"xxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx-xxxxxxxx\" style=\"${inp}flex:1;font-family:monospace;\">\n                <button onclick=\"intgToggleVisibility('intg_vibertoken')\"\n                    style=\"padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;\">${I.eye}</button>\n            </div>\n            <div style=\"font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;\''https://partners.viber.com\" target=\"_blank\" style=\"color:#7c3aed;\">partners.viber.com</a> → Create bot\n            </div>\n        </div>\n        <div style=\"margin-bottom:0.75rem;\">\n            <label style=\"${lbl}\''intg_viberchat\" type=\"text\" value=\"${s.viberManagerId||''}\"\n                placeholder=\"+380XXXXXXXXX або user_id\" style=\"${inp}\">\n            <div style=\"font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;\''margin-bottom:0.75rem;\">\n            <label style=\"${lbl}\''display:flex;gap:0.4rem;\">\n                <input type=\"text\" readonly\n                    value=\"https://apptalko.com/api/webhook?channel=viber&cid=${window.currentCompanyId||''}\"\n                    style=\"${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;\">\n                <button onclick=\"intgCopy('https://apptalko.com/api/webhook?channel=viber&cid=${window.currentCompanyId||''}')\"  \n                    style=\"padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;\">${I.copy}</button>\n            </div>\n        </div>\n        <div style=\"display:flex;gap:0.4rem;\">\n            <button onclick=\"intgSaveViber()\"\n                style=\"padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\''intgTestViber()\"\n                style=\"padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\''intgSetViberWebhook()\"\n                style=\"padding:0.4rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\">\n                ${I.webhook} Підключити webhook\n            </button>\n        </div>\n    </div>\n\n    <!-- Webhook / Ліди з лендингів -->
     <div style="${card}">
-        <div style="${sTitle}">${I.webhook} ${''} ${badge(!!(s.webhookApiKey))}</div>
+        <div style="${sTitle}">${I.webhook} '' ${badge(!!(s.webhookApiKey))}</div>
 
         <!-- API Key -->
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">${''}</label>
+            <label style="${lbl}">''</label>
             <div style="display:flex;gap:0.4rem;">
                 <input id="intg_apikey" type="password" value="${s.webhookApiKey||''}"
-                    placeholder="${''}" style="${inp}flex:1;font-family:monospace;">
+                    placeholder="''" style="${inp}flex:1;font-family:monospace;">
                 <button onclick="intgToggleVisibility('intg_apikey')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
                 <button onclick="intgGenerateApiKey()"
                     style="padding:0.45rem 0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;color:#16a34a;font-size:0.72rem;font-weight:600;white-space:nowrap;">
-                    ${''}
+                    ''
                 </button>
             </div>
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                ${''}
+                ''
             </div>
         </div>
 
@@ -236,19 +236,19 @@ function _renderAll() {
         <!-- Зберегти ключ -->
         <button onclick="intgSave('webhookApiKey','intg_apikey')"
             style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;margin-bottom:1rem;">
-            ${I.save} ${''}
+            ${I.save} ''
         </button>
 
         <!-- Готовий код форми -->
         <div style="border-top:1px solid #f1f5f9;padding-top:0.85rem;">
-            <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:0.5rem;">${''}</div>
+            <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:0.5rem;">''</div>
             <div style="position:relative;">
                 <pre id="intg_form_code" style="background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:0.85rem 1rem;font-size:0.68rem;overflow-x:auto;margin:0;line-height:1.6;">&lt;form id="talko-lead-form"&gt;
   &lt;input name="name" placeholder=${window.t('yourNamePh')} required&gt;
   &lt;input name="phone" placeholder=${window.t('crmColPhone')} required&gt;
   &lt;input name="email" placeholder="Email"&gt;
   &lt;textarea name="message" placeholder=${window.t('crmMessage')}&gt;&lt;/textarea&gt;
-  &lt;button type="submit"&gt;${''}&lt;/button&gt;
+  &lt;button type="submit"&gt;''&lt;/button&gt;
 &lt;/form&gt;
 
 &lt;script&gt;
@@ -273,11 +273,11 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
                     style="position:absolute;top:0.5rem;right:0.5rem;padding:0.3rem 0.6rem;
                     background:#313244;border:1px solid #45475a;border-radius:5px;
                     cursor:pointer;color:#cdd6f4;font-size:0.68rem;display:flex;align-items:center;gap:4px;">
-                    ${I.copy} ${''}
+                    ${I.copy} ''
                 </button>
             </div>
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.5rem;line-height:1.5;">
-                ${''}
+                ''
             </div>
         </div>
     </div>
@@ -286,7 +286,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
     <div style="${card}">
         <div style="${sTitle}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            ${''} ${badge(!!s.novaPoshtaApiKey)}
+            '' ${badge(!!s.novaPoshtaApiKey)}
         </div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">API ключ</label>
@@ -303,11 +303,11 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
             <button onclick="intgSaveNP()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ${''}
+                ${I.save} ''
             </button>
             <button onclick="intgTestNP()"
                 style="padding:0.4rem 0.9rem;background:#fef2f2;color:#e30613;border:1px solid #fecaca;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.test} ${''}
+                ${I.test} ''
             </button>
         </div>
         ${s.novaPoshtaApiKey ? `
@@ -318,7 +318,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
                     style="${inp}flex:1;font-family:monospace;">
                 <button onclick="intgTrackNP()"
                     style="padding:0.35rem 0.75rem;background:#e30613;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;white-space:nowrap;">
-                    ${''}
+                    ''
                 </button>
             </div>
             <div id="intg_np_result" style="margin-top:0.5rem;display:none;font-size:0.78rem;line-height:1.5;"></div>
@@ -329,7 +329,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
     <div style="${card}">
         <div style="${sTitle}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-            ${''} ${badge(!!(s.monobankToken || s.liqpayPublicKey))}
+            '' ${badge(!!(s.monobankToken || s.liqpayPublicKey))}
         </div>
 
         <!-- Monobank -->
@@ -373,15 +373,15 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
 
         <button onclick="intgSavePayments()"
             style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            ${I.save} ${''}
+            ${I.save} ''
         </button>
     </div>
 
     <!-- Zapier / Make -->
     <div style="${card}">
-        <div style="${sTitle}">${I.zapier} ${''}</div>
+        <div style="${sTitle}">${I.zapier} ''</div>
         <div style="font-size:0.8rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ${''}
+            ''
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
             ${[
@@ -408,7 +408,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Facebook Lead Ads ${badge(!!(s.fbPageAccessToken && s.fbPageId))}
         </div>
         <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ${''}
+            ''
         </div>
 
         <div style="margin-bottom:0.6rem;">
@@ -441,7 +441,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveFacebook()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ${''}
+                ${I.save} ''
             </button>
             <button onclick="intgCopy('https://apptalko.com/api/webhook?channel=facebook&cid=${window.currentCompanyId||''}')"
                 style="padding:0.4rem 0.9rem;background:#f0f9ff;color:#0369a1;border:1px solid #bae6fd;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
@@ -490,7 +490,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
             <button onclick="intgSaveInstagram()"
                 style="padding:0.4rem 1rem;background:#c026d3;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ${''}
+                ${I.save} ''
             </button>
             <button onclick="intgTestInstagram()"
                 style="padding:0.4rem 0.9rem;background:#fdf4ff;color:#c026d3;border:1px solid #e9d5ff;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
@@ -510,21 +510,21 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Google Sheets ${badge(!!s.googleSheetsUrl)}
         </div>
         <div style="margin-bottom:0.6rem;">
-            <label style="${lbl}">${''}</label>
+            <label style="${lbl}">''</label>
             <input id="intg_sheets" type="text" value="${s.googleSheetsUrl||''}"
                 placeholder="https://script.google.com/macros/s/..." style="${inp}">
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
-                ${''}
+                ''
             </div>
         </div>
         <button onclick="intgSave('googleSheetsUrl','intg_sheets',false)"
             style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            ${I.save} ${''}
+            ${I.save} ''
         </button>
     </div>
 
     <!-- ══════════════════════════════════════════════════
-         ${''}
+         ''
     ══════════════════════════════════════════════════ -->
 
     <!-- Binotel -->
@@ -534,7 +534,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Binotel ${badge(!!(s.binotelKey && s.binotelSecret))}
         </div>
         <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ${''}
+            ''
         </div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">API Key</label>
@@ -556,7 +556,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             </div>
         </div>
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">${''}</label>
+            <label style="${lbl}">''</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="text" readonly
                     value="${window.currentCompanyId ? 'https://apptalko.com/api/webhook?channel=binotel&cid=' + window.currentCompanyId : ''}"
@@ -575,7 +575,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveBinotel()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ${''}
+                ${I.save} ''
             </button>
             <button onclick="intgTestBinotel()"
                 style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
@@ -591,7 +591,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Ringostat ${badge(!!s.ringostatApiKey)}
         </div>
         <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ${''}
+            ''
         </div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">API Token</label>
@@ -629,7 +629,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveRingostat()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ${''}
+                ${I.save} ''
             </button>
             <button onclick="intgTestRingostat()"
                 style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
@@ -645,7 +645,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             Stream Telecom ${badge(!!(s.streamTelecomLogin && s.streamTelecomPassword))}
         </div>
         <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
-            ${''}
+            ''
         </div>
         <div style="margin-bottom:0.6rem;">
             <label style="${lbl}">Login (email)</label>
@@ -682,7 +682,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveStreamTelecom()"
                 style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-                ${I.save} ${''}
+                ${I.save} ''
             </button>
             <button onclick="intgTestStreamTelecom()"
                 style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
@@ -960,13 +960,13 @@ window.intgTrackNP = async function() {
                 <div style="background:white;border:1px solid #e8eaed;border-radius:6px;padding:0.5rem 0.65rem;">
                     <div style="font-weight:700;color:${statusColor};margin-bottom:0.25rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>${d.Status || '—'}</div>
                     <div style="color:#374151;">ТТН: <b>${ttn}</b></div>
-                    ${d.RecipientFullName ? `<div style="color:#6b7280;">${''} ${d.RecipientFullName}</div>` : ''}
+                    ${d.RecipientFullName ? `<div style="color:#6b7280;">'' ${d.RecipientFullName}</div>` : ''}
                     ${d.CityRecipient ? `<div style="color:#6b7280;">${window.t('cityLabel').replace('{V}', d.CityRecipient)}</div>` : ''}
-                    ${d.ScheduledDeliveryDate ? `<div style="color:#6b7280;">${''} ${d.ScheduledDeliveryDate}</div>` : ''}
+                    ${d.ScheduledDeliveryDate ? `<div style="color:#6b7280;">'' ${d.ScheduledDeliveryDate}</div>` : ''}
                     ${d.WarehouseRecipient ? `<div style="color:#6b7280;font-size:0.72rem;">${d.WarehouseRecipient}</div>` : ''}
                 </div>`;
         } else {
-            if (resultEl) resultEl.innerHTML = `${''}`;
+            if (resultEl) resultEl.innerHTML = `''`;
         }
     } catch(e) {
         if (resultEl) resultEl.innerHTML = `<span style="color:#ef4444;">${e.message}</span>`;

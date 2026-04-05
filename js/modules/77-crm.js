@@ -174,7 +174,7 @@ function _renderShell() {
                 style="display:flex;align-items:center;gap:.3rem;padding:.3rem .65rem;
                 border:1px solid #22c55e;border-radius:6px;background:#f0fdf4;
                 color:#16a34a;cursor:pointer;font-size:.75rem;font-weight:600;">
-                ${I.list} ${''}
+                ${I.list} ''
             </button>
             <button id="crmToggleKanban" onclick="crmSetViewMode('kanban')"
                 style="display:flex;align-items:center;gap:.3rem;padding:.3rem .65rem;
@@ -231,7 +231,7 @@ function _renderShell() {
                         ${I.kanban}
                     </button>
                     <button id="crmToggleList" onclick="crmSetViewMode('list')"
-                        title="${''}" style="padding:0.3rem 0.5rem;border:1px solid #e8eaed;border-radius:0 6px 6px 0;
+                        title="''" style="padding:0.3rem 0.5rem;border:1px solid #e8eaed;border-radius:0 6px 6px 0;
                         background:white;cursor:pointer;display:flex;align-items:center;color:#6b7280;">
                         ${I.list}
                     </button>
@@ -620,7 +620,7 @@ function _kanbanFilterBar() {
         </div>` : ''}
         <div style="display:flex;align-items:center;gap:3px;border:1px solid #e8eaed;border-radius:6px;background:white;padding:0 0.4rem;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <input id="crmKanbanFilterCity" type="text" placeholder="${''}" value="${f.city||''}"
+            <input id="crmKanbanFilterCity" type="text" placeholder="''" value="${f.city||''}"
                 oninput="crmApplyFilters()"
                 style="border:none;background:none;outline:none;font-size:0.75rem;width:75px;padding:0.25rem 0;">
         </div>
@@ -749,7 +749,7 @@ function _renderKanban() {
         </div>
         <button onclick="crm.selectedIds.clear();_renderKanban()"
             style="margin-left:auto;padding:0.25rem 0.6rem;background:none;color:#9ca3af;border:1px solid #4b5563;border-radius:6px;font-size:0.74rem;cursor:pointer;">
-            ${''}
+            ''
         </button>
     </div>` : ''}
 
@@ -793,7 +793,7 @@ function _kanbanCol(stage) {
             ${deals.length ? deals.map(d => _dealCard(d)).join('') : `
             <div style="margin-top:0.5rem;border:2px dashed #dde1e7;border-radius:8px;
                 padding:1.5rem 0.5rem;text-align:center;color:#c4c9d4;font-size:0.72rem;">
-                ${''}
+                ''
             </div>`}
         </div>
     </div>`;
@@ -883,13 +883,13 @@ function _renderListView() {
         </span>
         <div style="display:flex;gap:0.35rem;margin-left:0.5rem;flex-wrap:wrap;">
             <button onclick="crmBulkStage()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                ${''}
+                ''
             </button>
             <button onclick="crmBulkAssign()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                ${''}
+                ''
             </button>
             <button onclick="crmBulkTag()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                ${''}
+                ''
             </button>
             <button onclick="crmBulkDelete()" style="padding:0.3rem 0.7rem;background:#7f1d1d;color:#fca5a5;border:1px solid #991b1b;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
                 Видалити
@@ -897,7 +897,7 @@ function _renderListView() {
         </div>
         <button onclick="crm.selectedIds=new Set();crm._bulkMode=false;crmSetViewMode('list')"
             style="margin-left:auto;padding:0.3rem 0.6rem;background:none;color:#9ca3af;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.72rem;">
-            ${''}
+            ''
         </button>
     </div>` : '';
 
@@ -931,7 +931,7 @@ function _renderListView() {
         ${deals.length === 0 ? `
         <div style="text-align:center;padding:3rem 1rem;color:#9ca3af;font-size:.83rem;">
             <div style="margin-bottom:0.5rem;color:#9ca3af;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg></div>
-            ${''}
+            ''
         </div>` :
         deals.map(d => {
             const stage = stages.find(s=>s.id===d.stage);
@@ -991,7 +991,7 @@ function _renderListView() {
             ${crm.filters.assignee || crm.filters.stage || crm.filters.search ? `
             <button onclick="crm.filters={assignee:'',stage:'',tag:'',search:''};document.getElementById('crmSearchInput').value='';crmSetViewMode('list')"
                 style="padding:0.35rem 0.65rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;color:#6b7280;">
-                ${''}
+                ''
             </button>` : ''}
             <div style="margin-left:auto;font-size:0.78rem;color:#9ca3af;">${deals.length} ${window.t('crmDealsWord')||'угод'}</div>
         </div>
@@ -1020,7 +1020,7 @@ function _renderListView() {
                 <tbody>
                     ${deals.length === 0 ? `
                     <tr><td colspan="9" style="text-align:center;padding:3rem;color:#9ca3af;font-size:0.82rem;">
-                        ${''}
+                        ''
                     </td></tr>` :
                     deals.map((d,i) => {
                         const stage = stages.find(s=>s.id===d.stage);
@@ -1981,19 +1981,19 @@ window.crmOpenDeal = function(dealId) {
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title=''>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M16.95 16.95l1.41 1.41M4.93 4.93l1.41 1.41M7.05 16.95l-1.41 1.41M21 12h-2M5 12H3M12 21v-2M12 5V3"/></svg>
-                    ${''}
+                    ''
                 </button>
                 <button onclick="crmCreateTaskFromDeal('${deal.id}')"
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title=''>
-                    ${I.check} ${''}
+                    ${I.check} ''
                 </button>
                 ${window._userHasTabAccess('finance') ? `<button onclick="window.crmCreateInvoiceForDeal('${deal.id}')"
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title=''>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${''}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ''
                 </button>` : ''}
                 <!-- Кнопка замовлення покупця (77m) -->
                 ${window._userHasTabAccess('sales')
@@ -2002,20 +2002,20 @@ window.crmOpenDeal = function(dealId) {
                           style="padding:0.5rem 1rem;background:#ede9fe;color:#6366f1;border:1px solid #c4b5fd;
                           border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
-                          ${''}
+                          ''
                       </button>`
                     : `<button onclick="window._crmCreateOrderFromDeal('${deal.id}')" class="crm-order-footer-btn"
                           style="padding:0.5rem 1rem;background:#f0fdf4;color:#059669;border:1px solid #bbf7d0;
                           border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                          ${''}
+                          ''
                       </button>`)
                   : ''
                 }
                 <button onclick="crmSaveDeal('${deal.id}')"
                     style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;
                     border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                    ${''}
+                    ''
                 </button>
             </div>
         </div>
@@ -2199,15 +2199,15 @@ function _renderDealDetails(deal) {
     </div>` : ''}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
         <div>
-            <label style="${lbl}">${''}</label>
+            <label style="${lbl}">''</label>
             <input id="dd_close" type="date" value="${deal.expectedClose||''}" style="${inp}">
         </div>
         <div>
-            <label style="${lbl}">${''}</label>
+            <label style="${lbl}">''</label>
             <input id="dd_probability" type="number" min="0" max="100" value="${deal.probability ?? ''}" placeholder="10" style="${inp}">
         </div>
         <div>
-            <label style="${lbl}">${''}</label>
+            <label style="${lbl}">''</label>
             <div style="display:flex;gap:0.35rem;">
                 <input id="dd_nextContact" type="date" value="${deal.nextContactDate||''}" style="${inp}${deal.nextContactDate && deal.nextContactDate < _crmToday() ? 'border-color:#ef4444;' : ''}flex:1;min-width:0;">
                 <input id="dd_nextContactTime" type="time" value="${deal.nextContactTime||''}" style="padding:0.45rem 0.4rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;width:82px;">
@@ -2215,21 +2215,21 @@ function _renderDealDetails(deal) {
         </div>
     </div>
     <div style="${row}">
-        <label style="${lbl}">${''}</label>
+        <label style="${lbl}">''</label>
         <select id="dd_assignee" style="${inp}background:white;cursor:pointer;">
-            <option value="">${''}</option>
+            <option value="">''</option>
             ${(typeof users !== 'undefined' ? users : []).map(u => '<option value="' + u.id + '" ' + (deal.assigneeId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>').join('')}
         </select>
     </div>
     <div style="${row}">
-        <label style="${lbl}">${''}</label>
+        <label style="${lbl}">''</label>
         <textarea id="dd_note" rows="3" style="${inp}resize:vertical;overflow:hidden;min-height:72px;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';" onfocus="setTimeout(()=>{this.style.height='auto';this.style.height=this.scrollHeight+'px';},0)">${_esc(deal.note||'')}</textarea>
     </div>
 
     <!-- Доставка / Оплата — тільки для ніш з доставкою -->
     ${['furniture','construction','cleaning','logistics','retail',''].includes(window.currentCompanyData?.niche||'') || !window.currentCompanyData?.niche ? `
     <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
-        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> ${''}</div>
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> ''</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
                 <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">ТТН Нова Пошта</label>
@@ -2244,20 +2244,20 @@ function _renderDealDetails(deal) {
                 </div>
             </div>
             <div>
-                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">${''}</label>
+                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">''</label>
                 <select id="dd_payStatus" style="${inp}background:white;cursor:pointer;font-size:0.78rem;">
-                    <option value="" ${!deal.payStatus?'selected':''}>${''}</option>
-                    <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>${''}</option>
-                    <option value="paid"     ${deal.payStatus==='paid'    ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${''}</option>
-                    <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none"><polygon points="12,2 22,12 12,22 2,12"/></svg>${''}</option>
-                    <option value="refunded" ${deal.payStatus==='refunded'?'selected':''}>${''}</option>
+                    <option value="" ${!deal.payStatus?'selected':''}>''</option>
+                    <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>''</option>
+                    <option value="paid"     ${deal.payStatus==='paid'    ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>''</option>
+                    <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none"><polygon points="12,2 22,12 12,22 2,12"/></svg>''</option>
+                    <option value="refunded" ${deal.payStatus==='refunded'?'selected':''}>''</option>
                 </select>
             </div>
         </div>
         ${deal.amount ? `
         <button onclick="crmMonoPayLink(${deal.amount||0},'${_esc(deal.title||deal.clientName||'')}','${deal.id}')"
             style="padding:0.3rem 0.75rem;background:#1f3950;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> ${''} ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> '' ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
         </button>` : ''}
     </div>
 
@@ -2267,15 +2267,15 @@ function _renderDealDetails(deal) {
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
         <div style="font-size:0.68rem;font-weight:700;color:#15803d;text-transform:uppercase;margin-bottom:0.6rem;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            ${''}
+            ''
         </div>
 
         <!-- Рядок 1: Філіал + Адреса об'єкту -->
         <div style="display:grid;grid-template-columns:1fr 2fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
-                <label style="${lbl}">${''}</label>
+                <label style="${lbl}">''</label>
                 <select id="dd_branch" style="${inp}background:white;cursor:pointer;">
-                    <option value="" ${!deal.branch?'selected':''}>${''}</option>
+                    <option value="" ${!deal.branch?'selected':''}>''</option>
                     <option value="prague"    ${deal.branch==='prague'    ?'selected':''}> Прага</option>
                     <option value="brno"      ${deal.branch==='brno'      ?'selected':''}> Брно</option>
                     <option value="bratislava"${deal.branch==='bratislava'?'selected':''}>🌆 Братислава</option>
@@ -2290,16 +2290,16 @@ function _renderDealDetails(deal) {
         <!-- Рядок 2: Замірник + Дата заміру -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
-                <label style="${lbl}">${''}</label>
+                <label style="${lbl}">''</label>
                 <select id="dd_measurer" style="${inp}background:white;cursor:pointer;">
-                    <option value="" ${!deal.measurerId?'selected':''}>${''}</option>
+                    <option value="" ${!deal.measurerId?'selected':''}>''</option>
                     ${(typeof users !== 'undefined' ? users : []).map(u =>
                         '<option value="' + u.id + '" ' + (deal.measurerId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>'
                     ).join('')}
                 </select>
             </div>
             <div>
-                <label style="${lbl}">${''}</label>
+                <label style="${lbl}">''</label>
                 <input id="dd_measurementDate" type="datetime-local" value="${deal.measurementDate||''}" style="${inp}">
             </div>
         </div>
@@ -2307,16 +2307,16 @@ function _renderDealDetails(deal) {
         <!-- Рядок 3: Монтажник + Дата монтажу -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
-                <label style="${lbl}">${''}</label>
+                <label style="${lbl}">''</label>
                 <select id="dd_installer" style="${inp}background:white;cursor:pointer;">
-                    <option value="" ${!deal.installerId?'selected':''}>${''}</option>
+                    <option value="" ${!deal.installerId?'selected':''}>''</option>
                     ${(typeof users !== 'undefined' ? users : []).map(u =>
                         '<option value="' + u.id + '" ' + (deal.installerId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>'
                     ).join('')}
                 </select>
             </div>
             <div>
-                <label style="${lbl}">${''}</label>
+                <label style="${lbl}">''</label>
                 <input id="dd_installationDate" type="datetime-local" value="${deal.installationDate||''}" style="${inp}">
             </div>
         </div>
@@ -2324,7 +2324,7 @@ function _renderDealDetails(deal) {
         <!-- Рядок 4: Передоплата + Залишок (авто) -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
-                <label style="${lbl}">${''}</label>
+                <label style="${lbl}">''</label>
                 <input id="dd_prepayment" type="number" min="0" step="0.01"
                     value="${deal.prepayment||''}" placeholder="0"
                     oninput="(function(){
@@ -2336,7 +2336,7 @@ function _renderDealDetails(deal) {
                     })()" style="${inp}">
             </div>
             <div>
-                <label style="${lbl}">${''}</label>
+                <label style="${lbl}">''</label>
                 <div id="dd_balance_display" style="${inp}background:#f9fafb;color:#374151;font-weight:600;display:flex;align-items:center;">
                     ${deal.amount && deal.prepayment != null
                         ? (Math.max(0, (deal.amount||0) - (deal.prepayment||0))).toFixed(2) + ' €'
@@ -2350,7 +2350,7 @@ function _renderDealDetails(deal) {
 
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
     <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;margin-bottom:0.9rem;">
-        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">${''}</div>
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">''</div>
         ${[[window.t('crmRole'),'role'],[window.t('crmProblem'),'mainProblem'],[window.t('crmGoal'),'mainGoal']].map(([l,k]) =>
             deal.leadData[k] ? `<div style="font-size:0.78rem;margin-bottom:0.25rem;"><span style="color:#9ca3af;">${l}: </span>${_esc(deal.leadData[k])}</div>` : ''
         ).join('')}
@@ -2358,7 +2358,7 @@ function _renderDealDetails(deal) {
 
     <!-- Теги -->
     <div style="margin-bottom:0.9rem;">
-        <label style="${lbl}">${''}</label>
+        <label style="${lbl}">''</label>
         <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.3rem;" id="dealTagsList">
             ${(deal.tags||[]).map(tag =>
             `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f3f4f6;border-radius:20px;font-size:0.72rem;color:#374151;">
@@ -2368,17 +2368,17 @@ function _renderDealDetails(deal) {
             </span>`).join('')}
         </div>
         <div style="display:flex;gap:0.3rem;">
-            <input id="dd_tagInput" placeholder="${''}" onkeydown="if(event.key==='Enter'){event.preventDefault();crmAddTag('${deal.id}')}"
+            <input id="dd_tagInput" placeholder="''" onkeydown="if(event.key==='Enter'){event.preventDefault();crmAddTag('${deal.id}')}"
                 style="${inp}flex:1;">
             <button onclick="crmAddTag('${deal.id}')"
-                style="padding:0.45rem 0.7rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;">${''}</button>
+                style="padding:0.45rem 0.7rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;">''</button>
         </div>
     </div>
 
     <!-- Товари зі складу -->
     ${typeof window.whGetItems === 'function' && window.whGetItems().length > 0 ? `
     <div style="margin-bottom:0.9rem;">
-        <label style="${lbl}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>${''}</label>
+        <label style="${lbl}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>''</label>
         <div id="dealWhItems" style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.4rem;">
             ${(deal.warehouseItems||[]).map((wi,idx) => {
                 const it = window.whGetItems().find(i=>i.id===wi.itemId);
@@ -2555,10 +2555,10 @@ window.crmToggleDealChat = async function (dealId) {
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
                     height:100%;text-align:center;padding:2rem;color:#9ca3af;">
                     <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                    <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">${''}</div>
+                    <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">''</div>
                     <div style="font-size:0.75rem;line-height:1.5;">
-                        ${''}<br>
-                        ${''}
+                        ''<br>
+                        ''
                     </div>
                     ${deal.phone ? `
                     <div style="margin-top:1rem;display:flex;flex-direction:column;gap:0.4rem;width:100%;">
@@ -3118,7 +3118,7 @@ async function _loadActivityTab(deal) {
         <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;margin-bottom:1rem;border:1px solid #e8eaed;">
             <div style="display:flex;gap:0.4rem;">
                 <select id="actType" style="padding:0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;background:white;">
-                    <option value="note">${''}</option>
+                    <option value="note">''</option>
                     <option value="call">${window.t('crmCall')||'Дзвінок'}</option>
                     <option value="meeting">Встреча</option>
                     <option value="email">Email</option>
@@ -3343,7 +3343,7 @@ async function _loadAITab(deal) {
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.65rem;">
                 <div style="display:flex;align-items:center;gap:0.4rem;">
                     <div style="width:28px;height:28px;background:#f0fdf4;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#22c55e;">${I.ai}</div>
-                    <div style="font-weight:700;font-size:0.88rem;color:#111827;">${''}</div>
+                    <div style="font-weight:700;font-size:0.88rem;color:#111827;">''</div>
                 </div>
                 ${analyzedAt ? `<div style="font-size:0.68rem;color:#9ca3af;">${analyzedAt}</div>` : ''}
             </div>
@@ -3352,7 +3352,7 @@ async function _loadAITab(deal) {
         <button onclick="crmRunAI('${deal.id}')"
             style="width:100%;padding:0.5rem;background:#f0fdf4;color:#16a34a;
             border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:0.35rem;">
-            ${I.refresh} ${''}
+            ${I.refresh} ''
         </button>`;
         return;
     }
@@ -3371,9 +3371,9 @@ async function _loadAITab(deal) {
             margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;color:#22c55e;font-size:1.4rem;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
         </div>
-        <div style="font-weight:700;font-size:0.92rem;margin-bottom:0.35rem;color:#111827;">${''}</div>
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:0.35rem;color:#111827;">''</div>
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;line-height:1.5;">
-            ${''}
+            ''
         </div>
         ${ctx.length ? `<div style="background:#f8fafc;border-radius:8px;padding:0.65rem;margin-bottom:1rem;text-align:left;">
             ${ctx.map(c=>`<div style="font-size:0.75rem;color:#6b7280;margin-bottom:3px;">${c}</div>`).join('')}
@@ -3381,9 +3381,9 @@ async function _loadAITab(deal) {
         <button onclick="crmRunAI('${deal.id}')"
             style="padding:0.65rem 1.75rem;background:#22c55e;color:white;border:none;
             border-radius:8px;cursor:pointer;font-weight:600;font-size:0.84rem;display:inline-flex;align-items:center;gap:0.4rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>${''}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>''
         </button>
-        <div style="font-size:0.68rem;color:#d1d5db;margin-top:0.5rem;">${''}</div>
+        <div style="font-size:0.68rem;color:#d1d5db;margin-top:0.5rem;">''</div>
     </div>`;
 }
 
@@ -3560,7 +3560,7 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 <div>
                     <label style="${lbl}">${window.t('crmNiche')||'Ніша'}</label>
                     <div style="position:relative;">
-                        <input id="nd_niche" placeholder="${''}"
+                        <input id="nd_niche" placeholder="''"
                             list="nd_nicheList"
                             autocomplete="off"
                             style="${inp}"
@@ -3604,7 +3604,7 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 <button onclick="document.getElementById('crmCreateDealOverlay').remove()"
                     style="padding:0.45rem 1rem;background:white;border:1px solid #e8eaed;
                     border-radius:6px;cursor:pointer;font-size:0.82rem;color:#374151;">
-                    ${''}
+                    ''
                 </button>
                 <button onclick="crmCreateDeal()"
                     style="padding:0.45rem 1.25rem;background:#22c55e;color:white;border:none;
@@ -3718,7 +3718,7 @@ function _renderClients() {
                     <button onclick="crmOpenCreateClient()"
                         style="padding:0.5rem 1rem;background:#22c55e;color:white;border:none;
                         border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;white-space:nowrap;">
-                        ${''}
+                        ''
                     </button>
                 </div>
                 <div id="crmClientList">${_clientListHTML(crm.clients)}</div>
@@ -3815,9 +3815,9 @@ window.crmOpenClient = function(clientId) {
 
         <!-- Контакти -->
         <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;margin-bottom:0.75rem;">
-            <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">${''}</div>
+            <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">''</div>
             ${cl.phone ? `<div style="font-size:0.82rem;color:#374151;margin-bottom:0.25rem;">
-                <span style="color:#9ca3af;">${''}</span> ${_esc(cl.phone)}</div>` : ''}
+                <span style="color:#9ca3af;">''</span> ${_esc(cl.phone)}</div>` : ''}
             ${cl.email ? `<div style="font-size:0.82rem;color:#374151;margin-bottom:0.25rem;">
                 <span style="color:#9ca3af;">Email:</span> ${_esc(cl.email)}</div>` : ''}
             ${cl.telegram ? `<div style="font-size:0.82rem;color:#374151;">
@@ -3841,7 +3841,7 @@ window.crmOpenClient = function(clientId) {
 
         <!-- Угоди клієнта -->
         <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.4rem;">
-            ${''} (${clientDeals.length})
+            '' (${clientDeals.length})
         </div>
         ${clientDeals.length ? clientDeals.slice(0,5).map(d => {
             const stage = (crm.pipeline?.stages||[]).find(s=>s.id===d.stage);
@@ -3875,7 +3875,7 @@ window.crmOpenClient = function(clientId) {
             <button onclick="crmEditClient('${cl.id}')"
                 style="padding:0.42rem 0.6rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:3px;">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                ${''}
+                ''
             </button>
             <button onclick="crmDeleteClient('${cl.id}')"
                 style="padding:0.42rem 0.6rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;
@@ -3894,7 +3894,7 @@ window.crmOpenClient = function(clientId) {
             <button onclick="crmClientLaunchProcess('${cl.id}')"
                 style="flex:1;padding:0.42rem;background:#f8fafc;color:#374151;border:1px solid #e8eaed;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:3px;">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M16.95 16.95l1.41 1.41M4.93 4.93l1.41 1.41M7.05 16.95l-1.41 1.41M21 12h-2M5 12H3M12 21v-2M12 5V3"/></svg>
-                ${''}
+                ''
             </button>
         </div>
 
@@ -3909,7 +3909,7 @@ window.crmOpenClient = function(clientId) {
                 style="height:280px;overflow-y:auto;padding:0.75rem;
                 background:#f8fafc;border-radius:8px;border:1px solid #f1f5f9;
                 display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.5rem;">
-                <div style="text-align:center;color:#9ca3af;font-size:0.78rem;padding:2rem;">${''}</div>
+                <div style="text-align:center;color:#9ca3af;font-size:0.78rem;padding:2rem;">''</div>
             </div>
             <!-- Поле вводу -->
             <div id="chatInputArea_crm" style="display:flex;gap:0.4rem;align-items:flex-end;">
@@ -3992,7 +3992,7 @@ window.crmEditClient = function(clientId) {
     overlay.innerHTML = `
         <div style="background:white;border-radius:14px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;">
-                <div style="font-size:0.95rem;font-weight:700;color:#111827;">${''}</div>
+                <div style="font-size:0.95rem;font-weight:700;color:#111827;">''</div>
                 <button onclick="document.getElementById('crmEditClientOverlay').remove()"
                     style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;padding:0.25rem;">✕</button>
             </div>
@@ -4002,7 +4002,7 @@ window.crmEditClient = function(clientId) {
                     <input id="eci_name" style="${inp}" value="${_esc(cl.name||'')}" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
                 <div>
-                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${''}</label>
+                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">''</label>
                     <input id="eci_phone" style="${inp}" value="${_esc(cl.phone||'')}" placeholder="+380..." onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
                 <div>
@@ -4014,37 +4014,37 @@ window.crmEditClient = function(clientId) {
                     <input id="eci_telegram" style="${inp}" value="${_esc(cl.telegram||'')}" placeholder="@username" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
                 <div>
-                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${''}</label>
-                    <input id="eci_niche" style="${inp}" value="${_esc(cl.niche||cl.clientNiche||'')}" placeholder="${''}" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">''</label>
+                    <input id="eci_niche" style="${inp}" value="${_esc(cl.niche||cl.clientNiche||'')}" placeholder="''" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
                 <div>
-                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${''}</label>
+                    <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">''</label>
                     <textarea id="eci_note" rows="3" style="${inp}resize:vertical;overflow:hidden;min-height:72px;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';" onfocus="this.style.borderColor='#22c55e';setTimeout(()=>{this.style.height='auto';this.style.height=this.scrollHeight+'px';},0)" onblur="this.style.borderColor='#e5e7eb'">${_esc(cl.note||'')}</textarea>
                 </div>
                 <!-- Фінансові налаштування клієнта -->
                 <div style="border-top:1px solid #f1f5f9;padding-top:0.75rem;margin-top:0.25rem;">
-                    <div style="font-size:0.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:0.6rem;">${''}</div>
+                    <div style="font-size:0.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:0.6rem;">''</div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
                         <div>
-                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${''}</label>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">''</label>
                             <select id="eci_paymentCondition" style="${inp}">
-                                <option value="prepay" ${(cl.paymentCondition||'prepay')==='prepay'?'selected':''}>${''}</option>
-                                <option value="postpay" ${cl.paymentCondition==='postpay'?'selected':''}>${''}</option>
-                                <option value="partial" ${cl.paymentCondition==='partial'?'selected':''}>${''}</option>
+                                <option value="prepay" ${(cl.paymentCondition||'prepay')==='prepay'?'selected':''}>''</option>
+                                <option value="postpay" ${cl.paymentCondition==='postpay'?'selected':''}>''</option>
+                                <option value="partial" ${cl.paymentCondition==='partial'?'selected':''}>''</option>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${''}</label>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">''</label>
                             <input id="eci_paymentDueDays" type="number" min="0" max="365" style="${inp}" value="${cl.paymentDueDays||0}">
                         </div>
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.6rem;">
                         <div>
-                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${''}</label>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">''</label>
                             <input id="eci_creditLimit" type="number" min="0" step="100" style="${inp}" value="${cl.creditLimit||0}" placeholder="0 = без ліміту">
                         </div>
                         <div>
-                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">${''}</label>
+                            <label style="font-size:0.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;">''</label>
                             <div style="padding:0.5rem 0.65rem;background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;color:${Number(cl.totalDebt||0)>0?'#dc2626':'#059669'};font-weight:600">${Number(cl.totalDebt||0).toLocaleString('uk-UA',{minimumFractionDigits:0,maximumFractionDigits:0})} UAH</div>
                         </div>
                     </div>
@@ -4052,11 +4052,11 @@ window.crmEditClient = function(clientId) {
                 <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
                     <button onclick="document.getElementById('crmEditClientOverlay').remove()"
                         style="flex:1;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;color:#6b7280;">
-                        ${''}
+                        ''
                     </button>
                     <button onclick="crmSaveClientEdit('${clientId}')"
                         style="flex:2;padding:0.6rem;border:none;border-radius:8px;background:#22c55e;color:white;cursor:pointer;font-size:0.85rem;font-weight:700;">
-                        ${''}
+                        ''
                     </button>
                 </div>
             </div>
@@ -4170,7 +4170,7 @@ window.crmClientToProject = async function(clientId) {
         const deal = clientDeals[0];
         confirmed = typeof showConfirmModal === 'function'
             ? await showConfirmModal(_tg(`Конвертувати угоду «${deal.title || deal.clientName}» в проєкт?`, `Конвертировать сделку «${deal.title || deal.clientName}» в проект?`))
-            : confirm(`${''}`);
+            : confirm(`''`);
         if (confirmed) dealToConvert = deal;
     } else {
         confirmed = typeof showConfirmModal === 'function'
@@ -4267,10 +4267,10 @@ window.crmDealLaunchProcess = async function(dealId) {
     overlay.innerHTML = `
     <div style="background:white;border-radius:12px;padding:1.25rem;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-            <div style="font-weight:700;font-size:0.95rem;color:#111827;">${''}</div>
+            <div style="font-weight:700;font-size:0.95rem;color:#111827;">''</div>
             <button onclick="document.getElementById('crmDealProcessOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.1rem;">✕</button>
         </div>
-        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.75rem;">${''} <strong>${_esc(label)}</strong></div>
+        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.75rem;">'' <strong>${_esc(label)}</strong></div>
         <div style="display:flex;flex-direction:column;gap:0.4rem;">
             ${templates.map(t => `
             <button onclick="crmDealStartProcess('${dealId}','${t.id}')"
@@ -4278,7 +4278,7 @@ window.crmDealLaunchProcess = async function(dealId) {
                 onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='#e8eaed'">
                 <div style="font-weight:600;color:#111827;">${_esc(t.name)}</div>
                 ${t.description ? `<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">${_esc(t.description.slice(0,80))}</div>` : ''}
-                ${t.steps ? `<div style="font-size:0.68rem;color:#6b7280;margin-top:2px;">${t.steps.length} ${''}</div>` : ''}
+                ${t.steps ? `<div style="font-size:0.68rem;color:#6b7280;margin-top:2px;">${t.steps.length} ''</div>` : ''}
             </button>`).join('')}
         </div>
     </div>`;
@@ -4379,10 +4379,10 @@ window.crmClientLaunchProcess = async function(clientId) {
     overlay.innerHTML = `
     <div style="background:white;border-radius:12px;padding:1.25rem;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-            <div style="font-weight:700;font-size:0.95rem;color:#111827;">${''}</div>
+            <div style="font-weight:700;font-size:0.95rem;color:#111827;">''</div>
             <button onclick="document.getElementById('crmLaunchProcessOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.1rem;">✕</button>
         </div>
-        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.75rem;">${''} <strong>${_esc(cl.name||'')}</strong></div>
+        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.75rem;">'' <strong>${_esc(cl.name||'')}</strong></div>
         <div style="display:flex;flex-direction:column;gap:0.4rem;">
             ${templates.map(t => `
             <button onclick="crmClientStartProcess('${clientId}','${t.id}')"
@@ -4390,7 +4390,7 @@ window.crmClientLaunchProcess = async function(clientId) {
                 onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='#e8eaed'">
                 <div style="font-weight:600;color:#111827;">${_esc(t.name)}</div>
                 ${t.description ? `<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">${_esc(t.description.slice(0,80))}</div>` : ''}
-                ${t.steps ? `<div style="font-size:0.68rem;color:#6b7280;margin-top:2px;">${t.steps.length} ${''}</div>` : ''}
+                ${t.steps ? `<div style="font-size:0.68rem;color:#6b7280;margin-top:2px;">${t.steps.length} ''</div>` : ''}
             </button>`).join('')}
         </div>
     </div>`;
@@ -4497,11 +4497,11 @@ window.crmOpenCreateClient = function() {
         <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
             <button onclick="crmSaveNewClient()"
                 style="flex:1;padding:0.55rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                ${''}
+                ''
             </button>
             <button onclick="document.getElementById('crmCreateClientOverlay').remove()"
                 style="padding:0.55rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">
-                ${''}
+                ''
             </button>
         </div>
     </div>`;
@@ -4945,7 +4945,7 @@ function _renderAnalytics() {
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
           <div style="display:flex;gap:6px;background:#f4f5f7;border-radius:10px;padding:4px;">
             <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;background:#6366f1;color:white;">
-              ${''}
+              ''
             </button>
             <button onclick="crmSwitchAnalyticsMode('niche')"
               style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:transparent;color:#6b7280;">
@@ -4982,7 +4982,7 @@ function _renderAnalytics() {
           </div>
         </div>
         ${(_afManager||_afPeriod!=='all') ? `<div style="font-size:0.75rem;color:#6366f1;background:#eef2ff;border-radius:7px;padding:4px 10px;margin-bottom:2px;">
-          Показано: <b>${total}</b> угод${_afManager ? ` · ${(window.users||[]).find(u=>u.id===_afManager)?.name||'менеджер'}` : ''}${_afPeriod!=='all'?` · ${_afPeriod==='custom'?`${_afFrom||'...'} — ${_afTo||'...'}`${''}`:''}</div>` : ''}
+          Показано: <b>${total}</b> угод${_afManager ? ` · ${(window.users||[]).find(u=>u.id===_afManager)?.name||'менеджер'}` : ''}${_afPeriod!=='all'?` · ${_afPeriod==='custom'?`${_afFrom||'...'} — ${_afTo||'...'}`:''}`:''}</div>` : ''}
 
         <!-- KPI картки -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;">
@@ -5074,7 +5074,7 @@ function _renderAnalytics() {
 
             <!-- Пай-чарт: джерела -->
             <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
-                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span> ${''}</div>
+                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span> ''</div>
                 ${Object.keys(sources).length ? `
                 <div style="display:flex;align-items:center;gap:0.75rem;">
                     <svg width="80" height="80" viewBox="-1 -1 2 2" style="transform:rotate(-90deg);flex-shrink:0;">
@@ -5233,7 +5233,7 @@ function _renderAnalytics() {
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.85rem;">
                 <div style="font-weight:700;font-size:0.85rem;color:#111827;display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    ${''}
+                    ''
                     <span style="background:#f3f4f6;color:#6b7280;border-radius:20px;padding:2px 8px;font-size:0.72rem;font-weight:600;">${_leadsFiltered.length}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;">
@@ -5245,15 +5245,15 @@ function _renderAnalytics() {
                 <span style="color:#9ca3af;">—</span>
                 <input type="date" value="${_leadsReportTo}" onchange="crm._leadsReportTo=this.value;_renderAnalytics();" style="border:1px solid #e5e7eb;border-radius:6px;padding:0.25rem 0.5rem;font-size:0.78rem;">
             </div>` : ''}
-            ${_srcNicheRows.length === 0 ? `<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1.5rem 0;">${''}</div>` : `
+            ${_srcNicheRows.length === 0 ? `<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1.5rem 0;">''</div>` : `
             <div style="overflow-x:auto;">
             <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
                 <thead><tr style="border-bottom:2px solid #f3f4f6;">
-                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${''}</th>
-                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${''}</th>
-                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${''}</th>
-                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${''}</th>
-                    <th style="text-align:right;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">${''}</th>
+                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">''</th>
+                    <th style="text-align:left;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">''</th>
+                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">''</th>
+                    <th style="text-align:center;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">''</th>
+                    <th style="text-align:right;padding:0.4rem 0.5rem;color:#6b7280;font-weight:600;font-size:0.72rem;">''</th>
                 </tr></thead>
                 <tbody>${_srcNicheRows.map((r,i) => `
                 <tr style="border-bottom:1px solid #f9fafb;${i%2===0?'background:#fafafa;':''}">
@@ -5264,7 +5264,7 @@ function _renderAnalytics() {
                     <td style="padding:0.45rem 0.5rem;text-align:right;color:#16a34a;font-weight:600;">${r.amount>0?_fmt(r.amount):'—'}</td>
                 </tr>`).join('')}</tbody>
                 <tfoot><tr style="border-top:2px solid #e5e7eb;background:#f9fafb;">
-                    <td colspan="2" style="padding:0.45rem 0.5rem;font-weight:700;font-size:0.78rem;">${''}</td>
+                    <td colspan="2" style="padding:0.45rem 0.5rem;font-weight:700;font-size:0.78rem;">''</td>
                     <td style="padding:0.45rem 0.5rem;text-align:center;font-weight:700;">${_leadsFiltered.length}</td>
                     <td style="padding:0.45rem 0.5rem;text-align:center;font-weight:700;color:#22c55e;">${_srcNicheRows.reduce((s,r)=>s+r.won,0)||'—'}</td>
                     <td style="padding:0.45rem 0.5rem;text-align:right;font-weight:700;color:#16a34a;">${_fmt(_srcNicheRows.reduce((s,r)=>s+r.amount,0))}</td>
@@ -5435,10 +5435,10 @@ function _renderCrmNicheMatrix() {
   <div style="display:flex;gap:6px;margin-bottom:1rem;background:#f4f5f7;border-radius:10px;padding:4px;width:fit-content;">
     <button onclick="crmSwitchAnalyticsMode('overview')"
       style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:white;color:#6b7280;box-shadow:none;">
-      ${''}
+      ''
     </button>
     <button style="padding:5px 14px;border:none;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;background:#22c55e;color:white;">
-      ${''} ${groupByLabel.toLowerCase()}
+      '' ${groupByLabel.toLowerCase()}
     </button>
   </div>
 
@@ -5499,7 +5499,7 @@ function _renderCrmNicheMatrix() {
               ${g.length > 18 ? g.slice(0,17)+'…' : g}
             </th>`).join('')}
           <th style="padding:.6rem .75rem;font-size:.72rem;font-weight:700;color:#6b7280;text-align:center;border-bottom:2px solid #e5e7eb;background:#f8fafc;">
-            ${''}
+            ''
           </th>
         </tr>
       </thead>
@@ -5594,7 +5594,7 @@ function _renderCRMSettings() {
                     style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;
                     background:#22c55e;color:white;border:none;border-radius:6px;
                     cursor:pointer;font-size:0.78rem;font-weight:600;">
-                    ${I.plus} ${''}
+                    ${I.plus} ''
                 </button>
             </div>
             <div id="crmPipelineList">
@@ -5616,10 +5616,10 @@ function _renderCRMSettings() {
             </div>
         </div>
 
-        <!-- ${''} -->\
+        <!-- '' -->\
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
             <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">
-                ${''}
+                ''
             </div>
             ${(function(){
                 // FIX: bySource та total оголошені локально (були з іншої функції)
@@ -5659,20 +5659,20 @@ function _renderCRMSettings() {
         <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
                 <div>
-                    <div style="${sectionTitle}margin-bottom:0;">${''} ${_esc(pipeline?.name || '')}</div>
-                    <div style="font-size:0.7rem;color:#9ca3af;">${''}</div>
+                    <div style="${sectionTitle}margin-bottom:0;">'' ${_esc(pipeline?.name || '')}</div>
+                    <div style="font-size:0.7rem;color:#9ca3af;">''</div>
                 </div>
                 <button onclick="crmAddStage()"
                     style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;
                     background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;
                     cursor:pointer;font-size:0.78rem;font-weight:600;">
-                    ${I.plus} ${''}
+                    ${I.plus} ''
                 </button>
             </div>
             <div id="crmStageList" style="display:flex;flex-direction:column;gap:0.35rem;">
                 ${stages.map((s, i) => {
                     const usersArr = (typeof users !== 'undefined' ? users : []).filter(u => u.role !== 'employee' || true);
-                    const assigneeOpts = `<option value="">${''}</option>` +
+                    const assigneeOpts = `<option value="">''</option>` +
                         usersArr.map(u => `<option value="${u.id}" ${s.autoAssigneeId===u.id?'selected':''}>${_esc(u.name||u.email||u.id)}</option>`).join('');
                     return `
                 <div id="crmStage_${s.id}" draggable="true"
@@ -5704,7 +5704,7 @@ function _renderCRMSettings() {
             <button onclick="crmSaveStages()"
                 style="margin-top:0.75rem;width:100%;padding:0.5rem;background:#22c55e;color:white;
                 border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                ${''}
+                ''
             </button>
         </div>
 
@@ -5978,7 +5978,7 @@ async function _doCreatePipeline(name) {
 window.crmDeletePipeline = async function(pipelineId, name) {
     // FIX F+C: перевіряємо скільки угод в pipeline
     const dealsInPipeline = crm.deals.filter(d => d.pipelineId === pipelineId).length;
-    const dealsWarn = dealsInPipeline > 0 ? `\n${''} ${dealsInPipeline} ${''} UI.` : '\nУгод у воронці немає.';
+    const dealsWarn = dealsInPipeline > 0 ? `\n'' ${dealsInPipeline} '' UI.` : '\nУгод у воронці немає.';
     const msg = `Видалити воронку "${name}"?${dealsWarn}`;
     if (!(await (window.showConfirmModal ? showConfirmModal(msg, {danger:true}) : Promise.resolve(confirm(msg))))) return;
     try {
@@ -6161,11 +6161,11 @@ async function _checkRequiredFields(deal, newStage) {
         <div style="display:flex;gap:0.6rem;margin-top:1rem;">
             <button onclick="document.getElementById('crmRequiredFieldsModal').remove()"
                 style="flex:1;padding:0.5rem;background:#f3f4f6;color:#374151;border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                ${''}
+                ''
             </button>
             <button id="crmReqFieldsConfirm"
                 style="flex:2;padding:0.5rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
-                ${''}
+                ''
             </button>
         </div>
     </div>`;
@@ -6389,7 +6389,7 @@ window.crmCreateTaskFromDeal = function(dealId) {
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
             <button onclick="document.getElementById('crmTaskModal').remove()"
                 style="padding:0.5rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">
-                ${''}
+                ''
             </button>
             <button onclick="crmSaveTaskFromDeal('${deal.id}')"
                 style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">
@@ -6552,12 +6552,12 @@ window.crmOpenImport = function() {
             </div>
             <p style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">
                 ${_tg("Файл CSV має містити колонки: <b>name</b> (обов'язково), phone, email",'Файл CSV должен содержать колонки: <b>name</b> (обязательно), phone, email')}, source, amount, stage, nextContactDate, description.<br>
-                ${''}
+                ''
             </p>
             <div style="margin-bottom:0.75rem;">
                 <a href="#" onclick="window.crmDownloadImportTemplate();return false;"
                    style="font-size:0.81rem;color:#22c55e;font-weight:600;text-decoration:underline;">
-                    ${''}
+                    ''
                 </a>
             </div>
             <div id="crmImportDropzone"
@@ -6568,7 +6568,7 @@ window.crmOpenImport = function() {
                 onclick="document.getElementById('crmImportFileInput').click()">
                 <div style="font-size:2rem;margin-bottom:0.5rem;">📂</div>
                 <div style="font-size:0.9rem;color:#374151;font-weight:600;">${window.t('crmImportDragDrop')}</div>
-                <div style="font-size:0.78rem;color:#9ca3af;margin-top:0.25rem;">${''}</div>
+                <div style="font-size:0.78rem;color:#9ca3af;margin-top:0.25rem;">''</div>
             </div>
             <input type="file" id="crmImportFileInput" accept=".csv,text/csv" style="display:none;"
                 onchange="window.crmHandleImportFile(this.files[0])">
@@ -6582,7 +6582,7 @@ window.crmOpenImport = function() {
                     </button>
                     <button onclick="window.crmResetImport()"
                         style="padding:0.65rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.9rem;">
-                        ${''}
+                        ''
                     </button>
                 </div>
             </div>

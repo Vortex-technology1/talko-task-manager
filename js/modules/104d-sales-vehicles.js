@@ -201,7 +201,7 @@
             <button onclick="window._salesWOPickVehicle()" class="sl-btn-sm" style="background:#eef2ff;color:#6366f1">Змінити авто</button>
           </div>
           <div id="slWOVehicleInfo">
-            ${vehicle ? renderVehicleInfo(vehicle, order?.vehicleInfo) : `${''}`}
+            ${vehicle ? renderVehicleInfo(vehicle, order?.vehicleInfo) : `''`}
           </div>
           <input type="hidden" id="slWOVehicleId" value="${esc(vId)}">
           <div style="margin-top:.75rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">

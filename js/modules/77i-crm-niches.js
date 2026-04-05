@@ -94,7 +94,7 @@ window._renderVehiclesTab = async function(deal) {
                     <button onclick="window._salesOpenVehicleCard && window._salesOpenVehicleCard(null)" style="background:#fff7ed;border:1px solid #fed7aa;color:#c2410c;padding:3px 10px;border-radius:5px;cursor:pointer;font-size:.72rem;font-weight:600">+ Авто</button>
                 </div>
                 ${!vehicles.length
-                    ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">${''}</div>`
+                    ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">''</div>`
                     : vehicles.map(v => `
                         <div style="border:1px solid #e5e7eb;border-radius:8px;padding:.6rem .75rem;margin-bottom:.35rem;display:flex;justify-content:space-between;align-items:center">
                             <div>
@@ -110,7 +110,7 @@ window._renderVehiclesTab = async function(deal) {
             <div>
                 <b style="font-size:.8rem;color:#374151;display:block;margin-bottom:.5rem">📋 Наряди</b>
                 ${!orders.length
-                    ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">${''}</div>`
+                    ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">''</div>`
                     : orders.map(o => `
                         <div onclick="window._salesEditOrder && window._salesEditOrder('${o.id}')" style="border:1px solid #e5e7eb;border-radius:8px;padding:.6rem .75rem;margin-bottom:.35rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
                             <div>
@@ -179,7 +179,7 @@ window._renderPosHistoryTab = async function(deal) {
                 <b style="font-size:.8rem;color:#374151;display:block;margin-bottom:.5rem">🧾 Чеки</b>
                 ${!orders.length
                     ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">
-                        ${''}${clientName ? ` для «${_esc(clientName)}»` : ''}.
+                        ''${clientName ? ` для «${_esc(clientName)}»` : ''}.
                         <br><span style="font-size:.72rem">Чеки прив'язуються до клієнта при проведенні через Реалізацію → Каса</span>
                        </div>`
                     : orders.map(o => {
@@ -243,7 +243,7 @@ window._renderRoutesHistoryTab = async function(deal) {
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;">
                 <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:.6rem .75rem;text-align:center">
                     <div style="font-size:1.2rem;font-weight:700;color:#0369a1">${routes.length}</div>
-                    <div style="font-size:.7rem;color:#9ca3af">${''}</div>
+                    <div style="font-size:.7rem;color:#9ca3af">''</div>
                 </div>
                 <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.6rem .75rem;text-align:center">
                     <div style="font-size:1rem;font-weight:700;color:#16a34a">${_fmt(totalRev)} ₴</div>
@@ -260,7 +260,7 @@ window._renderRoutesHistoryTab = async function(deal) {
                 <b style="font-size:.8rem;color:#374151;display:block;margin-bottom:.5rem">🚛 Рейси</b>
                 ${!routes.length
                     ? `<div style="font-size:.8rem;color:#9ca3af;padding:.5rem">
-                        ${''}
+                        ''
                         <br><span style="font-size:.72rem">Рейси додаються в Реалізація → Рейси</span>
                        </div>`
                     : routes.map(r => {
@@ -287,7 +287,7 @@ window._renderRoutesHistoryTab = async function(deal) {
 
             <!-- New route button -->
             <button onclick="window._salesOpenRouteForm && window._salesOpenRouteForm(null)" style="background:#0369a1;color:white;border:none;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600;width:100%">
-                ${''}
+                ''
             </button>
         </div>`;
 

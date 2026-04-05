@@ -181,7 +181,7 @@ async function _showFinanceModal(appt, amount) {
         <div>
           <label style="font-size:0.72rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.25rem;">${_t('Категорія','Категория')}егорія доходу</label>
           <select id="bkfbCategory" style="width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;background:#fff;">
-            <option value="">${''}</option>
+            <option value="">''</option>
             ${categories.map(c=>`<option value="${_esc(c.id)}">${_esc(c.name)}</option>`).join('')}
           </select>
         </div>

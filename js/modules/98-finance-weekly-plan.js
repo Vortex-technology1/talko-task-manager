@@ -110,7 +110,7 @@ function _render(root) {
           font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
           stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        ${''}
+        ''
       </button>
       <select id="wpHorizonSel" onchange="window._wpChangeHorizon(this.value)"
         style="padding:0.45rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
@@ -219,7 +219,7 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <!-- Дохід факт (накладений) -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:2px;width:${bw}px;height:${Math.max(1,aIncH)}px;
           background:#86efac;border-radius:2px 2px 0 0;border:1.5px solid #22c55e;box-sizing:border-box;"
-          title="${''}: ${_fmt(w.aInc,currency)}"></div>` : ''}
+          title="'': ${_fmt(w.aInc,currency)}"></div>` : ''}
 
         <!-- Витрати план -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:${halfW+2}px;width:${bw}px;height:${Math.max(1,pExpH)}px;
@@ -230,7 +230,7 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <!-- Витрати факт -->
         <div style="position:absolute;bottom:${CF_H+28}px;left:${halfW+2}px;width:${bw}px;height:${Math.max(1,aExpH)}px;
           background:#fca5a5;border-radius:2px 2px 0 0;border:1.5px solid #ef4444;box-sizing:border-box;"
-          title="${''}: ${_fmt(w.aExp,currency)}"></div>` : ''}
+          title="'': ${_fmt(w.aExp,currency)}"></div>` : ''}
 
         <!-- Розділювач між зонами -->
         <div style="position:absolute;bottom:${CF_H+26}px;left:0;right:0;height:2px;background:#f3f4f6;"></div>
@@ -239,7 +239,7 @@ function _renderChart(weeks, maxBar, maxCf, minCf, currency) {
         <div style="position:absolute;bottom:${26 + cfZeroY - cfY - 4}px;left:50%;transform:translateX(-50%);
           width:8px;height:8px;border-radius:50%;background:${w.cfEnd<0?'#ef4444':'#3b82f6'};
           border:2px solid white;box-shadow:0 0 0 1px ${w.cfEnd<0?'#ef4444':'#3b82f6'};z-index:3;"
-          title="${''}: ${_fmt(w.cfEnd,currency)}"></div>
+          title="'': ${_fmt(w.cfEnd,currency)}"></div>
 
         <!-- Нульова лінія CF якщо є мінус -->
         ${minCf < 0 ? `<div style="position:absolute;bottom:${26 + cfZeroY}px;left:0;right:0;height:1px;
@@ -719,7 +719,7 @@ window._wpAddEventModal = function() {
         </div>
         <div>
           <label style="font-size:0.75rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${_t('Назва події','Название события')} *</label>
-          <input id="wpEvLabel" type="text" placeholder="${''}"
+          <input id="wpEvLabel" type="text" placeholder="''"
             style="width:100%;padding:0.5rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;box-sizing:border-box;outline:none;"
             onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
         </div>

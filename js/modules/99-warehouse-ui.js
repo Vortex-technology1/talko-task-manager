@@ -366,7 +366,7 @@ function _t(ua, ru) {
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
           <div style="position:relative;flex:1;min-width:180px;">
             <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#9ca3af;pointer-events:none;"></i>
-            <input type="text" placeholder="${''}" value="${_searchQuery}"
+            <input type="text" placeholder="''" value="${_searchQuery}"
               oninput="window._whSearchCatalog(this.value)"
               style="width:100%;box-sizing:border-box;padding:0.45rem 0.5rem 0.45rem 2rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;">
           </div>
@@ -524,13 +524,13 @@ function _t(ua, ru) {
         <div style="padding:0.75rem 1rem;display:flex;gap:0.75rem;align-items:center;border-bottom:1px solid #f3f4f6;flex-wrap:wrap;">
           <input
             type="text"
-            placeholder="${''}"
+            placeholder="''"
             value="${_whEscHtml(_searchQuery)}"
             oninput="window._whByLocSearch(this.value)"
             style="padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;width:200px;outline:none;">
           <select onchange="window._whByLocFilter(this.value)"
             style="padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;color:#374151;">
-            <option value="">${''}</option>
+            <option value="">''</option>
             ${locations.map(l => `<option value="${l.id}" ${_locFilterId===l.id?'selected':''}>${_whEscHtml(l.name)}</option>`).join('')}
           </select>
           <span style="font-size:0.8rem;color:#6b7280;margin-left:auto;">${visItems.length} ${_t('товарів','товаров')} · ${visLocs.length} локацій</span>
@@ -733,7 +733,7 @@ function _t(ua, ru) {
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
           <div style="position:relative;flex:1;min-width:180px;">
             <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#9ca3af;pointer-events:none;"></i>
-            <input type="text" placeholder="${''}" value="${_searchQuery}"
+            <input type="text" placeholder="''" value="${_searchQuery}"
               oninput="window._whOpSearch(this.value)"
               style="width:100%;box-sizing:border-box;padding:0.45rem 0.5rem 0.45rem 2rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;outline:none;">
           </div>
@@ -746,7 +746,7 @@ function _t(ua, ru) {
           </select>
           <select onchange="window._whOpDateFilter(this.value)"
             style="padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
-            <option value="">${''}</option>
+            <option value="">''</option>
             <option value="today" ${_opDateFilter==='today'?'selected':''}>${window.t('whToday')}</option>
             <option value="week" ${_opDateFilter==='week'?'selected':''}>${_t('Тиждень','')}</option>
             <option value="month" ${_opDateFilter==='month'?'selected':''}>${window.t('whMonth')}</option>
@@ -886,7 +886,7 @@ function _t(ua, ru) {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">${_t('Назва *','Название *')}</label>
-              <input id="wh_name" value="${item.name || ''}" style="${_inp()}" placeholder="${''}">
+              <input id="wh_name" value="${item.name || ''}" style="${_inp()}" placeholder="''">
             </div>
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">${_t('SKU / Артикул','SKU / Артикул')}</label>
@@ -941,7 +941,7 @@ function _t(ua, ru) {
           </div>
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">${_t('Опис','Описание')}</label>
-            <textarea id="wh_desc" style="${_inp()}height:56px;resize:none;" placeholder="${''}">${_whEscHtml(item.description || '')}</textarea>
+            <textarea id="wh_desc" style="${_inp()}height:56px;resize:none;" placeholder="''">${_whEscHtml(item.description || '')}</textarea>
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
@@ -1067,7 +1067,7 @@ function _t(ua, ru) {
     const info = document.getElementById('wh_op_stock_info');
     if (info) {
       info.style.display = 'block';
-      info.innerHTML = `${''} <b>${s.qty}</b> ${item?.unit || 'шт'} | ${_t('','Доступно:')} <b>${s.available}</b>`;
+      info.innerHTML = `'' <b>${s.qty}</b> ${item?.unit || 'шт'} | ${_t('','Доступно:')} <b>${s.available}</b>`;
     }
     const priceInput = document.getElementById('wh_op_price');
     if (priceInput && item && type === 'IN' && item.costPrice) priceInput.value = item.costPrice;
@@ -1119,7 +1119,7 @@ function _t(ua, ru) {
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">${_t('Назва *','Название *')}</label>
-            <input id="wh_sup_name" value="${s.name || ''}" style="${_inp()}" placeholder="${''}">
+            <input id="wh_sup_name" value="${s.name || ''}" style="${_inp()}" placeholder="''">
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
@@ -1187,7 +1187,7 @@ function _t(ua, ru) {
         <div style="display:flex;flex-direction:column;gap:0.65rem;">
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">${_t('Назва *','Название *')}</label>
-            <input id="wh_loc_name" value="${l.name || ''}" style="${_inp()}" placeholder="${''}">
+            <input id="wh_loc_name" value="${l.name || ''}" style="${_inp()}" placeholder="''">
           </div>
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">${_t('Тип','Тип')}</label>
@@ -1766,11 +1766,11 @@ function _t(ua, ru) {
         </div>
         <div style="display:flex;gap:0.5rem;margin-left:auto;flex-wrap:wrap;align-items:center;">
           <select onchange="window._whRepSetLoc(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;">
-            <option value="">${''}</option>
+            <option value="">''</option>
             ${locations.map(l=>`<option value="${l.id}" ${_repLocId===l.id?'selected':''}>${_whEscHtml(l.name)}</option>`).join('')}
           </select>
           <select onchange="window._whRepSetItem(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;max-width:180px;">
-            <option value="">${''}</option>
+            <option value="">''</option>
             ${items.map(i=>`<option value="${i.id}" ${_repItemId===i.id?'selected':''}>${_whEscHtml(i.name)}</option>`).join('')}
           </select>
           <select onchange="window._whRepSetYear(this.value)" style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;outline:none;color:#374151;">

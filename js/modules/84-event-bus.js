@@ -269,7 +269,7 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[ТЗ] Пошив: ${e.payload.clientName || e.payload.dealTitle || ''}`,
-            description: `${''}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `''\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+3d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId || null,
@@ -287,7 +287,7 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[Закупка]: ${e.payload.clientName || e.payload.dealTitle || ''}`,
-            description: `${''}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `''\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+2d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId || null,
@@ -305,7 +305,7 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[Монтаж]: ${e.payload.clientName || e.payload.dealTitle || ''}`,
-            description: `${''}\nАдреса: ${e.payload.objectAddress || ''}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `''\nАдреса: ${e.payload.objectAddress || ''}\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+5d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId || null,
@@ -323,7 +323,7 @@ const _defaultAutomationRules = [
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `[Старт] Виробництво: ${e.payload.clientName || ''}`,
-            description: `${''} ${e.payload.prepayment || ''}€ ${''}\nФіліал: ${e.payload.branch || '—'}`,
+            description: `'' ${e.payload.prepayment || ''}€ ''\nФіліал: ${e.payload.branch || '—'}`,
             deadlineOffset: '+0d',
             dealId: e.payload.dealId,
             priority: 'high',
@@ -349,8 +349,8 @@ const _defaultAutomationRules = [
                 const startDt = new Date(measurementDate);
                 const endDt   = new Date(startDt.getTime() + 60 * 60 * 1000); // +1 год
                 const calEvent = {
-                    summary:     `${''}: ${clientName || ''}`,
-                    description: `${''} ID: ${dealId}\n${''}: ${window.location.origin}`,
+                    summary:     `'': ${clientName || ''}`,
+                    description: `'' ID: ${dealId}\n'': ${window.location.origin}`,
                     location:    objectAddress || '',
                     start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
                     end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },
@@ -394,7 +394,7 @@ const _defaultAutomationRules = [
                 const endDt   = new Date(startDt.getTime() + 2 * 60 * 60 * 1000); // +2 год
                 const calEvent = {
                     summary:     `Монтаж: ${clientName || ''}`,
-                    description: `${''} ID: ${dealId}\n${''}: ${window.location.origin}`,
+                    description: `'' ID: ${dealId}\n'': ${window.location.origin}`,
                     location:    objectAddress || '',
                     start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
                     end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },

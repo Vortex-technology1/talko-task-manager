@@ -401,7 +401,7 @@
           <!-- Modal Header -->
           <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid #f1f5f9;">
             <div>
-              <div style="font-size:1rem;font-weight:700;color:#111">${isEdit ? tg('${''} замовлення','Edit order') : tg('Нове замовлення','New order')}</div>
+              <div style="font-size:1rem;font-weight:700;color:#111">${isEdit ? tg(''' замовлення','Edit order') : tg('Нове замовлення','New order')}</div>
               ${isEdit ? `<div style="font-size:.78rem;color:#9ca3af;margin-top:2px">${esc(o.number||'')}</div>` : ''}
             </div>
             <button onclick="window.closeSalesOrderModal()" style="border:none;background:none;cursor:pointer;color:#9ca3af;padding:4px">
@@ -497,7 +497,7 @@
                   <span id="soTotalGross" style="font-weight:600">0.00</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:.84rem">
-                  <span style="color:#6b7280">${tg('${''}:','Discount:')}</span>
+                  <span style="color:#6b7280">${tg(''':','Discount:')}</span>
                   <span id="soTotalDiscount" style="color:#ef4444">-0.00</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:1rem;font-weight:700">
