@@ -386,105 +386,72 @@
                     
                     html += `
                     <div class="mobile-task-card ${cardClass}" data-task-id="${task.id}" data-can-complete="${canSwipeComplete}">
-                        <!-- Swipe backgrounds -->
                         <div class="swipe-action-bg left"><i data-lucide="check" class="icon"></i> ${window.t('statusDone')}</div>
                         <div class="swipe-action-bg right"><i data-lucide="trash-2" class="icon"></i> ${window.t('delete')}</div>
-                        
-                        <!-- Card content -->
                         <div class="mobile-task-content" onclick="openTaskModal('${escId(task.id)}')">
-                            <div class="mobile-task-header">
-                                <div class="mobile-task-title ${task.status === 'done' ? 'mobile-task-title-done' : ''}">
-                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c;width:14px;height:14px;"></i> ' : ''}${task.parentId ? '<span style="font-size:0.65rem;color:#9ca3af;">↳ </span>' : ''}${esc(task.title)}${!task.parentId && (subtaskCountMap[task.id] || 0) > 0 ? ' <span style="font-size:0.65rem;color:#16a34a;">⊕'+(subtaskCountMap[task.id] || 0)+'</span>' : ''}
+                            <div class="mobile-task-check ${task.status === 'done' ? 'done' : task.status === 'review' ? 'review' : ''}"
+                                onclick="event.stopPropagation();${task.status !== 'done' && task.status !== 'review' ? `this.classList.add('done');setTimeout(()=>quickCompleteTask('${escId(task.id)}'),150)` : task.status === 'done' ? `reopenTask('${escId(task.id)}')` : ''}">
+                                ${task.status === 'done' ? '<i data-lucide="check" class="icon"></i>' : task.status === 'review' ? '<i data-lucide="eye" class="icon"></i>' : ''}
+                            </div>
+                            <div class="mobile-task-body">
+                                <div class="mobile-task-header">
+                                    <div class="mobile-task-title ${task.status === 'done' ? 'mobile-task-title-done' : ''}">
+                                        ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#ff3b30;width:12px;height:12px;"></i> ' : ''}${task.parentId ? '<span style="font-size:0.65rem;color:#8e8e93;">↳ </span>' : ''}${esc(task.title)}${!task.parentId && (subtaskCountMap[task.id] || 0) > 0 ? ' <span style="font-size:0.65rem;color:#34c759;">+' + (subtaskCountMap[task.id] || 0) + '</span>' : ''}
+                                    </div>
+                                    ${(() => {
+                                        if (!taskDeadline) return '';
+                                        if (od) {
+                                            const daysAgo = Math.floor((new Date(today) - new Date(taskDeadline)) / 86400000);
+                                            const label = daysAgo === 1 ? window.t('daysAgoOne') : daysAgo < 5 ? daysAgo + ' дні' : daysAgo + ' днів';
+                                            return `<span class="mobile-task-deadline-badge overdue">${label}</span>`;
+                                        }
+                                        if (isToday) return `<span class="mobile-task-deadline-badge today">${task.timeEnd || window.t('today')}</span>`;
+                                        const dp = taskDeadline.split('-');
+                                        const dayNum = parseInt(dp[2]);
+                                        const monthShort = (typeof getMonthNames === 'function' ? getMonthNames() : [window.t('janShort'),'лют','бер',window.t('aprShort'),'тра','чер','лип','сер','вер','жов','лис','гру'])[parseInt(dp[1]) - 1];
+                                        return `<span class="mobile-task-deadline-badge upcoming">${dayNum} ${monthShort}</span>`;
+                                    })()}
+                                </div>
+                                <div class="mobile-task-meta">
+                                    ${(() => {
+                                        const name = task.assigneeName || '';
+                                        const initials = name.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2) || '?';
+                                        const colors = ['#007aff','#ff3b30','#ff9500','#af52de','#ff2d55','#5ac8fa','#34c759','#ff6b00'];
+                                        const colorIdx = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % colors.length;
+                                        return `<div class="mobile-task-avatar" style="background:${colors[colorIdx]}">${initials}</div>`;
+                                    })()}
+                                    <span style="color:#8e8e93;">${esc(task.assigneeName || '')}</span>
+                                    ${task.function ? `<span class="mobile-task-meta-sep">•</span><span>${esc(task.function)}</span>` : ''}
                                 </div>
                                 ${(() => {
-                                    if (!taskDeadline) return '';
-                                    if (od) {
-                                        const daysAgo = Math.floor((new Date(today) - new Date(taskDeadline)) / 86400000);
-                                        const label = daysAgo === 1 ? window.t('daysAgoOne') : daysAgo < 5 ? daysAgo + ' дні тому' : daysAgo + ' днів тому';
-                                        return `<span class="mobile-task-deadline-badge overdue">${label}</span>`;
+                                    const badges = [];
+                                    const checklist = task.checklist || [];
+                                    if (checklist.length > 0) {
+                                        const done = checklist.filter(c => c.done || c.checked).length;
+                                        const cls = done === checklist.length ? 'has-items' : '';
+                                        badges.push(`<span class="mobile-badge ${cls}"><i data-lucide="list-checks" class="icon"></i> ${done}/${checklist.length}</span>`);
                                     }
-                                    if (isToday) return `<span class="mobile-task-deadline-badge today">${task.timeEnd || window.t('today')}</span>`;
-                                    // Format date compactly
-                                    const dp = taskDeadline.split('-');
-                                    const dayNum = parseInt(dp[2]);
-                                    const monthShort = (typeof getMonthNames === 'function' ? getMonthNames() : [window.t('janShort'),'лют','бер',window.t('aprShort'),'тра','чер','лип','сер','вер','жов','лис','гру'])[parseInt(dp[1]) - 1];
-                                    return `<span class="mobile-task-deadline-badge upcoming">${dayNum} ${monthShort}</span>`;
+                                    const commentCount = task.commentCount || 0;
+                                    if (commentCount > 0) badges.push(`<span class="mobile-badge has-items"><i data-lucide="message-circle" class="icon"></i> ${commentCount}</span>`);
+                                    const files = task.files || [];
+                                    if (files.length > 0) badges.push(`<span class="mobile-badge has-items"><i data-lucide="paperclip" class="icon"></i> ${files.length}</span>`);
+                                    if (task.coExecutorIds?.length > 0) badges.push(`<span class="mobile-badge"><i data-lucide="users" class="icon"></i> +${task.coExecutorIds.length}</span>`);
+                                    if (task.crmDealId || task.dealId) {
+                                        const crmClient = task.clientName || task.crmClientName || 'CRM';
+                                        const dId = task.crmDealId || task.dealId;
+                                        badges.push(`<span class="mobile-badge has-items" onclick="event.stopPropagation();if(typeof window.crmOpenDeal==='function')window.crmOpenDeal('${escId(dId)}')" style="background:#f0fdf4;color:#34c759;padding:1px 5px;border-radius:4px;border:1px solid #bbf7d0;cursor:pointer;"><i data-lucide="phone-call" class="icon"></i> ${esc(crmClient)}</span>`);
+                                    }
+                                    return badges.length > 0 ? `<div class="mobile-task-badges">${badges.join('')}</div>` : '';
                                 })()}
-                            </div>
-                            
-                            <div class="mobile-task-meta">
-                                ${(() => {
-                                    // Аватар з ініціалами
-                                    const name = task.assigneeName || '';
-                                    const initials = name.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2) || '?';
-                                    const colors = ['#3b82f6','#ef4444','#f59e0b','#8b5cf6','#ec4899','#06b6d4','#22c55e','#f97316'];
-                                    const colorIdx = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % colors.length;
-                                    return `<div class="mobile-task-avatar" style="background:${colors[colorIdx]}">${initials}</div>`;
-                                })()}
-                                <span>${esc(task.assigneeName || '')}</span>
-                                ${task.status !== 'done' ? `
-                                    <span class="mobile-task-meta-sep">•</span>
-                                    <span class="status-badge status-${task.status}" style="font-size:0.7rem;padding:0.1rem 0.4rem;cursor:pointer;" onclick="event.stopPropagation();cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status || '—'}</span>
-                                ` : ''}
-                                ${task.function ? `<span class="mobile-task-meta-sep">•</span><span>${esc(task.function)}</span>` : ''}
-                            </div>
-                            
-                            ${(() => {
-                                // Badges: чеклист, коментарі, файли, співвиконавці
-                                const badges = [];
-                                const checklist = task.checklist || [];
-                                if (checklist.length > 0) {
-                                const done = checklist.filter(c => c.done || c.checked).length; // БАГ M6 fix: підтримуємо обидва поля
-                                    const cls = done === checklist.length ? 'has-items' : '';
-                                    badges.push(`<span class="mobile-badge ${cls}"><i data-lucide="list-checks" class="icon"></i> ${done}/${checklist.length}</span>`);
-                                }
-                                const commentCount = task.commentCount || 0;
-                                if (commentCount > 0) {
-                                    badges.push(`<span class="mobile-badge has-items"><i data-lucide="message-circle" class="icon"></i> ${commentCount}</span>`);
-                                }
-                                const files = task.files || [];
-                                if (files.length > 0) {
-                                    badges.push(`<span class="mobile-badge has-items"><i data-lucide="paperclip" class="icon"></i> ${files.length}</span>`);
-                                }
-                                if (task.coExecutorIds?.length > 0) {
-                                    badges.push(`<span class="mobile-badge"><i data-lucide="users" class="icon"></i> +${task.coExecutorIds.length}</span>`);
-                                }
-                                // CRM бейдж — якщо задача прив'язана до угоди
-                                if (task.crmDealId || task.dealId) {
-                                    const crmClient = task.clientName || task.crmClientName || 'CRM';
-                                    const dId = task.crmDealId || task.dealId;
-                                    badges.push(`<span class="mobile-badge has-items" onclick="event.stopPropagation();if(typeof window.crmOpenDeal==='function')window.crmOpenDeal('${escId(dId)}')" style="background:#f0fdf4;color:#16a34a;border-color:#bbf7d0;cursor:pointer;" title="Відкрити угоду в CRM"><i data-lucide="phone-call" class="icon"></i> ${esc(crmClient)}</span>`);
-                                }
-                                return badges.length > 0 ? `<div class="mobile-task-badges">${badges.join('')}</div>` : '';
-                            })()}
-                            
-                            <div class="mobile-task-actions" onclick="event.stopPropagation()">
                                 ${isReviewForCreator ? `
-                                    <button class="mobile-action-btn complete" onclick="acceptReviewTask('${escId(task.id)}')" style="background:#22c55e;color:white;">
+                                <div class="mobile-task-review-actions" onclick="event.stopPropagation()">
+                                    <button class="mobile-action-btn complete" onclick="acceptReviewTask('${escId(task.id)}')">
                                         <i data-lucide="check" class="icon icon-sm"></i> ${window.t('acceptTask')}
                                     </button>
-                                    <button class="mobile-action-btn edit" onclick="rejectReviewTask('${escId(task.id)}')" style="background:#f59e0b;color:white;">
+                                    <button class="mobile-action-btn edit" onclick="rejectReviewTask('${escId(task.id)}')">
                                         <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${window.t('rejectTask')}
                                     </button>
-                                ` : task.status === 'review' ? `
-                                    <button class="mobile-action-btn edit" style="opacity:0.6;cursor:default;">
-                                        <i data-lucide="eye" class="icon icon-sm"></i> ${window.t('reviewLabel')}
-                                    </button>
-                                ` : task.status !== 'done' ? `
-                                    <button class="mobile-action-btn complete" onclick="this.disabled=true;this.style.opacity='0.5';quickCompleteTask('${escId(task.id)}')">
-                                        <i data-lucide="check" class="icon icon-sm"></i> ${window.t('statusDone')}
-                                    </button>
-                                ` : `
-                                    <button class="mobile-action-btn edit" onclick="reopenTask('${escId(task.id)}')">
-                                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${window.t('reopen')}
-                                    </button>
-                                `}
-                                <button class="mobile-action-btn edit" onclick="openTaskModal('${escId(task.id)}')">
-                                    <i data-lucide="pencil" class="icon icon-sm"></i>
-                                </button>
-                                <button class="mobile-action-btn delete" onclick="showConfirmModal(window.t('deleteConfirm'),{danger:true}).then(ok=>ok&&deleteTask('${escId(task.id)}'))">
-                                    <i data-lucide="trash-2" class="icon icon-sm"></i>
-                                </button>
+                                </div>` : ''}
                             </div>
                         </div>
                     </div>`;
